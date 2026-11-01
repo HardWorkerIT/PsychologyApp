@@ -66,6 +66,21 @@ public static class JournalCsvExporter
     private static string Csv(string? value)
     {
         string text = value ?? string.Empty;
+        int firstMeaningfulCharacter = 0;
+        while (firstMeaningfulCharacter < text.Length
+            && (char.IsWhiteSpace(text[firstMeaningfulCharacter]) || char.IsControl(text[firstMeaningfulCharacter])))
+        {
+            firstMeaningfulCharacter++;
+        }
+
+        // Notes and factor labels are user supplied. Prefix spreadsheet formulas with an apostrophe so a shared CSV
+        // cannot execute them when opened in Excel or another spreadsheet application.
+        if (firstMeaningfulCharacter < text.Length
+            && text[firstMeaningfulCharacter] is '=' or '+' or '-' or '@')
+        {
+            text = "'" + text;
+        }
+
         if (text.Contains('"') || text.Contains(',') || text.Contains('\n') || text.Contains('\r'))
         {
             return $"\"{text.Replace("\"", "\"\"", StringComparison.Ordinal)}\"";

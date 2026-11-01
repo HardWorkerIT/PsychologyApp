@@ -10,6 +10,27 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class JournalCsvExporterTests
 {
     [Theory]
+    [InlineData("=1+1")]
+    [InlineData("  =1+1")]
+    [InlineData("\t=1+1")]
+    [InlineData("+SUM(A1:A2)")]
+    [InlineData("-1+2")]
+    [InlineData("@SUM(A1:A2)")]
+    [InlineData("=HYPERLINK(\"https://example.invalid\",\"open\")")]
+    public void BuildCsv_PrefixesSpreadsheetFormulasInUserNotes(string note)
+    {
+        string csv = JournalCsvExporter.BuildCsv([new MoodEntryDTO
+        {
+            MoodLevel = 3,
+            Note = note,
+            RecordedAt = DateTime.UtcNow
+        }]);
+
+        string normalized = note.TrimStart().Replace("\"", "\"\"", StringComparison.Ordinal);
+        Assert.Contains("'" + normalized, csv, StringComparison.Ordinal);
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public async Task Sharing_removes_the_temporary_file_containing_private_notes(bool shareFails)
