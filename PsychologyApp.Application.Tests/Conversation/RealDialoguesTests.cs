@@ -43,6 +43,7 @@ public sealed class RealDialoguesTests(ITestOutputHelper output)
 
         LexiconSituationAnalyzer analyzer = new();
         int checks = 0;
+        Dictionary<string, (int Total, int Correct)> fieldMetrics = new(StringComparer.Ordinal);
         List<string> misses = [];
         for (int index = 0; index < dialogues.Length; index++)
         {
@@ -90,7 +91,10 @@ public sealed class RealDialoguesTests(ITestOutputHelper output)
                     }
 
                     checks++;
-                    if (!EqualityComparer<T>.Default.Equals(expected, actual))
+                    bool matched = EqualityComparer<T>.Default.Equals(expected, actual);
+                    (int total, int correct) = fieldMetrics.GetValueOrDefault(field);
+                    fieldMetrics[field] = (total + 1, correct + (matched ? 1 : 0));
+                    if (!matched)
                     {
                         misses.Add($"dialogue {index + 1}, turn {turnIndex + 1}, {field}: expected {expected}, got {actual}");
                     }
@@ -105,7 +109,10 @@ public sealed class RealDialoguesTests(ITestOutputHelper output)
 
                     string? expectedValue = expected.Equals("None", StringComparison.OrdinalIgnoreCase) ? null : expected;
                     checks++;
-                    if (!string.Equals(expectedValue, actual, StringComparison.Ordinal))
+                    bool matched = string.Equals(expectedValue, actual, StringComparison.Ordinal);
+                    (int total, int correct) = fieldMetrics.GetValueOrDefault(field);
+                    fieldMetrics[field] = (total + 1, correct + (matched ? 1 : 0));
+                    if (!matched)
                     {
                         misses.Add($"dialogue {index + 1}, turn {turnIndex + 1}, {field}: expected {expected}, got {actual ?? "None"}");
                     }
@@ -119,6 +126,11 @@ public sealed class RealDialoguesTests(ITestOutputHelper output)
         }
 
         output.WriteLine($"Real dialogue cases: {dialogues.Length}; labeled checks: {checks}; mismatches: {misses.Count}.");
+        foreach ((string field, (int total, int correct)) in fieldMetrics.OrderBy(pair => pair.Key, StringComparer.Ordinal))
+        {
+            output.WriteLine($"  {field}: {correct}/{total} = {(double)correct / total:P0}");
+        }
+
         misses.ForEach(output.WriteLine);
         Assert.Empty(misses);
     }

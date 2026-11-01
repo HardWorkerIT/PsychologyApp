@@ -34,7 +34,7 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
             return manifest.Files.All(file =>
             {
                 string path = SafePath(targetDirectory, file.Path);
-                return File.Exists(path) && new FileInfo(path).Length == file.SizeBytes;
+                return File.Exists(path) && (!file.VerifySize || new FileInfo(path).Length == file.SizeBytes);
             });
         }
     }
@@ -55,7 +55,7 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
         foreach (LocalModelFile file in manifest.Files)
         {
             string finalPath = SafePath(StagingDirectory, file.Path);
-            if (File.Exists(finalPath) && new FileInfo(finalPath).Length == file.SizeBytes)
+            if (File.Exists(finalPath) && (!file.VerifySize || new FileInfo(finalPath).Length == file.SizeBytes))
             {
                 try
                 {
@@ -157,13 +157,13 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
         Directory.CreateDirectory(Path.GetDirectoryName(finalPath)!);
         string partPath = finalPath + ".part";
         long existing = File.Exists(partPath) ? new FileInfo(partPath).Length : 0;
-        if (existing > file.SizeBytes)
+        if (file.VerifySize && existing > file.SizeBytes)
         {
             File.Delete(partPath);
             existing = 0;
         }
 
-        if (existing < file.SizeBytes)
+        if (!file.VerifySize || existing < file.SizeBytes)
         {
             using HttpRequestMessage request = new(HttpMethod.Get, file.Url);
             if (existing > 0)
@@ -174,6 +174,15 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
             using HttpResponseMessage response = await http
                 .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                 .ConfigureAwait(false);
+            if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable
+                && existing > 0
+                && (file.Sha256 is not null || response.Content.Headers.ContentRange?.Length == existing))
+            {
+                await VerifyAsync(file, partPath, cancellationToken).ConfigureAwait(false);
+                File.Move(partPath, finalPath, overwrite: true);
+                return;
+            }
+
             response.EnsureSuccessStatusCode();
 
             // A server that ignores Range answers 200 with the whole body: start over instead of appending.
@@ -191,7 +200,7 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
             int read;
             while ((read = await body.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
             {
-                if (read > file.SizeBytes - written)
+                if (file.VerifySize && read > file.SizeBytes - written)
                 {
                     await output.DisposeAsync().ConfigureAwait(false);
                     File.Delete(partPath);
@@ -211,7 +220,7 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
     private static async Task VerifyAsync(LocalModelFile file, string path, CancellationToken cancellationToken)
     {
         long length = new FileInfo(path).Length;
-        if (length != file.SizeBytes)
+        if (file.VerifySize && length != file.SizeBytes)
         {
             File.Delete(path);
             throw new IOException($"'{file.Path}' has {length} bytes, expected {file.SizeBytes}. The partial file was discarded.");
@@ -238,7 +247,7 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
 
     private static string Fingerprint(LocalModelManifest manifest) =>
         Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(
-            manifest.Id + "|" + string.Join('|', manifest.Files.Select(f => $"{f.Path}:{f.SizeBytes}:{f.Sha256}")))));
+            manifest.Id + "|" + string.Join('|', manifest.Files.Select(f => $"{f.Path}:{f.SizeBytes}:{f.Sha256}:{f.VerifySize}")))));
 
     /// <summary>Keeps manifest paths inside the staging folder (no "../" escapes).</summary>
     private static string SafePath(string root, string relative)

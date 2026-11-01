@@ -216,6 +216,48 @@
   <data name="SettingsRemindersSection" xml:space="preserve">
     <value>Reminders</value>
   </data>
+  <data name="SettingsLocalAiSection" xml:space="preserve">
+    <value>On-device AI</value>
+  </data>
+  <data name="SettingsLocalAiDescription" xml:space="preserve">
+    <value>Optional Qwen3 model for English and Russian conversations. It is downloaded only after confirmation; your messages stay on this device. The offline dialogue remains available without it.</value>
+  </data>
+  <data name="SettingsLocalAiDownload" xml:space="preserve">
+    <value>Download model</value>
+  </data>
+  <data name="SettingsLocalAiDelete" xml:space="preserve">
+    <value>Delete model</value>
+  </data>
+  <data name="SettingsLocalAiNotInstalled" xml:space="preserve">
+    <value>Model is not downloaded. You can still use the offline dialogue.</value>
+  </data>
+  <data name="SettingsLocalAiInstalled" xml:space="preserve">
+    <value>Model is ready. English and Russian conversations can use on-device generation.</value>
+  </data>
+  <data name="SettingsLocalAiNotEnoughMemory" xml:space="preserve">
+    <value>This device does not have enough memory for the model. The offline dialogue remains available.</value>
+  </data>
+  <data name="SettingsLocalAiNotEnoughStorage" xml:space="preserve">
+    <value>There is not enough free storage to download the model.</value>
+  </data>
+  <data name="SettingsLocalAiDownloading" xml:space="preserve">
+    <value>Downloading the model…</value>
+  </data>
+  <data name="SettingsLocalAiProgress" xml:space="preserve">
+    <value>Downloading the model… {0}%</value>
+  </data>
+  <data name="SettingsLocalAiConsentTitle" xml:space="preserve">
+    <value>Download on-device model?</value>
+  </data>
+  <data name="SettingsLocalAiConsentMessage" xml:space="preserve">
+    <value>{0} requires about {1} GB of storage. It will be downloaded from Hugging Face. Your messages are never uploaded. The download can be resumed later. Model terms: {2}</value>
+  </data>
+  <data name="SettingsLocalAiDeleteTitle" xml:space="preserve">
+    <value>Delete on-device model?</value>
+  </data>
+  <data name="SettingsLocalAiDeleteMessage" xml:space="preserve">
+    <value>The model files will be removed from this device. The offline dialogue will remain available.</value>
+  </data>
   <data name="SettingsPracticeRemindersLabel" xml:space="preserve">
     <value>Practice reminders</value>
   </data>

@@ -175,7 +175,7 @@ public static class UtteranceClassifier
 
     private static readonly string[] DirectAdviceOverrides =
     [
-        "посоветуй", "посоветуйте", "подскажи", "подскажите", "скажи что мне делать", "скажи что делать", "дай совет", "дайте совет", "мне нужен совет", "нужен совет", "что посоветуешь", "что посоветуете", "помоги", "помогите", "give me advice", "i need advice", "i need some advice", "any advice", "what do you suggest", "what would you recommend", "help me", "need help"
+        "посоветуй", "посоветуйте", "подскажи", "подскажите", "скажи что мне делать", "скажи что делать", "дай совет", "дайте совет", "мне нужен совет", "нужен совет", "что посоветуешь", "что посоветуете", "помоги", "помогите", "give me advice", "can you give me advice", "can you give me some advice", "could you give me advice", "could you give me some advice", "can you advise me", "could you advise me", "can i get advice", "can i get some advice", "could i get advice", "could i get some advice", "i need advice", "i need some advice", "any advice", "what do you suggest", "what would you recommend", "help me", "need help"
     ];
 
     private static readonly string[] EntertainTerms = ["расскажи анекдот", "знаешь анекдот", "анекдот", "пошути", "умеешь шутить", "расскажи шутку", "мне скучно", "скучно", "нечем заняться", "tell me a joke", "know any jokes", "i am bored", "im bored", "tell a joke"];

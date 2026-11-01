@@ -219,6 +219,26 @@ public class CompanionDialogueTests
     }
 
     [Fact]
+    public void A_correction_replaces_the_previous_emotion_in_the_live_conversation()
+    {
+        CompanionDialogue dialogue = Create();
+        CompanionState beforeCorrection = new()
+        {
+            Emotion = nameof(CompanionEmotion.Anger),
+            Theme = nameof(CompanionTheme.Relationships),
+            RecentTexts = ["Он опять не ответил на сообщение"]
+        };
+
+        CompanionReply corrected = Say(dialogue, beforeCorrection, "Нет, я не злюсь — мне страшно, что он уйдёт");
+
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), corrected.State.Emotion);
+        Assert.Equal(nameof(CompanionTheme.Relationships), corrected.State.Theme);
+        Assert.False(corrected.State.EmotionExplicitlyCleared);
+        Assert.Contains(corrected.Messages, message => message.Contains("тревог", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(corrected.Messages, message => message.Contains("вы злитесь", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void Panic_gets_help_for_the_body_first_not_questions()
     {
         CompanionReply reply = Say(Create(), new CompanionState(), "Паническая атака, не могу дышать, сердце колотится");
@@ -301,6 +321,26 @@ public class CompanionDialogueTests
 
         Assert.Contains(offer.QuickReplies, q => q.Kind == ChatQuickReplyKinds.Practice);
         Assert.Equal(offer.State.AskedQuestions.Distinct().Count(), offer.State.AskedQuestions.Count);
+    }
+
+    [Theory]
+    [InlineData(false, "Можешь дать мне совет, что делать?")]
+    [InlineData(true, "Can you give me some advice on what to do?")]
+    public void Explicit_advice_request_switches_from_listening_to_problem_solving(bool english, string text)
+    {
+        CompanionDialogue d = Create(english);
+        CompanionState state = new()
+        {
+            Goal = CompanionCaseContent.GoalVent,
+            Emotion = nameof(CompanionEmotion.Anxiety),
+            Theme = nameof(CompanionTheme.Work)
+        };
+
+        CompanionReply reply = Say(d, state, text);
+
+        Assert.Equal(CompanionCaseContent.GoalUnderstand, reply.State.Goal);
+        Assert.True(reply.State.GoalAsked);
+        Assert.Contains(reply.QuickReplies, q => q.Payload == "practice");
     }
 
     [Fact]

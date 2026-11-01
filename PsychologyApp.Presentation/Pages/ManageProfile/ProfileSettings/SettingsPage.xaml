@@ -223,6 +223,24 @@
                 </VerticalStackLayout>
             </Border>
 
+            <Border
+                IsVisible="{Binding IsOnDeviceAiSettingsVisible}"
+                Style="{StaticResource SettingsSectionCardStyle}"
+                Margin="0">
+                <Border.Behaviors>
+                    <behaviors:ListItemRevealBehavior RevealIndex="5" />
+                </Border.Behaviors>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding LocalModelSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{Binding LocalModelDescription}" Style="{StaticResource BodyStyle}" />
+                    <Label Text="{Binding LocalModelStatusText}" Style="{StaticResource BodyStyle}" />
+                    <Button
+                        Text="{Binding LocalModelButtonText}"
+                        Command="{Binding LocalModelActionCommand}"
+                        SemanticProperties.Description="{Binding LocalModelButtonText}" />
+                </VerticalStackLayout>
+            </Border>
+
             <ui:ButtonView
                 Variant="Secondary"
                 BodyText="{Binding ReplayOnboardingText}"

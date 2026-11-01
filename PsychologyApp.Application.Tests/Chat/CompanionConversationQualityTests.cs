@@ -212,6 +212,34 @@ public class CompanionConversationQualityTests
         Assert.Equal(CompanionTheme.Family.ToString(), chat[0].Reply.State.Theme);
     }
 
+    [Theory]
+    [InlineData("На работе меня тревожит предстоящий разговор с начальником.", "Anxiety", "Work", "работой")]
+    [InlineData("После расставания с партнёром мне очень грустно.", "Sadness", "Relationships", "отношениями")]
+    [InlineData("Ухаживаю за мамой после операции, совсем вымоталась.", "Exhaustion", "Family", "семьёй")]
+    [InlineData("Жду результаты обследования, мне тревожно.", "Anxiety", "Health", "здоровьем")]
+    [InlineData("Не знаю, хватит ли денег на аренду до зарплаты, тревожно.", "Anxiety", "Money", "деньгами")]
+    [InlineData("Перед экзаменом мне тревожно, боюсь провалиться.", "Anxiety", "Study", "учёбой")]
+    public void Different_life_topics_keep_their_context_in_the_reply(string message, string emotion, string theme, string reflectedTheme)
+    {
+        Turn turn = Talk(message)[0];
+
+        Assert.Equal(emotion, turn.Reply.State.Emotion);
+        Assert.Equal(theme, turn.Reply.State.Theme);
+        Assert.Contains(reflectedTheme, turn.Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void A_new_life_topic_can_enter_the_conversation_without_losing_the_next_context()
+    {
+        List<Turn> chat = Talk(
+            "Мне тревожно из-за разговора с начальником.",
+            "А ещё завтра экзамен, боюсь, что не справлюсь.");
+
+        Assert.Equal(CompanionTheme.Work.ToString(), chat[0].Reply.State.Theme);
+        Assert.Equal(CompanionTheme.Study.ToString(), chat[1].Reply.State.Theme);
+        Assert.Equal(CompanionEmotion.Anxiety.ToString(), chat[1].Reply.State.Emotion);
+    }
+
     [Fact]
     public void PanicIsNotSaidTwiceInOneReply()
     {

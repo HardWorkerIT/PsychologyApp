@@ -30,6 +30,8 @@ public class EmotionGuesserTests(ITestOutputHelper output)
     {
         LexiconSituationAnalyzer lexicon = new();
         int offered = 0, right = 0, lexiconMissed = 0, lexiconHits = 0, combinedHits = 0, total = 0, chitChatOffered = 0;
+        Dictionary<CompanionEmotion, (int Offered, int Correct)> byProposedEmotion = [];
+        Dictionary<(CompanionEmotion Proposed, string Actual), int> wrongProposals = [];
         foreach (string heldOut in Sets)
         {
             EmotionGuesser guesser = TrainedWithout(heldOut);
@@ -53,7 +55,15 @@ public class EmotionGuesserTests(ITestOutputHelper output)
                 if (lex == "Unknown" && guess is not null)
                 {
                     offered++;
-                    right += guess.Emotion.ToString() == item.Label ? 1 : 0;
+                    bool correctGuess = guess.Emotion.ToString() == item.Label;
+                    right += correctGuess ? 1 : 0;
+                    (int proposed, int correct) = byProposedEmotion.GetValueOrDefault(guess.Emotion);
+                    byProposedEmotion[guess.Emotion] = (proposed + 1, correct + (correctGuess ? 1 : 0));
+                    if (!correctGuess && Enum.TryParse(item.Label, out CompanionEmotion actual))
+                    {
+                        (CompanionEmotion Proposed, string Actual) key = (guess.Emotion, actual.ToString());
+                        wrongProposals[key] = wrongProposals.GetValueOrDefault(key) + 1;
+                    }
                     chitChatOffered += item.Label == "Unknown" ? 1 : 0;
                 }
             }
@@ -62,6 +72,16 @@ public class EmotionGuesserTests(ITestOutputHelper output)
         }
 
         output.WriteLine($"lexicon {lexiconHits}/{total}; lexicon then guesser {combinedHits}/{total}; proposed {offered} of {lexiconMissed} misses, right {right}, chit-chat wrongly proposed {chitChatOffered}");
+        foreach ((CompanionEmotion emotion, (int proposed, int correct)) in byProposedEmotion.OrderBy(pair => pair.Key))
+        {
+            output.WriteLine($"  proposal {emotion}: precision {correct}/{proposed} = {(double)correct / proposed:P0}");
+        }
+
+        foreach (((CompanionEmotion proposed, string actual), int count) in wrongProposals.OrderByDescending(pair => pair.Value).Take(10))
+        {
+            output.WriteLine($"  wrong proposal {proposed} -> {actual}: {count}");
+        }
+
         Assert.True(combinedHits >= lexiconHits + 40, $"The guesser must add clearly: {lexiconHits} -> {combinedHits}.");
         Assert.True(offered >= lexiconMissed * 0.7, $"Proposed only {offered} of {lexiconMissed}.");
         Assert.True((double)right / offered >= 0.8, $"Precision of the proposals fell to {(double)right / offered:P0}.");
