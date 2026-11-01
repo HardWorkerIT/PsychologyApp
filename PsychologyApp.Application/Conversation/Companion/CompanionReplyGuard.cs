@@ -15,12 +15,22 @@ public static partial class CompanionReplyGuard
     private const int MinLength = 25;
     private const int StemLength = 5;
 
+    private static readonly HashSet<string> GenericTopicStems =
+    [
+        "слышу", "поним", "чувст", "ощуще", "ситуа", "соста", "эмоци", "переж", "важно", "трудн", "сложн",
+        "сейча", "очень", "правд", "похо", "кажет", "внутр", "может", "потом", "поэто", "челов", "людям",
+        "норма", "реакц", "будет", "время", "когда", "сильн", "много", "самог", "самой", "остал", "вчера", "сегод", "завтр", "теперь"
+    ];
+
     private static readonly string[] Banned =
     [
         // Medical / identity
         "диагноз", "расстройств", "у вас депресс", "у тебя депресс", "антидепрессант", "таблетк", "лекарств", "препарат", "принимайте", "принимай ", "рекомендую принять",
         "языковая модель", "как ии", "как искусственный интеллект",
         "diagnos", "disorder", "antidepress", "medication", "prescri", "dosage", "you have depression", "as an ai", "language model",
+        "это нормально", "это норма", "отказ от жизни", "не хочу жить", "лучше бы меня не было", "суицид", "самоубийств", "покончить с собой",
+        "it is normal", "it's normal", "suicide", "kill yourself", "dont want to live", "don't want to live",
+        "плохо для вашего здоровья", "плохо для ваше здоровье", "плохо для здоровья", "плохо для вашего настроения", "вы точно правы",
         "http", "www.",
         // Advice and dismissing phrases: the prompt forbids them, small models do them anyway
         "не бойтесь", "не бойся", "не переживай", "не волнуйтесь", "не волнуйся", "успокойтесь", "успокойся", "попробуйте", "попробуй", "советую", "рекомендую",
@@ -51,8 +61,20 @@ public static partial class CompanionReplyGuard
     [GeneratedRegex(@"^\s*(?:[-•*]|\d+[.)])\s+", RegexOptions.CultureInvariant)]
     private static partial Regex ListMarker();
 
-    [GeneratedRegex(@"\p{L}{6,}(?:ешь|ишь)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"\p{L}{6,}(?:ешь|ишь|ёшь)(?:ся)?$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
     private static partial Regex InformalVerb();
+
+    [GeneratedRegex(@"\bвы(?:\s+\p{L}+){0,2}\s+\p{L}+(?:юсь|усь|ю|у)\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex FirstPersonAfterFormalYou();
+
+    [GeneratedRegex(@"\bвы(?:\s+\p{L}+){0,2}\s+\p{L}+(?:л|ла)\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex SingularPastAfterFormalYou();
+
+    [GeneratedRegex(@"\bвы(?:\s+\p{L}+){0,2}\s+\p{L}+(?:ут|ют|ат|ят)\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex ThirdPersonPluralAfterFormalYou();
+
+    [GeneratedRegex(@"\bвы(?:\s+\p{L}+){0,2}\s+чувствуетесь\b", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)]
+    private static partial Regex MalformedReflexiveAddress();
 
     [GeneratedRegex(@"([.!?])\1+", RegexOptions.CultureInvariant)]
     private static partial Regex RepeatedPunctuation();
@@ -142,6 +164,11 @@ public static partial class CompanionReplyGuard
             return null;
         }
 
+        if (!english && HasRussianAgreementError(lowered))
+        {
+            return null;
+        }
+
         if (!LanguageMatches(text, english))
         {
             return null;
@@ -169,6 +196,12 @@ public static partial class CompanionReplyGuard
         return false;
     }
 
+    private static bool HasRussianAgreementError(string lowered) =>
+        FirstPersonAfterFormalYou().IsMatch(lowered)
+        || SingularPastAfterFormalYou().IsMatch(lowered)
+        || ThirdPersonPluralAfterFormalYou().IsMatch(lowered)
+        || MalformedReflexiveAddress().IsMatch(lowered);
+
     /// <summary>A reflection reuses the person's own words; a reply with no shared stem is about something else.</summary>
     private static bool SharesTopicWith(string loweredReply, string userText)
     {
@@ -176,11 +209,16 @@ public static partial class CompanionReplyGuard
         return Stems(userText.ToLowerInvariant().Replace('ё', 'е')).Overlaps(replyStems);
     }
 
-    private static HashSet<string> Stems(string text) =>
-        NonLetterRuns().Split(text)
+    private static HashSet<string> Stems(string text)
+    {
+        // Generic empathy words are not evidence that a reply is about this person's actual situation.
+        // In particular, matching only "чувствую" allowed a model to replace a deadline story with an invented argument.
+        return NonLetterRuns().Split(text)
             .Where(word => word.Length >= StemLength)
             .Select(word => word[..StemLength])
+            .Where(stem => !GenericTopicStems.Contains(stem))
             .ToHashSet(StringComparer.Ordinal);
+    }
 
     private static bool LanguageMatches(string text, bool english)
     {

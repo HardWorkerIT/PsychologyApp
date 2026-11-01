@@ -118,6 +118,11 @@ public partial class SettingsViewModel
         OnPropertyChanged(nameof(SizeLabel));
         OnPropertyChanged(nameof(BoldLabel));
         OnPropertyChanged(nameof(TestsSectionTitle));
+        OnPropertyChanged(nameof(LocalModelSectionTitle));
+        OnPropertyChanged(nameof(LocalModelDescription));
+        OnPropertyChanged(nameof(LocalModelStatusText));
+        OnPropertyChanged(nameof(LocalModelButtonText));
+        OnPropertyChanged(nameof(IsOnDeviceAiSettingsVisible));
         OnPropertyChanged(nameof(QuestionnaireAutoAdvanceLabel));
         OnPropertyChanged(nameof(RemindersSectionTitle));
         OnPropertyChanged(nameof(PracticeRemindersLabel));

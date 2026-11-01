@@ -496,6 +496,7 @@ public sealed partial class CompanionDialogue(
 
     private CompanionReply RespondToAdvice(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion, CompanionTheme? theme)
     {
+        bool explicitRequest = UtteranceClassifier.IsExplicitAdviceRequest(text);
         if (analysis.HasLoss || state.GriefShared || analysis.MentionsTrauma
             || emotion == CompanionEmotion.Panic
             || (emotion == CompanionEmotion.Anxiety && analysis.IsIntense && analysis.HasBodySymptoms))
@@ -505,6 +506,10 @@ public sealed partial class CompanionDialogue(
 
         bool newEvent = analysis.Event != CompanionEvent.None && state.Event != analysis.Event.ToString();
         state = RememberMeaningfulContext(state, previous, text, analysis, emotion);
+        if (state.Goal == CompanionCaseContent.GoalVent && explicitRequest)
+        {
+            state = state with { Goal = CompanionCaseContent.GoalUnderstand, GoalAsked = true };
+        }
 
         List<string> messages = [];
         string? quote = QuoteExtractor.Pick(text, analyzer, emotion);

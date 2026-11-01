@@ -166,11 +166,26 @@ public class CompanionReplyGuardTests
     [Theory]
     [InlineData("У тебя сейчас очень тяжело на душе, это понятно.")]
     [InlineData("Похоже, вам тяжело, и вы чувствуешь усталость.")]
+    [InlineData("Вы справишься с этим, не переживай.")]
     [InlineData("Слышу, как вам тревожно. Не бойтесь, это пройдёт.")]
     [InlineData("Слышу, как вам тревожно. Попробуйте немного отдохнуть.")]
     [InlineData("Слышу вас, и мне тоже очень тяжело от этого.")]
     [InlineData("Всё будет хорошо, вы справитесь с этой встречей.")]
     public void Advice_dismissals_and_informal_register_are_rejected(string raw)
+    {
+        Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
+    }
+
+    [Theory]
+    [InlineData("Вы действительно злюсь — это нормально. Коллега присвоил вашу работу, и это больно.")]
+    [InlineData("Вы сейчас сильно бегут, но это очень трудно. Коллега присвоил вашу работу.")]
+    [InlineData("Вы перешёл в другой город, и теперь вам одиноко. Это правда непросто.")]
+    [InlineData("Вы чувствуетесь обидно, когда муж забывает о важном. Это действительно тяжело.")]
+    [InlineData("После этой ситуации отказ от жизни — это нормально.")]
+    [InlineData("Вы чувствуете себя виноватой, и это нормально.")]
+    [InlineData("Вы точно правы — эта злость показывает, что нужно действовать.")]
+    [InlineData("Постоянное напряжение плохо для ваше здоровье. Это действительно тяжело.")]
+    public void Ungrammatical_or_minimizing_russian_model_replies_are_rejected(string raw)
     {
         Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
     }
@@ -196,6 +211,15 @@ public class CompanionReplyGuardTests
 
         Assert.NotNull(CompanionReplyGuard.Sanitize("Слышу, как вам тревожно перед презентацией. Это очень выматывает.", english: false, user));
         Assert.Null(CompanionReplyGuard.Sanitize("Солнце в комнате кажется таким тусклым и серым сегодня.", english: false, user));
+    }
+
+    [Fact]
+    public void Generic_empathy_words_do_not_make_an_invented_story_match_the_user_topic()
+    {
+        const string user = "Я чувствую себя виноватой из-за пропущенного дедлайна.";
+        const string unrelated = "Видимо, ссора с мамой вызвала у вас ощущение, что вы не смогли выразить свои чувства. Это тяжело переживать.";
+
+        Assert.Null(CompanionReplyGuard.Sanitize(unrelated, english: false, user));
     }
 
 

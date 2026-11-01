@@ -26,8 +26,8 @@ public interface IEmotionGuesser
 /// </summary>
 public sealed class EmotionGuesser : IEmotionGuesser
 {
-    /// <summary>Lead over the runner-up (in natural-log units) below which the classifier stays silent. Chosen on the leave-one-set-out sweep.</summary>
-    public const double MinMargin = 20;
+    /// <summary>Lead over the runner-up (in natural-log units) below which the classifier stays silent. Chosen by a sweep over spent Russian sets.</summary>
+    public const double MinMargin = 25;
 
     /// <summary>Shorter messages carry too little to tell feelings apart ("hello", "just checking in").</summary>
     public const int MinWords = 5;

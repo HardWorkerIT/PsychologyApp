@@ -96,8 +96,8 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
     {
         [CompanionTheme.Work] = ["работ", "начальник", "коллег", "проект", "зарплат", "офис", "увол", "собеседован", "=boss", "=work", "=job", "colleague", "office", "interview"],
         [CompanionTheme.Relationships] = ["отношен", "парень", "парня", "девушк", "=муж", "мужа", "жена", "жену", "партнер", "расстал", "бывш", "свидан", "boyfriend", "girlfriend", "husband", "=wife", "partner", "breakup", "relationship", "dating"],
-        [CompanionTheme.Family] = ["мама", "мамы", "маму", "=папа", "родител", "ребен", "=дети", "семь", "=брат", "сестр", "дочь", "дочк", "дочер", "=сын", "=сына", "=сыну", "=сыном", "внук", "внучк", "бабушк", "дедушк", "тёщ", "теща", "свекров", "mother", "father", "parents", "=child", "=kids", "family", "sister", "brother"],
-        [CompanionTheme.Health] = ["здоров", "болезн", "врач", "диагноз", "болит", "=боль", "анализ", "health", "doctor", "illness", "diagnos", "=pain"],
+        [CompanionTheme.Family] = ["мама", "мамы", "маму", "мамой", "=папа", "папой", "родител", "ребен", "=дети", "семь", "=брат", "сестр", "дочь", "дочк", "дочер", "=сын", "=сына", "=сыну", "=сыном", "внук", "внучк", "бабушк", "дедушк", "тёщ", "теща", "свекров", "mother", "father", "parents", "=child", "=kids", "family", "sister", "brother"],
+        [CompanionTheme.Health] = ["здоров", "болезн", "врач", "диагноз", "болит", "=боль", "анализ", "обследовани", "health", "doctor", "illness", "diagnos", "=pain"],
         [CompanionTheme.Money] = ["=деньги", "денег", "=долг", "долги", "кредит", "ипотек", "=money", "=debt", "=loan", "=rent", "=bills"],
         [CompanionTheme.Study] = ["экзамен", "учеб", "сесси", "универ", "школ", "диплом", "зачет", "=exam", "=study", "university", "=school", "thesis", "=grade"]
     };

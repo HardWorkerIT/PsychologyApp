@@ -4,9 +4,10 @@ The assistant is shown as **AI chat** (ИИ-чат), the owner's choice of name.
 says it works on the phone without internet, and its answers about itself say it is a self-help assistant, not a person and not a
 doctor. It has no grammatical gender in its replies.
 
-The chat companion is an offline, on-device dialogue engine behind a messenger-style UI. It does not use a language model and never
-touches the network. Why not a model: see [local-llm.md](local-llm.md) (unusable in Russian on a phone) and
-[companion-understanding.md](companion-understanding.md) (measured limits of understanding).
+The chat companion is an offline, on-device dialogue engine behind a messenger-style UI. Its decisions and actions are deterministic.
+On Android, an optional downloaded model may rephrase only the first reflective sentence in an ordinary English or Russian free-text turn; the
+reply guard drops unsafe or unrelated output, and scripted reflection is used on failure. Crisis turns remain deterministic.
+See [local-llm.md](local-llm.md) for model limits and evaluation results.
 
 ## Layers
 
@@ -38,7 +39,8 @@ saves the person's message and the whole reply in one transaction and updates th
    advice, asking to explain, why, is it normal, backchannel, laughter/emoji, good news, how are you, name, capabilities, "say that
    again", "skip". Social phrases count only when the message carries no feeling ("thanks, but I'm still anxious" is a statement).
 4. Anything else is a statement about a situation: quote one sentence back (only when the message has several), name the feeling, ask
-   one fitting question at a time, measure tension, summarise now and then, return to the first thing said, offer a practice.
+   one fitting question at a time, measure tension, summarise now and then, return to the first thing said, offer a practice. For an
+   ordinary English free-text turn, Android may rephrase the first reflection only; a deterministic reply is used for every decision.
 5. If the reply would repeat one of the last eight companion messages, it is drawn again (up to four times).
 
 `CompanionState` is an immutable record serialised to JSON with the chat, so a chat resumes exactly where it stopped.

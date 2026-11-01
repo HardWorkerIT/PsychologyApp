@@ -1,6 +1,6 @@
 namespace PsychologyApp.Application.Conversation.Companion;
 
-public sealed record LocalModelFile(string Path, string Url, long SizeBytes, string? Sha256 = null);
+public sealed record LocalModelFile(string Path, string Url, long SizeBytes, string? Sha256 = null, bool VerifySize = true);
 
 /// <param name="Id">Changing the id (or any file) makes an installed copy count as outdated and triggers a reinstall.</param>
 public sealed record LocalModelManifest(
@@ -13,7 +13,7 @@ public sealed record LocalModelManifest(
 {
     public long TotalBytes => Files.Sum(f => f.SizeBytes);
 
-    /// <summary>Only languages the model was evaluated to write acceptably in. Others always use scripted replies.</summary>
+    /// <summary>Languages enabled for guarded generation. Other languages always use scripted replies.</summary>
     public bool SupportsLanguage(bool english) => Languages.Contains(english ? "en" : "ru");
 }
 
@@ -35,12 +35,28 @@ public interface ILocalModelInstaller
     Task DeleteAsync(CancellationToken cancellationToken = default);
 }
 
+/// <summary>Fallback for platforms without an on-device model installer.</summary>
+public sealed class NullLocalModelInstaller : ILocalModelInstaller
+{
+    public LocalModelManifest Manifest => LocalModelCatalog.Default;
+    public bool IsInstalled => false;
+    public Task InstallAsync(IProgress<ModelInstallProgress>? progress = null, CancellationToken cancellationToken = default) =>
+        Task.FromException(new PlatformNotSupportedException("On-device model downloads are not supported on this platform."));
+    public Task DeleteAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+}
+
 /// <summary>What the phone can offer to a large on-device model. Zero means "unknown / not supported".</summary>
 public interface IDeviceCapabilities
 {
     long TotalMemoryBytes { get; }
 
     long FreeStorageBytes { get; }
+}
+
+public sealed class NullDeviceCapabilities : IDeviceCapabilities
+{
+    public long TotalMemoryBytes => 0;
+    public long FreeStorageBytes => 0;
 }
 
 public enum LocalModelEligibility

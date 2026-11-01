@@ -1,9 +1,8 @@
-> **Status (current):** the app no longer ships an on-device LLM. ONNX Runtime GenAI, the Android adapter, the Settings download
-> section and device checks were removed after the evaluations below (Gemma 3 1B unusable in Russian, Qwen3-4B too slow and still
-> unreliable). The messenger companion (`CompanionDialogue`, see `companion-understanding.md`) is fully scripted and deterministic.
-> What remains in the repository, unwired and tested, is reusable when a suitable model exists: `ILanguageModel`, the prompt builder and
-> reply guard, `HttpLocalModelInstaller` + `LocalModelCatalog`, `PsychologyApp.LocalLlm` (ONNX engine) and `tools/PsychologyApp.LlmEval`.
-> Sections about installing a model and the Settings screen describe that dormant path.
+> **Status:** Android can optionally download Qwen3 0.6B (4-bit, ONNX GenAI) from Settings and use it to rephrase the first
+> reflection in ordinary Russian or English chat turns. The model never handles crisis messages, actions, questions or practice routing.
+> A deterministic, guarded reply is always available as fallback. The user's message text is never sent over the network; only the
+> model files are downloaded after explicit confirmation. The Russian output of this new model has not yet been evaluated or reviewed
+> by a native-speaking psychologist, and phone performance has not been measured.
 
 # Offline companion and the on-device LLM
 
@@ -21,7 +20,7 @@ model download the user starts explicitly.
 | `LexiconSituationAnalyzer` | `Application/Conversation/Companion` | RU/EN weighted lexicon -> state (panic, anxiety, anger...), theme, body symptoms, intensity. Ties go to the state named first. |
 | `TechniqueSuggester` | same | Closed, hand-reviewed state -> practices mapping. **The model never chooses what the app launches.** |
 | `ILanguageModel` | same | Port for an on-device model. Optional. |
-| `CompanionPromptBuilder` | same | System prompt + two example exchanges + the last 6 turns. |
+| `CompanionPromptBuilder` | same | System prompt + up to 2 short examples selected for the current theme and emotion (from a broader Russian/English library) + the last 6 turns. This is prompt-based demonstration, not model fine-tuning. |
 | `CompanionReplyGuard` | same | Drops replies with diagnoses, medication talk, advice, dismissive phrases, lists, questions, URLs, informal "ты", wrong language, "as an AI", or no link to what the person wrote. |
 | `CompanionContent` | same | Scripted wording. Used when there is no model, on timeout, or when the guard rejects a reply. |
 | `LocalModelCatalog` / `HttpLocalModelInstaller` | `Application` / `Infrastructure` | Consent-based, resumable, checksum-verified, atomic model download. |
@@ -30,14 +29,21 @@ model download the user starts explicitly.
 
 Without a model the companion is fully functional on scripted replies. The model only rewrites the *reflection* sentence(s).
 
-## Current status: the model is English-only
+The reply guard also checks common Russian agreement errors and ignores generic empathy words when matching a reply to the person's
+topic. It rejects broad normalising statements such as "это нормально" and routes those cases to the reviewed scripted reply. These
+checks catch known failure patterns; they are not a complete grammar checker or clinical review, so the Russian generation remains
+experimental.
 
-`LocalModelManifest.Languages` lists the languages the model may be used for. It is currently `["en"]`:
+## Current status: Russian and English are enabled, pending evaluation
 
-- In Russian the companion **never** uses the model and the Settings section is hidden.
-- In English the section offers the download and the companion uses the model when installed.
+`LocalModelManifest.Languages` lists the languages the model may be used for. It is currently `["en", "ru"]` for Qwen3 0.6B:
 
-Reason: evaluation on a real model (below). Add `"ru"` only after a Russian-capable model passes the evaluation **and** a native-speaker / psychologist review.
+- In both Russian and English the Settings section offers the download and the companion may use the installed model.
+- The model rewrites only the first reflection in ordinary free-text turns. The reviewed deterministic dialogue remains the fallback.
+
+This is a cautious enablement of a multilingual model, not a quality certification. The earlier Gemma 3 1B and Qwen3 4B results below
+show why generation is strictly limited and guarded. The Qwen3 0.6B model still needs its Russian evaluation, review by a native-speaking
+psychologist, and benchmarking on real Android phones before its output should be treated as dependable.
 
 ## Evaluation (`tools/PsychologyApp.LlmEval`)
 
@@ -74,14 +80,14 @@ Qwen3 also needs its reasoning mode disabled (`/no_think`); the engine does this
 
 1. **1B models are unusable for Russian emotional support** (Gemma 3 1B).
 2. **A 4B model is the first with acceptable Russian grammar, but it is too slow for an interactive chat** (tens of seconds on a desktop, likely minutes on a phone) **and still makes content mistakes** that a rule-based guard cannot catch. It needs 8+ GB RAM and a 4 GB download.
-3. Therefore the model stays **English-only** and off by default. The Russian companion runs on scripted replies until a model clears *both* bars: acceptable speed on a real phone, and review of its Russian output by a native speaker / psychologist.
-4. Options for a better Russian conversation: improve the scripted companion (more of the person's own words, follow-up questions, more varied reflective listening), an opt-in cloud mode with explicit consent (breaks the "fully offline" promise), or revisit on-device models when faster / better ones exist.
+3. These results were for earlier models. Qwen3 0.6B is now enabled for Russian and English as an optional experiment; it has not yet cleared either a phone-performance benchmark or a Russian clinical-language review.
+4. If Qwen3 0.6B does not meet the quality bar, improve the scripted companion (more of the person's own words, follow-up questions, more varied reflective listening) or revisit on-device models when faster / better ones exist. An opt-in cloud mode would break the "fully offline" promise.
 ## Installing a model
 
-### From the app (English only for now)
+### From the app (Russian and English)
 
 Settings -> **On-device AI** -> Download. The user confirms size and terms first. The download resumes after interruptions,
-is verified (size + SHA-256) and installed atomically, so a half-downloaded model is never used. Requires Android 7.0+.
+is verified against pinned SHA-256 hashes for the model weights and large tokenizer, then installed atomically, so a half-downloaded model is never used. Smaller configuration files are fetched from the pinned model revision. Requires Android 7.0+ and at least 4 GB total device memory.
 
 ### Manually (developer flow)
 
@@ -94,7 +100,7 @@ The runtime looks for a GenAI-format model folder (`genai_config.json`, `model.o
 adb push <local-model-folder> /sdcard/Android/data/com.subconscious.psychologyapp/files/llm
 ```
 
-Manual installs bypass the language gate in Settings but **not** in the companion: Russian still uses scripted replies.
+Manual installs bypass the language gate in Settings but **not** in the companion: the declared manifest language list still applies.
 
 ## Safety design (why it is built this way)
 
@@ -113,7 +119,7 @@ Manual installs bypass the language gate in Settings but **not** in the companio
 
 ## Not done yet
 
-- A Russian-capable model that passes evaluation, and a phone benchmark (speed, RAM, battery, thermal).
+- Evaluate and review Qwen3 0.6B's Russian replies with a native-speaking psychologist; benchmark speed, RAM, battery and heat on real phones.
 - Streaming tokens into the chat bubble (currently the whole reply appears at once).
 - Review of the scripted wording and the crisis wording by a psychologist.
 - Conversation memory between sessions.

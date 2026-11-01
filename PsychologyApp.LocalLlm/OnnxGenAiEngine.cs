@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.ML.OnnxRuntimeGenAI;
 using PsychologyApp.Application.Conversation.Companion;
 
@@ -28,6 +29,7 @@ public sealed class OnnxGenAiEngine(string modelDirectory) : IDisposable
             return;
         }
 
+        RemoveUnsupportedExecutionProviders();
         _quirks = ModelQuirks.ForModelType(ReadModelType(modelDirectory));
         _model = new Model(modelDirectory);
         _tokenizer = new Tokenizer(_model);
@@ -117,6 +119,35 @@ public sealed class OnnxGenAiEngine(string modelDirectory) : IDisposable
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Some community GenAI configs include WebGPU options for Transformers.js. The Android and CPU GenAI packages do not
+    /// ship that provider; leaving it in the config makes model loading fail before CPU fallback can be selected. Keep
+    /// the file's original byte length so the installer's pinned size check remains valid.
+    /// </summary>
+    private void RemoveUnsupportedExecutionProviders()
+    {
+        string path = Path.Combine(modelDirectory, "genai_config.json");
+        byte[] original = File.ReadAllBytes(path);
+        JsonNode config = JsonNode.Parse(original) ?? throw new InvalidDataException("The model GenAI config is empty.");
+        JsonObject? sessionOptions = config["model"]?["decoder"]?["session_options"] as JsonObject;
+        if (sessionOptions is null || !sessionOptions.ContainsKey("provider_options"))
+        {
+            return;
+        }
+
+        sessionOptions.Remove("provider_options");
+        byte[] normalized = Encoding.UTF8.GetBytes(config.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+        if (normalized.Length > original.Length)
+        {
+            throw new InvalidDataException("The CPU-compatible model config exceeds the installed config size.");
+        }
+
+        byte[] compatible = new byte[original.Length];
+        normalized.CopyTo(compatible, 0);
+        Array.Fill(compatible, (byte)' ', normalized.Length, compatible.Length - normalized.Length);
+        File.WriteAllBytes(path, compatible);
     }
 }
 
