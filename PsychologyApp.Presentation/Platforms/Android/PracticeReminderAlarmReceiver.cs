@@ -29,7 +29,7 @@ public sealed class PracticeReminderAlarmReceiver : BroadcastReceiver
             ?? string.Empty;
 
         ShowNotification(context, techniqueId, title, body);
-        ReminderSyncWork.Run<IPracticeReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IPracticeReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 
     private static void ShowNotification(Context context, TechniqueId techniqueId, string title, string body)

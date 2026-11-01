@@ -21,7 +21,7 @@ public sealed class MoodReminderBootReceiver : BroadcastReceiver
             return;
         }
 
-        ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif
