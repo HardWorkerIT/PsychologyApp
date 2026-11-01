@@ -82,6 +82,10 @@ public sealed class DeviceSpeechInput : ISpeechInput
                 await Task.WhenAny(completed.Task, Task.Delay(StopGrace, cancellationToken));
             }
 
+            // WhenAny does not rethrow cancellation from completed.Task or Task.Delay. Preserve the caller's cancellation
+            // contract instead of reporting a partial transcript or "nothing heard" after the user leaves the screen.
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (completed.Task.IsCompletedSuccessfully)
             {
                 SpeechToTextResult result = completed.Task.Result;
