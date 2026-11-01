@@ -12,6 +12,7 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | Exported backup / specialist summary | A file the person chooses to share; removed from the cache right after the share sheet closes |
 | Error log | `logs/app-errors.log`, warnings and errors only, no message text; shared only by the person |
 | Downloaded prayer audio | Cache folder, HTTPS only, validated as audio |
+| Optional on-device model | App-private `llm` folder; downloaded after consent and verified before use |
 
 ## Who could get at it, and how it is handled
 
@@ -22,10 +23,10 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | The person wants everything gone | «Delete all my data» on the data screen, asked twice: the database file is recreated empty, settings are cleared with a synchronous commit, the logs and the app's own exported files in the cache are deleted, then the app restarts in a fresh process (`PersonalDataEraser`). The files, settings and restart happen while the database lane is held, so a save already queued (an autosaved note, a chat turn) cannot land in the new, empty database | Files already shared to other apps (a backup sent by mail) are outside the app |
 | Backup file leaks after sharing | The export offers a passphrase (PBKDF2-SHA256 600k iterations, AES-256-GCM, authenticated); the unprotected option stays available; the temporary file is deleted from the cache after sharing | A weak passphrase; an unprotected export sent somewhere unsafe |
 | Forged intent to MainActivity | Reminder taps need a per-install secret carried only by our own PendingIntents | Navigation only, no data access |
-| Malicious content over the network | The app only downloads audio, over HTTPS, size-capped, content-type and magic-byte checked | Third-party site compromise |
-| Tampered model download (dormant feature) | Pinned commit and SHA-256 for every file | Feature is not shipped |
+| Malicious content over the network | Prayer audio is downloaded over HTTPS with size, content-type and magic-byte checks. The optional on-device model is downloaded only after confirmation, from a pinned revision, with SHA-256 verification for pinned files. | Third-party host compromise or a configuration file at the pinned revision |
+| Tampered model download | Pinned revision and SHA-256 checks for model weights and tokenizer; incomplete files are never installed | Small configuration files are fetched from the pinned revision without individual hashes |
 | Crash / error log reveals data | Logs carry exception types and technical messages, never chat or journal text | Exception messages may include SQL fragments |
-| Network eavesdropping | No traffic except audio | – |
+| Network eavesdropping | No chat, journal or practice text leaves the device. Network traffic is limited to prayer audio and a model download started by the user. | Download metadata (IP address and requested files) is visible to the hosting provider |
 
 ## Safety (not security) risks the app handles
 

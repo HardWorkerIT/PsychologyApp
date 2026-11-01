@@ -243,6 +243,9 @@
   <data name="SettingsLocalAiDownloading" xml:space="preserve">
     <value>Downloading the model…</value>
   </data>
+  <data name="SettingsLocalAiCancel" xml:space="preserve">
+    <value>Cancel download</value>
+  </data>
   <data name="SettingsLocalAiProgress" xml:space="preserve">
     <value>Downloading the model… {0}%</value>
   </data>

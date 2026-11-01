@@ -17,5 +17,16 @@ internal sealed class AndroidDeviceCapabilities : IDeviceCapabilities
         }
     }
 
+    public long AvailableMemoryBytes
+    {
+        get
+        {
+            ActivityManager? manager = (ActivityManager?)Android.App.Application.Context.GetSystemService(Android.Content.Context.ActivityService);
+            ActivityManager.MemoryInfo info = new();
+            manager?.GetMemoryInfo(info);
+            return info.AvailMem;
+        }
+    }
+
     public long FreeStorageBytes => new StatFs(FileSystem.AppDataDirectory).AvailableBytes;
 }

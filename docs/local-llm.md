@@ -1,5 +1,6 @@
-> **Status:** Android can optionally download Qwen3 0.6B (4-bit, ONNX GenAI) from Settings and use it to rephrase the first
-> reflection in ordinary Russian or English chat turns. The model never handles crisis messages, actions, questions or practice routing.
+> **Status:** Android can optionally download Qwen3 0.6B (4-bit, ONNX GenAI) from Settings. It can rephrase the first reflection
+> in ordinary Russian or English chat turns and suggest up to two variants in the Reframe and Self-kindness practices.
+> The model never handles crisis messages, actions, questions or practice routing.
 > A deterministic, guarded reply is always available as fallback. The user's message text is never sent over the network; only the
 > model files are downloaded after explicit confirmation. The Russian output of this new model has not yet been evaluated or reviewed
 > by a native-speaking psychologist, and phone performance has not been measured.
@@ -27,7 +28,8 @@ model download the user starts explicitly.
 | `OnnxGenAiLanguageModel` | `Presentation/Platforms/Android` | ONNX Runtime GenAI implementation. Android only. |
 | `tools/PsychologyApp.LlmEval` | repo root | Runs the evaluation set through a real model with the app's exact prompt and guard. |
 
-Without a model the companion is fully functional on scripted replies. The model only rewrites the *reflection* sentence(s).
+Without a model the companion is fully functional on scripted replies. In chat the model only rewrites the *reflection* sentence(s);
+in Reframe and Self-kindness it can suggest up to two phrasing variants for an existing practice prompt. All use is optional and guarded.
 
 The reply guard also checks common Russian agreement errors and ignores generic empathy words when matching a reply to the person's
 topic. It rejects broad normalising statements such as "это нормально" and routes those cases to the reviewed scripted reply. These
@@ -39,7 +41,7 @@ experimental.
 `LocalModelManifest.Languages` lists the languages the model may be used for. It is currently `["en", "ru"]` for Qwen3 0.6B:
 
 - In both Russian and English the Settings section offers the download and the companion may use the installed model.
-- The model rewrites only the first reflection in ordinary free-text turns. The reviewed deterministic dialogue remains the fallback.
+- In ordinary free-text turns it rewrites only the first reflection. In Reframe and Self-kindness it suggests up to two variants for a fixed practice prompt. Crisis handling, routing and practice selection remain deterministic; reviewed text is the fallback.
 
 This is a cautious enablement of a multilingual model, not a quality certification. The earlier Gemma 3 1B and Qwen3 4B results below
 show why generation is strictly limited and guarded. The Qwen3 0.6B model still needs its Russian evaluation, review by a native-speaking
@@ -87,7 +89,7 @@ Qwen3 also needs its reasoning mode disabled (`/no_think`); the engine does this
 ### From the app (Russian and English)
 
 Settings -> **On-device AI** -> Download. The user confirms size and terms first. The download resumes after interruptions,
-is verified against pinned SHA-256 hashes for the model weights and large tokenizer, then installed atomically, so a half-downloaded model is never used. Smaller configuration files are fetched from the pinned model revision. Requires Android 7.0+ and at least 4 GB total device memory.
+is verified against pinned SHA-256 hashes for the model weights and large tokenizer, then installed atomically, so a half-downloaded model is never used. Smaller configuration files are fetched from the pinned model revision. Requires Android 7.0+, at least 4 GB total device memory, and 1 GB currently available memory before download.
 
 ### Manually (developer flow)
 

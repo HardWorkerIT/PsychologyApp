@@ -2,7 +2,7 @@ name: Security
 
 on:
   push:
-    branches: [main, master, features/re-design]
+    branches: [main, master, stage, features/re-design, "features/**", "bugfixes/**"]
   pull_request:
   schedule:
     - cron: "0 5 * * 1"
@@ -26,12 +26,16 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - run: dotnet workload install maui-android
       - name: Fail on known-vulnerable NuGet packages
         run: |
           dotnet restore PsychologyApp.Domain/PsychologyApp.Domain.csproj
           dotnet restore PsychologyApp.Application/PsychologyApp.Application.csproj
           dotnet restore PsychologyApp.Infrastructure/PsychologyApp.Infrastructure.csproj
-          for proj in PsychologyApp.Domain PsychologyApp.Application PsychologyApp.Infrastructure; do
+          dotnet restore PsychologyApp.Bootstrap/PsychologyApp.Bootstrap.csproj
+          dotnet restore PsychologyApp.Presentation/PsychologyApp.Presentation.csproj
+          dotnet restore PsychologyApp.LocalLlm/PsychologyApp.LocalLlm.csproj
+          for proj in PsychologyApp.Domain PsychologyApp.Application PsychologyApp.Infrastructure PsychologyApp.Bootstrap PsychologyApp.Presentation PsychologyApp.LocalLlm; do
             dotnet list "$proj/$proj.csproj" package --vulnerable --include-transitive | tee "vuln-$proj.txt"
           done
           if grep -h -q "has the following vulnerable packages" vuln-*.txt; then

@@ -14,12 +14,15 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
 {
     private const string MarkerFile = ".installed";
     private const int BufferSize = 128 * 1024;
+    private static readonly TimeSpan NetworkIdleTimeout = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan ProgressInterval = TimeSpan.FromMilliseconds(250);
 
     private string StagingDirectory => targetDirectory + ".partial";
     private string PreviousDirectory => targetDirectory + ".previous";
 
     public LocalModelManifest Manifest => manifest;
+
+    public long ExistingBytes => DirectoryBytes(targetDirectory) + DirectoryBytes(PreviousDirectory);
 
     public bool IsInstalled
     {
@@ -74,7 +77,9 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
             done += file.SizeBytes;
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         await File.WriteAllTextAsync(Path.Combine(StagingDirectory, MarkerFile), Fingerprint(manifest), cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         bool movedPrevious = false;
         if (Directory.Exists(targetDirectory))
@@ -171,8 +176,10 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
                 request.Headers.Range = new RangeHeaderValue(existing, null);
             }
 
+            using CancellationTokenSource headerTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            headerTimeout.CancelAfter(NetworkIdleTimeout);
             using HttpResponseMessage response = await http
-                .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+                .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, headerTimeout.Token)
                 .ConfigureAwait(false);
             if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable
                 && existing > 0
@@ -198,8 +205,16 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
             byte[] buffer = new byte[BufferSize];
             long written = existing;
             int read;
-            while ((read = await body.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+            while (true)
             {
+                using CancellationTokenSource readTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                readTimeout.CancelAfter(NetworkIdleTimeout);
+                read = await body.ReadAsync(buffer, readTimeout.Token).ConfigureAwait(false);
+                if (read == 0)
+                {
+                    break;
+                }
+
                 if (file.VerifySize && read > file.SizeBytes - written)
                 {
                     await output.DisposeAsync().ConfigureAwait(false);
@@ -216,6 +231,10 @@ public sealed class HttpLocalModelInstaller(HttpClient http, LocalModelManifest 
         await VerifyAsync(file, partPath, cancellationToken).ConfigureAwait(false);
         File.Move(partPath, finalPath, overwrite: true);
     }
+
+    private static long DirectoryBytes(string directory) => !Directory.Exists(directory)
+        ? 0
+        : Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories).Sum(path => new FileInfo(path).Length);
 
     private static async Task VerifyAsync(LocalModelFile file, string path, CancellationToken cancellationToken)
     {

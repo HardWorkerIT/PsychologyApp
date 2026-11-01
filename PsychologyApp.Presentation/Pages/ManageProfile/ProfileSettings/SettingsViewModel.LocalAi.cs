@@ -13,6 +13,7 @@ public partial class SettingsViewModel
     private readonly IDialogService? _dialogService;
     private string? _localModelStatusOverride;
     private bool _isLocalModelBusy;
+    private CancellationTokenSource? _localModelInstallCancellation;
 
     public ICommand LocalModelActionCommand { get; }
 
@@ -35,7 +36,7 @@ public partial class SettingsViewModel
         (_localModelInstaller.IsInstalled ? AppStrings.SettingsLocalAiInstalled : AppStrings.SettingsLocalAiNotInstalled);
 
     public string LocalModelButtonText => _isLocalModelBusy
-        ? AppStrings.SettingsLocalAiDownloading
+        ? _localModelInstallCancellation is null ? AppStrings.SettingsLocalAiDownloading : AppStrings.SettingsLocalAiCancel
         : _localModelInstaller.IsInstalled ? AppStrings.SettingsLocalAiDelete : AppStrings.SettingsLocalAiDownload;
 
     public string LocalModelSectionTitle => AppStrings.SettingsLocalAiSection;
@@ -43,6 +44,12 @@ public partial class SettingsViewModel
 
     private async Task ManageLocalModelAsync()
     {
+        if (_localModelInstallCancellation is not null)
+        {
+            _localModelInstallCancellation.Cancel();
+            return;
+        }
+
         if (IsLocalModelBusy || _dialogService is null)
         {
             return;
@@ -79,7 +86,8 @@ public partial class SettingsViewModel
             return;
         }
 
-        LocalModelEligibility eligibility = LocalModelEligibilityChecker.Check(_localModelInstaller.Manifest, _deviceCapabilities);
+        LocalModelEligibility eligibility = LocalModelEligibilityChecker.Check(
+            _localModelInstaller.Manifest, _deviceCapabilities, _localModelInstaller.ExistingBytes);
         if (eligibility != LocalModelEligibility.Eligible)
         {
             _localModelStatusOverride = eligibility == LocalModelEligibility.NotEnoughMemory
@@ -100,6 +108,8 @@ public partial class SettingsViewModel
             AppStrings.Back);
         if (!accepted) return;
 
+        using CancellationTokenSource installCancellation = new();
+        _localModelInstallCancellation = installCancellation;
         IsLocalModelBusy = true;
         _localModelStatusOverride = AppStrings.SettingsLocalAiDownloading;
         OnPropertyChanged(nameof(LocalModelStatusText));
@@ -110,8 +120,13 @@ public partial class SettingsViewModel
                 _localModelStatusOverride = AppStrings.SettingsLocalAiProgress((int)Math.Round(value.Fraction * 100));
                 OnPropertyChanged(nameof(LocalModelStatusText));
             });
-            await _localModelInstaller.InstallAsync(progress);
+            await _localModelInstaller.InstallAsync(progress, installCancellation.Token);
             _localModelStatusOverride = null;
+            OnPropertyChanged(nameof(LocalModelStatusText));
+        }
+        catch (OperationCanceledException) when (installCancellation.IsCancellationRequested)
+        {
+            _localModelStatusOverride = AppStrings.SettingsLocalAiNotInstalled;
             OnPropertyChanged(nameof(LocalModelStatusText));
         }
         catch
@@ -121,6 +136,7 @@ public partial class SettingsViewModel
         }
         finally
         {
+            _localModelInstallCancellation = null;
             IsLocalModelBusy = false;
             OnPropertyChanged(nameof(LocalModelButtonText));
         }

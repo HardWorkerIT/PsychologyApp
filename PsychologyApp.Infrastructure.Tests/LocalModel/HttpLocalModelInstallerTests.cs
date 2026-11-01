@@ -100,6 +100,16 @@ public sealed class HttpLocalModelInstallerTests : IDisposable
     }
 
     [Fact]
+    public async Task Existing_bytes_include_the_installed_copy_needed_during_atomic_update()
+    {
+        FakeServer server = new();
+        HttpLocalModelInstaller installer = Create(server);
+        await installer.InstallAsync();
+
+        Assert.Equal(ConfigBytes.Length + WeightsBytes.Length + File.ReadAllText(Path.Combine(Target, ".installed")).Length, installer.ExistingBytes);
+    }
+
+    [Fact]
     public async Task Interrupted_download_resumes_with_a_range_request()
     {
         FakeServer server = new();

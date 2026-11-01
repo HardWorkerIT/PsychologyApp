@@ -9,9 +9,9 @@ on:
   # main runs it through the release workflow, which publishes only after it passed.
   workflow_call:
   push:
-    branches: [master, features/re-design, "release/**"]
+    branches: [master, stage, features/re-design, "features/**", "bugfixes/**", "release/**"]
   pull_request:
-    branches: [main, master, features/re-design]
+    branches: [main, master, stage, features/re-design]
   schedule:
     - cron: "0 4 * * 2"
 

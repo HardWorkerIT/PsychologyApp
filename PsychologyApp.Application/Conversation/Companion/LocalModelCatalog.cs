@@ -20,5 +20,6 @@ public static class LocalModelCatalog
             new("tokenizer_config.json", Repository + "tokenizer_config.json", 9_762)
         ],
         Languages: ["en", "ru"],
-        MinTotalMemoryBytes: 4L * 1024 * 1024 * 1024);
+        MinTotalMemoryBytes: 4L * 1024 * 1024 * 1024,
+        MinAvailableMemoryBytes: 1024L * 1024 * 1024);
 }

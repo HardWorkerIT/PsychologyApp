@@ -243,6 +243,9 @@
   <data name="SettingsLocalAiDownloading" xml:space="preserve">
     <value>Скачиваем модель…</value>
   </data>
+  <data name="SettingsLocalAiCancel" xml:space="preserve">
+    <value>Отменить скачивание</value>
+  </data>
   <data name="SettingsLocalAiProgress" xml:space="preserve">
     <value>Скачиваем модель… {0}%</value>
   </data>
