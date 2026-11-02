@@ -11,6 +11,7 @@
 [![Google Play](https://img.shields.io/badge/Google%20Play-Psychology%20App-34A853?style=flat-square&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.subconscious.psychologyapp)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![MAUI](https://img.shields.io/badge/MAUI-10.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/apps/maui)
+[![CI](https://github.com/Heraxizator/PsychologyApp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Heraxizator/PsychologyApp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 </div>
@@ -119,6 +120,7 @@ CI запускает тесты и проверку Release-сборки на �
 - Правила разработки (для людей и AI-агентов): [`AGENTS.md`](AGENTS.md)
 - Как оформлять изменения: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - История изменений: [`CHANGELOG.md`](CHANGELOG.md)
+- Инженерная проверка качества и границы проверки: [`docs/quality-review-2026-11-02.md`](docs/quality-review-2026-11-02.md)
 
 ## Лицензия
 
