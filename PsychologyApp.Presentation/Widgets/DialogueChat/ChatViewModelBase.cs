@@ -186,7 +186,7 @@ public abstract class ChatViewModelBase : BaseViewModel
             return;
         }
 
-        await ShowTurnAsync(await AwaitModelAsync(_session.StartAsync(Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session.StartAsync(Lifetime)));
     }
 
     /// <summary>Called when the page goes away: stops typing delays and cancels any pending model call.</summary>
@@ -263,7 +263,7 @@ public abstract class ChatViewModelBase : BaseViewModel
         DraftText = string.Empty;
         AppendMessage(text, isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitTextAsync(text, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitTextAsync(text, Lifetime)));
     }
 
     private async Task ChooseAsync(int index)
@@ -276,18 +276,18 @@ public abstract class ChatViewModelBase : BaseViewModel
 
         AppendMessage(choice.Label, isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitChoiceAsync(index, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitChoiceAsync(index, Lifetime)));
     }
 
     private async Task RateAsync(int rating)
     {
         AppendMessage(rating.ToString(CultureInfo.InvariantCulture), isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitRatingAsync(rating, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitRatingAsync(rating, Lifetime)));
     }
 
-    /// <summary>Shows the typing indicator while a turn is being produced (instant for scripts, seconds for a language model).</summary>
-    private async Task<ConversationTurn> AwaitModelAsync(Task<ConversationTurn> turn)
+    /// <summary>Shows the typing indicator while the asynchronous turn is being produced.</summary>
+    private async Task<ConversationTurn> AwaitTurnAsync(Task<ConversationTurn> turn)
     {
         IsTyping = true;
         try

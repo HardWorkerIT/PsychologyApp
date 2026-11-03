@@ -40,6 +40,33 @@ public sealed class AppStringsResourceTests
         }
     }
 
+    [Fact]
+    public void EveryTextResolvesForEverySupportedInterfaceLanguage()
+    {
+        string? previous = AppStrings.LanguageOverride;
+        try
+        {
+            foreach (string language in AppLanguages.All)
+            {
+                AppStrings.LanguageOverride = language;
+                foreach (PropertyInfo property in TextProperties())
+                {
+                    if (property.GetCustomAttribute<ObsoleteAttribute>() is not null)
+                    {
+                        continue;
+                    }
+
+                    string? text = (string?)property.GetValue(null);
+                    Assert.False(string.IsNullOrWhiteSpace(text), $"{property.Name} does not resolve in {language}");
+                }
+            }
+        }
+        finally
+        {
+            AppStrings.LanguageOverride = previous;
+        }
+    }
+
     [Theory]
     [InlineData("StringsFr.resx")]
     [InlineData("StringsDe.resx")]

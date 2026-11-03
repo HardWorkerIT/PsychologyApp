@@ -30,6 +30,15 @@ public static class RecurringTopics
     public static string Record(string? stored, DateTime nowUtc) =>
         string.Join(',', Dates(stored).Append(nowUtc).TakeLast(MaxDates).Select(date => date.ToString("O", CultureInfo.InvariantCulture)));
 
+    /// <summary>Drops expired and future-dated topic history; only recent dates are needed to recognize a recurring topic.</summary>
+    public static string? RetainRecentDates(string? stored, DateTime nowUtc)
+    {
+        DateTime[] recent = [.. Dates(stored).Where(date => nowUtc >= date && nowUtc - date <= Window).TakeLast(MaxDates)];
+        return recent.Length == 0
+            ? null
+            : string.Join(',', recent.Select(date => date.ToString("O", CultureInfo.InvariantCulture)));
+    }
+
     /// <summary>For every remembered topic, how many chats in the window it came up in.</summary>
     public static IReadOnlyDictionary<string, int> EarlierChats(IReadOnlyDictionary<string, string> memory, DateTime nowUtc)
     {
@@ -38,7 +47,7 @@ public static class RecurringTopics
         {
             if (key.StartsWith(MemoryPrefix, StringComparison.Ordinal))
             {
-                int recent = Dates(value).Count(date => nowUtc - date <= Window);
+                int recent = Dates(value).Count(date => nowUtc >= date && nowUtc - date <= Window);
                 if (recent > 0)
                 {
                     counts[key[MemoryPrefix.Length..]] = recent;

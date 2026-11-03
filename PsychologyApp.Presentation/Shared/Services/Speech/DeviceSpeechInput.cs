@@ -88,7 +88,7 @@ public sealed class DeviceSpeechInput : ISpeechInput
 
             if (completed.Task.IsCompletedSuccessfully)
             {
-                SpeechToTextResult result = completed.Task.Result;
+                SpeechToTextResult result = await completed.Task;
                 string text = result.IsSuccessful && !string.IsNullOrWhiteSpace(result.Text) ? result.Text : lastPartial;
                 if (!string.IsNullOrWhiteSpace(text))
                 {

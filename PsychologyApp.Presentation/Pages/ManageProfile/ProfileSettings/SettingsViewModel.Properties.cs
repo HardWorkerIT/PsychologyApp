@@ -19,7 +19,6 @@ public partial class SettingsViewModel
 
             language = normalized;
             OnPropertyChanged(nameof(Language));
-            OnPropertyChanged(nameof(IsOnDeviceAiSettingsVisible));
             OnSettingsChanged();
         }
     }

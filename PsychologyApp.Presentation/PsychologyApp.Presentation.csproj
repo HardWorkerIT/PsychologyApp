@@ -229,7 +229,6 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-	  <ProjectReference Include="..\PsychologyApp.LocalLlm\PsychologyApp.LocalLlm.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

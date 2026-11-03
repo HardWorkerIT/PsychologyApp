@@ -214,13 +214,13 @@ public sealed class ChatViewModel : BaseViewModel
         Task<IReadOnlyList<ChatMessageDTO>> historyTask = _chat.GetMessagesAsync(id, _lifetime.Token);
         await Task.WhenAll(sessionTask, historyTask);
 
-        ChatSessionDTO? session = sessionTask.Result;
+        ChatSessionDTO? session = await sessionTask;
         if (session is null)
         {
             return;
         }
 
-        IReadOnlyList<ChatMessageDTO> history = historyTask.Result;
+        IReadOnlyList<ChatMessageDTO> history = await historyTask;
 
         // The state changes only after everything has been read, so a failed load leaves nothing half-done.
         _sessionId = id;

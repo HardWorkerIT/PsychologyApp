@@ -32,6 +32,15 @@ public sealed class RecurringTopicsTests
     }
 
     [Fact]
+    public void Future_topic_dates_do_not_count_as_recent()
+    {
+        IReadOnlyDictionary<string, int> counts = RecurringTopics.EarlierChats(
+            new Dictionary<string, string> { [RecurringTopics.MemoryKey("person:Boss")] = Now.AddDays(10).ToString("O") }, Now);
+
+        Assert.Empty(counts);
+    }
+
+    [Fact]
     public void The_memory_keeps_only_the_latest_dates()
     {
         string? stored = null;
@@ -41,6 +50,21 @@ public sealed class RecurringTopicsTests
         }
 
         Assert.Equal(8, stored!.Split(',').Length);
+    }
+
+    [Fact]
+    public void Expired_future_and_invalid_topic_dates_are_removed_from_retained_memory()
+    {
+        string stored = string.Join(',',
+            Now.AddDays(-40).ToString("O"),
+            Now.AddDays(-3).ToString("O"),
+            Now.AddDays(2).ToString("O"),
+            "not-a-date");
+
+        string retained = RecurringTopics.RetainRecentDates(stored, Now)!;
+
+        Assert.Equal(Now.AddDays(-3).ToString("O"), retained);
+        Assert.Null(RecurringTopics.RetainRecentDates(Now.AddDays(-31).ToString("O"), Now));
     }
 
     private static CompanionReply Say(IReadOnlyDictionary<string, int> earlier, string text) =>

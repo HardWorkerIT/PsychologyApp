@@ -6,7 +6,7 @@ namespace PsychologyApp.Infrastructure.Data.Context;
 
 public static class SqliteSchema
 {
-    public const int CurrentVersion = 14;
+    public const int CurrentVersion = 15;
 
     private static readonly string[] DropTablesSql =
     [
@@ -151,6 +151,12 @@ public static class SqliteSchema
         if (version < 14)
         {
             await ApplyMigrationAsync(connection, 14, MigrateToVersion14Async, cancellationToken).ConfigureAwait(false);
+            version = 14;
+        }
+
+        if (version < 15)
+        {
+            await ApplyMigrationAsync(connection, 15, MigrateToVersion15Async, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -165,6 +171,14 @@ public static class SqliteSchema
             CREATE UNIQUE INDEX IF NOT EXISTS UX_Quots_Text ON Quots (Text);
             """,
             transaction: transaction).ConfigureAwait(false);
+    }
+    /// <summary>The rowid alias SessionId is already carried by the UpdatedAt index and satisfies the chat-list ordering.</summary>
+    private static async Task MigrateToVersion15Async(DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken)
+    {
+        await connection.ExecuteAsync(new CommandDefinition(
+            "DROP INDEX IF EXISTS IX_ChatSessions_UpdatedAt_SessionId;",
+            transaction: transaction,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -192,6 +206,7 @@ public static class SqliteSchema
             DROP TABLE ChatMessages;
             ALTER TABLE ChatMessages_v13 RENAME TO ChatMessages;
             CREATE INDEX IF NOT EXISTS IX_ChatMessages_Session ON ChatMessages(SessionId, MessageId);
+            CREATE INDEX IF NOT EXISTS IX_ChatMessages_Session_Role_MessageId ON ChatMessages(SessionId, Role, MessageId);
             """,
             transaction: transaction).ConfigureAwait(false);
     }
@@ -255,7 +270,9 @@ public static class SqliteSchema
             );
 
             CREATE INDEX IF NOT EXISTS IX_ChatMessages_Session ON ChatMessages(SessionId, MessageId);
+            CREATE INDEX IF NOT EXISTS IX_ChatMessages_Session_Role_MessageId ON ChatMessages(SessionId, Role, MessageId);
             CREATE INDEX IF NOT EXISTS IX_ChatSessions_UpdatedAt ON ChatSessions(UpdatedAt);
+            CREATE INDEX IF NOT EXISTS IX_ChatSessions_UpdatedAt_SessionId ON ChatSessions(UpdatedAt DESC, SessionId DESC);
             """,
             transaction: transaction).ConfigureAwait(false);
     }

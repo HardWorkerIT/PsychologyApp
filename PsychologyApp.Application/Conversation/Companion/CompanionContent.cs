@@ -2,7 +2,7 @@ using PsychologyApp.Application.Practice.Catalog;
 
 namespace PsychologyApp.Application.Conversation.Companion;
 
-/// <summary>Scripted wording of the companion. Used on its own when no language model is installed and as a fallback when the model's reply is rejected.</summary>
+/// <summary>Localized, scripted wording for the deterministic companion dialogue.</summary>
 public static class CompanionContent
 {
     public static string Greeting(bool english, Random random) => Pick(random, english

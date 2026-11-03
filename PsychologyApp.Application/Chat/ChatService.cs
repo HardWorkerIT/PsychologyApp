@@ -69,17 +69,12 @@ public sealed class ChatService(
     IChatLanguageProvider language,
     TimeProvider time,
     IQuotContentProvider quotes,
-    IEmotionGuesser? emotionGuesser = null,
-    ILanguageModel? languageModel = null,
-    ILocalModelInstaller? localModelInstaller = null) : IChatService
+    IEmotionGuesser? emotionGuesser = null) : IChatService
 {
     private const int MaxTitleLength = 60;
     private const int MaxNameLength = 30;
     private const int LowMoodLevel = 2;
     private const int StressTestRelevantDays = 30;
-    private static readonly TimeSpan LocalModelTimeout = TimeSpan.FromSeconds(25);
-    private readonly ILanguageModel _languageModel = languageModel ?? new NullLanguageModel();
-    private readonly ILocalModelInstaller _localModelInstaller = localModelInstaller ?? new NullLocalModelInstaller();
 
     // A turn is read-modify-write on the chat's state: two at once (a double send, a quick reply racing a follow-up) would each start from
     // the same state and the later save would silently erase the earlier turn. Turns of one chat therefore run one at a time.
@@ -289,7 +284,7 @@ public sealed class ChatService(
         Task<IReadOnlyList<ChatSessionDTO>> sessionsTask = repository.GetSessionsAsync(cancellationToken);
         Task<IReadOnlyDictionary<string, string>> memoryTask = repository.GetMemoryAsync(cancellationToken);
         await Task.WhenAll(sessionsTask, memoryTask).ConfigureAwait(false);
-        return ChatStatistics.Compute(sessionsTask.Result, memoryTask.Result, Now(), time.LocalTimeZone);
+        return ChatStatistics.Compute(await sessionsTask.ConfigureAwait(false), await memoryTask.ConfigureAwait(false), Now(), time.LocalTimeZone);
     }
 
     public async Task SetUserNameAsync(string? name, CancellationToken cancellationToken = default)
@@ -378,10 +373,31 @@ public sealed class ChatService(
     private List<ChatMemoryChange> MemoryChanges(CompanionState before, CompanionReply reply, IReadOnlyDictionary<string, string> memory, DateTime now)
     {
         List<ChatMemoryChange> changes = [];
+        string? recordedTopicKey = reply.State.TopicCounted is { } countedTopic && countedTopic != before.TopicCounted
+            ? RecurringTopics.MemoryKey(countedTopic)
+            : null;
+        foreach ((string key, string value) in memory.Where(pair => pair.Key.StartsWith(RecurringTopics.MemoryPrefix, StringComparison.Ordinal)))
+        {
+            if (key == recordedTopicKey)
+            {
+                continue;
+            }
+
+            string? retained = RecurringTopics.RetainRecentDates(value, now);
+            if (retained is null)
+            {
+                changes.Add(new ChatMemoryChange(key));
+            }
+            else if (!string.Equals(retained, value, StringComparison.Ordinal))
+            {
+                changes.Add(new ChatMemoryChange(key, retained));
+            }
+        }
+
         if (reply.State.TopicCounted is { } topic && topic != before.TopicCounted)
         {
             string key = RecurringTopics.MemoryKey(topic);
-            changes.Add(new ChatMemoryChange(key, RecurringTopics.Record(memory.GetValueOrDefault(key), now)));
+            changes.Add(new ChatMemoryChange(key, RecurringTopics.Record(RecurringTopics.RetainRecentDates(memory.GetValueOrDefault(key), now), now)));
         }
 
         if (reply.State.NewPlan is { } plan && plan != before.NewPlan)
@@ -470,7 +486,6 @@ public sealed class ChatService(
 
         CompanionDialogue dialogue = await DialogueAsync(cancellationToken, currentSessionId: sessionId, earlierTopicChats: RecurringTopics.EarlierChats(memory, now)).ConfigureAwait(false);
         CompanionReply reply = dialogue.Respond(state, input);
-        reply = await RefineReflectionAsync(sessionId, userText, input, reply, cancellationToken).ConfigureAwait(false);
         ApplyReply(session, reply, now, firstText: input is CompanionInput.FreeText ? userText : null);
 
         // Do not persist a reply that says the mood was logged before the journal write commits. A failed journal
@@ -494,64 +509,6 @@ public sealed class ChatService(
             return new ChatTurnResult(session, added, null);
         }
         return new ChatTurnResult(session, added, reply.Action);
-    }
-
-    /// <summary>
-    /// The model may only rephrase the first reflection in an ordinary English or Russian free-text turn. Crisis handling,
-    /// questions, choices, practice routing and state changes remain deterministic.
-    /// </summary>
-    private async Task<CompanionReply> RefineReflectionAsync(
-        long sessionId,
-        string userText,
-        CompanionInput input,
-        CompanionReply reply,
-        CancellationToken cancellationToken)
-    {
-        if (input is not CompanionInput.FreeText
-            || !_localModelInstaller.Manifest.SupportsLanguage(language.IsEnglish)
-            || !_languageModel.IsAvailable
-            || crisisDetector.IsCrisis(userText)
-            || reply.Action is not null
-            || reply.Messages.Count == 0)
-        {
-            return reply;
-        }
-
-        try
-        {
-            IReadOnlyList<ChatMessageDTO> history = await repository.GetMessagesAsync(sessionId, cancellationToken).ConfigureAwait(false);
-            List<LlmMessage> turns = history
-                .TakeLast(5)
-                .Select(message => new LlmMessage(
-                    message.Role == ChatRole.User ? LlmRole.User : LlmRole.Assistant,
-                    message.Text))
-                .ToList();
-            turns.Add(new LlmMessage(LlmRole.User, userText));
-
-            LlmRequest request = CompanionPromptBuilder.Build(
-                english: language.IsEnglish,
-                turns,
-                analyzer.Analyze(userText)) with { MaxNewTokens = 100, Temperature = 0.3f };
-            using CancellationTokenSource timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            timeout.CancelAfter(LocalModelTimeout);
-            string? raw = await _languageModel.GenerateAsync(request, timeout.Token)
-                .WaitAsync(LocalModelTimeout, cancellationToken)
-                .ConfigureAwait(false);
-            string? safe = CompanionReplyGuard.Sanitize(raw, english: language.IsEnglish, userText);
-            return safe is null ? reply : reply with { Messages = [safe, .. reply.Messages.Skip(1)] };
-        }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
-        {
-            return reply;
-        }
-        catch (TimeoutException)
-        {
-            return reply;
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            return reply;
-        }
     }
 
     /// <summary>Copies what the turn learned onto the session: state, recognised feeling, tension, title, activity time.</summary>
@@ -643,20 +600,24 @@ public sealed class ChatService(
             ? progress.GetRecentMoodsAsync(3, cancellationToken)
             : Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);
         await Task.WhenAll(takenTask, quotesTask, stressTestTask, moodsTask).ConfigureAwait(false);
-        HashSet<string> recentlyTaken = [.. takenTask.Result.Where(pair => pair.Value.CompletedAt >= since).Select(pair => pair.Key)];
+        IReadOnlyDictionary<string, TestResultDTO> taken = await takenTask.ConfigureAwait(false);
+        IReadOnlyList<QuotSeed> availableQuotes = await quotesTask.ConfigureAwait(false);
+        TestResultDTO? latestStressTest = await stressTestTask.ConfigureAwait(false);
+        IReadOnlyList<MoodEntryDTO> recentMoods = await moodsTask.ConfigureAwait(false);
+        HashSet<string> recentlyTaken = [.. taken.Where(pair => pair.Value.CompletedAt >= since).Select(pair => pair.Key)];
 
         DateTime now = Now();
-        TestResultDTO? stressTest = stressTestTask.Result is { } result && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
+        TestResultDTO? stressTest = latestStressTest is { } result && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
             ? result
             : null;
-        MoodEntryDTO? todayLowMood = moodsTask.Result.FirstOrDefault(m => m.MoodLevel <= LowMoodLevel && IsLocalToday(m.RecordedAt, now));
+        MoodEntryDTO? todayLowMood = recentMoods.FirstOrDefault(m => m.MoodLevel <= LowMoodLevel && IsLocalToday(m.RecordedAt, now));
 
         return new(
             analyzer,
             crisisDetector,
             language.IsEnglish,
             time: time,
-            quotes: quotesTask.Result,
+            quotes: availableQuotes,
             todayLowMood: todayLowMood,
             recentStressTest: stressTest,
             emotionGuesser: emotionGuesser,

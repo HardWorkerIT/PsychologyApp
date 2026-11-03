@@ -29,8 +29,8 @@ The person asked for a chat that "digs up traumas like an AI psychologist". That
   article names it as a red flag in a specialist.
 - Reliving an event in detail without a therapist can flood a person (a flashback, dissociation) with no one to notice and stop it.
   The companion is a rule-based engine without a language model; it cannot read a person the way a therapist does.
-- A cloud model is ruled out by the first rule of the app (the person's words never leave the phone), and local models do not work
-  in Russian on a phone (docs/local-llm.md).
+- The app uses neither a cloud nor a local language model. The companion is a deterministic rule-based engine; it cannot read a
+  person the way a therapist does.
 
 What is built instead rests on a finding of cognitive processing therapy: CPT **without** a written account of the event is as
 effective for PTSD as with it (Resick et al., 2008). The work that matters is on what the event changed, not on the memory.

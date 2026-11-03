@@ -23,4 +23,4 @@ The Presentation test project was first run independently to reproduce the compi
 
 ## Limits
 
-The ordinary solution build also attempts MAUI platform targets. This environment has no usable Android platform SDK/build-tools, so Android Debug/Release packaging and emulator smoke behavior were not verified in this pass. No Android device was exercised. Clinical wording, translations, accessibility on a physical device, and app-store release signing require their separate reviews.
+The ordinary solution build also attempts MAUI platform targets. This environment has no usable Android platform SDK/build-tools (`platforms;android-36`, `platform-tools/adb`, and `build-tools` are absent), so Android Debug/Release packaging and emulator smoke behavior were not verified in this pass. No Android device was exercised. Local Stryker analysis also stopped before test discovery: Buildalyzer's `dotnet --info` invocation hit a `TypeInitializationException` in this host's .NET SDK installer; no repository configuration fault was confirmed. Clinical wording, translations, accessibility on a physical device, and app-store release signing require their separate reviews.

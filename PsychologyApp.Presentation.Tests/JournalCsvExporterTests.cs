@@ -64,4 +64,31 @@ public sealed class JournalCsvExporterTests
             Directory.Delete(directory, recursive: true);
         }
     }
+
+    [Fact]
+    public async Task Sharing_does_not_open_the_share_sheet_when_cancelled_before_publish()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        string previous = FileSystem.CacheDirectory;
+        FileSystem.CacheDirectory = directory;
+        int previousShareCount = Share.Shared.Count;
+        using CancellationTokenSource cancellation = new();
+        cancellation.Cancel();
+
+        try
+        {
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => JournalCsvExporter.ShareAsync(
+                [new MoodEntryDTO { MoodLevel = 3, Note = "private journal note", RecordedAt = DateTime.UtcNow }],
+                cancellation.Token));
+
+            Assert.Equal(previousShareCount, Share.Shared.Count);
+            Assert.Empty(Directory.EnumerateFiles(directory));
+        }
+        finally
+        {
+            FileSystem.CacheDirectory = previous;
+            Directory.Delete(directory, recursive: true);
+        }
+    }
 }

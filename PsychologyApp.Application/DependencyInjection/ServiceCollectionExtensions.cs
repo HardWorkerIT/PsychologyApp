@@ -75,9 +75,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<LuscherDetailReader>();
         services.AddSingleton<IClinicalCareService, ClinicalCareService>();
         services.AddSingleton<ICrisisDetector, KeywordCrisisDetector>();
-        services.TryAddSingleton<ILanguageModel, NullLanguageModel>();
-        services.TryAddSingleton<ILocalModelInstaller, NullLocalModelInstaller>();
-        services.TryAddSingleton<IDeviceCapabilities, NullDeviceCapabilities>();
         services.AddSingleton<ISupportPhraseSuggester, SupportPhraseSuggester>();
         services.AddSingleton<IExposureService, ExposureService>();
         services.AddSingleton<IBodyService, BodyService>();

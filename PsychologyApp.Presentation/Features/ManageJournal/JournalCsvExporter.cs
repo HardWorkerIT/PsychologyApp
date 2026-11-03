@@ -4,6 +4,7 @@ using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Storage;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 
 namespace PsychologyApp.Presentation.Features.ManageJournal;
 
@@ -39,7 +40,8 @@ public static class JournalCsvExporter
         string path = Path.Combine(FileSystem.CacheDirectory, fileName);
         try
         {
-            await File.WriteAllTextAsync(path, BuildCsv(entries), Encoding.UTF8, cancellationToken);
+            await AtomicFileWriter.WriteAllTextAsync(path, BuildCsv(entries), Encoding.UTF8, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await Share.Default.RequestAsync(new ShareFileRequest
             {
                 Title = AppStrings.JournalExportTitle,

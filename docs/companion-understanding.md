@@ -56,8 +56,8 @@ of prototypes); the gain comes from combining them. Embedding one message takes 
 **Embeddings are not integrated yet.** Reasons:
 
 - Even the best variant is wrong about half of the time on unseen text; the missing ingredient is labelled data, not the model.
-- Shipping needs ONNX Runtime (~15-20 MB extra in the APK) plus a ~118 MB model download (the downloader exists in
-  `Infrastructure/LocalModel`), and adds a heavy dependency for a partial gain.
+- Shipping an embeddings fallback would need ONNX Runtime (~15-20 MB extra in the APK) plus a ~118 MB model download, adding
+  a heavy dependency for a partial gain. The experiment is not part of the app or its runtime dependencies.
 - A wrong guess is costly in this domain ("you seem hurt" to someone who feels guilty). Any embedding-based guess should be
   *proposed and confirmed with one tap*, not assumed.
 

@@ -34,8 +34,7 @@ jobs:
           dotnet restore PsychologyApp.Infrastructure/PsychologyApp.Infrastructure.csproj
           dotnet restore PsychologyApp.Bootstrap/PsychologyApp.Bootstrap.csproj
           dotnet restore PsychologyApp.Presentation/PsychologyApp.Presentation.csproj
-          dotnet restore PsychologyApp.LocalLlm/PsychologyApp.LocalLlm.csproj
-          for proj in PsychologyApp.Domain PsychologyApp.Application PsychologyApp.Infrastructure PsychologyApp.Bootstrap PsychologyApp.Presentation PsychologyApp.LocalLlm; do
+          for proj in PsychologyApp.Domain PsychologyApp.Application PsychologyApp.Infrastructure PsychologyApp.Bootstrap PsychologyApp.Presentation; do
             dotnet list "$proj/$proj.csproj" package --vulnerable --include-transitive | tee "vuln-$proj.txt"
           done
           if grep -h -q "has the following vulnerable packages" vuln-*.txt; then
