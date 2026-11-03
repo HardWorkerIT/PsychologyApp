@@ -31,7 +31,9 @@ public sealed class AppStartupIdempotencyIntegrationTests : IAsyncLifetime
         IDatabaseInitializer initializer = _provider.GetRequiredService<IDatabaseInitializer>();
 
         await startup.InitializeAsync();
+        await startup.WarmupAsync();
         await startup.InitializeAsync();
+        await startup.WarmupAsync();
 
         await initializer.InitializeAsync();
 

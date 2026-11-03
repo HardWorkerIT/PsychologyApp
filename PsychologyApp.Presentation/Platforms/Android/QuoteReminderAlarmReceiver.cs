@@ -19,7 +19,7 @@ public sealed class QuoteReminderAlarmReceiver : BroadcastReceiver
 
         if (!AndroidNotificationPermission.CanPost(context))
         {
-            ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+            ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
             return;
         }
 
@@ -43,7 +43,7 @@ public sealed class QuoteReminderAlarmReceiver : BroadcastReceiver
         NotificationManagerCompat.From(context)?.Notify(QuoteReminderConstants.NotificationId, notification);
         tapIntent.Dispose();
 
-        ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

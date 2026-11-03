@@ -19,7 +19,7 @@ public sealed class ChatReminderAlarmReceiver : BroadcastReceiver
 
         if (!AndroidNotificationPermission.CanPost(context))
         {
-            ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+            ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
             return;
         }
 
@@ -43,7 +43,7 @@ public sealed class ChatReminderAlarmReceiver : BroadcastReceiver
         NotificationManagerCompat.From(context)?.Notify(ChatReminderConstants.NotificationId, notification);
         tapIntent.Dispose();
 
-        ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

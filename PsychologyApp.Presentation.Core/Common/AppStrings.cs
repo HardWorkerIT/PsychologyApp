@@ -523,6 +523,7 @@ public static partial class AppStrings
     public static string ProfileMoodNotesTitle => R(nameof(ProfileMoodNotesTitle));
     public static string PracticeGoHomeButton => R(nameof(PracticeGoHomeButton));
     public static string PracticeMoreButton => R(nameof(PracticeMoreButton));
+    public static string PracticeChooseAnother => R(nameof(PracticeChooseAnother));
     public static string PracticeNextCaption => R(nameof(PracticeNextCaption));
     public static string PracticeNextReason => R(nameof(PracticeNextReason));
     public static string PracticeHistoryTitle => R(nameof(PracticeHistoryTitle));

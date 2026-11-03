@@ -4,10 +4,9 @@ The assistant is shown as **AI chat** (ИИ-чат), the owner's choice of name.
 says it works on the phone without internet, and its answers about itself say it is a self-help assistant, not a person and not a
 doctor. It has no grammatical gender in its replies.
 
-The chat companion is an offline, on-device dialogue engine behind a messenger-style UI. Its decisions and actions are deterministic.
-On Android, an optional downloaded model may rephrase only the first reflective sentence in an ordinary English or Russian free-text turn; the
-reply guard drops unsafe or unrelated output, and scripted reflection is used on failure. Crisis turns remain deterministic.
-See [local-llm.md](local-llm.md) for model limits and evaluation results.
+The chat companion is an offline, on-device dialogue engine behind a messenger-style UI. Its decisions, wording, and actions are
+deterministic. The application has no local or cloud language-model runtime, model download, or model-backed reply path. Crisis
+turns are checked first and remain deterministic.
 
 ## Layers
 
@@ -39,8 +38,8 @@ saves the person's message and the whole reply in one transaction and updates th
    advice, asking to explain, why, is it normal, backchannel, laughter/emoji, good news, how are you, name, capabilities, "say that
    again", "skip". Social phrases count only when the message carries no feeling ("thanks, but I'm still anxious" is a statement).
 4. Anything else is a statement about a situation: quote one sentence back (only when the message has several), name the feeling, ask
-   one fitting question at a time, measure tension, summarise now and then, return to the first thing said, offer a practice. For an
-   ordinary English free-text turn, Android may rephrase the first reflection only; a deterministic reply is used for every decision.
+   one fitting question at a time, measure tension, summarise now and then, return to the first thing said, offer a practice. Replies
+   are selected and assembled by the deterministic dialogue engine.
 5. If the reply would repeat one of the last eight companion messages, it is drawn again (up to four times).
 
 `CompanionState` is an immutable record serialised to JSON with the chat, so a chat resumes exactly where it stopped.
@@ -56,7 +55,7 @@ Table `ChatMemory (MemoryKey, MemoryValue)`:
 | `helped:<TechniqueId>` | how many times the tension dropped after it |
 | `plan`, `plan_at` | a step the person decided on (their own words, cut to 160 characters) and when, in UTC |
 | `trauma_notes` | stuck points and triggers found in trauma work (their own words, at most 10 of each), for the summary for a specialist |
-| `topic:<key>` | the dates (UTC) of the chats where a person or an area of life came up (`person:Boss`, `theme:Work`), at most 8; the third chat on a topic within 30 days is named as a repeat ("“boss” has come up in 3 of our conversations this month"), once per chat, with the offer to look under it |
+| `topic:<key>` | the dates (UTC) of the chats where a person or an area of life came up (`person:Boss`, `theme:Work`), at most 8; dates older than 30 days are pruned on the next saved turn. The third chat on a topic within 30 days is named as a repeat ("“boss” has come up in 3 of our conversations this month"), once per chat, with the offer to look under it |
 
 "Delete all chats" keeps only `name`, `tried:` and `helped:` (its dialog promises the name and preferences); the rest was taken
 from the conversations and is deleted with them (`ChatMemoryKeys.OutlivesChats`). "Forget about you" clears the whole table.

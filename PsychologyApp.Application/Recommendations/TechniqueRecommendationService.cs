@@ -31,7 +31,11 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         TechniqueId.Hack,
         TechniqueId.Observer,
         TechniqueId.Anchor,
-        TechniqueId.Comparison
+        TechniqueId.Comparison,
+        TechniqueId.ThoughtRecord,
+        TechniqueId.SelfCompassion,
+        TechniqueId.BusyMind,
+        TechniqueId.MuscleRelax
     ];
 
     private static readonly TechniqueId[] AnxietyPool =
@@ -41,7 +45,8 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         TechniqueId.Grounding,
         TechniqueId.ThoughtRecord,
         TechniqueId.Observer,
-        TechniqueId.Anchor
+        TechniqueId.Anchor,
+        TechniqueId.BusyMind
     ];
 
     private static readonly TechniqueId[] BodyPool =
@@ -51,7 +56,8 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         TechniqueId.Experience,
         TechniqueId.Check,
         TechniqueId.Hack,
-        TechniqueId.Observer
+        TechniqueId.Observer,
+        TechniqueId.MuscleRelax
     ];
 
     private static readonly TechniqueId[] MoodPool =

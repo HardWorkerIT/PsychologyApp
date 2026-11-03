@@ -105,6 +105,12 @@
                     </today:TodayPracticeRowView.Behaviors>
                 </today:TodayPracticeRowView>
 
+                <ui:ButtonView
+                    IsVisible="{Binding HasNextPractice}"
+                    Variant="Secondary"
+                    BodyText="{Binding ChooseAnotherPracticeText}"
+                    TapCommand="{Binding ChooseAnotherPracticeCommand}" />
+
                 <Border Style="{StaticResource BrandCardStyle}">
                     <Border.Behaviors>
                         <behaviors:ListItemRevealBehavior RevealIndex="1" />

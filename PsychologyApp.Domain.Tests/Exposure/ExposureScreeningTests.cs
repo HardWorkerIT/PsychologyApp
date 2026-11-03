@@ -56,6 +56,7 @@ public sealed class ExposureScreeningTests
 
         Assert.True(ExposureScreening.IsCurrent(plan, screened.AddDays(27)));
         Assert.False(ExposureScreening.IsCurrent(plan, screened.AddDays(28)));
+        Assert.False(ExposureScreening.IsCurrent(plan, screened.AddMinutes(-1)));
         Assert.False(ExposureScreening.IsCurrent(plan with { Screening = ExposureScreeningResult.Specialist }, screened.AddDays(1)));
         Assert.False(ExposureScreening.IsCurrent(new ExposurePlan(), screened));
     }

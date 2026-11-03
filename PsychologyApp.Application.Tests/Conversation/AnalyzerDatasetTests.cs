@@ -78,6 +78,8 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
         int hits = 0;
         int guessed = 0;
         Dictionary<string, (int Total, int Correct)> byLabel = [];
+        Dictionary<string, int> predictedCounts = new(StringComparer.Ordinal);
+        Dictionary<(string Expected, string Actual), int> confusions = [];
         foreach (Item item in items)
         {
             CompanionEmotion emotion = analyzer.Analyze(item.Text).Emotion;
@@ -100,21 +102,39 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
             bool correct = emotion.ToString() == item.Label;
             (int total, int correctCount) = byLabel.GetValueOrDefault(item.Label);
             byLabel[item.Label] = (total + 1, correctCount + (correct ? 1 : 0));
+            predictedCounts[emotion.ToString()] = predictedCounts.GetValueOrDefault(emotion.ToString()) + 1;
             if (correct)
             {
                 hits++;
             }
-            else if (printMisses)
+            else
             {
-                output.WriteLine($"  [{item.Label} -> {emotion}] {item.Text}");
+                (string Expected, string Actual) key = (item.Label, emotion.ToString());
+                confusions[key] = confusions.GetValueOrDefault(key) + 1;
+                if (printMisses)
+                {
+                    output.WriteLine($"  [{item.Label} -> {emotion}] {item.Text}");
+                }
             }
         }
 
         double accuracy = (double)hits / items.Length;
         output.WriteLine($"{name}: offline lexicon + Russian suggestion gate (margin {minGuessMargin:0}) {hits}/{items.Length} = {accuracy:P0}; suggestions used {guessed}");
-        foreach ((string label, (int total, int correct)) in byLabel.OrderBy(pair => pair.Key).Where(_ => printClassMetrics))
+        foreach ((string label, (int total, int correct)) in byLabel.OrderBy(pair => pair.Key, StringComparer.Ordinal).Where(_ => printClassMetrics))
         {
-            output.WriteLine($"  {label}: {correct}/{total} = {(double)correct / total:P0}");
+            int predicted = predictedCounts.GetValueOrDefault(label);
+            double precision = predicted == 0 ? 0 : (double)correct / predicted;
+            double recall = (double)correct / total;
+            double f1 = precision + recall == 0 ? 0 : 2 * precision * recall / (precision + recall);
+            output.WriteLine($"  {label}: precision {precision:P0}, recall {recall:P0}, F1 {f1:P0} ({correct}/{total})");
+        }
+
+        foreach (((string expected, string actual), int count) in confusions
+            .OrderByDescending(pair => pair.Value)
+            .ThenBy(pair => pair.Key.Expected, StringComparer.Ordinal)
+            .Take(10))
+        {
+            output.WriteLine($"  Confusion {expected} -> {actual}: {count}");
         }
 
         return accuracy;

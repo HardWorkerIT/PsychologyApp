@@ -34,7 +34,7 @@ public sealed record CompanionReply(
 /// quotes their own words back, notices who the story is about and mixed feelings, asks one fitting question at a time,
 /// measures tension on 0..10, summarises now and then, returns to the first thing they said and offers a practice when it makes sense.
 /// Every decision is derived from <see cref="CompanionState"/> plus the new input, so a chat resumes after a restart and behaviour is testable.
-/// No language model is involved.
+/// Its decisions follow the explicit companion state and the reviewed dialogue rules.
 /// </summary>
 public sealed partial class CompanionDialogue(
     ISituationAnalyzer analyzer,
@@ -588,7 +588,8 @@ public sealed partial class CompanionDialogue(
         CompanionEmotion previousEmotion = ParseEmotion(state.Emotion);
         CompanionEvent previousEvent = CompanionCaseContent.ParseEvent(state.Event);
         bool emotionWasCleared = (state.EmotionExplicitlyCleared && previousEmotion == CompanionEmotion.Unknown)
-            || analysis.NegatedEmotions.Contains(previousEmotion);
+            || analysis.NegatedEmotions.Contains(previousEmotion)
+            || analysis.EmotionAttributedToOther;
         bool eventWasNegated = analysis.NegatedEvents.Contains(previousEvent) && analysis.Event != previousEvent;
         CompanionEmotion emotion = analysis.Emotion != CompanionEmotion.Unknown
             ? analysis.Emotion
@@ -620,7 +621,9 @@ public sealed partial class CompanionDialogue(
         // A message that names no feeling continues the one we know; only when nothing is known yet are the recent messages read together.
         CompanionEmotion previousEmotion = ParseEmotion(previous.Emotion);
         bool previousEmotionWasNegated = analysis.NegatedEmotions.Contains(previousEmotion);
-        bool emotionWasCleared = (previous.EmotionExplicitlyCleared && previousEmotion == CompanionEmotion.Unknown) || previousEmotionWasNegated;
+        bool emotionWasCleared = (previous.EmotionExplicitlyCleared && previousEmotion == CompanionEmotion.Unknown)
+            || previousEmotionWasNegated
+            || analysis.EmotionAttributedToOther;
         if (analysis.Emotion == CompanionEmotion.Unknown && analysis.NegatedEmotions.Count == 0 && !emotionWasCleared && previousEmotion == CompanionEmotion.Unknown)
         {
             SituationAnalysis recent = analyzer.Analyze(string.Join(' ', state.RecentTexts));
@@ -1179,7 +1182,7 @@ public sealed partial class CompanionDialogue(
 
         IReadOnlyList<TechniqueId> suggestions = calming && emotion is not (CompanionEmotion.Panic or CompanionEmotion.Anxiety)
             ? [TechniqueId.Breathing, TechniqueId.Grounding]
-            : TechniqueSuggester.Suggest(analysis with { Emotion = emotion });
+            : [.. TechniqueSuggester.Recommend(analysis with { Emotion = emotion }).Select(item => item.Technique)];
 
         // What has helped this person before comes first, mentioned once per chat. A panic attack gets the standard help, not an experiment.
         if (!state.PreferredMentioned && emotion != CompanionEmotion.Panic

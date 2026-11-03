@@ -24,6 +24,17 @@ public class CompanionDialogueTests
         d.Respond(state, new CompanionInput.QuickReply(new ChatQuickReply(kind, label, payload)));
 
     [Fact]
+    public void Does_not_reflect_another_persons_emotion_as_the_users()
+    {
+        CompanionReply reply = Say(Create(), new CompanionState(), "Мама тревожится из-за переезда");
+
+        Assert.Equal(CompanionEmotion.Unknown, reply.Emotion);
+        Assert.True(reply.State.QuestionPending);
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("вам тревожно", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("вы тревожитесь", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void A_numeric_value_outside_the_practice_catalog_does_not_create_a_navigation_action()
     {
         CompanionReply reply = Tap(Create(), new CompanionState { Emotion = "Anxiety" }, ChatQuickReplyKinds.Practice, "Start", "999");
@@ -248,6 +259,15 @@ public class CompanionDialogueTests
         Assert.Equal("Grounding", reply.QuickReplies[0].Payload);
         Assert.Contains(reply.QuickReplies, c => c.Payload == "resource:somatic");
         Assert.Equal(ChatQuickReplyKinds.More, reply.QuickReplies[^1].Kind);
+    }
+
+    [Fact]
+    public void A_physical_sensation_already_named_is_not_asked_about_again()
+    {
+        CompanionReply reply = Say(Create(), new CompanionState(), "Перед встречей чувствую тяжесть в груди и переживаю");
+
+        Assert.Contains("body", reply.State.AskedQuestions);
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("Где в теле", StringComparison.Ordinal));
     }
 
     [Fact]

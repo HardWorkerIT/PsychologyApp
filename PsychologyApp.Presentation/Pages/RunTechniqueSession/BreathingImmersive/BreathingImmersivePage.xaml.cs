@@ -39,5 +39,6 @@ public partial class BreathingImmersivePage : ContentPage
         Glow.Opacity = ReduceMotion.IsEnabled ? GlowMin : GlowMin + (GlowMax - GlowMin) * size;
     }
 
-    private async void OnCloseTapped(object? sender, TappedEventArgs e) => await Navigation.PopModalAsync();
+    private void OnCloseTapped(object? sender, TappedEventArgs e) =>
+        SafeAsync.Run(() => Navigation.PopModalAsync());
 }

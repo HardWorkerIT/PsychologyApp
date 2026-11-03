@@ -1,5 +1,4 @@
 using PsychologyApp.Application.Conversation;
-using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Practice;
 using PsychologyApp.Domain.Practice;
 using Xunit;
@@ -8,21 +7,7 @@ namespace PsychologyApp.Application.Tests.Practice;
 
 public class SupportPhraseSuggesterTests
 {
-    private sealed class FakeModel(string? reply, bool available = true, bool fail = false) : ILanguageModel
-    {
-        public int Calls { get; private set; }
-
-        public bool IsAvailable => available;
-
-        public Task<string?> GenerateAsync(LlmRequest request, CancellationToken cancellationToken = default)
-        {
-            Calls++;
-            return fail ? throw new InvalidOperationException("model crashed") : Task.FromResult(reply);
-        }
-    }
-
-    private static SupportPhraseSuggester Create(ILanguageModel? model = null) =>
-        new(model ?? new NullLanguageModel(), new KeywordCrisisDetector());
+    private static SupportPhraseSuggester Create() => new(new KeywordCrisisDetector());
 
     [Theory]
     [InlineData(EntryFieldRole.None)]
@@ -85,54 +70,9 @@ public class SupportPhraseSuggesterTests
         Assert.Contains(expected, await Create().SuggestAsync(EntryFieldRole.SelfKindness, "encore raté", language));
 
     [Fact]
-    public async Task The_model_is_not_asked_in_a_language_the_reply_guard_cannot_read()
-    {
-        // The guard that drops advice and dismissive lines knows only Russian and English words.
-        FakeModel model = new("- Calme-toi simplement");
-
-        IReadOnlyList<string> phrases = await Create(model).SuggestAsync(EntryFieldRole.Reframe, "Tout est fichu", "fr");
-
-        Assert.Equal(0, model.Calls);
-        Assert.Contains("C'est une pensée, pas un fait", phrases);
-    }
-
-    [Fact]
     public async Task Nothing_is_offered_when_the_context_reads_as_a_crisis()
     {
         Assert.Empty(await Create().SuggestAsync(EntryFieldRole.SelfKindness, "не хочу жить", "ru"));
     }
 
-    [Fact]
-    public async Task Model_variants_that_pass_the_guard_come_first()
-    {
-        FakeModel model = new("- Я не знаю наверняка, что обо мне подумают коллеги\n- Попробуй просто успокоиться и не волнуйся");
-
-        IReadOnlyList<string> phrases = await Create(model).SuggestAsync(EntryFieldRole.Reframe, "Коллеги меня осудят", "ru");
-
-        Assert.Equal(1, model.Calls);
-        Assert.Equal("Я не знаю наверняка, что обо мне подумают коллеги.", phrases[0].TrimEnd('.') + ".");
-        Assert.DoesNotContain(phrases, p => p.Contains("Попробуй", StringComparison.Ordinal));
-    }
-
-    [Fact]
-    public async Task A_failing_or_missing_model_falls_back_to_reviewed_phrases()
-    {
-        IReadOnlyList<string> failed = await Create(new FakeModel(null, fail: true)).SuggestAsync(EntryFieldRole.Reframe, "Всё пропало", "ru");
-        FakeModel missing = new("anything", available: false);
-        IReadOnlyList<string> absent = await Create(missing).SuggestAsync(EntryFieldRole.Reframe, "Всё пропало", "ru");
-
-        Assert.NotEmpty(failed);
-        Assert.NotEmpty(absent);
-        Assert.Equal(0, missing.Calls);
-    }
-
-    [Fact]
-    public async Task Kind_words_to_a_friend_never_ask_the_model()
-    {
-        FakeModel model = new("Ты молодец");
-
-        await Create(model).SuggestAsync(EntryFieldRole.Kindness, "ошибся на работе", "ru");
-
-        Assert.Equal(0, model.Calls);
-    }
 }

@@ -56,6 +56,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         });
         MorePracticeCommand = new AsyncCommand(MorePracticeAsync);
         NextPracticeCommand = new AsyncCommand(StartNextPracticeAsync);
+        ChooseAnotherPracticeCommand = new AsyncCommand(() => _navigationService.GoBackAsync());
         GoHomeCommand = new AsyncCommand(() => _navigationService.GoToRootAsync());
         CrisisCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
         ToggleAnswersCommand = new Command(() => IsAnswersExpanded = !IsAnswersExpanded);
@@ -96,6 +97,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public string ActiveDaysLabelText => AppStrings.ProfileActiveDaysLabel;
     public bool HasActiveDays => ActiveDays > 0;
     public string MorePracticeText => AppStrings.PracticeMoreButton;
+    public string ChooseAnotherPracticeText => AppStrings.PracticeChooseAnother;
     public string GoHomeText => AppStrings.PracticeGoHomeButton;
     public string ReflectionQuestion => AppStrings.PracticeReflectionQuestion;
     public string ReflectionNotePlaceholder => AppStrings.PracticeReflectionNotePlaceholder;
@@ -163,7 +165,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
 
     public string AnswersToggleGlyph => IsAnswersExpanded ? "−" : "+";
 
-    private bool _isCheckInExpanded;
+    private bool _isCheckInExpanded = true;
     public bool IsCheckInExpanded
     {
         get => _isCheckInExpanded;
@@ -277,6 +279,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public ICommand RecordMoodCommand { get; }
     public ICommand MorePracticeCommand { get; }
     public ICommand NextPracticeCommand { get; }
+    public ICommand ChooseAnotherPracticeCommand { get; }
     public ICommand GoHomeCommand { get; }
     public ICommand CrisisCommand { get; }
     public ICommand ToggleAnswersCommand { get; }
@@ -294,6 +297,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             nameof(ActiveDaysLabelText),
             nameof(HasActiveDays),
             nameof(MorePracticeText),
+            nameof(ChooseAnotherPracticeText),
             nameof(GoHomeText),
             nameof(ReflectionQuestion),
             nameof(ReflectionNotePlaceholder),

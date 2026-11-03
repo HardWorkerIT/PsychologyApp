@@ -99,6 +99,27 @@ public sealed class MoodReminderCoordinatorTests
     }
 
     [Fact]
+    public async Task RescheduleAsync_DoesNotRequestPermissionOrCancelReminder()
+    {
+        var store = new InMemoryUserPreferencesStore();
+        store.Save(new UserPreferencesState
+        {
+            HasCompletedOnboarding = true,
+            MoodRemindersEnabled = true,
+            MoodReminderHour = 20
+        });
+
+        var scheduler = new RecordingMoodReminderScheduler(permissionGranted: false);
+        var coordinator = new MoodReminderCoordinator(new Mock<IUserProgressService>().Object, store, scheduler);
+
+        await coordinator.RescheduleAsync();
+
+        Assert.False(scheduler.WasPermissionRequested);
+        Assert.True(scheduler.WasScheduled);
+        Assert.False(scheduler.WasCancelled);
+    }
+
+    [Fact]
     public void SettingsPresenter_BuildState_PersistsMoodReminderFields()
     {
         var presenter = new PsychologyApp.Presentation.Features.ManageProfile.SettingsPreferencesPresenter();
@@ -137,12 +158,16 @@ public sealed class MoodReminderCoordinatorTests
         public bool IsSupported => true;
         public bool WasScheduled { get; private set; }
         public bool WasCancelled { get; private set; }
+        public bool WasPermissionRequested { get; private set; }
         public string? LastTitle { get; private set; }
         public string? LastBody { get; private set; }
         public DateTime? LastFireAt { get; private set; }
 
-        public Task<bool> RequestPermissionIfNeededAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult(permissionGranted);
+        public Task<bool> RequestPermissionIfNeededAsync(CancellationToken cancellationToken = default)
+        {
+            WasPermissionRequested = true;
+            return Task.FromResult(permissionGranted);
+        }
 
         public void Schedule(DateTime fireAtLocal, string title, string body)
         {

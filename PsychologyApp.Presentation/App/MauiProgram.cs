@@ -19,7 +19,6 @@ using PsychologyApp.Presentation.Shared.Lib.Navigation;
 using PsychologyApp.Presentation.App.Routes;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 #if ANDROID
-using PsychologyApp.Infrastructure.LocalModel;
 using PsychologyApp.Presentation.Platforms.Android;
 #endif
 
@@ -82,16 +81,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<MauiTestAssetReader>();
         builder.Services.AddSingleton<ITestAssetReader>(sp => sp.GetRequiredService<MauiTestAssetReader>());
         builder.Services.AddSingleton<IConversationScenarioProvider, MauiConversationScenarioProvider>();
-#if ANDROID
-        builder.Services.AddSingleton<ILocalModelInstaller>(_ => new HttpLocalModelInstaller(
-            new HttpClient { Timeout = Timeout.InfiniteTimeSpan },
-            LocalModelCatalog.Default,
-            Path.Combine(FileSystem.AppDataDirectory, "llm")));
-        builder.Services.AddSingleton<IDeviceCapabilities, AndroidDeviceCapabilities>();
-        builder.Services.AddSingleton<ILanguageModel, AndroidOnnxLanguageModel>();
-#else
-        builder.Services.AddSingleton<ILanguageModel, NullLanguageModel>();
-#endif
         builder.Services.AddSingleton<MauiTestCatalogProvider>();
         builder.Services.AddPsychologyAppCachedTestCatalog(sp =>
             new CachedTestCatalogProvider(

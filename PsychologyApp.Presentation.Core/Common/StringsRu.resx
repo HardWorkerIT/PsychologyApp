@@ -216,48 +216,6 @@
   <data name="SettingsRemindersSection" xml:space="preserve">
     <value>Напоминания</value>
   </data>
-  <data name="SettingsLocalAiSection" xml:space="preserve">
-    <value>ИИ на устройстве</value>
-  </data>
-  <data name="SettingsLocalAiDescription" xml:space="preserve">
-    <value>Дополнительная модель Qwen3 для русских и английских диалогов. Она скачивается только после подтверждения; ваши сообщения остаются на этом устройстве. Офлайн-диалог доступен и без неё.</value>
-  </data>
-  <data name="SettingsLocalAiDownload" xml:space="preserve">
-    <value>Скачать модель</value>
-  </data>
-  <data name="SettingsLocalAiDelete" xml:space="preserve">
-    <value>Удалить модель</value>
-  </data>
-  <data name="SettingsLocalAiNotInstalled" xml:space="preserve">
-    <value>Модель не скачана. Офлайн-диалог доступен и без неё.</value>
-  </data>
-  <data name="SettingsLocalAiInstalled" xml:space="preserve">
-    <value>Модель готова. В русских и английских диалогах можно использовать локальную генерацию.</value>
-  </data>
-  <data name="SettingsLocalAiNotEnoughMemory" xml:space="preserve">
-    <value>На устройстве недостаточно памяти для модели. Офлайн-диалог останется доступен.</value>
-  </data>
-  <data name="SettingsLocalAiNotEnoughStorage" xml:space="preserve">
-    <value>Недостаточно свободного места для скачивания модели.</value>
-  </data>
-  <data name="SettingsLocalAiDownloading" xml:space="preserve">
-    <value>Скачиваем модель…</value>
-  </data>
-  <data name="SettingsLocalAiProgress" xml:space="preserve">
-    <value>Скачиваем модель… {0}%</value>
-  </data>
-  <data name="SettingsLocalAiConsentTitle" xml:space="preserve">
-    <value>Скачать локальную модель?</value>
-  </data>
-  <data name="SettingsLocalAiConsentMessage" xml:space="preserve">
-    <value>{0} займёт около {1} ГБ и будет скачана с Hugging Face. Ваши сообщения никуда не отправляются. Прерванное скачивание можно продолжить. Условия модели: {2}</value>
-  </data>
-  <data name="SettingsLocalAiDeleteTitle" xml:space="preserve">
-    <value>Удалить локальную модель?</value>
-  </data>
-  <data name="SettingsLocalAiDeleteMessage" xml:space="preserve">
-    <value>Файлы модели будут удалены с устройства. Офлайн-диалог продолжит работать.</value>
-  </data>
   <data name="SettingsPracticeRemindersLabel" xml:space="preserve">
     <value>Напоминания о практике</value>
   </data>
@@ -1043,6 +1001,9 @@
   </data>
   <data name="PracticeMoreButton" xml:space="preserve">
     <value>Ещё практика</value>
+  </data>
+  <data name="PracticeChooseAnother" xml:space="preserve">
+    <value>Выбрать другую практику</value>
   </data>
   <data name="PracticeNextCaption" xml:space="preserve">
     <value>Следующая практика</value>

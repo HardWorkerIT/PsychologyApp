@@ -1,12 +1,10 @@
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Features.ManageProfile;
-using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
-using PsychologyApp.Application.Conversation.Companion;
 
 namespace PsychologyApp.Presentation.Pages.ManageProfile.ProfileSettings;
 
@@ -38,11 +36,7 @@ public partial class SettingsViewModel : BaseViewModel
         IQuoteReminderCoordinator quoteReminderCoordinator,
         IMoodReminderCoordinator moodReminderCoordinator,
         IChatReminderCoordinator chatReminderCoordinator,
-        IPracticeReminderScheduler practiceReminderScheduler,
-        ILocalModelInstaller? localModelInstaller = null,
-        IDeviceCapabilities? deviceCapabilities = null,
-        ILanguageModel? languageModel = null,
-        IDialogService? dialogService = null)
+        IPracticeReminderScheduler practiceReminderScheduler)
     {
         BindPreferences(userPreferencesStore);
         _navigationService = navigationService;
@@ -54,10 +48,6 @@ public partial class SettingsViewModel : BaseViewModel
         _moodReminderCoordinator = moodReminderCoordinator;
         _chatReminderCoordinator = chatReminderCoordinator;
         _areRemindersSupported = practiceReminderScheduler.IsSupported;
-        _localModelInstaller = localModelInstaller ?? new NullLocalModelInstaller();
-        _deviceCapabilities = deviceCapabilities ?? new NullDeviceCapabilities();
-        _languageModel = languageModel ?? new NullLanguageModel();
-        _dialogService = dialogService;
         ModuleName = AppStrings.ShellTabPractice;
         PageName = AppStrings.SettingsTitle;
 
@@ -69,7 +59,6 @@ public partial class SettingsViewModel : BaseViewModel
 
         Finish = new AsyncCommand(SaveAndGoBackAsync);
         ReplayOnboardingCommand = new AsyncCommand(ReplayOnboardingAsync);
-        LocalModelActionCommand = new AsyncCommand(ManageLocalModelAsync);
     }
 
     public ICommand ReplayOnboardingCommand { get; }

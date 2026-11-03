@@ -40,7 +40,7 @@ public sealed record DialogueAction(
 
 /// <summary>
 /// A turn-based dialogue the chat UI can drive without knowing whether it is a scripted scenario or the companion.
-/// Asynchronous because the companion may wait for an on-device language model.
+/// Asynchronous so implementations can perform cancellable application work without blocking the caller.
 /// </summary>
 public interface IDialogueSession
 {

@@ -31,6 +31,7 @@ public sealed class AppStartupServiceIntegrationTests : IAsyncLifetime
         IQuotService quotService = _provider.GetRequiredService<IQuotService>();
 
         await startup.InitializeAsync();
+        await startup.WarmupAsync();
 
         IEnumerable<PsychologyApp.Application.Models.QuotDTO> quotes =
             await quotService.GetAllAsync(5);

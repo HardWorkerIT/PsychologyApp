@@ -30,6 +30,28 @@ public class LexiconSituationAnalyzerTests
     }
 
     [Theory]
+    [InlineData("Мама очень тревожится из-за переезда")]
+    [InlineData("Он меня разозлил своим поступком")]
+    [InlineData("My mother is anxious about the move")]
+    [InlineData("He made me angry with what he said")]
+    public void Does_not_attribute_another_persons_emotion_to_the_user(string text)
+    {
+        SituationAnalysis analysis = _analyzer.Analyze(text);
+
+        Assert.Equal(CompanionEmotion.Unknown, analysis.Emotion);
+        Assert.True(analysis.EmotionAttributedToOther);
+    }
+
+    [Fact]
+    public void Asks_instead_of_picking_between_the_users_and_another_persons_emotions()
+    {
+        SituationAnalysis analysis = _analyzer.Analyze("Мама тревожится, а я злюсь");
+
+        Assert.Equal(CompanionEmotion.Unknown, analysis.Emotion);
+        Assert.True(analysis.EmotionAttributedToOther);
+    }
+
+    [Theory]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("Сегодня был дождь и я купил хлеб")]
@@ -124,151 +146,6 @@ public class LexiconSituationAnalyzerTests
     }
 }
 
-public class CompanionReplyGuardTests
-{
-    [Fact]
-    public void Clean_russian_reply_passes_untouched() =>
-        Assert.Equal(
-            "Похоже, вам тяжело. Это понятная реакция.",
-            CompanionReplyGuard.Sanitize("Похоже, вам тяжело. Это понятная реакция.", english: false));
-
-    [Fact]
-    public void Formatting_and_questions_are_stripped()
-    {
-        string? result = CompanionReplyGuard.Sanitize("**Слышу, как вам непросто.**\n- Это очень выматывает.\nЧто вы чувствуете?", english: false);
-
-        Assert.Equal("Слышу, как вам непросто. Это очень выматывает.", result);
-    }
-
-    [Fact]
-    public void Reply_is_capped_at_three_sentences()
-    {
-        string? result = CompanionReplyGuard.Sanitize("Слышу вас очень хорошо. Это правда непросто. Вы много выдержали. Дальше будет проще. Отдыхайте.", english: false);
-
-        Assert.Equal("Слышу вас очень хорошо. Это правда непросто. Вы много выдержали.", result);
-    }
-
-    [Theory]
-    [InlineData("У вас депрессия, вам нужно лечение.")]
-    [InlineData("Попробуйте принимайте антидепрессанты.")]
-    [InlineData("Это похоже на тревожное расстройство.")]
-    [InlineData("Как ИИ, я не могу вам помочь.")]
-    [InlineData("Подробнее на http://example.com")]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData("Только вопрос?")]
-    public void Unsafe_or_empty_replies_are_rejected(string raw)
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
-    }
-
-
-    [Theory]
-    [InlineData("У тебя сейчас очень тяжело на душе, это понятно.")]
-    [InlineData("Похоже, вам тяжело, и вы чувствуешь усталость.")]
-    [InlineData("Вы справишься с этим, не переживай.")]
-    [InlineData("Слышу, как вам тревожно. Не бойтесь, это пройдёт.")]
-    [InlineData("Слышу, как вам тревожно. Попробуйте немного отдохнуть.")]
-    [InlineData("Слышу вас, и мне тоже очень тяжело от этого.")]
-    [InlineData("Всё будет хорошо, вы справитесь с этой встречей.")]
-    public void Advice_dismissals_and_informal_register_are_rejected(string raw)
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
-    }
-
-    [Theory]
-    [InlineData("Вы действительно злюсь — это нормально. Коллега присвоил вашу работу, и это больно.")]
-    [InlineData("Вы сейчас сильно бегут, но это очень трудно. Коллега присвоил вашу работу.")]
-    [InlineData("Вы перешёл в другой город, и теперь вам одиноко. Это правда непросто.")]
-    [InlineData("Вы чувствуетесь обидно, когда муж забывает о важном. Это действительно тяжело.")]
-    [InlineData("После этой ситуации отказ от жизни — это нормально.")]
-    [InlineData("Вы чувствуете себя виноватой, и это нормально.")]
-    [InlineData("Вы точно правы — эта злость показывает, что нужно действовать.")]
-    [InlineData("Постоянное напряжение плохо для ваше здоровье. Это действительно тяжело.")]
-    public void Ungrammatical_or_minimizing_russian_model_replies_are_rejected(string raw)
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
-    }
-
-    [Fact]
-    public void Tokenizer_artifacts_and_repeated_punctuation_are_cleaned()
-    {
-        string? result = CompanionReplyGuard.Sanitize("Слышу, как вам тяжело перед встречей.▁▁Это очень выматывает..", english: false);
-
-        Assert.Equal("Слышу, как вам тяжело перед встречей. Это очень выматывает.", result);
-    }
-
-    [Fact]
-    public void Too_short_replies_are_rejected()
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize("Понимаю вас.", english: false));
-    }
-
-    [Fact]
-    public void Reply_must_be_about_what_the_person_wrote_when_the_text_is_given()
-    {
-        const string user = "Завтра важная презентация, я очень тревожусь";
-
-        Assert.NotNull(CompanionReplyGuard.Sanitize("Слышу, как вам тревожно перед презентацией. Это очень выматывает.", english: false, user));
-        Assert.Null(CompanionReplyGuard.Sanitize("Солнце в комнате кажется таким тусклым и серым сегодня.", english: false, user));
-    }
-
-    [Fact]
-    public void Generic_empathy_words_do_not_make_an_invented_story_match_the_user_topic()
-    {
-        const string user = "Я чувствую себя виноватой из-за пропущенного дедлайна.";
-        const string unrelated = "Видимо, ссора с мамой вызвала у вас ощущение, что вы не смогли выразить свои чувства. Это тяжело переживать.";
-
-        Assert.Null(CompanionReplyGuard.Sanitize(unrelated, english: false, user));
-    }
-
-
-    [Fact]
-    public void Reasoning_blocks_and_special_tokens_are_removed()
-    {
-        string? result = CompanionReplyGuard.Sanitize(
-            "<think>\nОна расстроена, надо ответить мягко.\n</think>\n\nСлышу, как вам тяжело перед встречей. Это очень выматывает.<|im_end|>",
-            english: false);
-
-        Assert.Equal("Слышу, как вам тяжело перед встречей. Это очень выматывает.", result);
-    }
-
-    [Fact]
-    public void Unfinished_reasoning_block_rejects_the_reply()
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize("<think>\nНадо подумать, что ответить этому человеку и как именно", english: false));
-    }
-
-
-    [Theory]
-    [InlineData("Слышу, как вам тяжело. Гrief — это чувство, которое сложно нести.")]
-    [InlineData("Видите, как тяжело, когда в семье nobody делает своё.")]
-    [InlineData("Слышу вас очень хорошо. Просто держите себя в руках сейчас.")]
-    public void Code_switching_and_disguised_advice_are_rejected_in_russian(string raw)
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize(raw, english: false));
-    }
-
-    [Fact]
-    public void Latin_words_are_fine_in_english_replies()
-    {
-        Assert.NotNull(CompanionReplyGuard.Sanitize("It sounds like the exam is weighing heavily on you right now.", english: true));
-    }
-
-    [Fact]
-    public void Wrong_language_is_rejected()
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize("I hear that this is hard for you.", english: false));
-        Assert.Null(CompanionReplyGuard.Sanitize("Слышу, что вам тяжело.", english: true));
-        Assert.NotNull(CompanionReplyGuard.Sanitize("I hear that this is hard for you.", english: true));
-    }
-
-    [Fact]
-    public void Medication_talk_is_rejected_in_english()
-    {
-        Assert.Null(CompanionReplyGuard.Sanitize("You should ask about medication for this.", english: true));
-    }
-}
 
 public class CompanionContentCatalogTests
 {

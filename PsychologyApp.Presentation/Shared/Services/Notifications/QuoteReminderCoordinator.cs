@@ -21,12 +21,25 @@ public sealed class QuoteReminderCoordinator(
             return Task.CompletedTask;
         }
 
-        return SyncScheduledAsync(state, cancellationToken);
+        return SyncScheduledAsync(state, askPermission: true, cancellationToken);
     }
 
-    private async Task SyncScheduledAsync(UserPreferencesState state, CancellationToken cancellationToken)
+    public Task RescheduleAsync(CancellationToken cancellationToken = default)
     {
-        if (!await scheduler.RequestPermissionIfNeededAsync(cancellationToken))
+        UserPreferencesState state = preferencesStore.Load();
+
+        if (!QuoteReminderPolicy.ShouldSchedule(state.QuoteRemindersEnabled, state.HasCompletedOnboarding))
+        {
+            scheduler.Cancel();
+            return Task.CompletedTask;
+        }
+
+        return SyncScheduledAsync(state, askPermission: false, cancellationToken);
+    }
+
+    private async Task SyncScheduledAsync(UserPreferencesState state, bool askPermission, CancellationToken cancellationToken)
+    {
+        if (askPermission && !await scheduler.RequestPermissionIfNeededAsync(cancellationToken))
         {
             scheduler.Cancel();
             return;

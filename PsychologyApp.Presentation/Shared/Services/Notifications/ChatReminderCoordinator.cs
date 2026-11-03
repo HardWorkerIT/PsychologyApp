@@ -11,7 +11,11 @@ public sealed class ChatReminderCoordinator(
     IUserPreferencesStore preferencesStore,
     IChatReminderScheduler scheduler) : IChatReminderCoordinator
 {
-    public async Task SyncAsync(CancellationToken cancellationToken = default)
+    public Task SyncAsync(CancellationToken cancellationToken = default) => SyncAsync(askPermission: true, cancellationToken);
+
+    public Task RescheduleAsync(CancellationToken cancellationToken = default) => SyncAsync(askPermission: false, cancellationToken);
+
+    private async Task SyncAsync(bool askPermission, CancellationToken cancellationToken)
     {
         UserPreferencesState state = preferencesStore.Load();
 
@@ -22,7 +26,7 @@ public sealed class ChatReminderCoordinator(
             return;
         }
 
-        if (!await scheduler.RequestPermissionIfNeededAsync(cancellationToken))
+        if (askPermission && !await scheduler.RequestPermissionIfNeededAsync(cancellationToken))
         {
             scheduler.Cancel();
             return;

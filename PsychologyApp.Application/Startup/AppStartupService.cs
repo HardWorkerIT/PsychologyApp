@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Abstractions.Startup;
 using PsychologyApp.Application.Configuration;
+using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Practice;
 using PsychologyApp.Application.Quot;
 using PsychologyApp.Application.Statistic;
@@ -19,19 +20,42 @@ public sealed class AppStartupService(
     ILogger<AppStartupService> logger,
     IStatisticService? statistics = null) : IAppStartupService
 {
+    private readonly object _warmupLock = new();
+    private Task? _warmupTask;
+
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         await databaseInitializer.InitializeAsync(cancellationToken).ConfigureAwait(false);
+    }
 
-        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+    public Task WarmupAsync()
+    {
+        lock (_warmupLock)
+        {
+            return _warmupTask ??= Task.Run(InitializeOptionalWorkAsync);
+        }
+    }
+
+    private async Task InitializeOptionalWorkAsync()
+    {
+        using var timeoutSource = new CancellationTokenSource();
         timeoutSource.CancelAfter(settings.Value.MiddleTimeoutMs);
 
-        await Task.WhenAll(
-            SeedQuotesAsync(timeoutSource.Token),
-            PrewarmTechniqueCatalogAsync(timeoutSource.Token)).ConfigureAwait(false);
-
-        await PruneStatisticsAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await Task.WhenAll(
+                SeedQuotesAsync(timeoutSource.Token),
+                PrewarmTechniqueCatalogAsync(timeoutSource.Token),
+                PrewarmEmotionGuesserAsync(),
+                PruneStatisticsAsync(timeoutSource.Token)).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Optional startup warmup failed; app can continue.");
+        }
     }
+
+    private static Task PrewarmEmotionGuesserAsync() => Task.Run(() => _ = EmotionGuesser.Bundled);
 
     /// <summary>Page-visit history is written on every screen view and read by nothing but a distinct-page count: keep 90 days of it.</summary>
     private async Task PruneStatisticsAsync(CancellationToken cancellationToken)

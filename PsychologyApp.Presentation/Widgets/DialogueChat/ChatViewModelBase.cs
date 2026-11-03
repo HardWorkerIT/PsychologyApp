@@ -60,31 +60,6 @@ public abstract class ChatViewModelBase : BaseViewModel
 
     public bool HasSuggestions => Suggestions.Count > 0;
 
-    /// <summary>
-    /// The chips laid out in two rows that scroll sideways together: a long list (twenty things to see) shows twice as many at once
-    /// without taking the conversation's screen. Up to five chips stay in one row.
-    /// </summary>
-    public ObservableCollection<DialogueSuggestionItem> SuggestionsFirstRow { get; } = [];
-
-    public ObservableCollection<DialogueSuggestionItem> SuggestionsSecondRow { get; } = [];
-
-    public bool HasSecondSuggestionRow => SuggestionsSecondRow.Count > 0;
-
-    private const int OneRowChips = 5;
-
-    private void LayoutSuggestionRows()
-    {
-        SuggestionsFirstRow.Clear();
-        SuggestionsSecondRow.Clear();
-        bool twoRows = Suggestions.Count > OneRowChips;
-        for (int i = 0; i < Suggestions.Count; i++)
-        {
-            (twoRows && i % 2 == 1 ? SuggestionsSecondRow : SuggestionsFirstRow).Add(Suggestions[i]);
-        }
-
-        OnPropertyChanged(nameof(HasSecondSuggestionRow));
-    }
-
     public IReadOnlyList<DialogueRatingItem> RatingItems { get; }
 
     public ICommand BackCommand { get; }
@@ -186,7 +161,7 @@ public abstract class ChatViewModelBase : BaseViewModel
             return;
         }
 
-        await ShowTurnAsync(await AwaitModelAsync(_session.StartAsync(Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session.StartAsync(Lifetime)));
     }
 
     /// <summary>Called when the page goes away: stops typing delays and cancels any pending model call.</summary>
@@ -263,7 +238,7 @@ public abstract class ChatViewModelBase : BaseViewModel
         DraftText = string.Empty;
         AppendMessage(text, isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitTextAsync(text, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitTextAsync(text, Lifetime)));
     }
 
     private async Task ChooseAsync(int index)
@@ -276,18 +251,18 @@ public abstract class ChatViewModelBase : BaseViewModel
 
         AppendMessage(choice.Label, isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitChoiceAsync(index, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitChoiceAsync(index, Lifetime)));
     }
 
     private async Task RateAsync(int rating)
     {
         AppendMessage(rating.ToString(CultureInfo.InvariantCulture), isUser: true);
         SetInput(null, null);
-        await ShowTurnAsync(await AwaitModelAsync(_session!.SubmitRatingAsync(rating, Lifetime)));
+        await ShowTurnAsync(await AwaitTurnAsync(_session!.SubmitRatingAsync(rating, Lifetime)));
     }
 
-    /// <summary>Shows the typing indicator while a turn is being produced (instant for scripts, seconds for a language model).</summary>
-    private async Task<ConversationTurn> AwaitModelAsync(Task<ConversationTurn> turn)
+    /// <summary>Shows the typing indicator while the asynchronous turn is being produced.</summary>
+    private async Task<ConversationTurn> AwaitTurnAsync(Task<ConversationTurn> turn)
     {
         IsTyping = true;
         try
@@ -345,7 +320,6 @@ public abstract class ChatViewModelBase : BaseViewModel
             OfferRecentProblemAsync().FireAndForget();
         }
 
-        LayoutSuggestionRows();
         OnPropertyChanged(nameof(HasSuggestions));
         RefreshSuggestionSelection();
 
@@ -395,7 +369,6 @@ public abstract class ChatViewModelBase : BaseViewModel
         }
 
         Suggestions.Insert(0, new DialogueSuggestionItem(AppStrings.PracticeRecentProblem(AnswerText.Shorten(recent, 32)), recent, SuggestCommand));
-        LayoutSuggestionRows();
         OnPropertyChanged(nameof(HasSuggestions));
         RefreshSuggestionSelection();
     }

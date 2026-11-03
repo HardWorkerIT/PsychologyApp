@@ -105,6 +105,12 @@ public class SqliteSchemaHardeningTests
         Assert.Equal(["a", "c"], await connection.QueryAsync<string>("SELECT Title FROM Quots ORDER BY QuotId;"));
         await Assert.ThrowsAsync<SqliteException>(() => connection.ExecuteAsync(
             "INSERT INTO Quots (Title, Text, Theme, IsReaded, IsFavourite) VALUES ('d', 'same', 't', 0, 0);"));
+
+        // Opening the already upgraded database must not re-run a destructive or duplicate-producing migration.
+        await SqliteSchema.EnsureSchemaAsync(connection);
+
+        Assert.Equal(SqliteSchema.CurrentVersion, await connection.ExecuteScalarAsync<int>("SELECT MAX(Version) FROM SchemaVersion;"));
+        Assert.Equal(["a", "c"], await connection.QueryAsync<string>("SELECT Title FROM Quots ORDER BY QuotId;"));
     }
 
     [Fact]

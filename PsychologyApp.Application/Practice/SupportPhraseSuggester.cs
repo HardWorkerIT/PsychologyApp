@@ -15,65 +15,26 @@ public interface ISupportPhraseSuggester
 }
 
 /// <summary>
-/// Reviewed phrases first; when an on-device model is installed it may add its own variants, each passed through
-/// <see cref="CompanionReplyGuard"/> so that nothing unchecked reaches the person. The words never leave the phone.
+/// Returns reviewed, deterministic phrases selected to match the thought and app language.
 /// </summary>
-public sealed class SupportPhraseSuggester(ILanguageModel languageModel, ICrisisDetector crisisDetector) : ISupportPhraseSuggester
+public sealed class SupportPhraseSuggester(ICrisisDetector crisisDetector) : ISupportPhraseSuggester
 {
     public const int MaxSuggestions = 6;
-    private const int ModelVariants = 2;
 
-    public async Task<IReadOnlyList<string>> SuggestAsync(EntryFieldRole role, string? context, string? language, CancellationToken cancellationToken = default)
+    public Task<IReadOnlyList<string>> SuggestAsync(EntryFieldRole role, string? context, string? language, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (role is not (EntryFieldRole.Reframe or EntryFieldRole.Kindness or EntryFieldRole.SelfKindness)
             || crisisDetector.IsCrisis(context))
         {
-            return [];
+            return Task.FromResult<IReadOnlyList<string>>([]);
         }
 
-        List<string> scripted = SupportPhraseContent.Pick(role, context, language);
-        // The reply guard reads only Russian and English: in another language a model phrase could not be checked.
-        string? modelLanguage = language?.ToLowerInvariant() is "ru" or "en" ? language.ToLowerInvariant() : null;
-        List<string> fromModel = role == EntryFieldRole.Kindness || modelLanguage is null
-            ? []
-            : await AskModelAsync(role, context, modelLanguage == "en", cancellationToken).ConfigureAwait(false);
-
-        return fromModel
-            .Concat(scripted)
+        IReadOnlyList<string> suggestions = SupportPhraseContent.Pick(role, context, language)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Take(MaxSuggestions)
             .ToList();
-    }
 
-    private async Task<List<string>> AskModelAsync(EntryFieldRole role, string? context, bool english, CancellationToken cancellationToken)
-    {
-        if (!languageModel.IsAvailable || string.IsNullOrWhiteSpace(context))
-        {
-            return [];
-        }
-
-        try
-        {
-            string? raw = await languageModel.GenerateAsync(
-                new LlmRequest(SupportPhraseContent.SystemPrompt(role, english), [new LlmMessage(LlmRole.User, context.Trim())], MaxNewTokens: 90),
-                cancellationToken).ConfigureAwait(false);
-
-            return (raw ?? string.Empty)
-                .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(line => CompanionReplyGuard.Sanitize(line.TrimStart('-', '•', '*', ' ').Trim('"', '«', '»'), english))
-                .Where(line => line is { Length: <= SupportPhraseContent.MaxPhraseLength })
-                .Select(line => line!)
-                .Take(ModelVariants)
-                .ToList();
-        }
-        catch (OperationCanceledException)
-        {
-            throw;
-        }
-        catch (Exception)
-        {
-            // The model is a bonus: the reviewed phrases are always there.
-            return [];
-        }
+        return Task.FromResult(suggestions);
     }
 }

@@ -9,7 +9,7 @@
 
     <ContentView.Resources>
         <DataTemplate x:Key="SuggestionChipTemplate" x:DataType="chat:DialogueSuggestionItem">
-                            <Border Style="{StaticResource DialogueAnswerChipStyle}">
+                            <Border MaximumWidthRequest="240" Style="{StaticResource DialogueAnswerChipStyle}">
                                 <Border.Triggers>
                                     <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
                                         <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryFill}" />
@@ -18,7 +18,7 @@
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding .}" />
                                 </Border.GestureRecognizers>
-                                <Label Text="{Binding Label}" Style="{StaticResource AnswerChipLabelStyle}">
+                                <Label Text="{Binding Label}" Style="{StaticResource AnswerChipLabelStyle}" MaxLines="2" LineBreakMode="WordWrap">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
                                             <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
@@ -78,16 +78,15 @@
                 IsVisible="{Binding OffersEmotions}"
                 Margin="0,10,0,0"
                 Text="{Binding DraftText, Mode=TwoWay}" />
-            <!-- Quick answers: one row that scrolls sideways, like the quick replies of a messenger, so the conversation keeps the screen. -->
+            <!-- Quick answers stay in one horizontally scrollable row, preserving room for the conversation and keyboard. -->
             <ScrollView
                 IsVisible="{Binding HasSuggestions}"
                 Orientation="Horizontal"
                 HorizontalScrollBarVisibility="Never"
-                Margin="0,10,0,0">
-                <VerticalStackLayout>
-                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding SuggestionsFirstRow}" BindableLayout.ItemTemplate="{StaticResource SuggestionChipTemplate}" />
-                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding SuggestionsSecondRow}" BindableLayout.ItemTemplate="{StaticResource SuggestionChipTemplate}" IsVisible="{Binding HasSecondSuggestionRow}" />
-                </VerticalStackLayout>
+                Margin="0,8,0,0">
+                <HorizontalStackLayout
+                    BindableLayout.ItemsSource="{Binding Suggestions}"
+                    BindableLayout.ItemTemplate="{StaticResource SuggestionChipTemplate}" />
             </ScrollView>
 
             <!-- Free text answer -->

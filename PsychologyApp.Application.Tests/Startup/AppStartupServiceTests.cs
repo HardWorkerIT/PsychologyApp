@@ -37,6 +37,7 @@ public class AppStartupServiceTests
             techniqueCatalogService.Object);
 
         await service.InitializeAsync();
+        await service.WarmupAsync();
 
         databaseInitializer.Verify(d => d.InitializeAsync(It.IsAny<CancellationToken>()), Times.Once);
         techniqueCatalogService.Verify(s => s.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -63,6 +64,7 @@ public class AppStartupServiceTests
             techniqueCatalogService.Object);
 
         await service.InitializeAsync();
+        await service.WarmupAsync();
 
         quotService.Verify(
             s => s.ReseedFeedAsync(QuoteCatalogPolicy.DefaultFeedSeedCount, It.IsAny<CancellationToken>()),
@@ -95,6 +97,8 @@ public class AppStartupServiceTests
             techniqueCatalogService.Object);
 
         await service.InitializeAsync();
+        await service.WarmupAsync();
+        await service.WarmupAsync();
 
         quotService.Verify(s => s.LoadSingleAsync(It.IsAny<CancellationToken>()), Times.Once);
         quotService.Verify(
