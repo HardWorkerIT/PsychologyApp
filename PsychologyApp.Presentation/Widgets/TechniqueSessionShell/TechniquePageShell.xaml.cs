@@ -90,6 +90,11 @@ public partial class TechniquePageShell : ContentView
 
         bool footer = FooterContent?.IsVisible == true;
         FooterHost.IsVisible = footer;
+        ActionButtons.ColumnDefinitions[1].Width = footer ? GridLength.Auto : new GridLength(0);
+        Grid.SetColumn(FinishButton, footer ? 1 : 0);
+        Grid.SetColumnSpan(FinishButton, footer ? 1 : 2);
+        FinishButton.Variant = footer ? "Secondary" : "Primary";
+        FinishButton.IsCompact = footer;
         ActionBar.IsVisible = footer || FinishEnabled;
     }
 

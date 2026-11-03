@@ -114,15 +114,21 @@
         StrokeThickness="0"
         Padding="16,10,16,14"
         BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
-        <VerticalStackLayout Spacing="10">
-            <BoxView Style="{StaticResource SubtleDividerStyle}" Margin="-16,-10,-16,0" />
-            <Grid x:Name="FooterHost" />
-            <ui:ButtonView
-                x:Name="FinishButton"
-                BodyText="{Binding Source={x:Reference Root}, Path=FinishText}"
-                TapCommand="{Binding Source={x:Reference Root}, Path=FinishCommand}"
-                IsEnabled="{Binding Source={x:Reference Root}, Path=FinishEnabled}"
-                IsVisible="{Binding Source={x:Reference Root}, Path=FinishEnabled}" />
+        <VerticalStackLayout Spacing="8">
+            <BoxView Style="{StaticResource SubtleDividerStyle}" Margin="-16,-8,-16,0" />
+            <Grid
+                x:Name="ActionButtons"
+                ColumnDefinitions="*,Auto"
+                ColumnSpacing="8">
+                <Grid x:Name="FooterHost" Grid.Column="0" />
+                <ui:ButtonView
+                    x:Name="FinishButton"
+                    Grid.Column="1"
+                    BodyText="{Binding Source={x:Reference Root}, Path=FinishText}"
+                    TapCommand="{Binding Source={x:Reference Root}, Path=FinishCommand}"
+                    IsEnabled="{Binding Source={x:Reference Root}, Path=FinishEnabled}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=FinishEnabled}" />
+            </Grid>
         </VerticalStackLayout>
     </Border>
     </Grid>

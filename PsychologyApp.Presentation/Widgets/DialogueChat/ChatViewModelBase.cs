@@ -60,31 +60,6 @@ public abstract class ChatViewModelBase : BaseViewModel
 
     public bool HasSuggestions => Suggestions.Count > 0;
 
-    /// <summary>
-    /// The chips laid out in two rows that scroll sideways together: a long list (twenty things to see) shows twice as many at once
-    /// without taking the conversation's screen. Up to five chips stay in one row.
-    /// </summary>
-    public ObservableCollection<DialogueSuggestionItem> SuggestionsFirstRow { get; } = [];
-
-    public ObservableCollection<DialogueSuggestionItem> SuggestionsSecondRow { get; } = [];
-
-    public bool HasSecondSuggestionRow => SuggestionsSecondRow.Count > 0;
-
-    private const int OneRowChips = 5;
-
-    private void LayoutSuggestionRows()
-    {
-        SuggestionsFirstRow.Clear();
-        SuggestionsSecondRow.Clear();
-        bool twoRows = Suggestions.Count > OneRowChips;
-        for (int i = 0; i < Suggestions.Count; i++)
-        {
-            (twoRows && i % 2 == 1 ? SuggestionsSecondRow : SuggestionsFirstRow).Add(Suggestions[i]);
-        }
-
-        OnPropertyChanged(nameof(HasSecondSuggestionRow));
-    }
-
     public IReadOnlyList<DialogueRatingItem> RatingItems { get; }
 
     public ICommand BackCommand { get; }
@@ -345,7 +320,6 @@ public abstract class ChatViewModelBase : BaseViewModel
             OfferRecentProblemAsync().FireAndForget();
         }
 
-        LayoutSuggestionRows();
         OnPropertyChanged(nameof(HasSuggestions));
         RefreshSuggestionSelection();
 
@@ -395,7 +369,6 @@ public abstract class ChatViewModelBase : BaseViewModel
         }
 
         Suggestions.Insert(0, new DialogueSuggestionItem(AppStrings.PracticeRecentProblem(AnswerText.Shorten(recent, 32)), recent, SuggestCommand));
-        LayoutSuggestionRows();
         OnPropertyChanged(nameof(HasSuggestions));
         RefreshSuggestionSelection();
     }
