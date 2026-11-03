@@ -5,8 +5,6 @@ namespace PsychologyApp.Application.Practice;
 /// <summary>Reviewed ready phrases for balanced thoughts and kind words, matched to the kind of harsh thought the person wrote.</summary>
 internal static class SupportPhraseContent
 {
-    public const int MaxPhraseLength = 120;
-
     /// <summary>A trap in thinking, recognised by word stems, and the balanced answers that fit it.</summary>
     private sealed record Pattern(string[] Stems, string[] Phrases);
 
@@ -353,22 +351,6 @@ internal static class SupportPhraseContent
         EntryFieldRole.Kindness => [.. For(language).Kindness],
         EntryFieldRole.SelfKindness => [.. For(language).SelfKindness],
         _ => []
-    };
-
-    public static string SystemPrompt(EntryFieldRole role, bool english) => (role, english) switch
-    {
-        (EntryFieldRole.Reframe, false) =>
-            "Человек записал автоматическую мысль. Предложи две короткие сбалансированные мысли от первого лица (до 12 слов каждая), " +
-            "реалистичные, без советов, без диагнозов, без «всё будет хорошо». Каждую с новой строки, без нумерации.",
-        (EntryFieldRole.Reframe, true) =>
-            "The person wrote down an automatic thought. Suggest two short balanced thoughts in the first person (up to 12 words each), " +
-            "realistic, no advice, no diagnoses, no \"everything will be fine\". One per line, no numbering.",
-        (_, false) =>
-            "Человек записал, за что критикует себя. Предложи две короткие добрые фразы себе от первого лица (до 12 слов каждая), " +
-            "без советов и без обесценивания. Каждую с новой строки, без нумерации.",
-        _ =>
-            "The person wrote what they criticise themselves for. Suggest two short kind phrases to oneself in the first person (up to 12 words each), " +
-            "no advice and no dismissing. One per line, no numbering."
     };
 
     private static List<string> PickReframes(string? context, PhraseSet set)

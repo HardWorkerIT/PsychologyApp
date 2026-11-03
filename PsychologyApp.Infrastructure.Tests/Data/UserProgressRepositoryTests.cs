@@ -1,4 +1,5 @@
 using Dapper;
+using Microsoft.Data.Sqlite;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Infrastructure.Data.Context;
 using PsychologyApp.Infrastructure.Data.Repositories.UserProgress;
@@ -55,6 +56,63 @@ public sealed class UserProgressRepositoryTests : IAsyncLifetime
         Assert.Equal(2, history.Count);
         Assert.Equal(3, history[0].Score);
         Assert.Equal(2, history[1].Score);
+    }
+
+    [Fact]
+    public async Task GetTestResultHistoryAsync_ReturnsOnlyRequestedWindow_For50KRows()
+    {
+        await using System.Data.Common.DbConnection connection = await _connectionFactory.CreateOpenConnectionAsync();
+        await using System.Data.Common.DbTransaction transaction = await connection.BeginTransactionAsync();
+        await connection.ExecuteAsync(
+            """
+            WITH RECURSIVE sequence(value) AS (
+                SELECT 1
+                UNION ALL
+                SELECT value + 1 FROM sequence WHERE value < 50000
+            )
+            INSERT INTO TestResults (TestId, Score, Summary, CompletedAt)
+            SELECT 'scale-test', value, 'summary', '2026-11-03T00:00:00.0000000Z'
+            FROM sequence;
+            """,
+            transaction: transaction);
+        await transaction.CommitAsync();
+
+        IReadOnlyList<TestResultDTO> page = await _repository.GetTestResultHistoryAsync("scale-test", 50);
+
+        Assert.Equal(50, page.Count);
+        Assert.Equal(50000, page[0].Score);
+        Assert.Equal(49951, page[^1].Score);
+    }
+
+    [Fact]
+    public async Task SaveTestResultAsync_PreservesPreviousData_WhenDatabaseRunsOutOfPages()
+    {
+        await _repository.SaveTestResultAsync(new TestResultDTO
+        {
+            TestId = "disk-full",
+            Score = 7,
+            Summary = "last valid result",
+            CompletedAt = DateTime.UtcNow
+        });
+
+        await using System.Data.Common.DbConnection connection = await _connectionFactory.CreateOpenConnectionAsync();
+        long currentPageCount = await connection.ExecuteScalarAsync<long>("PRAGMA page_count;");
+        long maxPageCount = currentPageCount + 1;
+        long configuredPageLimit = await connection.ExecuteScalarAsync<long>($"PRAGMA max_page_count = {maxPageCount};");
+        Assert.Equal(maxPageCount, configuredPageLimit);
+
+        await Assert.ThrowsAsync<SqliteException>(() => _repository.SaveTestResultAsync(new TestResultDTO
+        {
+            TestId = "disk-full",
+            Score = 99,
+            Summary = new string('x', 2_000_000),
+            CompletedAt = DateTime.UtcNow
+        }));
+
+        TestResultDTO? latest = await _repository.GetLatestTestResultAsync("disk-full");
+        Assert.NotNull(latest);
+        Assert.Equal(7, latest!.Score);
+        Assert.Equal("last valid result", latest.Summary);
     }
 
     [Fact]

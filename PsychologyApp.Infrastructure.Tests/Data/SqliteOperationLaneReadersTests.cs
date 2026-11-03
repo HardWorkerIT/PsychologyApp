@@ -111,6 +111,46 @@ public sealed class SqliteOperationLaneReadersTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task File_database_remains_consistent_under_concurrent_read_and_write_pressure()
+    {
+        await using (SqliteConnection setup = (SqliteConnection)await _factory.CreateOpenConnectionAsync())
+        await using (SqliteCommand command = setup.CreateCommand())
+        {
+            command.CommandText = "CREATE TABLE LaneStress (Id INTEGER PRIMARY KEY, Value INTEGER NOT NULL);";
+            await command.ExecuteNonQueryAsync();
+        }
+
+        Task[] readers = Enumerable.Range(0, 30).Select(ReadWhileHoldingConnectionAsync).ToArray();
+        Task[] writers = Enumerable.Range(0, 40).Select(InsertAsync).ToArray();
+
+        await Task.WhenAll(readers.Concat(writers)).WaitAsync(TimeSpan.FromSeconds(15));
+
+        await using SqliteConnection verification = await Open(_factory, read: true);
+        await using SqliteCommand verifyCommand = verification.CreateCommand();
+        verifyCommand.CommandText = "SELECT COUNT(*) FROM LaneStress;";
+        Assert.Equal(40L, (long)(await verifyCommand.ExecuteScalarAsync())!);
+    }
+
+    private async Task ReadWhileHoldingConnectionAsync(int _)
+    {
+        await using SqliteConnection connection = await Open(_factory, read: true);
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM LaneStress;";
+        Assert.InRange((long)(await command.ExecuteScalarAsync())!, 0L, 40L);
+        await Task.Delay(10);
+    }
+
+    private async Task InsertAsync(int value)
+    {
+        await using SqliteConnection connection = await Open(_factory, read: false);
+        await using SqliteCommand command = connection.CreateCommand();
+        command.CommandText = "INSERT INTO LaneStress (Id, Value) VALUES ($id, $value);";
+        command.Parameters.AddWithValue("$id", value + 1);
+        command.Parameters.AddWithValue("$value", value);
+        Assert.Equal(1, await command.ExecuteNonQueryAsync());
+    }
+
+    [Fact]
     public async Task A_database_that_does_not_allow_parallel_reads_keeps_one_operation_at_a_time()
     {
         await using PsychologyApp.Testing.Data.SharedMemoryConnectionFactory memory = new();

@@ -59,5 +59,8 @@ public static class ExposureScreening
 
     /// <summary>True when the plan may be worked on now: screened, allowed, and the screening is not older than <see cref="ValidFor"/>.</summary>
     public static bool IsCurrent(ExposurePlan plan, DateTime nowUtc) =>
-        AllowsExposure(plan.Screening) && plan.ScreenedAt is { } screenedAt && nowUtc - screenedAt < ValidFor;
+        AllowsExposure(plan.Screening)
+        && plan.ScreenedAt is { } screenedAt
+        && screenedAt <= nowUtc
+        && nowUtc - screenedAt < ValidFor;
 }

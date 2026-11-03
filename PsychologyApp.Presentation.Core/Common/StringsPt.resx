@@ -1002,6 +1002,9 @@
   <data name="PracticeMoreButton" xml:space="preserve">
     <value>Mais uma prática</value>
   </data>
+  <data name="PracticeChooseAnother" xml:space="preserve">
+    <value>Escolher outra prática</value>
+  </data>
   <data name="PracticeNextCaption" xml:space="preserve">
     <value>Próxima prática</value>
   </data>

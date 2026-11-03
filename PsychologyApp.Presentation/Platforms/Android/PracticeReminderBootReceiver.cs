@@ -19,7 +19,7 @@ public sealed class PracticeReminderBootReceiver : BroadcastReceiver
             return;
         }
 
-        ReminderSyncWork.Run<IPracticeReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IPracticeReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

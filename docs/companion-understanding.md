@@ -5,27 +5,31 @@ This page records how well that works, what was measured, and what was decided.
 
 ## What runs in the app today
 
-A weighted **lexicon** (`LexiconSituationAnalyzer`, RU + EN, with simple negation and a colloquial extension list).
-It is instant, offline and predictable. When it recognises nothing the dialogue does not guess: it reflects the person's own words,
-asks an open question and, after two unclear messages, offers a choice of feelings as chips.
+A weighted **lexicon** (`LexiconSituationAnalyzer`, RU + EN, with simple negation and a colloquial extension list) runs first.
+It is instant, offline and predictable. If it finds no match, a local Russian classifier can suggest a feeling for a sufficiently long message;
+the person can confirm or reject it. When confidence is low, the dialogue reflects the person's words and asks an open question.
 
 ## Measurements (`AnalyzerDatasetTests`, `tools/PsychologyApp.NluEval`)
 
-The analyzer tests use hand-labelled Russian and English examples. On 2026-10-30, the current lexicon produced these results:
+All current Russian expansion sets are synthetic examples authored for development; they are not real-user observations or clinical validation.
+The lexicon and local classifier are evaluated separately from the user-facing flow. In the live flow, the classifier only suggests a feeling
+after the lexicon returns Unknown, and the person can confirm or reject it.
 
-| Set | Examples | Accuracy | Purpose |
-|-----|---------|----------|---------|
-| `nlu-dataset.json` | 159 | 96% | Development set tuned alongside the lexicon; not an estimate of unseen wording |
-| `nlu-heldout.json` | 60 | 92% | Existing held-out set |
-| `nlu-fresh.json` | 110 | 96% | Earlier fresh set |
-| `nlu-fresh2.json` | 98 | 41% | Final set written after the third lexicon round |
-| `nlu-fresh3.json` | 100 | 59% | Set written before the bundled guesser was extended |
-| `nlu-fresh4.json` | 60 | 62% | Additional set newly included in automated evaluation |
+| Russian set | Examples | Lexicon | Full offline flow | Status |
+|-----|---------:|---------:|---------:|---------|
+| v11 | 110 | 62% after phrase expansion | 90% (99/110) | Spent during tuning |
+| v12 | 110 | 68% after phrase expansion | 93% (102/110) | Spent during tuning |
+| **v13** | **110** | **84%** | **96% (106/110)** | Current fresh check; exact text overlap with classifier training: 0 |
 
-Scores vary sharply by set, so the 92% on `nlu-heldout.json` must not be treated as general-purpose recognition accuracy.
-`nlu-fresh4.json` has particularly low recall for anxiety, anger and resentment; its examples were not used to add lexicon terms
-in this task. `AnalyzerDatasetTests` now reports recall per emotion as well as overall accuracy so a good total cannot hide a
-weak class.
+The v13 end-to-end score meets the 95% development target on this one balanced synthetic set. Per-class accuracy is: Panic 10/10, Anxiety 9/10,
+Overthinking 10/10, Anger 10/10, Resentment 8/10, Guilt 10/10, Sadness 9/10, Exhaustion 10/10, Loneliness 10/10, Procrastination 10/10,
+Unknown 10/10. Resentment is the weakest class at 80%. The lexicon alone recognizes 92/110 (84%); the local guesser supplies 14 suggestions
+and correctly resolves all 14 on this set. This result must not be generalized to real users: the sample is small, synthetic, and not independently reviewed.
+
+Earlier English and mixed-language measurements below are historical and have different data splits. Their scores should not be compared as
+if they were a shared benchmark. The evaluator prints per-class precision, recall and F1 plus common confusion pairs so aggregate accuracy
+does not hide weak categories. For credible quality claims, the next evaluation needs independently authored and psychologist-reviewed Russian
+phrases, with test examples kept out of both the lexicon and classifier training.
 
 The conversation suite also exercises multi-turn user outcomes: correcting a feeling, declining an inferred goal, changing from
 listening to understanding, indirect requests, and the crisis route after a support preference has been chosen. These are
@@ -52,8 +56,8 @@ of prototypes); the gain comes from combining them. Embedding one message takes 
 **Embeddings are not integrated yet.** Reasons:
 
 - Even the best variant is wrong about half of the time on unseen text; the missing ingredient is labelled data, not the model.
-- Shipping needs ONNX Runtime (~15-20 MB extra in the APK) plus a ~118 MB model download (the downloader exists in
-  `Infrastructure/LocalModel`), and adds a heavy dependency for a partial gain.
+- Shipping an embeddings fallback would need ONNX Runtime (~15-20 MB extra in the APK) plus a ~118 MB model download, adding
+  a heavy dependency for a partial gain. The experiment is not part of the app or its runtime dependencies.
 - A wrong guess is costly in this domain ("you seem hurt" to someone who feels guilty). Any embedding-based guess should be
   *proposed and confirmed with one tap*, not assumed.
 
@@ -120,41 +124,25 @@ shorter unclear messages keep the old two-step behaviour.
 the lexicon recognised nothing and the message has at least five normalized words. Its answer is never assumed: the chat asks "Sounds like X, is that
 right? If not, pick what is closer." and puts X first among the feeling chips, so one tap confirms it.
 
-Leave-one-set-out (`EmotionGuesserTests`: train on three sets, ask about the fourth), with the gate of a lead of 20 (natural-log units) and at least
-5 words:
+Leave-one-set-out (`EmotionGuesserTests`: train without one of six sets, then evaluate on that set), with the current minimum margin of 25 natural-log units and at least
+5 normalized words:
 
-| | all four sets pooled (427 messages) |
+| Measure | Across six sets (587 messages) |
 |---|---|
-| Lexicon alone | 355 right (83%) |
-| Lexicon, then the guesser's proposal | 379 right (89%) |
-| Lexicon misses that get a proposal | 38 of 53, 25 of them right (66%) |
-| Small talk wrongly given a feeling | 1 |
+| Lexicon alone | 452 right (77.0%) |
+| Lexicon, then a proposed guess when the lexicon says Unknown | 517 right (88.1%) |
+| Lexicon misses that received a proposal | 72 of 93 |
+| Proposed feelings accepted by the labels | 65 of 72 (90.3%) |
+| Small talk wrongly proposed as a feeling | 0 |
 
-On the final set (the only one never read while writing terms): lexicon 41%, lexicon then guesser 63%.
+Proposal precision varies by emotion: Anxiety 6/7 (86%), Exhaustion 5/7 (71%), Guilt 4/5 (80%), Resentment 9/10 (90%); the other proposed classes were 86-100% on these small samples. This is not enough data to set separate per-class confidence gates safely.
 
-Limits, stated plainly: the training and the test messages were written by the same author in the same style, so real people's phrasing is the open
-question; precision of about two in three is why the result is a question and not a conclusion. Replace the training file with messages labelled by a
-psychologist and re-run `EmotionGuesserTests`; the gate (`EmotionGuesser.MinMargin`, `MinWords`) should be re-chosen on that data.
+On the older final sets under the current gate, lexicon -> lexicon plus guesser: `nlu-fresh2.json` 42% -> 73%, `nlu-fresh3.json` 60% -> 78%, `nlu-fresh4.json` 62% -> 78%.
 
-### Update: word features, a "no feeling" class, more data (2026-10)
+A historical threshold sweep on earlier folds found that a margin of 25 raised proposal precision to 90% (64/71) but reduced combined correct classifications from 516 to 513. The current gate is 25: the bundled model's original threshold of 5 led to too many incorrect suggestions in a full-suite regression check. On the current fresh v13 Russian set, the higher gate reaches 96% because the expanded lexicon handles most messages first. A rejected guess becomes an open question instead of a forced label.
 
-The guesser now also uses word stems and word pairs next to the character n-grams, and "no feeling named" (small talk, questions about the app)
-is a class of its own, so it can answer "nothing here" instead of being forced to pick a feeling. The training set grew from 427 to 723 messages
-(`nlu-train-extra.json` adds 190 written in other registers: short, formal, colloquial, English). It is regenerated from the labelled files with
-`node tools/build-emotion-training.js`; a test fails when a labelled message is missing from the shipped file.
+Limits: training and tests are synthetic and mostly written by the same author; they do not represent real people's phrasing or clinical quality. The missing ingredient is independently labelled, consented examples reviewed by a psychologist. Keep them local to development; never send chat text off-device.
 
-Model comparison, leave-one-set-out over five sets (527 messages; the lexicon alone gets 414 right, 78.6%). Gate: lead of 20, at least 5 words.
-
-| Model | Lexicon then model | Proposals / lexicon misses | Right | Small talk given a feeling |
-|---|---|---|---|---|
-| Characters only (the first version, extra data) | 87.5% | 67 / 76 | 81% | 7 |
-| Characters + words | 87.7% | 69 / 76 | 80% | 7 |
-| Words only | 79.1% | 3 / 76 | 100% | 0 |
-| Characters + a "no feeling" class | 88.4% | 57 / 76 | 91% | 0 |
-| **Characters + words + "no feeling" class (shipped)** | **88.8%** | **60 / 76** | **90%** | **0** |
-
-Per set, the sets written after the lexicon was frozen (never read while writing terms): `nlu-fresh2.json` lexicon 41% -> lexicon then guesser
-74%; `nlu-fresh3.json` 59% -> 76%. The model and the gate were chosen on these same folds, so some optimism remains; the authorship caveat above still applies.
-
+The shipped training set has 1,615 labelled examples and is built from the labelled files with `node tools/build-emotion-training.js`; a test fails when an evaluation case is missing from the bundle. The classifier is deterministic and uses character 3-5-grams, word stems, word pairs and a separate “no feeling named” class.
 Update (2026-10-30): the guesser now applies the shared `UtteranceText.Normalize` to training and user messages before counting words or building
 features. The lexicon measurements above were recalculated after this change. The earlier embedding experiment remains a separate historical result.

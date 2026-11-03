@@ -6,7 +6,7 @@ public interface ICrisisDetector
 }
 
 /// <summary>
-/// Conservative phrase matcher that runs locally before any scenario logic or language model sees free text.
+/// Conservative phrase matcher that runs locally before scenario logic processes free text.
 /// It favours false positives: a wrongly shown helpline card costs little, a missed one costs a lot.
 /// Text is normalised (lower case, "ё" = "е", apostrophes removed, punctuation collapsed) so "Don't" and "dont" behave the same.
 /// </summary>

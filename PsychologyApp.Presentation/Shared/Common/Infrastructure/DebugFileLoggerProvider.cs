@@ -148,18 +148,7 @@ public sealed class DebugFileLoggerProvider : ILoggerProvider
                 return;
             }
 
-            string messageTemplate = state is IReadOnlyList<KeyValuePair<string, object?>> values
-                ? values.FirstOrDefault(static value => value.Key == "{OriginalFormat}").Value as string ?? $"Event {eventId.Id}"
-                : eventId.Name ?? $"Event {eventId.Id}";
-            string line = $"[{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss.fff}] {logLevel} {categoryName}: {messageTemplate}";
-
-            // Rendered values and exception messages can contain a person's text; keep the technical template and exception type only.
-            if (exception is not null)
-            {
-                line += $" [{exception.GetType().Name}]";
-            }
-
-            lines.TryWrite(line);
+            lines.TryWrite(DebugLogPrivacyFormatter.Format(categoryName, logLevel, eventId, state, exception));
         }
     }
 }

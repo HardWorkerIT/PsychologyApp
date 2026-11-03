@@ -23,11 +23,18 @@ JSON arrays in `PsychologyApp.Application.Tests/Conversation/Data/real/*.json` (
 ]
 ```
 
-Labels are `CompanionEmotion` names, `Unknown` for messages with no feeling, `Crisis` for crisis messages. Have a second person label them,
-without seeing the engine's answers. `intent` is optional; when present, use a `Utterance` name and label it independently too. Cases with
-an intent label are checked against the classifier and reported by intent. The tests read these ignored files directly from the source tree;
-they do not copy private examples into build output, where deleted samples could otherwise linger. Test output includes labels and mismatch
-counts only; it never prints message text. Consent and anonymisation are still required, and the files stay local and ignored by Git.
+Labels are `CompanionEmotion` names, `Unknown` for messages with no feeling, and `Crisis` for messages that should reach the crisis-support
+route. `intent` is optional; when present, use a `Utterance` name. For independent annotation, record each annotator's label separately for
+emotion, intent, topic (`CompanionTheme` or `None`), crisis (`Yes`/`No`/`Unclear`), required reaction, and acceptable alternatives. A reaction
+can specify the expected route (for example, clarify, reflect, decline advice, or crisis support) without prescribing one exact sentence.
+Annotators work independently without seeing the engine's output or each other's labels. Keep both raw labels, report exact agreement and
+disagreements by field and label, and adjudicate disagreements before using final labels. Do not claim inter-rater reliability from a tiny
+sample; report the number of annotators, examples and unresolved items. Multi-turn expectations use the field names in the dialogue example below.
+
+The tests read these ignored files directly from the source tree; they do not copy private examples into build output, where deleted samples
+could otherwise linger. Test output includes labels and mismatch counts only; it never prints message text. Consent and anonymisation are
+still required, and the files stay local and ignored by Git. The current repository contains no independently collected real-user set;
+synthetic developer-authored data must not be presented as validation on real users.
 
 ## Running
 ```bash

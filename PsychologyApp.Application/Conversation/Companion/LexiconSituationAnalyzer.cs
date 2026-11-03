@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Text.RegularExpressions;
+
 namespace PsychologyApp.Application.Conversation.Companion;
 
 /// <summary>
@@ -18,6 +21,32 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
     private const int MaxNegationModifiers = 3;
 
     private sealed record Entry(int Weight, string[] Terms);
+
+    // These tables are declared across this partial type. Build them lazily so the merge always runs after every
+    // static lexicon field has initialized, then reuse the merged arrays for all messages.
+    private static readonly Lazy<Dictionary<CompanionEmotion, Entry[]>> CachedEmotionEntries = new(BuildEmotionEntries, LazyThreadSafetyMode.ExecutionAndPublication);
+    private static readonly Lazy<HashSet<string>> SharedMatchTerms = new(BuildSharedMatchTerms, LazyThreadSafetyMode.ExecutionAndPublication);
+
+    private static Dictionary<CompanionEmotion, Entry[]> BuildEmotionEntries() => Emotions.ToDictionary(
+            pair => pair.Key,
+            pair => new[]
+            {
+                pair.Value,
+                Colloquial.GetValueOrDefault(pair.Key, []),
+                Extended.GetValueOrDefault(pair.Key, [])
+            }.SelectMany(entries => entries).ToArray());
+
+    private static HashSet<string> BuildSharedMatchTerms() => CachedEmotionEntries.Value.Values
+        .SelectMany(entries => entries)
+        .SelectMany(entry => entry.Terms)
+        .Concat(BodyTerms)
+        .Concat(IntensityTerms)
+        .Concat(Themes.Values.SelectMany(terms => terms))
+        .Concat(Events.Values.SelectMany(terms => terms))
+        .GroupBy(term => term, StringComparer.Ordinal)
+        .Where(group => group.Skip(1).Any())
+        .Select(group => group.Key)
+        .ToHashSet(StringComparer.Ordinal);
 
     private static readonly Dictionary<CompanionEmotion, Entry[]> Emotions = new()
     {
@@ -96,8 +125,8 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
     {
         [CompanionTheme.Work] = ["работ", "начальник", "коллег", "проект", "зарплат", "офис", "увол", "собеседован", "=boss", "=work", "=job", "colleague", "office", "interview"],
         [CompanionTheme.Relationships] = ["отношен", "парень", "парня", "девушк", "=муж", "мужа", "жена", "жену", "партнер", "расстал", "бывш", "свидан", "boyfriend", "girlfriend", "husband", "=wife", "partner", "breakup", "relationship", "dating"],
-        [CompanionTheme.Family] = ["мама", "мамы", "маму", "=папа", "родител", "ребен", "=дети", "семь", "=брат", "сестр", "дочь", "дочк", "дочер", "=сын", "=сына", "=сыну", "=сыном", "внук", "внучк", "бабушк", "дедушк", "тёщ", "теща", "свекров", "mother", "father", "parents", "=child", "=kids", "family", "sister", "brother"],
-        [CompanionTheme.Health] = ["здоров", "болезн", "врач", "диагноз", "болит", "=боль", "анализ", "health", "doctor", "illness", "diagnos", "=pain"],
+        [CompanionTheme.Family] = ["мама", "мамы", "маму", "мамой", "=папа", "папой", "родител", "ребен", "=дети", "семь", "=брат", "сестр", "дочь", "дочк", "дочер", "=сын", "=сына", "=сыну", "=сыном", "внук", "внучк", "бабушк", "дедушк", "тёщ", "теща", "свекров", "mother", "father", "parents", "=child", "=kids", "family", "sister", "brother"],
+        [CompanionTheme.Health] = ["здоров", "болезн", "врач", "диагноз", "болит", "=боль", "анализ", "обследовани", "health", "doctor", "illness", "diagnos", "=pain"],
         [CompanionTheme.Money] = ["=деньги", "денег", "=долг", "долги", "кредит", "ипотек", "=money", "=debt", "=loan", "=rent", "=bills"],
         [CompanionTheme.Study] = ["экзамен", "учеб", "сесси", "универ", "школ", "диплом", "зачет", "=exam", "=study", "university", "=school", "thesis", "=grade"]
     };
@@ -117,17 +146,35 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         string normalized = UtteranceText.Normalize(text);
         string[] tokens = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
+        bool emotionAttributedToOther = HasExplicitOtherEmotion(normalized);
         int[] offsets = new int[tokens.Length];
         for (int i = 1; i < tokens.Length; i++)
         {
             offsets[i] = offsets[i - 1] + tokens[i - 1].Length + 1;
         }
 
+        Dictionary<(string Term, bool RespectNegation), int> matchCache = [];
+        int MatchIndex(string term, bool respectNegation)
+        {
+            if (!SharedMatchTerms.Value.Contains(term))
+            {
+                return IndexOf(term, normalized, tokens, offsets, respectNegation);
+            }
+
+            var key = (term, respectNegation);
+            if (!matchCache.TryGetValue(key, out int index))
+            {
+                index = IndexOf(term, normalized, tokens, offsets, respectNegation);
+                matchCache.Add(key, index);
+            }
+
+            return index;
+        }
+
         CompanionEmotion[] negatedEmotions = tokens.Any(Negations.Contains)
-            ? Emotions
+            ? CachedEmotionEntries.Value
                 .Where(pair => pair.Value.SelectMany(entry => entry.Terms)
-                    .Where(term => !term.Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(Negations.Contains))
+                    .Where(term => !LexiconWords(term).Any(Negations.Contains))
                     .Any(term => HasNegatedMatch(term, tokens)))
                 .Select(pair => pair.Key)
                 .ToArray()
@@ -135,7 +182,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         CompanionEvent[] negatedEvents = tokens.Any(Negations.Contains)
             ? Events
                 .Where(pair => pair.Value
-                    .Where(term => !term.Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries).Any(Negations.Contains))
+                    .Where(term => !LexiconWords(term).Any(Negations.Contains))
                     .Any(term => HasNegatedMatch(term, tokens)))
                 .Select(pair => pair.Key)
                 .ToArray()
@@ -143,9 +190,8 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         Dictionary<CompanionEmotion, double> scores = [];
         Dictionary<CompanionEmotion, int> firstMention = [];
-        foreach ((CompanionEmotion emotion, Entry[] baseEntries) in Emotions)
+        foreach ((CompanionEmotion emotion, Entry[] entries) in CachedEmotionEntries.Value)
         {
-            Entry[] entries = [.. baseEntries, .. Colloquial.GetValueOrDefault(emotion, []), .. Extended.GetValueOrDefault(emotion, [])];
             double score = 0;
             int first = int.MaxValue;
             // One word can be a near-typo of more than one listed stem for the same emotion (e.g. "тревога"
@@ -155,7 +201,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
             {
                 foreach (string term in entry.Terms)
                 {
-                    int at = IndexOf(term, normalized, tokens, offsets, respectNegation: true);
+                    int at = MatchIndex(term, respectNegation: true);
                     if (at >= 0 && countedOffsets.Add(at))
                     {
                         score += entry.Weight;
@@ -171,7 +217,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
             }
         }
 
-        bool Matches(string term, bool respectNegation) => IndexOf(term, normalized, tokens, offsets, respectNegation) >= 0;
+        bool Matches(string term, bool respectNegation) => MatchIndex(term, respectNegation) >= 0;
 
         bool hasBody = BodyTerms.Any(term => Matches(term, respectNegation: true));
         if (hasBody && scores.ContainsKey(CompanionEmotion.Anxiety))
@@ -200,7 +246,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         bool intense = IntensityTerms.Any(term => Matches(term, respectNegation: true));
         // Most hits first; a tie goes to the theme mentioned first ("the kids all day, my husband at work" is about the family, not the job).
         IReadOnlyList<CompanionTheme> themes = Themes
-            .Select(pair => (Theme: pair.Key, Hits: pair.Value.Count(term => Matches(term, respectNegation: false)), First: pair.Value.Select(term => IndexOf(term, normalized, tokens, offsets, respectNegation: false)).Where(at => at >= 0).DefaultIfEmpty(int.MaxValue).Min()))
+            .Select(pair => (Theme: pair.Key, Hits: pair.Value.Count(term => Matches(term, respectNegation: false)), First: pair.Value.Select(term => MatchIndex(term, respectNegation: false)).Where(at => at >= 0).DefaultIfEmpty(int.MaxValue).Min()))
             .Where(x => x.Hits > 0)
             .OrderByDescending(x => x.Hits)
             .ThenBy(x => x.First)
@@ -221,18 +267,54 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
             .OrderByDescending(p => p.Value)
             .ThenBy(p => firstMention[p.Key])
             .ToList();
-        if (ranked.Count == 0 || ranked[0].Value < MinScore)
+        if (ranked.Count == 0 || ranked[0].Value < MinScore || emotionAttributedToOther)
         {
-            return new SituationAnalysis(CompanionEmotion.Unknown, 0, hasBody, intense, themes, CompanionEmotion.Unknown, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents };
+            return new SituationAnalysis(CompanionEmotion.Unknown, 0, hasBody, intense, themes, CompanionEmotion.Unknown, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther };
         }
 
         double top = ranked[0].Value;
         double second = ranked.Count > 1 ? ranked[1].Value : 0;
         CompanionEmotion secondary = ranked.Count > 1 && ranked[1].Value >= 2 && ranked[1].Value >= top * 0.6 ? ranked[1].Key : CompanionEmotion.Unknown;
-        return new SituationAnalysis(ranked[0].Key, top / (top + second + 1), hasBody, intense, themes, secondary, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { IsFlashback = isFlashback, MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents };
+        return new SituationAnalysis(ranked[0].Key, top / (top + second + 1), hasBody, intense, themes, secondary, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { IsFlashback = isFlashback, MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther };
     }
 
+    private static bool HasExplicitOtherEmotion(string normalized)
+    {
+        string[] clauses = normalized.Split([" а ", " но ", " and ", " but ", "."], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (string clause in clauses)
+        {
+            Match subject = OtherEmotionSubject().Match(clause);
+            Match predicate = OtherEmotionPredicate().Match(clause);
+            bool emotionFollowsOtherSubject = subject.Success
+                && predicate.Success
+                && subject.Index < predicate.Index
+                && clause[subject.Index..predicate.Index].Count(char.IsWhiteSpace) <= 4;
+            if (emotionFollowsOtherSubject || OtherCausedEmotion().IsMatch(clause))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    [GeneratedRegex(@"\b(?:мама|мам[ыуеой]|папа|пап[уы]|мать|отец|родител\w*|он|она|они|брат|сестр\w*|друг|подруг\w*|муж|жена|сын|дочь|mother|mom|father|dad|parent|he|she|they|brother|sister|friend|husband|wife|son|daughter)\b", RegexOptions.CultureInvariant)]
+    private static partial Regex OtherEmotionSubject();
+
+    [GeneratedRegex(@"\b(?:тревож\w*|пережива\w*|бою\w*|боится|груст\w*|злится|злятся|злюсь|сердится|устал\w*|виноват\w*|стыдится|одинок\w*|worr\w*|anxious|afraid|scared|sad|angry|furious|tired|guilty|lonely|feels? (?:sad|angry|anxious|tired))\b", RegexOptions.CultureInvariant)]
+    private static partial Regex OtherEmotionPredicate();
+
+    [GeneratedRegex(@"\b(?:он|она|они)\s+(?:меня|мне)\s+(?:разозлил\w*|обидел\w*|напугал\w*|расстроил\w*)\b|\b(?:he|she|they)\s+made\s+me\s+(?:angry|sad|afraid|anxious)\b", RegexOptions.CultureInvariant)]
+    private static partial Regex OtherCausedEmotion();
+
     private const int PhraseWordGap = 3;
+
+    // Lexicon terms are constant. Cache their tokenization once instead of allocating split arrays on every message.
+    private static readonly ConcurrentDictionary<string, string[]> TermWords = new(StringComparer.Ordinal);
+
+    private static string[] LexiconWords(string term) => TermWords.GetOrAdd(
+        term,
+        static value => value.Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
     /// <returns>Character position of the earliest match in the normalised text, or -1.</returns>
     private static int IndexOf(string term, string normalized, string[] tokens, int[] offsets, bool respectNegation)
@@ -243,7 +325,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         {
             // Normalization turns a hyphen into a token boundary just like a space, so a term written with one
             // ("вдруг что-то случится") must be split the same way, or its hyphenated word can never match.
-            return IndexOfPhrase(t.Split([' ', '-'], StringSplitOptions.RemoveEmptyEntries), tokens, offsets, respectNegation);
+            return IndexOfPhrase(LexiconWords(t), tokens, offsets, respectNegation);
         }
 
         bool exact = t.StartsWith('=');
@@ -389,18 +471,19 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
     private static bool HasNegatedMatch(string term, string[] tokens)
     {
-        string[] words = term.Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        bool exact = words[0].StartsWith('=');
+        string[] words = LexiconWords(term);
+        string firstWord = words[0];
+        bool exact = firstWord.StartsWith('=');
         if (exact)
         {
-            words[0] = words[0][1..];
+            firstWord = firstWord[1..];
         }
 
         for (int start = 0; start < tokens.Length; start++)
         {
             bool firstMatches = exact
-                ? tokens[start] == words[0]
-                : tokens[start].StartsWith(words[0], StringComparison.Ordinal) || (words.Length == 1 && IsNearPrefixMatch(tokens[start], words[0]));
+                ? tokens[start] == firstWord
+                : tokens[start].StartsWith(firstWord, StringComparison.Ordinal) || (words.Length == 1 && IsNearPrefixMatch(tokens[start], firstWord));
             if (!firstMatches)
             {
                 continue;

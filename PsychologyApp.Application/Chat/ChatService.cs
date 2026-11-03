@@ -284,7 +284,7 @@ public sealed class ChatService(
         Task<IReadOnlyList<ChatSessionDTO>> sessionsTask = repository.GetSessionsAsync(cancellationToken);
         Task<IReadOnlyDictionary<string, string>> memoryTask = repository.GetMemoryAsync(cancellationToken);
         await Task.WhenAll(sessionsTask, memoryTask).ConfigureAwait(false);
-        return ChatStatistics.Compute(sessionsTask.Result, memoryTask.Result, Now(), time.LocalTimeZone);
+        return ChatStatistics.Compute(await sessionsTask.ConfigureAwait(false), await memoryTask.ConfigureAwait(false), Now(), time.LocalTimeZone);
     }
 
     public async Task SetUserNameAsync(string? name, CancellationToken cancellationToken = default)
@@ -373,10 +373,31 @@ public sealed class ChatService(
     private List<ChatMemoryChange> MemoryChanges(CompanionState before, CompanionReply reply, IReadOnlyDictionary<string, string> memory, DateTime now)
     {
         List<ChatMemoryChange> changes = [];
+        string? recordedTopicKey = reply.State.TopicCounted is { } countedTopic && countedTopic != before.TopicCounted
+            ? RecurringTopics.MemoryKey(countedTopic)
+            : null;
+        foreach ((string key, string value) in memory.Where(pair => pair.Key.StartsWith(RecurringTopics.MemoryPrefix, StringComparison.Ordinal)))
+        {
+            if (key == recordedTopicKey)
+            {
+                continue;
+            }
+
+            string? retained = RecurringTopics.RetainRecentDates(value, now);
+            if (retained is null)
+            {
+                changes.Add(new ChatMemoryChange(key));
+            }
+            else if (!string.Equals(retained, value, StringComparison.Ordinal))
+            {
+                changes.Add(new ChatMemoryChange(key, retained));
+            }
+        }
+
         if (reply.State.TopicCounted is { } topic && topic != before.TopicCounted)
         {
             string key = RecurringTopics.MemoryKey(topic);
-            changes.Add(new ChatMemoryChange(key, RecurringTopics.Record(memory.GetValueOrDefault(key), now)));
+            changes.Add(new ChatMemoryChange(key, RecurringTopics.Record(RecurringTopics.RetainRecentDates(memory.GetValueOrDefault(key), now), now)));
         }
 
         if (reply.State.NewPlan is { } plan && plan != before.NewPlan)
@@ -579,20 +600,24 @@ public sealed class ChatService(
             ? progress.GetRecentMoodsAsync(3, cancellationToken)
             : Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);
         await Task.WhenAll(takenTask, quotesTask, stressTestTask, moodsTask).ConfigureAwait(false);
-        HashSet<string> recentlyTaken = [.. takenTask.Result.Where(pair => pair.Value.CompletedAt >= since).Select(pair => pair.Key)];
+        IReadOnlyDictionary<string, TestResultDTO> taken = await takenTask.ConfigureAwait(false);
+        IReadOnlyList<QuotSeed> availableQuotes = await quotesTask.ConfigureAwait(false);
+        TestResultDTO? latestStressTest = await stressTestTask.ConfigureAwait(false);
+        IReadOnlyList<MoodEntryDTO> recentMoods = await moodsTask.ConfigureAwait(false);
+        HashSet<string> recentlyTaken = [.. taken.Where(pair => pair.Value.CompletedAt >= since).Select(pair => pair.Key)];
 
         DateTime now = Now();
-        TestResultDTO? stressTest = stressTestTask.Result is { } result && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
+        TestResultDTO? stressTest = latestStressTest is { } result && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
             ? result
             : null;
-        MoodEntryDTO? todayLowMood = moodsTask.Result.FirstOrDefault(m => m.MoodLevel <= LowMoodLevel && IsLocalToday(m.RecordedAt, now));
+        MoodEntryDTO? todayLowMood = recentMoods.FirstOrDefault(m => m.MoodLevel <= LowMoodLevel && IsLocalToday(m.RecordedAt, now));
 
         return new(
             analyzer,
             crisisDetector,
             language.IsEnglish,
             time: time,
-            quotes: quotesTask.Result,
+            quotes: availableQuotes,
             todayLowMood: todayLowMood,
             recentStressTest: stressTest,
             emotionGuesser: emotionGuesser,

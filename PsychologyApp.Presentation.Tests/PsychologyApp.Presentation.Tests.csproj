@@ -49,6 +49,9 @@
     <Compile Include="JournalHelpersTests.cs" />
     <Compile Include="JournalCsvExporterTests.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/ManageJournal/JournalCsvExporter.cs" Link="Linked/Journal/JournalCsvExporter.cs" />
+    <Compile Include="AtomicFileWriterTests.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Shared/Common/Infrastructure/AtomicFileWriter.cs" Link="Linked/Infrastructure/AtomicFileWriter.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Shared/Common/Infrastructure/DebugLogPrivacyFormatter.cs" Link="Linked/Infrastructure/DebugLogPrivacyFormatter.cs" />
     <Compile Include="TestScoreLabelMapperTests.cs" />
     <Compile Include="AppStringsErrorTests.cs" />
     <Compile Include="BreathingPatternTests.cs" />
@@ -360,6 +363,7 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <ProjectReference Include="..\PsychologyApp.Presentation.Core\PsychologyApp.Presentation.Core.csproj" />
     <ProjectReference Include="..\PsychologyApp.Application\PsychologyApp.Application.csproj" />
+    <ProjectReference Include="..\PsychologyApp.Domain\PsychologyApp.Domain.csproj" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />

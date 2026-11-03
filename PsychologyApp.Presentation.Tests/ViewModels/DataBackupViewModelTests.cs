@@ -19,6 +19,7 @@ namespace PsychologyApp.Presentation.Tests.ViewModels;
 public sealed class DataBackupViewModelTests : IDisposable
 {
     private readonly Mock<IBackupService> _backup = new();
+    private readonly Mock<ISpecialistSummaryService> _summary = new();
     private readonly Mock<IDialogService> _dialogs = new();
     private readonly Mock<IToastService> _toasts = new();
     private readonly Mock<IPersonalDataEraser> _eraser = new();
@@ -38,7 +39,13 @@ public sealed class DataBackupViewModelTests : IDisposable
     public void Dispose() => Directory.Delete(_folder, recursive: true);
 
     private DataBackupViewModel Create() =>
-        new(new Mock<INavigationService>().Object, _backup.Object, new Mock<ISpecialistSummaryService>().Object, _toasts.Object, new MauiUserPreferencesStore(), _dialogs.Object, _eraser.Object, _appLock.Object);
+        new(new Mock<INavigationService>().Object, _backup.Object, _summary.Object, _toasts.Object, new MauiUserPreferencesStore(), _dialogs.Object, _eraser.Object, _appLock.Object);
+
+    private static async Task<T> WaitForCancellationAsync<T>(CancellationToken cancellationToken)
+    {
+        await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        return default!;
+    }
 
     private void Choose(string? option) =>
         _dialogs.Setup(d => d.PickOptionAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string>())).ReturnsAsync(option);
@@ -94,6 +101,49 @@ public sealed class DataBackupViewModelTests : IDisposable
 
         Assert.Empty(Share.Shared);
         _backup.Verify(b => b.ExportAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task LeavingThePageCancelsAnActiveBackupExportWithoutSharingIt()
+    {
+        Choose(AppStrings.BackupProtectWithout);
+        TaskCompletionSource<CancellationToken> started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        _backup.Setup(b => b.ExportAsync(It.IsAny<CancellationToken>()))
+            .Returns((CancellationToken token) =>
+            {
+                started.TrySetResult(token);
+                return WaitForCancellationAsync<string>(token);
+            });
+        DataBackupViewModel viewModel = Create();
+
+        viewModel.ExportBackupCommand.Execute(null);
+        CancellationToken token = await started.Task.WaitAsync(TimeSpan.FromSeconds(3));
+        viewModel.CancelPendingOperations();
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.ExportBackupCommand.CanExecute(null));
+
+        Assert.True(token.IsCancellationRequested);
+        Assert.Empty(Share.Shared);
+    }
+
+    [Fact]
+    public async Task LeavingThePageCancelsSpecialistSummaryGenerationWithoutSharingIt()
+    {
+        TaskCompletionSource<CancellationToken> started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        _summary.Setup(s => s.BuildSummaryAsync(It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+            .Returns((string? _, CancellationToken token) =>
+            {
+                started.TrySetResult(token);
+                return WaitForCancellationAsync<string>(token);
+            });
+        DataBackupViewModel viewModel = Create();
+
+        viewModel.ExportSummaryCommand.Execute(null);
+        CancellationToken token = await started.Task.WaitAsync(TimeSpan.FromSeconds(3));
+        viewModel.CancelPendingOperations();
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.ExportSummaryCommand.CanExecute(null));
+
+        Assert.True(token.IsCancellationRequested);
+        Assert.Empty(Share.Shared);
     }
 
     [Theory]

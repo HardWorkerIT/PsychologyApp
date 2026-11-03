@@ -95,6 +95,8 @@ public class UtteranceClassifierTests
     [InlineData("Мне тревожно, подскажи", Utterance.AsksForAdvice)]
     [InlineData("My manager asked me, ‘What should I do?’ and I feel anxious", Utterance.Statement)]
     [InlineData("Мне тревожно, что делать?", Utterance.AsksForAdvice)]
+    [InlineData("Can you give me some advice on what to do?", Utterance.AsksForAdvice)]
+    [InlineData("Could you advise me what to do next?", Utterance.AsksForAdvice)]
     public void Advice_intent_requires_a_question_or_direct_request_when_a_feeling_is_present(string text, Utterance expected) =>
         Assert.Equal(expected, UtteranceClassifier.Classify(text, hasFeeling: true));
 

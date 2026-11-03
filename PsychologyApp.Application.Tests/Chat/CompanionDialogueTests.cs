@@ -24,6 +24,17 @@ public class CompanionDialogueTests
         d.Respond(state, new CompanionInput.QuickReply(new ChatQuickReply(kind, label, payload)));
 
     [Fact]
+    public void Does_not_reflect_another_persons_emotion_as_the_users()
+    {
+        CompanionReply reply = Say(Create(), new CompanionState(), "Мама тревожится из-за переезда");
+
+        Assert.Equal(CompanionEmotion.Unknown, reply.Emotion);
+        Assert.True(reply.State.QuestionPending);
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("вам тревожно", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("вы тревожитесь", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void A_numeric_value_outside_the_practice_catalog_does_not_create_a_navigation_action()
     {
         CompanionReply reply = Tap(Create(), new CompanionState { Emotion = "Anxiety" }, ChatQuickReplyKinds.Practice, "Start", "999");
@@ -219,6 +230,26 @@ public class CompanionDialogueTests
     }
 
     [Fact]
+    public void A_correction_replaces_the_previous_emotion_in_the_live_conversation()
+    {
+        CompanionDialogue dialogue = Create();
+        CompanionState beforeCorrection = new()
+        {
+            Emotion = nameof(CompanionEmotion.Anger),
+            Theme = nameof(CompanionTheme.Relationships),
+            RecentTexts = ["Он опять не ответил на сообщение"]
+        };
+
+        CompanionReply corrected = Say(dialogue, beforeCorrection, "Нет, я не злюсь — мне страшно, что он уйдёт");
+
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), corrected.State.Emotion);
+        Assert.Equal(nameof(CompanionTheme.Relationships), corrected.State.Theme);
+        Assert.False(corrected.State.EmotionExplicitlyCleared);
+        Assert.Contains(corrected.Messages, message => message.Contains("тревог", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(corrected.Messages, message => message.Contains("вы злитесь", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void Panic_gets_help_for_the_body_first_not_questions()
     {
         CompanionReply reply = Say(Create(), new CompanionState(), "Паническая атака, не могу дышать, сердце колотится");
@@ -228,6 +259,15 @@ public class CompanionDialogueTests
         Assert.Equal("Grounding", reply.QuickReplies[0].Payload);
         Assert.Contains(reply.QuickReplies, c => c.Payload == "resource:somatic");
         Assert.Equal(ChatQuickReplyKinds.More, reply.QuickReplies[^1].Kind);
+    }
+
+    [Fact]
+    public void A_physical_sensation_already_named_is_not_asked_about_again()
+    {
+        CompanionReply reply = Say(Create(), new CompanionState(), "Перед встречей чувствую тяжесть в груди и переживаю");
+
+        Assert.Contains("body", reply.State.AskedQuestions);
+        Assert.DoesNotContain(reply.Messages, message => message.Contains("Где в теле", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -301,6 +341,26 @@ public class CompanionDialogueTests
 
         Assert.Contains(offer.QuickReplies, q => q.Kind == ChatQuickReplyKinds.Practice);
         Assert.Equal(offer.State.AskedQuestions.Distinct().Count(), offer.State.AskedQuestions.Count);
+    }
+
+    [Theory]
+    [InlineData(false, "Можешь дать мне совет, что делать?")]
+    [InlineData(true, "Can you give me some advice on what to do?")]
+    public void Explicit_advice_request_switches_from_listening_to_problem_solving(bool english, string text)
+    {
+        CompanionDialogue d = Create(english);
+        CompanionState state = new()
+        {
+            Goal = CompanionCaseContent.GoalVent,
+            Emotion = nameof(CompanionEmotion.Anxiety),
+            Theme = nameof(CompanionTheme.Work)
+        };
+
+        CompanionReply reply = Say(d, state, text);
+
+        Assert.Equal(CompanionCaseContent.GoalUnderstand, reply.State.Goal);
+        Assert.True(reply.State.GoalAsked);
+        Assert.Contains(reply.QuickReplies, q => q.Payload == "practice");
     }
 
     [Fact]

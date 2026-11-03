@@ -25,6 +25,8 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
         Item[] items = Load(file);
         List<string> misses = [];
         Dictionary<string, (int Total, int Correct)> byLabel = [];
+        Dictionary<string, int> predictedCounts = new(StringComparer.Ordinal);
+        Dictionary<(string Expected, string Actual), int> confusions = [];
         int hits = 0;
 
         foreach (Item item in items)
@@ -32,6 +34,12 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
             string predicted = analyzer.Analyze(item.Text).Emotion.ToString();
             (int total, int correct) = byLabel.GetValueOrDefault(item.Label);
             byLabel[item.Label] = (total + 1, correct + (predicted == item.Label ? 1 : 0));
+            predictedCounts[predicted] = predictedCounts.GetValueOrDefault(predicted) + 1;
+            if (predicted != item.Label)
+            {
+                (string Expected, string Actual) key = (item.Label, predicted);
+                confusions[key] = confusions.GetValueOrDefault(key) + 1;
+            }
             if (predicted == item.Label)
             {
                 hits++;
@@ -46,10 +54,89 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
         output.WriteLine($"{name}: {hits}/{items.Length} = {accuracy:P0}");
         foreach (KeyValuePair<string, (int Total, int Correct)> pair in byLabel.OrderBy(pair => pair.Key))
         {
-            output.WriteLine($"  {pair.Key}: recall {pair.Value.Correct}/{pair.Value.Total} = {(double)pair.Value.Correct / pair.Value.Total:P0}");
+            int predicted = predictedCounts.GetValueOrDefault(pair.Key);
+            double precision = predicted == 0 ? 0 : (double)pair.Value.Correct / predicted;
+            double recall = (double)pair.Value.Correct / pair.Value.Total;
+            double f1 = precision + recall == 0 ? 0 : 2 * precision * recall / (precision + recall);
+            output.WriteLine($"  {pair.Key}: precision {precision:P0}, recall {recall:P0}, F1 {f1:P0} ({pair.Value.Correct}/{pair.Value.Total})");
+        }
+
+        foreach (((string expected, string actual), int count) in confusions.OrderByDescending(pair => pair.Value).ThenBy(pair => pair.Key.Expected, StringComparer.Ordinal).Take(10))
+        {
+            output.WriteLine($"  Confusion {expected} -> {actual}: {count}");
         }
 
         misses.ForEach(output.WriteLine);
+        return accuracy;
+    }
+
+    private double MeasureOfflinePipeline(string file, string name, bool printMisses = false, double minGuessMargin = EmotionGuesser.MinMargin, bool printClassMetrics = true)
+    {
+        LexiconSituationAnalyzer analyzer = new();
+        EmotionGuesser guesser = EmotionGuesser.Bundled;
+        Item[] items = Load(file);
+        int hits = 0;
+        int guessed = 0;
+        Dictionary<string, (int Total, int Correct)> byLabel = [];
+        Dictionary<string, int> predictedCounts = new(StringComparer.Ordinal);
+        Dictionary<(string Expected, string Actual), int> confusions = [];
+        foreach (Item item in items)
+        {
+            CompanionEmotion emotion = analyzer.Analyze(item.Text).Emotion;
+            EmotionGuess? guess = null;
+            if (emotion == CompanionEmotion.Unknown
+                && item.Lang == "ru"
+                && item.Text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length >= EmotionGuesser.MinWords
+                && guesser.Rank(item.Text) is { Emotion: not CompanionEmotion.Unknown } ranked
+                && ranked.Margin >= minGuessMargin)
+            {
+                guess = ranked;
+            }
+
+            if (guess is not null)
+            {
+                emotion = guess.Emotion;
+                guessed++;
+            }
+
+            bool correct = emotion.ToString() == item.Label;
+            (int total, int correctCount) = byLabel.GetValueOrDefault(item.Label);
+            byLabel[item.Label] = (total + 1, correctCount + (correct ? 1 : 0));
+            predictedCounts[emotion.ToString()] = predictedCounts.GetValueOrDefault(emotion.ToString()) + 1;
+            if (correct)
+            {
+                hits++;
+            }
+            else
+            {
+                (string Expected, string Actual) key = (item.Label, emotion.ToString());
+                confusions[key] = confusions.GetValueOrDefault(key) + 1;
+                if (printMisses)
+                {
+                    output.WriteLine($"  [{item.Label} -> {emotion}] {item.Text}");
+                }
+            }
+        }
+
+        double accuracy = (double)hits / items.Length;
+        output.WriteLine($"{name}: offline lexicon + Russian suggestion gate (margin {minGuessMargin:0}) {hits}/{items.Length} = {accuracy:P0}; suggestions used {guessed}");
+        foreach ((string label, (int total, int correct)) in byLabel.OrderBy(pair => pair.Key, StringComparer.Ordinal).Where(_ => printClassMetrics))
+        {
+            int predicted = predictedCounts.GetValueOrDefault(label);
+            double precision = predicted == 0 ? 0 : (double)correct / predicted;
+            double recall = (double)correct / total;
+            double f1 = precision + recall == 0 ? 0 : 2 * precision * recall / (precision + recall);
+            output.WriteLine($"  {label}: precision {precision:P0}, recall {recall:P0}, F1 {f1:P0} ({correct}/{total})");
+        }
+
+        foreach (((string expected, string actual), int count) in confusions
+            .OrderByDescending(pair => pair.Value)
+            .ThenBy(pair => pair.Key.Expected, StringComparer.Ordinal)
+            .Take(10))
+        {
+            output.WriteLine($"  Confusion {expected} -> {actual}: {count}");
+        }
+
         return accuracy;
     }
 
@@ -105,13 +192,124 @@ public class AnalyzerDatasetTests(ITestOutputHelper output)
         Assert.True(accuracy >= 0.20, $"Fourth-set accuracy fell to {accuracy:P0}.");
     }
 
+    [Fact]
+    public void Russian_vocabulary_expansion_development_set_is_recorded()
+    {
+        double accuracy = Measure("nlu-ru-expansion-dev.json", "Russian vocabulary expansion development set");
+
+        Assert.True(accuracy >= 0.20, $"Development-set accuracy fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Lexicon_accuracy_on_classifier_training_phrases_is_reported()
+    {
+        Measure("nlu-train-extra.json", "Lexicon on the guesser training phrases (development only)");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_heldout_set_is_recorded()
+    {
+        double accuracy = Measure("nlu-ru-expansion-heldout.json", "Russian vocabulary expansion held-out set");
+
+        Assert.True(accuracy >= 0.20, $"Held-out-set accuracy fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v5_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v5.json", "Russian v5 (spent), lexicon only");
+        MeasureOfflinePipeline("nlu-ru-expansion-heldout-v5.json", "Russian v5 (spent), live offline pipeline");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v6_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v6.json", "Russian v6 (spent), lexicon only");
+        MeasureOfflinePipeline("nlu-ru-expansion-heldout-v6.json", "Russian v6 (spent), live offline pipeline");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v7_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v7.json", "Russian v7 (spent), lexicon only");
+        MeasureOfflinePipeline("nlu-ru-expansion-heldout-v7.json", "Russian v7 (spent), live offline pipeline");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v8_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v8.json", "Russian v8 (spent), lexicon only");
+        MeasureOfflinePipeline("nlu-ru-expansion-heldout-v8.json", "Russian v8 (spent), live offline pipeline");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v9_reports_current_offline_accuracy()
+    {
+        Measure("nlu-ru-expansion-heldout-v9.json", "Russian held-out v9, lexicon only");
+        double accuracy = MeasureOfflinePipeline("nlu-ru-expansion-heldout-v9.json", "Russian held-out v9, live offline pipeline");
+
+        // Synthetic development target is 90%; this floor only guards against collapse until independently labelled data is available.
+        Assert.True(accuracy >= 0.80, $"Live offline pipeline accuracy on the reserved Russian set fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v10_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v10.json", "Russian v10 (spent), lexicon only");
+        double accuracy = MeasureOfflinePipeline("nlu-ru-expansion-heldout-v10.json", "Russian v10 (spent), live offline pipeline");
+
+        Assert.True(accuracy >= 0.80, $"Live offline pipeline accuracy on the spent Russian set fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v11_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v11.json", "Russian v11 (spent), lexicon only");
+        double accuracy = MeasureOfflinePipeline("nlu-ru-expansion-heldout-v11.json", "Russian v11 (spent), live offline pipeline");
+
+        Assert.True(accuracy >= 0.80, $"Live offline pipeline accuracy on the spent Russian set fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v12_reports_its_spent_check_result()
+    {
+        Measure("nlu-ru-expansion-heldout-v12.json", "Russian v12 (spent), lexicon only");
+        double accuracy = MeasureOfflinePipeline("nlu-ru-expansion-heldout-v12.json", "Russian v12 (spent), live offline pipeline");
+
+        Assert.True(accuracy >= 0.80, $"Live offline pipeline accuracy on the spent Russian set fell to {accuracy:P0}.");
+    }
+
+    [Fact]
+    public void Russian_vocabulary_expansion_v13_reaches_ninety_five_percent_offline_accuracy()
+    {
+        Measure("nlu-ru-expansion-heldout-v13.json", "Russian held-out v13, lexicon only");
+        double accuracy = MeasureOfflinePipeline("nlu-ru-expansion-heldout-v13.json", "Russian held-out v13, live offline pipeline");
+
+        Assert.True(accuracy >= 0.95, $"Live offline pipeline accuracy on the fresh Russian set was {accuracy:P0}; the target is 95%.");
+    }
+
     [Theory]
     [InlineData("nlu-dataset.json")]
+    [InlineData("nlu-train-extra.json")]
     [InlineData("nlu-heldout.json")]
     [InlineData("nlu-fresh.json")]
     [InlineData("nlu-fresh2.json")]
     [InlineData("nlu-fresh3.json")]
     [InlineData("nlu-fresh4.json")]
+    [InlineData("nlu-ru-expansion-dev.json")]
+    [InlineData("nlu-ru-expansion-heldout.json")]
+    [InlineData("nlu-ru-expansion-heldout-v2.json")]
+    [InlineData("nlu-ru-expansion-heldout-v3.json")]
+    [InlineData("nlu-ru-expansion-heldout-v4.json")]
+    [InlineData("nlu-ru-expansion-heldout-v5.json")]
+    [InlineData("nlu-ru-expansion-heldout-v6.json")]
+    [InlineData("nlu-ru-expansion-heldout-v7.json")]
+    [InlineData("nlu-ru-expansion-heldout-v8.json")]
+    [InlineData("nlu-ru-expansion-heldout-v9.json")]
+    [InlineData("nlu-ru-expansion-heldout-v10.json")]
+    [InlineData("nlu-ru-expansion-heldout-v11.json")]
+    [InlineData("nlu-ru-expansion-heldout-v12.json")]
+    [InlineData("nlu-ru-expansion-heldout-v13.json")]
     public void Datasets_are_well_formed(string file)
     {
         Item[] items = Load(file);

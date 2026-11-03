@@ -22,10 +22,9 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | The person wants everything gone | «Delete all my data» on the data screen, asked twice: the database file is recreated empty, settings are cleared with a synchronous commit, the logs and the app's own exported files in the cache are deleted, then the app restarts in a fresh process (`PersonalDataEraser`). The files, settings and restart happen while the database lane is held, so a save already queued (an autosaved note, a chat turn) cannot land in the new, empty database | Files already shared to other apps (a backup sent by mail) are outside the app |
 | Backup file leaks after sharing | The export offers a passphrase (PBKDF2-SHA256 600k iterations, AES-256-GCM, authenticated); the unprotected option stays available; the temporary file is deleted from the cache after sharing | A weak passphrase; an unprotected export sent somewhere unsafe |
 | Forged intent to MainActivity | Reminder taps need a per-install secret carried only by our own PendingIntents | Navigation only, no data access |
-| Malicious content over the network | The app only downloads audio, over HTTPS, size-capped, content-type and magic-byte checked | Third-party site compromise |
-| Tampered model download (dormant feature) | Pinned commit and SHA-256 for every file | Feature is not shipped |
+| Malicious content over the network | Prayer audio is downloaded over HTTPS with size, content-type and magic-byte checks. | Third-party host compromise |
 | Crash / error log reveals data | Logs carry exception types and technical messages, never chat or journal text | Exception messages may include SQL fragments |
-| Network eavesdropping | No traffic except audio | – |
+| Network eavesdropping | No chat, journal or practice text leaves the device. Network traffic is limited to prayer audio. | Prayer-audio request metadata (IP address and requested resource) is visible to the hosting provider |
 
 ## Safety (not security) risks the app handles
 

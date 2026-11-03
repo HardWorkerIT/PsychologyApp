@@ -14,12 +14,14 @@ public sealed class DeviceSpeechInput : ISpeechInput
     private static readonly TimeSpan StopGrace = TimeSpan.FromMilliseconds(1500);
 
     private TaskCompletionSource? _stopRequested;
+    private int _stopVersion;
     private bool? _isSupported;
 
     public bool IsSupported => _isSupported ??= DetectSupport();
 
     public async Task<SpeechInputResult> ListenAsync(Action<string> onPartial, CancellationToken cancellationToken = default)
     {
+        int stopVersion = Volatile.Read(ref _stopVersion);
         if (!IsSupported)
         {
             return new SpeechInputResult(SpeechInputStatus.Unavailable);
@@ -36,6 +38,11 @@ public sealed class DeviceSpeechInput : ISpeechInput
             return new SpeechInputResult(SpeechInputStatus.Unavailable);
         }
 
+        if (stopVersion != Volatile.Read(ref _stopVersion))
+        {
+            return new SpeechInputResult(SpeechInputStatus.NothingHeard);
+        }
+
         if (!granted)
         {
             return new SpeechInputResult(SpeechInputStatus.PermissionDenied);
@@ -45,6 +52,10 @@ public sealed class DeviceSpeechInput : ISpeechInput
         TaskCompletionSource<SpeechToTextResult> completed = new(TaskCreationOptions.RunContinuationsAsynchronously);
         TaskCompletionSource stopRequested = new(TaskCreationOptions.RunContinuationsAsynchronously);
         _stopRequested = stopRequested;
+        if (stopVersion != Volatile.Read(ref _stopVersion))
+        {
+            stopRequested.TrySetResult();
+        }
 
         void OnUpdated(object? sender, SpeechToTextRecognitionResultUpdatedEventArgs e)
         {
@@ -71,9 +82,13 @@ public sealed class DeviceSpeechInput : ISpeechInput
                 await Task.WhenAny(completed.Task, Task.Delay(StopGrace, cancellationToken));
             }
 
+            // WhenAny does not rethrow cancellation from completed.Task or Task.Delay. Preserve the caller's cancellation
+            // contract instead of reporting a partial transcript or "nothing heard" after the user leaves the screen.
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (completed.Task.IsCompletedSuccessfully)
             {
-                SpeechToTextResult result = completed.Task.Result;
+                SpeechToTextResult result = await completed.Task;
                 string text = result.IsSuccessful && !string.IsNullOrWhiteSpace(result.Text) ? result.Text : lastPartial;
                 if (!string.IsNullOrWhiteSpace(text))
                 {
@@ -110,6 +125,7 @@ public sealed class DeviceSpeechInput : ISpeechInput
 
     public Task StopAsync()
     {
+        Interlocked.Increment(ref _stopVersion);
         _stopRequested?.TrySetResult();
         return Task.CompletedTask;
     }

@@ -1,6 +1,5 @@
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Features.ManageProfile;
-using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 using PsychologyApp.Presentation.Shared.Services.Preferences;

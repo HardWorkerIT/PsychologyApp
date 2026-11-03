@@ -12,6 +12,18 @@ namespace PsychologyApp.Application.Tests.Chat;
 
 public class ChatServiceTests
 {
+    [Fact]
+    public void ChatService_does_not_accept_an_outbound_http_transport()
+    {
+        Type[] dependencies = typeof(ChatService).GetConstructors()
+            .SelectMany(constructor => constructor.GetParameters())
+            .Select(parameter => parameter.ParameterType)
+            .ToArray();
+
+        Assert.DoesNotContain(dependencies, type =>
+            typeof(System.Net.Http.HttpMessageInvoker).IsAssignableFrom(type));
+    }
+
     private sealed class InMemoryChatRepository : IChatRepository
     {
         private readonly Dictionary<long, ChatSessionDTO> _sessions = [];

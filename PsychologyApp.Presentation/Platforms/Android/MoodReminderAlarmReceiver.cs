@@ -19,7 +19,7 @@ public sealed class MoodReminderAlarmReceiver : BroadcastReceiver
 
         if (!AndroidNotificationPermission.CanPost(context))
         {
-            ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+            ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
             return;
         }
 
@@ -43,7 +43,7 @@ public sealed class MoodReminderAlarmReceiver : BroadcastReceiver
         NotificationManagerCompat.From(context)?.Notify(MoodReminderConstants.NotificationId, notification);
         tapIntent.Dispose();
 
-        ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IMoodReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

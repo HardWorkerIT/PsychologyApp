@@ -28,6 +28,7 @@ public partial class TechniqueSessionPage : ContentPage
     private readonly INavigation _hostNavigation;
     private bool _initialized;
     private bool _bodyLoaded;
+    private readonly KeyboardResize _keyboard = new();
 
     public TechniqueSessionPage(
         ITechniqueViewModelFactory techniqueViewModelFactory,
@@ -56,6 +57,7 @@ public partial class TechniqueSessionPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _keyboard.Enable();
         PlayZoomAsync().FireAndForget();
         InitializeSessionAsync().FireAndForget();
     }
@@ -188,6 +190,7 @@ public partial class TechniqueSessionPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        _keyboard.Restore();
         if (BindingContext is TechniqueSessionViewModel sessionViewModel)
         {
             sessionViewModel.SaveEntryDraftIfNeeded();

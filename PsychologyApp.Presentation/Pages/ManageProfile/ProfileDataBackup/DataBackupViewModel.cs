@@ -4,6 +4,7 @@ using PsychologyApp.Application.DataBackup;
 using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Presentation.Features.ManageProfile;
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
@@ -25,6 +26,8 @@ public sealed class DataBackupViewModel : BaseViewModel
     private readonly IDialogService _dialogService;
     private readonly IPersonalDataEraser _eraser;
     private readonly IAppLock _appLock;
+    private readonly object _operationCancellationSync = new();
+    private readonly HashSet<CancellationTokenSource> _activeOperationCancellations = [];
 
     // A second tap while the system prompt is open would put a second prompt behind it.
     private bool _enablingAppLock;
@@ -102,11 +105,46 @@ public sealed class DataBackupViewModel : BaseViewModel
         _appLock = appLock;
 
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
-        ExportBackupCommand = new AsyncCommand(ExportBackupAsync);
-        ImportBackupCommand = new AsyncCommand(ImportBackupAsync);
-        ExportSummaryCommand = new AsyncCommand(ExportSummaryAsync);
-        ShareErrorLogCommand = new AsyncCommand(ShareErrorLogAsync);
+        ExportBackupCommand = new AsyncCommand(() => RunCancelableAsync(ExportBackupAsync));
+        ImportBackupCommand = new AsyncCommand(() => RunCancelableAsync(ImportBackupAsync));
+        ExportSummaryCommand = new AsyncCommand(() => RunCancelableAsync(ExportSummaryAsync));
+        ShareErrorLogCommand = new AsyncCommand(() => RunCancelableAsync(ShareErrorLogAsync));
         EraseAllCommand = new AsyncCommand(EraseAllAsync);
+    }
+
+    public void CancelPendingOperations()
+    {
+        lock (_operationCancellationSync)
+        {
+            foreach (CancellationTokenSource cancellation in _activeOperationCancellations)
+            {
+                cancellation.Cancel();
+            }
+        }
+    }
+
+    private async Task RunCancelableAsync(Func<CancellationToken, Task> operation)
+    {
+        using CancellationTokenSource cancellation = new();
+        lock (_operationCancellationSync)
+        {
+            _activeOperationCancellations.Add(cancellation);
+        }
+
+        try
+        {
+            await operation(cancellation.Token);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            lock (_operationCancellationSync)
+            {
+                _activeOperationCancellations.Remove(cancellation);
+            }
+        }
     }
 
     protected override void RefreshLocalizedProperties()
@@ -179,7 +217,7 @@ public sealed class DataBackupViewModel : BaseViewModel
         }
     }
 
-    private async Task ExportBackupAsync()
+    private async Task ExportBackupAsync(CancellationToken cancellationToken)
     {
         string? choice = await _dialogService.PickOptionAsync(
             AppStrings.BackupProtectTitle,
@@ -190,38 +228,40 @@ public sealed class DataBackupViewModel : BaseViewModel
             return;
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         string json;
         bool passphraseProtected = false;
         if (choice == AppStrings.BackupProtectWith)
         {
-            string? passphrase = await AskNewPassphraseAsync();
+            string? passphrase = await AskNewPassphraseAsync(cancellationToken);
             if (passphrase is null)
             {
                 return;
             }
 
-            json = await _backupService.ExportEncryptedAsync(passphrase);
+            json = await _backupService.ExportEncryptedAsync(passphrase, cancellationToken);
             passphraseProtected = true;
         }
         else
         {
-            json = await _backupService.ExportAsync();
+            json = await _backupService.ExportAsync(cancellationToken);
         }
 
         string fileName = SharedFileNames.Backup(passphraseProtected, DateTime.Now);
-        await ShareTemporaryFileAsync(fileName, json, AppStrings.DataBackupExportTitle);
+        await ShareTemporaryFileAsync(fileName, json, AppStrings.DataBackupExportTitle, cancellationToken);
     }
 
     /// <summary>
     /// The file holds chats, mood notes and the safety plan in plain text, so it is written to the cache only for the moment
     /// the share sheet is open and removed afterwards (also when sharing fails or is cancelled).
     /// </summary>
-    private static async Task ShareTemporaryFileAsync(string fileName, string content, string title)
+    private static async Task ShareTemporaryFileAsync(string fileName, string content, string title, CancellationToken cancellationToken)
     {
         string path = Path.Combine(FileSystem.CacheDirectory, fileName);
         try
         {
-            await File.WriteAllTextAsync(path, content, Encoding.UTF8);
+            await AtomicFileWriter.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await Share.Default.RequestAsync(new ShareFileRequest
             {
                 Title = title,
@@ -249,7 +289,7 @@ public sealed class DataBackupViewModel : BaseViewModel
         }
     }
 
-    private async Task ImportBackupAsync()
+    private async Task ImportBackupAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -262,16 +302,18 @@ public sealed class DataBackupViewModel : BaseViewModel
                 return;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             // A video or a database picked by mistake is rejected by its size, before it is read into memory.
             if (new FileInfo(file.FullPath).Length > BackupService.MaxImportFileBytes)
             {
                 throw new BackupFormatException("The file is too large to be a backup.");
             }
 
-            string json = await File.ReadAllTextAsync(file.FullPath, Encoding.UTF8);
+            string json = await File.ReadAllTextAsync(file.FullPath, Encoding.UTF8, cancellationToken);
             BackupImportResult? imported = _backupService.IsEncrypted(json)
-                ? await ImportProtectedAsync(json)
-                : await _backupService.ImportAsync(json);
+                ? await ImportProtectedAsync(json, cancellationToken)
+                : await _backupService.ImportAsync(json, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             if (imported is not BackupImportResult result)
             {
                 return;
@@ -284,6 +326,9 @@ public sealed class DataBackupViewModel : BaseViewModel
                     result.Completions + result.SessionResults,
                     result.ChatSessions,
                     result.SkippedDuplicates));
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
         }
         catch (BackupFormatException)
         {
@@ -298,10 +343,11 @@ public sealed class DataBackupViewModel : BaseViewModel
     }
 
     /// <summary>Asks for a new passphrase twice; null when cancelled or when it is too short or the two differ (a toast says which).</summary>
-    private async Task<string?> AskNewPassphraseAsync()
+    private async Task<string?> AskNewPassphraseAsync(CancellationToken cancellationToken)
     {
         string? first = await _dialogService.PromptPasswordAsync(
             AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseNewBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
+        cancellationToken.ThrowIfCancellationRequested();
         if (first is null)
         {
             return null;
@@ -315,6 +361,7 @@ public sealed class DataBackupViewModel : BaseViewModel
 
         string? second = await _dialogService.PromptPasswordAsync(
             AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseConfirmBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
+        cancellationToken.ThrowIfCancellationRequested();
         if (second is null)
         {
             return null;
@@ -330,12 +377,13 @@ public sealed class DataBackupViewModel : BaseViewModel
     }
 
     /// <summary>Three tries at the passphrase; null when cancelled or when all of them were wrong.</summary>
-    private async Task<BackupImportResult?> ImportProtectedAsync(string file)
+    private async Task<BackupImportResult?> ImportProtectedAsync(string file, CancellationToken cancellationToken)
     {
         for (int attempt = 0; attempt < 3; attempt++)
         {
             string? passphrase = await _dialogService.PromptPasswordAsync(
                 AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseOpenBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
+            cancellationToken.ThrowIfCancellationRequested();
             if (passphrase is null)
             {
                 return null;
@@ -343,7 +391,7 @@ public sealed class DataBackupViewModel : BaseViewModel
 
             try
             {
-                return await _backupService.ImportEncryptedAsync(file, passphrase);
+                return await _backupService.ImportEncryptedAsync(file, passphrase, cancellationToken);
             }
             catch (BackupPassphraseException)
             {
@@ -354,33 +402,34 @@ public sealed class DataBackupViewModel : BaseViewModel
         return null;
     }
 
-    private async Task ShareErrorLogAsync()
+    private async Task ShareErrorLogAsync(CancellationToken cancellationToken)
     {
         string text;
         try
         {
             string path = Shared.Common.Infrastructure.DebugFileLoggerProvider.ErrorLogPath;
-            text = File.Exists(path) ? await File.ReadAllTextAsync(path, Encoding.UTF8) : string.Empty;
+            text = File.Exists(path) ? await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken) : string.Empty;
         }
         catch (IOException)
         {
             text = string.Empty;
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         if (string.IsNullOrWhiteSpace(text))
         {
             _toastService.ShortToast(AppStrings.ErrorLogEmptyToast);
             return;
         }
 
-        await ShareTemporaryFileAsync(SharedFileNames.ErrorLog(DateTime.Now), text, AppStrings.ErrorLogTitle);
+        await ShareTemporaryFileAsync(SharedFileNames.ErrorLog(DateTime.Now), text, AppStrings.ErrorLogTitle, cancellationToken);
     }
 
-    private async Task ExportSummaryAsync()
+    private async Task ExportSummaryAsync(CancellationToken cancellationToken)
     {
         string language = UserPreferences.NormalizeLanguageKey(_preferences.Load().Language);
-        string summary = await _specialistSummaryService.BuildSummaryAsync(language);
+        string summary = await _specialistSummaryService.BuildSummaryAsync(language, cancellationToken);
         string fileName = SharedFileNames.SpecialistSummary(DateTime.Now);
-        await ShareTemporaryFileAsync(fileName, summary, AppStrings.DataBackupSummaryTitle);
+        await ShareTemporaryFileAsync(fileName, summary, AppStrings.DataBackupSummaryTitle, cancellationToken);
     }
 }

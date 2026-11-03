@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 This project follows a Keep a Changelog style and Semantic Versioning principles for release notes.
 
 ## [Unreleased]
+- После практики чек-ин настроения и самочувствия открыт сразу, но его можно свернуть; на экране завершения можно вернуться к списку и выбрать другую практику вместо рекомендованной. Проверено 891 Presentation-тестом; Android-сборка не подтверждена, так как на хосте отсутствует Android SDK.
+- Removed the experimental on-device language-model download/runtime path, its settings and chat integration. The companion and practice phrase suggestions remain deterministic and offline; crisis routing remains deterministic.
+- Chat and speech code now awaits completed asynchronous operations explicitly; CI rejects blocking task waits/results in production layers, except for the documented background-only diagnostic watchdog.
+- NLU benchmark now reports precision, recall, F1 by feeling, and common confusion pairs to expose recognition gaps hidden by aggregate accuracy.
+
+- Android: минимальная версия повышена до Android 7.0 (API 24) для автоматической защиты Google Play. Android 5 и 6 больше не поддерживаются. Not checked on a device.
 
 ## [2.009] - 2026-10-31
 

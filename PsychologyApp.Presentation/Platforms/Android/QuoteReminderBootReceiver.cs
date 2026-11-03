@@ -21,7 +21,7 @@ public sealed class QuoteReminderBootReceiver : BroadcastReceiver
             return;
         }
 
-        ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IQuoteReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

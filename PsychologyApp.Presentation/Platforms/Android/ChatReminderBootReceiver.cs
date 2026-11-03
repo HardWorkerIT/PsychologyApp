@@ -21,7 +21,7 @@ public sealed class ChatReminderBootReceiver : BroadcastReceiver
             return;
         }
 
-        ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.SyncAsync());
+        ReminderSyncWork.Run<IChatReminderCoordinator>(this, coordinator => coordinator.RescheduleAsync());
     }
 }
 #endif

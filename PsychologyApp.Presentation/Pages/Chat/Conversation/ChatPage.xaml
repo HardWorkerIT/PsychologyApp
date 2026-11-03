@@ -182,44 +182,49 @@
                     Chosen="OnTensionChosen" />
             </Border>
 
-            <FlexLayout
+            <ScrollView
                 IsVisible="{Binding ShowChips}"
-                Wrap="Wrap"
-                JustifyContent="Start"
-                Margin="20,10,20,0"
-                BindableLayout.ItemsSource="{Binding QuickReplies}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="vm:QuickReplyItem">
-                        <!-- Shrink 0: a chip moves to the next row instead of being squeezed and clipped (a long English label lost its second line). -->
-                        <Border
-                            Margin="0,0,8,8"
-                            BindingContextChanged="OnChipContextChanged"
-                            FlexLayout.Shrink="0"
-                            Style="{StaticResource ChatQuickReplyStyle}">
-                            <Border.Triggers>
-                                <DataTrigger TargetType="Border" Binding="{Binding IsPractice}" Value="True">
-                                    <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryFill}" />
-                                </DataTrigger>
-                            </Border.Triggers>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding Reply}" />
-                            </Border.GestureRecognizers>
-                            <Label
-                                Text="{Binding Label}"
-                                FontSize="14"
-                                FontFamily="{StaticResource MediumFontFamily}"
-                                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding IsPractice}" Value="True">
-                                        <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
-                                        <Setter Property="FontFamily" Value="{StaticResource SemiBoldFontFamily}" />
+                Orientation="Horizontal"
+                HorizontalScrollBarVisibility="Never"
+                Margin="0,8,0,0"
+                Padding="20,0">
+                <HorizontalStackLayout
+                    VerticalOptions="Center"
+                    BindableLayout.ItemsSource="{Binding QuickReplies}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:QuickReplyItem">
+                            <Border
+                                Margin="0,0,8,0"
+                                BindingContextChanged="OnChipContextChanged"
+                                MaximumWidthRequest="260"
+                                Style="{StaticResource ChatQuickReplyStyle}">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsPractice}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryFill}" />
                                     </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
-                        </Border>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </FlexLayout>
+                                </Border.Triggers>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding Reply}" />
+                                </Border.GestureRecognizers>
+                                <Label
+                                    Text="{Binding Label}"
+                                    FontSize="14"
+                                    FontFamily="{StaticResource MediumFontFamily}"
+                                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                                    MaxLines="2"
+                                    LineBreakMode="WordWrap">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsPractice}" Value="True">
+                                            <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
+                                            <Setter Property="FontFamily" Value="{StaticResource SemiBoldFontFamily}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </ScrollView>
 
             <ui:ChatInputBar
                 x:Name="InputBar"
