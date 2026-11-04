@@ -20,7 +20,7 @@ public sealed class PracticeReminderAlarmReceiver : BroadcastReceiver
         string? techniqueValue = intent.GetStringExtra(PracticeReminderConstants.ExtraTechniqueId);
         if (!Enum.TryParse(techniqueValue, out TechniqueId techniqueId))
         {
-            techniqueId = TechniqueId.Spin;
+            techniqueId = TechniqueId.Grounding;
         }
 
         string title = intent.GetStringExtra(PracticeReminderConstants.ExtraTitle)

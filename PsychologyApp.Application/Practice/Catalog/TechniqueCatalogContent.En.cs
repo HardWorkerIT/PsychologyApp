@@ -246,49 +246,49 @@ internal static class TechniqueCatalogContentEn
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
-        "Practice", "Observer position",
+        "Practice", "Distanced Self-Talk",
         [
-            "1. Describe the situation that bothers you",
-            "2. Write feelings from first person",
-            "3. View the situation as a neutral observer",
-            "4. Rate tension after shifting position"
+            "1. Name the situation and feeling in one sentence; you do not need to describe a painful event.",
+            "2. Address yourself by name or as “you,” instead of only “I.” For example: “[Name], what is happening right now?”",
+            "3. Write what matters now and one safe, realistic next step. Do not excuse harm or minimize danger.",
+            "4. Rate your tension now. It may ease, stay the same, or increase. If you feel worse, stop and choose other support."
         ],
-        "Shifting perceptual position helps step back from an emotional peak and see the situation more broadly.",
-        TechniqueUiKind.Entry, "Technique #12", "12.06.2026", "Observer position", "Step back from emotions and see the situation from outside", "Hard moment", "NLP", 4, "Visibility",
+        "A brief self-distancing prompt: address yourself by name or as “you” rather than only “I.” It may create room to reflect, but does not promise immediate relief.",
+        TechniqueUiKind.Entry, "Technique #12", "12.06.2026", "Distanced Self-Talk", "Address yourself by name or as “you,” then choose a safe next step", "Difficult moment", "Self-help skill", 1, "Visibility",
         [
-            new TechniqueEntrySeed("Situation", "What happened or what are you replaying in your mind?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Feelings from first person", "What do you feel while inside the situation?", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("What the observer sees", "What would a calm outside observer notice?", Suggestions: ["Two people arguing", "A tired, upset person", "An ordinary work situation", "Each one defends their side", "In a week this will be forgotten", "People misunderstood each other", "A person trying very hard", "Unpleasant, but not dangerous", "Everyone has their own view", "The person needs rest"]),
-            new TechniqueEntrySeed("Tension now", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situation", "Briefly: what is happening now? Details of a painful event are not needed.", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Feelings from first person", "What are you feeling? One short sentence is enough.", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("What the observer sees", "Address yourself by name or as “you”: what matters, and what is one safe next step?", Suggestions: ["[Name], what matters to you right now?", "What is one safe, realistic step?", "How can you support yourself?", "What would you say to someone you care about?", "You can reply later, when things are clearer"]),
+            new TechniqueEntrySeed("Tension now", "Rate it at the end; it may stay the same.", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "When you are inside an episode, emotions feel inevitable. The observer position creates distance without denying the experience.",
-            "When a situation overwhelms you and rational arguments do not help.",
-            "Describe the situation and feelings, then rewrite it in third person — neutrally, without judgment.",
-            "Argument: inside — \"they disrespect me\". Observer: \"two people are speaking loudly\". Tension: 8 → 5."),
+            "Distanced self-talk uses your name or “you” instead of only “I.” This may create room to reflect, but it is not a promise of immediate relief.",
+            "Try it during manageable emotional or social stress, only when you are safe. Do not use it to excuse harm or dismiss real danger.",
+            "Name the feeling briefly, address yourself by name or as “you,” and ask what matters now and what safe step is possible.",
+            "Instead of “I can’t cope”: “[Name], this is hard. What is one safe next step you can take?”"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Anchor = new(
-        "Practice", "Resource anchor",
+        "Practice", "Supportive memory",
         [
-            "1. Recall a moment when you felt confident or calm",
-            "2. Describe body sensations",
-            "3. Choose a simple anchor gesture",
-            "4. Rate the strength of the resource state"
+            "1. Recall a safe moment when you felt supported or managed a difficulty",
+            "2. Notice what helped and what you sensed in your body",
+            "3. If you wish, choose a gesture only as a reminder of the memory",
+            "4. Rate how helpful the memory feels now (0 = not at all, 10 = very); 0 is okay"
         ],
-        "An anchor links a body gesture to a resource state so you can return to support more quickly.",
-        TechniqueUiKind.Entry, "Technique #13", "12.06.2026", "Resource anchor", "Restore support through gesture and memory", "Hard moment", "NLP", 4, "SelfImprovement",
+        "A memory may remind you of familiar sources of support. Responses vary; a gesture is only an optional reminder, not a reliable way to change your state.",
+        TechniqueUiKind.Entry, "Technique #13", "12.06.2026", "Supportive memory", "Recall an experience of support and notice usable resources", "A hard moment", "Memory recall", 4, "SelfImprovement",
         [
-            new TechniqueEntrySeed("Resource memory", "When did you feel strong, calm, or joyful?", Suggestions: ["A talk that went well", "A holiday by the sea", "A hug from someone close", "Finishing something hard", "A walk in nature", "Passing an exam", "The birth of a child", "Winning a competition", "An evening with friends", "Praise from my manager", "First day at a new job", "A morning without rush"]),
+            new TechniqueEntrySeed("Resource memory", "Choose a memory that feels safe to recall; skip this exercise if none comes to mind.", Suggestions: ["A talk that went well", "A holiday by the sea", "A hug from someone close", "Finishing something hard", "A walk in nature", "Passing an exam", "The birth of a child", "Winning a competition", "An evening with friends", "Praise from my manager", "First day at a new job", "A morning without rush"]),
             new TechniqueEntrySeed("Body sensations", "Where do you feel it? Warmth, lightness, grounding…", Suggestions: ["Warmth in the chest", "Lightness", "Open shoulders", "Even breathing", "Steady legs", "A smile", "A calm heart", "A straight back", "Energy in my hands", "A relaxed belly"]),
-            new TechniqueEntrySeed("Gesture or anchor", "E.g. clench fist, touch wrist", Suggestions: ["Clench a fist", "Touch the wrist", "Join thumb and index finger", "Hand on the heart", "A deep breath", "Squeeze an earlobe", "Open the shoulders", "Stroke my palm"]),
-            new TechniqueEntrySeed("State strength", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Optional reminder gesture", "This gesture may remind you of the memory; you can skip this step", Suggestions: ["Clench a fist", "Touch the wrist", "Join thumb and index finger", "Hand on the heart", "A deep breath", "Squeeze an earlobe", "Open the shoulders", "Stroke my palm"]),
+            new TechniqueEntrySeed("Memory response", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "The brain quickly links a gesture to a state if you repeat the pair \"memory + gesture\" several times.",
-            "Before a stressful event or when inner support feels low.",
-            "Recall the resource episode, intensify body sensations, and fix them with a simple gesture.",
-            "Resource: successful talk. Body: warmth in chest. Anchor: thumb touch. Strength: 8."),
+            "This is a brief memory exercise. Its effect, and any link with a gesture, are not guaranteed.",
+            "When you want to remember what has helped before. Choose only a safe memory; stop if it feels harder.",
+            "Notice what helped. A gesture is optional and only a reminder; you do not need to make yourself feel calm.",
+            "I remember a friend listening to me. Talking helped; I could message them now. Memory response: 5 out of 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Grounding = new(
@@ -317,49 +317,50 @@ internal static class TechniqueCatalogContentEn
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
-        "Practice", "Box breathing",
+        "Practice", "Gentle paced breathing",
         [
-            "1. Rate tension before the practice",
-            "2. Inhale for 4 counts",
-            "3. Hold for 4 counts",
-            "4. Exhale for 4 counts",
-            "5. Hold for 4 counts — repeat 4 cycles and rate tension after"
+            "1. Rate your tension before the practice",
+            "2. Sit comfortably. Keep your breathing gentle; don't breathe deeper than usual",
+            "3. If comfortable, follow the circle: in for about 4 counts, out for about 6. Don't hold your breath",
+            "4. If the pace doesn't suit you, let go of the count or stop. If dizzy or short of breath, return to your natural breathing",
+            "5. Rate your tension again afterwards. It may not change; that is useful information too"
         ],
-        "Rhythmic breathing calms the nervous system and reduces bodily tension.",
-        TechniqueUiKind.Entry, "Technique #15", "04.07.2026", "Box breathing", "Calm the body through breath rhythm", "Hard moment", "Psyche", 3, "Air",
+        "A brief, gentle rhythm without breath holds can be tried when tense. It does not suit everyone: counting or focusing on the breath may increase discomfort.",
+        TechniqueUiKind.Entry, "Technique #15", "04.07.2026", "Gentle paced breathing", "Try a comfortable rhythm with a slightly longer out-breath", "Hard moment", "Psyche", 3, "Air",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "What did you notice in your body or breath during the practice?", Suggestions: ["Shoulders dropped", "Breathing slowed", "Felt warmer", "Hard to hold the pause", "Thoughts distracted me", "I felt calmer", "Felt dizzy", "Heart slowed down", "Wanted to yawn", "Nothing special"]),
+            new TechniqueEntrySeed("Notes", "What did you notice? Any response is okay.", Suggestions: ["The pace felt comfortable", "Counting felt distracting", "The pace felt too slow", "I felt dizzy", "Breathing felt uncomfortable", "I felt a little calmer", "No change in tension", "I felt more tense", "I stopped and noticed things around me"]),
             new TechniqueEntrySeed("Tension after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Slow rhythmic breathing lowers sympathetic nervous system activity and helps the body exit fight-or-flight mode.",
-            "During anxiety, panic, racing heart, insomnia, or feeling overwhelmed.",
-            "Sit comfortably, breathe through your nose: 4 in, 4 hold, 4 out, 4 hold. Repeat 4 cycles.",
-            "Anxiety 7/10 → after 4 cycles 4/10. Shoulders drop, pulse slows."),
+            "A brief, gentle rhythm with a slightly longer out-breath is one way to try pacing the breath when tense. Responses vary; this practice does not guarantee relief.",
+            "When you feel tense and focusing on breathing feels comfortable.",
+            "Sit comfortably. Keep the breath gentle and no deeper than usual. For about a minute, you can follow the circle: in for about 4 counts and out for about 6, with no pauses. If the pace feels forced, return to your natural breathing. Stop if discomfort increases and name a few objects around you.",
+            "Tension was 7/10. After a minute it was still 7/10; counting felt forced, so I stopped and named five objects around me."
+        ),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SmallStep = new(
         "Practice", "One small step",
         [
-            "1. Describe what feels heavy or blocks you from starting",
-            "2. Choose the smallest realistic step for today",
-            "3. Write when you will do it",
-            "4. Rate your energy after writing the step"
+            "1. Choose a small activity for self-care, interest, connection, or a sense of completion",
+            "2. Shrink it to a safe 2–5 minute start. You do not have to finish the whole task",
+            "3. Pick a specific time in the next 24 hours. If now is not right, choose rest, support, or an easier step",
+            "4. Rate how doable it feels: 0 — not confident at all, 10 — completely confident. If unsure, make it smaller"
         ],
-        "Behavioral activation: a small action restores a sense of movement and control.",
-        TechniqueUiKind.Entry, "Technique #16", "04.07.2026", "One small step", "Restore momentum through minimal action", "Hard moment", "CBT", 5, "DirectionsWalk",
+        "A brief activity plan informed by behavioral activation. A small step can help with getting started, but it does not guarantee a better mood or more energy.",
+        TechniqueUiKind.Entry, "Technique #16", "04.07.2026", "One small step", "Choose an activity and make the start manageable", "Hard moment", "CBT", 5, "DirectionsWalk",
         [
-            new TechniqueEntrySeed("What feels heavy", "What seems hard, boring, or impossible right now?", Suggestions: ["Tiredness", "No energy", "Too much to do", "Boredom", "Scared to start", "Nothing seems to matter", "Slept badly", "No mood", "Loneliness", "Procrastination", "Headache", "Don't know where to start"], Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Smallest step today", "E.g. get up, wash face, send one message", Suggestions: ["Get out of bed", "Wash my face", "Drink some water", "Send one message", "Go outside for 5 minutes", "Tidy one thing", "Open a window", "Stretch for 2 minutes", "Take a shower", "Eat something", "Call someone close", "Open the file I need", "Write a plan for the day", "Wash one cup"]),
-            new TechniqueEntrySeed("When you will do it", "A specific time or moment in the day", Suggestions: ["Right now", "In 15 minutes", "In an hour", "In the morning", "After breakfast", "After lunch", "In the evening", "Before bed", "Tomorrow morning", "At the weekend"]),
-            new TechniqueEntrySeed("Energy after", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("What makes starting hard?", "Tiredness, anxiety, loneliness, too much to do?", Suggestions: ["Tiredness", "Anxiety", "Loneliness", "Too much to do", "Boredom", "I don't know where to start", "I need rest", "The conditions aren't right"], Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("A small activity for me", "Self-care, interest, connection, or a small task", Suggestions: ["Drink water or have a snack", "Wash or get dressed", "Get fresh air for 2 minutes", "Play a favorite song", "Send someone close one message", "Spend 2 minutes on something important", "Put one thing away", "Ask someone to stay with me"]),
+            new TechniqueEntrySeed("When will you try it?", "A specific time in the next 24 hours", Suggestions: ["For 2 minutes now", "After breakfast", "After lunch", "After work or study", "At a time I choose today", "Ask someone close to remind me"]),
+            new TechniqueEntrySeed("How doable does it feel?", "0 — not confident at all, 10 — completely confident", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "In apathy the brain waits for motivation to act. A small step creates motivation through action, not the other way around.",
-            "When you have no energy, everything feels pointless, or starting the day is hard.",
-            "Pick a 2–5 minute step without a perfect plan. Write it and the time — that is already movement.",
-            "Clean apartment → put one cup in the kitchen at 10:00. Energy: 2 → 4."),
+            "Low mood or energy can make it hard to begin. A small planned activity may help create momentum; the effect varies from person to person.",
+            "When low mood or energy makes it hard to start and a safe, manageable activity is available. Rest or asking for help can also be a useful step.",
+            "Choose an activity for self-care, interest, connection, or a sense of completion; shrink the start to 2–5 minutes and schedule it within 24 hours. Planning is not the same as doing it. If it does not feel manageable, make it smaller or ask for support.",
+            "Instead of “clean the whole apartment,” wash one cup after lunch — or send someone close: “Have a minute to talk?”"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
@@ -491,24 +492,24 @@ internal static class TechniqueCatalogContentEn
     internal static readonly BuiltInTechniqueDefinition Balloons = new(
         "Practice", "Pop the balloons",
         [
-            "1. Rate your tension",
-            "2. Pop the balloons with a tap, without rushing",
-            "3. With each pop, breathe out slowly",
-            "4. Play the round to the end",
-            "5. Rate your tension after"
+            "1. Rate your tension before the game",
+            "2. Start the round and tap at your own pace; you do not need to pop every balloon",
+            "3. Breathe as usual. You do not need to match your exhale to each pop",
+            "4. The round ends on its own. If the game frustrates you or you feel worse, go back",
+            "5. Rate your tension after and note what you noticed. No change is a valid result"
         ],
-        "A short game moves attention from anxious thoughts to a simple action and sensations.",
-        TechniqueUiKind.Entry, "Technique #22", "26.10.2026", "Pop the balloons", "A short break to let tension out", "Hard moment", "Psyche", 3, "BubbleChart",
+        "A short game for your hands and attention. It may briefly shift your focus, but it need not change how you feel and does not replace action or support.",
+        TechniqueUiKind.Entry, "Technique #22", "26.10.2026", "Pop the balloons", "An optional short game break", "Hard moment", "Psyche", 3, "BubbleChart",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "What changed while you were popping balloons?", Suggestions: ["I feel lighter", "My mind took a break", "I wanted to smile", "My breathing evened out", "The irritation passed", "My hands relaxed", "Nothing changed", "I want another round"]),
+            new TechniqueEntrySeed("Notes", "What did you notice, if anything? You can leave this blank.", Suggestions: ["A little less tense", "No noticeable change", "More tense", "My attention shifted briefly", "I noticed colors or movement", "The game felt frustrating", "Not sure", "Other"]),
             new TechniqueEntrySeed("Tension after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "When anxiety or irritation peaks, thoughts are hard to stop by willpower. A simple action that needs your eyes and hands switches the brain for a few minutes and lets tension ease. It is not a treatment but a way through an acute minute.",
-            "When irritation, tension or anxiety takes over and you need a short break. If the game only helps you avoid a problem that is worth solving, come back to it once you are calmer.",
-            "Don't hurry: you don't have to hit every balloon. Breathe out slowly with each pop. The round ends by itself; there is no endless game.",
-            "Tension 7/10 after an argument. A round of 20 balloons, a breath out with each pop. Tension 4/10, and I could calmly think about what to answer."),
+            "A short game may briefly occupy your hands and attention; its effect varies. It is not a guaranteed way to reduce anxiety or a treatment.",
+            "When a short game break feels welcome. Do not delay urgent steps for health or safety because of the game.",
+            "Tap at a comfortable pace; you do not have to pop every balloon. Breathe normally; do not sync your breathing with each pop. After the round, compare your rating without expecting a particular result. If there is a practical problem to address, return to the next step when ready.",
+            "After an argument, my tension was 7/10 and stayed at 7/10 after the round. I noticed I was still angry and chose to wait before replying."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition CyclicSigh = new(
@@ -558,25 +559,44 @@ internal static class TechniqueCatalogContentEn
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition BusyMind = new(
-        "Practice", "Keep the mind busy",
+        "Practice", "Brief Attention Shift",
         [
-            "1. Rate your tension",
-            "2. Take a task and do it in your head or out loud",
-            "3. If your thoughts drift back to the worry, gently return to the task",
-            "4. Do five tasks",
-            "5. Rate your tension after"
+            "1. Rate your tension only if that feels useful",
+            "2. Choose one neutral task for about 30–60 seconds",
+            "3. If attention returns to the worry, do not criticize yourself; you may gently return to the task once",
+            "4. Stop and check whether a practical next step or support is needed"
         ],
-        "Simple tasks for the mind take attention away from thoughts that go round in circles.",
-        TechniqueUiKind.Entry, "Technique #25", "26.10.2026", "Keep the mind busy", "Simple tasks to break the circle of thoughts", "Hard moment", "Psyche", 3, "Extension",
+        "A brief neutral task may shift attention for a moment when thoughts feel stuck in a loop. It does not remove thoughts or solve the problem.",
+        TechniqueUiKind.Entry, "Technique #25", "26.10.2026", "Brief Attention Shift", "A temporary pause when thoughts repeat", "Hard moment", "Psyche", 1, "Extension",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "What changed while you were busy with the tasks?", Suggestions: ["My thoughts let go", "I feel calmer", "It was hard to focus", "I want to get something done", "The anxiety came back", "Nothing changed", "I want more tasks"]),
+            new TechniqueEntrySeed("Notes", "How was that brief pause?", Suggestions: ["My attention shifted for a moment", "Nothing changed", "I felt more frustrated or tense", "I can see a next step now", "I need support", "I stopped the exercise"]),
             new TechniqueEntrySeed("Tension after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "When thoughts go round in circles, stopping them by willpower is almost impossible. A task that occupies the mind (counting, remembering, listing) leaves no room for the loop for a while. It is a distraction skill from dialectical behaviour therapy: not a solution to the problem but a way through an acute minute.",
-            "When intrusive thoughts take over, before sleep, or after an argument when the conversation keeps going on in your head.",
-            "Do the tasks for real: the more attention they take, the better. If the problem really needs solving, come back to it once you are calmer.",
-            "After an argument the conversation keeps spinning in my head, tension 7/10. Five tasks: animals that live in water, counting down from 100 by 7, things of every colour around me. Tension 4/10."),
+            "A short neutral task, such as naming objects of one colour, can sometimes help you get through an intense moment. It is a temporary shift of attention, not a way to eliminate thoughts; its effect varies from person to person and moment to moment.",
+            "When repetitive thoughts have taken your attention and you want a brief pause. If there is an urgent problem or a safety or health concern, address it and seek appropriate help.",
+            "Choose one simple task for 30–60 seconds; you do not need perfect focus. Then decide whether there is a practical step to return to. If the task frustrates you or makes things worse, stop and choose another approach.",
+            "After an argument, the conversation keeps replaying. For half a minute, name five objects around you, then decide whether to clarify a fact, take a break, or ask for support."),
+        null, null);
+
+    internal static readonly BuiltInTechniqueDefinition ThoughtDefusion = new(
+        "Practice", "Unhook from a thought",
+        [
+            "1. Notice one brief thought; writing it down is optional",
+            "2. Say: “I’m noticing the thought that…”",
+            "3. Notice one thing in front of you and the support beneath your feet",
+            "4. Choose one small next step, or stop here"
+        ],
+        "A brief acceptance and commitment therapy (ACT) skill: notice a thought as something the mind is doing, not necessarily a fact or a command.",
+        TechniqueUiKind.Entry, "Technique #26", "03.11.2026", "Unhook from a thought", "A short practice to create space around a worrying thought", "Thoughts", "Psyche", 1, "FormatQuote",
+        [
+            new TechniqueEntrySeed("Thought", "Optional: you can do the practice silently", Suggestions: HarshThoughts)
+        ],
+        Theory(
+            "A repeating thought can take over your attention. In ACT, defusion means noticing the thought without arguing with it or trying to push it away.",
+            "When one worry, self-critical thought, or fear keeps looping. You do not need to choose a distressing memory.",
+            "You do not have to write anything down. Add “I’m noticing the thought that…” before the thought, look at one object, and feel the support beneath your feet. If distress rises, stop and name a few things around you.",
+            "“I’ll ruin everything” becomes “I’m noticing the thought that I’ll ruin everything.” You notice the cup in front of you and decide whether to reply to one email or pause."),
         null, null);
 }

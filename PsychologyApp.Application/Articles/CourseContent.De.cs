@@ -93,7 +93,7 @@ public static partial class ArticleContent
                             "Schreib alles auf, was dich beschäftigt, und zu jedem Punkt einen nächsten Schritt oder „im Moment kann ich nichts tun“",
                             "Wenn der Gedanke im Bett zurückkommt, sag dir: „Das habe ich aufgeschrieben, darum kümmere ich mich morgen“"),
                         Quiz("Im Bett denkst du: „Wenn ich nicht schlafe, vermassle ich morgen alles.“ Was ist näher an der Wahrheit?", 1, "Der Gedanke übertreibt. Nach einer schlechten Nacht ist es schwerer, aber die meisten Menschen erledigen ihre Aufgaben trotzdem. Je stärker die Angst vor morgen, desto schwerer ist das Einschlafen.", "Es stimmt, das Scheitern ist unvermeidlich", "Nach einer schlechten Nacht ist es schwerer, aber das Wichtigste schaffe ich meistens", "Besser gar nicht ins Bett gehen"),
-                        Practice(TechniqueId.Observer, "Beobachterposition")
+                        Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken")
                     ],
                     "Nimm dir jeden Abend 15 Minuten, um aufzuschreiben, was dich beschäftigt, und nimm diese Gedanken nicht mit ins Bett.",
                     "Welche Gedanken kommen nachts am häufigsten? Hat das Aufschreiben geholfen?"),
@@ -192,7 +192,7 @@ public static partial class ArticleContent
                             "Wenn eine Sorge zu einer anderen Zeit kommt, schreib das Thema in einer Zeile auf und sag dir: „Darüber denke ich in meiner Sorgenzeit nach“",
                             "Geh in deiner Sorgenzeit die Liste durch: Plane einen Schritt für das, was du tun kannst, lass los, was du nicht tun kannst",
                             "Oft wirkt das Thema zur vereinbarten Zeit nicht mehr wichtig"),
-                        Practice(TechniqueId.Observer, "Beobachterposition")
+                        Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken")
                     ],
                     "Leg dir eine Sorgenzeit fest und verschiebe ängstliche Gedanken auf sie.",
                     "Ist es dir gelungen, Sorgen zu verschieben? Was ist mit den Themen bis zur vereinbarten Zeit passiert?"),

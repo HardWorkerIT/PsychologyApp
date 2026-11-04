@@ -3860,13 +3860,13 @@
     <value>Done. Sit quietly for a moment, then rate your tension below.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Five short tasks. Do each one in your head or out loud, without rushing.</value>
+    <value>One neutral task for about 30–60 seconds. Stop if it feels frustrating or makes things worse.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Start</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Done, next</value>
+    <value>Finish pause</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Another task</value>
@@ -3878,7 +3878,7 @@
     <value>Done. Rate your tension below.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Five more tasks</value>
+    <value>Another brief pause</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Name five animals that live in water</value>

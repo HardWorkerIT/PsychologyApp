@@ -3860,13 +3860,13 @@
     <value>Fertig. Bleib einen Moment ruhig sitzen und bewerte dann unten deine Anspannung.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Fünf kurze Aufgaben. Löse jede im Kopf oder laut, ohne Eile.</value>
+    <value>Eine neutrale Aufgabe für etwa 30–60 Sekunden. Wenn sie frustriert oder es dir schlechter geht, stoppe.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Starten</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Erledigt, weiter</value>
+    <value>Pause beenden</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Andere Aufgabe</value>
@@ -3878,7 +3878,7 @@
     <value>Fertig. Bewerte unten deine Anspannung.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Noch fünf Aufgaben</value>
+    <value>Noch eine kurze Pause</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Nenne fünf Tiere, die im Wasser leben</value>

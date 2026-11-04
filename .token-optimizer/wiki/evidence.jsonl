@@ -1,1 +1,4 @@
 {"schemaVersion":2,"id":"1-4aec3fac","episodeId":"mcp-29072-muqwv7no","sessionId":"mcp-29072-muqwv7no","arm":"full","client":"claude-code","clientVersion":"2.1.286","kind":"mcp-client","clientTitle":"Claude Code","at":1790942405580}
+{"schemaVersion":2,"id":"da-2847191a","kind":"harvest","tokens":383,"findings":1,"origin":"agent","sessionId":null,"at":1793750145740}
+{"schemaVersion":2,"id":"if-3dd097fa","kind":"harvest","tokens":455,"findings":1,"origin":"agent","sessionId":null,"at":1793751094390}
+{"schemaVersion":2,"id":"16p-86084f6b","kind":"harvest","tokens":303,"findings":1,"origin":"agent","sessionId":null,"at":1793760330740}

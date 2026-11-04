@@ -22,9 +22,17 @@ public class TechniqueFlavorTests
     {
         Assert.Equal(TechniqueFlavor.Body, TechniqueFlavors.For(TechniqueId.Breathing));
         Assert.Equal(TechniqueFlavor.Body, TechniqueFlavors.For(TechniqueId.Grounding));
+        Assert.Equal(TechniqueFlavor.Body, TechniqueFlavors.For(TechniqueId.PauseBeforeReaction));
+        Assert.Equal(TechniqueFlavor.Body, TechniqueFlavors.For(TechniqueId.SensoryComfort));
+
+        Assert.Equal(TechniqueFlavor.Mind, TechniqueFlavors.For(TechniqueId.UrgeSurfing));
+
         Assert.Equal(TechniqueFlavor.Mind, TechniqueFlavors.For(TechniqueId.ThoughtRecord));
         Assert.Equal(TechniqueFlavor.Heart, TechniqueFlavors.For(TechniqueId.SelfCompassion));
         Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.SmallStep));
+        Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.OppositeAction));
+        Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.ProblemSolving));
+        Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.ImplementationIntention));
     }
 
     [Theory]

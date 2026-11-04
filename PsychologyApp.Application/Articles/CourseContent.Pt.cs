@@ -93,7 +93,7 @@ public static partial class ArticleContent
                             "Escreva tudo o que preocupa você e, para cada item, um próximo passo ou «por enquanto não há o que fazer»",
                             "Se o pensamento voltar na cama, diga a si mesmo: «já anotei isso, cuido disso amanhã»"),
                         Quiz("Na cama você pensa: «Se eu não dormir, amanhã vou estragar tudo.» O que está mais perto da verdade?", 1, "O pensamento exagera. Depois de uma noite ruim fica mais difícil, mas a maioria das pessoas ainda dá conta das tarefas. Quanto maior o medo do dia seguinte, mais difícil adormecer.", "É verdade, o fracasso é inevitável", "Depois de uma noite ruim é mais difícil, mas geralmente dou conta do principal", "Melhor nem ir para a cama"),
-                        Practice(TechniqueId.Observer, "Posição de observador")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distância de um pensamento")
                     ],
                     "Toda noite, reserve 15 minutos para escrever o que preocupa você, e não leve esses pensamentos para a cama.",
                     "Que pensamentos aparecem com mais frequência à noite? Escrevê-los ajudou?"),
@@ -192,7 +192,7 @@ public static partial class ArticleContent
                             "Quando a preocupação vier em outra hora, anote o assunto numa linha e diga a si mesmo: «vou pensar nisso no meu horário da preocupação»",
                             "No seu horário da preocupação, repasse a lista: planeje um passo para o que você pode fazer, solte o que não pode",
                             "Muitas vezes, na hora marcada, o assunto já não parece importante"),
-                        Practice(TechniqueId.Observer, "Posição de observador")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distância de um pensamento")
                     ],
                     "Defina um horário da preocupação e adie para ele os pensamentos ansiosos.",
                     "Você conseguiu adiar a preocupação? O que aconteceu com os assuntos na hora marcada?"),

@@ -186,7 +186,7 @@ public partial class BreathingPacerView : ContentView
         double scale = BreathingPattern.ScaleAt(position.Phase, position.Progress);
         // The halo follows the circle a moment later, so the breath has depth instead of one flat disc.
         BreathPosition trailing = _pattern.At(Math.Max(0, elapsed - HaloLagSeconds));
-        Render(scale, _pattern.CalmAt(elapsed), BreathingPattern.ScaleAt(trailing.Phase, trailing.Progress));
+        Render(scale, _pattern.ProgressAt(elapsed), BreathingPattern.ScaleAt(trailing.Phase, trailing.Progress));
         CountLabel.Text = position.SecondsLeft.ToString();
         CycleLabel.Text = string.Format(AppStrings.BreathCycleFormat, position.Cycle, _pattern.Cycles);
 

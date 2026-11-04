@@ -9,14 +9,14 @@ internal static class BuiltInTechniqueCatalogRegistry
     internal static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> For(string? language) =>
         language?.ToLowerInvariant() switch
         {
-            "ru" => Russian,
-            "en" => English,
-            "fr" => French,
-            "de" => German,
-            "es" => Spanish,
-            "pt" => Portuguese,
-            "zh" => Chinese,
-            _ => English
+            "ru" => RussianWithAdditional,
+            "en" => EnglishWithAdditional,
+            "fr" => FrenchWithAdditional,
+            "de" => GermanWithAdditional,
+            "es" => SpanishWithAdditional,
+            "pt" => PortugueseWithAdditional,
+            "zh" => ChineseWithAdditional,
+            _ => EnglishWithAdditional
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> Russian { get; } =
@@ -46,7 +46,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentRu.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentRu.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentRu.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentRu.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentRu.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentRu.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> English { get; } =
@@ -76,7 +77,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentEn.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentEn.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentEn.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentEn.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentEn.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentEn.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> French { get; } =
@@ -106,7 +108,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentFr.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentFr.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentFr.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentFr.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentFr.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentFr.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> German { get; } =
@@ -136,7 +139,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentDe.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentDe.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentDe.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentDe.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentDe.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentDe.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> Spanish { get; } =
@@ -166,7 +170,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentEs.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentEs.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentEs.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentEs.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentEs.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentEs.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> Portuguese { get; } =
@@ -196,7 +201,8 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentPt.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentPt.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentPt.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentPt.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentPt.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentPt.ThoughtDefusion
         };
 
     private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> Chinese { get; } =
@@ -226,6 +232,48 @@ internal static class BuiltInTechniqueCatalogRegistry
             [TechniqueId.Balloons] = TechniqueCatalogContentZh.Balloons,
             [TechniqueId.CyclicSigh] = TechniqueCatalogContentZh.CyclicSigh,
             [TechniqueId.MuscleRelax] = TechniqueCatalogContentZh.MuscleRelax,
-            [TechniqueId.BusyMind] = TechniqueCatalogContentZh.BusyMind
+            [TechniqueId.BusyMind] = TechniqueCatalogContentZh.BusyMind,
+            [TechniqueId.ThoughtDefusion] = TechniqueCatalogContentZh.ThoughtDefusion
         };
+
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> RussianWithAdditional { get; } = WithAdditional(Russian, "ru");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> EnglishWithAdditional { get; } = WithAdditional(English, "en");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> FrenchWithAdditional { get; } = WithAdditional(French, "fr");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> GermanWithAdditional { get; } = WithAdditional(German, "de");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> SpanishWithAdditional { get; } = WithAdditional(Spanish, "es");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> PortugueseWithAdditional { get; } = WithAdditional(Portuguese, "pt");
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> ChineseWithAdditional { get; } = WithAdditional(Chinese, "zh");
+
+    private static IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> WithAdditional(
+        IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> catalog,
+        string language)
+    {
+        Dictionary<TechniqueId, BuiltInTechniqueDefinition> complete = catalog.ToDictionary(entry => entry.Key, entry => entry.Value);
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentAdditional.For(language))
+        {
+            complete.Add(id, definition);
+        }
+
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentEvidenceInformed.For(language))
+        {
+            complete.Add(id, definition);
+        }
+
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentImplementationIntention.For(language))
+        {
+            complete.Add(id, definition);
+        }
+
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentSensoryPause.For(language))
+        {
+            complete.Add(id, definition);
+        }
+
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentUrgeSurfing.For(language))
+        {
+            complete.Add(id, definition);
+        }
+
+        return complete;
+    }
 }

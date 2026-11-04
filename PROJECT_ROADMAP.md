@@ -33,5 +33,27 @@ Performance and engineering-quality backlog: [docs/performance-quality-roadmap.m
 - [x] Run `PsychologyApp.Presentation.Tests` in Release: 891 passed, 0 failed; `git diff --check` reported no whitespace errors.
 - [ ] Compile and smoke-test the Android UI on an emulator/device; blocked by the missing Android SDK below.
 
+## Technique catalog — 2026-11-04
+
+- [x] Скрыть двенадцать практик из новых рекомендаций, сохранив старые ID, определения и доступ к черновикам; добавить локализованные ThoughtDefusion, STOP, OppositeAction, ProblemSolving, CheckTheFacts, WorryTime и ImplementationIntention; обновить маршруты чата, тестов и программ. «Занять голову» ограничена временной паузой на 30–60 секунд; «Один маленький шаг» уточнена как планирование посильной активности; «Лопни шарики» оставлена как игровая пауза без обещания снижения тревоги. «Якорь ресурса» переименован и переписан в семи локалях как необязательное воспоминание об опоре без неподтверждённой связки жеста с состоянием; ID сохранён, практика остаётся архивной. XAML и визуальный UI не менялись.
+- [x] Добавить «Волну импульса» на семи языках; ограничить офлайн-маршрут мягкой злостью и явной фразой о безопасно откладываемом действии; добавить тесты отрицания и риска вреда. Исправить отсечение «прежде чем» в анализаторе. Application `net10.0` — 1 451 тест, Presentation `net10.0` — 908 тестов прошли. Эффект минутной адаптации не подтверждён; клинический review и пилот нужны до заявлений об эффективности.
+
+- [x] Переработать технику №15: мягкий ритм 4/6 без задержек в основном и полноэкранном круге, нейтральная обратная связь и выход при дискомфорте на семи языках; XAML не менялся. Индивидуальный эффект и клиническая пригодность этой минутной адаптации не установлены.
+
+- [x] Согласовать дыхательные подсказки статьи о панике с техникой №15 во всех семи локалях: мягкий ритм только по желанию, остановка при дискомфорте и переключение на окружение. Текущая проверка: Application — 1 437 и Presentation `net10.0` — 908 тестов пройдены; Android-сборка заблокирована отсутствующим SDK (`XA5300`).
+
+- [x] Прогнать пять .NET test-проектов в Release (Presentation `net10.0`): 2,813 тестов прошло; `git diff --check` прошёл.
+- [ ] Clinician review, native-speaker copy review, and a user pilot remain open. See `docs/technique-catalog-review-2026-11-03.md`.
+- [x] Добавить «Сенсорную паузу» (`SensoryComfort`) на семи языках как необязательную 30–60-секундную адаптацию DBT-самоуспокоения; подключить к каталогу, рекомендациям и офлайн-чату с оценкой дискомфорта до/после без обещания эффекта. Подробности и первичные источники: `docs/technique-sensory-comfort-review-2026-11-04.md`.
+- [ ] Получить клиническую проверку сенсорной паузы, ревью переводов носителями и пользовательские данные до заявлений об эффективности.
+
+- [x] По этой итерации пройдены Application `net10.0` — 1 439 тестов и Presentation `net10.0` — 908 тестов; Android target не собрался из-за отсутствующего SDK (`XA5300`).
+
+- [ ] Android build/device verification remains blocked by the missing Android SDK (`XA5300`).
+
 ## External blocker
 - [ ] Android package/emulator verification: `dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -c Release -f net10.0-android --no-restore` failed with `XA5300` because the Android SDK directory is missing. `dotnet workload list` also fails in this host with the .NET SDK installer `TypeInitializationException`. Install/CI/device verification remains external; no SDK was installed and nothing was published.
+
+## Technique improvement — 2026-11-04
+- [x] Улучшена «Позиция наблюдателя»: тот же `Observer`/черновой формат и порядок полей, но понятная минутная практика дистанцированного самообращения на семи языках; техника доступна в каталоге, узких чат-рекомендациях и последовательности исследования практик. Добавлены проверки доступности, формы черновика, рекомендуемых ситуаций и исключений для повышенного риска. Эффективность конкретной адаптации не заявляется; клиническое ревью и пользовательский пилот остаются открытыми.
+- [x] Release-проверки: Application `net10.0` — 1 468 тестов, Presentation `net10.0` — 908; `git diff --check` прошёл. Android-таргет не проверен: отсутствует Android SDK (`XA5300`).

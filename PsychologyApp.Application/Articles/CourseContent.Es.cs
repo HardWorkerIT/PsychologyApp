@@ -93,7 +93,7 @@ public static partial class ArticleContent
                             "Escribe todo lo que te preocupa y, para cada punto, un próximo paso o «por ahora no puedo hacer nada»",
                             "Si el pensamiento vuelve en la cama, dite: «ya lo he apuntado, me ocuparé de ello mañana»"),
                         Quiz("En la cama piensas: «Si no duermo, mañana me saldrá todo mal.» ¿Qué se acerca más a la verdad?", 1, "El pensamiento exagera. Después de una mala noche cuesta más, pero la mayoría de las personas sacan adelante sus tareas. Cuanto mayor es el miedo al día siguiente, más cuesta dormirse.", "Es verdad, el fracaso es inevitable", "Después de una mala noche cuesta más, pero normalmente saco adelante lo principal", "Mejor no acostarse"),
-                        Practice(TechniqueId.Observer, "Posición de observador")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento")
                     ],
                     "Cada tarde, reserva 15 minutos para escribir lo que te preocupa, y no te lleves esos pensamientos a la cama.",
                     "¿Qué pensamientos aparecen con más frecuencia por la noche? ¿Te ayudó escribirlos?"),
@@ -192,7 +192,7 @@ public static partial class ArticleContent
                             "Cuando aparezca una preocupación en otro momento, apunta el tema en una línea y dite: «pensaré en esto en mi tiempo para preocuparme»",
                             "En tu tiempo para preocuparte, repasa la lista: planifica un paso para lo que puedes hacer y suelta lo que no",
                             "A menudo, a la hora fijada, el tema ya no parece importante"),
-                        Practice(TechniqueId.Observer, "Posición de observador")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento")
                     ],
                     "Fíjate un tiempo para preocuparte y aplaza a él los pensamientos ansiosos.",
                     "¿Conseguiste aplazar la preocupación? ¿Qué pasó con los temas a la hora fijada?"),

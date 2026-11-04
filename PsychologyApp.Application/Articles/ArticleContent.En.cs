@@ -32,7 +32,7 @@ public static partial class ArticleContent
                     "Testing your frightening predictions in real life, step by step",
                     "Noticing thinking traps and questioning them",
                     "Measuring how strong the anxiety is: the Tests section has the short GAD-7 questionnaire"),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Ladder("Fear ladder")
             ]),
         new(
@@ -55,9 +55,9 @@ public static partial class ArticleContent
                     "Do not fight the sensations or run away if you can stay",
                     "Lengthen the out-breath: in for 4 counts, out for 6",
                     "Bring attention back to your surroundings: what you see, hear, touch"),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Practice(TechniqueId.Grounding, "5-4-3-2-1 grounding"),
-                Breathe("Try it now: a slow out-breath, longer than the in-breath"),
+                Breathe("If comfortable, try a gentle out-breath slightly longer than your in-breath. If it feels worse, return to your natural breathing and name a few things around you."),
                 H("How to make attacks rarer"),
                 P("What works best is gradually going back to avoided places and situations without safety nets, and exercises that deliberately bring on similar sensations in a safe setting. This is how the brain relearns: \"a pounding heart is just a pounding heart\"."),
                 Ladder("Fear ladder"),
@@ -133,7 +133,7 @@ public static partial class ArticleContent
                 P("Give yourself 15 to 20 minutes a day at the same time, not before bed. When a worry comes at another time, write it down in one line and tell yourself: \"I'll think about this in my worry time\". At that time, go through the list. Many items will no longer matter by then, and you will see it for yourself. This is not a ban on thinking, it is postponing."),
                 H("Not arguing with a thought, but stepping back"),
                 P("Trying not to think is useless: try not to think of a white bear. What helps is different: noticing the thought as an event in your head (\"there's that thought that I'll ruin everything again\"), not getting into it, and bringing attention back to what you are doing. The thought can play in the background, like a radio in the next room."),
-                Practice(TechniqueId.Observer, "Observer position"),
+                Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought"),
                 Practice(TechniqueId.Grounding, "5-4-3-2-1 grounding")
             ]),
         new(
@@ -286,7 +286,7 @@ public static partial class ArticleContent
                     "Ask yourself: what really hurt me? Which boundary was crossed?",
                     "Speak about yourself, not about the person: \"I get angry when plans change at the last minute\" instead of \"you always ruin everything\"",
                     "Say what you want: \"let me know at least a day ahead\""),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Practice(TechniqueId.BodyScan, "Where is it in the body?"),
                 Warning("When help is needed"),
                 P("If in anger you break things, hurt others, or the people close to you are afraid of you, it is a reason to see a specialist: this responds well to work. And if you or someone near you is in danger, call 112 or your local emergency number.")
@@ -348,7 +348,7 @@ public static partial class ArticleContent
                     "Remember: you cannot change another person, you can only decide for yourself"),
                 P("If you recognise yourself in the description of the traits, that is a brave observation. Psychotherapy works with this, and people with such traits often suffer a great deal themselves."),
                 Practice(TechniqueId.SelfCompassion, "Kind words to yourself"),
-                Practice(TechniqueId.Observer, "Observer position"),
+                Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought"),
                 Warning("If you are afraid"),
                 P("If the relationship involves threats, control or violence, read the article on emotional abuse. If you are in danger, call 112 or your local emergency number."),
                 Crisis("I need help now")
@@ -437,7 +437,7 @@ public static partial class ArticleContent
                     "Counting how many hours are left"),
                 H("If thoughts keep spinning"),
                 P("Move the worrying to the evening, a couple of hours before bed: write down what is bothering you and, for each item, a first step for tomorrow. In bed, if the thoughts come back, tell yourself \"I've already written this down\" and turn your attention to your breathing."),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Warning("When to see a doctor"),
                 P("If insomnia lasts more than three months, you snore loudly and wake up choking, or you fall asleep on the go during the day, see a doctor: these may be conditions that are treated differently.")
             ]),
@@ -452,12 +452,12 @@ public static partial class ArticleContent
                 P("It gets hard when this response switches on often and for long. Then the body gets tired: muscles ache, sleep gets worse, digestion is upset. What helps are practices that give the body back a sense of safety, and work on what sets the anxiety off."),
                 Practice(TechniqueId.BodyScan, "Where is it in the body?"),
                 H("Pounding heart, short of breath"),
-                P("This is what adrenaline and fast breathing feel like. We breathe faster and deeper than we need, and that makes it feel as if there is too little air. A slow out-breath, longer than the in-breath, helps: it switches on the nervous system's brake."),
-                Practice(TechniqueId.Breathing, "Box breathing"),
-                Breathe("Try it now: breathe in for 4, out for 6"),
+                P("During panic, breathing may become faster and feel uncomfortable. If it feels okay, try a gentle, slightly longer out-breath. You do not need to breathe deeply or hold your breath. If focusing on breathing increases discomfort, return to your natural rhythm and name a few objects around you."),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
+                Breathe("If comfortable, try a gentle breath in for about 4 counts and out for about 6, with no holds. Stop if uncomfortable."),
                 H("A lump in the throat, a tight chest"),
                 P("The muscles of the throat and chest tense when we hold feelings back or expect something bad. It helps to notice the tension without fighting it and to let the out-breath grow longer."),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 H("Tense shoulders, neck, jaw"),
                 P("The body gets ready to act and forgets to relax. It helps to move your attention through the body from time to time and to let tension go on the out-breath."),
                 Practice(TechniqueId.BodyScan, "Where is it in the body?"),
@@ -526,7 +526,7 @@ public static partial class ArticleContent
                     "Noticing anxious thoughts about the body and checking them like any other"),
                 P("Cognitive behavioural therapy for health anxiety is well studied and helps most people."),
                 Ladder("Fear ladder"),
-                Practice(TechniqueId.Observer, "Observer position"),
+                Practice(TechniqueId.ThoughtRecord, "Thought record"),
                 Warning("New symptoms: see a doctor"),
                 P("Working on anxiety does not mean ignoring the body. If a new symptom appears, grows or does not go away, see a doctor once and follow their advice. The list of warning signs is in the article \"The body and stress\".")
             ]),
@@ -599,8 +599,8 @@ public static partial class ArticleContent
                     "Taking a break when it gets too much: agree to come back to the talk in 20 to 30 minutes, when the body has calmed down",
                     "Offering to make up: a joke, a touch, \"let's start again\", and accepting it"),
                 P("The aim of an argument is not to win but to understand each other and find a solution you can both live with."),
-                Practice(TechniqueId.Breathing, "Box breathing"),
-                Practice(TechniqueId.Observer, "Observer position"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
+                Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought"),
                 P("If you are afraid in arguments, if you are humiliated, controlled or force is used, it is no longer a conflict but abuse. Read the article on emotional abuse.")
             ]),
         new(
@@ -845,7 +845,7 @@ public static partial class ArticleContent
                 Quiz("What keeps OCD going most?", 1, "A ritual removes the anxiety for a minute, and that is why it sticks. Treatment is built on meeting the thought without doing the ritual until the anxiety settles by itself.", "The intrusive thoughts themselves", "Rituals and seeking reassurance", "Weak willpower"),
                 H("What helps"),
                 P("The best-studied method is exposure and response prevention: step by step, meeting what sets off the thoughts and not doing the ritual. This is done with a psychotherapist, often together with medication prescribed by a psychiatrist. On your own you can start small: delay a ritual by a few minutes, cut down checking, notice the thought and name it: \"this is an OCD thought\"."),
-                Practice(TechniqueId.Observer, "Observer position"),
+                Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought"),
                 Ladder("Fear ladder"),
                 Warning("When to see a specialist"),
                 P("If rituals take more than an hour a day, get in the way of work and relationships, or the thoughts cause a lot of suffering, see a psychotherapist or psychiatrist. OCD is very treatable.")
@@ -891,7 +891,7 @@ public static partial class ArticleContent
                     "Keep another way at hand: a walk, breathing, a message to a friend",
                     "Don't try to quit everything at once: start with one time of day or one place"),
                 Practice(TechniqueId.BodyScan, "Where is it in the body?"),
-                Practice(TechniqueId.Breathing, "Box breathing"),
+                Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Warning("When you need help"),
                 P("If you drink every day or a lot at once, and without alcohol your hands shake and you sleep badly, don't stop abruptly on your own: sudden withdrawal after long and frequent drinking can be dangerous. See an addiction specialist or a GP. If overeating alternates with fasting, vomiting or laxatives, read the article on eating disorders."),
                 See(ArticleIds.EatingDisorders, "Eating disorders: how to recognise them")
@@ -1112,7 +1112,7 @@ public static partial class ArticleContent
                 Warning("If it makes things worse"),
                 P("After trauma, attending to the body with eyes closed sometimes brings up hard memories. Then keep your eyes open, shorten the practice to a minute and lean on what you see around you. If it stays hard, it is better to practise with a specialist."),
                 Practice(TechniqueId.Grounding, "5-4-3-2-1 grounding"),
-                Practice(TechniqueId.Breathing, "Box breathing")
+                Practice(TechniqueId.Breathing, "Gentle paced breathing")
             ]),
         new(
             ArticleIds.Uncertainty,
@@ -1146,7 +1146,7 @@ public static partial class ArticleContent
                     "Remember that most decisions can be adjusted along the way"),
                 P("There is usually no perfect decision. There is a reasonable one, and that is enough."),
                 Practice(TechniqueId.ThoughtRecord, "Thought record"),
-                Practice(TechniqueId.BusyMind, "Keep the mind busy")
+                Practice(TechniqueId.BusyMind, "Brief Attention Shift")
             ]),
         new(
             ArticleIds.JealousyAndEnvy,

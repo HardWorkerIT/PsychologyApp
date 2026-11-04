@@ -5,7 +5,7 @@ using Xunit;
 
 namespace PsychologyApp.Presentation.Tests;
 
-/// <summary>The rhythms of the cyclic sigh, the muscle relaxation and "keep the mind busy": what the person is guided through, and that each ends.</summary>
+/// <summary>The rhythms of the cyclic sigh, muscle relaxation and the brief attention shift: what the person is guided through, and that each ends.</summary>
 public sealed class CalmingPracticesTests
 {
     private static readonly BreathingPattern Sigh = BreathingPattern.CyclicSigh;
@@ -59,7 +59,7 @@ public sealed class CalmingPracticesTests
     [Fact]
     public void A_round_of_tasks_ends_after_its_length_without_repeating_a_task()
     {
-        BusyMindRound round = new(random: new Random(3));
+        BusyMindRound round = new(length: 5, random: new Random(3));
         List<int> seen = [round.Current];
 
         round.Skip();
@@ -77,7 +77,7 @@ public sealed class CalmingPracticesTests
             seen.Add(round.Current);
         }
 
-        Assert.Equal(BusyMindRound.DefaultLength, round.Step);
+        Assert.Equal(round.Length, round.Step);
         Assert.Equal(seen.Count, seen.Distinct().Count());
         Assert.All(seen, task => Assert.InRange(task, 1, BusyMindRound.TaskCount));
     }
@@ -95,6 +95,36 @@ public sealed class CalmingPracticesTests
         Assert.Equal(BusyMindRound.TaskCount - 1, skips);
         round.Next();
         Assert.True(round.IsOver);
+    }
+
+    [Fact]
+    public void A_default_round_returns_to_rating_after_one_task()
+    {
+        BusyMindRound round = new(random: new Random(3));
+
+        Assert.Equal(1, round.Length);
+        Assert.Equal(1, round.Step);
+        Assert.False(round.IsOver);
+
+        round.Next();
+
+        Assert.True(round.IsOver);
+        Assert.Equal(1, round.Step);
+    }
+
+    [Theory]
+    [InlineData("ru")]
+    [InlineData("en")]
+    [InlineData("de")]
+    [InlineData("es")]
+    [InlineData("fr")]
+    [InlineData("pt")]
+    [InlineData("zh")]
+    public void Every_language_has_the_short_attention_shift_intro_and_exit_labels(string language)
+    {
+        Assert.NotEqual("BusyMindIntro", AppStrings.In(language, "BusyMindIntro"));
+        Assert.NotEqual("BusyMindNext", AppStrings.In(language, "BusyMindNext"));
+        Assert.NotEqual("BusyMindAgain", AppStrings.In(language, "BusyMindAgain"));
     }
 
     // A task number without a text would show its resource key to the person.

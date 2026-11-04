@@ -108,5 +108,5 @@ public partial class TechniquesViewModel
         OnPropertyChanged(nameof(EngagementNudgeText));
     }
 
-    private TechniqueId _todayTechniqueId = TechniqueId.Spin;
+    private TechniqueId _todayTechniqueId = TechniqueId.Grounding;
 }

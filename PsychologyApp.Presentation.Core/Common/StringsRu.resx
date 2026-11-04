@@ -3866,13 +3866,13 @@
     <value>Готово. Посидите немного спокойно, а потом оцените напряжение ниже.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Пять коротких заданий. Выполняйте каждое в уме или вслух, не торопясь.</value>
+    <value>Одна нейтральная задача на 30–60 секунд. Если станет неприятно или труднее, остановитесь.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Начать</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Готово, дальше</value>
+    <value>Завершить паузу</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Другое задание</value>
@@ -3884,7 +3884,7 @@
     <value>Готово. Оцените напряжение ниже.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Ещё пять заданий</value>
+    <value>Ещё одна короткая пауза</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Назовите пять животных, которые живут в воде</value>

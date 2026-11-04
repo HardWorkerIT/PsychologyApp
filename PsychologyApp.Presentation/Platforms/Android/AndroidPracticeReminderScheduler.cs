@@ -20,7 +20,7 @@ public sealed class AndroidPracticeReminderScheduler : IPracticeReminderSchedule
     {
         Context context = Platform.AppContext;
         AlarmManager? alarmManager = context.GetSystemService(Context.AlarmService) as AlarmManager;
-        PendingIntent pendingIntent = CreateAlarmPendingIntent(context, TechniqueId.Spin, string.Empty, string.Empty);
+        PendingIntent pendingIntent = CreateAlarmPendingIntent(context, TechniqueId.Grounding, string.Empty, string.Empty);
         alarmManager?.Cancel(pendingIntent);
         pendingIntent.Dispose();
 

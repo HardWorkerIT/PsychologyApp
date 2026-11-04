@@ -32,7 +32,7 @@ public static partial class ArticleContent
                     "Poner a prueba las predicciones que asustan en la vida real, paso a paso",
                     "Detectar las trampas del pensamiento y cuestionarlas",
                     "Medir cuánta ansiedad hay: en el apartado Tests está el breve cuestionario GAD-7"),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 Ladder("Escalera del miedo")
             ]),
         new(
@@ -55,9 +55,9 @@ public static partial class ArticleContent
                     "No luchar contra las sensaciones ni huir si puedes quedarte",
                     "Alargar la exhalación: inhala contando 4, exhala contando 6",
                     "Llevar la atención hacia fuera: lo que ves, oyes y tocas"),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 Practice(TechniqueId.Grounding, "Anclaje 5-4-3-2-1"),
-                Breathe("Pruébalo ahora: una exhalación lenta, más larga que la inhalación"),
+                Breathe("Si te resulta cómodo, prueba a espirar suavemente un poco más de lo que inspiras. Si te sienta peor, vuelve a tu respiración natural y nombra algunos objetos que tengas alrededor."),
                 H("Cómo hacer que los ataques sean menos frecuentes"),
                 P("Lo que mejor funciona es volver poco a poco, sin muletas, a los lugares y situaciones evitados, y hacer ejercicios que provoquen a propósito sensaciones parecidas en un entorno seguro. Así el cerebro vuelve a aprender: «un corazón que late rápido es solo un corazón que late rápido»."),
                 Ladder("Escalera del miedo"),
@@ -133,7 +133,7 @@ public static partial class ArticleContent
                 P("Date 15–20 minutos al día, siempre a la misma hora, no antes de dormir. Cuando aparezca una preocupación en otro momento, anótala en una línea y dite: «pensaré en esto en mi tiempo para preocuparme». En ese momento, repasa la lista. Muchos puntos ya no importarán, y lo verás por ti mismo. No es una prohibición de pensar, es un aplazamiento."),
                 H("No discutir con el pensamiento, sino tomar distancia"),
                 P("Intentar no pensar es inútil: intenta no pensar en un oso blanco. Lo que ayuda es otra cosa: notar el pensamiento como un suceso en tu cabeza («vaya, aquí está otra vez el pensamiento de que lo voy a estropear todo»), no engancharte a él y devolver la atención a lo que estás haciendo. El pensamiento puede seguir de fondo, como una radio en la habitación de al lado."),
-                Practice(TechniqueId.Observer, "Posición de observador"),
+                Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento"),
                 Practice(TechniqueId.Grounding, "Anclaje 5-4-3-2-1")
             ]),
         new(
@@ -286,7 +286,7 @@ public static partial class ArticleContent
                     "Pregúntate: ¿qué me dolió de verdad? ¿Qué límite se cruzó?",
                     "Habla de ti, no del otro: «me enfado cuando los planes cambian en el último momento» en lugar de «siempre lo estropeas todo»",
                     "Di lo que quieres: «avísame por lo menos el día antes»"),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 Practice(TechniqueId.BodyScan, "¿Dónde está en el cuerpo?"),
                 Warning("Cuándo hace falta ayuda"),
                 P("Si con la ira rompes cosas, haces daño a otros o los tuyos te tienen miedo, es un motivo para consultar a un especialista: se trabaja bien. Y si tú o alguien cercano estáis en peligro, llama al 112 o al número de emergencias local (911 en gran parte de América Latina).")
@@ -348,7 +348,7 @@ public static partial class ArticleContent
                     "Recuerda: no puedes cambiar al otro, solo puedes decidir por ti"),
                 P("Si te reconoces en la descripción de los rasgos, es una observación valiente. La psicoterapia trabaja precisamente en eso, y las personas con estos rasgos a menudo sufren mucho."),
                 Practice(TechniqueId.SelfCompassion, "Palabras amables para ti"),
-                Practice(TechniqueId.Observer, "Posición de observador"),
+                Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento"),
                 Warning("Si tienes miedo"),
                 P("Si en la relación hay amenazas, control o violencia, lee el artículo sobre la violencia psicológica. Si estás en peligro, llama al 112 o al número de emergencias local (911 en gran parte de América Latina)."),
                 Crisis("Necesito ayuda ahora")
@@ -437,7 +437,7 @@ public static partial class ArticleContent
                     "Contar las horas que quedan"),
                 H("Si los pensamientos dan vueltas"),
                 P("Traslada las preocupaciones a la tarde, dos horas antes de acostarte: escribe lo que te preocupa y, para cada punto, un primer paso para mañana. En la cama, si los pensamientos vuelven, dite «ya lo he apuntado» y lleva la atención a tu respiración."),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 Warning("Cuándo consultar a un médico"),
                 P("Si el insomnio dura más de tres meses, roncas fuerte y te despiertas ahogándote, o te quedas dormido en pleno día, consulta a un médico: puede tratarse de trastornos que se tratan de otra manera.")
             ]),
@@ -452,12 +452,12 @@ public static partial class ArticleContent
                 P("Se complica cuando esta reacción se activa a menudo y durante mucho tiempo. Entonces el cuerpo se cansa: duelen los músculos, el sueño empeora, la digestión se altera. Ayudan las prácticas que devuelven al cuerpo una sensación de seguridad y el trabajo con lo que desencadena la ansiedad."),
                 Practice(TechniqueId.BodyScan, "¿Dónde está en el cuerpo?"),
                 H("El corazón golpea, falta el aliento"),
-                P("Así se sienten la adrenalina y la respiración rápida. Respiramos más rápido y más hondo de lo necesario, y eso da la sensación de que falta aire. Ayuda una exhalación lenta, más larga que la inhalación: activa el freno del sistema nervioso."),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
-                Breathe("Pruébalo ahora: inhala contando 4, exhala contando 6"),
+                P("Durante el pánico, la respiración puede acelerarse y resultar incómoda. Si te resulta cómodo, prueba una exhalación suave y algo más larga. No hace falta inspirar más profundamente ni retener el aire. Si centrarte en la respiración aumenta la incomodidad, vuelve a tu ritmo natural y nombra algunos objetos de alrededor."),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
+                Breathe("Si te resulta cómodo, inspira suavemente unos 4 tiempos y espira 6, sin pausas. Para si te incomoda."),
                 H("Un nudo en la garganta, el pecho oprimido"),
                 P("Los músculos de la garganta y del pecho se tensan cuando contenemos emociones o esperamos lo peor. Ayuda notar la tensión sin luchar contra ella y dejar que la exhalación se alargue."),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 H("Hombros, cuello y mandíbula tensos"),
                 P("El cuerpo se prepara para actuar y se olvida de relajarse. Ayuda recorrer el cuerpo con la atención de vez en cuando y soltar la tensión al exhalar."),
                 Practice(TechniqueId.BodyScan, "¿Dónde está en el cuerpo?"),
@@ -526,7 +526,7 @@ public static partial class ArticleContent
                     "Detectar los pensamientos ansiosos sobre el cuerpo y comprobarlos como los demás"),
                 P("La terapia cognitivo-conductual de la ansiedad por la salud está bien estudiada y ayuda a la mayoría de las personas."),
                 Ladder("Escalera del miedo"),
-                Practice(TechniqueId.Observer, "Posición de observador"),
+                Practice(TechniqueId.ThoughtRecord, "Registro de pensamientos"),
                 Warning("Síntomas nuevos: consulta a un médico"),
                 P("Trabajar la ansiedad no significa ignorar el cuerpo. Si aparece un síntoma nuevo, aumenta o no se va, consulta a un médico una vez y sigue sus indicaciones. La lista de señales de alarma está en el artículo «El cuerpo y el estrés».")
             ]),
@@ -599,8 +599,8 @@ public static partial class ArticleContent
                     "Hacer una pausa cuando sea demasiado: acordar retomar en 20–30 minutos, cuando el cuerpo se haya calmado",
                     "Proponer la reconciliación: una broma, un gesto, «¿empezamos de nuevo?», y aceptarla"),
                 P("El objetivo de una discusión no es ganar, sino entenderse y encontrar una solución con la que los dos puedan vivir."),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
-                Practice(TechniqueId.Observer, "Posición de observador"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
+                Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento"),
                 P("Si en las discusiones tienes miedo, te humillan, te controlan o usan la fuerza, eso ya no es un conflicto sino violencia. Lee el artículo sobre la violencia psicológica.")
             ]),
         new(
@@ -845,7 +845,7 @@ public static partial class ArticleContent
                 Quiz("¿Qué es lo que más mantiene el TOC?", 1, "Un ritual quita la ansiedad durante un momento, y por eso se afianza. El tratamiento se basa en encontrarse con el pensamiento sin hacer el ritual, hasta que la ansiedad baja sola.", "Los propios pensamientos intrusivos", "Los rituales y la búsqueda de tranquilidad", "La falta de fuerza de voluntad"),
                 H("Qué ayuda"),
                 P("El método mejor estudiado es la exposición con prevención de respuesta: paso a paso, encontrarse con lo que desencadena los pensamientos sin hacer el ritual. Se hace con un psicoterapeuta, a menudo junto con un tratamiento prescrito por un psiquiatra. Por tu cuenta puedes empezar con poco: retrasar un ritual unos minutos, reducir las comprobaciones, notar el pensamiento y nombrarlo: «es un pensamiento del TOC»."),
-                Practice(TechniqueId.Observer, "Posición de observador"),
+                Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento"),
                 Ladder("Escalera del miedo"),
                 Warning("Cuándo acudir a un especialista"),
                 P("Si los rituales ocupan más de una hora al día, afectan al trabajo y a las relaciones o los pensamientos causan mucho sufrimiento, acude a un psicoterapeuta o a un psiquiatra. El TOC se trata muy bien.")
@@ -891,7 +891,7 @@ public static partial class ArticleContent
                     "Ten a mano otra forma: un paseo, la respiración, un mensaje a un amigo",
                     "No intentes dejarlo todo de golpe: empieza por un momento del día o un lugar"),
                 Practice(TechniqueId.BodyScan, "¿Dónde está en el cuerpo?"),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada"),
+                Practice(TechniqueId.Breathing, "Respiración guiada suave"),
                 Warning("Cuándo necesitas ayuda"),
                 P("Si bebes todos los días o mucho de una vez, y sin alcohol te tiemblan las manos y duermes mal, no lo dejes de golpe por tu cuenta: una abstinencia brusca tras un consumo largo y frecuente puede ser peligrosa. Acude a un especialista en adicciones o a tu médico de cabecera. Si los atracones se alternan con ayunos, vómitos o laxantes, lee el artículo sobre los trastornos de la conducta alimentaria."),
                 See(ArticleIds.EatingDisorders, "Los trastornos de la conducta alimentaria: cómo reconocerlos")
@@ -1112,7 +1112,7 @@ public static partial class ArticleContent
                 Warning("Si empeora"),
                 P("Después de un trauma, atender al cuerpo con los ojos cerrados a veces trae recuerdos difíciles. Entonces mantén los ojos abiertos, acorta la práctica a un minuto y apóyate en lo que ves a tu alrededor. Si sigue siendo difícil, es mejor practicar con un especialista."),
                 Practice(TechniqueId.Grounding, "Anclaje 5-4-3-2-1"),
-                Practice(TechniqueId.Breathing, "Respiración cuadrada")
+                Practice(TechniqueId.Breathing, "Respiración guiada suave")
             ]),
         new(
             ArticleIds.Uncertainty,
@@ -1146,7 +1146,7 @@ public static partial class ArticleContent
                     "Recuerda que la mayoría de las decisiones se pueden ajustar por el camino"),
                 P("Normalmente no existe la decisión perfecta. Existe una razonable, y es suficiente."),
                 Practice(TechniqueId.ThoughtRecord, "Registro de pensamientos"),
-                Practice(TechniqueId.BusyMind, "Ocupar la mente")
+                Practice(TechniqueId.BusyMind, "Pausa breve de atención")
             ]),
         new(
             ArticleIds.JealousyAndEnvy,

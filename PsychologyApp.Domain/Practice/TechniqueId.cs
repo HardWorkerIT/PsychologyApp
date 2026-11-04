@@ -39,8 +39,29 @@ public enum TechniqueId
     /// <summary>A short progressive muscle relaxation: tense and let go of five muscle groups in turn.</summary>
     MuscleRelax,
 
-    /// <summary>"Keep the mind busy": short neutral tasks that take attention away from spinning thoughts.</summary>
-    BusyMind
+    /// <summary>A brief temporary attention shift with a neutral task; it does not replace returning to an actionable problem.</summary>
+    BusyMind,
+
+    /// <summary>Notice a thought as a thought, then reconnect with the present and choose a small next action.</summary>
+    ThoughtDefusion,
+
+    /// <summary>Pause before acting on an intense urge; notice facts and choose a safe response.</summary>
+    PauseBeforeReaction,
+
+    /// <summary>Choose an action opposite to an emotion-driven urge only when facts and safety support it.</summary>
+    OppositeAction,
+
+    /// <summary>Define one controllable problem, compare options, and choose a concrete next step.</summary>
+    ProblemSolving,
+
+    /// <summary>Separate observable facts from interpretations before choosing an emotional response.</summary>
+    CheckTheFacts,
+
+    /// <summary>Record a hypothetical worry and schedule a later time to revisit it instead of suppressing it.</summary>
+    WorryTime,
+    ImplementationIntention,
+    SensoryComfort,
+    UrgeSurfing
 }
 
 public enum TechniqueUiKind

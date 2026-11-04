@@ -72,11 +72,11 @@ public class BreathingPatternTests
     }
 
     [Fact]
-    public void CalmGrowsFromZeroToOneOverTheExercise()
+    public void ProgressMovesFromZeroToOneOverTheExercise()
     {
-        Assert.Equal(0, Square.CalmAt(0));
-        Assert.Equal(0.5, Square.CalmAt(32), 6);
-        Assert.Equal(1, Square.CalmAt(1000));
+        Assert.Equal(0, Square.ProgressAt(0));
+        Assert.Equal(0.5, Square.ProgressAt(32), 6);
+        Assert.Equal(1, Square.ProgressAt(1000));
     }
 
     [Theory]
@@ -84,11 +84,13 @@ public class BreathingPatternTests
     [InlineData(4, BreathPhaseKind.Exhale)]
     [InlineData(9.5, BreathPhaseKind.Exhale)]
     [InlineData(10, BreathPhaseKind.Inhale)]
-    public void CalmBreathingHasAnOutBreathLongerThanTheInBreathForAMinute(double elapsed, BreathPhaseKind expected)
+    public void PacedBreathingHasNoHoldsAndKeepsTheFourSixRhythmForAMinute(double elapsed, BreathPhaseKind expected)
     {
         // The article promises a longer out-breath; a pacer that held the breath or ran on would teach something else.
         Assert.Equal(expected, BreathingPattern.Calm.At(elapsed).Phase.Kind);
         Assert.Equal(60, BreathingPattern.Calm.TotalSeconds);
+        Assert.Equal(6, BreathingPattern.Calm.Cycles);
+        Assert.Equal(new[] { 4, 6 }, BreathingPattern.Calm.Phases.Select(phase => phase.Seconds).ToArray());
         Assert.DoesNotContain(BreathingPattern.Calm.Phases, phase => phase.Kind is BreathPhaseKind.HoldFull or BreathPhaseKind.HoldEmpty);
     }
 }
