@@ -88,6 +88,12 @@ public sealed record SituationAnalysis(
     /// <summary>A narrow phrase match for a delayable everyday action urge; this does not establish that the action is safe.</summary>
     public bool HasDelayableActionUrge { get; init; }
 
+    /// <summary>The message explicitly asks to avoid breathing or other body-focused practices.</summary>
+    public bool AvoidsBodyFocus { get; init; }
+
+    /// <summary>The message explicitly asks to try or allow a breathing/body-focused practice.</summary>
+    public bool AllowsBodyFocus { get; init; }
+
     /// <summary>The message explicitly attributes an emotion to someone else; callers should clarify before treating it as the user's state.</summary>
     public bool EmotionAttributedToOther { get; init; }
     public static SituationAnalysis Empty { get; } = new(CompanionEmotion.Unknown, 0, false, false, []);
