@@ -93,7 +93,7 @@ public static partial class ArticleContent
                             "Écrivez tout ce qui vous préoccupe et, pour chaque point, une prochaine étape ou « rien à faire pour l'instant »",
                             "Si la pensée revient au lit, dites-vous : « je l'ai noté, je m'en occuperai demain »"),
                         Quiz("Au lit, vous pensez : « Si je ne dors pas, je vais tout rater demain. » Qu'est-ce qui est plus proche de la vérité ?", 1, "La pensée exagère. Après une mauvaise nuit, c'est plus dur, mais la plupart des gens accomplissent quand même leurs tâches. Plus la peur du lendemain est forte, plus il est difficile de s'endormir.", "C'est vrai, l'échec est inévitable", "Après une mauvaise nuit c'est plus dur, mais d'habitude je m'en sors pour l'essentiel", "Mieux vaut ne pas se coucher du tout"),
-                        Practice(TechniqueId.Observer, "Position d'observateur")
+                        Practice(TechniqueId.ThoughtDefusion, "Prendre du recul sur une pensée")
                     ],
                     "Chaque soir, réservez 15 minutes pour écrire ce qui vous préoccupe, et n'emportez pas ces pensées au lit.",
                     "Quelles pensées viennent le plus souvent la nuit ? Les écrire vous a-t-il aidé ?"),
@@ -192,7 +192,7 @@ public static partial class ArticleContent
                             "Quand un souci arrive à un autre moment, notez le sujet en une ligne et dites-vous : « j'y penserai pendant mon temps des soucis »",
                             "Pendant votre temps des soucis, parcourez la liste : prévoyez un pas pour ce que vous pouvez faire, lâchez ce que vous ne pouvez pas",
                             "Souvent, à l'heure prévue, le sujet ne semble plus important"),
-                        Practice(TechniqueId.Observer, "Position d'observateur")
+                        Practice(TechniqueId.ThoughtDefusion, "Prendre du recul sur une pensée")
                     ],
                     "Fixez-vous un temps des soucis et reportez-y les pensées anxieuses.",
                     "Avez-vous réussi à reporter les soucis ? Que sont devenus les sujets à l'heure prévue ?"),

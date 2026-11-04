@@ -7,10 +7,10 @@ namespace PsychologyApp.Application.Tests.Tests;
 public sealed class LuscherScoreRecommendationTests
 {
     [Theory]
-    [InlineData(25, TechniqueId.Spin)]
+    [InlineData(25, TechniqueId.Grounding)]
     [InlineData(20, TechniqueId.Breathing)]
     [InlineData(15, TechniqueId.Grounding)]
-    [InlineData(5, TechniqueId.Experience)]
+    [InlineData(5, TechniqueId.Grounding)]
     public void RecommendTechnique_ReturnsExpected(int coValue, TechniqueId expected) =>
         Assert.Equal(expected, LuscherScoreRecommendation.RecommendTechnique(coValue));
 }

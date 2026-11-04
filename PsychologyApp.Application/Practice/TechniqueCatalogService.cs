@@ -8,6 +8,22 @@ namespace PsychologyApp.Application.Practice;
 
 public sealed class TechniqueCatalogService(ITechniqueCatalogProvider provider) : ITechniqueCatalogService
 {
+    // Retained definitions remain addressable by ID for old sessions and backups, but are not offered as new practices.
+    private static readonly HashSet<TechniqueId> ArchivedFromDiscovery =
+    [
+        TechniqueId.Spin,
+        TechniqueId.Hack,
+        TechniqueId.Experience,
+        TechniqueId.Copied,
+        TechniqueId.Comparison,
+        TechniqueId.Polarity,
+        TechniqueId.Paper,
+        TechniqueId.Future,
+        TechniqueId.Resize,
+        TechniqueId.Check,
+        TechniqueId.Anchor
+    ];
+
     private readonly SemaphoreSlim _indexGate = new(1, 1);
     private IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition>? _byId;
 
@@ -50,7 +66,14 @@ public sealed class TechniqueCatalogService(ITechniqueCatalogProvider provider) 
 
             IReadOnlyList<BuiltInTechniqueDefinition> loaded =
                 await provider.LoadAllAsync(cancellationToken).ConfigureAwait(false);
-            _byId = Enum.GetValues<TechniqueId>()
+            TechniqueId[] techniqueIds = Enum.GetValues<TechniqueId>();
+            if (loaded.Count != techniqueIds.Length)
+            {
+                throw new InvalidOperationException(
+                    $"The technique catalog provider returned {loaded.Count} definitions; expected {techniqueIds.Length}.");
+            }
+
+            _byId = techniqueIds
                 .Zip(loaded)
                 .ToDictionary(pair => pair.First, pair => pair.Second);
             return _byId;
@@ -64,6 +87,7 @@ public sealed class TechniqueCatalogService(ITechniqueCatalogProvider provider) 
     private static IReadOnlyList<TechniqueListEntry> BuildListEntries(
         IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> byId) =>
         Enum.GetValues<TechniqueId>()
+            .Where(id => !ArchivedFromDiscovery.Contains(id))
             .Select(id =>
             {
                 BuiltInTechniqueDefinition definition = byId[id];

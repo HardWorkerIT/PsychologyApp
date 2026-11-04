@@ -21,54 +21,56 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
     // A newcomer gets the first entry that was never tried, so the list opens with the gentlest practices.
     private static readonly TechniqueId[] ExploreRotation =
     [
-        TechniqueId.Breathing,
         TechniqueId.Grounding,
-        TechniqueId.Spin,
-        TechniqueId.Paper,
-        TechniqueId.Experience,
+        TechniqueId.Breathing,
         TechniqueId.SmallStep,
-        TechniqueId.Future,
-        TechniqueId.Hack,
-        TechniqueId.Observer,
-        TechniqueId.Anchor,
-        TechniqueId.Comparison,
-        TechniqueId.ThoughtRecord,
+        TechniqueId.ImplementationIntention,
+        TechniqueId.ThoughtDefusion,
         TechniqueId.SelfCompassion,
+        TechniqueId.ThoughtRecord,
+        TechniqueId.PauseBeforeReaction,
+        TechniqueId.OppositeAction,
+        TechniqueId.ProblemSolving,
+        TechniqueId.CheckTheFacts,
+        TechniqueId.WorryTime,
+        TechniqueId.MuscleRelax,
         TechniqueId.BusyMind,
-        TechniqueId.MuscleRelax
+        TechniqueId.SensoryComfort,
+        TechniqueId.UrgeSurfing,
+        TechniqueId.Observer
+
     ];
 
     private static readonly TechniqueId[] AnxietyPool =
     [
-        TechniqueId.Spin,
-        TechniqueId.Breathing,
         TechniqueId.Grounding,
+        TechniqueId.Breathing,
+        TechniqueId.ThoughtDefusion,
         TechniqueId.ThoughtRecord,
-        TechniqueId.Observer,
-        TechniqueId.Anchor,
-        TechniqueId.BusyMind
+        TechniqueId.ProblemSolving,
+        TechniqueId.CheckTheFacts,
+        TechniqueId.WorryTime,
+        TechniqueId.SensoryComfort,
+        TechniqueId.Observer
     ];
 
     private static readonly TechniqueId[] BodyPool =
     [
         TechniqueId.Grounding,
         TechniqueId.Breathing,
-        TechniqueId.Experience,
-        TechniqueId.Check,
-        TechniqueId.Hack,
-        TechniqueId.Observer,
-        TechniqueId.MuscleRelax
+        TechniqueId.ThoughtDefusion,
+        TechniqueId.MuscleRelax,
+        TechniqueId.SensoryComfort
     ];
 
     private static readonly TechniqueId[] MoodPool =
     [
         TechniqueId.SmallStep,
+        TechniqueId.ImplementationIntention,
         TechniqueId.ThoughtRecord,
         TechniqueId.SelfCompassion,
-        TechniqueId.Paper,
-        TechniqueId.Future,
-        TechniqueId.Hack,
-        TechniqueId.Comparison
+        TechniqueId.ThoughtDefusion,
+        TechniqueId.ProblemSolving
     ];
 
     private static readonly TechniqueId[] LowMoodPool =
@@ -77,12 +79,12 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         TechniqueId.Grounding,
         TechniqueId.SmallStep,
         TechniqueId.SelfCompassion,
-        TechniqueId.Observer
+        TechniqueId.ThoughtDefusion
     ];
 
     public TechniqueId ResolveFromOnboardingConcern(string concern) => concern switch
     {
-        OnboardingConcernKeys.Anxiety => TechniqueId.Spin,
+        OnboardingConcernKeys.Anxiety => TechniqueId.Grounding,
         // Grounding: when the body signals stress, the first step is back to the senses, not into a painful experience.
         OnboardingConcernKeys.Body => TechniqueId.Grounding,
         OnboardingConcernKeys.Mood => TechniqueId.SmallStep,
@@ -103,7 +105,7 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
             TechniqueId fromTest = test.TestId == TestIds.LuscherStandard
                 ? LuscherScoreRecommendation.RecommendTechnique(test.Score.Value)
                 : TestScoreRecommendation.RecommendTechnique(test.TestId, test.Score.Value)
-                    ?? TechniqueId.Experience;
+                    ?? TechniqueId.Grounding;
 
             TechniqueId picked = PickFromPool([fromTest], context.LastPracticeDatesUtc, context.TechniqueEffectiveness);
             return new TodayRecommendationDecision(picked, TodayRecommendationSource.RecentTest, test.TestId);
@@ -184,7 +186,7 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
     {
         if (pool.Count == 0)
         {
-            return TechniqueId.Spin;
+            return TechniqueId.Grounding;
         }
 
         if (pool.Count == 1)

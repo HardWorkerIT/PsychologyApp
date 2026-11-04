@@ -3860,13 +3860,13 @@
     <value>Terminé. Restez tranquille un instant, puis évaluez votre tension ci-dessous.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Cinq courtes tâches. Faites chacune dans votre tête ou à voix haute, sans vous presser.</value>
+    <value>Une tâche neutre pendant environ 30 à 60 secondes. Si elle vous frustre ou aggrave votre état, arrêtez.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Commencer</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Fait, suivante</value>
+    <value>Terminer la pause</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Une autre tâche</value>
@@ -3878,7 +3878,7 @@
     <value>Terminé. Évaluez votre tension ci-dessous.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Cinq autres tâches</value>
+    <value>Une autre pause courte</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Citez cinq animaux qui vivent dans l'eau</value>

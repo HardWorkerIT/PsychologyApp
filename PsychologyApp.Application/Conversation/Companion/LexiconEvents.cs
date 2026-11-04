@@ -41,7 +41,11 @@ public sealed partial class LexiconSituationAnalyzer
         foreach (string clause in SplitClauses(rest))
         {
             string c = clause.ToLowerInvariant();
-            bool ended = EndedMarkers.Any(c.Contains) && !c.Contains("не могу", StringComparison.Ordinal) && !c.Contains("cant", StringComparison.Ordinal) && !c.Contains("can't", StringComparison.Ordinal);
+            bool ended = EndedMarkers.Any(c.Contains) &&
+                !c.Contains("прежде чем", StringComparison.Ordinal) &&
+                !c.Contains("не могу", StringComparison.Ordinal) &&
+                !c.Contains("cant", StringComparison.Ordinal) &&
+                !c.Contains("can't", StringComparison.Ordinal);
             if (!ended)
             {
                 kept.Add(clause);

@@ -1,6 +1,7 @@
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Models.Tests;
 using PsychologyApp.Application.Recommendations;
+using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Domain.Practice;
 using Xunit;
 
@@ -11,14 +12,42 @@ public sealed class TechniqueRecommendationServiceTests
     private readonly TechniqueRecommendationService _service = new();
 
     [Theory]
-    [InlineData(OnboardingConcernKeys.Anxiety, TechniqueId.Spin)]
+    [InlineData(OnboardingConcernKeys.Anxiety, TechniqueId.Grounding)]
     [InlineData(OnboardingConcernKeys.Body, TechniqueId.Grounding)]
     [InlineData(OnboardingConcernKeys.Mood, TechniqueId.SmallStep)]
-    [InlineData(OnboardingConcernKeys.Explore, TechniqueId.Breathing)]
+    [InlineData(OnboardingConcernKeys.Explore, TechniqueId.Grounding)]
     public void ResolveFromOnboardingConcern_MapsKnownConcerns(string concern, TechniqueId expected) =>
         Assert.Equal(expected, _service.ResolveFromOnboardingConcern(concern));
 
-    // "Just exploring" enrols in the stress programme; its first suggestion was a practice that rewrites a painful experience.
+    [Fact]
+    public void Therapy_program_pools_do_not_offer_archived_practices()
+    {
+        TechniqueId[] archivedIds =
+        [
+            TechniqueId.Spin,
+            TechniqueId.Hack,
+            TechniqueId.Experience,
+            TechniqueId.Copied,
+            TechniqueId.Resize,
+            TechniqueId.Check,
+            TechniqueId.Anchor,
+            TechniqueId.Comparison,
+            TechniqueId.Polarity,
+            TechniqueId.Paper,
+            TechniqueId.Future
+        ];
+
+        foreach (TherapyProgramType programType in Enum.GetValues<TherapyProgramType>())
+        {
+            for (int week = 1; week <= TherapyProgramCatalog.TotalWeeks; week++)
+            {
+                IReadOnlyList<TechniqueId> pool = TherapyProgramCatalog.ResolvePool(programType, week);
+                Assert.All(pool, techniqueId => Assert.DoesNotContain(techniqueId, archivedIds));
+            }
+        }
+    }
+
+    // "Just exploring" starts with a short sensory-orientation practice before any reflection.
     [Fact]
     public void A_newcomer_in_the_stress_programme_starts_with_breathing()
     {
@@ -31,11 +60,11 @@ public sealed class TechniqueRecommendationServiceTests
     }
 
     [Fact]
-    public void A_newcomer_who_is_just_exploring_starts_with_breathing()
+    public void A_newcomer_who_is_just_exploring_starts_with_grounding()
     {
         TodayRecommendationDecision decision = _service.ResolveTodayTechnique(new TodayRecommendationContext(OnboardingConcernKeys.Explore));
 
-        Assert.Equal(TechniqueId.Breathing, decision.TechniqueId);
+        Assert.Equal(TechniqueId.Grounding, decision.TechniqueId);
     }
 
     [Fact]
@@ -50,7 +79,7 @@ public sealed class TechniqueRecommendationServiceTests
                 CompletedAt = DateTime.UtcNow.AddDays(-2)
             }));
 
-        Assert.Equal(TechniqueId.Spin, decision.TechniqueId);
+        Assert.Equal(TechniqueId.ThoughtDefusion, decision.TechniqueId);
         Assert.Equal(TodayRecommendationSource.RecentTest, decision.Source);
     }
 
@@ -66,7 +95,7 @@ public sealed class TechniqueRecommendationServiceTests
                 CompletedAt = DateTime.UtcNow.AddDays(-1)
             }));
 
-        Assert.Equal(TechniqueId.Spin, decision.TechniqueId);
+        Assert.Equal(TechniqueId.Grounding, decision.TechniqueId);
         Assert.Equal(TodayRecommendationSource.RecentTest, decision.Source);
         Assert.Equal(TestIds.LuscherStandard, decision.TestId);
     }
@@ -88,7 +117,7 @@ public sealed class TechniqueRecommendationServiceTests
         TodayRecommendationDecision decision = _service.ResolveTodayTechnique(new TodayRecommendationContext(
             OnboardingConcernKeys.Anxiety));
 
-        Assert.Equal(TechniqueId.Spin, decision.TechniqueId);
+        Assert.Equal(TechniqueId.Grounding, decision.TechniqueId);
         Assert.Equal(TodayRecommendationSource.OnboardingConcern, decision.Source);
     }
 
@@ -240,17 +269,17 @@ public sealed class TechniqueRecommendationServiceTests
     {
         TechniqueId[] corePractices =
         [
-            TechniqueId.Breathing,
             TechniqueId.Grounding,
-            TechniqueId.Spin,
-            TechniqueId.Paper,
-            TechniqueId.Experience,
+            TechniqueId.Breathing,
             TechniqueId.SmallStep,
-            TechniqueId.Future,
-            TechniqueId.Hack,
-            TechniqueId.Observer,
-            TechniqueId.Anchor,
-            TechniqueId.Comparison
+            TechniqueId.ImplementationIntention,
+            TechniqueId.ThoughtDefusion,
+            TechniqueId.SelfCompassion,
+            TechniqueId.ThoughtRecord,
+            TechniqueId.BusyMind,
+            TechniqueId.MuscleRelax,
+            TechniqueId.CheckTheFacts,
+            TechniqueId.WorryTime
         ];
         Dictionary<string, DateTime> dates = corePractices.ToDictionary(
             id => id.ToString(),
@@ -263,24 +292,27 @@ public sealed class TechniqueRecommendationServiceTests
 
         Assert.Contains(next, new[]
         {
+            TechniqueId.PauseBeforeReaction,
+            TechniqueId.OppositeAction,
+            TechniqueId.ProblemSolving,
             TechniqueId.ThoughtRecord,
             TechniqueId.SelfCompassion,
             TechniqueId.BusyMind,
-            TechniqueId.MuscleRelax
+            TechniqueId.MuscleRelax,
+            TechniqueId.CheckTheFacts,
+            TechniqueId.WorryTime
         });
     }
 
     [Fact]
-    public void Anxiety_recommendations_can_include_busy_mind_after_the_other_options_were_used()
+    public void Anxiety_recommendations_prioritize_practical_skills_before_attention_shift()
     {
         TechniqueId[] existingOptions =
         [
-            TechniqueId.Spin,
             TechniqueId.Breathing,
             TechniqueId.Grounding,
             TechniqueId.ThoughtRecord,
-            TechniqueId.Observer,
-            TechniqueId.Anchor
+            TechniqueId.ThoughtDefusion
         ];
         Dictionary<string, DateTime> dates = existingOptions.ToDictionary(
             id => id.ToString(),
@@ -291,7 +323,48 @@ public sealed class TechniqueRecommendationServiceTests
             new TodayRecommendationContext(OnboardingConcernKeys.Anxiety, LastPracticeDatesUtc: dates),
             TechniqueId.Spin);
 
-        Assert.Equal(TechniqueId.BusyMind, next);
+        Assert.Equal(TechniqueId.ProblemSolving, next);
+    }
+
+    [Fact]
+    public void Anxiety_pool_reaches_distanced_self_talk_after_other_options_were_used()
+    {
+        TechniqueId[] previouslyUsed =
+        [
+            TechniqueId.Grounding,
+            TechniqueId.Breathing,
+            TechniqueId.ThoughtDefusion,
+            TechniqueId.ThoughtRecord,
+            TechniqueId.ProblemSolving,
+            TechniqueId.CheckTheFacts,
+            TechniqueId.WorryTime,
+            TechniqueId.SensoryComfort
+        ];
+        Dictionary<string, DateTime> dates = previouslyUsed.ToDictionary(
+            id => id.ToString(),
+            _ => DateTime.UtcNow.AddDays(-3),
+            StringComparer.Ordinal);
+
+        TechniqueId next = _service.ResolveNextAfterCompletion(
+            new TodayRecommendationContext(OnboardingConcernKeys.Anxiety, LastPracticeDatesUtc: dates),
+            TechniqueId.SensoryComfort);
+
+        Assert.Equal(TechniqueId.Observer, next);
+    }
+
+    [Fact]
+    public void Explore_rotation_reaches_distanced_self_talk_after_earlier_practices()
+    {
+        Dictionary<string, DateTime> dates = ExploreRotationExcept(TechniqueId.Observer).ToDictionary(
+            id => id.ToString(),
+            _ => DateTime.UtcNow.AddDays(-3),
+            StringComparer.Ordinal);
+
+        TechniqueId next = _service.ResolveNextAfterCompletion(
+            new TodayRecommendationContext(OnboardingConcernKeys.Explore, LastPracticeDatesUtc: dates),
+            TechniqueId.UrgeSurfing);
+
+        Assert.Equal(TechniqueId.Observer, next);
     }
 
     [Fact]
@@ -301,10 +374,7 @@ public sealed class TechniqueRecommendationServiceTests
         [
             TechniqueId.Grounding,
             TechniqueId.Breathing,
-            TechniqueId.Experience,
-            TechniqueId.Check,
-            TechniqueId.Hack,
-            TechniqueId.Observer
+            TechniqueId.ThoughtDefusion
         ];
         Dictionary<string, DateTime> dates = existingOptions.ToDictionary(
             id => id.ToString(),
@@ -318,23 +388,78 @@ public sealed class TechniqueRecommendationServiceTests
         Assert.Equal(TechniqueId.MuscleRelax, next);
     }
 
+    [Fact]
+    public void Explore_rotation_surfaces_fact_checking_and_worry_time_after_existing_practices_are_used()
+    {
+        TechniqueId[] previouslyUsed =
+        [
+            TechniqueId.Grounding,
+            TechniqueId.Breathing,
+            TechniqueId.SmallStep,
+            TechniqueId.ImplementationIntention,
+            TechniqueId.ThoughtDefusion,
+            TechniqueId.SelfCompassion,
+            TechniqueId.ThoughtRecord,
+            TechniqueId.BusyMind,
+            TechniqueId.PauseBeforeReaction,
+            TechniqueId.OppositeAction,
+            TechniqueId.ProblemSolving,
+            TechniqueId.MuscleRelax
+        ];
+        Dictionary<string, DateTime> dates = previouslyUsed.ToDictionary(
+            id => id.ToString(),
+            _ => DateTime.UtcNow.AddDays(-3),
+            StringComparer.Ordinal);
+        TodayRecommendationContext context = new(OnboardingConcernKeys.Explore, LastPracticeDatesUtc: dates);
+
+        TechniqueId checkFacts = _service.ResolveNextAfterCompletion(context, TechniqueId.ProblemSolving);
+
+        Assert.Equal(TechniqueId.CheckTheFacts, checkFacts);
+
+        dates[TechniqueId.CheckTheFacts.ToString()] = DateTime.UtcNow.AddDays(-2);
+        TechniqueId worryTime = _service.ResolveNextAfterCompletion(context, checkFacts);
+
+        Assert.Equal(TechniqueId.WorryTime, worryTime);
+    }
+
+    [Fact]
+    public void Mood_program_week_three_offers_the_if_then_plan_after_earlier_skills()
+    {
+        Dictionary<string, DateTime> dates = new(StringComparer.Ordinal)
+        {
+            [TechniqueId.ThoughtDefusion.ToString()] = DateTime.UtcNow.AddDays(-3),
+            [TechniqueId.ProblemSolving.ToString()] = DateTime.UtcNow.AddDays(-3)
+        };
+
+        TodayRecommendationDecision decision = _service.ResolveTodayTechnique(new TodayRecommendationContext(
+            OnboardingConcernKeys.Mood,
+            ActiveProgramType: TherapyProgramType.Mood,
+            ActiveProgramWeek: 3,
+            LastPracticeDatesUtc: dates));
+
+        Assert.Equal(TechniqueId.ImplementationIntention, decision.TechniqueId);
+    }
+
+
     private static IEnumerable<TechniqueId> ExploreRotationExcept(TechniqueId exclude) =>
         new[]
         {
-            TechniqueId.Spin,
-            TechniqueId.Paper,
-            TechniqueId.Experience,
-            TechniqueId.Breathing,
             TechniqueId.Grounding,
+            TechniqueId.Breathing,
             TechniqueId.SmallStep,
-            TechniqueId.Future,
-            TechniqueId.Hack,
-            TechniqueId.Observer,
-            TechniqueId.Anchor,
-            TechniqueId.Comparison,
-            TechniqueId.ThoughtRecord,
+            TechniqueId.ImplementationIntention,
+            TechniqueId.ThoughtDefusion,
             TechniqueId.SelfCompassion,
+            TechniqueId.ThoughtRecord,
+            TechniqueId.PauseBeforeReaction,
+            TechniqueId.OppositeAction,
+            TechniqueId.ProblemSolving,
+            TechniqueId.CheckTheFacts,
+            TechniqueId.WorryTime,
+            TechniqueId.MuscleRelax,
             TechniqueId.BusyMind,
-            TechniqueId.MuscleRelax
+            TechniqueId.SensoryComfort,
+            TechniqueId.UrgeSurfing,
+            TechniqueId.Observer
         }.Where(id => id != exclude);
 }

@@ -32,7 +32,7 @@ public static partial class ArticleContent
                     "在现实生活中一步步检验那些吓人的预测",
                     "识别思维陷阱并提出质疑",
                     "测量焦虑的程度：“测试”部分有简短的GAD-7问卷"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 Ladder("恐惧阶梯")
             ]),
         new(
@@ -55,9 +55,9 @@ public static partial class ArticleContent
                     "不要和这些感觉对抗，如果可以留下，就不要逃离",
                     "延长呼气：吸气数到4，呼气数到6",
                     "把注意力转向外界：你看到、听到、触摸到的东西"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 Practice(TechniqueId.Grounding, "着陆练习 5-4-3-2-1"),
-                Breathe("现在试试：缓慢地呼气，比吸气更长"),
+                Breathe("如果感觉舒服，可以试着轻柔地呼气，比吸气稍长一些。如果不舒服加重，就恢复自然呼吸，并说出周围几样物品。"),
                 H("如何让发作变少"),
                 P("最有效的是不带“拐杖”，逐步回到曾经回避的地方和情境，并在安全的环境中做一些有意引起类似感觉的练习。这样大脑会重新学到：“心跳得快，只是心跳得快而已。”"),
                 Ladder("恐惧阶梯"),
@@ -133,7 +133,7 @@ public static partial class ArticleContent
                 P("每天给自己15–20分钟，固定在同一时间，不要安排在睡前。其他时间冒出担忧时，用一行字记下来，对自己说：“我会在担忧时间再想这件事。”到了那个时间，再把清单过一遍。很多事情到那时已经不重要了，你会亲眼看到这一点。这不是禁止思考，而是推迟思考。"),
                 H("不和念头争辩，而是退后一步"),
                 P("努力不去想是没用的：试试不去想一头白熊。真正有帮助的是另一回事：把念头看作脑海里发生的一件事（“哦，那个‘我会搞砸一切’的念头又来了”），不去纠缠它，把注意力带回你正在做的事情上。念头可以在背景里继续，就像隔壁房间开着的收音机。"),
-                Practice(TechniqueId.Observer, "观察者视角"),
+                Practice(TechniqueId.ThoughtDefusion, "与念头拉开距离"),
                 Practice(TechniqueId.Grounding, "着陆练习 5-4-3-2-1")
             ]),
         new(
@@ -286,7 +286,7 @@ public static partial class ArticleContent
                     "问问自己：真正伤到我的是什么？越过的是哪条界限？",
                     "说自己，而不是说对方：“计划在最后一刻改变时，我会很生气”，而不是“你总是把一切都搞砸”",
                     "说出你想要什么：“至少提前一天告诉我”"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 Practice(TechniqueId.BodyScan, "它在身体的哪里？"),
                 Warning("什么时候需要帮助"),
                 P("如果愤怒时你会摔东西、伤害他人，或者家人害怕你，这就是去看专业人士的理由：这方面的问题可以很好地处理。如果你或身边的人处于危险之中，请拨打报警电话（中国大陆为110）。")
@@ -348,7 +348,7 @@ public static partial class ArticleContent
                     "记住：你改变不了对方，你只能为自己做决定"),
                 P("如果你在这些特质的描述中看到了自己，这是一种勇敢的观察。心理治疗正是在处理这些问题，而有这些特质的人往往自己也非常痛苦。"),
                 Practice(TechniqueId.SelfCompassion, "对自己说温和的话"),
-                Practice(TechniqueId.Observer, "观察者视角"),
+                Practice(TechniqueId.ThoughtDefusion, "与念头拉开距离"),
                 Warning("如果你感到害怕"),
                 P("如果关系中有威胁、控制或暴力，请阅读关于心理暴力的文章。如果你处于危险之中，请拨打报警电话（中国大陆为110）。"),
                 Crisis("我现在需要帮助")
@@ -437,7 +437,7 @@ public static partial class ArticleContent
                     "数着还剩几个小时"),
                 H("如果念头停不下来"),
                 P("把担忧挪到傍晚，睡前两小时：写下让你担心的事，并为每一项写出明天的第一步。躺在床上时如果念头又回来了，就对自己说“我已经记下来了”，然后把注意力转到呼吸上。"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 Warning("什么时候该去看医生"),
                 P("如果失眠持续超过三个月，你打鼾很响、会憋醒，或者在白天突然睡着，请去看医生：这可能是需要用其他方式治疗的睡眠障碍。")
             ]),
@@ -452,12 +452,12 @@ public static partial class ArticleContent
                 P("当这种反应频繁而长期地启动时，事情就变得困难了。身体会疲惫：肌肉酸痛、睡眠变差、消化紊乱。有帮助的是那些让身体重新获得安全感的练习，以及处理引发焦虑的因素。"),
                 Practice(TechniqueId.BodyScan, "它在身体的哪里？"),
                 H("心跳加速，呼吸急促"),
-                P("这就是肾上腺素和快速呼吸的感觉。我们呼吸得比需要的更快、更深，这反而让人觉得空气不够。缓慢的呼气、比吸气更长，会有帮助：它会启动神经系统的“刹车”。"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
-                Breathe("现在试试：吸气数到4，呼气数到6"),
+                P("惊恐时，呼吸可能变快，也可能让人觉得不舒服。如果感觉舒服，可以试试轻柔地把呼气放长一点；不必刻意深吸气或屏息。如果关注呼吸让不适加重，就恢复自然节奏，并说出周围几样物品。"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
+                Breathe("如果感觉舒服，可以轻柔地吸气约 4 拍、呼气约 6 拍，中间不停顿。如有不适就停止。"),
                 H("喉咙发紧，胸口发闷"),
                 P("当我们压抑情绪或预期最坏的情况时，喉咙和胸部的肌肉会收紧。留意这种紧张而不与之对抗，让呼气慢慢变长，会有帮助。"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 H("肩膀、脖子、下巴紧绷"),
                 P("身体准备行动，却忘了放松。时不时用注意力扫过全身，在呼气时放下紧张，会有帮助。"),
                 Practice(TechniqueId.BodyScan, "它在身体的哪里？"),
@@ -526,7 +526,7 @@ public static partial class ArticleContent
                     "识别关于身体的焦虑念头，像检验其他想法一样检验它们"),
                 P("针对健康焦虑的认知行为疗法研究充分，能帮助大多数人。"),
                 Ladder("恐惧阶梯"),
-                Practice(TechniqueId.Observer, "观察者视角"),
+                Practice(TechniqueId.ThoughtRecord, "想法记录"),
                 Warning("新症状：请去看医生"),
                 P("处理焦虑并不意味着忽视身体。如果出现新的症状、症状加重或迟迟不消失，请去看一次医生并遵从医嘱。危险信号清单见文章《身体与压力》。")
             ]),
@@ -599,8 +599,8 @@ public static partial class ArticleContent
                     "太激烈时就暂停：约定20–30分钟后，等身体平静下来再继续",
                     "提出和好：一个玩笑、一个动作、“我们重新开始好吗？”，并接受对方的和好"),
                 P("争吵的目的不是赢，而是相互理解，找到一个两个人都能接受的解决办法。"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
-                Practice(TechniqueId.Observer, "观察者视角"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
+                Practice(TechniqueId.ThoughtDefusion, "与念头拉开距离"),
                 P("如果在争吵中你感到害怕，被羞辱、被控制或被使用暴力，那就不再是冲突，而是暴力。请阅读关于心理暴力的文章。")
             ]),
         new(
@@ -845,7 +845,7 @@ public static partial class ArticleContent
                 Quiz("是什么最让强迫症持续下去？", 1, "仪式能让焦虑消失一会儿，正因如此它才会固定下来。治疗的基础是面对念头而不做仪式，直到焦虑自行消退。", "侵入性念头本身", "仪式和寻求安慰", "缺乏意志力"),
                 H("什么有帮助"),
                 P("研究最充分的方法是暴露与反应预防：一步步面对引发念头的事物，而不做仪式。这需要在心理治疗师的帮助下进行，常常配合精神科医生开的治疗。自己可以从小处开始：把仪式推迟几分钟、减少检查、留意念头并给它命名：“这是强迫念头。”"),
-                Practice(TechniqueId.Observer, "观察者视角"),
+                Practice(TechniqueId.ThoughtDefusion, "与念头拉开距离"),
                 Ladder("恐惧阶梯"),
                 Warning("什么时候该找专业人士"),
                 P("如果仪式每天占用超过一小时，妨碍工作和人际关系，或者念头让你非常痛苦，请去看心理治疗师或精神科医生。强迫症是可以很好治疗的。")
@@ -891,7 +891,7 @@ public static partial class ArticleContent
                     "准备好另一种方式：散步、呼吸练习、给朋友发条消息",
                     "不要试图一下子全部戒掉：从一天中的某个时段或某个地方开始"),
                 Practice(TechniqueId.BodyScan, "它在身体的哪里？"),
-                Practice(TechniqueId.Breathing, "方块呼吸"),
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸"),
                 Warning("什么时候你需要帮助"),
                 P("如果你每天喝酒或一次喝很多，不喝时手会发抖、睡不好，不要自己突然停下来：长期频繁饮酒后突然戒断可能很危险。请去看成瘾科医生或全科医生。如果暴食与节食、催吐或使用泻药交替出现，请阅读关于进食障碍的文章。"),
                 See(ArticleIds.EatingDisorders, "进食障碍：如何识别")
@@ -1112,7 +1112,7 @@ public static partial class ArticleContent
                 Warning("如果情况变糟"),
                 P("经历创伤后，闭着眼睛关注身体有时会唤起痛苦的回忆。这时请睁着眼睛，把练习缩短到一分钟，借助你看到的周围环境稳住自己。如果仍然很难受，最好在专业人士的陪伴下练习。"),
                 Practice(TechniqueId.Grounding, "着陆练习 5-4-3-2-1"),
-                Practice(TechniqueId.Breathing, "方块呼吸")
+                Practice(TechniqueId.Breathing, "轻柔节律呼吸")
             ]),
         new(
             ArticleIds.Uncertainty,
@@ -1146,7 +1146,7 @@ public static partial class ArticleContent
                     "记住大多数决定都可以在过程中调整"),
                 P("通常没有完美的决定，只有合理的决定，而这就足够了。"),
                 Practice(TechniqueId.ThoughtRecord, "想法记录"),
-                Practice(TechniqueId.BusyMind, "让大脑忙起来")
+                Practice(TechniqueId.BusyMind, "短暂转移注意力")
             ]),
         new(
             ArticleIds.JealousyAndEnvy,

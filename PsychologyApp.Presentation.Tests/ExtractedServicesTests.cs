@@ -240,6 +240,8 @@ public sealed class ProfileFeaturedTechniquesBuilderTests
         IReadOnlyList<TechniqueItem> items = await builder.BuildAsync(navigation.Object);
 
         Assert.Equal(4, items.Count);
+        Assert.Contains(items, item => item.Title == "Проверить факты");
+        Assert.DoesNotContain(items, item => item.Title == "Лист бумаги");
         Assert.All(items, item => Assert.NotNull(item.TapCommand));
     }
 }

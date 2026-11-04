@@ -3860,13 +3860,13 @@
     <value>Listo. Descansa un momento y luego valora tu tensión abajo.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Cinco tareas cortas. Haz cada una mentalmente o en voz alta, sin prisa.</value>
+    <value>Una tarea neutra durante unos 30–60 segundos. Si te frustra o te hace sentir peor, detente.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Empezar</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Hecho, siguiente</value>
+    <value>Terminar la pausa</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Otra tarea</value>
@@ -3878,7 +3878,7 @@
     <value>Listo. Valora tu tensión abajo.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Cinco tareas más</value>
+    <value>Otra pausa breve</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Nombra cinco animales que viven en el agua</value>

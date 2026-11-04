@@ -146,7 +146,7 @@ public static class BodyRules
             practices.AddRange(feeling switch
             {
                 BodyFeeling.Anxiety or BodyFeeling.Fear => [TechniqueId.Breathing, TechniqueId.Grounding],
-                BodyFeeling.Anger => [TechniqueId.Breathing, TechniqueId.Observer],
+                BodyFeeling.Anger => [TechniqueId.Grounding, TechniqueId.ThoughtDefusion],
                 BodyFeeling.Hurt or BodyFeeling.Sadness or BodyFeeling.Shame or BodyFeeling.Guilt => [TechniqueId.SelfCompassion, TechniqueId.ThoughtRecord],
                 BodyFeeling.Exhaustion => [TechniqueId.SmallStep],
                 _ => []

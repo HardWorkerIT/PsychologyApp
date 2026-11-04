@@ -1,14 +1,13 @@
 namespace PsychologyApp.Presentation.Core.Practice;
 
 /// <summary>
-/// One round of "keep the mind busy": a few tasks drawn at random from the list, never the same one twice in a round. The round is
-/// short on purpose, so the practice ends and the person comes back to the rating instead of distracting themselves indefinitely.
-/// Tasks are numbers 1..<see cref="TaskCount"/>; their texts live in the resources.
+/// One brief neutral task (or one alternative if skipped), then return to the rating instead of distracting indefinitely.
+/// Task numbers refer to localized text resources.
 /// </summary>
 public sealed class BusyMindRound
 {
     public const int TaskCount = 12;
-    public const int DefaultLength = 5;
+    public const int DefaultLength = 1;
 
     private readonly Queue<int> _unused;
 

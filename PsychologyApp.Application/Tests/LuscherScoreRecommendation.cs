@@ -9,10 +9,10 @@ public static class LuscherScoreRecommendation
 {
     public static TechniqueId RecommendTechnique(int coValue) => coValue switch
     {
-        >= 23 => TechniqueId.Spin,
+        >= 23 => TechniqueId.Grounding,
         >= 17 => TechniqueId.Breathing,
         >= 12 => TechniqueId.Grounding,
-        _ => TechniqueId.Experience
+        _ => TechniqueId.Grounding
     };
 }
 
