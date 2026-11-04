@@ -25,6 +25,7 @@ public sealed class TechniqueSuggesterTests
     [InlineData(CompanionEmotion.Anxiety, false, TechniqueSuggestionReasonCode.Anxiety, TechniqueId.CheckTheFacts, TechniqueId.ProblemSolving)]
     [InlineData(CompanionEmotion.Anxiety, true, TechniqueSuggestionReasonCode.AnxietyWithBodySymptoms, TechniqueId.Grounding, TechniqueId.SensoryComfort)]
     [InlineData(CompanionEmotion.Panic, false, TechniqueSuggestionReasonCode.Panic, TechniqueId.Grounding, TechniqueId.Breathing)]
+    [InlineData(CompanionEmotion.Panic, true, TechniqueSuggestionReasonCode.Panic, TechniqueId.Grounding, TechniqueId.SensoryComfort)]
     [InlineData(CompanionEmotion.Guilt, false, TechniqueSuggestionReasonCode.Guilt, TechniqueId.SelfCompassion, TechniqueId.ThoughtRecord)]
     [InlineData(CompanionEmotion.Overthinking, false, TechniqueSuggestionReasonCode.Overthinking, TechniqueId.ThoughtDefusion, TechniqueId.WorryTime)]
     [InlineData(CompanionEmotion.Anger, true, TechniqueSuggestionReasonCode.Anger, TechniqueId.Grounding, TechniqueId.MuscleRelax)]

@@ -106,6 +106,9 @@ public sealed record CompanionState
     /// <summary>The person said they do not want practices: no automatic offers, only when they ask.</summary>
     public bool PracticesDeclined { get; init; }
 
+    /// <summary>The person asked to avoid breathing/body-focused practices in this conversation.</summary>
+    public bool AvoidsBodyFocus { get; init; }
+
     /// <summary>The note about talking to a doctor or psychologist was already given in this chat.</summary>
     public bool ProfessionalHelpNoted { get; init; }
 
@@ -226,6 +229,7 @@ public sealed record CompanionState
             w.WriteBoolean("journalLogged", JournalLogged);
             w.WriteBoolean("grief", GriefShared);
             w.WriteBoolean("declined", PracticesDeclined);
+            w.WriteBoolean("avoidBodyFocus", AvoidsBodyFocus);
             w.WriteBoolean("helpNoted", ProfessionalHelpNoted);
             WriteOptional(w, "event", Event);
             WriteOptional(w, "goal", Goal);
@@ -307,6 +311,7 @@ public sealed record CompanionState
                 JournalLogged = Bool(r, "journalLogged"),
                 GriefShared = Bool(r, "grief"),
                 PracticesDeclined = Bool(r, "declined"),
+                AvoidsBodyFocus = Bool(r, "avoidBodyFocus"),
                 ProfessionalHelpNoted = Bool(r, "helpNoted"),
                 Event = EnumName<CompanionEvent>(r, "event"),
                 Goal = Str(r, "goal"),
