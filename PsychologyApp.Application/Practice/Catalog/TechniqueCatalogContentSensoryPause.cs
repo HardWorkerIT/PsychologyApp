@@ -22,7 +22,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "Когда хочется сделать небольшую паузу и в окружении есть безопасный сигнал, который вам подходит. Не нужно специально искать запах, вкус, звук или прикосновение. Если сенсорный фокус неприятен, пропустите практику.",
                 "Сначала оцените дискомфорт от 0 до 10. Выберите один доступный сигнал: например, цвет или форму, привычный звук на комфортной громкости, фактуру только если прикосновение приятно, или опору под стопами. Замечайте одну-две детали 30–60 секунд, затем оцените дискомфорт снова. Не заставляйте себя успокаиваться. Если стало хуже или некомфортно — остановитесь. После паузы при необходимости выберите один практический шаг.",
                 "Вы замечаете прохладный свет на стене и его мягкие границы. Через полминуты дискомфорт может остаться прежним — это допустимый результат; вы просто возвращаетесь к выбранному делу или поддержке.",
-                "Eye", "Дискомфорт до (0–10)", "На что я обращу внимание?", "Выберите один уже доступный безопасный сигнал или пропустите выбор.", "Дискомфорт после (0–10)",
+                "Visibility", "Дискомфорт до (0–10)", "На что я обращу внимание?", "Выберите один уже доступный безопасный сигнал или пропустите выбор.", "Дискомфорт после (0–10)",
                 [
                     "1. Оцените текущий дискомфорт от 0 до 10. Это ориентир, а не оценка того, насколько хорошо вы справляетесь.",
                     "2. Выберите один безопасный нейтральный или приятный сигнал, который уже есть рядом. Например: цвет или контур, знакомый звук на комфортной громкости, приятная фактура или ощущение опоры под стопами.",
@@ -38,7 +38,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "When you want a short pause and there is a safe cue around you that feels suitable. You do not need to seek out a smell, taste, sound, or touch. Skip the practice if focusing on sensation feels unpleasant.",
                 "First rate your distress from 0 to 10. Choose one available cue: a color or shape, a familiar sound at a comfortable volume, a texture only if touch feels pleasant, or support under your feet. Notice one or two details for 30–60 seconds, then rate distress again. Do not force yourself to feel calm. Stop if you feel worse or uncomfortable. After the pause, choose a practical next step if one is needed.",
                 "You notice cool light on a wall and its soft edges. After half a minute, distress may be unchanged; that is a valid result. You can return to the task or support you chose.",
-                "Eye", "Distress before (0–10)", "What will I notice?", "Choose one safe cue already available, or skip this choice.", "Distress after (0–10)",
+                "Visibility", "Distress before (0–10)", "What will I notice?", "Choose one safe cue already available, or skip this choice.", "Distress after (0–10)",
                 [
                     "1. Rate your current distress from 0 to 10. This is a reference point, not a score of how well you are coping.",
                     "2. Choose one safe, neutral or pleasant cue already nearby, such as a color or outline, a familiar sound at a comfortable volume, a pleasant texture, or support under your feet.",
@@ -54,7 +54,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "Wenn du kurz innehalten möchtest und ein sicherer Reiz in deiner Umgebung passend ist. Du musst keinen Geruch, Geschmack, Klang oder Berührung suchen. Lass die Übung aus, wenn der Sinnesfokus unangenehm ist.",
                 "Bewerte zuerst deine Belastung von 0 bis 10. Wähle einen verfügbaren Reiz: eine Farbe oder Form, einen vertrauten Klang in angenehmer Lautstärke, eine angenehme Oberfläche nur wenn Berührung sich gut anfühlt, oder den Halt unter den Füßen. Nimm 30–60 Sekunden ein oder zwei Details wahr und bewerte danach erneut. Erzwinge keine Ruhe. Wenn es schlechter oder unangenehm wird, hör auf. Wähle anschließend bei Bedarf einen praktischen Schritt.",
                 "Du bemerkst kühles Licht an der Wand und seine weichen Ränder. Nach einer halben Minute kann die Belastung unverändert sein. Das ist ein gültiges Ergebnis; du kannst zur Aufgabe oder Unterstützung zurückkehren.",
-                "Eye", "Belastung vorher (0–10)", "Worauf achte ich?", "Wähle einen sicheren, bereits vorhandenen Reiz oder überspringe die Auswahl.", "Belastung nachher (0–10)",
+                "Visibility", "Belastung vorher (0–10)", "Worauf achte ich?", "Wähle einen sicheren, bereits vorhandenen Reiz oder überspringe die Auswahl.", "Belastung nachher (0–10)",
                 [
                     "1. Bewerte deine aktuelle Belastung von 0 bis 10. Das ist ein Ausgangspunkt, keine Bewertung deiner Bewältigung.",
                     "2. Wähle einen sicheren, neutralen oder angenehmen Reiz in deiner Nähe, etwa eine Farbe oder Kontur, einen vertrauten Klang in angenehmer Lautstärke, eine angenehme Oberfläche oder Halt unter den Füßen.",
@@ -70,7 +70,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "Cuando quieras hacer una pausa breve y haya cerca una señal segura que te resulte adecuada. No hace falta buscar un olor, sabor, sonido o contacto. Omite la práctica si centrarte en las sensaciones te resulta desagradable.",
                 "Primero valora tu malestar de 0 a 10. Elige una señal disponible: un color o una forma, un sonido conocido a un volumen cómodo, una textura solo si tocarla resulta agradable o el apoyo bajo los pies. Observa uno o dos detalles durante 30–60 segundos y vuelve a valorar el malestar. No te obligues a calmarte. Detente si empeora o te incomoda. Después, si hace falta, elige un paso práctico.",
                 "Notas la luz fresca en una pared y sus bordes suaves. Tras medio minuto, el malestar puede seguir igual. Es un resultado válido; puedes volver a la tarea o al apoyo que elegiste.",
-                "Eye", "Malestar antes (0–10)", "¿En qué me fijaré?", "Elige una señal segura que ya esté disponible o sáltate esta elección.", "Malestar después (0–10)",
+                "Visibility", "Malestar antes (0–10)", "¿En qué me fijaré?", "Elige una señal segura que ya esté disponible o sáltate esta elección.", "Malestar después (0–10)",
                 [
                     "1. Valora el malestar actual de 0 a 10. Es un punto de referencia, no una nota sobre cómo lo estás haciendo.",
                     "2. Elige una señal segura, neutra o agradable que ya esté cerca: un color o contorno, un sonido conocido a un volumen cómodo, una textura agradable o el apoyo bajo los pies.",
@@ -86,7 +86,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "Quand vous souhaitez faire une courte pause et qu’un repère sûr de votre environnement vous convient. Inutile de chercher une odeur, un goût, un son ou un contact. Passez l’exercice si l’attention aux sensations vous déplaît.",
                 "Évaluez d’abord votre détresse de 0 à 10. Choisissez un repère disponible : une couleur ou une forme, un son familier à volume confortable, une texture seulement si le contact est agréable, ou l’appui sous vos pieds. Remarquez un ou deux détails pendant 30–60 secondes, puis réévaluez votre détresse. Ne vous forcez pas à vous calmer. Arrêtez si cela empire ou vous gêne. Ensuite, choisissez si besoin une action concrète.",
                 "Vous remarquez la lumière fraîche sur un mur et ses contours doux. Après une demi-minute, la détresse peut rester identique. C’est un résultat valable ; vous pouvez revenir à la tâche ou au soutien choisi.",
-                "Eye", "Détresse avant (0–10)", "Sur quoi vais-je porter mon attention ?", "Choisissez un repère sûr déjà présent, ou passez ce choix.", "Détresse après (0–10)",
+                "Visibility", "Détresse avant (0–10)", "Sur quoi vais-je porter mon attention ?", "Choisissez un repère sûr déjà présent, ou passez ce choix.", "Détresse après (0–10)",
                 [
                     "1. Évaluez votre détresse actuelle de 0 à 10. C’est un repère, pas une note sur votre façon de faire.",
                     "2. Choisissez un repère sûr, neutre ou agréable déjà présent : une couleur ou un contour, un son familier à volume confortable, une texture agréable ou l’appui sous vos pieds.",
@@ -102,7 +102,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "Quando quiser fazer uma pausa breve e houver por perto um estímulo seguro que lhe pareça adequado. Não precisa procurar cheiro, sabor, som ou toque. Pule a prática se focar nas sensações for desagradável.",
                 "Primeiro, avalie seu sofrimento de 0 a 10. Escolha um estímulo disponível: uma cor ou forma, um som familiar em volume confortável, uma textura apenas se o toque for agradável ou o apoio sob os pés. Observe um ou dois detalhes por 30–60 segundos e avalie novamente. Não se force a ficar calmo. Pare se piorar ou incomodar. Depois, se necessário, escolha um passo prático.",
                 "Você percebe a luz fria na parede e seus contornos suaves. Após meio minuto, o sofrimento pode continuar igual. Esse é um resultado válido; você pode voltar à tarefa ou ao apoio escolhido.",
-                "Eye", "Sofrimento antes (0–10)", "No que vou prestar atenção?", "Escolha um estímulo seguro que já esteja disponível ou pule esta escolha.", "Sofrimento depois (0–10)",
+                "Visibility", "Sofrimento antes (0–10)", "No que vou prestar atenção?", "Escolha um estímulo seguro que já esteja disponível ou pule esta escolha.", "Sofrimento depois (0–10)",
                 [
                     "1. Avalie o sofrimento atual de 0 a 10. É apenas uma referência, não uma nota sobre seu desempenho.",
                     "2. Escolha um estímulo seguro, neutro ou agradável que já esteja por perto: uma cor ou contorno, um som familiar em volume confortável, uma textura agradável ou o apoio sob os pés.",
@@ -118,7 +118,7 @@ internal static class TechniqueCatalogContentSensoryPause
                 "当你想短暂停一下，而且周围有安全、适合你的线索时使用。不必特意寻找气味、味道、声音或触感。如果关注感官让你不舒服，就跳过练习。",
                 "先将当前不适程度评为 0 到 10。选择一个现成的线索：一种颜色或形状、音量舒适的熟悉声音、只有在触摸令人愉快时才选择的质感，或脚下的支撑感。留意一两个细节 30–60 秒，然后再次评分。不要强迫自己平静下来。如果感觉更糟或不舒服，就停下。暂停后，如有需要，选择一个实际可行的下一步。",
                 "你留意墙面上清凉的光线和柔和的边缘。半分钟后，不适程度可能没有变化；这也是有效的观察结果。你可以回到原来的任务或寻求支持。",
-                "Eye", "练习前的不适程度（0–10）", "我会留意什么？", "选择一个身边已有的安全线索，或跳过此项。", "练习后的不适程度（0–10）",
+                "Visibility", "练习前的不适程度（0–10）", "我会留意什么？", "选择一个身边已有的安全线索，或跳过此项。", "练习后的不适程度（0–10）",
                 [
                     "1. 将当前的不适程度评为 0 到 10。这只是参考，不是对你应对能力的打分。",
                     "2. 选择一个身边已有的安全、中性或令人愉快的线索，例如颜色或轮廓、音量舒适的熟悉声音、令人愉快的质感，或脚下的支撑感。",

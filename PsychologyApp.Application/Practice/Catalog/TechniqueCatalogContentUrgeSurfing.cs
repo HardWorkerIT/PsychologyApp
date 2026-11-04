@@ -22,7 +22,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "Когда хочется немедленно отправить сообщение или снова проверить телефон и подождать одну минуту безопасно. Не откладывайте медицинскую помощь, нужные лекарства, еду, воду и действия для безопасности. Не используйте эту практику в одиночку при риске навредить себе или кому-то; обратитесь к плану безопасности и живой поддержке.",
                 "Сначала проверьте, безопасно ли отложить действие на минуту. Назовите желание фразой «Я замечаю импульс…». Если это комфортно, заметьте одно ощущение в теле, не пытаясь его изменить. В течение минуты наблюдайте: оно усиливается, держится или меняется? Затем оцените импульс ещё раз и выберите следующий безопасный шаг. Не нужно ждать, пока импульс исчезнет.",
                 "Вы злитесь и хотите сразу отправить сообщение. На минуту отложите отправку и замечайте, что происходит с желанием и напряжением в челюсти. Импульс может остаться таким же сильным; это не провал. Решите, хотите ли вы подождать ещё, изменить обстановку или обдуманно ответить.",
-                "Eye", "Сила импульса до (0–10)", "Какое действие хочется сделать?", "Опишите только действие, которое безопасно отложить. Можно оставить поле пустым.", "Сила импульса после (0–10)",
+                "Visibility", "Сила импульса до (0–10)", "Какое действие хочется сделать?", "Опишите только действие, которое безопасно отложить. Можно оставить поле пустым.", "Сила импульса после (0–10)",
                 [
                     "1. Оцените силу желания действовать от 0 до 10.",
                     "2. Убедитесь, что действие можно безопасно отложить на минуту. Если оно срочное, касается здоровья или безопасности — займитесь им или обратитесь за помощью.",
@@ -38,7 +38,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "When you want to send a message immediately or check your phone again, and waiting one minute is safe. Do not delay medical care, needed medication, food, water, or safety actions. Do not use this practice alone if you may harm yourself or someone else; follow your safety plan and get live support.",
                 "First check that it is safe to delay the action for a minute. Name the pull: “I notice an urge to…”. If comfortable, notice one body sensation without trying to change it. For a minute, observe: is it getting stronger, staying steady, or changing? Then rate the urge again and choose a safe next step. You do not have to wait for it to disappear.",
                 "You are angry and want to send a message right away. Delay sending for a minute and notice what happens to the urge and the tension in your jaw. The urge may stay just as strong; that is not failure. Decide whether to wait longer, change your surroundings, or reply after thinking it through.",
-                "Eye", "Urge strength before (0–10)", "What action am I pulled to take?", "Describe only an action that is safe to delay. You may leave this blank.", "Urge strength after (0–10)",
+                "Visibility", "Urge strength before (0–10)", "What action am I pulled to take?", "Describe only an action that is safe to delay. You may leave this blank.", "Urge strength after (0–10)",
                 [
                     "1. Rate how strong the pull to act feels, from 0 to 10.",
                     "2. Check that waiting a minute is safe. If the action is urgent or concerns health or safety, take care of it or seek help.",
@@ -54,7 +54,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "Wenn du sofort eine Nachricht senden oder erneut dein Telefon prüfen möchtest und eine Minute Aufschub sicher ist. Verschiebe keine medizinische Hilfe, notwendigen Medikamente, Nahrung, Wasser oder Sicherheitsmaßnahmen. Bei Gefahr, dir oder anderen zu schaden, nutze diese Übung nicht allein, sondern deinen Sicherheitsplan und direkte Unterstützung.",
                 "Prüfe zuerst, ob du die Handlung sicher eine Minute aufschieben kannst. Benenne den Drang: „Ich bemerke den Impuls, …“. Wenn es sich gut anfühlt, nimm eine Körperempfindung wahr, ohne sie verändern zu wollen. Beobachte eine Minute lang: wird sie stärker, bleibt sie gleich oder verändert sie sich? Bewerte den Impuls danach erneut und wähle einen sicheren nächsten Schritt. Du musst nicht warten, bis er verschwindet.",
                 "Du bist wütend und möchtest sofort eine Nachricht senden. Warte eine Minute und beobachte den Impuls und die Spannung im Kiefer. Der Impuls kann gleich stark bleiben; das ist kein Scheitern. Entscheide, ob du weiter wartest, die Umgebung wechselst oder überlegt antwortest.",
-                "Eye", "Impulsstärke vorher (0–10)", "Was möchte ich gerade tun?", "Beschreibe nur eine Handlung, die sicher warten kann. Das Feld darf leer bleiben.", "Impulsstärke nachher (0–10)",
+                "Visibility", "Impulsstärke vorher (0–10)", "Was möchte ich gerade tun?", "Beschreibe nur eine Handlung, die sicher warten kann. Das Feld darf leer bleiben.", "Impulsstärke nachher (0–10)",
                 [
                     "1. Bewerte den Handlungsdrang von 0 bis 10.",
                     "2. Prüfe, ob eine Minute Aufschub sicher ist. Ist die Handlung dringend oder betrifft sie Gesundheit oder Sicherheit, kümmere dich darum oder hole Hilfe.",
@@ -70,7 +70,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "Cuando quieras enviar un mensaje de inmediato o volver a mirar el teléfono y esperar un minuto sea seguro. No retrases atención médica, medicación necesaria, comida, agua ni acciones de seguridad. Si existe riesgo de hacerte daño o hacérselo a alguien, no uses esta práctica a solas: sigue tu plan de seguridad y busca apoyo directo.",
                 "Primero comprueba si es seguro aplazar la acción un minuto. Nombra el deseo: «Noto el impulso de…». Si te resulta cómodo, observa una sensación corporal sin intentar cambiarla. Durante un minuto, observa: ¿se intensifica, se mantiene o cambia? Después vuelve a valorar el impulso y elige un paso seguro. No tienes que esperar a que desaparezca.",
                 "Estás enfadado y quieres enviar un mensaje de inmediato. Espera un minuto antes de enviarlo y observa el impulso y la tensión en la mandíbula. Puede seguir igual de fuerte; no es un fracaso. Decide si quieres esperar más, cambiar de entorno o responder tras pensarlo.",
-                "Eye", "Intensidad del impulso antes (0–10)", "¿Qué acción me apetece hacer?", "Describe solo una acción que sea seguro aplazar. Puedes dejarlo en blanco.", "Intensidad del impulso después (0–10)",
+                "Visibility", "Intensidad del impulso antes (0–10)", "¿Qué acción me apetece hacer?", "Describe solo una acción que sea seguro aplazar. Puedes dejarlo en blanco.", "Intensidad del impulso después (0–10)",
                 [
                     "1. Valora cuánto te empuja a actuar, de 0 a 10.",
                     "2. Comprueba que esperar un minuto sea seguro. Si la acción es urgente o afecta a tu salud o seguridad, ocúpate de ella o pide ayuda.",
@@ -86,7 +86,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "Lorsque vous voulez envoyer un message immédiatement ou vérifier encore votre téléphone, et qu’attendre une minute est sans danger. Ne différez pas des soins médicaux, un traitement nécessaire, la nourriture, l’eau ou une mesure de sécurité. En cas de risque de vous faire du mal ou d’en faire à quelqu’un, ne restez pas seul avec cet exercice : suivez votre plan de sécurité et demandez un soutien direct.",
                 "Vérifiez d’abord qu’il est sans danger de différer l’action une minute. Nommez l’envie : « Je remarque une impulsion à… ». Si cela vous convient, observez une sensation corporelle sans chercher à la modifier. Pendant une minute, remarquez si elle augmente, reste stable ou change. Évaluez l’impulsion de nouveau et choisissez une étape sûre. Vous n’avez pas à attendre qu’elle disparaisse.",
                 "Vous êtes en colère et voulez envoyer un message tout de suite. Attendez une minute avant l’envoi et observez l’envie et la tension dans votre mâchoire. L’impulsion peut rester aussi forte ; ce n’est pas un échec. Décidez si vous souhaitez attendre davantage, changer d’environnement ou répondre après réflexion.",
-                "Eye", "Force de l’impulsion avant (0–10)", "Quelle action ai-je envie de faire ?", "Décrivez seulement une action qu’il est sans risque de différer. Vous pouvez laisser ce champ vide.", "Force de l’impulsion après (0–10)",
+                "Visibility", "Force de l’impulsion avant (0–10)", "Quelle action ai-je envie de faire ?", "Décrivez seulement une action qu’il est sans risque de différer. Vous pouvez laisser ce champ vide.", "Force de l’impulsion après (0–10)",
                 [
                     "1. Évaluez la force de l’envie d’agir de 0 à 10.",
                     "2. Vérifiez qu’attendre une minute est sans danger. Si l’action est urgente ou concerne la santé ou la sécurité, occupez-vous-en ou demandez de l’aide.",
@@ -102,7 +102,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "Quando quiser enviar uma mensagem imediatamente ou verificar o celular de novo, e esperar um minuto for seguro. Não adie cuidados médicos, medicamentos necessários, comida, água ou ações de segurança. Se houver risco de machucar a si mesmo ou outra pessoa, não faça esta prática sozinho: siga seu plano de segurança e procure apoio direto.",
                 "Primeiro, confirme que é seguro adiar a ação por um minuto. Nomeie a vontade: «Percebo um impulso de…». Se for confortável, observe uma sensação no corpo sem tentar mudá-la. Por um minuto, note se ela aumenta, permanece ou muda. Depois avalie o impulso novamente e escolha um próximo passo seguro. Você não precisa esperar que desapareça.",
                 "Você está com raiva e quer enviar uma mensagem imediatamente. Espere um minuto antes de enviar e observe o impulso e a tensão na mandíbula. Ele pode continuar tão forte quanto antes; isso não é fracasso. Decida se quer esperar mais, mudar de ambiente ou responder depois de refletir.",
-                "Eye", "Força do impulso antes (0–10)", "Que ação estou com vontade de fazer?", "Descreva apenas uma ação que seja seguro adiar. Você pode deixar em branco.", "Força do impulso depois (0–10)",
+                "Visibility", "Força do impulso antes (0–10)", "Que ação estou com vontade de fazer?", "Descreva apenas uma ação que seja seguro adiar. Você pode deixar em branco.", "Força do impulso depois (0–10)",
                 [
                     "1. Avalie de 0 a 10 a força da vontade de agir.",
                     "2. Confirme que esperar um minuto é seguro. Se a ação for urgente ou envolver saúde ou segurança, cuide dela ou peça ajuda.",
@@ -118,7 +118,7 @@ internal static class TechniqueCatalogContentUrgeSurfing
                 "当你很想立刻发消息或再次查看手机，而且等待一分钟是安全的。不延误医疗照护、必要药物、食物、饮水或安全行动。如果你可能伤害自己或他人，不要独自使用此练习；请遵循安全计划并寻求现实中的支持。",
                 "先确认把行动延后一分钟是安全的。用一句话说出冲动：“我注意到自己很想……”。如果关注身体让你感觉舒适，就观察一种身体感受，不必试图改变它。用一分钟留意它是在增强、保持不变还是发生变化。然后再次评估冲动，并选择安全的下一步。不必等到冲动消失。",
                 "你很生气，想马上发消息。先等一分钟，留意冲动和下颌的紧绷感。冲动可能仍然很强；这不代表失败。想想是否继续等一会儿、换个环境，或考虑后再回复。",
-                "Eye", "练习前的冲动强度（0–10）", "我现在很想做什么？", "只描述可以安全延后的行动。也可以留空。", "练习后的冲动强度（0–10）",
+                "Visibility", "练习前的冲动强度（0–10）", "我现在很想做什么？", "只描述可以安全延后的行动。也可以留空。", "练习后的冲动强度（0–10）",
                 [
                     "1. 将行动冲动的强度评为 0 到 10。",
                     "2. 确认等待一分钟是安全的。如果事情紧急或涉及健康、安全，就先处理或寻求帮助。",
