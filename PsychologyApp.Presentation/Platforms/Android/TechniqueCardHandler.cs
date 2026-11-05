@@ -182,6 +182,9 @@ public sealed class TechniqueCardPlatformView : LinearLayout
     {
         _author.Text = text;
         _author.Visibility = string.IsNullOrWhiteSpace(text) ? ViewStates.Gone : ViewStates.Visible;
+        _status.Visibility = !string.IsNullOrWhiteSpace(_date.Text) || !string.IsNullOrWhiteSpace(text)
+            ? ViewStates.Visible
+            : ViewStates.Gone;
     }
 
     public void SetFlavor(string flavor)
