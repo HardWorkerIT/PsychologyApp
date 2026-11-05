@@ -12,9 +12,14 @@ public partial class BreathingImmersivePage : ContentPage
     private const double GlowMin = 0.08;
     private const double GlowMax = 0.38;
 
-    public BreathingImmersivePage()
+    public BreathingImmersivePage() : this(BreathingPattern.Calm)
+    {
+    }
+
+    public BreathingImmersivePage(BreathingPattern pattern)
     {
         InitializeComponent();
+        Pacer.Pattern = pattern;
         SemanticProperties.SetDescription(CloseIcon, AppStrings.DialogueClose);
         Pacer.Rendered += OnPacerRendered;
     }

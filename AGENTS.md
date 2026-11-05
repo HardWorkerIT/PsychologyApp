@@ -117,9 +117,10 @@ Clean Architecture на уровне решения и Feature-Sliced Design в�
 
 ## Тексты интерфейса
 
-- Весь текст для человека — через `AppStrings` (`PsychologyApp.Presentation.Core/Common`): `R(key)` и `F(key, args)`
-  со значениями в `StringsRu.resx` и `StringsEn.resx`. Ключи и плейсхолдеры обоих файлов совпадают
-  (`AppStringsResourceTests`). Файлы resx — UTF-8 с CRLF: правьте так, чтобы не сломать окончания строк и кодировку.
+- Весь текст для человека — через `AppStrings` (`PsychologyApp.Presentation.Core/Common`), используя существующие
+  свойства/методы в partial-файлах `AppStrings.*.cs`. Строки хранятся в `Strings*.resx` для семи языков; новые ключи
+  и плейсхолдеры должны совпадать во всех локалях (`AppStringsResourceTests`). Файлы resx — UTF-8 с CRLF: сохраняйте
+  кодировку и окончания строк.
 - Каталог практик (`TechniqueCatalogContent.Ru.cs` / `.En.cs`) и сценарии диалогов (`Resources/Raw/conversations/*.json`
   и `*.en.json`) меняются парами; паритет RU/EN проверяется тестами.
 

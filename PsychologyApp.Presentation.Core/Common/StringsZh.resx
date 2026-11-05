@@ -21,6 +21,9 @@
   <data name="ChatInputPlaceholder" xml:space="preserve">
     <value>输入消息…</value>
   </data>
+  <data name="ChatShowReplyOptions" xml:space="preserve">
+    <value>显示选项</value>
+  </data>
   <data name="ChatEmptyBody" xml:space="preserve">
     <value>告诉我发生了什么。我会倾听，帮你理清思路，并推荐一个练习。</value>
   </data>
@@ -3860,13 +3863,13 @@
     <value>完成了。静静坐一会儿，然后在下面给紧张程度打分。</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>五个小任务。在心里或大声完成每一个，不用着急。</value>
+    <value>用 30–60 秒做一项中性任务。如果感到烦躁或更难受，就停下来。</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>开始</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>完成，下一个</value>
+    <value>结束暂停</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>换一个任务</value>
@@ -3878,7 +3881,7 @@
     <value>完成了。在下面给紧张程度打分。</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>再来五个任务</value>
+    <value>再做一次短暂停顿</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>说出五种生活在水里的动物</value>

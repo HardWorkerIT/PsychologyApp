@@ -246,49 +246,49 @@ internal static class TechniqueCatalogContentFr
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
-        "Pratique", "Position d'observateur",
+        "Pratique", "Dialogue intérieur avec recul",
         [
-            "1. Décrivez la situation qui vous préoccupe",
-            "2. Écrivez vos sentiments à la première personne",
-            "3. Regardez la situation en observateur neutre",
-            "4. Évaluez la tension après avoir changé de position"
+            "1. Nommez la situation et l’émotion en une phrase ; inutile de détailler un événement pénible.",
+            "2. Adressez-vous à vous-même par votre prénom ou avec « tu », plutôt qu’uniquement avec « je ». Par exemple : « [Prénom], que se passe-t-il maintenant ? »",
+            "3. Écrivez ce qui compte maintenant et une prochaine étape réaliste et sûre. Ne justifiez pas un tort et ne minimisez pas un danger.",
+            "4. Évaluez votre tension maintenant. Elle peut diminuer, rester stable ou augmenter. Si vous vous sentez plus mal, arrêtez et choisissez un autre soutien."
         ],
-        "Changer de position de perception aide à prendre du recul face à un pic émotionnel et à voir la situation plus largement.",
-        TechniqueUiKind.Entry, "Technique n° 12", "12.06.2026", "Position d'observateur", "Prendre du recul et voir la situation de l'extérieur", "Moment difficile", "PNL", 4, "Visibility",
+        "Une courte adaptation du dialogue intérieur distancié : s’adresser à soi par son prénom ou avec « tu » plutôt qu’uniquement avec « je ». Cela peut laisser un peu d’espace pour réfléchir, sans promettre un soulagement immédiat.",
+        TechniqueUiKind.Entry, "Technique n° 12", "12.06.2026", "Dialogue intérieur avec recul", "Adressez-vous à vous-même par votre prénom ou « tu », puis choisissez une étape sûre", "Moment difficile", "Aide personnelle", 1, "Visibility",
         [
-            new TechniqueEntrySeed("Situation", "Que s'est-il passé ou que ressassez-vous ?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Sentiments à la première personne", "Que ressentez-vous quand vous êtes dans la situation ?", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("Ce que voit l'observateur", "Que remarquerait un observateur extérieur calme ?", Suggestions: ["Deux personnes qui se disputent", "Une personne fatiguée et contrariée", "Une situation de travail ordinaire", "Chacun défend son point de vue", "Dans une semaine, ce sera oublié", "Les gens se sont mal compris", "Une personne qui fait de gros efforts", "Désagréable, mais pas dangereux", "Chacun a son point de vue", "La personne a besoin de repos"]),
-            new TechniqueEntrySeed("Tension maintenant", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situation", "En bref : que se passe-t-il maintenant ? Il n’est pas nécessaire de raconter un événement pénible.", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Sentiments à la première personne", "Que ressentez-vous ? Une courte phrase suffit.", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("Ce que voit l'observateur", "Adressez-vous à vous-même par votre prénom ou « tu » : qu’est-ce qui compte, et quelle étape sûre est possible ?", Suggestions: ["[Prénom], qu’est-ce qui compte pour toi maintenant ?", "Quelle étape est sûre et réaliste ?", "Comment peux-tu te soutenir ?", "Que dirais-tu à un proche ?", "Tu peux répondre plus tard, quand ce sera plus clair"]),
+            new TechniqueEntrySeed("Tension maintenant", "Évaluez-la à la fin ; elle peut rester identique.", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Quand on est dans un épisode, les émotions semblent inévitables. La position d'observateur crée de la distance sans nier ce qu'on vit.",
-            "Quand une situation vous submerge et que les arguments rationnels n'aident pas.",
-            "Décrivez la situation et vos sentiments, puis réécrivez-la à la troisième personne — de façon neutre, sans jugement.",
-            "Dispute : de l'intérieur — « on me manque de respect ». Observateur : « deux personnes parlent fort ». Tension : 8 → 5."),
+            "Le dialogue intérieur distancié consiste à utiliser son prénom ou « tu » plutôt que seulement « je ». Cela peut créer un peu d’espace pour réfléchir, sans garantir un soulagement immédiat.",
+            "Essayez en cas de tension émotionnelle ou sociale supportable, uniquement si vous êtes en sécurité. Ne l’utilisez pas pour justifier un tort ou minimiser un danger réel.",
+            "Nommez brièvement l’émotion, adressez-vous à vous-même par votre prénom ou « tu », puis demandez-vous ce qui compte maintenant et quelle étape sûre est possible.",
+            "Au lieu de « Je n’y arriverai pas » : « [Prénom], c’est difficile en ce moment. Quelle est la prochaine étape sûre pour toi ? »"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Anchor = new(
-        "Pratique", "Ancre de ressource",
+        "Pratique", "Souvenir de soutien",
         [
-            "1. Rappelez-vous un moment où vous vous sentiez confiant·e ou calme",
-            "2. Décrivez les sensations du corps",
-            "3. Choisissez un geste d'ancrage simple",
-            "4. Évaluez la force de l'état ressource"
+            "1. Rappelez-vous un moment sûr où vous avez reçu du soutien ou surmonté une difficulté",
+            "2. Remarquez ce qui vous a aidé et ce que vous perceviez dans votre corps",
+            "3. Si vous le souhaitez, choisissez un geste uniquement comme rappel de ce souvenir",
+            "4. Évaluez l’aide que ce souvenir vous apporte maintenant (0 = aucune, 10 = beaucoup) ; 0 convient aussi"
         ],
-        "Une ancre relie un geste du corps à un état ressource pour retrouver plus vite un appui.",
-        TechniqueUiKind.Entry, "Technique n° 13", "12.06.2026", "Ancre de ressource", "Retrouver un appui par un geste et un souvenir", "Moment difficile", "PNL", 4, "SelfImprovement",
+        "Un souvenir peut rappeler des sources de soutien déjà connues. La réponse varie ; un geste n’est qu’un rappel facultatif et ne change pas l’état de façon fiable.",
+        TechniqueUiKind.Entry, "Technique n° 13", "12.06.2026", "Souvenir de soutien", "Se rappeler une expérience de soutien et repérer des ressources accessibles", "Moment difficile", "Souvenir de soutien", 4, "SelfImprovement",
         [
-            new TechniqueEntrySeed("Souvenir ressource", "Quand vous êtes-vous senti·e fort·e, calme ou joyeux·se ?", Suggestions: ["Une intervention réussie", "Des vacances à la mer", "L'étreinte d'un proche", "Avoir terminé quelque chose de difficile", "Une promenade dans la nature", "Un examen réussi", "La naissance d'un enfant", "Une victoire en compétition", "Une soirée entre amis", "Les félicitations de mon chef", "Le premier jour dans un nouveau travail", "Un matin sans se presser"]),
+            new TechniqueEntrySeed("Souvenir ressource", "Choisissez un souvenir qui vous semble sûr ; sinon, vous pouvez passer l’exercice.", Suggestions: ["Une intervention réussie", "Des vacances à la mer", "L’étreinte d’un proche", "Avoir terminé quelque chose de difficile", "Une promenade dans la nature", "Un examen réussi", "La naissance d’un enfant", "Une victoire en compétition", "Une soirée entre amis", "Les félicitations de mon chef", "Le premier jour dans un nouveau travail", "Un matin sans se presser"]),
             new TechniqueEntrySeed("Sensations du corps", "Où le ressentez-vous ? Chaleur, légèreté, ancrage…", Suggestions: ["De la chaleur dans la poitrine", "De la légèreté", "Les épaules ouvertes", "Une respiration régulière", "Des jambes solides", "Un sourire", "Un cœur calme", "Le dos droit", "De l'énergie dans les mains", "Le ventre détendu"]),
-            new TechniqueEntrySeed("Geste ou ancre", "Par ex. serrer le poing, toucher le poignet", Suggestions: ["Serrer le poing", "Toucher le poignet", "Joindre le pouce et l'index", "La main sur le cœur", "Une inspiration profonde", "Pincer le lobe de l'oreille", "Ouvrir les épaules", "Caresser ma paume"]),
-            new TechniqueEntrySeed("Force de l'état", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Geste de rappel facultatif", "Ce geste peut rappeler le souvenir ; vous pouvez passer cette étape", Suggestions: ["Serrer le poing", "Toucher le poignet", "Joindre le pouce et l’index", "La main sur le cœur", "Une inspiration profonde", "Pincer le lobe de l’oreille", "Ouvrir les épaules", "Caresser ma paume"]),
+            new TechniqueEntrySeed("Réponse au souvenir", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Le cerveau associe vite un geste à un état si vous répétez plusieurs fois la paire « souvenir + geste ».",
-            "Avant un événement stressant ou quand vous manquez d'appui intérieur.",
-            "Rappelez-vous l'épisode ressource, intensifiez les sensations du corps et fixez-les par un geste simple.",
-            "Ressource : une intervention réussie. Corps : chaleur dans la poitrine. Ancre : toucher du pouce. Force : 8."),
+            "Il s’agit d’un bref exercice de rappel. Son effet et tout lien avec un geste ne sont pas garantis.",
+            "Pour vous rappeler ce qui vous a déjà aidé. Choisissez un souvenir sûr ; arrêtez si cela devient plus difficile.",
+            "Remarquez ce qui vous a aidé. Le geste est facultatif et sert seulement de rappel ; vous n’avez pas à vous forcer à vous calmer.",
+            "Je me rappelle qu’un ami m’a écouté·e. En parler m’a aidé·e ; je pourrais lui écrire. Effet du souvenir : 5 sur 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Grounding = new(
@@ -317,49 +317,50 @@ internal static class TechniqueCatalogContentFr
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
-        "Pratique", "Respiration carrée",
+        "Pratique", "Respiration guidée en douceur",
         [
-            "1. Évaluez la tension avant la pratique",
-            "2. Inspirez sur 4 temps",
-            "3. Retenez sur 4 temps",
-            "4. Expirez sur 4 temps",
-            "5. Retenez sur 4 temps — répétez 4 cycles et évaluez la tension ensuite"
+            "1. Évaluez votre tension avant de commencer",
+            "2. Installez-vous confortablement. Respirez doucement, sans inspirer plus profondément que d'habitude",
+            "3. Si cela vous convient, suivez le cercle : inspirez environ 4 temps et expirez environ 6. Ne retenez pas votre souffle",
+            "4. Si le rythme ne vous convient pas, cessez de compter ou arrêtez. En cas de vertige ou d'essoufflement, reprenez votre respiration naturelle",
+            "5. Évaluez de nouveau votre tension après. Elle peut rester la même ; c'est aussi une information utile"
         ],
-        "Une respiration rythmée calme le système nerveux et réduit la tension du corps.",
-        TechniqueUiKind.Entry, "Technique n° 15", "04.07.2026", "Respiration carrée", "Calmer le corps par le rythme du souffle", "Moment difficile", "Psyché", 3, "Air",
+        "En cas de tension, vous pouvez essayer un rythme bref et doux, sans pause respiratoire. Cela ne convient pas à tout le monde : compter ou se concentrer sur le souffle peut accentuer l'inconfort.",
+        TechniqueUiKind.Entry, "Technique n° 15", "04.07.2026", "Respiration guidée en douceur", "Essayer un rythme confortable avec une expiration un peu plus longue", "Moment difficile", "Psyché", 3, "Air",
         [
             new TechniqueEntrySeed("Tension avant", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "Qu'avez-vous remarqué dans votre corps ou votre respiration pendant la pratique ?", Suggestions: ["Les épaules se sont relâchées", "La respiration a ralenti", "J'ai eu plus chaud", "Difficile de tenir la pause", "Les pensées m'ont distrait·e", "Je me suis senti·e plus calme", "J'ai eu la tête qui tourne", "Le cœur a ralenti", "J'ai eu envie de bâiller", "Rien de spécial"]),
+            new TechniqueEntrySeed("Notes", "Qu'avez-vous remarqué ? Toutes les réactions sont possibles.", Suggestions: ["Le rythme était confortable", "Compter me distrayait", "Le rythme était trop lent", "J'ai eu des vertiges", "La respiration était inconfortable", "Je me suis senti·e un peu plus calme", "La tension n'a pas changé", "Je me suis senti·e plus tendu·e", "J'ai arrêté et observé ce qui m'entourait"]),
             new TechniqueEntrySeed("Tension après", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Une respiration lente et rythmée réduit l'activité du système nerveux sympathique et aide le corps à sortir du mode « combat ou fuite ».",
-            "En cas d'anxiété, de panique, de cœur qui s'emballe, d'insomnie ou de sentiment d'être débordé·e.",
-            "Installez-vous confortablement, respirez par le nez : 4 inspiration, 4 rétention, 4 expiration, 4 rétention. Répétez 4 cycles.",
-            "Anxiété 7/10 → après 4 cycles 4/10. Les épaules se relâchent, le pouls ralentit."),
+            "Un rythme bref et doux, avec une expiration un peu plus longue, permet d'essayer d'accompagner le souffle en cas de tension. Les réactions varient ; cette pratique ne garantit pas de soulagement.",
+            "En cas de tension, si se concentrer sur le souffle vous convient.",
+            "Installez-vous confortablement. Respirez doucement, sans inspirer plus profondément que d'habitude. Pendant environ une minute, vous pouvez suivre le cercle : inspirez environ 4 temps et expirez environ 6, sans pause. Si le rythme semble forcé, reprenez votre respiration naturelle. Arrêtez si l'inconfort augmente et nommez quelques objets autour de vous.",
+            "La tension était de 7/10. Après une minute, elle était toujours de 7/10 ; compter me semblait forcé, alors j'ai arrêté et nommé cinq objets autour de moi."
+        ),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SmallStep = new(
         "Pratique", "Un petit pas",
         [
-            "1. Décrivez ce qui vous pèse ou vous empêche de commencer",
-            "2. Choisissez le plus petit pas réaliste pour aujourd'hui",
-            "3. Écrivez quand vous le ferez",
-            "4. Évaluez votre énergie après avoir écrit le pas"
+            "1. Choisissez une petite activité de soin de soi, d’intérêt, de lien social ou donnant un sentiment d’accomplissement",
+            "2. Réduisez-la à un début sûr de 2–5 minutes. Vous n’avez pas à terminer toute la tâche",
+            "3. Choisissez un moment précis dans les prochaines 24 heures. Si ce n’est pas le bon moment, choisissez le repos, du soutien ou une étape plus petite",
+            "4. Évaluez si cela vous semble faisable : 0 — pas du tout confiant, 10 — tout à fait confiant. En cas de doute, réduisez encore"
         ],
-        "Activation comportementale : une petite action redonne un sentiment de mouvement et de contrôle.",
-        TechniqueUiKind.Entry, "Technique n° 16", "04.07.2026", "Un petit pas", "Retrouver l'élan par une action minimale", "Moment difficile", "TCC", 5, "DirectionsWalk",
+        "Un bref plan d’activité inspiré des principes de l’activation comportementale. Un petit pas peut aider à commencer, sans garantir une meilleure humeur ou plus d’énergie.",
+        TechniqueUiKind.Entry, "Technique n° 16", "04.07.2026", "Un petit pas", "Choisissez une activité et rendez le début faisable", "Moment difficile", "TCC", 5, "DirectionsWalk",
         [
-            new TechniqueEntrySeed("Ce qui pèse", "Qu'est-ce qui semble difficile, ennuyeux ou impossible en ce moment ?", Suggestions: ["Fatigue", "Pas d'énergie", "Trop de choses à faire", "L'ennui", "Peur de commencer", "Rien ne semble compter", "Mal dormi", "Pas le moral", "La solitude", "La procrastination", "Mal de tête", "Je ne sais pas par où commencer"], Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Le plus petit pas aujourd'hui", "Par ex. me lever, me laver le visage, envoyer un message", Suggestions: ["Sortir du lit", "Me laver le visage", "Boire un peu d'eau", "Envoyer un message", "Sortir 5 minutes", "Ranger une chose", "Ouvrir une fenêtre", "M'étirer 2 minutes", "Prendre une douche", "Manger quelque chose", "Appeler un proche", "Ouvrir le fichier dont j'ai besoin", "Écrire un plan pour la journée", "Laver une tasse"]),
-            new TechniqueEntrySeed("Quand vous le ferez", "Une heure précise ou un moment de la journée", Suggestions: ["Tout de suite", "Dans 15 minutes", "Dans une heure", "Le matin", "Après le petit-déjeuner", "Après le déjeuner", "Le soir", "Avant de dormir", "Demain matin", "Le week-end"]),
-            new TechniqueEntrySeed("Énergie après", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Qu’est-ce qui rend le début difficile ?", "Fatigue, anxiété, solitude, trop de choses à faire ?", Suggestions: ["Fatigue", "Anxiété", "Solitude", "Trop de choses à faire", "Ennui", "Je ne sais pas par où commencer", "J’ai besoin de repos", "Les conditions ne sont pas réunies"], Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Une petite activité pour moi", "Prendre soin de soi, intérêt, lien social ou petite tâche", Suggestions: ["Boire de l’eau ou manger un peu", "Me laver ou m’habiller", "Prendre l’air deux minutes", "Écouter une chanson que j’aime", "Envoyer un message à un proche", "Consacrer deux minutes à quelque chose d’important", "Ranger un objet", "Demander à quelqu’un de rester avec moi"]),
+            new TechniqueEntrySeed("Quand allez-vous essayer ?", "Un moment précis dans les prochaines 24 heures", Suggestions: ["Maintenant, deux minutes", "Après le petit-déjeuner", "Après le déjeuner", "Après le travail ou les études", "À l’heure que je choisis aujourd’hui", "Demander à un proche de me le rappeler"]),
+            new TechniqueEntrySeed("Cela semble-t-il faisable ?", "0 — pas du tout confiant, 10 — tout à fait confiant", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Dans l'apathie, le cerveau attend la motivation pour agir. Un petit pas crée la motivation par l'action, et non l'inverse.",
-            "Quand vous n'avez pas d'énergie, que tout semble inutile ou que commencer la journée est difficile.",
-            "Choisissez un pas de 2 à 5 minutes sans plan parfait. Écrivez-le avec l'heure — c'est déjà un mouvement.",
-            "Ranger l'appartement → poser une tasse dans la cuisine à 10 h. Énergie : 2 → 4."),
+            "Un moral bas ou peu d’énergie peuvent rendre le début difficile. Une petite activité planifiée peut aider à se remettre en mouvement ; l’effet varie selon les personnes.",
+            "Quand le moral ou l’énergie compliquent le démarrage et qu’une activité sûre et faisable est possible. Se reposer ou demander de l’aide peut aussi être un bon pas.",
+            "Choisissez une activité de soin de soi, d’intérêt, de lien social ou donnant un sentiment d’accomplissement ; réduisez le début à 2–5 minutes et prévoyez-le dans les prochaines 24 heures. Prévoir ne signifie pas avoir déjà fait. Si cela ne semble pas faisable, réduisez l’étape ou demandez du soutien.",
+            "Au lieu de « ranger tout l’appartement », lavez une tasse après le déjeuner — ou écrivez à un proche : « As-tu une minute pour parler ? »"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
@@ -491,24 +492,24 @@ internal static class TechniqueCatalogContentFr
     internal static readonly BuiltInTechniqueDefinition Balloons = new(
         "Pratique", "Éclate les ballons",
         [
-            "1. Évaluez votre tension",
-            "2. Éclatez les ballons d'une touche, sans vous presser",
-            "3. À chaque éclatement, expirez lentement",
-            "4. Allez jusqu'au bout de la manche",
-            "5. Évaluez votre tension après"
+            "1. Évaluez votre tension avant le jeu",
+            "2. Commencez la manche et touchez les ballons à votre rythme ; inutile de tous les éclater",
+            "3. Respirez comme d’habitude. Vous n’avez pas à synchroniser votre expiration avec chaque éclatement",
+            "4. La manche se termine d’elle-même. Si le jeu vous agace ou aggrave votre état, revenez en arrière",
+            "5. Réévaluez votre tension et notez ce que vous avez remarqué. L’absence de changement est aussi un résultat"
         ],
-        "Un petit jeu détourne l'attention des pensées anxieuses vers un geste simple et les sensations.",
-        TechniqueUiKind.Entry, "Technique n° 22", "26.10.2026", "Éclate les ballons", "Une courte pause pour relâcher la tension", "Moment difficile", "Psyché", 3, "BubbleChart",
+        "Un jeu bref pour occuper les mains et l’attention. Il peut détourner l’attention un instant, sans devoir changer votre état ni remplacer une action ou du soutien.",
+        TechniqueUiKind.Entry, "Technique n° 22", "26.10.2026", "Éclate les ballons", "Une courte pause ludique, si vous le souhaitez", "Moment difficile", "Psyché", 3, "BubbleChart",
         [
             new TechniqueEntrySeed("Tension avant", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "Qu'est-ce qui a changé pendant que vous éclatiez les ballons ?", Suggestions: ["Je me sens plus léger", "Mes pensées ont fait une pause", "J'ai eu envie de sourire", "Ma respiration s'est apaisée", "L'agacement est passé", "Mes mains se sont détendues", "Rien n'a changé", "J'ai envie d'une autre manche"]),
+            new TechniqueEntrySeed("Notes", "Qu’avez-vous remarqué, le cas échéant ? Vous pouvez laisser vide.", Suggestions: ["Un peu moins de tension", "Pas de changement notable", "Plus de tension", "Mon attention a changé un instant", "J’ai remarqué les couleurs ou le mouvement", "Le jeu m’a agacé", "Je ne sais pas", "Autre"]),
             new TechniqueEntrySeed("Tension après", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Quand l'anxiété ou l'agacement sont au plus haut, les pensées sont difficiles à arrêter par la volonté. Un geste simple qui demande les yeux et les mains change d'activité pour le cerveau quelques minutes et laisse la tension retomber. Ce n'est pas un traitement, mais un moyen de traverser une minute difficile.",
-            "Quand l'agacement, la tension ou l'anxiété prennent le dessus et qu'il faut une courte pause. Si le jeu sert seulement à éviter un problème qui mérite d'être réglé, revenez-y une fois plus calme.",
-            "Ne vous pressez pas : inutile de toucher chaque ballon. Expirez lentement à chaque éclatement. La manche se termine d'elle-même ; il n'y a pas de jeu sans fin.",
-            "Tension 7/10 après une dispute. Une manche de 20 ballons, une expiration à chaque éclatement. Tension 4/10, et j'ai pu réfléchir calmement à ma réponse."),
+            "Un petit jeu peut occuper brièvement les mains et l’attention ; son effet varie. Il ne garantit pas une baisse de l’anxiété et ne constitue pas un traitement.",
+            "Quand une courte pause ludique vous convient. Ne retardez pas une action urgente liée à la santé ou à la sécurité pour jouer.",
+            "Touchez les ballons à votre rythme ; inutile de tous les éclater. Respirez normalement, sans synchroniser votre souffle avec chaque éclatement. Après la manche, comparez votre évaluation sans attendre un résultat précis. Si un problème concret demande une action, reprenez l’étape suivante lorsque vous serez prêt.",
+            "Après une dispute, ma tension était à 7/10 et est restée à 7/10 après la manche. J’ai remarqué que j’étais encore en colère et j’ai choisi d’attendre avant de répondre."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition CyclicSigh = new(
@@ -558,25 +559,44 @@ internal static class TechniqueCatalogContentFr
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition BusyMind = new(
-        "Pratique", "Occuper l'esprit",
+        "Pratique", "Brève pause de l’attention",
         [
-            "1. Évaluez votre tension",
-            "2. Prenez une tâche et faites-la dans votre tête ou à voix haute",
-            "3. Si vos pensées reviennent à l'inquiétude, revenez doucement à la tâche",
-            "4. Faites cinq tâches",
-            "5. Évaluez votre tension après"
+            "1. Évaluez votre tension seulement si cela vous est utile maintenant",
+            "2. Choisissez une tâche neutre pour environ 30 à 60 secondes",
+            "3. Si votre attention revient à l’inquiétude, ne vous critiquez pas ; vous pouvez revenir doucement à la tâche une fois",
+            "4. Arrêtez-vous et vérifiez si une action concrète ou du soutien est nécessaire"
         ],
-        "Des tâches simples pour l'esprit détournent l'attention des pensées qui tournent en rond.",
-        TechniqueUiKind.Entry, "Technique n° 25", "26.10.2026", "Occuper l'esprit", "Des tâches simples pour briser le cercle des pensées", "Moment difficile", "Psyché", 3, "Extension",
+        "Une courte tâche neutre peut déplacer l’attention un instant quand les pensées semblent bloquées. Elle ne supprime pas les pensées et ne résout pas le problème.",
+        TechniqueUiKind.Entry, "Technique n° 25", "26.10.2026", "Brève pause de l’attention", "Une pause temporaire quand les pensées se répètent", "Moment difficile", "Psyché", 1, "Extension",
         [
             new TechniqueEntrySeed("Tension avant", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "Qu'est-ce qui a changé pendant que vous étiez occupé·e par les tâches ?", Suggestions: ["Mes pensées ont lâché prise", "Je suis plus calme", "J'ai eu du mal à me concentrer", "J'ai envie de passer à l'action", "L'anxiété est revenue", "Rien n'a changé", "Je veux d'autres tâches"]),
+            new TechniqueEntrySeed("Notes", "Comment s’est passée cette courte pause ?", Suggestions: ["Mon attention a changé un instant", "Rien n’a changé", "Je me suis senti·e plus tendu·e ou frustré·e", "Je vois une prochaine étape", "J’ai besoin de soutien", "J’ai arrêté l’exercice"]),
             new TechniqueEntrySeed("Tension après", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Quand les pensées tournent en rond, les arrêter par la volonté est presque impossible. Une tâche qui occupe l'esprit (compter, se souvenir, énumérer) ne laisse plus de place au ressassement pendant un moment. C'est une compétence de distraction issue de la thérapie comportementale dialectique : pas une solution au problème, mais un moyen de traverser une minute difficile.",
-            "Quand des pensées envahissantes prennent le dessus, avant de dormir, ou après une dispute quand la conversation continue dans la tête.",
-            "Faites les tâches pour de vrai : plus elles prennent d'attention, mieux c'est. Si le problème doit vraiment être résolu, revenez-y quand vous serez plus calme.",
-            "Après une dispute, la conversation tourne dans ma tête, tension 7/10. Cinq tâches : des animaux qui vivent dans l'eau, compter à rebours de 100 en retirant 7, des objets de chaque couleur autour de moi. Tension 4/10."),
+            "Une courte tâche neutre — comme nommer des objets d’une même couleur — peut parfois aider à traverser un moment intense. Elle déplace temporairement l’attention sans supprimer les pensées ; ses effets varient.",
+            "Quand des pensées répétitives captent votre attention et que vous souhaitez une brève pause. En cas de problème urgent ou de question de sécurité ou de santé, agissez et demandez une aide adaptée.",
+            "Choisissez une tâche simple pendant 30 à 60 secondes ; une concentration parfaite n’est pas nécessaire. Ensuite, voyez s’il y a une action concrète à reprendre. Si la tâche vous frustre ou aggrave votre état, arrêtez et choisissez une autre approche.",
+            "Après une dispute, la conversation tourne encore dans votre tête. Pendant une demi-minute, nommez cinq objets autour de vous, puis décidez s’il faut clarifier un fait, faire une pause ou demander du soutien."),
+        null, null);
+
+    internal static readonly BuiltInTechniqueDefinition ThoughtDefusion = new(
+        "Pratique", "Prendre du recul sur une pensée",
+        [
+            "1. Repérez une pensée courte ; l’écrire est facultatif",
+            "2. Dites : « Je remarque la pensée que… »",
+            "3. Regardez un objet devant vous et sentez l’appui sous vos pieds",
+            "4. Choisissez une petite prochaine action ou arrêtez-vous ici"
+        ],
+        "Un exercice bref de thérapie d’acceptation et d’engagement (ACT) : voir une pensée comme une activité de l’esprit, pas forcément comme un fait ou un ordre.",
+        TechniqueUiKind.Entry, "Technique n° 26", "03.11.2026", "Prendre du recul sur une pensée", "Un exercice bref pour prendre du recul face à une pensée inquiétante", "Pensées", "Psyché", 1, "FormatQuote",
+        [
+            new TechniqueEntrySeed("Pensée", "Facultatif : vous pouvez faire l’exercice en silence", Suggestions: HarshThoughts)
+        ],
+        Theory(
+            "Une pensée répétitive peut accaparer toute l’attention. En ACT, la défusion consiste à la remarquer sans la contester ni essayer de la chasser.",
+            "Quand une inquiétude, une autocritique ou une peur revient en boucle. Il n’est pas nécessaire de choisir un souvenir pénible.",
+            "Vous n’avez rien à écrire. Ajoutez « Je remarque la pensée que… » avant la pensée, regardez un objet et sentez l’appui sous vos pieds. Si le malaise augmente, arrêtez et nommez quelques objets autour de vous.",
+            "« Je vais tout gâcher » devient « Je remarque la pensée que je vais tout gâcher ». Vous remarquez la tasse devant vous et choisissez de répondre à un courriel ou de faire une pause."),
         null, null);
 }

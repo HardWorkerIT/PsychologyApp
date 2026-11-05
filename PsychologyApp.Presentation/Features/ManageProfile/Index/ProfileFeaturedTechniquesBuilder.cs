@@ -28,9 +28,10 @@ public sealed class ProfileFeaturedTechniquesBuilder(
         TechniqueId[] featuredIds =
         [
             recommendedId,
-            TechniqueId.Spin,
-            TechniqueId.Paper,
-            TechniqueId.Polarity
+            TechniqueId.Grounding,
+            TechniqueId.CheckTheFacts,
+            TechniqueId.ThoughtDefusion,
+            TechniqueId.SmallStep
         ];
 
         List<TechniqueItem> items = [];

@@ -32,7 +32,7 @@ public static partial class ArticleContent
                     "Beängstigende Vorhersagen Schritt für Schritt im echten Leben prüfen",
                     "Denkfallen erkennen und hinterfragen",
                     "Messen, wie stark die Angst ist: Im Bereich Tests gibt es den kurzen Fragebogen GAD-7"),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Ladder("Angstleiter")
             ]),
         new(
@@ -55,9 +55,9 @@ public static partial class ArticleContent
                     "Nicht gegen die Empfindungen kämpfen und nicht fliehen, wenn du bleiben kannst",
                     "Die Ausatmung verlängern: auf 4 einatmen, auf 6 ausatmen",
                     "Die Aufmerksamkeit nach außen lenken: was du siehst, hörst, berührst"),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Practice(TechniqueId.Grounding, "Erdung 5-4-3-2-1"),
-                Breathe("Probier es jetzt: eine langsame Ausatmung, länger als die Einatmung"),
+                Breathe("Wenn es angenehm ist, atme sanft etwas länger aus als ein. Wenn es unangenehmer wird, atme wieder natürlich und benenne einige Dinge um dich herum."),
                 H("Wie Attacken seltener werden"),
                 P("Am besten wirkt es, schrittweise ohne Sicherheitsnetze an gemiedene Orte und in gemiedene Situationen zurückzukehren und Übungen zu machen, die in sicherem Rahmen absichtlich ähnliche Empfindungen auslösen. So lernt das Gehirn neu: „Ein schnell schlagendes Herz ist einfach ein schnell schlagendes Herz.“"),
                 Ladder("Angstleiter"),
@@ -133,7 +133,7 @@ public static partial class ArticleContent
                 P("Gönn dir täglich 15–20 Minuten, immer zur gleichen Zeit, nicht vor dem Schlafengehen. Wenn eine Sorge zu einer anderen Zeit auftaucht, schreib sie in einer Zeile auf und sag dir: „Darüber denke ich in meiner Sorgenzeit nach.“ Dann geh die Liste durch. Viele Punkte sind bis dahin unwichtig geworden, und das wirst du selbst sehen. Das ist kein Denkverbot, sondern ein Aufschub."),
                 H("Nicht mit dem Gedanken streiten, sondern zurücktreten"),
                 P("Zu versuchen, nicht zu denken, ist zwecklos: Versuch einmal, nicht an einen weißen Bären zu denken. Etwas anderes hilft: den Gedanken als Ereignis in deinem Kopf zu bemerken („aha, da ist wieder der Gedanke, dass ich alles verderbe“), nicht darauf einzusteigen und die Aufmerksamkeit zu dem zurückzulenken, was du gerade tust. Der Gedanke darf im Hintergrund weiterlaufen, wie ein Radio im Nebenzimmer."),
-                Practice(TechniqueId.Observer, "Beobachterposition"),
+                Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken"),
                 Practice(TechniqueId.Grounding, "Erdung 5-4-3-2-1")
             ]),
         new(
@@ -286,7 +286,7 @@ public static partial class ArticleContent
                     "Frag dich: Was hat mich wirklich verletzt? Welche Grenze wurde überschritten?",
                     "Sprich von dir, nicht vom anderen: „Ich werde wütend, wenn Pläne in letzter Minute geändert werden“ statt „du machst immer alles kaputt“",
                     "Sag, was du willst: „Sag mir bitte spätestens am Vortag Bescheid“"),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Practice(TechniqueId.BodyScan, "Wo sitzt es im Körper?"),
                 Warning("Wann Hilfe nötig ist"),
                 P("Wenn du in Wut Dinge zerbrichst, andere verletzt oder deine Angehörigen Angst vor dir haben, ist das ein Grund, eine Fachperson aufzusuchen: Daran lässt sich gut arbeiten. Und wenn du oder jemand in deiner Nähe in Gefahr ist, ruf die 112 oder die örtliche Notrufnummer an.")
@@ -348,7 +348,7 @@ public static partial class ArticleContent
                     "Denk daran: Du kannst den anderen nicht ändern, du kannst nur für dich entscheiden"),
                 P("Wenn du dich in der Beschreibung der Züge wiedererkennst, ist das eine mutige Beobachtung. Psychotherapie arbeitet genau daran, und Menschen mit solchen Zügen leiden oft selbst sehr."),
                 Practice(TechniqueId.SelfCompassion, "Freundliche Worte an dich selbst"),
-                Practice(TechniqueId.Observer, "Beobachterposition"),
+                Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken"),
                 Warning("Wenn du Angst hast"),
                 P("Wenn es in der Beziehung Drohungen, Kontrolle oder Gewalt gibt, lies den Artikel über psychische Gewalt. Wenn du in Gefahr bist, ruf die 112 oder die örtliche Notrufnummer an."),
                 Crisis("Ich brauche jetzt Hilfe")
@@ -437,7 +437,7 @@ public static partial class ArticleContent
                     "Die verbleibenden Stunden zählen"),
                 H("Wenn die Gedanken kreisen"),
                 P("Verlege die Sorgen auf den Abend, zwei Stunden vor dem Schlafengehen: Schreib auf, was dich beschäftigt, und zu jedem Punkt einen ersten Schritt für morgen. Wenn im Bett die Gedanken zurückkommen, sag dir „das habe ich schon aufgeschrieben“ und lenk die Aufmerksamkeit auf deinen Atem."),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Warning("Wann du zum Arzt gehen solltest"),
                 P("Wenn die Schlaflosigkeit länger als drei Monate anhält, du laut schnarchst und nach Luft schnappend aufwachst oder mitten am Tag einschläfst, geh zu einer Ärztin oder einem Arzt: Es kann sich um Störungen handeln, die anders behandelt werden.")
             ]),
@@ -452,12 +452,12 @@ public static partial class ArticleContent
                 P("Schwierig wird es, wenn diese Reaktion oft und lange anspringt. Dann ermüdet der Körper: Muskeln schmerzen, der Schlaf wird schlechter, die Verdauung gerät durcheinander. Hilfreich sind Übungen, die dem Körper ein Gefühl von Sicherheit zurückgeben, und die Arbeit an dem, was die Angst auslöst."),
                 Practice(TechniqueId.BodyScan, "Wo sitzt es im Körper?"),
                 H("Herzklopfen, kurzer Atem"),
-                P("So fühlen sich Adrenalin und schnelles Atmen an. Wir atmen schneller und tiefer als nötig, und dadurch scheint die Luft knapp. Eine langsame Ausatmung, länger als die Einatmung, hilft: Sie aktiviert die Bremse des Nervensystems."),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
-                Breathe("Probier es jetzt: auf 4 einatmen, auf 6 ausatmen"),
+                P("Bei Panik kann die Atmung schneller werden und sich unangenehm anfühlen. Wenn es angenehm ist, probiere ein sanftes, etwas längeres Ausatmen. Du musst weder tiefer einatmen noch den Atem anhalten. Wenn die Aufmerksamkeit auf den Atem das Unbehagen verstärkt, atme wieder in deinem natürlichen Rhythmus und benenne einige Dinge um dich herum."),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
+                Breathe("Wenn es angenehm ist: sanft etwa 4 Zählzeiten ein- und 6 ausatmen, ohne Pause. Bei Unbehagen abbrechen."),
                 H("Ein Kloß im Hals, Enge in der Brust"),
                 P("Die Muskeln von Hals und Brust spannen sich an, wenn wir Gefühle zurückhalten oder das Schlimmste erwarten. Es hilft, die Anspannung zu bemerken, ohne gegen sie zu kämpfen, und die Ausatmung länger werden zu lassen."),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 H("Verspannte Schultern, Nacken, Kiefer"),
                 P("Der Körper bereitet sich aufs Handeln vor und vergisst, sich zu entspannen. Es hilft, ab und zu mit der Aufmerksamkeit durch den Körper zu wandern und die Anspannung beim Ausatmen loszulassen."),
                 Practice(TechniqueId.BodyScan, "Wo sitzt es im Körper?"),
@@ -526,7 +526,7 @@ public static partial class ArticleContent
                     "Ängstliche Gedanken über den Körper erkennen und wie andere prüfen"),
                 P("Kognitive Verhaltenstherapie bei Krankheitsangst ist gut untersucht und hilft den meisten Menschen."),
                 Ladder("Angstleiter"),
-                Practice(TechniqueId.Observer, "Beobachterposition"),
+                Practice(TechniqueId.ThoughtRecord, "Gedankenprotokoll"),
                 Warning("Neue Symptome: geh zur Ärztin"),
                 P("An der Angst zu arbeiten heißt nicht, den Körper zu ignorieren. Wenn ein neues Symptom auftritt, zunimmt oder nicht weggeht, geh einmal zur Ärztin oder zum Arzt und folge dem Rat. Die Liste der Warnzeichen steht im Artikel „Körper und Stress“.")
             ]),
@@ -599,8 +599,8 @@ public static partial class ArticleContent
                     "Eine Pause machen, wenn es zu viel wird: vereinbaren, in 20–30 Minuten weiterzureden, wenn der Körper sich beruhigt hat",
                     "Versöhnung anbieten: ein Witz, eine Geste, „fangen wir nochmal an?“, und sie annehmen"),
                 P("Das Ziel eines Streits ist nicht zu gewinnen, sondern einander zu verstehen und eine Lösung zu finden, mit der beide leben können."),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
-                Practice(TechniqueId.Observer, "Beobachterposition"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
+                Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken"),
                 P("Wenn du bei Streit Angst hast, gedemütigt, kontrolliert wirst oder Gewalt angewendet wird, ist das kein Konflikt mehr, sondern Gewalt. Lies den Artikel über psychische Gewalt.")
             ]),
         new(
@@ -845,7 +845,7 @@ public static partial class ArticleContent
                 Quiz("Was hält eine Zwangsstörung am meisten am Leben?", 1, "Ein Ritual nimmt die Angst für einen Moment, und genau deshalb setzt es sich fest. Die Behandlung beruht darauf, dem Gedanken zu begegnen, ohne das Ritual auszuführen, bis die Angst von selbst nachlässt.", "Die aufdringlichen Gedanken selbst", "Rituale und die Suche nach Beruhigung", "Mangelnde Willenskraft"),
                 H("Was hilft"),
                 P("Die am besten untersuchte Methode ist Exposition mit Reaktionsverhinderung: Schritt für Schritt dem begegnen, was die Gedanken auslöst, ohne das Ritual auszuführen. Das geschieht mit einer Psychotherapeutin, oft zusammen mit einer Behandlung, die ein Psychiater verschreibt. Allein kannst du klein anfangen: ein Ritual um einige Minuten hinauszögern, Kontrollen verringern, den Gedanken bemerken und benennen: „Das ist ein Zwangsgedanke.“"),
-                Practice(TechniqueId.Observer, "Beobachterposition"),
+                Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken"),
                 Ladder("Angstleiter"),
                 Warning("Wann du eine Fachperson aufsuchen solltest"),
                 P("Wenn Rituale mehr als eine Stunde am Tag einnehmen, Arbeit und Beziehungen stören oder die Gedanken großes Leid verursachen, wende dich an eine Psychotherapeutin oder einen Psychiater. Zwangsstörungen lassen sich sehr gut behandeln.")
@@ -891,7 +891,7 @@ public static partial class ArticleContent
                     "Halte ein anderes Mittel bereit: einen Spaziergang, die Atmung, eine Nachricht an einen Freund",
                     "Versuch nicht, alles auf einmal aufzugeben: Fang mit einer Tageszeit oder einem Ort an"),
                 Practice(TechniqueId.BodyScan, "Wo sitzt es im Körper?"),
-                Practice(TechniqueId.Breathing, "Box-Atmung"),
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Warning("Wann du Hilfe brauchst"),
                 P("Wenn du jeden Tag oder viel auf einmal trinkst und ohne Alkohol deine Hände zittern und du schlecht schläfst, hör nicht plötzlich allein auf: Ein abrupter Entzug nach langem, häufigem Trinken kann gefährlich sein. Wende dich an eine Suchtmedizinerin oder deine Hausärztin. Wenn Essanfälle sich mit Hungern, Erbrechen oder Abführmitteln abwechseln, lies den Artikel über Essstörungen."),
                 See(ArticleIds.EatingDisorders, "Essstörungen: wie du sie erkennst")
@@ -1112,7 +1112,7 @@ public static partial class ArticleContent
                 Warning("Wenn es schlimmer wird"),
                 P("Nach einem Trauma kann Aufmerksamkeit für den Körper mit geschlossenen Augen schwere Erinnerungen hochholen. Dann halte die Augen offen, verkürze die Übung auf eine Minute und orientiere dich an dem, was du um dich herum siehst. Wenn es schwer bleibt, übe besser mit einer Fachperson."),
                 Practice(TechniqueId.Grounding, "Erdung 5-4-3-2-1"),
-                Practice(TechniqueId.Breathing, "Box-Atmung")
+                Practice(TechniqueId.Breathing, "Sanftes Atemtempo")
             ]),
         new(
             ArticleIds.Uncertainty,
@@ -1146,7 +1146,7 @@ public static partial class ArticleContent
                     "Denk daran, dass sich die meisten Entscheidungen unterwegs anpassen lassen"),
                 P("Eine perfekte Entscheidung gibt es meistens nicht. Es gibt eine vernünftige, und die reicht."),
                 Practice(TechniqueId.ThoughtRecord, "Gedankenprotokoll"),
-                Practice(TechniqueId.BusyMind, "Den Kopf beschäftigen")
+                Practice(TechniqueId.BusyMind, "Kurze Aufmerksamkeitslenkung")
             ]),
         new(
             ArticleIds.JealousyAndEnvy,

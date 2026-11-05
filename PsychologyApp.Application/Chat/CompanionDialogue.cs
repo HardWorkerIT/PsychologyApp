@@ -229,6 +229,16 @@ public sealed partial class CompanionDialogue(
         }
 
         SituationAnalysis single = analyzer.Analyze(text);
+        if (single.AllowsBodyFocus)
+        {
+            previous = previous with { AvoidsBodyFocus = false };
+        }
+        else if (single.AvoidsBodyFocus)
+        {
+            previous = previous with { AvoidsBodyFocus = true };
+        }
+
+        single = single with { AvoidsBodyFocus = previous.AvoidsBodyFocus };
 
         // "Just talk" typed after "get it off your chest, sort it out or calm down?" is that choice, not a new story.
         if (WordCount(text) <= 12 && CompanionCaseContent.ParseGoal(text, asked: previous.LastQuestionId == CompanionCaseContent.GoalQuestionId) is { } typedGoal)
@@ -915,7 +925,7 @@ public sealed partial class CompanionDialogue(
 
             case "body":
                 return Offer(
-                    state,
+                    state with { AvoidsBodyFocus = false },
                     [CompanionDialogueContent.UrgentBridge(english)],
                     new SituationAnalysis(emotion, 1, true, false, []),
                     emotion,
@@ -1180,13 +1190,16 @@ public sealed partial class CompanionDialogue(
             return Reply(messages, [], state, emotion, theme);
         }
 
-        IReadOnlyList<TechniqueId> suggestions = calming && emotion is not (CompanionEmotion.Panic or CompanionEmotion.Anxiety)
+        analysis = analysis with { AvoidsBodyFocus = analysis.AvoidsBodyFocus || state.AvoidsBodyFocus };
+
+        IReadOnlyList<TechniqueId> suggestions = calming && (!analysis.HasBodySymptoms || asked) && !analysis.AvoidsBodyFocus && emotion is not (CompanionEmotion.Panic or CompanionEmotion.Anxiety)
             ? [TechniqueId.Breathing, TechniqueId.Grounding]
             : [.. TechniqueSuggester.Recommend(analysis with { Emotion = emotion }).Select(item => item.Technique)];
 
         // What has helped this person before comes first, mentioned once per chat. A panic attack gets the standard help, not an experiment.
         if (!state.PreferredMentioned && emotion != CompanionEmotion.Panic
-            && Enum.TryParse(state.PreferredPractice, out TechniqueId preferred) && Enum.IsDefined(preferred))
+            && Enum.TryParse(state.PreferredPractice, out TechniqueId preferred) && Enum.IsDefined(preferred)
+            && (!(analysis.HasBodySymptoms || analysis.AvoidsBodyFocus) || !IsBodyFocusedPractice(preferred)))
         {
             suggestions = [preferred, .. suggestions.Where(s => s != preferred).Take(1)];
             messages.Add($"{CompanionSmallTalk.PreferredNote(preferred, english)} {CompanionContent.OfferLine(preferred, english)}");
@@ -1259,6 +1272,9 @@ public sealed partial class CompanionDialogue(
             emotion,
             theme);
     }
+
+    private static bool IsBodyFocusedPractice(TechniqueId technique) =>
+        technique is TechniqueId.Breathing or TechniqueId.MuscleRelax;
 
     private static CompanionReply Reply(
         List<string> messages,

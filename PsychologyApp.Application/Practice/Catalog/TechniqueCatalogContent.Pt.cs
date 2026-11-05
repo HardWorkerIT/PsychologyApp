@@ -246,49 +246,49 @@ internal static class TechniqueCatalogContentPt
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
-        "Prática", "Posição de observador",
+        "Prática", "Falar consigo com distanciamento",
         [
-            "1. Descreva a situação que incomoda você",
-            "2. Escreva os sentimentos em primeira pessoa",
-            "3. Olhe a situação como um observador neutro",
-            "4. Avalie a tensão depois de mudar de posição"
+            "1. Nomeie a situação e o sentimento em uma frase; não é preciso detalhar um acontecimento doloroso.",
+            "2. Fale consigo usando seu nome ou «você», em vez de usar apenas «eu». Por exemplo: «[Nome], o que está acontecendo agora?»",
+            "3. Escreva o que importa agora e um próximo passo seguro e possível. Não justifique danos nem minimize perigos.",
+            "4. Avalie sua tensão agora. Ela pode diminuir, continuar igual ou aumentar. Se você se sentir pior, pare e escolha outro apoio."
         ],
-        "Mudar a posição de percepção ajuda a se afastar de um pico emocional e ver a situação de forma mais ampla.",
-        TechniqueUiKind.Entry, "Técnica nº 12", "12.06.2026", "Posição de observador", "Se afastar das emoções e ver a situação de fora", "Momento difícil", "PNL", 4, "Visibility",
+        "Uma adaptação breve do diálogo interno distanciado: fale consigo usando seu nome ou «você», em vez de apenas «eu». Isso pode criar espaço para refletir, mas não promete alívio imediato.",
+        TechniqueUiKind.Entry, "Técnica nº 12", "12.06.2026", "Falar consigo com distanciamento", "Use seu nome ou «você» ao falar consigo e escolha um passo seguro", "Momento difícil", "Autocuidado", 1, "Visibility",
         [
-            new TechniqueEntrySeed("Situação", "O que aconteceu ou o que você fica repassando na cabeça?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Sentimentos em primeira pessoa", "O que você sente estando dentro da situação?", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("O que o observador vê", "O que um observador de fora, calmo, perceberia?", Suggestions: ["Duas pessoas discutindo", "Uma pessoa cansada e chateada", "Uma situação comum de trabalho", "Cada um defende seu lado", "Em uma semana isso vai estar esquecido", "As pessoas se entenderam mal", "Uma pessoa se esforçando muito", "Desagradável, mas não perigoso", "Cada um tem seu ponto de vista", "A pessoa precisa descansar"]),
-            new TechniqueEntrySeed("Tensão agora", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situação", "Em poucas palavras: o que está acontecendo agora? Não é preciso contar os detalhes de um acontecimento doloroso.", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Sentimentos em primeira pessoa", "O que você está sentindo? Uma frase curta basta.", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("O que o observador vê", "Fale consigo usando seu nome ou «você»: o que importa e qual é um próximo passo seguro?", Suggestions: ["[Nome], o que é importante para você agora?", "Qual é um passo seguro e possível?", "Como você pode se apoiar?", "O que diria a alguém próximo?", "Você pode responder mais tarde, quando estiver mais claro"]),
+            new TechniqueEntrySeed("Tensão agora", "Avalie no final; ela pode continuar igual.", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Quando você está dentro de um episódio, as emoções parecem inevitáveis. A posição de observador cria distância sem negar a experiência.",
-            "Quando uma situação sobrecarrega você e argumentos racionais não ajudam.",
-            "Descreva a situação e os sentimentos e depois reescreva em terceira pessoa — de forma neutra, sem julgamento.",
-            "Discussão: de dentro — \"não me respeitam\". Observador: \"duas pessoas falam alto\". Tensão: 8 → 5."),
+            "O diálogo interno distanciado usa seu nome ou «você», em vez de apenas «eu». Isso pode abrir espaço para refletir, mas não garante alívio imediato.",
+            "Experimente durante uma tensão emocional ou social manejável e somente se você estiver em segurança. Não use para justificar danos nem minimizar um perigo real.",
+            "Nomeie brevemente o sentimento, fale consigo usando seu nome ou «você» e pergunte o que importa agora e qual passo seguro é possível.",
+            "Em vez de «Não vou dar conta»: «[Nome], isso está difícil. Qual é um próximo passo seguro para você?»"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Anchor = new(
-        "Prática", "Âncora de recurso",
+        "Prática", "Memória de apoio",
         [
-            "1. Lembre um momento em que você se sentiu confiante ou calmo",
-            "2. Descreva as sensações do corpo",
-            "3. Escolha um gesto simples como âncora",
-            "4. Avalie a força do estado de recurso"
+            "1. Lembre de um momento seguro em que recebeu apoio ou superou uma dificuldade",
+            "2. Perceba o que ajudou e o que você sentia no corpo",
+            "3. Se quiser, escolha um gesto apenas como lembrete dessa lembrança",
+            "4. Avalie quanto a lembrança ajuda agora (0 = nada, 10 = muito); escolher 0 também está bem"
         ],
-        "Uma âncora liga um gesto do corpo a um estado de recurso para você voltar a ter apoio mais rápido.",
-        TechniqueUiKind.Entry, "Técnica nº 13", "12.06.2026", "Âncora de recurso", "Recuperar o apoio com um gesto e uma lembrança", "Momento difícil", "PNL", 4, "SelfImprovement",
+        "Uma lembrança pode trazer à mente fontes de apoio já conhecidas. A resposta varia; um gesto é apenas um lembrete opcional e não muda o estado de forma confiável.",
+        TechniqueUiKind.Entry, "Técnica nº 13", "12.06.2026", "Memória de apoio", "Relembrar uma experiência de apoio e perceber recursos disponíveis", "Momento difícil", "Memória de apoio", 4, "SelfImprovement",
         [
-            new TechniqueEntrySeed("Lembrança de recurso", "Quando você se sentiu forte, calmo ou alegre?", Suggestions: ["Uma apresentação que deu certo", "Férias na praia", "O abraço de alguém próximo", "Terminar algo difícil", "Uma caminhada na natureza", "Passar em uma prova", "O nascimento de um filho", "Vencer uma competição", "Uma noite com amigos", "Um elogio do meu chefe", "O primeiro dia em um emprego novo", "Uma manhã sem pressa"]),
+            new TechniqueEntrySeed("Lembrança de recurso", "Escolha uma lembrança segura para você; se não encontrar uma, pode pular o exercício.", Suggestions: ["Uma apresentação que deu certo", "Férias na praia", "O abraço de alguém próximo", "Terminar algo difícil", "Uma caminhada na natureza", "Passar em uma prova", "O nascimento de um filho", "Vencer uma competição", "Uma noite com amigos", "Um elogio do meu chefe", "O primeiro dia em um emprego novo", "Uma manhã sem pressa"]),
             new TechniqueEntrySeed("Sensações do corpo", "Onde você sente isso? Calor, leveza, firmeza…", Suggestions: ["Calor no peito", "Leveza", "Ombros abertos", "Respiração tranquila", "Pernas firmes", "Um sorriso", "Um coração calmo", "As costas retas", "Energia nas mãos", "A barriga relaxada"]),
-            new TechniqueEntrySeed("Gesto ou âncora", "Ex.: fechar a mão, tocar o pulso", Suggestions: ["Fechar a mão", "Tocar o pulso", "Juntar o polegar e o indicador", "A mão no coração", "Uma respiração profunda", "Apertar o lóbulo da orelha", "Abrir os ombros", "Acariciar a palma da mão"]),
-            new TechniqueEntrySeed("Força do estado", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Gesto opcional de lembrança", "Este gesto pode lembrar a experiência; você pode pular esta etapa", Suggestions: ["Fechar a mão", "Tocar o pulso", "Juntar o polegar e o indicador", "A mão no coração", "Uma respiração profunda", "Apertar o lóbulo da orelha", "Abrir os ombros", "Acariciar a palma da mão"]),
+            new TechniqueEntrySeed("Resposta à lembrança", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "O cérebro liga rapidamente um gesto a um estado se você repetir várias vezes o par \"lembrança + gesto\".",
-            "Antes de algo estressante ou quando falta apoio interno.",
-            "Lembre o episódio de recurso, intensifique as sensações do corpo e fixe-as com um gesto simples.",
-            "Recurso: uma apresentação que deu certo. Corpo: calor no peito. Âncora: toque no polegar. Força: 8."),
+            "Este é um breve exercício de lembrança. Seu efeito e qualquer ligação com um gesto não são garantidos.",
+            "Quando quiser lembrar o que já ajudou. Escolha apenas uma lembrança segura; pare se isso ficar mais difícil.",
+            "Perceba o que ajudou naquela situação. O gesto é opcional e serve apenas como lembrete; você não precisa se obrigar a ficar calmo.",
+            "Lembro que um amigo me ouviu. Conversar ajudou; posso escrever para ele agora. Resposta à lembrança: 5 de 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Grounding = new(
@@ -317,49 +317,50 @@ internal static class TechniqueCatalogContentPt
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
-        "Prática", "Respiração quadrada",
+        "Prática", "Respiração guiada suave",
         [
-            "1. Avalie a tensão antes da prática",
-            "2. Inspire contando até 4",
-            "3. Segure contando até 4",
-            "4. Expire contando até 4",
-            "5. Segure contando até 4 — repita 4 ciclos e avalie a tensão depois"
+            "1. Avalie a tensão antes de começar",
+            "2. Sente-se confortavelmente. Respire com suavidade, sem inspirar mais profundamente que o habitual",
+            "3. Se for confortável, acompanhe o círculo: inspire por cerca de 4 tempos e expire por cerca de 6. Não prenda a respiração",
+            "4. Se o ritmo não funcionar para você, pare de contar ou encerre a prática. Se sentir tontura ou falta de ar, volte à respiração natural",
+            "5. Avalie a tensão novamente ao terminar. Ela pode não mudar; isso também é uma informação útil"
         ],
-        "Respirar com ritmo acalma o sistema nervoso e reduz a tensão do corpo.",
-        TechniqueUiKind.Entry, "Técnica nº 15", "04.07.2026", "Respiração quadrada", "Acalmar o corpo com o ritmo da respiração", "Momento difícil", "Psique", 3, "Air",
+        "Quando sentir tensão, você pode experimentar um ritmo breve e suave, sem pausas. Ele não é adequado para todas as pessoas: contar ou focar na respiração pode aumentar o desconforto.",
+        TechniqueUiKind.Entry, "Técnica nº 15", "04.07.2026", "Respiração guiada suave", "Experimente um ritmo confortável com a expiração um pouco mais longa", "Momento difícil", "Psique", 3, "Air",
         [
             new TechniqueEntrySeed("Tensão antes", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Anotações", "O que você notou no corpo ou na respiração durante a prática?", Suggestions: ["Os ombros baixaram", "A respiração ficou mais lenta", "Fiquei mais aquecido", "Foi difícil segurar a pausa", "Os pensamentos me distraíram", "Fiquei mais calmo", "Fiquei tonto", "O coração desacelerou", "Deu vontade de bocejar", "Nada de especial"]),
+            new TechniqueEntrySeed("Anotações", "O que você percebeu? Qualquer reação é válida.", Suggestions: ["O ritmo foi confortável", "Contar me distraiu", "O ritmo estava lento demais", "Fiquei tonto", "Respirar pareceu desconfortável", "Fiquei um pouco mais calmo", "A tensão não mudou", "Fiquei mais tenso", "Parei e observei o que estava ao meu redor"]),
             new TechniqueEntrySeed("Tensão depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "A respiração lenta e ritmada reduz a atividade do sistema nervoso simpático e ajuda o corpo a sair do modo de luta ou fuga.",
-            "Em momentos de ansiedade, pânico, coração acelerado, insônia ou sobrecarga.",
-            "Sente-se confortavelmente e respire pelo nariz: 4 inspirando, 4 segurando, 4 expirando, 4 segurando. Repita 4 ciclos.",
-            "Ansiedade 7/10 → depois de 4 ciclos 4/10. Os ombros baixam e o pulso desacelera."),
+            "Um ritmo breve e suave, com a expiração um pouco mais longa, permite experimentar acompanhar a respiração quando há tensão. Cada pessoa reage de um jeito; esta prática não garante alívio.",
+            "Quando sentir tensão e for confortável prestar atenção à respiração.",
+            "Sente-se confortavelmente. Respire com suavidade, sem inspirar mais profundamente que o habitual. Por cerca de um minuto, você pode acompanhar o círculo: inspire por cerca de 4 tempos e expire por cerca de 6, sem pausas. Se o ritmo parecer forçado, volte à respiração natural. Pare se o desconforto aumentar e nomeie alguns objetos ao seu redor.",
+            "A tensão estava em 7/10. Depois de um minuto, continuou em 7/10; contar parecia forçado, então parei e nomeei cinco objetos ao meu redor."
+        ),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SmallStep = new(
         "Prática", "Um pequeno passo",
         [
-            "1. Descreva o que pesa ou impede você de começar",
-            "2. Escolha o menor passo realista para hoje",
-            "3. Escreva quando você vai fazer",
-            "4. Avalie sua energia depois de escrever o passo"
+            "1. Escolha uma pequena atividade de autocuidado, interesse, conexão ou sensação de conclusão",
+            "2. Reduza-a a um começo seguro de 2–5 minutos. Você não precisa terminar toda a tarefa",
+            "3. Escolha um horário concreto nas próximas 24 horas. Se agora não for o momento, escolha descanso, apoio ou um passo menor",
+            "4. Avalie se parece possível: 0 — nenhuma confiança, 10 — total confiança. Se tiver dúvida, diminua mais"
         ],
-        "Ativação comportamental: uma pequena ação devolve a sensação de movimento e controle.",
-        TechniqueUiKind.Entry, "Técnica nº 16", "04.07.2026", "Um pequeno passo", "Retomar o impulso com uma ação mínima", "Momento difícil", "TCC", 5, "DirectionsWalk",
+        "Um breve plano de atividade inspirado nos princípios da ativação comportamental. Um passo pequeno pode ajudar a começar, mas não garante melhora do humor nem mais energia.",
+        TechniqueUiKind.Entry, "Técnica nº 16", "04.07.2026", "Um pequeno passo", "Escolha uma atividade e torne o começo viável", "Momento difícil", "TCC", 5, "DirectionsWalk",
         [
-            new TechniqueEntrySeed("O que pesa", "O que parece difícil, chato ou impossível agora?", Suggestions: ["Cansaço", "Sem energia", "Coisa demais para fazer", "Tédio", "Medo de começar", "Nada parece importar", "Dormi mal", "Sem ânimo", "A solidão", "Procrastinação", "Dor de cabeça", "Não sei por onde começar"], Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("O menor passo hoje", "Ex.: levantar, lavar o rosto, mandar uma mensagem", Suggestions: ["Sair da cama", "Lavar o rosto", "Beber um pouco de água", "Mandar uma mensagem", "Sair por 5 minutos", "Arrumar uma coisa", "Abrir uma janela", "Me alongar por 2 minutos", "Tomar banho", "Comer alguma coisa", "Ligar para alguém próximo", "Abrir o arquivo de que preciso", "Escrever um plano para o dia", "Lavar uma xícara"]),
-            new TechniqueEntrySeed("Quando você vai fazer", "Um horário ou momento específico do dia", Suggestions: ["Agora mesmo", "Daqui a 15 minutos", "Daqui a uma hora", "De manhã", "Depois do café da manhã", "Depois do almoço", "À noite", "Antes de dormir", "Amanhã de manhã", "No fim de semana"]),
-            new TechniqueEntrySeed("Energia depois", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("O que dificulta começar?", "Cansaço, ansiedade, solidão, coisa demais para fazer?", Suggestions: ["Cansaço", "Ansiedade", "Solidão", "Coisa demais para fazer", "Tédio", "Não sei por onde começar", "Preciso descansar", "As condições não estão boas agora"], Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Uma pequena atividade para mim", "Autocuidado, interesse, conexão ou uma tarefa pequena", Suggestions: ["Beber água ou comer algo", "Me lavar ou me vestir", "Tomar um ar por 2 minutos", "Ouvir uma música de que gosto", "Mandar uma mensagem para alguém próximo", "Dedicar 2 minutos a algo importante", "Guardar uma coisa", "Pedir para alguém ficar comigo"]),
+            new TechniqueEntrySeed("Quando você vai tentar?", "Um horário concreto nas próximas 24 horas", Suggestions: ["Agora por 2 minutos", "Depois do café da manhã", "Depois do almoço", "Depois do trabalho ou estudo", "Em um horário que eu escolher hoje", "Pedir para alguém próximo me lembrar"]),
+            new TechniqueEntrySeed("Quão possível parece?", "0 — nenhuma confiança, 10 — total confiança", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Na apatia, o cérebro espera a motivação para agir. Um pequeno passo cria motivação pela ação, e não o contrário.",
-            "Quando você está sem energia, tudo parece sem sentido ou é difícil começar o dia.",
-            "Escolha um passo de 2–5 minutos sem plano perfeito. Escreva o passo e o horário — isso já é movimento.",
-            "Arrumar o apartamento → levar uma xícara para a cozinha às 10:00. Energia: 2 → 4."),
+            "O humor baixo ou a falta de energia podem dificultar o começo. Uma pequena atividade planejada pode ajudar a sair da inércia; o efeito varia de pessoa para pessoa.",
+            "Quando o humor ou a energia dificultam começar e há uma atividade segura e viável. Descansar ou pedir ajuda também pode ser um bom passo.",
+            "Escolha algo de autocuidado, interesse, conexão ou sensação de realização; reduza o início a 2–5 minutos e marque um momento nas próximas 24 horas. Planejar não é o mesmo que fazer. Se não parecer viável, diminua o passo ou peça apoio.",
+            "Em vez de «arrumar a casa toda», lave uma xícara depois do almoço — ou escreva para alguém próximo: «Tem um minuto para conversar?»"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
@@ -491,24 +492,24 @@ internal static class TechniqueCatalogContentPt
     internal static readonly BuiltInTechniqueDefinition Balloons = new(
         "Prática", "Estoure os balões",
         [
-            "1. Avalie sua tensão",
-            "2. Estoure os balões com um toque, sem pressa",
-            "3. A cada estouro, solte o ar devagar",
-            "4. Jogue a rodada até o fim",
-            "5. Avalie sua tensão depois"
+            "1. Avalie sua tensão antes do jogo",
+            "2. Comece a rodada e toque no seu ritmo; não é preciso estourar todos os balões",
+            "3. Respire como de costume. Não é necessário sincronizar a expiração com cada estouro",
+            "4. A rodada termina sozinha. Se o jogo frustrar ou você se sentir pior, volte",
+            "5. Avalie a tensão depois e anote o que percebeu. Não mudar também é um resultado"
         ],
-        "Um jogo curto leva a atenção dos pensamentos ansiosos para uma ação simples e para as sensações.",
-        TechniqueUiKind.Entry, "Técnica nº 22", "26.10.2026", "Estoure os balões", "Uma pausa curta para soltar a tensão", "Momento difícil", "Psique", 3, "BubbleChart",
+        "Um jogo curto para ocupar as mãos e a atenção. Pode distrair por um momento, mas não precisa mudar como você se sente nem substitui ação ou apoio.",
+        TechniqueUiKind.Entry, "Técnica nº 22", "26.10.2026", "Estoure os balões", "Uma pausa breve com jogo, se você quiser", "Momento difícil", "Psique", 3, "BubbleChart",
         [
             new TechniqueEntrySeed("Tensão antes", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notas", "O que mudou enquanto você estourava balões?", Suggestions: ["Me sinto mais leve", "Minha mente descansou", "Deu vontade de sorrir", "Minha respiração se acalmou", "A irritação passou", "Minhas mãos relaxaram", "Nada mudou", "Quero mais uma rodada"]),
+            new TechniqueEntrySeed("Notas", "O que você percebeu, se percebeu algo? Pode deixar em branco.", Suggestions: ["Um pouco menos de tensão", "Sem mudança perceptível", "Mais tensão", "Me distraí por um momento", "Percebi as cores ou o movimento", "O jogo me frustrou", "Não sei", "Outra coisa"]),
             new TechniqueEntrySeed("Tensão depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Quando a ansiedade ou a irritação estão no auge, é difícil parar os pensamentos pela força de vontade. Uma ação simples, que pede atenção dos olhos e das mãos, muda o foco do cérebro por alguns minutos e deixa a tensão baixar. Não é um tratamento, mas um jeito de atravessar um minuto difícil.",
-            "Quando a irritação, a tensão ou a ansiedade tomam conta e você precisa de uma pausa curta. Se o jogo só ajudar a fugir de um problema que vale a pena resolver, volte a ele quando estiver mais calmo.",
-            "Sem pressa: não é preciso acertar todos os balões. Solte o ar devagar a cada estouro. A rodada termina sozinha; não existe jogo sem fim.",
-            "Tensão 7/10 depois de uma discussão. Uma rodada de 20 balões, uma expiração a cada estouro. Tensão 4/10, e consegui pensar com calma no que responder."),
+            "Um jogo curto pode ocupar as mãos e a atenção por um momento; o efeito varia. Ele não garante reduzir a ansiedade nem é um tratamento.",
+            "Quando uma breve pausa com jogo parecer adequada. Não adie ações urgentes de saúde ou segurança para jogar.",
+            "Toque no seu ritmo; não é preciso acertar todos os balões. Respire normalmente e não sincronize a respiração com cada estouro. Depois, compare sua avaliação sem esperar um resultado específico. Se houver um problema prático a resolver, retome o próximo passo quando estiver pronto.",
+            "Depois de uma discussão, minha tensão estava em 7/10 e continuou em 7/10 após a rodada. Percebi que ainda estava irritado e decidi esperar antes de responder."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition CyclicSigh = new(
@@ -558,25 +559,44 @@ internal static class TechniqueCatalogContentPt
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition BusyMind = new(
-        "Prática", "Ocupar a mente",
+        "Prática", "Pausa breve da atenção",
         [
-            "1. Avalie sua tensão",
-            "2. Pegue uma tarefa e faça mentalmente ou em voz alta",
-            "3. Se os pensamentos voltarem à preocupação, volte com calma à tarefa",
-            "4. Faça cinco tarefas",
-            "5. Avalie sua tensão depois"
+            "1. Avalie sua tensão apenas se isso for útil agora",
+            "2. Escolha uma tarefa neutra por cerca de 30–60 segundos",
+            "3. Se a atenção voltar à preocupação, não se critique; você pode retornar com calma à tarefa uma vez",
+            "4. Pare e veja se precisa de um próximo passo prático ou apoio"
         ],
-        "Tarefas simples para a mente tiram a atenção dos pensamentos que andam em círculos.",
-        TechniqueUiKind.Entry, "Técnica nº 25", "26.10.2026", "Ocupar a mente", "Tarefas simples para quebrar o ciclo de pensamentos", "Momento difícil", "Psique", 3, "Extension",
+        "Uma tarefa neutra e breve pode mudar a atenção por um momento quando os pensamentos parecem presos. Ela não elimina pensamentos nem resolve o problema.",
+        TechniqueUiKind.Entry, "Técnica nº 25", "26.10.2026", "Pausa breve da atenção", "Uma pausa temporária quando os pensamentos se repetem", "Momento difícil", "Psique", 1, "Extension",
         [
             new TechniqueEntrySeed("Tensão antes", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notas", "O que mudou enquanto você estava ocupado com as tarefas?", Suggestions: ["Os pensamentos me largaram", "Fiquei mais calmo", "Foi difícil me concentrar", "Deu vontade de fazer algo", "A ansiedade voltou", "Nada mudou", "Quero mais tarefas"]),
+            new TechniqueEntrySeed("Anotações", "Como foi essa pausa breve?", Suggestions: ["Mudei o foco por um momento", "Nada mudou", "Fiquei mais tenso ou frustrado", "Agora vejo um próximo passo", "Preciso de apoio", "Parei o exercício"]),
             new TechniqueEntrySeed("Tensão depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Quando os pensamentos andam em círculos, pará-los com força de vontade é quase impossível. Uma tarefa que ocupa a mente (contar, lembrar, listar) não deixa espaço para a ruminação por um tempo. É uma habilidade de distração da terapia comportamental dialética: não resolve o problema, mas ajuda a atravessar um momento difícil.",
-            "Quando pensamentos intrusivos tomam conta, antes de dormir ou depois de uma briga, quando a conversa continua na cabeça.",
-            "Faça as tarefas para valer: quanto mais atenção elas pedirem, melhor. Se o problema realmente precisa ser resolvido, volte a ele quando estiver mais calmo.",
-            "Depois de uma briga, a conversa fica girando na minha cabeça, tensão 7/10. Cinco tarefas: animais que vivem na água, contar de trás para frente a partir de 100 de 7 em 7, objetos de cada cor ao meu redor. Tensão 4/10."),
+            "Uma tarefa neutra e breve — como nomear objetos de uma cor — às vezes ajuda a atravessar um momento intenso. É uma mudança temporária de atenção, não elimina pensamentos; o efeito varia.",
+            "Quando pensamentos repetidos ocupam sua atenção e você quer uma pausa breve. Se houver um problema urgente ou uma questão de segurança ou saúde, cuide disso e procure ajuda adequada.",
+            "Escolha uma tarefa simples por 30–60 segundos; não precisa se concentrar perfeitamente. Depois, veja se existe um próximo passo prático. Se a tarefa frustrar ou piorar como você se sente, pare e escolha outra abordagem.",
+            "Depois de uma discussão, a conversa continua voltando à mente. Por meio minuto, nomeie cinco objetos ao redor; depois decida se precisa esclarecer um fato, descansar ou pedir apoio."),
+        null, null);
+
+    internal static readonly BuiltInTechniqueDefinition ThoughtDefusion = new(
+        "Prática", "Tomar distância de um pensamento",
+        [
+            "1. Perceba um pensamento curto; escrevê-lo é opcional",
+            "2. Diga: “Estou percebendo o pensamento de que…”",
+            "3. Observe um objeto à sua frente e sinta o apoio sob seus pés",
+            "4. Escolha um pequeno próximo passo ou pare por aqui"
+        ],
+        "Uma habilidade breve da terapia de aceitação e compromisso (ACT): perceber um pensamento como algo que a mente faz, não necessariamente como um fato ou uma ordem.",
+        TechniqueUiKind.Entry, "Técnica nº 26", "03.11.2026", "Tomar distância de um pensamento", "Uma prática breve para criar espaço em torno de um pensamento preocupante", "Pensamentos", "Psique", 1, "FormatQuote",
+        [
+            new TechniqueEntrySeed("Pensamento", "Opcional: você pode fazer a prática em silêncio", Suggestions: HarshThoughts)
+        ],
+        Theory(
+            "Um pensamento repetido pode tomar toda a atenção. Na ACT, desfusão é percebê-lo sem discutir com ele nem tentar afastá-lo.",
+            "Quando uma preocupação, autocrítica ou medo fica voltando. Você não precisa escolher uma lembrança angustiante.",
+            "Não é preciso escrever nada. Coloque “Estou percebendo o pensamento de que…” antes do pensamento, olhe para um objeto e sinta o apoio sob os pés. Se o desconforto aumentar, pare e nomeie alguns objetos ao redor.",
+            "“Vou estragar tudo” vira “Estou percebendo o pensamento de que vou estragar tudo”. Você nota a xícara à sua frente e decide responder a um e-mail ou fazer uma pausa."),
         null, null);
 }

@@ -127,7 +127,7 @@ public partial class TechniqueSessionPage : ContentPage
         VerticalStackLayout content = new() { Spacing = 8 };
         View? exercise = _techniqueId switch
         {
-            TechniqueId.Breathing => new BreathingPacerView { FullscreenCommand = new Command(OpenImmersiveBreathing) },
+            TechniqueId.Breathing => new BreathingPacerView { Pattern = BreathingPattern.Calm, FullscreenCommand = new Command(OpenImmersiveBreathing) },
             TechniqueId.Balloons => new BalloonPopView(),
             TechniqueId.CyclicSigh => new BreathingPacerView { Pattern = BreathingPattern.CyclicSigh },
             TechniqueId.MuscleRelax => new MuscleRelaxView(),
@@ -185,7 +185,7 @@ public partial class TechniqueSessionPage : ContentPage
 
     // Through the coordinator, so a quick second tap does not stack a second full-screen pacer over the first.
     private void OpenImmersiveBreathing() =>
-        SafeAsync.Run(() => NavigationCoordinator.RunPushAsync(() => Navigation.PushModalAsync(new BreathingImmersivePage())));
+        SafeAsync.Run(() => NavigationCoordinator.RunPushAsync(() => Navigation.PushModalAsync(new BreathingImmersivePage(BreathingPattern.Calm))));
 
     protected override void OnDisappearing()
     {

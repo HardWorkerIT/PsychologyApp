@@ -41,6 +41,7 @@ public static partial class AppStrings
     public static string ChatLoadingText => R(nameof(ChatLoadingText));
     public static string ChatScrollToNewest => R(nameof(ChatScrollToNewest));
     public static string ChatScrollToOldest => R(nameof(ChatScrollToOldest));
+    public static string ChatShowReplyOptions => R(nameof(ChatShowReplyOptions));
     public static string ChatStressTestTitle => R(nameof(ChatStressTestTitle));
 
     public static string ChatReminderTitle => R(nameof(ChatReminderTitle));

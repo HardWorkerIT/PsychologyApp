@@ -13,7 +13,7 @@ public partial class OnboardingViewModel
 
     private OnboardingRecommendationResult _recommendation = new()
     {
-        TechniqueId = TechniqueId.Spin,
+        TechniqueId = TechniqueId.Grounding,
         Concern = OnboardingConcernKeys.Explore,
         IconName = string.Empty,
         Title = string.Empty,

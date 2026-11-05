@@ -53,7 +53,7 @@ public sealed class BreathingPattern
         ],
         4);
 
-    /// <summary>Calm breathing for an article: four counts in, six out (a longer out-breath slows the heart), six cycles, one minute.</summary>
+    /// <summary>A one-minute, no-hold 4-in/6-out pace: a gentle guide to follow only while comfortable.</summary>
     public static BreathingPattern Calm { get; } = new(
         [
             new BreathPhase(BreathPhaseKind.Inhale, 4, SmallScale, LargeScale),
@@ -105,6 +105,6 @@ public sealed class BreathingPattern
         return phase.ScaleFrom + (phase.ScaleTo - phase.ScaleFrom) * eased;
     }
 
-    /// <summary>How far through the whole exercise the person is, 0..1: the colour moves from tense to calm with it.</summary>
-    public double CalmAt(double elapsedSeconds) => Math.Clamp(elapsedSeconds / TotalSeconds, 0, 1);
+    /// <summary>Progress through the timed exercise (0..1), used only for visual feedback.</summary>
+    public double ProgressAt(double elapsedSeconds) => Math.Clamp(elapsedSeconds / TotalSeconds, 0, 1);
 }

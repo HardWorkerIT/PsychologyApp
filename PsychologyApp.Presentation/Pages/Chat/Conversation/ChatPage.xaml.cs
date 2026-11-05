@@ -25,6 +25,8 @@ public partial class ChatPage : ContentPage
 
         // Real messenger typing: capital letter at the start of each sentence, spell check and suggestions.
         InputBar.Input.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence | KeyboardFlags.Spellcheck | KeyboardFlags.Suggestions);
+        InputBar.Input.Focused += (_, _) => _viewModel.SetComposerFocused(true);
+        InputBar.Input.Unfocused += (_, _) => _viewModel.SetComposerFocused(false);
 
         // Unloaded (page popped), not Disappearing: the latter also fires when the app is merely backgrounded.
         Unloaded += (_, _) => _viewModel.Close();
@@ -40,7 +42,15 @@ public partial class ChatPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        InputBar.Input.Unfocus();
+        _viewModel.SetComposerFocused(false);
         _keyboard.Restore();
+    }
+
+    private void OnReplyOptionsTapped(object? sender, TappedEventArgs e)
+    {
+        UiHaptics.Tick();
+        InputBar.Input.Unfocus();
     }
 
     private readonly KeyboardResize _keyboard = new();

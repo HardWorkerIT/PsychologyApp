@@ -138,7 +138,6 @@
                                 Title="{Binding Title}"
                                 Subtitle="{Binding Subtitle}"
                                 MetaText="{Binding MetaText}"
-                                Date="{Binding Date}"
                                 IconName="{Binding IconName}"
                                 Image="{Binding Image}"
                                 Flavor="{Binding Flavor}"
@@ -153,7 +152,6 @@
                         <DataTemplate x:DataType="technique:TechniqueItem">
                             <practiceUi:TechniqueListCardView
                                 Number="{Binding Number}"
-                                Date="{Binding Date}"
                                 Image="{Binding Image}"
                                 IconName="{Binding IconName}"
                                 MetaText="{Binding MetaText}"

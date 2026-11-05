@@ -246,49 +246,49 @@ internal static class TechniqueCatalogContentDe
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
-        "Übung", "Beobachterposition",
+        "Übung", "Selbstgespräch mit Abstand",
         [
-            "1. Beschreibe die Situation, die dich belastet",
-            "2. Schreib die Gefühle in der Ich-Form auf",
-            "3. Betrachte die Situation als neutraler Beobachter",
-            "4. Bewerte die Anspannung nach dem Positionswechsel"
+            "1. Benenne Situation und Gefühl in einem Satz; Details eines belastenden Ereignisses brauchst du nicht.",
+            "2. Sprich dich mit deinem Namen oder mit „du“ statt nur mit „ich“ an. Zum Beispiel: „[Name], was passiert gerade?“",
+            "3. Schreibe auf, was jetzt wichtig ist und welcher sichere, machbare Schritt möglich ist. Entschuldige keinen Schaden und spiele keine Gefahr herunter.",
+            "4. Bewerte jetzt deine Anspannung. Sie kann sinken, gleich bleiben oder steigen. Wenn es dir schlechter geht, hör auf und wähle andere Unterstützung."
         ],
-        "Ein Wechsel der Wahrnehmungsposition hilft, von einem emotionalen Höhepunkt zurückzutreten und die Situation weiter zu sehen.",
-        TechniqueUiKind.Entry, "Technik Nr. 12", "12.06.2026", "Beobachterposition", "Von den Gefühlen zurücktreten und die Situation von außen sehen", "Schwerer Moment", "NLP", 4, "Visibility",
+        "Eine kurze Variante des distanzierten Selbstgesprächs: Sprich dich mit deinem Namen oder mit „du“ statt nur mit „ich“ an. Das kann Raum zum Nachdenken schaffen, verspricht aber keine sofortige Erleichterung.",
+        TechniqueUiKind.Entry, "Technik Nr. 12", "12.06.2026", "Selbstgespräch mit Abstand", "Sprich dich mit deinem Namen oder „du“ an und wähle einen sicheren Schritt", "Schwerer Moment", "Selbsthilfe", 1, "Visibility",
         [
-            new TechniqueEntrySeed("Situation", "Was ist passiert, oder was spielst du im Kopf immer wieder durch?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Gefühle in der Ich-Form", "Was fühlst du, wenn du mitten in der Situation bist?", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("Was der Beobachter sieht", "Was würde ein ruhiger Beobachter von außen bemerken?", Suggestions: ["Zwei Menschen streiten", "Ein müder, aufgebrachter Mensch", "Eine gewöhnliche Arbeitssituation", "Jeder verteidigt seine Sicht", "In einer Woche ist das vergessen", "Die Menschen haben sich missverstanden", "Ein Mensch, der sich sehr bemüht", "Unangenehm, aber nicht gefährlich", "Jeder hat seine eigene Sicht", "Der Mensch braucht Ruhe"]),
-            new TechniqueEntrySeed("Anspannung jetzt", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situation", "Kurz: Was geschieht gerade? Details eines belastenden Ereignisses sind nicht nötig.", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Gefühle in der Ich-Form", "Was fühlst du? Ein kurzer Satz genügt.", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("Was der Beobachter sieht", "Sprich dich mit deinem Namen oder „du“ an: Was ist jetzt wichtig, und welcher sichere Schritt ist möglich?", Suggestions: ["[Name], was ist dir gerade wichtig?", "Was ist ein sicherer, machbarer Schritt?", "Wie kannst du dich unterstützen?", "Was würdest du einem nahestehenden Menschen sagen?", "Du kannst später antworten, wenn es klarer ist"]),
+            new TechniqueEntrySeed("Anspannung jetzt", "Bewerte sie am Ende; sie kann gleich bleiben.", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Mitten in einer Situation wirken Gefühle unausweichlich. Die Beobachterposition schafft Abstand, ohne das Erleben zu leugnen.",
-            "Wenn dich eine Situation überwältigt und vernünftige Argumente nicht helfen.",
-            "Beschreibe die Situation und die Gefühle und schreib sie dann in der dritten Person neu — neutral, ohne Urteil.",
-            "Streit: von innen — „man respektiert mich nicht“. Beobachter: „zwei Menschen sprechen laut“. Anspannung: 8 → 5."),
+            "Beim distanzierten Selbstgespräch verwendest du deinen Namen oder „du“ statt nur „ich“. Das kann Raum zum Nachdenken schaffen, garantiert aber keine sofortige Erleichterung.",
+            "Probiere es bei erträglichem emotionalem oder sozialem Stress und nur, wenn du gerade sicher bist. Nutze es nicht, um Schaden zu rechtfertigen oder Gefahr herunterzuspielen.",
+            "Benenne das Gefühl kurz, sprich dich mit deinem Namen oder „du“ an und frage, was jetzt wichtig ist und welcher sichere Schritt möglich ist.",
+            "Statt „Ich schaffe das nicht“: „[Name], das ist gerade schwer. Was ist ein sicherer nächster Schritt für dich?“"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Anchor = new(
-        "Übung", "Ressourcenanker",
+        "Übung", "Erinnerung an Unterstützung",
         [
-            "1. Erinnere dich an einen Moment, in dem du dich sicher oder ruhig gefühlt hast",
-            "2. Beschreibe die Körperempfindungen",
-            "3. Wähle eine einfache Ankergeste",
-            "4. Bewerte die Stärke des Ressourcenzustands"
+            "1. Erinnere dich an einen sicheren Moment, in dem du Unterstützung erlebt oder eine Schwierigkeit bewältigt hast",
+            "2. Achte darauf, was geholfen hat und was du im Körper wahrgenommen hast",
+            "3. Wenn du möchtest, wähle eine Geste nur als Erinnerung an dieses Erlebnis",
+            "4. Bewerte, wie hilfreich die Erinnerung jetzt ist (0 = gar nicht, 10 = sehr); 0 ist in Ordnung"
         ],
-        "Ein Anker verbindet eine Körpergeste mit einem Ressourcenzustand, damit du schneller zu innerem Halt zurückfindest.",
-        TechniqueUiKind.Entry, "Technik Nr. 13", "12.06.2026", "Ressourcenanker", "Halt durch Geste und Erinnerung zurückgewinnen", "Schwerer Moment", "NLP", 4, "SelfImprovement",
+        "Eine Erinnerung kann dich an vertraute Quellen der Unterstützung erinnern. Die Wirkung ist individuell; eine Geste ist nur ein freiwilliger Hinweis und verändert den Zustand nicht zuverlässig.",
+        TechniqueUiKind.Entry, "Technik Nr. 13", "12.06.2026", "Erinnerung an Unterstützung", "Erinnere dich an Unterstützung und bemerke verfügbare Ressourcen", "Schwieriger Moment", "Erinnerungsübung", 4, "SelfImprovement",
         [
-            new TechniqueEntrySeed("Ressourcenerinnerung", "Wann hast du dich stark, ruhig oder froh gefühlt?", Suggestions: ["Ein gelungener Vortrag", "Ein Urlaub am Meer", "Eine Umarmung von einem nahen Menschen", "Etwas Schweres geschafft", "Ein Spaziergang in der Natur", "Eine bestandene Prüfung", "Die Geburt eines Kindes", "Ein Sieg im Wettkampf", "Ein Abend mit Freunden", "Lob von meiner Chefin oder meinem Chef", "Der erste Tag in einem neuen Job", "Ein Morgen ohne Eile"]),
+            new TechniqueEntrySeed("Ressourcenerinnerung", "Wähle nur eine Erinnerung, die sich sicher anfühlt; sonst kannst du die Übung auslassen.", Suggestions: ["Ein gelungener Vortrag", "Ein Urlaub am Meer", "Eine Umarmung von einem nahen Menschen", "Etwas Schweres geschafft", "Ein Spaziergang in der Natur", "Eine bestandene Prüfung", "Die Geburt eines Kindes", "Ein Sieg im Wettkampf", "Ein Abend mit Freunden", "Lob von meiner Chefin oder meinem Chef", "Der erste Tag in einem neuen Job", "Ein Morgen ohne Eile"]),
             new TechniqueEntrySeed("Körperempfindungen", "Wo spürst du es? Wärme, Leichtigkeit, Halt…", Suggestions: ["Wärme in der Brust", "Leichtigkeit", "Offene Schultern", "Gleichmäßiger Atem", "Feste Beine", "Ein Lächeln", "Ein ruhiges Herz", "Ein gerader Rücken", "Energie in den Händen", "Ein entspannter Bauch"]),
-            new TechniqueEntrySeed("Geste oder Anker", "Z. B. Faust ballen, Handgelenk berühren", Suggestions: ["Eine Faust ballen", "Das Handgelenk berühren", "Daumen und Zeigefinger zusammenführen", "Hand aufs Herz", "Ein tiefer Atemzug", "Ein Ohrläppchen drücken", "Die Schultern öffnen", "Über die Handfläche streichen"]),
-            new TechniqueEntrySeed("Stärke des Zustands", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Freiwillige Erinnerungsgeste", "Diese Geste kann dich an die Erinnerung erinnern; du kannst den Schritt auslassen", Suggestions: ["Eine Faust ballen", "Das Handgelenk berühren", "Daumen und Zeigefinger zusammenführen", "Hand aufs Herz", "Ein tiefer Atemzug", "Ein Ohrläppchen drücken", "Die Schultern öffnen", "Über die Handfläche streichen"]),
+            new TechniqueEntrySeed("Wirkung der Erinnerung", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Das Gehirn verknüpft eine Geste schnell mit einem Zustand, wenn du das Paar „Erinnerung + Geste“ mehrmals wiederholst.",
-            "Vor einem stressigen Ereignis oder wenn dir innerer Halt fehlt.",
-            "Erinnere dich an die Ressourcensituation, verstärke die Körperempfindungen und verankere sie mit einer einfachen Geste.",
-            "Ressource: ein gelungener Vortrag. Körper: Wärme in der Brust. Anker: Daumenberührung. Stärke: 8."),
+            "Dies ist eine kurze Erinnerungsübung. Ihre Wirkung und eine Verbindung mit einer Geste sind nicht garantiert.",
+            "Wenn du dich daran erinnern möchtest, was dir schon geholfen hat. Wähle nur eine sichere Erinnerung; höre auf, wenn es schwerer wird.",
+            "Achte darauf, was damals geholfen hat. Eine Geste ist freiwillig und nur ein Hinweis; du musst dich nicht beruhigen.",
+            "Ich erinnere mich daran, dass mir jemand zugehört hat. Das Gespräch half; ich könnte der Person jetzt schreiben. Wirkung: 5 von 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Grounding = new(
@@ -317,49 +317,50 @@ internal static class TechniqueCatalogContentDe
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
-        "Übung", "Box-Atmung",
+        "Übung", "Sanftes Atemtempo",
         [
-            "1. Bewerte die Anspannung vor der Übung",
-            "2. Atme auf 4 Zählzeiten ein",
-            "3. Halte 4 Zählzeiten",
-            "4. Atme auf 4 Zählzeiten aus",
-            "5. Halte 4 Zählzeiten — wiederhole 4 Zyklen und bewerte danach die Anspannung"
+            "1. Bewerte deine Anspannung vor der Übung",
+            "2. Setz dich bequem hin. Atme sanft und nicht tiefer als sonst",
+            "3. Wenn es angenehm ist, folge dem Kreis: etwa 4 Zählzeiten ein- und 6 ausatmen. Halte den Atem nicht an",
+            "4. Wenn das Tempo nicht passt, lass das Zählen weg oder beende die Übung. Bei Schwindel oder Atemnot kehre zu deinem natürlichen Atem zurück",
+            "5. Bewerte deine Anspannung danach erneut. Sie muss sich nicht verändert haben; auch das ist eine hilfreiche Beobachtung"
         ],
-        "Rhythmisches Atmen beruhigt das Nervensystem und senkt die körperliche Anspannung.",
-        TechniqueUiKind.Entry, "Technik Nr. 15", "04.07.2026", "Box-Atmung", "Den Körper mit dem Atemrhythmus beruhigen", "Schwerer Moment", "Psyche", 3, "Air",
+        "Bei Anspannung kannst du einen kurzen, sanften Rhythmus ohne Atempausen ausprobieren. Er passt nicht für alle: Zählen oder die Konzentration auf den Atem kann Unbehagen verstärken.",
+        TechniqueUiKind.Entry, "Technik Nr. 15", "04.07.2026", "Sanftes Atemtempo", "Einen angenehmen Rhythmus mit etwas längerem Ausatmen probieren", "Schwerer Moment", "Psyche", 3, "Air",
         [
             new TechniqueEntrySeed("Anspannung vorher", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notizen", "Was hast du während der Übung in Körper oder Atem bemerkt?", Suggestions: ["Die Schultern sind gesunken", "Der Atem wurde langsamer", "Mir wurde wärmer", "Die Pause war schwer zu halten", "Gedanken haben mich abgelenkt", "Ich wurde ruhiger", "Mir wurde schwindelig", "Das Herz wurde langsamer", "Ich musste gähnen", "Nichts Besonderes"]),
+            new TechniqueEntrySeed("Notizen", "Was hast du bemerkt? Jede Reaktion ist in Ordnung.", Suggestions: ["Das Tempo war angenehm", "Das Zählen lenkte mich ab", "Das Tempo war zu langsam", "Mir wurde schwindelig", "Das Atmen fühlte sich unangenehm an", "Ich wurde etwas ruhiger", "Keine Veränderung", "Ich wurde angespannter", "Ich brach ab und nahm meine Umgebung wahr"]),
             new TechniqueEntrySeed("Anspannung danach", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Langsames, rhythmisches Atmen senkt die Aktivität des Sympathikus und hilft dem Körper, aus dem Kampf-oder-Flucht-Modus herauszukommen.",
-            "Bei Angst, Panik, Herzrasen, Schlaflosigkeit oder dem Gefühl, überfordert zu sein.",
-            "Setz dich bequem hin und atme durch die Nase: 4 ein, 4 halten, 4 aus, 4 halten. Wiederhole 4 Zyklen.",
-            "Angst 7/10 → nach 4 Zyklen 4/10. Die Schultern sinken, der Puls wird langsamer."),
+            "Ein kurzer, sanfter Rhythmus mit etwas längerem Ausatmen ist eine Möglichkeit, den Atem bei Anspannung zu begleiten. Die Reaktionen sind unterschiedlich; die Übung garantiert keine Erleichterung.",
+            "Bei Anspannung, wenn es angenehm ist, auf den Atem zu achten.",
+            "Setz dich bequem hin. Atme sanft und nicht tiefer als sonst. Etwa eine Minute lang kannst du dem Kreis folgen: ungefähr 4 Zählzeiten ein- und 6 ausatmen, ohne Pausen. Wenn sich das Tempo erzwungen anfühlt, atme wieder in deinem eigenen Rhythmus. Beende die Übung, wenn das Unbehagen zunimmt, und benenne einige Dinge in deiner Umgebung.",
+            "Die Anspannung lag bei 7/10. Nach einer Minute war sie noch bei 7/10. Das Zählen fühlte sich erzwungen an; ich brach ab und benannte fünf Dinge um mich herum."
+        ),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SmallStep = new(
         "Übung", "Ein kleiner Schritt",
         [
-            "1. Beschreibe, was schwer wirkt oder dich am Anfangen hindert",
-            "2. Wähle den kleinsten realistischen Schritt für heute",
-            "3. Schreib auf, wann du ihn machst",
-            "4. Bewerte deine Energie, nachdem du den Schritt aufgeschrieben hast"
+            "1. Wähle eine kleine Aktivität für Selbstfürsorge, Interesse, Kontakt oder ein Gefühl des Abschlusses",
+            "2. Mach daraus einen sicheren Anfang von 2–5 Minuten. Du musst nicht die ganze Aufgabe beenden",
+            "3. Lege einen konkreten Zeitpunkt innerhalb der nächsten 24 Stunden fest. Wenn es jetzt nicht passt: Ruhe, Unterstützung oder einen kleineren Schritt wählen",
+            "4. Bewerte, wie machbar es wirkt: 0 — gar nicht zuversichtlich, 10 — ganz sicher. Bei Zweifel: noch kleiner machen"
         ],
-        "Verhaltensaktivierung: Eine kleine Handlung gibt das Gefühl von Bewegung und Kontrolle zurück.",
-        TechniqueUiKind.Entry, "Technik Nr. 16", "04.07.2026", "Ein kleiner Schritt", "Mit einer kleinen Handlung wieder in Schwung kommen", "Schwerer Moment", "KVT", 5, "DirectionsWalk",
+        "Ein kurzer Aktivitätsplan nach Grundideen der Verhaltensaktivierung. Ein kleiner Schritt kann den Anfang erleichtern, garantiert aber weder bessere Stimmung noch mehr Energie.",
+        TechniqueUiKind.Entry, "Technik Nr. 16", "04.07.2026", "Ein kleiner Schritt", "Wähle eine Aktivität und mache den Anfang machbar", "Schwerer Moment", "KVT", 5, "DirectionsWalk",
         [
-            new TechniqueEntrySeed("Was schwer wirkt", "Was erscheint gerade schwer, langweilig oder unmöglich?", Suggestions: ["Müdigkeit", "Keine Energie", "Zu viel zu tun", "Langeweile", "Angst anzufangen", "Nichts scheint wichtig", "Schlecht geschlafen", "Keine Lust", "Einsamkeit", "Aufschieben", "Kopfschmerzen", "Ich weiß nicht, wo ich anfangen soll"], Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Kleinster Schritt heute", "Z. B. aufstehen, Gesicht waschen, eine Nachricht schreiben", Suggestions: ["Aus dem Bett aufstehen", "Mein Gesicht waschen", "Etwas Wasser trinken", "Eine Nachricht schreiben", "5 Minuten rausgehen", "Eine Sache aufräumen", "Ein Fenster öffnen", "2 Minuten dehnen", "Duschen", "Etwas essen", "Einen nahen Menschen anrufen", "Die Datei öffnen, die ich brauche", "Einen Plan für den Tag schreiben", "Eine Tasse spülen"]),
-            new TechniqueEntrySeed("Wann du es machst", "Eine bestimmte Uhrzeit oder ein Moment am Tag", Suggestions: ["Jetzt sofort", "In 15 Minuten", "In einer Stunde", "Am Morgen", "Nach dem Frühstück", "Nach dem Mittagessen", "Am Abend", "Vor dem Schlafen", "Morgen früh", "Am Wochenende"]),
-            new TechniqueEntrySeed("Energie danach", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Was macht den Anfang schwer?", "Müdigkeit, Angst, Einsamkeit, zu viel zu tun?", Suggestions: ["Müdigkeit", "Angst", "Einsamkeit", "Zu viel zu tun", "Langeweile", "Ich weiß nicht, wo ich anfangen soll", "Ich brauche Ruhe", "Die Umstände passen gerade nicht"], Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Eine kleine Aktivität für mich", "Selbstfürsorge, Interesse, Kontakt oder eine kleine Aufgabe", Suggestions: ["Ein Glas Wasser trinken oder etwas essen", "Mich waschen oder anziehen", "Zwei Minuten an die frische Luft gehen", "Ein Lieblingslied hören", "Einer nahestehenden Person schreiben", "Zwei Minuten an etwas Wichtigem arbeiten", "Eine Sache wegräumen", "Jemanden bitten, bei mir zu bleiben"]),
+            new TechniqueEntrySeed("Wann möchtest du es versuchen?", "Ein konkreter Zeitpunkt in den nächsten 24 Stunden", Suggestions: ["Jetzt für zwei Minuten", "Nach dem Frühstück", "Nach dem Mittagessen", "Nach Arbeit oder Lernen", "Heute zu einer gewählten Uhrzeit", "Eine nahestehende Person um Erinnerung bitten"]),
+            new TechniqueEntrySeed("Wie machbar wirkt es?", "0 — gar nicht zuversichtlich, 10 — ganz sicher", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "In der Antriebslosigkeit wartet das Gehirn auf Motivation, um zu handeln. Ein kleiner Schritt erzeugt Motivation durch Handeln — nicht umgekehrt.",
-            "Wenn du keine Energie hast, alles sinnlos wirkt oder der Start in den Tag schwerfällt.",
-            "Wähle einen Schritt von 2–5 Minuten, ohne perfekten Plan. Schreib ihn und die Uhrzeit auf — das ist schon Bewegung.",
-            "Wohnung aufräumen → um 10:00 eine Tasse in die Küche bringen. Energie: 2 → 4."),
+            "Wenig Energie oder gedrückte Stimmung können den Anfang erschweren. Eine kleine geplante Aktivität kann etwas Bewegung ermöglichen; die Wirkung ist individuell.",
+            "Wenn Stimmung oder Energie den Start erschweren und eine sichere, machbare Aktivität möglich ist. Ruhe oder um Hilfe zu bitten kann ebenfalls ein guter Schritt sein.",
+            "Wähle etwas für Selbstfürsorge, Interesse, Kontakt oder ein Gefühl des Abschlusses; reduziere den Anfang auf 2–5 Minuten und plane ihn innerhalb der nächsten 24 Stunden. Planen heißt noch nicht, dass du es getan hast. Wenn es nicht machbar wirkt, mach es kleiner oder bitte um Unterstützung.",
+            "Nicht „die ganze Wohnung aufräumen“, sondern nach dem Mittagessen eine Tasse spülen — oder einer nahestehenden Person schreiben: „Hast du kurz Zeit zum Reden?“"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
@@ -491,24 +492,24 @@ internal static class TechniqueCatalogContentDe
     internal static readonly BuiltInTechniqueDefinition Balloons = new(
         "Übung", "Ballons platzen lassen",
         [
-            "1. Bewerte deine Anspannung",
-            "2. Lass die Ballons mit einem Tippen platzen, ohne Eile",
-            "3. Atme bei jedem Platzen langsam aus",
-            "4. Spiel die Runde zu Ende",
-            "5. Bewerte deine Anspannung danach"
+            "1. Bewerte deine Anspannung vor dem Spiel",
+            "2. Starte die Runde und tippe in deinem Tempo; du musst nicht jeden Ballon treffen",
+            "3. Atme wie gewohnt. Du musst das Ausatmen nicht auf jeden Knall abstimmen",
+            "4. Die Runde endet von selbst. Wenn dich das Spiel frustriert oder es dir schlechter geht, geh zurück",
+            "5. Bewerte danach deine Anspannung und notiere, was du bemerkt hast. Keine Veränderung ist auch ein Ergebnis"
         ],
-        "Ein kurzes Spiel lenkt die Aufmerksamkeit von ängstlichen Gedanken auf eine einfache Handlung und Empfindungen.",
-        TechniqueUiKind.Entry, "Technik Nr. 22", "26.10.2026", "Ballons platzen lassen", "Eine kurze Pause, um Anspannung rauszulassen", "Schwerer Moment", "Psyche", 3, "BubbleChart",
+        "Ein kurzes Spiel für Hände und Aufmerksamkeit. Es kann kurz ablenken, muss dein Befinden aber nicht verändern und ersetzt weder Problemlösung noch Unterstützung.",
+        TechniqueUiKind.Entry, "Technik Nr. 22", "26.10.2026", "Ballons platzen lassen", "Eine kurze Spielpause nach Wunsch", "Schwerer Moment", "Psyche", 3, "BubbleChart",
         [
             new TechniqueEntrySeed("Anspannung vorher", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notizen", "Was hat sich verändert, während du Ballons platzen ließt?", Suggestions: ["Ich fühle mich leichter", "Meine Gedanken haben Pause gemacht", "Ich musste lächeln", "Mein Atem wurde ruhiger", "Der Ärger ist verflogen", "Meine Hände haben sich entspannt", "Nichts hat sich verändert", "Ich möchte noch eine Runde"]),
+            new TechniqueEntrySeed("Notizen", "Was ist dir aufgefallen? Du kannst das Feld leer lassen.", Suggestions: ["Etwas weniger angespannt", "Keine merkliche Veränderung", "Angespannter", "Kurz abgelenkt", "Farben oder Bewegung wahrgenommen", "Das Spiel war frustrierend", "Unsicher", "Anderes"]),
             new TechniqueEntrySeed("Anspannung danach", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Wenn Angst oder Ärger am stärksten sind, lassen sich Gedanken mit Willenskraft kaum stoppen. Eine einfache Handlung, die Augen und Hände braucht, lenkt das Gehirn für ein paar Minuten um und lässt die Anspannung sinken. Das ist keine Behandlung, sondern ein Weg durch eine akute Minute.",
-            "Wenn Ärger, Anspannung oder Angst überhandnehmen und du eine kurze Pause brauchst. Wenn das Spiel dir nur hilft, einem Problem auszuweichen, das sich zu lösen lohnt, komm darauf zurück, sobald du ruhiger bist.",
-            "Lass dir Zeit: Du musst nicht jeden Ballon treffen. Atme bei jedem Platzen langsam aus. Die Runde endet von selbst; es gibt kein endloses Spiel.",
-            "Anspannung 7/10 nach einem Streit. Eine Runde mit 20 Ballons, bei jedem Platzen ausatmen. Anspannung 4/10, und ich konnte in Ruhe überlegen, was ich antworte."),
+            "Ein kurzes Spiel kann Hände und Aufmerksamkeit vorübergehend beschäftigen; die Wirkung ist individuell. Es senkt Angst nicht garantiert und ist keine Behandlung.",
+            "Wenn sich eine kurze Spielpause gerade gut anfühlt. Dringende Schritte für Gesundheit oder Sicherheit sollten dadurch nicht aufgeschoben werden.",
+            "Tippe in deinem Tempo; du musst nicht alle Ballons treffen. Atme normal und stimme den Atem nicht auf jeden Knall ab. Vergleiche danach deine Einschätzung, ohne ein bestimmtes Ergebnis zu erwarten. Wenn ein praktisches Problem einen Schritt braucht, kehre dazu zurück, sobald du bereit bist.",
+            "Nach einem Streit lag meine Anspannung bei 7/10 und blieb nach der Runde bei 7/10. Ich bemerkte, dass ich noch wütend war, und wartete mit meiner Antwort."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition CyclicSigh = new(
@@ -558,25 +559,44 @@ internal static class TechniqueCatalogContentDe
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition BusyMind = new(
-        "Übung", "Den Kopf beschäftigen",
+        "Übung", "Kurze Aufmerksamkeitslenkung",
         [
-            "1. Bewerte deine Anspannung",
-            "2. Nimm eine Aufgabe und löse sie im Kopf oder laut",
-            "3. Wenn die Gedanken zur Sorge zurückwandern, kehr sanft zur Aufgabe zurück",
-            "4. Mach fünf Aufgaben",
-            "5. Bewerte deine Anspannung danach"
+            "1. Bewerte deine Anspannung nur, wenn es dir gerade hilft",
+            "2. Wähle eine neutrale Aufgabe für etwa 30–60 Sekunden",
+            "3. Kehrt die Aufmerksamkeit zur Sorge zurück, mach dir keine Vorwürfe; du kannst einmal sanft zur Aufgabe zurückkehren",
+            "4. Beende die Aufgabe und prüfe, ob ein konkreter Schritt oder Unterstützung nötig ist"
         ],
-        "Einfache Aufgaben für den Kopf lenken die Aufmerksamkeit von kreisenden Gedanken ab.",
-        TechniqueUiKind.Entry, "Technik Nr. 25", "26.10.2026", "Den Kopf beschäftigen", "Einfache Aufgaben, um das Gedankenkarussell zu stoppen", "Schwerer Moment", "Psyche", 3, "Extension",
+        "Eine kurze neutrale Aufgabe kann die Aufmerksamkeit einen Moment lang umlenken, wenn Gedanken festzustecken scheinen. Sie beseitigt keine Gedanken und löst das Problem nicht.",
+        TechniqueUiKind.Entry, "Technik Nr. 25", "26.10.2026", "Kurze Aufmerksamkeitslenkung", "Eine kurze Pause bei wiederkehrenden Gedanken", "Schwerer Moment", "Psyche", 1, "Extension",
         [
             new TechniqueEntrySeed("Anspannung vorher", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notizen", "Was hat sich verändert, während du mit den Aufgaben beschäftigt warst?", Suggestions: ["Die Gedanken haben losgelassen", "Ich bin ruhiger", "Es fiel mir schwer, mich zu konzentrieren", "Ich möchte etwas erledigen", "Die Angst kam zurück", "Nichts hat sich verändert", "Ich möchte mehr Aufgaben"]),
+            new TechniqueEntrySeed("Notizen", "Wie war diese kurze Pause?", Suggestions: ["Kurz umgelenkt", "Nichts hat sich verändert", "Ich bin angespannter oder frustrierter", "Ich sehe jetzt einen nächsten Schritt", "Ich brauche Unterstützung", "Ich habe die Übung beendet"]),
             new TechniqueEntrySeed("Anspannung danach", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Wenn Gedanken im Kreis laufen, lassen sie sich mit Willenskraft kaum stoppen. Eine Aufgabe, die den Kopf beschäftigt (zählen, sich erinnern, aufzählen), lässt eine Weile keinen Platz für das Grübeln. Das ist eine Ablenkungsfertigkeit aus der Dialektisch-Behavioralen Therapie: keine Lösung des Problems, sondern ein Weg durch eine schwere Minute.",
-            "Wenn aufdrängende Gedanken überhandnehmen, vor dem Schlafen oder nach einem Streit, wenn das Gespräch im Kopf weiterläuft.",
-            "Mach die Aufgaben ernsthaft: Je mehr Aufmerksamkeit sie brauchen, desto besser. Wenn das Problem wirklich gelöst werden muss, kehr dazu zurück, wenn du ruhiger bist.",
-            "Nach einem Streit läuft das Gespräch im Kopf weiter, Anspannung 7/10. Fünf Aufgaben: Tiere, die im Wasser leben, von 100 in Siebenerschritten rückwärts zählen, Dinge in jeder Farbe um mich herum. Anspannung 4/10."),
+            "Eine kurze neutrale Aufgabe — zum Beispiel Gegenstände einer Farbe zu benennen — kann manchmal helfen, einen akuten Moment zu überstehen. Sie lenkt die Aufmerksamkeit vorübergehend um, beseitigt aber keine Gedanken; die Wirkung ist unterschiedlich.",
+            "Wenn wiederkehrende Gedanken deine Aufmerksamkeit beanspruchen und du eine kurze Pause möchtest. Bei einem dringenden Problem oder einer Sicherheits- oder Gesundheitsfrage kümmere dich darum und suche passende Hilfe.",
+            "Wähle eine einfache Aufgabe für 30–60 Sekunden; perfekte Konzentration ist nicht nötig. Prüfe danach, ob es einen konkreten nächsten Schritt gibt. Wenn die Aufgabe dich frustriert oder es dir schlechter geht, beende sie und wähle etwas anderes.",
+            "Nach einem Streit läuft das Gespräch im Kopf weiter. Benenne eine halbe Minute lang fünf Gegenstände um dich herum und entscheide dann, ob du etwas klären, eine Pause machen oder Unterstützung holen möchtest."),
+        null, null);
+
+    internal static readonly BuiltInTechniqueDefinition ThoughtDefusion = new(
+        "Übung", "Abstand zu einem Gedanken",
+        [
+            "1. Bemerke einen kurzen Gedanken; aufschreiben ist optional",
+            "2. Sage: „Ich bemerke den Gedanken, dass …“",
+            "3. Nimm einen Gegenstand vor dir und den Halt unter deinen Füßen wahr",
+            "4. Wähle einen kleinen nächsten Schritt oder beende die Übung hier"
+        ],
+        "Eine kurze Fertigkeit aus der Akzeptanz- und Commitmenttherapie (ACT): einen Gedanken als Vorgang des Geistes wahrnehmen, nicht unbedingt als Tatsache oder Befehl.",
+        TechniqueUiKind.Entry, "Technik Nr. 26", "03.11.2026", "Abstand zu einem Gedanken", "Eine kurze Übung, um Abstand zu einem beunruhigenden Gedanken zu gewinnen", "Gedanken", "Psyche", 1, "FormatQuote",
+        [
+            new TechniqueEntrySeed("Gedanke", "Optional: Du kannst die Übung still machen", Suggestions: HarshThoughts)
+        ],
+        Theory(
+            "Ein wiederkehrender Gedanke kann die ganze Aufmerksamkeit einnehmen. Bei der Defusion in ACT wird er bemerkt, ohne mit ihm zu streiten oder ihn wegzudrücken.",
+            "Wenn sich eine Sorge, Selbstkritik oder Angst wiederholt. Du musst keine belastende Erinnerung wählen.",
+            "Du musst nichts aufschreiben. Setze „Ich bemerke den Gedanken, dass …“ vor den Gedanken, schau auf einen Gegenstand und spüre den Halt unter deinen Füßen. Wenn das Unwohlsein zunimmt, stoppe und benenne einige Dinge in deiner Umgebung.",
+            "Aus „Ich mache alles kaputt“ wird „Ich bemerke den Gedanken, dass ich alles kaputt mache“. Dann bemerkst du die Tasse vor dir und entscheidest, ob du eine E-Mail beantwortest oder kurz pausierst."),
         null, null);
 }

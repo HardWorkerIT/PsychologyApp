@@ -93,7 +93,7 @@ public static partial class ArticleContent
                             "Write down everything that worries you, and for each item one next step or \"nothing I can do for now\"",
                             "If the thought comes back in bed, tell yourself: \"I've written this down, I'll deal with it tomorrow\""),
                         Quiz("In bed you think: \"If I don't sleep, I'll fail everything tomorrow.\" What is closer to the truth?", 1, "The thought exaggerates. After a bad night things are harder, but most people still get their tasks done. The stronger the fear about tomorrow, the harder it is to fall asleep.", "It's true, failure is inevitable", "After a bad night it's harder, but I usually manage the main things", "Better not to go to bed at all"),
-                        Practice(TechniqueId.Observer, "Observer position")
+                        Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought")
                     ],
                     "Every evening, set aside 15 minutes to write down what worries you, and don't take those thoughts to bed.",
                     "Which thoughts come most often at night? Did writing them down help?"),
@@ -192,7 +192,7 @@ public static partial class ArticleContent
                             "When worry comes at another time, write the topic down in one line and tell yourself: \"I'll think about it in my worry time\"",
                             "In your worry time, go through the list: plan a step for what you can do, let go of what you can't",
                             "Often, by the appointed time, the topic no longer seems important"),
-                        Practice(TechniqueId.Observer, "Observer position")
+                        Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought")
                     ],
                     "Set yourself a worry time and postpone anxious thoughts to it.",
                     "Did you manage to postpone worry? What happened to the topics by the appointed time?"),

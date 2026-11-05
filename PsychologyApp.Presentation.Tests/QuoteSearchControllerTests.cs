@@ -28,7 +28,7 @@ public sealed class QuoteSearchControllerTests
 
         QuoteSearchController controller = CreateController(feedState, searchService.Object);
         controller.Query = "calm";
-        await Task.Delay(350);
+        await WaitForSearchAsync(controller);
 
         Assert.Equal(2, feedState.DisplayItems.Count);
         Assert.Equal("Calm quote", feedState.DisplayItems[0].Text);
@@ -40,7 +40,7 @@ public sealed class QuoteSearchControllerTests
     {
         QuoteFeedState feedState = new();
         feedState.SetFeedItems([CreateFeedItem("Feed quote")]);
-        bool searchCleared = false;
+        TaskCompletionSource searchCleared = new(TaskCreationOptions.RunContinuationsAsynchronously);
         Mock<IQuoteSearchService> searchService = new();
         searchService
             .Setup(s => s.SearchCatalogAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -49,13 +49,11 @@ public sealed class QuoteSearchControllerTests
         QuoteSearchController controller = CreateController(
             feedState,
             searchService.Object,
-            onSearchCleared: () => searchCleared = true);
+            onSearchCleared: searchCleared.SetResult);
         controller.Query = "test";
-        await Task.Delay(350);
+        await WaitForSearchAsync(controller);
         controller.Query = string.Empty;
-        await Task.Delay(50);
-
-        Assert.True(searchCleared);
+        await searchCleared.Task.WaitAsync(TimeSpan.FromSeconds(3));
         Assert.Single(feedState.DisplayItems);
         Assert.Equal("Feed quote", feedState.DisplayItems[0].Text);
     }
@@ -108,7 +106,7 @@ public sealed class QuoteSearchControllerTests
         QuoteSearchController controller = CreateController(feedState, searchService.Object);
         controller.Query = "first";
         controller.Query = "second";
-        await Task.Delay(350);
+        await WaitForSearchAsync(controller);
 
         Assert.Single(feedState.DisplayItems);
         Assert.Equal("Second", feedState.DisplayItems[0].Text);
@@ -118,6 +116,15 @@ public sealed class QuoteSearchControllerTests
         searchService.Verify(
             s => s.SearchCatalogAsync("second", It.IsAny<int>(), It.IsAny<CancellationToken>()),
             Times.Once);
+    }
+
+    private static async Task WaitForSearchAsync(QuoteSearchController controller)
+    {
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(5));
+        while (controller.IsSearchInFlight)
+        {
+            await Task.Delay(10, timeout.Token);
+        }
     }
 
     private static QuoteSearchController CreateController(

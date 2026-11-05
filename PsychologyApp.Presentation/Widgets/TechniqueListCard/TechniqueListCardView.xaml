@@ -58,22 +58,13 @@
                             Style="{StaticResource CaptionStyle}"
                             MaxLines="1"
                             LineBreakMode="TailTruncation" />
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                            <Label
-                                Grid.Column="0"
-                                Text="{TemplateBinding Date}"
-                                Style="{StaticResource CaptionStyle}"
-                                MaxLines="1"
-                                LineBreakMode="TailTruncation" />
-                            <Label
-                                Grid.Column="1"
-                                IsVisible="{TemplateBinding HasAuthor}"
-                                Text="{TemplateBinding Author}"
-                                Style="{StaticResource CaptionStyle}"
-                                HorizontalTextAlignment="End"
-                                MaxLines="1"
-                                LineBreakMode="TailTruncation" />
-                        </Grid>
+                        <Label
+                            IsVisible="{TemplateBinding HasAuthor}"
+                            Text="{TemplateBinding Author}"
+                            Style="{StaticResource CaptionStyle}"
+                            HorizontalTextAlignment="End"
+                            MaxLines="1"
+                            LineBreakMode="TailTruncation" />
                     </VerticalStackLayout>
                     <Label
                         Grid.Column="2"

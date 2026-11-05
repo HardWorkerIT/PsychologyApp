@@ -106,6 +106,23 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         ]
     };
 
+    private static readonly string[] DelayableActionUrgeTerms =
+    [
+        "тянет написать", "хочется написать", "хочется отправить сообщение",
+        "тянет проверить телефон", "хочется проверить телефон",
+        "urge to text", "want to text", "want to send a message", "urge to send a message",
+        "want to check my phone", "urge to check my phone"
+    ];
+
+    // Exclude explicit harm urges from the narrow phrase flag used to offer the optional practice.
+    private static readonly string[] UnsafeActionUrgeTerms =
+    [
+        "ударить", "избить", "убить", "причинить вред", "навредить себе", "покончить с собой", "порезать себя",
+        "hit him", "hit her", "hit them", "hurt him", "hurt her", "hurt them",
+        "hurt myself", "harm myself", "kill myself", "suicid", "self harm", "attack him", "attack her", "attack them"
+    ];
+
+
     private static readonly string[] BodyTerms =
     [
         "давит груд", "сдавл груд", "сжимает груд", "боль груд", "болит груд", "тяжест груд", "сердц колот", "сердц бьет", "сердц выскакива",
@@ -113,6 +130,28 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         "дрож", "трясет", "трясу", "потею", "спазм", "пульс зашкаливает", "ледяные руки", "не могу дышать",
         "tight chest", "chest tight", "tightness chest", "chest pain", "heart racing", "racing heart", "heart pounding", "pounding heart",
         "stomach ache", "stomach pain", "stomach cramps", "headache", "nausea", "shaking", "trembl", "sweat", "numb", "throat tight", "shoulder tension", "muscle tension", "cant breathe", "cannot breathe"
+    ];
+
+    private static readonly string[] BodyFocusAvoidanceTerms =
+    [
+        "не хочу дыхательн", "не хочу делать дыхательн", "не предлагай дыхательн", "не предлагай дыхание", "не надо дыхательн", "без дыхательн", "не хочу следить за дыханием",
+        "не хочу фокусироваться на дыхании", "не хочу концентрироваться на дыхании", "не хочу сосредотачиваться на дыхании",
+        "не хочу фокусироваться на теле", "не хочу концентрироваться на теле", "не хочу сосредотачиваться на теле",
+        "мне хуже от дыхания", "дыхание делает хуже", "мне не подходят дыхательные упражнения", "не люблю дыхательные упражнения",
+        "no breathing exercise", "no breathing technique", "no breathwork", "dont want breathing", "dont want a breathing", "dont want to do breathing", "dont want to do breathwork", "dont suggest breathing", "dont suggest a breathing",
+        "dont suggest breathwork", "dont want to focus on breathing", "dont want to focus on my body", "rather not focus on breathing", "rather not focus on my body",
+        "breathing makes it worse", "breathwork makes it worse", "breathing exercises make it worse",
+        "breathing feels uncomfortable", "breathing exercises feel uncomfortable", "i dont like breathing exercises", "body focused exercises make it worse"
+    ];
+
+    private static readonly string[] BodyFocusAcceptanceTerms =
+    [
+        "хочу дыхательную практику", "хочу дыхательное упражнение", "давай дыхательную практику",
+        "давай дыхательное упражнение", "можно дыхательную практику", "можно дыхательное упражнение",
+        "хочу попробовать дыхание", "мне подходят дыхательные упражнения",
+        "i want a breathing exercise", "i want to try breathing", "give me a breathing exercise",
+        "suggest a breathing exercise", "can we do a breathing exercise", "im okay with breathing",
+        "i am okay with breathing", "im open to breathing exercises", "i am open to breathing exercises"
     ];
 
     private static readonly string[] IntensityTerms =
@@ -219,7 +258,14 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         bool Matches(string term, bool respectNegation) => MatchIndex(term, respectNegation) >= 0;
 
+        // Conservatively suppress the practice on any explicit harm mention, including a negated one; this is not crisis assessment.
+        bool mentionsUnsafeAction = UnsafeActionUrgeTerms.Any(term =>
+            normalized.Contains(term, StringComparison.Ordinal) || Matches(term, respectNegation: false));
+        bool hasDelayableActionUrge = DelayableActionUrgeTerms.Any(term => Matches(term, respectNegation: true)) &&
+            !mentionsUnsafeAction;
         bool hasBody = BodyTerms.Any(term => Matches(term, respectNegation: true));
+        bool avoidsBodyFocus = BodyFocusAvoidanceTerms.Any(term => normalized.Contains(term, StringComparison.Ordinal));
+        bool allowsBodyFocus = !avoidsBodyFocus && BodyFocusAcceptanceTerms.Any(term => normalized.Contains(term, StringComparison.Ordinal));
         if (hasBody && scores.ContainsKey(CompanionEmotion.Anxiety))
         {
             scores[CompanionEmotion.Panic] = scores.GetValueOrDefault(CompanionEmotion.Panic) + 1;
@@ -269,13 +315,13 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
             .ToList();
         if (ranked.Count == 0 || ranked[0].Value < MinScore || emotionAttributedToOther)
         {
-            return new SituationAnalysis(CompanionEmotion.Unknown, 0, hasBody, intense, themes, CompanionEmotion.Unknown, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther };
+            return new SituationAnalysis(CompanionEmotion.Unknown, 0, hasBody, intense, themes, CompanionEmotion.Unknown, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther, HasDelayableActionUrge = hasDelayableActionUrge, AvoidsBodyFocus = avoidsBodyFocus, AllowsBodyFocus = allowsBodyFocus };
         }
 
         double top = ranked[0].Value;
         double second = ranked.Count > 1 ? ranked[1].Value : 0;
         CompanionEmotion secondary = ranked.Count > 1 && ranked[1].Value >= 2 && ranked[1].Value >= top * 0.6 ? ranked[1].Key : CompanionEmotion.Unknown;
-        return new SituationAnalysis(ranked[0].Key, top / (top + second + 1), hasBody, intense, themes, secondary, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { IsFlashback = isFlashback, MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther };
+        return new SituationAnalysis(ranked[0].Key, top / (top + second + 1), hasBody, intense, themes, secondary, persons, hasLoss, DetectEvent(normalized, tokens, offsets, hasLoss)) { IsFlashback = isFlashback, MentionsTrauma = mentionsTrauma, NegatedEmotions = negatedEmotions, NegatedEvents = negatedEvents, EmotionAttributedToOther = emotionAttributedToOther, HasDelayableActionUrge = hasDelayableActionUrge, AvoidsBodyFocus = avoidsBodyFocus, AllowsBodyFocus = allowsBodyFocus };
     }
 
     private static bool HasExplicitOtherEmotion(string normalized)

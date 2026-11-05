@@ -25,7 +25,7 @@ public sealed class QuestionnaireScoringServiceTests
 
         Assert.Equal(12, result.Score);
         Assert.Equal(1, result.BandIndex);
-        Assert.Equal(TechniqueId.Spin, result.RecommendedTechnique);
+        Assert.Equal(TechniqueId.ThoughtDefusion, result.RecommendedTechnique);
     }
 
     [Fact]

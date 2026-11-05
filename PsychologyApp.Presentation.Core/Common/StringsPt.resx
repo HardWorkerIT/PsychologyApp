@@ -21,6 +21,9 @@
   <data name="ChatInputPlaceholder" xml:space="preserve">
     <value>Escreva uma mensagem…</value>
   </data>
+  <data name="ChatShowReplyOptions" xml:space="preserve">
+    <value>Ver opções</value>
+  </data>
   <data name="ChatEmptyBody" xml:space="preserve">
     <value>Conte o que está acontecendo. Vou ouvir, ajudar você a entender e sugerir uma prática.</value>
   </data>
@@ -3860,13 +3863,13 @@
     <value>Pronto. Descanse um instante e depois avalie sua tensão abaixo.</value>
   </data>
   <data name="BusyMindIntro" xml:space="preserve">
-    <value>Cinco tarefas curtas. Faça cada uma mentalmente ou em voz alta, sem pressa.</value>
+    <value>Uma tarefa neutra por cerca de 30–60 segundos. Se ela frustrar ou fizer você se sentir pior, pare.</value>
   </data>
   <data name="BusyMindStart" xml:space="preserve">
     <value>Começar</value>
   </data>
   <data name="BusyMindNext" xml:space="preserve">
-    <value>Feito, próxima</value>
+    <value>Encerrar a pausa</value>
   </data>
   <data name="BusyMindSkip" xml:space="preserve">
     <value>Outra tarefa</value>
@@ -3878,7 +3881,7 @@
     <value>Pronto. Avalie sua tensão abaixo.</value>
   </data>
   <data name="BusyMindAgain" xml:space="preserve">
-    <value>Mais cinco tarefas</value>
+    <value>Mais uma pausa breve</value>
   </data>
   <data name="BusyMindTask01" xml:space="preserve">
     <value>Diga cinco animais que vivem na água</value>
