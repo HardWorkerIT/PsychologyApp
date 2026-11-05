@@ -85,6 +85,49 @@ public sealed class ChatViewModelTests
     }
 
     [Fact]
+    public async Task QuickReplyChoicesCollapseWhileTypingAndReturnWhenTheComposerCloses()
+    {
+        ChatQuickReply chip = new(ChatQuickReplyKinds.Emotion, "Anxiety", "Anxiety");
+        History(Message(ChatRole.Companion, "pick", Now, chip));
+        ChatViewModel viewModel = Create();
+        await viewModel.LoadAsync();
+
+        Assert.True(viewModel.ShowQuickReplies);
+        Assert.False(viewModel.ShowReplyOptionsToggle);
+
+        viewModel.SetComposerFocused(true);
+
+        Assert.False(viewModel.ShowQuickReplies);
+        Assert.True(viewModel.ShowReplyOptionsToggle);
+
+        viewModel.SetComposerFocused(false);
+
+        Assert.True(viewModel.ShowQuickReplies);
+        Assert.False(viewModel.ShowReplyOptionsToggle);
+    }
+
+    [Fact]
+    public async Task TensionScaleCollapsesWhileTypingAndReturnsWhenTheComposerCloses()
+    {
+        History(Message(ChatRole.Companion, "How tense do you feel?", Now, RatingChips()));
+        ChatViewModel viewModel = Create();
+        await viewModel.LoadAsync();
+
+        Assert.True(viewModel.ShowTensionPicker);
+        Assert.False(viewModel.ShowReplyOptionsToggle);
+
+        viewModel.SetComposerFocused(true);
+
+        Assert.False(viewModel.ShowTensionPicker);
+        Assert.True(viewModel.ShowReplyOptionsToggle);
+
+        viewModel.SetComposerFocused(false);
+
+        Assert.True(viewModel.ShowTensionPicker);
+        Assert.False(viewModel.ShowReplyOptionsToggle);
+    }
+
+    [Fact]
     public async Task WithoutASessionANewChatIsStartedAndShown()
     {
         _chat.Setup(c => c.StartNewChatAsync(It.IsAny<CancellationToken>()))

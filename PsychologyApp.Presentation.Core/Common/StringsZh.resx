@@ -21,6 +21,9 @@
   <data name="ChatInputPlaceholder" xml:space="preserve">
     <value>输入消息…</value>
   </data>
+  <data name="ChatShowReplyOptions" xml:space="preserve">
+    <value>显示选项</value>
+  </data>
   <data name="ChatEmptyBody" xml:space="preserve">
     <value>告诉我发生了什么。我会倾听，帮你理清思路，并推荐一个练习。</value>
   </data>

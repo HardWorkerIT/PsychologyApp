@@ -169,7 +169,7 @@
 
             <!-- The tension question is a card of its own on the soft backdrop. -->
             <Border
-                IsVisible="{Binding IsRatingMode}"
+                IsVisible="{Binding ShowTensionPicker}"
                 Margin="20,8,20,0"
                 Padding="0"
                 StrokeThickness="1"
@@ -182,8 +182,36 @@
                     Chosen="OnTensionChosen" />
             </Border>
 
+            <!-- Give the conversation and composer the space while the keyboard is open; one tap restores the choices. -->
+            <Border
+                IsVisible="{Binding ShowReplyOptionsToggle}"
+                Margin="20,4,20,0"
+                Padding="12,5"
+                HorizontalOptions="Start"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 16"
+                BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                SemanticProperties.Description="{Binding ReplyOptionsText}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnReplyOptionsTapped" />
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="4">
+                    <Label
+                        Text="{Binding ReplyOptionsText}"
+                        FontSize="13"
+                        FontFamily="{StaticResource MediumFontFamily}"
+                        TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Text="{mi:Material Icon=KeyboardArrowUp}"
+                        FontSize="18"
+                        TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
             <ScrollView
-                IsVisible="{Binding ShowChips}"
+                IsVisible="{Binding ShowQuickReplies}"
                 Orientation="Horizontal"
                 HorizontalScrollBarVisibility="Never"
                 Margin="0,8,0,0"

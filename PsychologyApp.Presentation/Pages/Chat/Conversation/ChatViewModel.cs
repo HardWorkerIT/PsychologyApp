@@ -58,6 +58,7 @@ public sealed class ChatViewModel : BaseViewModel
     private string _title = string.Empty;
     private string _draftText = string.Empty;
     private bool _isTyping;
+    private bool _isComposerFocused;
     private DateTime? _lastCreatedUtc;
     private bool? _lastWasUser;
 
@@ -142,6 +143,28 @@ public sealed class ChatViewModel : BaseViewModel
 
     /// <summary>The chips are shown unless the question is the tension scale.</summary>
     public bool ShowChips => HasQuickReplies && !IsRatingMode;
+
+    /// <summary>Choices give the conversation more room while the person is typing; they return as soon as the editor closes.</summary>
+    public bool ShowQuickReplies => ShowChips && !_isComposerFocused;
+
+    public bool ShowTensionPicker => IsRatingMode && !_isComposerFocused;
+
+    public bool ShowReplyOptionsToggle => _isComposerFocused && (ShowChips || IsRatingMode);
+
+    public string ReplyOptionsText => AppStrings.ChatShowReplyOptions;
+
+    internal void SetComposerFocused(bool focused)
+    {
+        if (_isComposerFocused == focused)
+        {
+            return;
+        }
+
+        _isComposerFocused = focused;
+        OnPropertyChanged(nameof(ShowQuickReplies));
+        OnPropertyChanged(nameof(ShowTensionPicker));
+        OnPropertyChanged(nameof(ShowReplyOptionsToggle));
+    }
 
     /// <summary>The tension the person gave last in this chat, so the slider can show "was 8 -> now 5" after a practice.</summary>
     public int? RatingReference { get; private set; }
@@ -466,6 +489,9 @@ public sealed class ChatViewModel : BaseViewModel
         OnPropertyChanged(nameof(HasQuickReplies));
         OnPropertyChanged(nameof(IsRatingMode));
         OnPropertyChanged(nameof(ShowChips));
+        OnPropertyChanged(nameof(ShowQuickReplies));
+        OnPropertyChanged(nameof(ShowTensionPicker));
+        OnPropertyChanged(nameof(ShowReplyOptionsToggle));
         OnPropertyChanged(nameof(RatingReference));
     }
 
