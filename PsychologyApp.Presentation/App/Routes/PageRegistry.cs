@@ -58,156 +58,157 @@ using PsychologyApp.Presentation.Shared.Services.Toasts;
 namespace PsychologyApp.Presentation.App.Routes;
 
 /// <summary>
-/// App-layer composition root for full-screen pages (canonical FSD routes).
+/// App-layer composition root for full-screen pages (canonical FSD routes). Inactive feature factories are resolved on demand,
+/// keeping their dependency graphs out of the cold-start path.
 /// </summary>
 public sealed class PageRegistry(
-    IProfilePageFactory profilePageFactory,
-    IJournalPageFactory journalPageFactory,
-    IReviewPageFactory reviewPageFactory,
-    ITestPageFactory testPageFactory,
-    ITechniquePageFactory techniquePageFactory,
-    IClinicalCarePageFactory clinicalCarePageFactory,
-    IReadArticlesPageFactory readArticlesPageFactory,
-    IChatPageFactory chatPageFactory,
-    IPracticeTheoryNavigator practiceTheoryNavigator,
-    IMusicPlayerViewModelFactory musicPlayerViewModelFactory,
-    IQuoteViewModelFactory quoteViewModelFactory,
+    Func<IProfilePageFactory> profilePageFactory,
+    Func<IJournalPageFactory> journalPageFactory,
+    Func<IReviewPageFactory> reviewPageFactory,
+    Func<ITestPageFactory> testPageFactory,
+    Func<ITechniquePageFactory> techniquePageFactory,
+    Func<IClinicalCarePageFactory> clinicalCarePageFactory,
+    Func<IReadArticlesPageFactory> readArticlesPageFactory,
+    Func<IChatPageFactory> chatPageFactory,
+    Func<IPracticeTheoryNavigator> practiceTheoryNavigator,
+    Func<IMusicPlayerViewModelFactory> musicPlayerViewModelFactory,
+    Func<IQuoteViewModelFactory> quoteViewModelFactory,
     IPageViewModelActivator pageViewModelActivator,
     IToastService toastService) : IPageFactory
 {
     public TechniquesPage CreateTechniquesPage() =>
-        WithPressFeedback(techniquePageFactory.CreateTechniquesPage());
+        WithPressFeedback(techniquePageFactory().CreateTechniquesPage());
 
     public TestsListPage CreateTestsListPage() =>
-        WithPressFeedback(testPageFactory.CreateTestsListPage());
+        WithPressFeedback(testPageFactory().CreateTestsListPage());
 
     public TestHistoryPage CreateTestHistoryPage(string testId, string testTitle) =>
-        WithPressFeedback(testPageFactory.CreateTestHistoryPage(testId, testTitle));
+        WithPressFeedback(testPageFactory().CreateTestHistoryPage(testId, testTitle));
 
     public MusicPlayerPage CreateMusicPlayerPage() =>
-        WithPressFeedback(new MusicPlayerPage(musicPlayerViewModelFactory, toastService));
+        WithPressFeedback(new MusicPlayerPage(musicPlayerViewModelFactory(), toastService));
 
     public QuotePage CreateQuotePage() =>
-        WithPressFeedback(new QuotePage(pageViewModelActivator, quoteViewModelFactory));
+        WithPressFeedback(new QuotePage(pageViewModelActivator, quoteViewModelFactory()));
 
     public UserPage CreateUserPage() =>
-        WithPressFeedback(profilePageFactory.CreateUserPage());
+        WithPressFeedback(profilePageFactory().CreateUserPage());
 
     public PracticeHistoryPage CreatePracticeHistoryPage() =>
-        WithPressFeedback(profilePageFactory.CreatePracticeHistoryPage());
+        WithPressFeedback(profilePageFactory().CreatePracticeHistoryPage());
 
     public PsychologyApp.Presentation.Pages.ManageProfile.ProfileInsights.InsightsPage CreateInsightsPage() =>
-        WithPressFeedback(profilePageFactory.CreateInsightsPage());
+        WithPressFeedback(profilePageFactory().CreateInsightsPage());
 
     public JournalPage CreateJournalPage() =>
-        WithPressFeedback(journalPageFactory.CreateJournalPage());
+        WithPressFeedback(journalPageFactory().CreateJournalPage());
 
     public JournalOverviewPage CreateJournalOverviewPage() =>
-        WithPressFeedback(journalPageFactory.CreateJournalOverviewPage());
+        WithPressFeedback(journalPageFactory().CreateJournalOverviewPage());
 
     public JournalTimelinePage CreateJournalTimelinePage() =>
-        WithPressFeedback(journalPageFactory.CreateJournalTimelinePage());
+        WithPressFeedback(journalPageFactory().CreateJournalTimelinePage());
 
     public OptionsPage CreateOptionsPage() =>
-        WithPressFeedback(profilePageFactory.CreateOptionsPage());
+        WithPressFeedback(profilePageFactory().CreateOptionsPage());
 
     public InfoPage CreateInfoPage() =>
-        WithPressFeedback(profilePageFactory.CreateInfoPage());
+        WithPressFeedback(profilePageFactory().CreateInfoPage());
 
     public DonatePage CreateDonatePage() =>
-        WithPressFeedback(profilePageFactory.CreateDonatePage());
+        WithPressFeedback(profilePageFactory().CreateDonatePage());
 
     public FormPage CreateFormPage() =>
-        WithPressFeedback(reviewPageFactory.CreateFormPage());
+        WithPressFeedback(reviewPageFactory().CreateFormPage());
 
     public SettingsPage CreateSettingsPage() =>
-        profilePageFactory.CreateSettingsPage();
+        profilePageFactory().CreateSettingsPage();
 
     public DataBackupPage CreateDataBackupPage() =>
-        WithPressFeedback(profilePageFactory.CreateDataBackupPage());
+        WithPressFeedback(profilePageFactory().CreateDataBackupPage());
 
     public TheoryPage CreateTheoryPage(string content, TechniqueId? techniqueId = null) =>
-        WithPressFeedback(practiceTheoryNavigator.CreateTheoryPage(content, techniqueId));
+        WithPressFeedback(practiceTheoryNavigator().CreateTheoryPage(content, techniqueId));
 
     public FindProblemPage CreateFindProblemPage(string? description, List<string> algorithm, string? comment, Func<Task> startTest, string? testId = null) =>
-        WithPressFeedback(testPageFactory.CreateFindProblemPage(description, algorithm, comment, startTest, testId));
+        WithPressFeedback(testPageFactory().CreateFindProblemPage(description, algorithm, comment, startTest, testId));
 
     public QuestionPage CreateQuestionPage(List<Question> questions, Func<int, string> scoreAnalyzer, bool singleAnswer, TestSessionInfo? session = null) =>
-        WithPressFeedback(testPageFactory.CreateQuestionPage(questions, scoreAnalyzer, singleAnswer, session));
+        WithPressFeedback(testPageFactory().CreateQuestionPage(questions, scoreAnalyzer, singleAnswer, session));
 
     public StandardTestPage CreateStandardTestPage() =>
-        WithPressFeedback(testPageFactory.CreateStandardTestPage());
+        WithPressFeedback(testPageFactory().CreateStandardTestPage());
 
     public AlternativeTestPage CreateAlternativeTestPage() =>
-        WithPressFeedback(testPageFactory.CreateAlternativeTestPage());
+        WithPressFeedback(testPageFactory().CreateAlternativeTestPage());
 
     public TestResultPage CreateTestResultPage(TestResultInfo result) =>
-        WithPressFeedback(testPageFactory.CreateTestResultPage(result));
+        WithPressFeedback(testPageFactory().CreateTestResultPage(result));
 
     public CreatedPage CreateCreatedPage(long techniqueId) =>
-        WithPressFeedback(techniquePageFactory.CreateCreatedPage(techniqueId));
+        WithPressFeedback(techniquePageFactory().CreateCreatedPage(techniqueId));
 
     public DesignerPage CreateDesignerPage(long techniqueId) =>
-        WithPressFeedback(techniquePageFactory.CreateDesignerPage(techniqueId));
+        WithPressFeedback(techniquePageFactory().CreateDesignerPage(techniqueId));
 
     public TechniqueSessionPage CreateTechniqueSessionPage(TechniqueId techniqueId, INavigation hostNavigation) =>
-        WithPressFeedback(techniquePageFactory.CreateTechniqueSessionPage(techniqueId, hostNavigation));
+        WithPressFeedback(techniquePageFactory().CreateTechniqueSessionPage(techniqueId, hostNavigation));
 
     public ContentPage CreateTechniquePage(TechniqueId techniqueId, INavigation hostNavigation) =>
-        techniquePageFactory.HasDialogue(techniqueId)
-            ? WithPressFeedback(techniquePageFactory.CreateTechniqueDialoguePage(techniqueId, hostNavigation))
+        techniquePageFactory().HasDialogue(techniqueId)
+            ? WithPressFeedback(techniquePageFactory().CreateTechniqueDialoguePage(techniqueId, hostNavigation))
             : CreateTechniqueSessionPage(techniqueId, hostNavigation);
 
     public PracticeCompletionPage CreatePracticeCompletionPage(int activeDays, string? completedItemKey = null, long? sessionResultId = null) =>
-        WithPressFeedback(techniquePageFactory.CreatePracticeCompletionPage(activeDays, completedItemKey, sessionResultId));
+        WithPressFeedback(techniquePageFactory().CreatePracticeCompletionPage(activeDays, completedItemKey, sessionResultId));
 
     public ChatListPage CreateChatListPage(INavigation? hostNavigation) =>
-        WithPressFeedback(chatPageFactory.CreateChatListPage(hostNavigation));
+        WithPressFeedback(chatPageFactory().CreateChatListPage(hostNavigation));
 
     public ChatPage CreateChatPage(long? sessionId, INavigation hostNavigation, string? topic = null, string? opener = null) =>
-        WithPressFeedback(chatPageFactory.CreateChatPage(sessionId, hostNavigation, topic, opener));
+        WithPressFeedback(chatPageFactory().CreateChatPage(sessionId, hostNavigation, topic, opener));
 
     public CompanionProfilePage CreateCompanionProfilePage(INavigation hostNavigation) =>
-        WithPressFeedback(chatPageFactory.CreateCompanionProfilePage(hostNavigation));
+        WithPressFeedback(chatPageFactory().CreateCompanionProfilePage(hostNavigation));
 
     public PsychologyApp.Presentation.Pages.Chat.ChatInfo.ChatInfoPage CreateChatInfoPage(long sessionId, INavigation hostNavigation) =>
-        WithPressFeedback(chatPageFactory.CreateChatInfoPage(sessionId, hostNavigation));
+        WithPressFeedback(chatPageFactory().CreateChatInfoPage(sessionId, hostNavigation));
 
     public CrisisHubPage CreateCrisisHubPage() =>
-        WithPressFeedback(clinicalCarePageFactory.CreateCrisisHubPage());
+        WithPressFeedback(clinicalCarePageFactory().CreateCrisisHubPage());
 
     public RiskCheckPage CreateRiskCheckPage(string source) =>
-        WithPressFeedback(clinicalCarePageFactory.CreateRiskCheckPage(source));
+        WithPressFeedback(clinicalCarePageFactory().CreateRiskCheckPage(source));
 
     public SafetyPlanPage CreateSafetyPlanPage() =>
-        WithPressFeedback(clinicalCarePageFactory.CreateSafetyPlanPage());
+        WithPressFeedback(clinicalCarePageFactory().CreateSafetyPlanPage());
 
     public ExposurePage CreateExposurePage() =>
-        WithPressFeedback(clinicalCarePageFactory.CreateExposurePage());
+        WithPressFeedback(clinicalCarePageFactory().CreateExposurePage());
 
     public BodyCheckPage CreateBodyCheckPage() =>
-        WithPressFeedback(clinicalCarePageFactory.CreateBodyCheckPage());
+        WithPressFeedback(clinicalCarePageFactory().CreateBodyCheckPage());
 
     public ArticlesPage CreateArticlesPage() =>
-        WithPressFeedback(readArticlesPageFactory.CreateArticlesPage());
+        WithPressFeedback(readArticlesPageFactory().CreateArticlesPage());
 
     public ForYouPage CreateForYouPage() =>
-        WithPressFeedback(readArticlesPageFactory.CreateForYouPage());
+        WithPressFeedback(readArticlesPageFactory().CreateForYouPage());
 
     public CoursesPage CreateCoursesPage() =>
-        WithPressFeedback(readArticlesPageFactory.CreateCoursesPage());
+        WithPressFeedback(readArticlesPageFactory().CreateCoursesPage());
 
     public ArticleReaderPage CreateArticleReaderPage(string articleId) =>
-        WithPressFeedback(readArticlesPageFactory.CreateArticleReaderPage(articleId));
+        WithPressFeedback(readArticlesPageFactory().CreateArticleReaderPage(articleId));
 
     public CoursePage CreateCoursePage(string courseId) =>
-        WithPressFeedback(readArticlesPageFactory.CreateCoursePage(courseId));
+        WithPressFeedback(readArticlesPageFactory().CreateCoursePage(courseId));
 
     public CourseDayPage CreateCourseDayPage(string courseId, int day) =>
-        WithPressFeedback(readArticlesPageFactory.CreateCourseDayPage(courseId, day));
+        WithPressFeedback(readArticlesPageFactory().CreateCourseDayPage(courseId, day));
 
     public AnchorThoughtsPage CreateAnchorThoughtsPage() =>
-        WithPressFeedback(readArticlesPageFactory.CreateAnchorThoughtsPage());
+        WithPressFeedback(readArticlesPageFactory().CreateAnchorThoughtsPage());
 
     private static TPage WithPressFeedback<TPage>(TPage page) where TPage : ContentPage
     {

@@ -3,6 +3,16 @@ using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Presentation.Platforms.Android;
 #endif
 using PsychologyApp.Presentation.App.Routes;
+using PsychologyApp.Presentation.Features.Chat;
+using PsychologyApp.Presentation.Features.ClinicalCare;
+using PsychologyApp.Presentation.Features.ManageJournal.DependencyInjection;
+using PsychologyApp.Presentation.Features.ManageProfile;
+using PsychologyApp.Presentation.Features.ManageQuotes.DependencyInjection;
+using PsychologyApp.Presentation.Features.PlayMusic.DependencyInjection;
+using PsychologyApp.Presentation.Features.ReadArticles;
+using PsychologyApp.Presentation.Features.RunTechniqueSession;
+using PsychologyApp.Presentation.Features.RunTests;
+using PsychologyApp.Presentation.Features.SendReviewForm;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Common.Localization;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
@@ -30,6 +40,18 @@ public static class SharedPresentationServiceCollectionExtensions
         services.AddSingleton<ChipUsageStore>();
         services.AddSingleton<GlobalExceptionHandler>();
         services.AddSingleton<IPageViewModelActivator, PageViewModelActivator>();
+        // AppShell resolves IPageFactory at startup; defer inactive feature graphs until their pages are requested.
+        services.AddSingleton<Func<IProfilePageFactory>>(sp => () => sp.GetRequiredService<IProfilePageFactory>());
+        services.AddSingleton<Func<IJournalPageFactory>>(sp => () => sp.GetRequiredService<IJournalPageFactory>());
+        services.AddSingleton<Func<IReviewPageFactory>>(sp => () => sp.GetRequiredService<IReviewPageFactory>());
+        services.AddSingleton<Func<ITestPageFactory>>(sp => () => sp.GetRequiredService<ITestPageFactory>());
+        services.AddSingleton<Func<ITechniquePageFactory>>(sp => () => sp.GetRequiredService<ITechniquePageFactory>());
+        services.AddSingleton<Func<IClinicalCarePageFactory>>(sp => () => sp.GetRequiredService<IClinicalCarePageFactory>());
+        services.AddSingleton<Func<IReadArticlesPageFactory>>(sp => () => sp.GetRequiredService<IReadArticlesPageFactory>());
+        services.AddSingleton<Func<IChatPageFactory>>(sp => () => sp.GetRequiredService<IChatPageFactory>());
+        services.AddSingleton<Func<IPracticeTheoryNavigator>>(sp => () => sp.GetRequiredService<IPracticeTheoryNavigator>());
+        services.AddSingleton<Func<IMusicPlayerViewModelFactory>>(sp => () => sp.GetRequiredService<IMusicPlayerViewModelFactory>());
+        services.AddSingleton<Func<IQuoteViewModelFactory>>(sp => () => sp.GetRequiredService<IQuoteViewModelFactory>());
         services.AddSingleton<IPageFactory, PageRegistry>();
         services.AddSingleton<IShellStartupCoordinator, ShellStartupCoordinator>();
         services.AddSingleton<IUserPreferencesStore, MauiUserPreferencesStore>();
