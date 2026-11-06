@@ -16,6 +16,10 @@ public sealed class JournalTimelineViewModel : BaseViewModel
     private readonly INavigationService _navigationService;
     private int _loadGeneration;
     private IReadOnlyList<JournalTimelineDayGroup> _allTimelineGroups = [];
+    private string _loadedLanguageKey = AppStrings.Language;
+    private bool _loaded;
+    private bool _isLoading = true;
+    private bool _isLoadFailed;
 
     public JournalTimelineViewModel(
         JournalMoodLoader journalMoodLoader,
@@ -27,16 +31,20 @@ public sealed class JournalTimelineViewModel : BaseViewModel
         _navigationService = navigationService;
         BindNavigation(navigationService);
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
+        ReloadCommand = new AsyncCommand(ReloadAsync);
         SelectTimelineEntryCommand = new AsyncCommand<object?>(SelectTimelineEntryAsync);
         ShareEntryCommand = new AsyncCommand<object?>(ShareEntryAsync);
-        LoadAsync().FireAndForget();
     }
 
     public string PageTitle => AppStrings.JournalTimelineTitle;
     public string SearchPlaceholder => AppStrings.JournalSearchPlaceholder;
     public string ShareLabel => AppStrings.JournalShareLabel;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     public ICommand BackCommand { get; }
+    public ICommand ReloadCommand { get; }
     public ICommand SelectTimelineEntryCommand { get; }
     public ICommand ShareEntryCommand { get; }
 
@@ -56,7 +64,31 @@ public sealed class JournalTimelineViewModel : BaseViewModel
     }
 
     public bool HasMoodNotes => TimelineItems.Count > 0;
-    public bool ShowMoodNotesEmpty => !HasMoodNotes;
+    public bool ShowMoodNotesEmpty => _loaded && !IsLoading && !IsLoadFailed && !HasMoodNotes;
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                OnPropertyChanged(nameof(ShowMoodNotesEmpty));
+            }
+        }
+    }
+
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set
+        {
+            if (SetProperty(ref _isLoadFailed, value))
+            {
+                OnPropertyChanged(nameof(ShowMoodNotesEmpty));
+            }
+        }
+    }
 
     public string MoodNotesEmpty =>
         string.IsNullOrWhiteSpace(SearchQuery)
@@ -83,8 +115,17 @@ public sealed class JournalTimelineViewModel : BaseViewModel
             nameof(SearchPlaceholder),
             nameof(ShareLabel),
             nameof(MoodNotesEmpty),
+            nameof(LoadingText),
+            nameof(LoadFailedText),
+            nameof(RetryText),
             nameof(HasMoodNotes),
             nameof(ShowMoodNotesEmpty));
+        string languageKey = AppStrings.Language;
+        if (!string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            _loadedLanguageKey = languageKey;
+            LoadAsync().FireAndForget();
+        }
     }
 
     public Task ReloadAsync() => LoadAsync();
@@ -114,6 +155,12 @@ public sealed class JournalTimelineViewModel : BaseViewModel
     private async Task LoadAsync()
     {
         int generation = Interlocked.Increment(ref _loadGeneration);
+        if (!_loaded)
+        {
+            IsLoading = true;
+            IsLoadFailed = false;
+        }
+
         try
         {
             JournalMoodSnapshot snapshot = await _journalMoodLoader.LoadAsync(90);
@@ -124,14 +171,33 @@ public sealed class JournalTimelineViewModel : BaseViewModel
 
             await UiThread.RunAsync(() =>
             {
+                if (generation != Volatile.Read(ref _loadGeneration))
+                {
+                    return;
+                }
+
                 _allTimelineGroups = snapshot.TimelineGroups;
                 ApplySearchFilter();
+                _loaded = true;
+                IsLoading = false;
+                IsLoadFailed = false;
             });
         }
         catch (Exception bestEffortError)
         {
             // Timeline is optional.
             BestEffort.Report(bestEffortError);
+            if (!_loaded)
+            {
+                await UiThread.RunAsync(() =>
+                {
+                    if (generation == Volatile.Read(ref _loadGeneration))
+                    {
+                        IsLoading = false;
+                        IsLoadFailed = true;
+                    }
+                });
+            }
         }
     }
 

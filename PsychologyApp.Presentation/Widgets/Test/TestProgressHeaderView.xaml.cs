@@ -6,11 +6,13 @@ namespace PsychologyApp.Presentation.Widgets.Test;
 public partial class TestProgressHeaderView : ContentView
 {
     private const int BarProgressThreshold = 7;
+    private CancellationTokenSource? _progressAnimation;
 
     public TestProgressHeaderView()
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private void OnLoaded(object? sender, EventArgs e)
@@ -20,6 +22,8 @@ public partial class TestProgressHeaderView : ContentView
             ProgressBarView.Progress = Progress;
         }
     }
+
+    private void OnUnloaded(object? sender, EventArgs e) => CancelProgressAnimation();
 
     public static readonly BindableProperty StepProperty =
         BindableProperty.Create(nameof(Step), typeof(int), typeof(TestProgressHeaderView), 0, propertyChanged: OnProgressModeChanged);
@@ -149,30 +153,66 @@ public partial class TestProgressHeaderView : ContentView
             return;
         }
 
-        if (!UiAnimations.ShouldAnimate(this))
+        if (!IsLoaded || !UiAnimations.ShouldAnimate(this))
         {
+            CancelProgressAnimation();
             ProgressBarView.Progress = target;
             return;
         }
 
-        double start = ProgressBarView.Progress;
-        if (Math.Abs(start - target) < 0.001)
+        _progressAnimation?.Cancel();
+        _progressAnimation?.Dispose();
+        CancellationTokenSource animation = new();
+        _progressAnimation = animation;
+        CancellationToken cancellationToken = animation.Token;
+
+        try
+        {
+            double start = ProgressBarView.Progress;
+            if (Math.Abs(start - target) < 0.001)
+            {
+                return;
+            }
+
+            const uint duration = 200;
+            uint elapsed = 0;
+            const uint stepMs = 16;
+
+            while (elapsed < duration)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                elapsed += stepMs;
+                double t = Math.Min(1.0, elapsed / (double)duration);
+                ProgressBarView.Progress = start + ((target - start) * t);
+                await Task.Delay((int)stepMs, cancellationToken);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            ProgressBarView.Progress = target;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_progressAnimation, animation))
+            {
+                _progressAnimation = null;
+                animation.Dispose();
+            }
+        }
+    }
+
+    private void CancelProgressAnimation()
+    {
+        CancellationTokenSource? animation = _progressAnimation;
+        _progressAnimation = null;
+        if (animation is null)
         {
             return;
         }
 
-        const uint duration = 200;
-        uint elapsed = 0;
-        const uint stepMs = 16;
-
-        while (elapsed < duration)
-        {
-            elapsed += stepMs;
-            double t = Math.Min(1.0, elapsed / (double)duration);
-            ProgressBarView.Progress = start + ((target - start) * t);
-            await Task.Delay((int)stepMs);
-        }
-
-        ProgressBarView.Progress = target;
+        animation.Cancel();
+        animation.Dispose();
     }
 }

@@ -94,6 +94,8 @@ public static class MauiProgram
         static Func<INavigationService> ShellNavigation(IServiceProvider sp) =>
             () => sp.GetRequiredService<Func<NavigationContext, INavigationService>>()(new NavigationContext(null));
         builder.Services.AddSingleton(sp => ActivatorUtilities.CreateInstance<AppShell>(sp, ShellNavigation(sp)));
+        builder.Services.AddSingleton<PsychologyApp.Presentation.Features.ManageProfile.IPersonalDataEraseLifecycle>(
+            sp => sp.GetRequiredService<AppShell>());
         builder.Services.AddSingleton<IShellTabNavigator>(sp =>
             new AppShellTabNavigator(
                 () => sp.GetRequiredService<AppShell>(),

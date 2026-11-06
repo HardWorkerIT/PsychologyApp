@@ -11,12 +11,14 @@ public sealed class BuiltInTechniqueCatalogProvider(Func<string>? languageKeyPro
     {
         cancellationToken.ThrowIfCancellationRequested();
         string languageKey = languageKeyProvider?.Invoke() ?? "ru";
-        IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> definitions = BuiltInTechniqueCatalogRegistry.For(languageKey);
+        return Task.Run<IReadOnlyList<BuiltInTechniqueDefinition>>(() =>
+        {
+            IReadOnlyDictionary<TechniqueId, BuiltInTechniqueDefinition> definitions = BuiltInTechniqueCatalogRegistry.For(languageKey);
+            cancellationToken.ThrowIfCancellationRequested();
 
-        IReadOnlyList<BuiltInTechniqueDefinition> ordered = Enum.GetValues<TechniqueId>()
-            .Select(id => definitions[id])
-            .ToList();
-
-        return Task.FromResult(ordered);
+            return Enum.GetValues<TechniqueId>()
+                .Select(id => definitions[id])
+                .ToList();
+        }, cancellationToken);
     }
 }

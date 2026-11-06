@@ -42,6 +42,34 @@ public static class BackupEncryption
     private const int TagBytes = 16;
     private const int KeyBytes = 32;
 
+    /// <summary>Returns the exact envelope size without allocating the encrypted payload.</summary>
+    internal static long GetEncryptedFileLength(int plaintextByteCount)
+    {
+        if (plaintextByteCount < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(plaintextByteCount));
+        }
+
+        EncryptedBackupEnvelope emptyEnvelope = new()
+        {
+            Format = FormatName,
+            Version = CurrentVersion,
+            Kdf = "PBKDF2-SHA256",
+            Iterations = KdfIterations,
+            Salt = Convert.ToBase64String(new byte[SaltBytes]),
+            Nonce = Convert.ToBase64String(new byte[NonceBytes]),
+            Tag = Convert.ToBase64String(new byte[TagBytes]),
+            Data = string.Empty
+        };
+
+        // Base64 output is ASCII and has a predictable length; the empty envelope supplies the fixed JSON overhead.
+        long base64Length = ((long)plaintextByteCount + 2) / 3 * 4;
+        int envelopeOverhead = JsonSerializer.SerializeToUtf8Bytes(
+            emptyEnvelope,
+            BackupJsonContext.Default.EncryptedBackupEnvelope).Length;
+        return envelopeOverhead + base64Length;
+    }
+
     public static bool IsEncrypted(string file)
     {
         // Cheap check first: an encrypted file is a small JSON object that names its format at the top.

@@ -10,6 +10,7 @@ public partial class TestHistoryViewModel
 {
     private async Task LoadAsync()
     {
+        int generation = Interlocked.Increment(ref _loadGeneration);
         try
         {
             SetInit();
@@ -22,6 +23,11 @@ public partial class TestHistoryViewModel
 
             await UiThread.RunAsync(() =>
             {
+                if (generation != Volatile.Read(ref _loadGeneration))
+                {
+                    return;
+                }
+
                 _testTitle = result.Title;
                 OnPropertyChanged(nameof(TestTitle));
                 HistoryEntries.ReplaceRange(result.Entries);
@@ -41,8 +47,11 @@ public partial class TestHistoryViewModel
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "TestHistoryViewModel load failed for {TestId}.", _testId);
-            await UiThread.RunAsync(SetFail);
+            if (generation == Volatile.Read(ref _loadGeneration))
+            {
+                _logger.LogError(ex, "TestHistoryViewModel load failed for {TestId}.", _testId);
+                await UiThread.RunAsync(SetFail);
+            }
         }
     }
 }

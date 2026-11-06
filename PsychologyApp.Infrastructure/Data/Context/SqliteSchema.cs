@@ -6,7 +6,7 @@ namespace PsychologyApp.Infrastructure.Data.Context;
 
 public static class SqliteSchema
 {
-    public const int CurrentVersion = 15;
+    public const int CurrentVersion = 16;
 
     private static readonly string[] DropTablesSql =
     [
@@ -157,6 +157,12 @@ public static class SqliteSchema
         if (version < 15)
         {
             await ApplyMigrationAsync(connection, 15, MigrateToVersion15Async, cancellationToken).ConfigureAwait(false);
+            version = 15;
+        }
+
+        if (version < 16)
+        {
+            await ApplyMigrationAsync(connection, 16, MigrateToVersion16Async, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -177,6 +183,23 @@ public static class SqliteSchema
     {
         await connection.ExecuteAsync(new CommandDefinition(
             "DROP INDEX IF EXISTS IX_ChatSessions_UpdatedAt_SessionId;",
+            transaction: transaction,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+    }
+
+    /// <summary>Stable per-chat identity lets backup restores distinguish sessions with the same title and timestamp.</summary>
+    private static async Task MigrateToVersion16Async(DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken)
+    {
+        await connection.ExecuteAsync(new CommandDefinition(
+            "ALTER TABLE ChatSessions ADD COLUMN BackupKey TEXT;",
+            transaction: transaction,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        await connection.ExecuteAsync(new CommandDefinition(
+            "UPDATE ChatSessions SET BackupKey = 'legacy:' || SessionId || ':' || CreatedAt WHERE BackupKey IS NULL;",
+            transaction: transaction,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        await connection.ExecuteAsync(new CommandDefinition(
+            "CREATE UNIQUE INDEX IF NOT EXISTS UX_ChatSessions_BackupKey ON ChatSessions(BackupKey);",
             transaction: transaction,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }

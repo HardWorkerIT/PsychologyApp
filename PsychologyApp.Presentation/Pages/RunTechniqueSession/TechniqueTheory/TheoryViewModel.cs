@@ -20,6 +20,8 @@ public partial class TheoryViewModel : BaseViewModel
     private readonly SemaphoreSlim _initGate = new(1, 1);
     private bool _initialized;
     private CancellationTokenSource? _initCts;
+    private string? _loadedLanguageKey;
+    private string _observedLanguageKey = AppStrings.Language;
 
     public bool HasInitialized => _initialized;
 
@@ -73,18 +75,23 @@ public partial class TheoryViewModel : BaseViewModel
         await _initGate.WaitAsync();
         try
         {
-            if (_initialized && !IsFail)
+            if (_initialized
+                && !IsFail
+                && string.Equals(_loadedLanguageKey, AppStrings.Language, StringComparison.Ordinal))
             {
                 return;
             }
 
             _initCts?.Cancel();
             _initCts?.Dispose();
-            _initCts = _settings is null
+            IOptions<AppSettings>? settings = _settings;
+            _initCts = settings is null
                 ? new CancellationTokenSource(TimeSpan.FromSeconds(10))
-                : OperationCancellation.CreateMiddleTimeoutSource(_settings);
-            await LoadTechniqueContentAsync(_techniqueId.Value, _initCts.Token);
-            _initialized = !IsFail;
+                : OperationCancellation.CreateMiddleTimeoutSource(settings);
+            string languageKey = AppStrings.Language;
+            await LoadTechniqueContentAsync(_techniqueId.Value, languageKey, _initCts.Token);
+            _initialized = !IsFail
+                && string.Equals(_loadedLanguageKey, AppStrings.Language, StringComparison.Ordinal);
         }
         finally
         {
@@ -95,6 +102,7 @@ public partial class TheoryViewModel : BaseViewModel
     private async Task ReloadAsync()
     {
         _initialized = false;
+        _initCts?.Cancel();
         await EnsureInitializedAsync();
     }
 
@@ -115,7 +123,10 @@ public partial class TheoryViewModel : BaseViewModel
             nameof(FailedText),
             nameof(RetryText));
 
-        if (_techniqueId is TechniqueId)
+        string languageKey = AppStrings.Language;
+        bool languageChanged = !string.Equals(_observedLanguageKey, languageKey, StringComparison.Ordinal);
+        _observedLanguageKey = languageKey;
+        if (_techniqueId is TechniqueId && languageChanged)
         {
             ReloadAsync().FireAndForget();
             return;
@@ -127,16 +138,28 @@ public partial class TheoryViewModel : BaseViewModel
         }
     }
 
-    private async Task LoadTechniqueContentAsync(TechniqueId techniqueId, CancellationToken cancellationToken)
+    private async Task LoadTechniqueContentAsync(TechniqueId techniqueId, string languageKey, CancellationToken cancellationToken)
     {
         try
         {
             await UiThread.RunAsync(SetInit);
             TechniqueDefinition definition = await _techniqueCatalog.GetAsync(techniqueId, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
+            if (!string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+            {
+                return;
+            }
+
             await UiThread.RunAsync(() =>
             {
+                if (cancellationToken.IsCancellationRequested
+                    || !string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
                 ApplyContent(definition);
+                _loadedLanguageKey = languageKey;
                 SetDone();
             });
         }

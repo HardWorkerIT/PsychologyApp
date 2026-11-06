@@ -1485,6 +1485,9 @@
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>Le fichier est prêt à être partagé</value>
   </data>
+  <data name="DataBackupExportTooLargeToast" xml:space="preserve">
+    <value>La sauvegarde est trop volumineuse. Supprimez une partie de l’historique ou exportez-la sans mot de passe.</value>
+  </data>
   <data name="ErrorLogTitle" xml:space="preserve">
     <value>Journal des erreurs</value>
   </data>

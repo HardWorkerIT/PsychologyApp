@@ -21,7 +21,6 @@ public partial class TechniquesViewModel
         }
 
         await InitializeAsync(showLoadingOverlay: true);
-        _initialized = true;
     }
 
     private async Task InitializeAsync(bool showLoadingOverlay)
@@ -89,18 +88,36 @@ public partial class TechniquesViewModel
                 OnPropertyChanged(nameof(TodayActionText));
                 ApplyUiState(snapshot.UiState);
                 ApplyCustomTechniquesPagingState(snapshot);
+                _hasLoadedList = true;
+                _initialized = true;
                 SetDone();
                 PerfTrace.Measure("Techniques list applied", applyStarted);
             });
         }
         catch (OperationCanceledException)
         {
-            await UiThread.RunAsync(CancelProgress);
+            await UiThread.RunAsync(() =>
+            {
+                if (_hasLoadedList)
+                {
+                    CancelProgress();
+                }
+                else
+                {
+                    SetFail();
+                }
+
+                _initialized = false;
+            });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Practice tab initialization failed.");
-            await UiThread.RunAsync(SetFail);
+            await UiThread.RunAsync(() =>
+            {
+                SetFail();
+                _initialized = false;
+            });
             _toastService.ShortToast(AppStrings.PracticeInitError);
         }
     }

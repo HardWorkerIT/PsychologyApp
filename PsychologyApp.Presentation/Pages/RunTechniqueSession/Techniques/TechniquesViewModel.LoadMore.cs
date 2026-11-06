@@ -14,7 +14,6 @@ public partial class TechniquesViewModel
     private int _customTechniquesOffset;
     private TechniqueGroup? _customTechniquesGroup;
     private bool _isLoadingMoreCustomTechniques;
-    private CancellationTokenSource? _loadMoreCts;
 
     public bool IsLoadingMoreCustomTechniques
     {
@@ -42,17 +41,26 @@ public partial class TechniquesViewModel
             return;
         }
 
-        _loadMoreCts?.Cancel();
-        _loadMoreCts?.Dispose();
-        _loadMoreCts = OperationCancellation.CreateSmallTimeoutSource(_settings);
-        CancellationToken cancellationToken = _loadMoreCts.Token;
-
         IsLoadingMoreCustomTechniques = true;
+        bool initGateHeld = false;
         try
         {
+            // Keep offsets and the visible custom group in sync with reloads and add/remove messages.
+            using CancellationTokenSource timeoutSource = OperationCancellation.CreateSmallTimeoutSource(_settings);
+            CancellationToken cancellationToken = timeoutSource.Token;
+            await _initGate.WaitAsync(cancellationToken);
+            initGateHeld = true;
+
+            if (!_hasMoreCustomTechniques || _customTechniquesGroup is null)
+            {
+                return;
+            }
+
             int pageSize = CatalogListPolicy.CustomTechniquesPageSize;
+            int requestedOffset = _customTechniquesOffset;
+            TechniqueGroup requestedGroup = _customTechniquesGroup;
             List<TechniqueDTO> page = (await _techniqueService.GetTechniquesPageAsync(
-                _customTechniquesOffset,
+                requestedOffset,
                 pageSize + 1,
                 cancellationToken)).ToList();
             bool hasMore = page.Count > pageSize;
@@ -63,14 +71,15 @@ public partial class TechniquesViewModel
 
             await UiThread.RunAsync(() =>
             {
-                if (_customTechniquesGroup is null)
+                if (!ReferenceEquals(_customTechniquesGroup, requestedGroup)
+                    || _customTechniquesOffset != requestedOffset)
                 {
                     return;
                 }
 
                 foreach (TechniqueItem item in items)
                 {
-                    _customTechniquesGroup.Add(item);
+                    requestedGroup.Add(item);
                 }
 
                 _customTechniquesOffset += items.Count;
@@ -87,6 +96,11 @@ public partial class TechniquesViewModel
         }
         finally
         {
+            if (initGateHeld)
+            {
+                _initGate.Release();
+            }
+
             IsLoadingMoreCustomTechniques = false;
         }
     }

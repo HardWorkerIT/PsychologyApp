@@ -23,12 +23,12 @@ public sealed class SqliteDatabaseInitializer(IDbConnectionFactory connectionFac
             SqliteConnection.ClearAllPools();
             SqliteSchema.DeleteDatabaseFiles();
 
+            await EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
+
             if (whileExclusive is not null)
             {
                 await whileExclusive().ConfigureAwait(false);
             }
-
-            await EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
         }, cancellationToken);
 
     public Task ApplyMigrationsForAppVersionAsync(string appVersion, CancellationToken cancellationToken = default)

@@ -27,7 +27,10 @@ public partial class TestsListViewModel
             nameof(FailedText),
             nameof(RetryText));
 
-        if (_initialized)
+        string languageKey = AppStrings.Language;
+        bool languageChanged = !string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal);
+        _loadedLanguageKey = languageKey;
+        if (languageChanged && _initialized)
         {
             ReloadAsync().FireAndForget();
         }

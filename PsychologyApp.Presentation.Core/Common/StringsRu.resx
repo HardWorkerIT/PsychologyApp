@@ -1485,6 +1485,9 @@
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>Файл готов к отправке</value>
   </data>
+  <data name="DataBackupExportTooLargeToast" xml:space="preserve">
+    <value>Резервная копия слишком велика. Удалите часть истории или попробуйте экспорт без пароля.</value>
+  </data>
   <data name="ErrorLogTitle" xml:space="preserve">
     <value>Журнал ошибок</value>
   </data>

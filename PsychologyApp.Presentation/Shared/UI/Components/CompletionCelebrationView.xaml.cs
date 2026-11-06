@@ -9,12 +9,14 @@ public partial class CompletionCelebrationView : ContentView
     private VisualElement? _iconHalo;
     private ConfettiBurstView? _confetti;
     private bool _milestonePulseStarted;
+    private CancellationTokenSource? _milestoneLifetime;
 
     public CompletionCelebrationView()
     {
         InitializeComponent();
         IconName = MaterialIconNames.CheckCircle;
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     public static readonly BindableProperty TitleTextProperty =
@@ -141,14 +143,13 @@ public partial class CompletionCelebrationView : ContentView
     {
         if (bindable is CompletionCelebrationView view && newValue is true)
         {
-            view.TryPulseMilestoneAsync().FireAndForget();
+            view.StartMilestonePulse();
         }
     }
 
-    private void OnLoaded(object? sender, EventArgs e) =>
-        TryPulseMilestoneAsync().FireAndForget();
+    private void OnLoaded(object? sender, EventArgs e) => StartMilestonePulse();
 
-    private async Task TryPulseMilestoneAsync()
+    private void StartMilestonePulse()
     {
         if (!IsMilestone || _milestonePulseStarted || !IsLoaded)
         {
@@ -156,15 +157,46 @@ public partial class CompletionCelebrationView : ContentView
         }
 
         _milestonePulseStarted = true;
-        await Task.Delay((int)UiAnimations.MicroDuration);
-        MilestoneCelebrationFeedback.Play();
-        VisualElement? target = _iconHalo
-            ?? GetTemplateChild("IconHalo") as VisualElement
-            ?? this;
-        ConfettiBurstView? confetti = _confetti
-            ?? GetTemplateChild("Confetti") as ConfettiBurstView;
-        await Task.WhenAll(
-            UiAnimations.SafePulseAsync(target),
-            confetti?.PlayAsync() ?? Task.CompletedTask);
+        CancellationTokenSource lifetime = new();
+        _milestoneLifetime = lifetime;
+        TryPulseMilestoneAsync(lifetime).FireAndForget();
+    }
+
+    private async Task TryPulseMilestoneAsync(CancellationTokenSource lifetime)
+    {
+        CancellationToken cancellationToken = lifetime.Token;
+        try
+        {
+            await Task.Delay((int)UiAnimations.MicroDuration, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            MilestoneCelebrationFeedback.Play();
+            VisualElement target = _iconHalo
+                ?? GetTemplateChild("IconHalo") as VisualElement
+                ?? this;
+            ConfettiBurstView? confetti = _confetti
+                ?? GetTemplateChild("Confetti") as ConfettiBurstView;
+            await Task.WhenAll(
+                UiAnimations.SafePulseAsync(target, cancellationToken),
+                confetti?.PlayAsync() ?? Task.CompletedTask);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_milestoneLifetime, lifetime))
+            {
+                _milestoneLifetime = null;
+            }
+
+            lifetime.Dispose();
+        }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        _milestoneLifetime?.Cancel();
+        (_iconHalo ?? GetTemplateChild("IconHalo") as VisualElement ?? this).CancelAnimations();
+        (_confetti ?? GetTemplateChild("Confetti") as ConfettiBurstView)?.Stop();
     }
 }

@@ -260,7 +260,8 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         // Conservatively suppress the practice on any explicit harm mention, including a negated one; this is not crisis assessment.
         bool mentionsUnsafeAction = UnsafeActionUrgeTerms.Any(term =>
-            normalized.Contains(term, StringComparison.Ordinal) || Matches(term, respectNegation: false));
+            normalized.Contains(term, StringComparison.Ordinal) || Matches(term, respectNegation: false)) ||
+            UtteranceText.MentionsHarmToAnother(tokens);
         bool hasDelayableActionUrge = DelayableActionUrgeTerms.Any(term => Matches(term, respectNegation: true)) &&
             !mentionsUnsafeAction;
         bool hasBody = BodyTerms.Any(term => Matches(term, respectNegation: true));

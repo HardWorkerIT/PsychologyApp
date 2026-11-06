@@ -171,16 +171,18 @@ public partial class MusicPlayerPage : ContentPage
         StopPositionTimer();
         _positionTimer = Dispatcher.CreateTimer();
         _positionTimer.Interval = TimeSpan.FromMilliseconds(500);
-        _positionTimer.Tick += (_, _) =>
-        {
-            if (!_playbackService.IsPlaying || _isSeeking)
-            {
-                return;
-            }
-
-            _viewModel.UpdatePlaybackProgressFromService();
-        };
+        _positionTimer.Tick += OnPositionTimerTick;
         _positionTimer.Start();
+    }
+
+    private void OnPositionTimerTick(object? sender, EventArgs e)
+    {
+        if (!_playbackService.IsPlaying || _isSeeking)
+        {
+            return;
+        }
+
+        _viewModel.UpdatePlaybackProgressFromService();
     }
 
     private void StopPositionTimer()
@@ -191,6 +193,7 @@ public partial class MusicPlayerPage : ContentPage
         }
 
         _positionTimer.Stop();
+        _positionTimer.Tick -= OnPositionTimerTick;
         _positionTimer = null;
     }
 }

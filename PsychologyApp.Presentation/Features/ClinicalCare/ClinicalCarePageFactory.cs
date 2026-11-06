@@ -1,5 +1,6 @@
 using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Application.Practice;
 using PsychologyApp.Application.Exposure;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Presentation.App.Providers;
@@ -87,10 +88,11 @@ public sealed class BodyCheckViewModelFactory(
     IBodyService bodyService,
     IDialogService dialogs,
     IDatabaseReadySignal databaseReady,
-    Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IBodyCheckViewModelFactory
+    Func<NavigationContext, INavigationService> navigationServiceFactory,
+    ITechniqueCatalogService? techniqueCatalog = null) : ViewModelFactoryBase, IBodyCheckViewModelFactory
 {
     public BodyCheckViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page), bodyService, dialogs, databaseReady);
+        new(ResolveNavigation(navigationServiceFactory, page), bodyService, dialogs, databaseReady, techniqueCatalog);
 }
 
 public sealed class ClinicalCarePageFactory(

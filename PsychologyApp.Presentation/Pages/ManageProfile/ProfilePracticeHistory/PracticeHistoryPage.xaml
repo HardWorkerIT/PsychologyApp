@@ -26,6 +26,16 @@
                     IsVisible="{Binding ShowEmpty}"
                     BodyText="{Binding EmptyText}"
                     IconName="History" />
+                <VerticalStackLayout IsVisible="{Binding ShowInitialLoading}" HorizontalOptions="Center" Spacing="10" Padding="0,16">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" />
+                    <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+                <ui:EmptyStateView
+                    IsVisible="{Binding ShowLoadError}"
+                    BodyText="{Binding LoadErrorText}"
+                    ActionText="{Binding RetryText}"
+                    ActionCommand="{Binding RetryCommand}"
+                    IconName="Refresh" />
             </VerticalStackLayout>
         </CollectionView.Header>
         <CollectionView.ItemsLayout>

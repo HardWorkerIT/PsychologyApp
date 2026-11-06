@@ -22,7 +22,8 @@
     <Grid RowDefinitions="Auto,*" Margin="{StaticResource LayoutPageMarginThickness}">
         <ui:NavigationBarSimpleView Grid.Row="0" TitleText="{Binding PageTitle}" BackCommand="{Binding BackCommand}" />
 
-        <ScrollView Grid.Row="1" IsVisible="{Binding HasLoaded}" VerticalScrollBarVisibility="Never">
+        <Grid Grid.Row="1">
+        <ScrollView IsVisible="{Binding HasLoaded}" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="0,16,0,24">
 
                 <!-- Who this chat is, as the AI psychologist's page begins: its state's tile (as in the chat list), its name and dates. -->
@@ -116,5 +117,14 @@
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
+            <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                               HorizontalOptions="Center" VerticalOptions="Center"
+                               SemanticProperties.Description="{Binding LoadingText}" />
+            <ui:RetryView IsVisible="{Binding IsLoadFailed}"
+                          FailedText="{Binding LoadFailedText}"
+                          RetryText="{Binding RetryText}"
+                          RetryCommand="{Binding ReloadCommand}"
+                          HorizontalOptions="Center" VerticalOptions="Center" />
+        </Grid>
     </Grid>
 </ContentPage>

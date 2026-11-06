@@ -16,9 +16,10 @@ public sealed class LanguageContentReloader : ILanguageContentReloader
     private readonly CachedTestCatalogProvider _testCatalogCache;
     private readonly CachedTechniqueCatalogProvider _techniqueCatalogCache;
     private readonly ITechniqueCatalogService _techniqueCatalogService;
-    private readonly SemaphoreSlim _gate = new(1, 1);
+    private readonly object _sync = new();
     private string _lastPersistedLanguage = UserPreferences.DefaultLanguage;
     private Task _reloadTask = Task.CompletedTask;
+    private bool _isPreparingForErase;
 
     public LanguageContentReloader(
         IQuotService quotService,
@@ -38,34 +39,85 @@ public sealed class LanguageContentReloader : ILanguageContentReloader
         _preferences.Changed += OnPreferencesChanged;
     }
 
-    public Task EnsureReloadedAsync() => _reloadTask;
+    public Task EnsureReloadedAsync()
+    {
+        lock (_sync)
+        {
+            return _reloadTask;
+        }
+    }
 
     private void OnPreferencesChanged()
     {
-        string persistedLanguage = _preferences.PersistedLanguage;
-        if (string.Equals(_lastPersistedLanguage, persistedLanguage, StringComparison.OrdinalIgnoreCase))
+        lock (_sync)
         {
-            return;
-        }
+            if (_isPreparingForErase)
+            {
+                return;
+            }
 
-        _lastPersistedLanguage = persistedLanguage;
-        _quotCache.Invalidate();
-        _testCatalogCache.Invalidate();
-        _techniqueCatalogCache.Invalidate();
-        _techniqueCatalogService.Invalidate();
-        _reloadTask = ReseedQuotesAsync();
+            string persistedLanguage = _preferences.PersistedLanguage;
+            if (string.Equals(_lastPersistedLanguage, persistedLanguage, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            _lastPersistedLanguage = persistedLanguage;
+            _quotCache.Invalidate();
+            _testCatalogCache.Invalidate();
+            _techniqueCatalogCache.Invalidate();
+            _techniqueCatalogService.Invalidate();
+            _reloadTask = QueueReseedAsync(_reloadTask);
+        }
     }
 
-    private async Task ReseedQuotesAsync()
+    /// <summary>Stops new reseeds and waits for every already queued language reload before the database is replaced.</summary>
+    public async Task PrepareForEraseAsync()
     {
-        await _gate.WaitAsync();
+        Task reload;
+        lock (_sync)
+        {
+            _isPreparingForErase = true;
+            reload = _reloadTask;
+        }
+
         try
         {
-            await _quotService.ReseedFeedAsync(DefaultQuoteFeedCount);
+            await reload.ConfigureAwait(false);
         }
-        finally
+        catch
         {
-            _gate.Release();
+            // A completed failed reseed owns no further database work; it must not prevent a full data erase.
         }
+
+        await _quotService.PrepareForEraseAsync().ConfigureAwait(false);
+    }
+
+    public void CompleteErase()
+    {
+        _quotService.CompleteErase();
+        lock (_sync)
+        {
+            _lastPersistedLanguage = _preferences.PersistedLanguage;
+            _quotCache.Invalidate();
+            _testCatalogCache.Invalidate();
+            _techniqueCatalogCache.Invalidate();
+            _techniqueCatalogService.Invalidate();
+            _isPreparingForErase = false;
+        }
+    }
+
+    private async Task QueueReseedAsync(Task previous)
+    {
+        try
+        {
+            await previous.ConfigureAwait(false);
+        }
+        catch
+        {
+            // Keep later language selections usable after one failed background reload.
+        }
+
+        await _quotService.ReseedFeedAsync(DefaultQuoteFeedCount).ConfigureAwait(false);
     }
 }

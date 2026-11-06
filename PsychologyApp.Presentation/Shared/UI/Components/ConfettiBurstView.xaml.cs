@@ -21,11 +21,13 @@ public partial class ConfettiBurstView : ContentView
 
     private readonly List<BoxView> _pieces = [];
     private bool _isPlaying;
+    private CancellationTokenSource? _playLifetime;
 
     public ConfettiBurstView()
     {
         InitializeComponent();
         BuildPieces();
+        Unloaded += OnUnloaded;
     }
 
     private void BuildPieces()
@@ -58,10 +60,15 @@ public partial class ConfettiBurstView : ContentView
         }
 
         _isPlaying = true;
+        CancellationTokenSource lifetime = new();
+        _playLifetime = lifetime;
         try
         {
             Random random = Random.Shared;
-            await Task.WhenAll(_pieces.Select(piece => AnimatePieceAsync(piece, random)));
+            await Task.WhenAll(_pieces.Select(piece => AnimatePieceAsync(piece, random, lifetime.Token)));
+        }
+        catch (OperationCanceledException) when (lifetime.IsCancellationRequested)
+        {
         }
         catch (Exception ex)
         {
@@ -70,11 +77,30 @@ public partial class ConfettiBurstView : ContentView
         finally
         {
             _isPlaying = false;
+            if (ReferenceEquals(_playLifetime, lifetime))
+            {
+                _playLifetime = null;
+            }
+
+            lifetime.Dispose();
         }
     }
 
-    private static async Task AnimatePieceAsync(BoxView piece, Random random)
+    private void OnUnloaded(object? sender, EventArgs e) => Stop();
+
+    public void Stop()
     {
+        _playLifetime?.Cancel();
+        foreach (BoxView piece in _pieces)
+        {
+            piece.AbortAnimation("Confetti");
+            piece.Opacity = 0;
+        }
+    }
+
+    private static async Task AnimatePieceAsync(BoxView piece, Random random, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         double dx = (random.NextDouble() * 2 - 1) * 100;
         double rise = -(20 + random.NextDouble() * 50);
         double fall = rise + 110 + random.NextDouble() * 90;
@@ -89,8 +115,10 @@ public partial class ConfettiBurstView : ContentView
 
         if (delayMs > 0)
         {
-            await Task.Delay(delayMs);
+            await Task.Delay(delayMs, cancellationToken);
         }
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -116,7 +144,7 @@ public partial class ConfettiBurstView : ContentView
             easing: Easing.Linear,
             finished: (_, _) => tcs.TrySetResult(true));
 
-        await tcs.Task;
+        await tcs.Task.WaitAsync(cancellationToken);
         piece.Opacity = 0;
     }
 }

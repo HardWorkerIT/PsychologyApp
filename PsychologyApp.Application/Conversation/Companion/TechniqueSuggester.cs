@@ -25,7 +25,9 @@ public static class TechniqueSuggester
     public static IReadOnlyList<TechniqueId> Suggest(SituationAnalysis analysis) => [.. Recommend(analysis).Select(item => item.Technique)];
 
     public static IReadOnlyList<TechniqueRecommendation> Recommend(SituationAnalysis analysis) => analysis.IsFlashback
-        ? [new(TechniqueId.Flashback, TechniqueSuggestionReasonCode.Flashback), new(TechniqueId.Grounding, TechniqueSuggestionReasonCode.Flashback)]
+        ? analysis.AvoidsBodyFocus
+            ? Pair(TechniqueSuggestionReasonCode.Flashback, TechniqueId.SensoryComfort, TechniqueId.ThoughtDefusion)
+            : [new(TechniqueId.Flashback, TechniqueSuggestionReasonCode.Flashback), new(TechniqueId.Grounding, TechniqueSuggestionReasonCode.Flashback)]
         : analysis.Emotion switch
     {
         CompanionEmotion.Panic when analysis.HasBodySymptoms || analysis.AvoidsBodyFocus => Pair(TechniqueSuggestionReasonCode.Panic, TechniqueId.Grounding, TechniqueId.SensoryComfort),
@@ -35,6 +37,7 @@ public static class TechniqueSuggester
         CompanionEmotion.Anxiety => Pair(TechniqueSuggestionReasonCode.Anxiety, TechniqueId.CheckTheFacts, TechniqueId.ProblemSolving),
         CompanionEmotion.Overthinking => Pair(TechniqueSuggestionReasonCode.Overthinking, TechniqueId.ThoughtDefusion, TechniqueId.WorryTime),
         CompanionEmotion.Anger when analysis.HasBodySymptoms => Pair(TechniqueSuggestionReasonCode.Anger, TechniqueId.Grounding, analysis.AvoidsBodyFocus ? TechniqueId.SensoryComfort : TechniqueId.MuscleRelax),
+        CompanionEmotion.Anger when analysis.AvoidsBodyFocus => Pair(TechniqueSuggestionReasonCode.Anger, TechniqueId.CheckTheFacts, TechniqueId.ProblemSolving),
         CompanionEmotion.Anger when analysis.HasDelayableActionUrge && !analysis.HasBodySymptoms && !analysis.IsIntense && !analysis.MentionsTrauma && !analysis.HasLoss && !analysis.EmotionAttributedToOther => Pair(TechniqueSuggestionReasonCode.Anger, TechniqueId.UrgeSurfing, TechniqueId.CheckTheFacts),
         CompanionEmotion.Anger => Pair(TechniqueSuggestionReasonCode.Anger, TechniqueId.PauseBeforeReaction, TechniqueId.CheckTheFacts),
         CompanionEmotion.Resentment when CanSuggestDistancedSelfTalk(analysis) => Pair(TechniqueSuggestionReasonCode.Resentment, TechniqueId.CheckTheFacts, TechniqueId.Observer),

@@ -768,6 +768,7 @@ public static partial class AppStrings
     public static string AppLockPromptSubtitle => R(nameof(AppLockPromptSubtitle));
     public static string AppLockEnableTitle => R(nameof(AppLockEnableTitle));
     public static string DataBackupExportedToast => R(nameof(DataBackupExportedToast));
+    public static string DataBackupExportTooLargeToast => R(nameof(DataBackupExportTooLargeToast));
     public static string DataBackupImportedToast(int moods, int tests, int completions, int chats, int skipped = 0) => skipped > 0
         ? F("DataBackupImportedToast.1", moods, tests, completions, chats, skipped)
         : F("DataBackupImportedToast.2", moods, tests, completions, chats);

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using PsychologyApp.Application.Abstractions.Persistence;
+using PsychologyApp.Application.Chat;
 
 namespace PsychologyApp.Presentation.Features.ManageProfile;
 
@@ -8,39 +9,92 @@ namespace PsychologyApp.Presentation.Features.ManageProfile;
 /// quotes), settings are cleared, the logs are deleted, and so are the app's own files in the cache: an exported journal,
 /// backup, summary or error log waiting to be shared, and a picked backup the file picker copied there. The rest of the cache is
 /// left alone: it holds the icon fonts MAUI unpacks there, the system's compiled code and downloaded music, none of it the
-/// person's. The database key stays: it protects the new, empty file just as well. The app then restarts, so no screen or
-/// service keeps an old copy in memory.
+/// person's. The database key stays: it protects the new, empty file just as well. Android starts a fresh process; on iOS and
+/// Mac Catalyst, the app replaces its screens and in-memory preferences before returning to onboarding.
 /// </summary>
-public sealed class PersonalDataEraser(IDatabaseInitializer database, ILogger<PersonalDataEraser> logger) : IPersonalDataEraser
+public sealed class PersonalDataEraser(
+    IDatabaseInitializer database,
+    IPersonalDataEraseLifecycle eraseLifecycle,
+    IChatService chat,
+    ILogger<PersonalDataEraser> logger) : IPersonalDataEraser
 {
-    // The rest runs while the database is held for this alone: the restart ends the process there, so a save that was already
-    // queued (a note being autosaved, a chat turn) never reaches the new, empty database.
-    public Task EraseAllAsync(CancellationToken cancellationToken = default) =>
-        database.RecreateDatabaseAsync(() =>
+    // Screens are detached before the database operation on platforms that cannot restart the process. Android exits inside the
+    // exclusive callback, before a queued write can reach the replacement database.
+    public async Task EraseAllAsync(CancellationToken cancellationToken = default)
+    {
+        try
         {
-            DeleteFilesAndSettings();
-            Restart();
-            return Task.CompletedTask;
-        }, cancellationToken);
+            await eraseLifecycle.PrepareForEraseAsync();
+            if (chat is IChatEraseLifecycle chatEraseLifecycle)
+            {
+                await chatEraseLifecycle.PrepareForEraseAsync();
+            }
+
+            await database.RecreateDatabaseAsync(() =>
+            {
+                DeleteFilesAndSettings();
+#if ANDROID
+                Restart();
+#endif
+                return Task.CompletedTask;
+            }, cancellationToken);
+        }
+        finally
+        {
+            if (chat is IChatEraseLifecycle chatEraseLifecycle)
+            {
+                chatEraseLifecycle.CompleteErase();
+            }
+
+            await eraseLifecycle.CompleteEraseAsync();
+        }
+    }
 
     private void DeleteFilesAndSettings()
     {
-        DeleteQuietly(Path.Combine(FileSystem.AppDataDirectory, "logs"));
-        DeleteOwnCacheFiles();
+        bool allFilesDeleted = DeleteQuietly(Path.Combine(FileSystem.AppDataDirectory, "logs"));
+        allFilesDeleted &= DeleteOwnCacheFiles();
 
         ClearPreferences();
-        logger.LogInformation("All personal data was deleted; restarting");
-    }
-
-    private void DeleteOwnCacheFiles()
-    {
-        if (!Directory.Exists(FileSystem.CacheDirectory))
+        if (!allFilesDeleted)
         {
-            return;
+            throw new IOException("Some app-owned files could not be deleted.");
         }
 
+        logger.LogInformation("All personal data was deleted");
+    }
+
+    private bool DeleteOwnCacheFiles()
+    {
+        string cacheDirectory = FileSystem.CacheDirectory;
+        FileAttributes rootAttributes;
+        try
+        {
+            rootAttributes = File.GetAttributes(cacheDirectory);
+        }
+        catch (FileNotFoundException)
+        {
+            return true;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return true;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            logger.LogWarning(ex, "The cache directory could not be inspected while erasing the data");
+            return false;
+        }
+
+        if ((rootAttributes & FileAttributes.Directory) == 0 || (rootAttributes & FileAttributes.ReparsePoint) != 0)
+        {
+            logger.LogWarning("The cache root is not a regular app directory; its contents were left untouched");
+            return false;
+        }
+
+        bool complete = true;
         Stack<string> directories = new();
-        directories.Push(FileSystem.CacheDirectory);
+        directories.Push(cacheDirectory);
         while (directories.Count > 0)
         {
             string directory = directories.Pop();
@@ -51,6 +105,7 @@ public sealed class PersonalDataEraser(IDatabaseInitializer database, ILogger<Pe
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
+                complete = false;
                 logger.LogWarning(ex, "A cache directory could not be scanned while erasing the data");
                 continue;
             }
@@ -71,36 +126,53 @@ public sealed class PersonalDataEraser(IDatabaseInitializer database, ILogger<Pe
                         continue;
                     }
 
-                    if (SharedFileNames.IsOwn(Path.GetFileName(entry)))
+                    if (SharedFileNames.IsOwn(Path.GetFileName(entry)) && !DeleteQuietly(entry))
                     {
-                        DeleteQuietly(entry);
+                        complete = false;
                     }
                 }
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                 {
+                    complete = false;
                     logger.LogWarning(ex, "A cache entry could not be inspected while erasing the data");
                 }
             }
         }
+
+        return complete;
     }
 
-    // A file that cannot be removed must not stop the rest: the database, which holds what matters, is already gone.
-    private void DeleteQuietly(string path)
+    // Keep trying the remaining files after a failure; the caller reports incomplete erasure after cleanup finishes.
+    private bool DeleteQuietly(string path)
     {
         try
         {
-            if (Directory.Exists(path))
+            FileAttributes attributes = File.GetAttributes(path);
+            bool isDirectory = (attributes & FileAttributes.Directory) != 0;
+            bool isLink = (attributes & FileAttributes.ReparsePoint) != 0;
+            if (isDirectory)
             {
-                Directory.Delete(path, recursive: true);
+                Directory.Delete(path, recursive: !isLink);
             }
-            else if (File.Exists(path))
+            else
             {
                 File.Delete(path);
             }
+
+            return true;
+        }
+        catch (FileNotFoundException)
+        {
+            return true;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             logger.LogWarning(ex, "A file could not be deleted while erasing the data");
+            return false;
         }
     }
 
@@ -112,10 +184,14 @@ public sealed class PersonalDataEraser(IDatabaseInitializer database, ILogger<Pe
     {
 #if ANDROID
         global::Android.Content.Context context = Platform.AppContext;
-        context.GetSharedPreferences($"{context.PackageName}_preferences", global::Android.Content.FileCreationMode.Private)?
+        bool committed = context.GetSharedPreferences($"{context.PackageName}_preferences", global::Android.Content.FileCreationMode.Private)?
             .Edit()?
             .Clear()?
-            .Commit();
+            .Commit() ?? false;
+        if (!committed)
+        {
+            throw new InvalidOperationException("App preferences could not be cleared from disk.");
+        }
 #else
         Preferences.Default.Clear();
 #endif

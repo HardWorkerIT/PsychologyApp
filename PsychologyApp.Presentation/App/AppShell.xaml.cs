@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Devices;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
+using PsychologyApp.Presentation.Shared.Common.Localization;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
 using PsychologyApp.Presentation.Shared.Navigation;
@@ -16,7 +17,7 @@ using PsychologyApp.Presentation.App.Routes;
 
 namespace PsychologyApp.Presentation.App;
 
-public partial class AppShell : Shell
+public partial class AppShell : Shell, PsychologyApp.Presentation.Features.ManageProfile.IPersonalDataEraseLifecycle
 {
     public ShellContent PracticeShellTab => PracticeTab;
     public ShellContent TestsTab => DetectorTab;
@@ -39,10 +40,12 @@ public partial class AppShell : Shell
     private readonly IChatReminderCoordinator _chatReminderCoordinator;
     private readonly ILogger<AppShell> _logger;
     private readonly IUserPreferencesStore _preferences;
+    private readonly LanguageContentReloader _languageContentReloader;
     private readonly Func<INavigationService> _navigationServiceFactory;
     private readonly PsychologyApp.Presentation.Features.ManageProfile.AppLockCoordinator _appLock;
     private readonly bool[] _tabsMaterialized = new bool[4];
     private bool _lazyTabsReady;
+    private bool _isPreparingDataErase;
 
     public AppShell(
         IPageFactory pageFactory,
@@ -53,12 +56,14 @@ public partial class AppShell : Shell
         IChatReminderCoordinator chatReminderCoordinator,
         ILogger<AppShell> logger,
         IUserPreferencesStore preferences,
+        LanguageContentReloader languageContentReloader,
         Func<INavigationService> navigationServiceFactory,
         PsychologyApp.Presentation.Features.ManageProfile.AppLockCoordinator appLock)
     {
         _navigationServiceFactory = navigationServiceFactory;
         _appLock = appLock;
         _preferences = preferences;
+        _languageContentReloader = languageContentReloader;
         _pageFactory = pageFactory;
         _startupCoordinator = startupCoordinator;
         _practiceReminderCoordinator = practiceReminderCoordinator;
@@ -95,7 +100,7 @@ public partial class AppShell : Shell
     private void OnShellNavigating(object? sender, ShellNavigatingEventArgs e)
     {
         PerfTrace.Mark($"Navigating {e.Target?.Location}");
-        if (TryResolveTabIndex(e.Target, out int index))
+        if (!_isPreparingDataErase && TryResolveTabIndex(e.Target, out int index))
         {
             EnsureTabMaterialized(index);
         }
@@ -104,6 +109,11 @@ public partial class AppShell : Shell
     private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
     {
         PerfTrace.Mark($"Navigated {e.Current?.Location}");
+        if (_isPreparingDataErase)
+        {
+            return;
+        }
+
         UpdateTabIcons();
         EnsureCurrentTabMaterialized();
 
@@ -291,6 +301,11 @@ public partial class AppShell : Shell
 
     private void EnsureCurrentTabMaterialized()
     {
+        if (_isPreparingDataErase)
+        {
+            return;
+        }
+
         if (GetCurrentTabIndex() is int index)
         {
             EnsureTabMaterialized(index);
@@ -374,7 +389,7 @@ public partial class AppShell : Shell
 
     private void EnsureTabMaterialized(int index)
     {
-        if (index < 0 || index >= _tabsMaterialized.Length || _tabsMaterialized[index])
+        if (_isPreparingDataErase || index < 0 || index >= _tabsMaterialized.Length || _tabsMaterialized[index])
         {
             return;
         }
@@ -495,6 +510,57 @@ public partial class AppShell : Shell
     /// <summary>The safety gate is on screen: a tap on a reminder or the widget must not move the person away from it.</summary>
     internal static bool IsSafetyPageShown =>
         Current?.CurrentPage is Pages.ClinicalCare.CrisisHub.CrisisHubPage or Pages.ClinicalCare.RiskCheck.RiskCheckPage;
+
+    public async Task PrepareForEraseAsync()
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            _isPreparingDataErase = true;
+            IsEnabled = false;
+            FlyoutIsPresented = false;
+
+            if (CurrentPage?.Navigation is INavigation navigation && navigation.NavigationStack.Count > 1)
+            {
+                await navigation.PopToRootAsync(false);
+            }
+
+            for (int index = 0; index < _tabsMaterialized.Length; index++)
+            {
+                ShellContent tab = GetTabShellContent(index);
+                if (tab.Content is Page tabRoot
+                    && tabRoot.Navigation is INavigation tabNavigation
+                    && tabNavigation.NavigationStack.Count > 1)
+                {
+                    await tabNavigation.PopToRootAsync(false);
+                }
+
+                tab.Content = new ContentPage
+                {
+                    BackgroundColor = Colors.Transparent,
+                    Title = tab.Title
+                };
+                _tabsMaterialized[index] = false;
+            }
+        });
+        await _languageContentReloader.PrepareForEraseAsync();
+    }
+
+    public async Task CompleteEraseAsync()
+    {
+        await MainThread.InvokeOnMainThreadAsync(() =>
+        {
+            _preferences.ApplyAll();
+            _languageContentReloader.CompleteErase();
+            _isPreparingDataErase = false;
+            ShowTab(PracticeTab);
+            UpdateTabIcons();
+            IsEnabled = true;
+        });
+
+        await ShowOnboardingIfNeededAsync();
+        await ShowClinicalGateIfNeededAsync();
+        SyncRemindersFireAndForget();
+    }
 
     private async Task InitializeAppAsync()
     {

@@ -27,7 +27,9 @@ public partial class TechniqueSessionPage : ContentPage
     private readonly TechniqueId _techniqueId;
     private readonly INavigation _hostNavigation;
     private bool _initialized;
+    private bool _initializing;
     private bool _bodyLoaded;
+    private CancellationTokenSource? _zoomLifetime;
     private readonly KeyboardResize _keyboard = new();
 
     public TechniqueSessionPage(
@@ -58,52 +60,93 @@ public partial class TechniqueSessionPage : ContentPage
     {
         base.OnAppearing();
         _keyboard.Enable();
-        PlayZoomAsync().FireAndForget();
+        if (_zoomPending)
+        {
+            CancellationTokenSource zoomLifetime = new();
+            _zoomLifetime = zoomLifetime;
+            PlayZoomAsync(zoomLifetime).FireAndForget();
+        }
+
         InitializeSessionAsync().FireAndForget();
     }
 
     /// <summary>The screen grows out of the card that was tapped to open it, instead of just appearing.</summary>
-    private async Task PlayZoomAsync()
+    private async Task PlayZoomAsync(CancellationTokenSource lifetime)
     {
         if (!_zoomPending)
         {
+            if (ReferenceEquals(_zoomLifetime, lifetime))
+            {
+                _zoomLifetime = null;
+            }
+
+            lifetime.Dispose();
             return;
         }
 
         _zoomPending = false;
-        for (int attempt = 0; attempt < 30 && Width <= 0; attempt++)
+        CancellationToken cancellationToken = lifetime.Token;
+        try
         {
-            await Task.Delay(16);
-        }
+            for (int attempt = 0; attempt < 30 && Width <= 0; attempt++)
+            {
+                await Task.Delay(16, cancellationToken);
+            }
 
-        if (TapOrigin.TakeStartFor(Width, Height) is not { } start)
-        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (TapOrigin.TakeStartFor(Width, Height) is not { } start)
+            {
+                ZoomHost.Scale = 1;
+                ZoomHost.TranslationX = 0;
+                ZoomHost.TranslationY = 0;
+                ZoomHost.Opacity = 1;
+                return;
+            }
+
+            ZoomHost.AnchorX = 0.5;
+            ZoomHost.AnchorY = 0.5;
+            ZoomHost.Scale = start.Scale;
+            ZoomHost.TranslationX = start.TranslationX;
+            ZoomHost.TranslationY = start.TranslationY;
             ZoomHost.Opacity = 1;
-            return;
+            await Task.WhenAll(
+                ZoomHost.ScaleToAsync(1, UiAnimations.MediumDuration + 60, Easing.CubicOut),
+                ZoomHost.TranslateToAsync(0, 0, UiAnimations.MediumDuration + 60, Easing.CubicOut))
+                .WaitAsync(cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_zoomLifetime, lifetime))
+            {
+                _zoomLifetime = null;
+            }
 
-        ZoomHost.AnchorX = 0.5;
-        ZoomHost.AnchorY = 0.5;
-        ZoomHost.Scale = start.Scale;
-        ZoomHost.TranslationX = start.TranslationX;
-        ZoomHost.TranslationY = start.TranslationY;
-        ZoomHost.Opacity = 1;
-        await Task.WhenAll(
-            ZoomHost.ScaleToAsync(1, UiAnimations.MediumDuration + 60, Easing.CubicOut),
-            ZoomHost.TranslateToAsync(0, 0, UiAnimations.MediumDuration + 60, Easing.CubicOut));
+            lifetime.Dispose();
+        }
     }
 
     private async Task InitializeSessionAsync()
     {
-        if (_initialized)
+        if (_initialized || _initializing)
         {
             return;
         }
 
-        _initialized = true;
-        BaseViewModel viewModel = await _techniqueViewModelFactory.CreateAsync(_techniqueId, _hostNavigation);
-        BindingContext = viewModel;
-        await EnsureBodyLoadedAsync();
+        _initializing = true;
+        try
+        {
+            BaseViewModel viewModel = await _techniqueViewModelFactory.CreateAsync(_techniqueId, _hostNavigation);
+            BindingContext = viewModel;
+            await EnsureBodyLoadedAsync();
+            _initialized = true;
+        }
+        finally
+        {
+            _initializing = false;
+        }
     }
 
     private async Task EnsureBodyLoadedAsync()
@@ -113,7 +156,6 @@ public partial class TechniqueSessionPage : ContentPage
             return;
         }
 
-        _bodyLoaded = true;
         TechniqueDefinition definition = await _techniqueCatalog.GetAsync(_techniqueId);
         View body = TechniqueBodyFactory.Create(definition.UiKind);
         body.BindingContext = BindingContext;
@@ -151,11 +193,13 @@ public partial class TechniqueSessionPage : ContentPage
 
         // Steps walked one by one, or acted out on a stage, need no long list above them: it folds to one line.
         SessionShell.AlgorithmFolded = (definition.Entries?.Count ?? 0) > 1 || content.Children.Count > 1;
-        SessionShell.BodyContent = content;
         if (body is EntryFormBody form)
         {
             SessionShell.FooterContent = form.DetachNavigation();
         }
+
+        SessionShell.BodyContent = content;
+        _bodyLoaded = true;
     }
 
     /// <summary>
@@ -190,6 +234,14 @@ public partial class TechniqueSessionPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        CancellationTokenSource? zoomLifetime = _zoomLifetime;
+        _zoomLifetime = null;
+        zoomLifetime?.Cancel();
+        ZoomHost.CancelAnimations();
+        ZoomHost.Scale = 1;
+        ZoomHost.TranslationX = 0;
+        ZoomHost.TranslationY = 0;
+        ZoomHost.Opacity = 1;
         _keyboard.Restore();
         if (BindingContext is TechniqueSessionViewModel sessionViewModel)
         {

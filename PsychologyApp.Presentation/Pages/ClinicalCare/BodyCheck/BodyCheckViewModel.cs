@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Application.Conversation.Companion;
+using PsychologyApp.Application.Practice;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Body;
 using PsychologyApp.Presentation.Shared.Common;
@@ -26,7 +27,13 @@ public sealed class BodyCheckViewModel : BaseViewModel
     private readonly IBodyService _service;
     private readonly IDialogService _dialogs;
     private readonly IDatabaseReadySignal _databaseReady;
+    private readonly ITechniqueCatalogService? _techniqueCatalog;
     private readonly HashSet<BodyFeeling> _feelings = [];
+    private int _practiceTitleRequestId;
+    private int _logLoadRequestId;
+    private BodyLog? _lastLoadedLog;
+    private string _practiceTitleLanguageKey = AppStrings.Language;
+    private string _historyLanguageKey = AppStrings.Language;
 
     private BodyArea? _area;
     private BodySensation? _sensation;
@@ -37,10 +44,16 @@ public sealed class BodyCheckViewModel : BaseViewModel
     private IReadOnlyList<BodyChoiceItem> _guessChips = [];
     private IReadOnlyList<BodyChoiceItem> _otherChips = [];
     private IReadOnlyList<BodyPracticeItem> _practices = [];
+    private IReadOnlyList<TechniqueId> _practiceIds = [];
     private IReadOnlyList<BodyPatternItem> _patterns = [];
     private IReadOnlyList<BodyEntryItem> _recent = [];
 
-    public BodyCheckViewModel(INavigationService navigation, IBodyService service, IDialogService dialogs, IDatabaseReadySignal databaseReady)
+    public BodyCheckViewModel(
+        INavigationService navigation,
+        IBodyService service,
+        IDialogService dialogs,
+        IDatabaseReadySignal databaseReady,
+        ITechniqueCatalogService? techniqueCatalog = null)
     {
         BindNavigation(navigation);
         BackCommand = new AsyncCommand(GoBackAsync);
@@ -48,6 +61,7 @@ public sealed class BodyCheckViewModel : BaseViewModel
         _service = service;
         _dialogs = dialogs;
         _databaseReady = databaseReady;
+        _techniqueCatalog = techniqueCatalog;
 
         SelectAreaCommand = new Command<BodyArea>(SelectArea);
         AreaChips = [.. Enum.GetValues<BodyArea>().Select(area => new BodyChoiceItem
@@ -220,16 +234,94 @@ public sealed class BodyCheckViewModel : BaseViewModel
 
     public async Task LoadAsync()
     {
+        int requestId = Interlocked.Increment(ref _logLoadRequestId);
         try
         {
             await _databaseReady.WaitAsync();
             BodyLog log = await _service.GetLogAsync();
-            await UiThread.RunAsync(() => ShowLog(log));
+            if (requestId != Volatile.Read(ref _logLoadRequestId))
+            {
+                return;
+            }
+
+            await UiThread.RunAsync(() =>
+            {
+                if (requestId == Volatile.Read(ref _logLoadRequestId))
+                {
+                    _lastLoadedLog = log;
+                    ShowLog(log);
+                    _historyLanguageKey = AppStrings.Language;
+                }
+            });
         }
         catch (Exception loadError)
         {
             // The check-in itself works without the history; only the patterns and the list are missing.
             BestEffort.Report(loadError);
+        }
+    }
+
+    protected override void RefreshLocalizedProperties()
+    {
+        Notify(
+            nameof(PageTitle),
+            nameof(LeadText),
+            nameof(NotDiagnosisText),
+            nameof(AreaQuestion),
+            nameof(SensationQuestion),
+            nameof(FeelingQuestion),
+            nameof(FeelingHint),
+            nameof(OtherFeelingsText),
+            nameof(PromptVoice),
+            nameof(PromptBefore),
+            nameof(NotePlaceholder),
+            nameof(DoctorText),
+            nameof(SaveText),
+            nameof(SavedText),
+            nameof(CrisisText),
+            nameof(CrisisButtonText),
+            nameof(AgainText),
+            nameof(PatternsTitle),
+            nameof(PatternsEmptyText),
+            nameof(RecentTitle),
+            nameof(IntensityTitle),
+            nameof(IntensityMinCaption),
+            nameof(IntensityMaxCaption));
+
+        foreach (BodyChoiceItem chip in AreaChips)
+        {
+            chip.UpdateText(BodyLabels.Area((BodyArea)chip.Value));
+        }
+
+        foreach (BodyChoiceItem chip in SensationChips)
+        {
+            chip.UpdateText(BodyLabels.Sensation((BodySensation)chip.Value));
+        }
+
+        foreach (BodyChoiceItem chip in GuessChips.Concat(OtherChips))
+        {
+            chip.UpdateText(BodyLabels.Feeling((BodyFeeling)chip.Value));
+        }
+
+        if (ShowPractices && _practiceIds.Count > 0)
+        {
+            string languageKey = AppStrings.Language;
+            if (!string.Equals(_practiceTitleLanguageKey, languageKey, StringComparison.Ordinal))
+            {
+                _practiceTitleLanguageKey = languageKey;
+                int requestId = Interlocked.Increment(ref _practiceTitleRequestId);
+                IReadOnlyList<TechniqueId> practiceIds = _practiceIds;
+                Practices = [.. practiceIds.Select(Practice)];
+                SafeAsync.Run(() => LoadLocalizedPracticeTitlesAsync(practiceIds, requestId, languageKey));
+            }
+        }
+
+        string historyLanguageKey = AppStrings.Language;
+        if (!string.Equals(_historyLanguageKey, historyLanguageKey, StringComparison.Ordinal)
+            && _lastLoadedLog is { } log)
+        {
+            _historyLanguageKey = historyLanguageKey;
+            ShowLog(log);
         }
     }
 
@@ -315,14 +407,42 @@ public sealed class BodyCheckViewModel : BaseViewModel
             // In the order shown, so the saved entry reads like the screen did.
             List<BodyFeeling> feelings = [.. GuessChips.Concat(OtherChips).Select(chip => (BodyFeeling)chip.Value).Where(_feelings.Contains)];
             BodyCheckResult result = await _service.SaveAsync(area, sensation, _intensity, feelings, _note);
-            BodyLog log = await _service.GetLogAsync();
+            BodyLog? log = null;
+            int logRequestId = Interlocked.Increment(ref _logLoadRequestId);
+            try
+            {
+                log = await _service.GetLogAsync();
+            }
+            catch (Exception historyError)
+            {
+                // The entry is already saved; a history refresh failure must not tell the person to save it again.
+                BestEffort.Report(historyError);
+            }
+
+            IReadOnlyList<TechniqueId> practiceIds = BodyRules.Practices(feelings);
+            _practiceIds = practiceIds;
+            int requestId = 0;
+            string languageKey = string.Empty;
             await UiThread.RunAsync(() =>
             {
                 IsCrisis = result.Crisis;
-                Practices = [.. BodyRules.Practices(feelings).Select(Practice)];
                 IsSaved = true;
-                ShowLog(log);
+                languageKey = AppStrings.Language;
+                _practiceTitleLanguageKey = languageKey;
+                requestId = Interlocked.Increment(ref _practiceTitleRequestId);
+                Practices = [.. practiceIds.Select(Practice)];
+                if (log is not null && logRequestId == Volatile.Read(ref _logLoadRequestId))
+                {
+                    _lastLoadedLog = log;
+                    ShowLog(log);
+                    _historyLanguageKey = AppStrings.Language;
+                }
             });
+
+            if (!result.Crisis && practiceIds.Count > 0)
+            {
+                SafeAsync.Run(() => LoadLocalizedPracticeTitlesAsync(practiceIds, requestId, languageKey));
+            }
         }
         catch (Exception saveError)
         {
@@ -332,11 +452,63 @@ public sealed class BodyCheckViewModel : BaseViewModel
     }
 
     private BodyPracticeItem Practice(TechniqueId id) =>
-        new(CompanionContent.TechniqueTitle(id, AppStrings.Language), new AsyncCommand(() => _navigation.GoToTechniqueAsync(id)));
+        new(FallbackPracticeTitle(id), new AsyncCommand(() => _navigation.GoToTechniqueAsync(id)));
+
+    private async Task LoadLocalizedPracticeTitlesAsync(IReadOnlyList<TechniqueId> ids, int requestId, string languageKey)
+    {
+        try
+        {
+            List<BodyPracticeItem> localized = new(ids.Count);
+            foreach (TechniqueId id in ids)
+            {
+                string title;
+                try
+                {
+                    title = _techniqueCatalog is null
+                        ? await Task.Run(() => CompanionContent.TechniqueTitle(id, languageKey))
+                        : (await _techniqueCatalog.GetAsync(id)).ListTitle;
+                }
+                catch (Exception titleError)
+                {
+                    BestEffort.Report(titleError);
+                    try
+                    {
+                        title = await Task.Run(() => CompanionContent.TechniqueTitle(id, languageKey));
+                    }
+                    catch (Exception fallbackError)
+                    {
+                        BestEffort.Report(fallbackError);
+                        title = FallbackPracticeTitle(id);
+                    }
+                }
+
+                localized.Add(new BodyPracticeItem(title, new AsyncCommand(() => _navigation.GoToTechniqueAsync(id))));
+            }
+
+            await UiThread.RunAsync(() =>
+            {
+                if (requestId == Volatile.Read(ref _practiceTitleRequestId)
+                    && IsSaved
+                    && string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    Practices = localized;
+                }
+            });
+        }
+        catch (Exception titleError)
+        {
+            BestEffort.Report(titleError);
+        }
+    }
+
+    private static string FallbackPracticeTitle(TechniqueId id) =>
+        CompanionContent.TechniqueTitle(id, !AppStrings.Language.StartsWith("ru", StringComparison.OrdinalIgnoreCase));
 
     private void Reset()
     {
+        Interlocked.Increment(ref _practiceTitleRequestId);
         _feelings.Clear();
+        _practiceIds = [];
         _sensation = null;
         SelectedArea = null;
         foreach (BodyChoiceItem chip in AreaChips.Concat(SensationChips))

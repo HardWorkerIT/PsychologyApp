@@ -20,7 +20,7 @@ public sealed class FavoriteQuoteTextStore(
 
     public async Task<IReadOnlySet<string>> GetTextsAsync(CancellationToken cancellationToken = default)
     {
-        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         string? value = await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
             "SELECT Value FROM AppMetadata WHERE Key = @key;",
             new { key = TextsKey },
@@ -37,13 +37,7 @@ public sealed class FavoriteQuoteTextStore(
             return;
         }
 
-        HashSet<string> texts = new(await GetTextsAsync(cancellationToken).ConfigureAwait(false), StringComparer.Ordinal);
-        if (!texts.Add(text))
-        {
-            return;
-        }
-
-        await SaveTextsInternalAsync(texts, cancellationToken).ConfigureAwait(false);
+        await MutateTextAsync(text, add: true, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task RemoveTextAsync(string text, CancellationToken cancellationToken = default)
@@ -53,13 +47,7 @@ public sealed class FavoriteQuoteTextStore(
             return;
         }
 
-        HashSet<string> texts = new(await GetTextsAsync(cancellationToken).ConfigureAwait(false), StringComparer.Ordinal);
-        if (!texts.Remove(text))
-        {
-            return;
-        }
-
-        await SaveTextsInternalAsync(texts, cancellationToken).ConfigureAwait(false);
+        await MutateTextAsync(text, add: false, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task SaveTextsAsync(IReadOnlySet<string> texts, CancellationToken cancellationToken = default)
@@ -73,13 +61,23 @@ public sealed class FavoriteQuoteTextStore(
             }
         }
 
-        await SaveTextsInternalAsync(normalized, cancellationToken).ConfigureAwait(false);
-        await ClearLegacyIndicesAsync(cancellationToken).ConfigureAwait(false);
+        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await using SqliteTransaction transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        HashSet<string> merged = await ReadTextsAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+        merged.UnionWith(normalized);
+        await SaveTextsInternalAsync(connection, transaction, merged, cancellationToken).ConfigureAwait(false);
+        await connection.ExecuteAsync(DapperCommandFactory.Create(
+            "DELETE FROM AppMetadata WHERE Key = @key;",
+            new { key = LegacyIndicesKey },
+            transaction,
+            CommandTimeoutSeconds,
+            cancellationToken)).ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlySet<int>> GetLegacyIndicesAsync(CancellationToken cancellationToken = default)
     {
-        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         string? value = await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
             "SELECT Value FROM AppMetadata WHERE Key = @key;",
             new { key = LegacyIndicesKey },
@@ -99,10 +97,41 @@ public sealed class FavoriteQuoteTextStore(
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
-    private async Task SaveTextsInternalAsync(HashSet<string> texts, CancellationToken cancellationToken)
+    private async Task MutateTextAsync(string text, bool add, CancellationToken cancellationToken)
     {
-        string serialized = string.Join('\n', texts.OrderBy(text => text, StringComparer.Ordinal));
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await using SqliteTransaction transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        HashSet<string> texts = await ReadTextsAsync(connection, transaction, cancellationToken).ConfigureAwait(false);
+        bool changed = add ? texts.Add(text) : texts.Remove(text);
+        if (changed)
+        {
+            await SaveTextsInternalAsync(connection, transaction, texts, cancellationToken).ConfigureAwait(false);
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<HashSet<string>> ReadTextsAsync(
+        SqliteConnection connection,
+        SqliteTransaction? transaction,
+        CancellationToken cancellationToken)
+    {
+        string? value = await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
+            "SELECT Value FROM AppMetadata WHERE Key = @key;",
+            new { key = TextsKey },
+            transaction,
+            CommandTimeoutSeconds,
+            cancellationToken)).ConfigureAwait(false);
+        return FavoriteQuoteTextsCodec.Decode(value);
+    }
+
+    private async Task SaveTextsInternalAsync(
+        SqliteConnection connection,
+        SqliteTransaction? transaction,
+        HashSet<string> texts,
+        CancellationToken cancellationToken)
+    {
+        string serialized = FavoriteQuoteTextsCodec.Encode(texts);
         await connection.ExecuteAsync(DapperCommandFactory.Create(
             """
             INSERT INTO AppMetadata (Key, Value)
@@ -110,25 +139,12 @@ public sealed class FavoriteQuoteTextStore(
             ON CONFLICT(Key) DO UPDATE SET Value = excluded.Value;
             """,
             new { key = TextsKey, value = serialized },
+            transaction,
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
-    private static HashSet<string> ParseTexts(string? value)
-    {
-        HashSet<string> texts = new(StringComparer.Ordinal);
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return texts;
-        }
-
-        foreach (string part in value.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-        {
-            texts.Add(part);
-        }
-
-        return texts;
-    }
+    private static HashSet<string> ParseTexts(string? value) => FavoriteQuoteTextsCodec.Decode(value);
 
     private static HashSet<int> ParseIndices(string? value)
     {
@@ -151,4 +167,7 @@ public sealed class FavoriteQuoteTextStore(
 
     private ConfiguredTaskAwaitable<SqliteConnection> OpenConnectionAsync(CancellationToken cancellationToken) =>
         SqliteOperationLane.OpenAsync(connectionFactory, cancellationToken);
+
+    private ConfiguredTaskAwaitable<SqliteConnection> OpenReadConnectionAsync(CancellationToken cancellationToken) =>
+        SqliteOperationLane.OpenAsync(connectionFactory, cancellationToken, readOnly: true);
 }

@@ -22,6 +22,7 @@ public partial class TestsListViewModel : BaseViewModel
     private readonly SemaphoreSlim _initGate = new(1, 1);
     private bool _initialized;
     private CancellationTokenSource? _initCts;
+    private string _loadedLanguageKey = AppStrings.Language;
 
     public bool HasInitialized => _initialized;
 

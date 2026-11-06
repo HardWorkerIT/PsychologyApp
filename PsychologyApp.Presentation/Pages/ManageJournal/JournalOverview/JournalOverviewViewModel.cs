@@ -24,6 +24,10 @@ public sealed class JournalOverviewViewModel : BaseViewModel
     private DateOnly _weekStripEnd = DateOnly.FromDateTime(DateTime.Today);
     private DateOnly _monthCursor = new(DateTime.Today.Year, DateTime.Today.Month, 1);
     private int _yearCursor = DateTime.Today.Year;
+    private string _loadedLanguageKey = AppStrings.Language;
+    private bool _loaded;
+    private bool _isLoading = true;
+    private bool _isLoadFailed;
     // The journal shows the last seven days; the month, a tap from its week line, is here.
     private readonly JournalCalendarScale _calendarScale = JournalCalendarScale.Month;
 
@@ -39,6 +43,7 @@ public sealed class JournalOverviewViewModel : BaseViewModel
         _dialogService = dialogService;
         BindNavigation(navigationService);
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
+        ReloadCommand = new AsyncCommand(ReloadAsync);
         PrevPeriodCommand = new Command(() => ShiftPeriod(-1), () => true);
         NextPeriodCommand = new Command(() => ShiftPeriod(1), () => CanGoNextPeriod);
         ExportCommand = new AsyncCommand(ExportAsync);
@@ -87,13 +92,12 @@ public sealed class JournalOverviewViewModel : BaseViewModel
             new FilterChipTabItem { Key = "90", Title = AppStrings.JournalFilter90Days, IsSelected = false }
         ];
 
-        LoadAsync().FireAndForget();
     }
 
     public string PageTitle => AppStrings.JournalOverviewTitle;
     public string MoodTrendTitle => AppStrings.JournalDynamicsTitle;
     public string MoodTrendHint => AppStrings.ProfileMoodTrendHint;
-    public bool ShowMoodTrendHint => !HasMoodTrendChart;
+    public bool ShowMoodTrendHint => _loaded && !IsLoading && !IsLoadFailed && !HasMoodTrendChart;
     public string ExportLabel => AppStrings.JournalExportLabel;
     public string CalendarSectionTitle => AppStrings.JournalCalendarSectionTitle;
     public string StatsSectionTitle => AppStrings.JournalStatsSectionTitle;
@@ -103,10 +107,32 @@ public sealed class JournalOverviewViewModel : BaseViewModel
     public string CheckInDaysLabel => AppStrings.JournalCheckInDaysLabel;
     public string PeriodNavPrevLabel => AppStrings.JournalPeriodNavPrev;
     public string PeriodNavNextLabel => AppStrings.JournalPeriodNavNext;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     public bool IsWeekScale => _calendarScale == JournalCalendarScale.Week;
     public bool IsMonthScale => _calendarScale == JournalCalendarScale.Month;
     public bool IsYearScale => _calendarScale == JournalCalendarScale.Year;
+    public ICommand ReloadCommand { get; }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                Notify(nameof(ShowPeriodEmpty), nameof(ShowMoodTrendHint));
+            }
+        }
+    }
+
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set => SetProperty(ref _isLoadFailed, value);
+    }
 
     public string PeriodTitle => _calendarScale switch
     {
@@ -289,7 +315,7 @@ public sealed class JournalOverviewViewModel : BaseViewModel
         }
     }
 
-    public bool ShowPeriodEmpty => !HasPeriodStats;
+    public bool ShowPeriodEmpty => _loaded && !IsLoading && !IsLoadFailed && !HasPeriodStats;
     public string PeriodEmptyText => AppStrings.JournalOverviewInsightEmpty;
 
     private string _practiceMoodInsightText = string.Empty;
@@ -338,6 +364,9 @@ public sealed class JournalOverviewViewModel : BaseViewModel
             nameof(CheckInDaysLabel),
             nameof(PeriodNavPrevLabel),
             nameof(PeriodNavNextLabel),
+            nameof(LoadingText),
+            nameof(LoadFailedText),
+            nameof(RetryText),
             nameof(PeriodTitle),
             nameof(WeekStripTitle),
             nameof(CanGoNextPeriod),
@@ -366,6 +395,13 @@ public sealed class JournalOverviewViewModel : BaseViewModel
                 "30" => AppStrings.JournalFilter30Days,
                 _ => AppStrings.JournalFilter7Days
             };
+        }
+
+        string languageKey = AppStrings.Language;
+        if (!string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            _loadedLanguageKey = languageKey;
+            LoadAsync().FireAndForget();
         }
     }
 
@@ -434,6 +470,12 @@ public sealed class JournalOverviewViewModel : BaseViewModel
     private async Task LoadAsync()
     {
         int generation = Interlocked.Increment(ref _loadGeneration);
+        if (!_loaded)
+        {
+            IsLoading = true;
+            IsLoadFailed = false;
+        }
+
         try
         {
             JournalMoodSnapshot snapshot = await _journalMoodLoader.LoadAsync(
@@ -449,6 +491,11 @@ public sealed class JournalOverviewViewModel : BaseViewModel
 
             await UiThread.RunAsync(() =>
             {
+                if (generation != Volatile.Read(ref _loadGeneration))
+                {
+                    return;
+                }
+
                 _weekStripEnd = snapshot.WeekStripEnd;
                 _monthCursor = snapshot.MonthCursor;
                 _yearCursor = snapshot.YearCursor;
@@ -477,12 +524,26 @@ public sealed class JournalOverviewViewModel : BaseViewModel
                     .Select(insight => insight.DisplayPill)
                     .ToList();
                 NotifyPeriodProperties();
+                _loaded = true;
+                IsLoading = false;
+                IsLoadFailed = false;
             });
         }
         catch (Exception bestEffortError)
         {
             // Overview is optional.
             BestEffort.Report(bestEffortError);
+            if (!_loaded)
+            {
+                await UiThread.RunAsync(() =>
+                {
+                    if (generation == Volatile.Read(ref _loadGeneration))
+                    {
+                        IsLoading = false;
+                        IsLoadFailed = true;
+                    }
+                });
+            }
         }
     }
 }

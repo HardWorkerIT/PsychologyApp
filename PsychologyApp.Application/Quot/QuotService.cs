@@ -11,8 +11,34 @@ public sealed class QuotService(
     IQuoteCatalogLookup catalogLookup,
     IFavoriteQuoteTextStore favoriteTextStore) : IQuotService
 {
+    private readonly SemaphoreSlim _mutationGate = new(1, 1);
+    private readonly object _mutationSync = new();
+    private bool _isPreparingForErase;
+    private long _mutationGeneration;
+
+    public async Task PrepareForEraseAsync()
+    {
+        lock (_mutationSync)
+        {
+            _isPreparingForErase = true;
+            _mutationGeneration++;
+        }
+
+        await _mutationGate.WaitAsync().ConfigureAwait(false);
+        _mutationGate.Release();
+    }
+
+    public void CompleteErase()
+    {
+        lock (_mutationSync)
+        {
+            _isPreparingForErase = false;
+        }
+    }
+
     public async Task AddSingleAsync(QuotDTO quotDTO, CancellationToken cancellationToken = default)
     {
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
         global::PsychologyApp.Domain.Entities.Quot quot = QuotMapper.GetQuot(quotDTO);
         await quotRepository.AddAsync(quot, cancellationToken).ConfigureAwait(false);
     }
@@ -47,6 +73,12 @@ public sealed class QuotService(
         CancellationToken cancellationToken = default)
     {
         if (themes.Count == 0 || count <= 0)
+        {
+            return;
+        }
+
+        using MutationLease? mutation = await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        if (mutation is null)
         {
             return;
         }
@@ -95,6 +127,12 @@ public sealed class QuotService(
             return false;
         }
 
+        using MutationLease? mutation = await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        if (mutation is null)
+        {
+            return false;
+        }
+
         QuoteSeedContext context = await CreateSeedContextAsync(cancellationToken).ConfigureAwait(false);
         if (TakeUnknown(context, CreateThemedPool(themes, context)) is { } seed)
         {
@@ -135,18 +173,33 @@ public sealed class QuotService(
 
     public async Task<bool> TryLoadSingleAsync(CancellationToken cancellationToken = default)
     {
+        using MutationLease? mutation = await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        if (mutation is null)
+        {
+            return false;
+        }
+
         int beforeCount = await quotRepository.CountAllAsync(cancellationToken).ConfigureAwait(false);
         await AddRandomQuotesAsync(1, cancellationToken).ConfigureAwait(false);
         int afterCount = await quotRepository.CountAllAsync(cancellationToken).ConfigureAwait(false);
         return afterCount > beforeCount;
     }
 
-    public Task LoadSingleAsync(CancellationToken cancellationToken = default) =>
-        AddRandomQuotesAsync(1, cancellationToken);
+    public async Task LoadSingleAsync(CancellationToken cancellationToken = default)
+    {
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        await AddRandomQuotesAsync(1, cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task ReseedFeedAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count <= 0)
+        {
+            return;
+        }
+
+        using MutationLease? mutation = await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        if (mutation is null)
         {
             return;
         }
@@ -175,6 +228,7 @@ public sealed class QuotService(
 
     public async Task MarkAsFavouriteAsync(long quotId, bool isFavourite, CancellationToken cancellationToken = default)
     {
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
         global::PsychologyApp.Domain.Entities.Quot quot = await quotRepository.GetByIdAsync(quotId, cancellationToken).ConfigureAwait(false)
             ?? throw new QuotNotFoundException($"Цитата с идентификатором {quotId} не найдена");
 
@@ -198,6 +252,7 @@ public sealed class QuotService(
 
     public async Task MarkAsReadedAsync(long quotId, CancellationToken cancellationToken = default)
     {
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
         global::PsychologyApp.Domain.Entities.Quot quot = await quotRepository.GetByIdAsync(quotId, cancellationToken).ConfigureAwait(false)
             ?? throw new QuotNotFoundException($"Цитата с идентификатором {quotId} не найдена");
 
@@ -225,11 +280,20 @@ public sealed class QuotService(
         return seeds.All(seed => knownTexts.Contains(seed.Text));
     }
 
-    public Task ResetReadStateAsync(CancellationToken cancellationToken = default) =>
-        quotRepository.ResetReadStateAsync(cancellationToken);
+    public async Task ResetReadStateAsync(CancellationToken cancellationToken = default)
+    {
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        await quotRepository.ResetReadStateAsync(cancellationToken).ConfigureAwait(false);
+    }
 
     public async Task<QuotDTO?> GetDailyQuoteAsync(DateOnly date, CancellationToken cancellationToken = default)
     {
+        using MutationLease? mutation = await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        if (mutation is null)
+        {
+            return null;
+        }
+
         int catalogCount = await catalogLookup.GetCountAsync(cancellationToken).ConfigureAwait(false);
         if (catalogCount <= 0)
         {
@@ -469,6 +533,52 @@ public sealed class QuotService(
 
             quot.MarkAsUnread();
             await quotRepository.EditAsync(quot, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task<MutationLease> EnterMutationAsync(CancellationToken cancellationToken) =>
+        await TryEnterMutationAsync(cancellationToken).ConfigureAwait(false)
+        ?? throw new OperationCanceledException("Quote changes are paused while personal data is being erased.", cancellationToken);
+
+    private async Task<MutationLease?> TryEnterMutationAsync(CancellationToken cancellationToken)
+    {
+        long generation;
+        lock (_mutationSync)
+        {
+            if (_isPreparingForErase)
+            {
+                return null;
+            }
+
+            generation = _mutationGeneration;
+        }
+
+        await _mutationGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        lock (_mutationSync)
+        {
+            if (_isPreparingForErase || generation != _mutationGeneration)
+            {
+                _mutationGate.Release();
+                return null;
+            }
+        }
+
+        return new MutationLease(_mutationGate);
+    }
+
+    private sealed class MutationLease(SemaphoreSlim gate) : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            gate.Release();
         }
     }
 }

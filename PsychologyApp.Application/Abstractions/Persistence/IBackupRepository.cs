@@ -5,7 +5,9 @@ namespace PsychologyApp.Application.Abstractions.Persistence;
 /// <summary>What a backup needs that no other port exposes, plus the atomic restore.</summary>
 public interface IBackupRepository
 {
-    Task<IReadOnlyList<BackupTechniqueDTO>> GetTechniquesAsync(CancellationToken cancellationToken = default);
+    Task<BackupExportMetrics> GetExportMetricsAsync(CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<BackupTechniqueDTO>> GetTechniquesAsync(int limit, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds the backup's rows in one transaction: either all of them or none. A row the database already has (same moment and

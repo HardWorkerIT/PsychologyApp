@@ -12,6 +12,19 @@ public partial class TechniqueSessionViewModel
     protected override void OnTechniqueContentChanged()
     {
         WatchEntries();
+        if (IsTechniqueLocalizationRefresh)
+        {
+            OnPropertyChanged(nameof(AsksPreIntensity));
+            if (AppliedUiKind == TechniqueUiKind.Entry)
+            {
+                _entryDraftCoordinator.WireHandlers();
+                ResumeWhereLeft();
+                Notify(nameof(NextStepText), nameof(CanFinish), nameof(IsCurrentEmpty), nameof(NextStepVariant));
+            }
+
+            return;
+        }
+
         ResetWizardStep();
         OnPropertyChanged(nameof(AsksPreIntensity));
 

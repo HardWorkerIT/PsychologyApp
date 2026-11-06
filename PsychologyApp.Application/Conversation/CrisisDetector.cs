@@ -12,6 +12,8 @@ public interface ICrisisDetector
 /// </summary>
 public sealed class KeywordCrisisDetector : ICrisisDetector
 {
+    private static readonly char[] SentenceBoundaries = ['.', '!', '?', ';', '\r', '\n', '…', '。', '！', '？', '；'];
+
     private static readonly string[] Markers =
     [
         // Russian
@@ -84,15 +86,27 @@ public sealed class KeywordCrisisDetector : ICrisisDetector
         // Chinese: no spaces between words, so these match inside a sentence. "跳楼" alone is also a sale ("跳楼价"), so only with intent.
         "自杀", "自殺", "轻生", "寻死", "不想活", "活不下去", "活着没意思", "活着没有意义", "活着没意义", "想死", "想去死", "不如死了", "死了算了", "一了百了",
         "结束自己的生命", "结束我的生命", "结束生命", "了结自己", "没有我会更好", "没有我大家会更好", "想消失", "永远消失", "不想醒来", "再也不醒",
-        "割腕", "自残", "伤害自己", "想跳楼", "要跳楼", "去跳楼", "跳楼自杀", "站在楼顶", "跳河", "跳桥", "上吊", "吞药", "吃安眠药", "把药全吃了", "喝农药"
+        "割腕", "自残", "伤害自己", "想跳楼", "要跳楼", "去跳楼", "跳楼自杀", "站在楼顶", "跳河", "跳桥", "上吊", "吞药", "吃安眠药", "把药全吃了", "喝农药",
+        "想伤害别人", "想伤害他人", "我想伤害某人", "想杀人", "想杀了某人", "我要杀人", "想打人", "我想打某人", "想攻击某人", "忍不住伤害别人",
+        "想傷害別人", "想傷害他人", "我想傷害某人", "想殺人", "想殺了某人", "我要殺人", "想打人", "我想打某人", "想攻擊某人", "忍不住傷害別人"
     ];
 
     /// <summary>
-    /// Everyday phrases that contain a marker without meaning it, removed before matching. Each is checked in the tests both
-    /// ways: alone it is not a crisis, with a real marker next to it it still is.
+    /// Common idioms and explicit denials that would otherwise match a shorter marker. The rest of the message is still scanned,
+    /// so an unrelated crisis marker later in the same message is not hidden.
     /// </summary>
     // "我想死你了" is "I missed you so much"; "想死我了" is "I missed (it) terribly".
-    private static readonly string[] Idioms = ["想死你", "想死我了"];
+    private static readonly string[] Idioms =
+    [
+        "想死你", "想死我了",
+        // Clear denials of wanting to die contain shorter affirmative markers ("want to die", "хочу умереть").
+        "не хочу умереть", "не хочу умирать", "не хочется умереть", "не хочется умирать",
+        "dont want to die", "do not want to die", "dont wanna die", "dont want to kill myself", "do not want to kill myself", "not suicidal",
+        "ne veux pas mourir", "ne veux pas me suicider", "ne veux pas me tuer",
+        "no quiero morir", "no me quiero morir", "no quiero suicidarme", "no me quiero suicidar", "nao quero morrer", "não quero morrer",
+        "nao quero me matar", "não quero me matar",
+        "不想死", "不想自杀", "不想自殺"
+    ];
 
     /// <summary>
     /// Slang that is only a signal as a whole word: as a substring "kms" would match "5 kms" and "unalive" is harmless inside
@@ -107,22 +121,108 @@ public sealed class KeywordCrisisDetector : ICrisisDetector
             return false;
         }
 
-        string normalized = UtteranceText.Normalize(text);
-        foreach (string idiom in Idioms)
+        if (HasPhraseMarkerAcrossEllipsis(text))
         {
-            normalized = normalized.Replace(idiom, " ", StringComparison.Ordinal);
+            return true;
         }
 
-        foreach (string marker in Markers)
+        string? previousNormalized = null;
+        foreach (string sentence in text.Split(SentenceBoundaries, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            if (normalized.Contains(marker, StringComparison.Ordinal))
+            string normalized = UtteranceText.Normalize(sentence);
+            foreach (string idiom in Idioms)
+            {
+                normalized = normalized.Replace(idiom, " ", StringComparison.Ordinal);
+            }
+
+            foreach (string marker in Markers)
+            {
+                if (normalized.Contains(marker, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            string[] tokens = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (HasSlangMarker(tokens) || NegatedWishToLive(tokens) || UtteranceText.IndicatesIntentToHarmAnother(tokens))
+            {
+                return true;
+            }
+
+            if (previousNormalized is not null)
+            {
+                string[] previousTokens = previousNormalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (UtteranceText.MentionsHarmToAnother(previousTokens)
+                    && UtteranceText.IndicatesIntentToHarmAnother(previousTokens.Concat(tokens).ToArray()))
+                {
+                    return true;
+                }
+            }
+
+            previousNormalized = normalized;
+        }
+
+        return false;
+    }
+
+    private static bool HasPhraseMarkerAcrossEllipsis(string text)
+    {
+        string ellipsisAsPause = ReplaceEllipsesWithPauses(text, out bool hadEllipsis);
+        if (!hadEllipsis)
+        {
+            return false;
+        }
+
+        foreach (string sentence in ellipsisAsPause.Split(SentenceBoundaries, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            string normalized = UtteranceText.Normalize(sentence);
+            foreach (string idiom in Idioms)
+            {
+                normalized = normalized.Replace(idiom, " ", StringComparison.Ordinal);
+            }
+
+            if (Markers.Any(marker => normalized.Contains(marker, StringComparison.Ordinal)))
             {
                 return true;
             }
         }
 
-        string[] tokens = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        return HasSlangMarker(tokens) || NegatedWishToLive(tokens);
+        return false;
+    }
+
+    private static string ReplaceEllipsesWithPauses(string text, out bool hadEllipsis)
+    {
+        hadEllipsis = false;
+        if (!text.Contains('…') && !text.Contains("..", StringComparison.Ordinal))
+        {
+            return text;
+        }
+
+        char[] characters = text.ToCharArray();
+        for (int index = 0; index < characters.Length; index++)
+        {
+            if (characters[index] == '…')
+            {
+                characters[index] = ' ';
+                hadEllipsis = true;
+                continue;
+            }
+
+            if (characters[index] != '.' || index + 1 >= characters.Length || characters[index + 1] != '.')
+            {
+                continue;
+            }
+
+            hadEllipsis = true;
+            while (index < characters.Length && characters[index] == '.')
+            {
+                characters[index++] = ' ';
+            }
+
+            index--;
+        }
+
+        return new string(characters);
     }
 
     /// <summary>

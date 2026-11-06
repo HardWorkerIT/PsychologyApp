@@ -18,7 +18,7 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
         return await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
             ChatSql.InsertSession,
-            new { Title = title, Now = ToIso(nowUtc) },
+            new { Title = title, Now = ToIso(nowUtc), BackupKey = Guid.NewGuid().ToString("N") },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -31,6 +31,15 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
         return rows.Select(ToDto).ToList();
+    }
+
+    public async Task<ChatExportMetrics> GetExportMetricsAsync(CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await connection.QuerySingleAsync<ChatExportMetrics>(DapperCommandFactory.Create(
+            ChatSql.SelectExportMetrics,
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     public async Task<ChatSessionDTO?> GetSessionAsync(long sessionId, CancellationToken cancellationToken = default)
@@ -253,16 +262,64 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
             new { SessionId = sessionId },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
-        return rows.Select(r => new ChatMessageDTO
-        {
-            Id = r.MessageId,
-            SessionId = r.SessionId,
-            Role = (ChatRole)r.Role,
-            Text = r.Text,
-            CreatedAt = FromIso(r.CreatedAt),
-            QuickReplies = ChatQuickReplyJson.Deserialize(r.QuickRepliesJson)
-        }).ToList();
+        return rows.Select(ToMessageDto).ToList();
     }
+
+    public async Task<ChatExportSnapshot> GetExportSnapshotAsync(int limit, CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        await using SqliteTransaction transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        int cap = Math.Max(1, limit);
+        IEnumerable<SessionRow> sessionRows = await connection.QueryAsync<SessionRow>(DapperCommandFactory.Create(
+            ChatSql.SelectExportSessions,
+            new { Limit = cap },
+            transaction,
+            CommandTimeoutSeconds,
+            cancellationToken)).ConfigureAwait(false);
+        IEnumerable<MessageRow> messageRows = await connection.QueryAsync<MessageRow>(DapperCommandFactory.Create(
+            ChatSql.SelectMessagesForExport,
+            new { Limit = cap },
+            transaction,
+            CommandTimeoutSeconds,
+            cancellationToken)).ConfigureAwait(false);
+        IEnumerable<MemoryRow> memoryRows = await connection.QueryAsync<MemoryRow>(DapperCommandFactory.Create(
+            ChatSql.SelectMemory,
+            transaction: transaction,
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        Dictionary<string, string> memory = memoryRows.ToDictionary(row => row.Key, row => row.Value, StringComparer.Ordinal);
+        return new ChatExportSnapshot(sessionRows.Select(ToDto).ToList(), messageRows.Select(ToMessageDto).ToList(), memory);
+    }
+
+    public async Task<ChatMessagePage> GetMessagesPageAsync(
+        long sessionId,
+        long? beforeMessageId,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        int limit = Math.Clamp(pageSize, 1, 500);
+        string sql = beforeMessageId is null ? ChatSql.SelectLatestMessages : ChatSql.SelectMessagesBefore;
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        IEnumerable<MessageRow> rows = await connection.QueryAsync<MessageRow>(DapperCommandFactory.Create(
+            sql,
+            new { SessionId = sessionId, BeforeMessageId = beforeMessageId, Limit = limit + 1 },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        List<MessageRow> newestFirst = rows.Take(limit + 1).ToList();
+        bool hasOlder = newestFirst.Count > limit;
+        return new ChatMessagePage(newestFirst.Take(limit).Reverse().Select(ToMessageDto).ToList(), hasOlder);
+    }
+
+    private static ChatMessageDTO ToMessageDto(MessageRow row) => new()
+    {
+        Id = row.MessageId,
+        SessionId = row.SessionId,
+        Role = (ChatRole)row.Role,
+        Text = row.Text,
+        CreatedAt = FromIso(row.CreatedAt),
+        QuickReplies = ChatQuickReplyJson.Deserialize(row.QuickRepliesJson)
+    };
 
     private static ChatSessionDTO ToDto(SessionRow r) => new()
     {
@@ -275,6 +332,7 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
         FirstIntensity = r.FirstIntensity,
         LastIntensity = r.LastIntensity,
         StateJson = r.StateJson,
+        BackupKey = r.BackupKey,
         Preview = r.Preview,
         MessageCount = r.MessageCount,
         UserMessageCount = r.UserMessageCount
@@ -295,6 +353,7 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
         public int? FirstIntensity { get; set; }
         public int? LastIntensity { get; set; }
         public string? StateJson { get; set; }
+        public string? BackupKey { get; set; }
         public string? Preview { get; set; }
         public int MessageCount { get; set; }
         public int UserMessageCount { get; set; }

@@ -20,7 +20,7 @@
         <!-- The saved line and the note of the open check-in, right under its faces: placed after both slots, a morning note sat
              under the evening row. One template, shown in whichever slot is open. -->
         <ControlTemplate x:Key="JournalNoteTemplate" x:DataType="vm:JournalViewModel">
-            <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
+            <VerticalStackLayout Spacing="{StaticResource CompactSpacing}" IsVisible="{Binding IsEditorReady}">
                 <!-- A quiet status: the chosen face already shows the answer; large blue text was the loudest thing on the page. -->
                 <Grid IsVisible="{Binding HasMoodSelected}" ColumnDefinitions="Auto,*" ColumnSpacing="6">
                     <ui:MaterialIconView
@@ -279,9 +279,18 @@
 
                     <!-- Morning, open: its name and the faces. -->
                     <VerticalStackLayout IsVisible="{Binding IsMorningSelected}" Spacing="{StaticResource CompactSpacing}" Padding="8,4,8,0">
+                        <ActivityIndicator IsRunning="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}" HorizontalOptions="Center"
+                                           SemanticProperties.Description="{Binding EditorLoadingText}" />
+                        <ui:RetryView
+                            IsVisible="{Binding IsEditorLoadFailed}"
+                            FailedText="{Binding EditorLoadFailedText}"
+                            RetryText="{Binding EditorRetryText}"
+                            RetryCommand="{Binding ReloadCommand}" />
                         <Label Text="{Binding SlotMorningLabel}" Style="{StaticResource ListRowTitleStyle}" />
                         <mood:MoodStripView
                             UsePlainLayout="True"
+                            IsVisible="{Binding IsEditorReady}"
+                            IsEnabled="{Binding IsEditorReady}"
                             HorizontalOptions="Fill"
                             QuestionText=""
                             RecordMoodCommand="{Binding RecordMoodCommand}"
@@ -339,9 +348,18 @@
 
                     <!-- Evening, open. -->
                     <VerticalStackLayout IsVisible="{Binding IsEveningSelected}" Spacing="{StaticResource CompactSpacing}" Padding="8,4,8,0">
+                        <ActivityIndicator IsRunning="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}" HorizontalOptions="Center"
+                                           SemanticProperties.Description="{Binding EditorLoadingText}" />
+                        <ui:RetryView
+                            IsVisible="{Binding IsEditorLoadFailed}"
+                            FailedText="{Binding EditorLoadFailedText}"
+                            RetryText="{Binding EditorRetryText}"
+                            RetryCommand="{Binding ReloadCommand}" />
                         <Label Text="{Binding SlotEveningLabel}" Style="{StaticResource ListRowTitleStyle}" />
                         <mood:MoodStripView
                             UsePlainLayout="True"
+                            IsVisible="{Binding IsEditorReady}"
+                            IsEnabled="{Binding IsEditorReady}"
                             HorizontalOptions="Fill"
                             QuestionText=""
                             RecordMoodCommand="{Binding RecordMoodCommand}"

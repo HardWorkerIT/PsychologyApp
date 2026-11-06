@@ -15,10 +15,20 @@ public interface IChatLanguageProvider
     bool IsEnglish { get; }
 }
 
+/// <summary>Drains chat writes before the database is replaced and rejects new writes until erasure is complete.</summary>
+public interface IChatEraseLifecycle
+{
+    Task PrepareForEraseAsync();
+    void CompleteErase();
+}
+
 /// <param name="Session">The chat after the turn (updated title, summary, activity time).</param>
 /// <param name="NewMessages">Everything appended by this turn, user message first.</param>
 /// <param name="Action">Something the UI must do after showing the messages.</param>
 public sealed record ChatTurnResult(ChatSessionDTO Session, IReadOnlyList<ChatMessageDTO> NewMessages, DialogueAction? Action);
+
+/// <summary>A bounded slice of one chat, oldest first, with a flag for an earlier page.</summary>
+public sealed record ChatMessagePage(IReadOnlyList<ChatMessageDTO> Messages, bool HasOlderMessages);
 
 public interface IChatService
 {
@@ -36,6 +46,23 @@ public interface IChatService
     Task<ChatSessionDTO?> GetChatAsync(long sessionId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<ChatMessageDTO>> GetMessagesAsync(long sessionId, CancellationToken cancellationToken = default);
+
+    /// <summary>Loads at most <paramref name="pageSize"/> messages before an optional message id; the first page is the newest.</summary>
+    async Task<ChatMessagePage> GetMessagesPageAsync(
+        long sessionId,
+        long? beforeMessageId,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        int limit = Math.Clamp(pageSize, 1, 500);
+        IReadOnlyList<ChatMessageDTO> all = await GetMessagesAsync(sessionId, cancellationToken).ConfigureAwait(false);
+        IEnumerable<ChatMessageDTO> candidates = beforeMessageId is { } before
+            ? all.Where(message => message.Id < before)
+            : all;
+        List<ChatMessageDTO> newestFirst = candidates.OrderByDescending(message => message.Id).Take(limit + 1).ToList();
+        bool hasOlder = newestFirst.Count > limit;
+        return new ChatMessagePage(newestFirst.Take(limit).Reverse().ToList(), hasOlder);
+    }
 
     Task<ChatTurnResult> SendTextAsync(long sessionId, string text, CancellationToken cancellationToken = default);
 
@@ -69,7 +96,7 @@ public sealed class ChatService(
     IChatLanguageProvider language,
     TimeProvider time,
     IQuotContentProvider quotes,
-    IEmotionGuesser? emotionGuesser = null) : IChatService
+    IEmotionGuesser? emotionGuesser = null) : IChatService, IChatEraseLifecycle
 {
     private const int MaxTitleLength = 60;
     private const int MaxNameLength = 30;
@@ -82,12 +109,47 @@ public sealed class ChatService(
     private readonly SemaphoreSlim _newChatGate = new(1, 1);
     // The session snapshot and cross-chat memory must be read and written with deletes/forgetting as one ordered operation.
     private readonly SemaphoreSlim _memoryGate = new(1, 1);
+    private readonly object _mutationSync = new();
+    private bool _eraseInProgress;
+    private int _activeMutations;
+    private TaskCompletionSource? _mutationsDrained;
+
+    public async Task PrepareForEraseAsync()
+    {
+        Task? drain = null;
+        lock (_mutationSync)
+        {
+            _eraseInProgress = true;
+            if (_activeMutations > 0)
+            {
+                _mutationsDrained ??= new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                drain = _mutationsDrained.Task;
+            }
+        }
+
+        if (drain is not null)
+        {
+            await drain.ConfigureAwait(false);
+        }
+    }
+
+    public void CompleteErase()
+    {
+        lock (_mutationSync)
+        {
+            _eraseInProgress = false;
+            _mutationsDrained = null;
+        }
+    }
 
     public Task<ChatTurnResult> StartNewChatAsync(CancellationToken cancellationToken = default) => StartChatAsync(topic: null, cancellationToken);
 
     public Task<ChatTurnResult> StartTopicChatAsync(string topic, CancellationToken cancellationToken = default) => StartChatAsync(topic, cancellationToken);
 
-    private async Task<ChatTurnResult> StartChatAsync(string? topic, CancellationToken cancellationToken)
+    private Task<ChatTurnResult> StartChatAsync(string? topic, CancellationToken cancellationToken) =>
+        WithMutationResultLeaseAsync(() => StartChatCoreAsync(topic, cancellationToken));
+
+    private async Task<ChatTurnResult> StartChatCoreAsync(string? topic, CancellationToken cancellationToken)
     {
         // "Is there an untouched chat?" then "create one" must not interleave, or two taps make two empty chats.
         await _newChatGate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -166,16 +228,26 @@ public sealed class ChatService(
     public Task<IReadOnlyList<ChatMessageDTO>> GetMessagesAsync(long sessionId, CancellationToken cancellationToken = default) =>
         repository.GetMessagesAsync(sessionId, cancellationToken);
 
+    public Task<ChatMessagePage> GetMessagesPageAsync(
+        long sessionId,
+        long? beforeMessageId,
+        int pageSize,
+        CancellationToken cancellationToken = default) =>
+        repository.GetMessagesPageAsync(sessionId, beforeMessageId, pageSize, cancellationToken);
+
     public Task<ChatTurnResult> SendTextAsync(long sessionId, string text, CancellationToken cancellationToken = default)
     {
         string capitalized = ChatText.Capitalize(text);
-        return TakeTurnAsync(sessionId, capitalized, new CompanionInput.FreeText(capitalized), cancellationToken);
+        return WithMutationResultLeaseAsync(() => TakeTurnAsync(sessionId, capitalized, new CompanionInput.FreeText(capitalized), cancellationToken));
     }
 
     public Task<ChatTurnResult> SendQuickReplyAsync(long sessionId, ChatQuickReply reply, CancellationToken cancellationToken = default) =>
-        TakeTurnAsync(sessionId, reply.Label, new CompanionInput.QuickReply(reply), cancellationToken);
+        WithMutationResultLeaseAsync(() => TakeTurnAsync(sessionId, reply.Label, new CompanionInput.QuickReply(reply), cancellationToken));
 
-    public async Task<ChatTurnResult?> CheckPracticeFollowUpAsync(long sessionId, CancellationToken cancellationToken = default)
+    public Task<ChatTurnResult?> CheckPracticeFollowUpAsync(long sessionId, CancellationToken cancellationToken = default) =>
+        WithMutationResultLeaseAsync(() => RunPracticeFollowUpAsync(sessionId, cancellationToken));
+
+    private async Task<ChatTurnResult?> RunPracticeFollowUpAsync(long sessionId, CancellationToken cancellationToken)
     {
         SemaphoreSlim gate = _turnGates.GetOrAdd(sessionId, _ => new SemaphoreSlim(1, 1));
         await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -226,7 +298,10 @@ public sealed class ChatService(
         return new ChatTurnResult(session, added, null);
     }
 
-    public async Task RenameAsync(long sessionId, string title, CancellationToken cancellationToken = default)
+    public Task RenameAsync(long sessionId, string title, CancellationToken cancellationToken = default) =>
+        WithMutationLeaseAsync(() => RenameCoreAsync(sessionId, title, cancellationToken));
+
+    private async Task RenameCoreAsync(long sessionId, string title, CancellationToken cancellationToken)
     {
         SemaphoreSlim gate = _turnGates.GetOrAdd(sessionId, _ => new SemaphoreSlim(1, 1));
         await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -256,7 +331,10 @@ public sealed class ChatService(
         }
     }
 
-    public async Task DeleteAsync(long sessionId, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(long sessionId, CancellationToken cancellationToken = default) =>
+        WithMutationLeaseAsync(() => DeleteCoreAsync(sessionId, cancellationToken));
+
+    private async Task DeleteCoreAsync(long sessionId, CancellationToken cancellationToken)
     {
         SemaphoreSlim gate = _turnGates.GetOrAdd(sessionId, _ => new SemaphoreSlim(1, 1));
         await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -287,7 +365,10 @@ public sealed class ChatService(
         return ChatStatistics.Compute(await sessionsTask.ConfigureAwait(false), await memoryTask.ConfigureAwait(false), Now(), time.LocalTimeZone);
     }
 
-    public async Task SetUserNameAsync(string? name, CancellationToken cancellationToken = default)
+    public Task SetUserNameAsync(string? name, CancellationToken cancellationToken = default) =>
+        WithMutationLeaseAsync(() => SetUserNameCoreAsync(name, cancellationToken));
+
+    private async Task SetUserNameCoreAsync(string? name, CancellationToken cancellationToken)
     {
         string trimmed = (name ?? string.Empty).Trim();
         await _memoryGate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -307,7 +388,10 @@ public sealed class ChatService(
         }
     }
 
-    public async Task DeleteAllChatsAsync(CancellationToken cancellationToken = default)
+    public Task DeleteAllChatsAsync(CancellationToken cancellationToken = default) =>
+        WithMutationLeaseAsync(() => DeleteAllChatsCoreAsync(cancellationToken));
+
+    private async Task DeleteAllChatsCoreAsync(CancellationToken cancellationToken)
     {
         await _memoryGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -322,7 +406,10 @@ public sealed class ChatService(
         }
     }
 
-    public async Task ForgetMemoryAsync(CancellationToken cancellationToken = default)
+    public Task ForgetMemoryAsync(CancellationToken cancellationToken = default) =>
+        WithMutationLeaseAsync(() => ForgetMemoryCoreAsync(cancellationToken));
+
+    private async Task ForgetMemoryCoreAsync(CancellationToken cancellationToken)
     {
         await _memoryGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
@@ -634,12 +721,57 @@ public sealed class ChatService(
         return recordedDay == today;
     }
 
+    private async Task<T> WithMutationResultLeaseAsync<T>(Func<Task<T>> operation)
+    {
+        using MutationLease lease = AcquireMutationLease();
+        return await operation().ConfigureAwait(false);
+    }
+
+    private async Task WithMutationLeaseAsync(Func<Task> operation)
+    {
+        using MutationLease lease = AcquireMutationLease();
+        await operation().ConfigureAwait(false);
+    }
+
+    private MutationLease AcquireMutationLease()
+    {
+        lock (_mutationSync)
+        {
+            if (_eraseInProgress)
+            {
+                throw new OperationCanceledException("Chat data is being erased.");
+            }
+
+            _activeMutations++;
+            return new MutationLease(this);
+        }
+    }
+
+    private void ReleaseMutationLease()
+    {
+        lock (_mutationSync)
+        {
+            _activeMutations--;
+            if (_eraseInProgress && _activeMutations == 0)
+            {
+                _mutationsDrained?.TrySetResult();
+            }
+        }
+    }
+
     private DateTime Now() => time.GetUtcNow().UtcDateTime;
 
     private string DefaultTitle() => language.IsEnglish ? EnglishDefaultTitle : RussianDefaultTitle;
 
     private const string EnglishDefaultTitle = "New chat";
     private const string RussianDefaultTitle = "Новый чат";
+
+    private sealed class MutationLease(ChatService owner) : IDisposable
+    {
+        private ChatService? _owner = owner;
+
+        public void Dispose() => Interlocked.Exchange(ref _owner, null)?.ReleaseMutationLease();
+    }
 
     /// <summary>The name a chat has until its feeling or the person names it, in either language it was created in.</summary>
     public static bool HasDefaultTitle(string title) => title is EnglishDefaultTitle or RussianDefaultTitle;

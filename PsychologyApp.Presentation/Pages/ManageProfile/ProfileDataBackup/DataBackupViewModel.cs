@@ -219,36 +219,43 @@ public sealed class DataBackupViewModel : BaseViewModel
 
     private async Task ExportBackupAsync(CancellationToken cancellationToken)
     {
-        string? choice = await _dialogService.PickOptionAsync(
-            AppStrings.BackupProtectTitle,
-            [AppStrings.BackupProtectWith, AppStrings.BackupProtectWithout],
-            AppStrings.Cancel);
-        if (choice is null)
+        try
         {
-            return;
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        string json;
-        bool passphraseProtected = false;
-        if (choice == AppStrings.BackupProtectWith)
-        {
-            string? passphrase = await AskNewPassphraseAsync(cancellationToken);
-            if (passphrase is null)
+            string? choice = await _dialogService.PickOptionAsync(
+                AppStrings.BackupProtectTitle,
+                [AppStrings.BackupProtectWith, AppStrings.BackupProtectWithout],
+                AppStrings.Cancel);
+            if (choice is null)
             {
                 return;
             }
 
-            json = await _backupService.ExportEncryptedAsync(passphrase, cancellationToken);
-            passphraseProtected = true;
-        }
-        else
-        {
-            json = await _backupService.ExportAsync(cancellationToken);
-        }
+            cancellationToken.ThrowIfCancellationRequested();
+            string json;
+            bool passphraseProtected = false;
+            if (choice == AppStrings.BackupProtectWith)
+            {
+                string? passphrase = await AskNewPassphraseAsync(cancellationToken);
+                if (passphrase is null)
+                {
+                    return;
+                }
 
-        string fileName = SharedFileNames.Backup(passphraseProtected, DateTime.Now);
-        await ShareTemporaryFileAsync(fileName, json, AppStrings.DataBackupExportTitle, cancellationToken);
+                json = await _backupService.ExportEncryptedAsync(passphrase, cancellationToken);
+                passphraseProtected = true;
+            }
+            else
+            {
+                json = await _backupService.ExportAsync(cancellationToken);
+            }
+
+            string fileName = SharedFileNames.Backup(passphraseProtected, DateTime.Now);
+            await ShareTemporaryFileAsync(fileName, json, AppStrings.DataBackupExportTitle, cancellationToken);
+        }
+        catch (BackupFormatException)
+        {
+            _toastService.LongToast(AppStrings.DataBackupExportTooLargeToast, AppToastKind.Error);
+        }
     }
 
     /// <summary>
@@ -303,14 +310,15 @@ public sealed class DataBackupViewModel : BaseViewModel
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            // A video or a database picked by mistake is rejected by its size, before it is read into memory.
+            // Keep oversized selections out of memory; malformed files are rejected by the backup parser after reading.
             if (new FileInfo(file.FullPath).Length > BackupService.MaxImportFileBytes)
             {
                 throw new BackupFormatException("The file is too large to be a backup.");
             }
 
             string json = await File.ReadAllTextAsync(file.FullPath, Encoding.UTF8, cancellationToken);
-            BackupImportResult? imported = _backupService.IsEncrypted(json)
+            bool isEncrypted = await Task.Run(() => _backupService.IsEncrypted(json), cancellationToken);
+            BackupImportResult? imported = isEncrypted
                 ? await ImportProtectedAsync(json, cancellationToken)
                 : await _backupService.ImportAsync(json, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();

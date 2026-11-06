@@ -19,7 +19,7 @@ public sealed class QuoteCatalogVersionStore(
 
     public async Task<int> GetAsync(CancellationToken cancellationToken = default)
     {
-        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         string? value = await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
             "SELECT Value FROM AppMetadata WHERE Key = @key;",
             new { key = Key },
@@ -45,4 +45,7 @@ public sealed class QuoteCatalogVersionStore(
 
     private ConfiguredTaskAwaitable<SqliteConnection> OpenConnectionAsync(CancellationToken cancellationToken) =>
         SqliteOperationLane.OpenAsync(connectionFactory, cancellationToken);
+
+    private ConfiguredTaskAwaitable<SqliteConnection> OpenReadConnectionAsync(CancellationToken cancellationToken) =>
+        SqliteOperationLane.OpenAsync(connectionFactory, cancellationToken, readOnly: true);
 }

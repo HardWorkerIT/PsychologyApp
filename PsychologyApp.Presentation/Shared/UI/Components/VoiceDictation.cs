@@ -15,8 +15,12 @@ public sealed class VoiceDictation
     private readonly Func<string> _readText;
     private readonly Action<string> _writeText;
     private CancellationTokenSource? _listening;
+    private CancellationTokenSource? _holdHintLifetime;
     private TaskCompletionSource? _listenFinished;
     private int _stopVersion;
+    private int _pressVersion;
+    private int _startingPressVersion;
+    private int _releaseStopPressVersion;
 
     public VoiceDictation(Func<string> readText, Action<string> writeText)
     {
@@ -71,22 +75,35 @@ public sealed class VoiceDictation
 
     private void OnPressed(Action? beforeStart)
     {
+        int pressVersion = Interlocked.Increment(ref _pressVersion);
         _pressed = true;
         _pressedAt = _lastTouchAt = DateTime.UtcNow;
         _pressStartedListening = !IsListening;
         if (_pressStartedListening)
         {
+            Volatile.Write(ref _startingPressVersion, pressVersion);
             beforeStart?.Invoke();
-            ToggleAsync().FireAndForget();
-            ShowHoldingWhenHeldAsync().FireAndForget();
+            ToggleCoreAsync(pressVersion).FireAndForget();
+            CancelHoldHintLifetime();
+            CancellationTokenSource holdHintLifetime = new();
+            _holdHintLifetime = holdHintLifetime;
+            ShowHoldingWhenHeldAsync(pressVersion, holdHintLifetime).FireAndForget();
         }
     }
 
     private void OnReleased()
     {
+        int pressVersion = Volatile.Read(ref _pressVersion);
         _pressed = false;
         _lastTouchAt = DateTime.UtcNow;
         bool held = (_lastTouchAt - _pressedAt).TotalMilliseconds >= HoldMilliseconds;
+        CancelHoldHintLifetime();
+
+        // If the recognizer is still waiting for the previous microphone, remember the held release and cancel it before it starts.
+        if (held && _pressStartedListening && !IsListening)
+        {
+            Volatile.Write(ref _releaseStopPressVersion, pressVersion);
+        }
 
         // Let go after holding: the words are done. A touch on a microphone that was already on stops it too.
         if (IsListening && (held || !_pressStartedListening))
@@ -111,27 +128,58 @@ public sealed class VoiceDictation
     }
 
     /// <summary>Once the press turns into a hold, the hint says that letting go finishes.</summary>
-    private async Task ShowHoldingWhenHeldAsync()
+    private async Task ShowHoldingWhenHeldAsync(int pressVersion, CancellationTokenSource lifetime)
     {
-        await Task.Delay(HoldMilliseconds);
-        if (_pressed && IsListening && StatusText == AppStrings.PracticeVoiceListening)
+        CancellationToken cancellationToken = lifetime.Token;
+        try
         {
-            UiHaptics.Tick();
-            SetStatus(AppStrings.PracticeVoiceHolding);
+            await Task.Delay(HoldMilliseconds, cancellationToken);
+            while (_pressed
+                && Volatile.Read(ref _pressVersion) == pressVersion
+                && Volatile.Read(ref _startingPressVersion) == pressVersion)
+            {
+                await Task.Delay(50, cancellationToken);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            if (Volatile.Read(ref _pressVersion) == pressVersion
+                && _pressed
+                && _pressStartedListening
+                && IsListening
+                && StatusText == AppStrings.PracticeVoiceListening)
+            {
+                UiHaptics.Tick();
+                SetStatus(AppStrings.PracticeVoiceHolding);
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            if (ReferenceEquals(_holdHintLifetime, lifetime))
+            {
+                _holdHintLifetime = null;
+                lifetime.Dispose();
+            }
         }
     }
 
-    public async Task ToggleAsync()
+    public Task ToggleAsync() => ToggleCoreAsync(null);
+
+    private async Task ToggleCoreAsync(int? pressVersion)
     {
         int startVersion = Volatile.Read(ref _stopVersion);
         if (IsListening)
         {
+            ClearStartingPress(pressVersion);
             await StopListeningAsync(cancel: false);
             return;
         }
 
         CancellationTokenSource listening;
         TaskCompletionSource listenFinished;
+        bool releasedBeforeListen;
         await ActiveGate.WaitAsync();
         try
         {
@@ -158,21 +206,30 @@ public sealed class VoiceDictation
             }
 
             listening = _listening = new CancellationTokenSource();
+            releasedBeforeListen = pressVersion is int startingPress
+                && Volatile.Read(ref _releaseStopPressVersion) == startingPress;
+            if (releasedBeforeListen)
+            {
+                listening.Cancel();
+            }
+
             listenFinished = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             _listenFinished = listenFinished;
             _active = this;
         }
         finally
         {
+            ClearStartingPress(pressVersion);
             ActiveGate.Release();
         }
 
         UiHaptics.Tick();
-        SetStatus(AppStrings.PracticeVoiceListening);
+        SetStatus(releasedBeforeListen ? string.Empty : AppStrings.PracticeVoiceListening);
 
         try
         {
             CancellationToken token = listening.Token;
+            token.ThrowIfCancellationRequested();
             SpeechInputResult result = await Speech.ListenAsync(heard => SetStatus(heard), token);
             token.ThrowIfCancellationRequested();
             if (result.Status == SpeechInputStatus.Recognized)
@@ -211,8 +268,33 @@ public sealed class VoiceDictation
     /// <summary>Stops listening without keeping the words, e.g. when the page closes.</summary>
     public Task StopAsync()
     {
+        _pressed = false;
+        Interlocked.Increment(ref _pressVersion);
+        Volatile.Write(ref _startingPressVersion, 0);
+        CancelHoldHintLifetime();
         Interlocked.Increment(ref _stopVersion);
         return StopListeningAsync(cancel: true);
+    }
+
+    private void ClearStartingPress(int? pressVersion)
+    {
+        if (pressVersion is int value)
+        {
+            Interlocked.CompareExchange(ref _startingPressVersion, 0, value);
+        }
+    }
+
+    private void CancelHoldHintLifetime()
+    {
+        CancellationTokenSource? lifetime = _holdHintLifetime;
+        _holdHintLifetime = null;
+        if (lifetime is null)
+        {
+            return;
+        }
+
+        lifetime.Cancel();
+        lifetime.Dispose();
     }
 
     private async Task StopListeningAsync(bool cancel)

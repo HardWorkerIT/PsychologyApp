@@ -7,9 +7,14 @@ namespace PsychologyApp.Presentation.Pages.ClinicalCare.BodyCheck;
 /// <summary>A chip of the Body page: a place, a sensation or a feeling.</summary>
 public sealed class BodyChoiceItem : INotifyPropertyChanged
 {
+    private string _text = string.Empty;
     private bool _isSelected;
 
-    public required string Text { get; init; }
+    public required string Text
+    {
+        get => _text;
+        init => _text = value;
+    }
 
     /// <summary>The place, sensation or feeling the chip stands for.</summary>
     public required object Value { get; init; }
@@ -30,6 +35,15 @@ public sealed class BodyChoiceItem : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void UpdateText(string text)
+    {
+        if (_text != text)
+        {
+            _text = text;
+            Changed(nameof(Text));
+        }
+    }
 
     private void Changed([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

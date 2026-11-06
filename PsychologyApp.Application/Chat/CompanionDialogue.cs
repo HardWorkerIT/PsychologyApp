@@ -1274,7 +1274,9 @@ public sealed partial class CompanionDialogue(
     }
 
     private static bool IsBodyFocusedPractice(TechniqueId technique) =>
-        technique is TechniqueId.Breathing or TechniqueId.MuscleRelax;
+        technique is TechniqueId.Breathing or TechniqueId.CyclicSigh or TechniqueId.MuscleRelax
+            or TechniqueId.BodyScan or TechniqueId.Flashback or TechniqueId.Anchor
+            or TechniqueId.Grounding;
 
     private static CompanionReply Reply(
         List<string> messages,

@@ -26,6 +26,7 @@ public sealed class RepeatStageView : PracticeStageView
     private readonly Border _circle;
     private readonly Ellipse _ripple;
     private readonly Label _count;
+    private CancellationTokenSource? _idlePulseCts;
 
     public RepeatStageView(TechniqueFlavor flavor)
         : base(flavor, AppStrings.StageRepeatTitle, AppStrings.StageRepeatHint)
@@ -84,7 +85,8 @@ public sealed class RepeatStageView : PracticeStageView
         SetActions(CreateButton(AppStrings.StageRepeatButton, Repeat));
         OnSourceTextChanged();
         OnCountChanged(0, RepeatCount);
-        Loaded += (_, _) => IdlePulseAsync().FireAndForget();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     public ICommand? RepeatCommand
@@ -159,12 +161,44 @@ public sealed class RepeatStageView : PracticeStageView
     /// A few slow breaths of the circle while it waits for the next repeat. Deliberately not endless: a looping animation keeps the
     /// screen busy for the battery and for accessibility services, which wait for the interface to settle.
     /// </summary>
-    private async Task IdlePulseAsync()
+    private void OnLoaded(object? sender, EventArgs e)
     {
-        for (int breath = 0; breath < IdleBreaths && UiAnimations.ShouldAnimate(_circle); breath++)
+        _idlePulseCts?.Cancel();
+        CancellationTokenSource pulseCts = new();
+        _idlePulseCts = pulseCts;
+        IdlePulseAsync(pulseCts).FireAndForget();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        _idlePulseCts?.Cancel();
+        _circle.CancelAnimations();
+    }
+
+    private async Task IdlePulseAsync(CancellationTokenSource pulseCts)
+    {
+        try
         {
-            await _circle.ScaleToAsync(1.03, 1600, Easing.SinInOut);
-            await _circle.ScaleToAsync(1, 1600, Easing.SinInOut);
+            for (int breath = 0; breath < IdleBreaths && UiAnimations.ShouldAnimate(_circle); breath++)
+            {
+                pulseCts.Token.ThrowIfCancellationRequested();
+                await _circle.ScaleToAsync(1.03, 1600, Easing.SinInOut);
+                pulseCts.Token.ThrowIfCancellationRequested();
+                await _circle.ScaleToAsync(1, 1600, Easing.SinInOut);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Leaving the stage stops its idle animation.
+        }
+        finally
+        {
+            if (ReferenceEquals(_idlePulseCts, pulseCts))
+            {
+                _idlePulseCts = null;
+            }
+
+            pulseCts.Dispose();
         }
     }
 }

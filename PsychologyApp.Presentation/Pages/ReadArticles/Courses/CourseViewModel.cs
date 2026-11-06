@@ -36,8 +36,13 @@ public sealed class CourseViewModel : BaseViewModel
     private IReadOnlyList<CourseDayItem> _days = [];
     private string _measureText = string.Empty;
     private string _progressText = string.Empty;
-    private string _primaryText = string.Empty;
-    private bool _canAct = true;
+    private string _primaryText = AppStrings.SkeletonLoadingLabel;
+    private bool _canAct;
+    private bool _hasRefreshed;
+    private bool _isLoading = true;
+    private bool _isLoadFailed;
+    private string _loadedLanguageKey = AppStrings.Language;
+    private int _refreshGeneration;
 
     public CourseViewModel(
         INavigationService navigation,
@@ -55,6 +60,7 @@ public sealed class CourseViewModel : BaseViewModel
         _databaseReady = databaseReady;
         _courseId = courseId;
         BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
+        ReloadCommand = new AsyncCommand(RefreshAsync);
         PrimaryCommand = new AsyncCommand(StartOrContinueAsync);
         TakeTestCommand = new AsyncCommand(() => _course is { } course ? _navigation.GoToTestAsync(course.TestId) : Task.CompletedTask);
         ResetCommand = new AsyncCommand(ResetAsync);
@@ -62,6 +68,7 @@ public sealed class CourseViewModel : BaseViewModel
     }
 
     public ICommand BackCommand { get; }
+    public ICommand ReloadCommand { get; }
     public ICommand PrimaryCommand { get; }
     public ICommand TakeTestCommand { get; }
     public ICommand ResetCommand { get; }
@@ -73,6 +80,9 @@ public sealed class CourseViewModel : BaseViewModel
     public string MeasureHint => _course is { } course ? AppStrings.CourseMeasureHint(course.TestName) : string.Empty;
     public string TakeTestText => _course is { } course ? AppStrings.CourseTakeTest(course.TestName) : string.Empty;
     public string ResetText => AppStrings.CourseReset;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
     public bool IsStarted => _state is not null;
 
     public string MeasureText
@@ -107,6 +117,18 @@ public sealed class CourseViewModel : BaseViewModel
         private set => SetProperty(ref _canAct, value);
     }
 
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set => SetProperty(ref _isLoading, value);
+    }
+
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set => SetProperty(ref _isLoadFailed, value);
+    }
+
     public IReadOnlyList<CourseDayItem> Days
     {
         get => _days;
@@ -118,13 +140,54 @@ public sealed class CourseViewModel : BaseViewModel
     {
         if (_course is not { } course)
         {
+            IsLoadFailed = true;
+            IsLoading = false;
+            CanAct = false;
+            PrimaryText = AppStrings.LoadFailed;
             return;
         }
 
-        await _databaseReady.WaitAsync();
-        ReadingState reading = await _reading.GetAsync();
-        IReadOnlyList<TestResultDTO> history = await _progress.GetTestResultHistoryAsync(course.TestId, HistoryLimit);
-        await UiThread.RunAsync(() => Apply(course, reading.Course(course.Id), history));
+        string languageKey = AppStrings.Language;
+        int generation = Interlocked.Increment(ref _refreshGeneration);
+        if (!_hasRefreshed)
+        {
+            IsLoadFailed = false;
+            IsLoading = true;
+            CanAct = false;
+            PrimaryText = AppStrings.SkeletonLoadingLabel;
+        }
+
+        try
+        {
+            await _databaseReady.WaitAsync();
+            ReadingState reading = await _reading.GetAsync();
+            IReadOnlyList<TestResultDTO> history = await _progress.GetTestResultHistoryAsync(course.TestId, HistoryLimit);
+            await UiThread.RunAsync(() =>
+            {
+                if (generation == Volatile.Read(ref _refreshGeneration)
+                    && string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    Apply(course, reading.Course(course.Id), history);
+                    _hasRefreshed = true;
+                    _loadedLanguageKey = languageKey;
+                    IsLoadFailed = false;
+                    IsLoading = false;
+                }
+            });
+        }
+        catch (Exception loadError)
+        {
+            if (generation == Volatile.Read(ref _refreshGeneration))
+            {
+                BestEffort.Report(loadError);
+                if (!_hasRefreshed)
+                {
+                    IsLoadFailed = true;
+                    IsLoading = false;
+                    PrimaryText = AppStrings.LoadFailed;
+                }
+            }
+        }
     }
 
     private void Apply(Course course, CourseProgress? state, IReadOnlyList<TestResultDTO> history)
@@ -206,8 +269,19 @@ public sealed class CourseViewModel : BaseViewModel
 
     protected override void RefreshLocalizedProperties()
     {
-        _course = ArticleContent.FindCourse(_courseId, AppStrings.Language);
-        Notify(nameof(Title), nameof(Summary), nameof(MeasureTitle), nameof(MeasureHint), nameof(TakeTestText), nameof(ResetText));
-        RefreshAsync().FireAndForget();
+        string languageKey = AppStrings.Language;
+        bool languageChanged = !string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal);
+        if (languageChanged)
+        {
+            _loadedLanguageKey = languageKey;
+            _course = ArticleContent.FindCourse(_courseId, languageKey);
+        }
+
+        Notify(nameof(Title), nameof(Summary), nameof(MeasureTitle), nameof(MeasureHint), nameof(TakeTestText), nameof(ResetText),
+            nameof(LoadingText), nameof(LoadFailedText), nameof(RetryText));
+        if (languageChanged && (_hasRefreshed || Volatile.Read(ref _refreshGeneration) > 0))
+        {
+            RefreshAsync().FireAndForget();
+        }
     }
 }

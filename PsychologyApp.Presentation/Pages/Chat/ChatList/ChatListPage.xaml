@@ -27,7 +27,7 @@
     <!-- One card per chat, as elsewhere in the app: the state or the initial, the title and time, the last line. -->
     <Grid>
         <CollectionView
-            IsVisible="{Binding IsChatAvailable}"
+            IsVisible="{Binding ShowChatList}"
             ItemsSource="{Binding Chats}"
             SelectionMode="None"
             VerticalScrollBarVisibility="Never"
@@ -319,6 +319,23 @@
                 </FlexLayout>
             </VerticalStackLayout>
         </ScrollView>
+
+        <VerticalStackLayout
+            IsVisible="{Binding ShowInitialLoading}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="10">
+            <ActivityIndicator IsRunning="{Binding IsLoading}" />
+            <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <ui:RetryView
+            IsVisible="{Binding ShowLoadFailed}"
+            FailedText="{Binding LoadFailedText}"
+            RetryText="{Binding RetryText}"
+            RetryCommand="{Binding ReloadCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
 
         <!-- A new chat: the screen's main action under the thumb, as in a messenger. A rounded tile with its words, in the
              shapes and the soft card shadow of the rest of the app, not a bare circle with a heavy shadow. -->

@@ -15,6 +15,9 @@ public partial class ChatPage : ContentPage
 
     /// <summary>Whether the bottom of the conversation was on screen at the last scroll event; new messages only pull the view down while this is true.</summary>
     private bool _isNearBottom = true;
+    private bool _hasReachedNewestAfterLoad;
+    private ChatBubble? _prependAnchorBubble;
+    private long? _prependAnchorMessageId;
 
     public ChatPage(IChatViewModelFactory viewModelFactory, long? sessionId, INavigation hostNavigation, string? topic = null, string? opener = null)
     {
@@ -121,6 +124,23 @@ public partial class ChatPage : ContentPage
             return;
         }
 
+        if (_viewModel.IsLoadingOlderMessages
+            && e.Action == NotifyCollectionChangedAction.Reset
+            && _prependAnchorBubble is { } anchor)
+        {
+            int index = _prependAnchorMessageId is { } messageId
+                ? FindMessageIndex(messageId)
+                : _viewModel.Messages.IndexOf(anchor);
+            if (index < 0)
+            {
+                index = _viewModel.Messages.IndexOf(anchor);
+            }
+            _prependAnchorBubble = null;
+            _prependAnchorMessageId = null;
+            Dispatcher.Dispatch(() => SafeScrollTo(index, ScrollToPosition.Start, animate: false));
+            return;
+        }
+
         bool isOwnMessage = e.Action == NotifyCollectionChangedAction.Add
             && e.NewItems is { Count: > 0 } added
             && added[^1] is ChatBubble { IsUser: true };
@@ -141,6 +161,62 @@ public partial class ChatPage : ContentPage
         ScrollToTopButton.IsVisible = canScrollUp;
         ScrollToBottomButton.IsVisible = canScrollDown;
         _isNearBottom = !canScrollDown;
+        if (count > 0 && e.LastVisibleItemIndex >= count - 1)
+        {
+            _hasReachedNewestAfterLoad = true;
+        }
+
+        if (_viewModel.IsLoadingOlderMessages)
+        {
+            if (_isNearBottom)
+            {
+                _prependAnchorBubble = null;
+                _prependAnchorMessageId = null;
+            }
+            else if (e.FirstVisibleItemIndex >= 0 && e.FirstVisibleItemIndex < count)
+            {
+                _prependAnchorBubble = _viewModel.Messages[e.FirstVisibleItemIndex];
+                _prependAnchorMessageId = _prependAnchorBubble.MessageId;
+            }
+
+            return;
+        }
+
+        if (_hasReachedNewestAfterLoad
+            && e.FirstVisibleItemIndex is >= 0 and <= 2
+            && _viewModel.HasOlderMessages
+            && !_viewModel.IsOlderMessagesLoadFailed
+            && !_viewModel.IsLoadingOlderMessages)
+        {
+            _prependAnchorBubble = _viewModel.Messages[e.FirstVisibleItemIndex];
+            _prependAnchorMessageId = _prependAnchorBubble.MessageId;
+            LoadOlderFromTopAsync(_prependAnchorBubble).FireAndForget();
+        }
+    }
+
+    private async Task LoadOlderFromTopAsync(ChatBubble anchor)
+    {
+        await _viewModel.LoadOlderMessagesAsync();
+        if (!_viewModel.IsOlderMessagesLoadFailed
+            && (ReferenceEquals(_prependAnchorBubble, anchor)
+                || (_prependAnchorMessageId is { } messageId && anchor.MessageId == messageId)))
+        {
+            _prependAnchorBubble = null;
+            _prependAnchorMessageId = null;
+        }
+    }
+
+    private int FindMessageIndex(long messageId)
+    {
+        for (int index = 0; index < _viewModel.Messages.Count; index++)
+        {
+            if (_viewModel.Messages[index].MessageId == messageId)
+            {
+                return index;
+            }
+        }
+
+        return -1;
     }
 
     private void OnScrollToTopTapped(object? sender, TappedEventArgs e)

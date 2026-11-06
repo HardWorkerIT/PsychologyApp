@@ -68,5 +68,20 @@
                 </vm:JournalTimelineItemTemplateSelector>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        <ActivityIndicator
+            Grid.Row="3"
+            IsRunning="{Binding IsLoading}"
+            IsVisible="{Binding IsLoading}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            SemanticProperties.Description="{Binding LoadingText}" />
+        <ui:RetryView
+            Grid.Row="3"
+            IsVisible="{Binding IsLoadFailed}"
+            FailedText="{Binding LoadFailedText}"
+            RetryText="{Binding RetryText}"
+            RetryCommand="{Binding ReloadCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
     </Grid>
 </ContentPage>

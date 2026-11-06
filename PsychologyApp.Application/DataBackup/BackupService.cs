@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.Text;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Application.Chat;
@@ -18,35 +20,112 @@ public sealed class BackupService(
     IBodyRepository bodyRepository) : IBackupService
 {
     private const int ExportLimit = 100_000;
+    private const int ExportProbeLimit = ExportLimit + 1;
 
     /// <summary>A real backup is a few MB; this only stops a wrong file (a video, a database) from being read into memory.</summary>
     internal const int MaxImportCharacters = 64 * 1024 * 1024;
 
     /// <summary>
-    /// The same limit in bytes, for checking a picked file before it is read: an encrypted backup has up to twice as many
-    /// characters, all ASCII, and a plain one up to three bytes per character in UTF-8.
+    /// Caps the picked file before reading it. It also bounds the largest UTF-8 text that can be loaded into memory; accepting
+    /// three times this many bytes lets an ASCII file exceed the character limit before the parser can reject it.
     /// </summary>
-    public const long MaxImportFileBytes = MaxImportCharacters * 3L;
+    public const long MaxImportFileBytes = MaxImportCharacters;
 
     private const int MaxEscalations = 1_000;
 
     public async Task<string> ExportAsync(CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<MoodEntryDTO> moods = await progress.GetMoodsAsync(null, null, ExportLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<TestResultDTO> testResults = await progress.GetAllTestResultsAsync(ExportLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<CompletionDTO> completions = await progress.GetRecentTechniqueCompletionsAsync(ExportLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<SessionResultDTO> sessionResults = await progress.GetRecentSessionResultsAsync(ExportLimit, cancellationToken).ConfigureAwait(false);
-        SafetyPlanDTO? safetyPlan = await clinicalCareRepository.GetSafetyPlanAsync(cancellationToken).ConfigureAwait(false);
+        BackupExportMetrics exportMetrics = await backupRepository.GetExportMetricsAsync(cancellationToken).ConfigureAwait(false);
+        if (exportMetrics.MoodEntryCount > ExportLimit
+            || exportMetrics.TestResultCount > ExportLimit
+            || exportMetrics.CompletionCount > ExportLimit
+            || exportMetrics.SessionResultCount > ExportLimit
+            || exportMetrics.TechniqueCount > ExportLimit
+            || exportMetrics.EscalationCount > MaxEscalations
+            || exportMetrics.Utf8PayloadBytes > MaxImportFileBytes)
+        {
+            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
+        }
 
-        IReadOnlyList<ChatSessionDTO> sessions = await chatRepository.GetSessionsAsync(cancellationToken).ConfigureAwait(false);
+        ChatExportMetrics chatMetrics = await chatRepository.GetExportMetricsAsync(cancellationToken).ConfigureAwait(false);
+        if (chatMetrics.SessionCount > ExportLimit
+            || chatMetrics.MessageCount > ExportLimit
+            || chatMetrics.MemoryCount > ExportLimit
+            || chatMetrics.Utf8PayloadBytes > MaxImportFileBytes)
+        {
+            throw new BackupFormatException("The chat history is too large to export and restore on this device.");
+        }
+
+        IReadOnlyList<MoodEntryDTO> moods = await progress.GetMoodsAsync(null, null, ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<TestResultDTO> testResults = await progress.GetAllTestResultsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<CompletionDTO> completions = await progress.GetRecentTechniqueCompletionsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<SessionResultDTO> sessionResults = await progress.GetRecentSessionResultsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<BackupTechniqueDTO> techniques = await backupRepository.GetTechniquesAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<EscalationEventDTO> escalations = await clinicalCareRepository.GetRecentEscalationsAsync(MaxEscalations + 1, cancellationToken).ConfigureAwait(false);
+
+        if (moods.Count > ExportLimit
+            || testResults.Count > ExportLimit
+            || completions.Count > ExportLimit
+            || sessionResults.Count > ExportLimit
+            || techniques.Count > ExportLimit
+            || escalations.Count > MaxEscalations)
+        {
+            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
+        }
+
+        SafetyPlanDTO? safetyPlan = await clinicalCareRepository.GetSafetyPlanAsync(cancellationToken).ConfigureAwait(false);
+        ChatExportSnapshot chatSnapshot = await chatRepository.GetExportSnapshotAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ChatSessionDTO> sessions = chatSnapshot.Sessions;
+        IReadOnlyList<ChatMessageDTO> exportMessages = chatSnapshot.Messages;
+        IReadOnlyDictionary<string, string> chatMemory = chatSnapshot.Memory;
+        if (sessions.Count > ExportLimit || exportMessages.Count > ExportLimit || chatMemory.Count > ExportLimit)
+        {
+            throw new BackupFormatException("The chat history is too large to export and restore on this device.");
+        }
+
+        Dictionary<long, List<ChatMessageDTO>> messagesBySession = new();
+        foreach (ChatMessageDTO message in exportMessages)
+        {
+            if (!messagesBySession.TryGetValue(message.SessionId, out List<ChatMessageDTO>? sessionMessages))
+            {
+                sessionMessages = [];
+                messagesBySession.Add(message.SessionId, sessionMessages);
+            }
+
+            sessionMessages.Add(message);
+        }
+
         List<BackupChatSessionDTO> chatSessions = new(sessions.Count);
         foreach (ChatSessionDTO session in sessions)
         {
-            IReadOnlyList<ChatMessageDTO> messages = await chatRepository.GetMessagesAsync(session.Id, cancellationToken).ConfigureAwait(false);
-            chatSessions.Add(new BackupChatSessionDTO { Session = session, Messages = messages });
+            messagesBySession.Remove(session.Id, out List<ChatMessageDTO>? messages);
+            chatSessions.Add(new BackupChatSessionDTO
+            {
+                Session = new BackupChatSessionInfoDTO
+                {
+                    Id = session.Id,
+                    Title = session.Title,
+                    CreatedAt = session.CreatedAt,
+                    UpdatedAt = session.UpdatedAt,
+                    Emotion = session.Emotion,
+                    Theme = session.Theme,
+                    FirstIntensity = session.FirstIntensity,
+                    LastIntensity = session.LastIntensity,
+                    StateJson = session.StateJson,
+                    BackupKey = session.BackupKey
+                },
+                Messages = messages is null ? Array.Empty<ChatMessageDTO>() : messages
+            });
         }
+        messagesBySession.Clear();
+        exportMessages = Array.Empty<ChatMessageDTO>();
+        sessions = Array.Empty<ChatSessionDTO>();
 
         IReadOnlySet<string> favourites = await favoriteQuoteTextStore.GetTextsAsync(cancellationToken).ConfigureAwait(false);
+        if (favourites.Count > ExportLimit)
+        {
+            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
+        }
 
         AppBackupDTO backup = new()
         {
@@ -57,30 +136,46 @@ public sealed class BackupService(
             SessionResults = sessionResults,
             ChatSessions = chatSessions,
             SafetyPlan = safetyPlan is null || safetyPlan.IsEmpty ? null : safetyPlan,
-            ChatMemory = await chatRepository.GetMemoryAsync(cancellationToken).ConfigureAwait(false),
+            ChatMemory = chatMemory,
             FavoriteQuoteTexts = favourites.OrderBy(text => text, StringComparer.Ordinal).ToList(),
-            Techniques = await backupRepository.GetTechniquesAsync(cancellationToken).ConfigureAwait(false),
+            Techniques = techniques,
             LatestRiskAssessment = await clinicalCareRepository.GetLatestRiskAssessmentAsync(cancellationToken).ConfigureAwait(false),
             TherapyProgram = await clinicalCareRepository.GetActiveProgramAsync(cancellationToken).ConfigureAwait(false),
-            Escalations = await clinicalCareRepository.GetRecentEscalationsAsync(MaxEscalations, cancellationToken).ConfigureAwait(false),
+            Escalations = escalations,
             ExposurePlan = await exposureRepository.GetAsync(cancellationToken).ConfigureAwait(false),
             Reading = await readingRepository.GetAsync(cancellationToken).ConfigureAwait(false),
             Body = await bodyRepository.GetAsync(cancellationToken).ConfigureAwait(false)
         };
 
-        return JsonSerializer.Serialize(backup, BackupJsonContext.Default.AppBackupDTO);
+        BoundedBackupBufferWriter output = new(MaxImportCharacters);
+        using Utf8JsonWriter jsonWriter = new(output);
+        JsonSerializer.Serialize(jsonWriter, backup, BackupJsonContext.Default.AppBackupDTO);
+        jsonWriter.Flush();
+        return Encoding.UTF8.GetString(output.WrittenSpan);
     }
 
     public async Task<string> ExportEncryptedAsync(string passphrase, CancellationToken cancellationToken = default)
     {
         string plain = await ExportAsync(cancellationToken).ConfigureAwait(false);
+        int plaintextByteCount = Encoding.UTF8.GetByteCount(plain);
+        if (BackupEncryption.GetEncryptedFileLength(plaintextByteCount) > MaxImportFileBytes)
+        {
+            throw new BackupFormatException("The protected backup is too large to import on this device.");
+        }
+
         // PBKDF2 with a high iteration count takes a moment: off the caller thread.
-        return await Task.Run(() => BackupEncryption.Encrypt(plain, passphrase), cancellationToken).ConfigureAwait(false);
+        string encrypted = await Task.Run(() => BackupEncryption.Encrypt(plain, passphrase), cancellationToken).ConfigureAwait(false);
+        if (System.Text.Encoding.UTF8.GetByteCount(encrypted) > MaxImportFileBytes)
+        {
+            throw new BackupFormatException("The protected backup is too large to import on this device.");
+        }
+
+        return encrypted;
     }
 
     public async Task<BackupImportResult> ImportEncryptedAsync(string file, string passphrase, CancellationToken cancellationToken = default)
     {
-        if (file.Length > MaxImportCharacters * 2L)
+        if (file.Length > MaxImportCharacters)
         {
             throw new BackupFormatException("The file is too large to be a backup.");
         }
@@ -91,14 +186,75 @@ public sealed class BackupService(
 
     public bool IsEncrypted(string file) => BackupEncryption.IsEncrypted(file);
 
-    public async Task<BackupImportResult> ImportAsync(string json, CancellationToken cancellationToken = default)
+    private sealed class BoundedBackupBufferWriter(int maximumBytes) : IBufferWriter<byte>
     {
-        if (BackupEncryption.IsEncrypted(json))
+        private byte[] _buffer = new byte[Math.Min(4096, maximumBytes)];
+        private int _written;
+
+        public ReadOnlySpan<byte> WrittenSpan => _buffer.AsSpan(0, _written);
+
+        public void Advance(int count)
         {
-            throw new BackupPassphraseException("A passphrase is needed to open this backup.");
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
+            if ((long)_written + count > maximumBytes)
+            {
+                throw TooLarge();
+            }
+
+            if (count > _buffer.Length - _written)
+            {
+                throw new ArgumentException("The buffer was advanced beyond the available memory.", nameof(count));
+            }
+
+            _written += count;
         }
 
-        AppBackupDTO backup = Parse(json);
+        public Memory<byte> GetMemory(int sizeHint = 0)
+        {
+            EnsureAvailable(sizeHint);
+            return _buffer.AsMemory(_written);
+        }
+
+        public Span<byte> GetSpan(int sizeHint = 0)
+        {
+            EnsureAvailable(sizeHint);
+            return _buffer.AsSpan(_written);
+        }
+
+        private void EnsureAvailable(int sizeHint)
+        {
+            if (sizeHint < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sizeHint));
+            }
+
+            int requiredSize = Math.Max(sizeHint, 1);
+            if ((long)_written + requiredSize > maximumBytes)
+            {
+                throw TooLarge();
+            }
+
+            int requiredCapacity = _written + requiredSize;
+            if (requiredCapacity <= _buffer.Length)
+            {
+                return;
+            }
+
+            int doubledCapacity = _buffer.Length <= maximumBytes / 2 ? _buffer.Length * 2 : maximumBytes;
+            Array.Resize(ref _buffer, Math.Max(requiredCapacity, doubledCapacity));
+        }
+
+        private static BackupFormatException TooLarge() =>
+            new("The backup is too large to export and restore on this device.");
+    }
+
+    public async Task<BackupImportResult> ImportAsync(string json, CancellationToken cancellationToken = default)
+    {
+        AppBackupDTO backup = await Task.Run(() => ParseImport(json), cancellationToken).ConfigureAwait(false);
         int sourceRows = backup.MoodEntries.Count + backup.TestResults.Count + backup.Completions.Count
             + backup.SessionResults.Count + backup.ChatSessions.Count + backup.Techniques.Count;
 
@@ -110,6 +266,16 @@ public sealed class BackupService(
         {
             SkippedDuplicates = Math.Max(0, sourceRows - added)
         };
+    }
+
+    private static AppBackupDTO ParseImport(string json)
+    {
+        if (BackupEncryption.IsEncrypted(json))
+        {
+            throw new BackupPassphraseException("A passphrase is needed to open this backup.");
+        }
+
+        return Parse(json);
     }
 
     private static AppBackupDTO Parse(string json)
@@ -146,7 +312,34 @@ public sealed class BackupService(
         }
 
         ValidateRequiredData(backup);
+        ValidateImportLimits(backup);
         return backup;
+    }
+
+    private static void ValidateImportLimits(AppBackupDTO backup)
+    {
+        if (backup.MoodEntries.Count > ExportLimit
+            || backup.TestResults.Count > ExportLimit
+            || backup.Completions.Count > ExportLimit
+            || backup.SessionResults.Count > ExportLimit
+            || backup.ChatSessions.Count > ExportLimit
+            || backup.Techniques.Count > ExportLimit
+            || backup.ChatMemory.Count > ExportLimit
+            || backup.Escalations.Count > MaxEscalations
+            || backup.FavoriteQuoteTexts.Count > ExportLimit)
+        {
+            throw new BackupFormatException("The saved data is too large to import and restore on this device.");
+        }
+
+        long messageCount = 0;
+        foreach (BackupChatSessionDTO session in backup.ChatSessions)
+        {
+            messageCount += session.Messages.Count;
+            if (messageCount > ExportLimit)
+            {
+                throw new BackupFormatException("The chat history is too large to import and restore on this device.");
+            }
+        }
     }
 
     // Nullable annotations do not reject explicit JSON nulls or null array elements.
@@ -171,7 +364,25 @@ public sealed class BackupService(
             {
                 throw new BackupFormatException("The backup contains a missing chat session.");
             }
+
+            if (chat.Session.BackupKey is { Length: > 128 })
+            {
+                throw new BackupFormatException("The backup contains an invalid chat session key.");
+            }
+
             RequireItems(chat.Messages);
+        }
+        if (backup.ChatSessions.Where(chat => !string.IsNullOrWhiteSpace(chat.Session.BackupKey))
+            .GroupBy(chat => chat.Session.BackupKey!, StringComparer.Ordinal)
+            .Any(group => group.Count() > 1))
+        {
+            throw new BackupFormatException("The backup contains duplicate chat sessions.");
+        }
+        if (backup.ChatSessions.Where(chat => string.IsNullOrWhiteSpace(chat.Session.BackupKey))
+            .GroupBy(chat => (chat.Session.Id, chat.Session.CreatedAt))
+            .Any(group => group.Count() > 1))
+        {
+            throw new BackupFormatException("The backup contains ambiguous legacy chat sessions.");
         }
         if (backup.SafetyPlan is { } plan)
         {
@@ -227,9 +438,10 @@ public sealed class BackupService(
         Body = BodyService.Sanitize(backup.Body)
     };
 
-    private static ChatSessionDTO SanitizeChatSession(ChatSessionDTO session) => new()
+    private static BackupChatSessionInfoDTO SanitizeChatSession(BackupChatSessionInfoDTO session) => new()
     {
         Id = session.Id,
+        BackupKey = session.BackupKey,
         Title = session.Title,
         CreatedAt = session.CreatedAt,
         UpdatedAt = session.UpdatedAt,

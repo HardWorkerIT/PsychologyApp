@@ -55,6 +55,9 @@ public sealed record JournalMoodSnapshot(
 /// <summary>A check-in of the editor's day as its morning or evening row shows it: the mood and the note as the history shows it.</summary>
 public sealed record JournalSlotPreview(int MoodLevel, string? Note);
 
+/// <summary>The persisted row id is needed by the next autosave so it updates this check-in instead of inserting a duplicate.</summary>
+public sealed record JournalMoodSaveResult(long EntryId, bool LooksLikeCrisis);
+
 public sealed class JournalMoodLoader(IUserProgressService userProgressService, ICrisisDetector crisisDetector)
 {
     private const int TimelineLimit = 500;
@@ -237,8 +240,18 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             ToSlotPreview(eveningEntry));
     }
 
-    /// <summary>Saves the check-in. Returns true when the note reads like a crisis, so the screen can offer the help page.</summary>
+    /// <summary>Backwards-compatible save API for callers that only need crisis classification.</summary>
     public async Task<bool> SaveMoodAsync(
+        int moodLevel,
+        string? note,
+        long? entryId,
+        DateOnly day,
+        JournalCheckInSlot slot,
+        CancellationToken cancellationToken = default) =>
+        (await SaveMoodWithResultAsync(moodLevel, note, entryId, day, slot, cancellationToken)).LooksLikeCrisis;
+
+    /// <summary>Saves the check-in and returns its row id and crisis classification.</summary>
+    public async Task<JournalMoodSaveResult> SaveMoodWithResultAsync(
         int moodLevel,
         string? note,
         long? entryId,
@@ -246,14 +259,16 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         JournalCheckInSlot slot,
         CancellationToken cancellationToken = default)
     {
+        long savedEntryId;
         if (entryId is > 0)
         {
             await userProgressService.UpdateMoodEntryAsync(entryId.Value, moodLevel, note, cancellationToken);
+            savedEntryId = entryId.Value;
         }
         else
         {
             DateTime recordedAtUtc = ResolveSlotTimestamp(day, slot);
-            await userProgressService.RecordMoodAsync(
+            savedEntryId = await userProgressService.RecordMoodAsync(
                 moodLevel,
                 note,
                 recordedAtUtc,
@@ -261,7 +276,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         }
 
         // A journal note is where people write what they would not say in the chat; it gets the same local check.
-        return crisisDetector.IsCrisis(note);
+        return new JournalMoodSaveResult(savedEntryId, crisisDetector.IsCrisis(note));
     }
 
     /// <summary>

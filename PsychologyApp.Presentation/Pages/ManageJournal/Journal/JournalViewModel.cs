@@ -19,8 +19,13 @@ public sealed class JournalViewModel : BaseViewModel
     private readonly JournalEditorContext _editorContext;
     private readonly IDialogService _dialogService;
     private readonly INavigationService _navigationService;
+    private readonly SemaphoreSlim _moodSaveGate = new(1, 1);
     private int _loadGeneration;
+    private long _noteRevision;
+    private long _moodRevision;
     private long? _editorEntryId;
+    private bool _isEditorLoading = true;
+    private bool _editorLoadFailed;
     private DateOnly _editorDay = DateOnly.FromDateTime(DateTime.Today);
     private DateOnly _weekStripEnd = DateOnly.FromDateTime(DateTime.Today);
     private JournalCheckInSlot _editorSlot =
@@ -30,15 +35,17 @@ public sealed class JournalViewModel : BaseViewModel
     private CancellationTokenSource? _noteSaveCts;
     private bool _suppressNoteAutosave;
     private bool _noteDirty;
+    private bool _moodDirty;
     private string? _crisisOfferedForNote;
     private bool _noteLooksLikeCrisis;
     private bool _factorsOpened;
+    private string _loadedLanguageKey = AppStrings.Language;
 
     /// <summary>
-    /// The day or slot changed and its check-in is still loading: the entry id, mood and note on screen belong to the one before, so a
-    /// face tapped or a note saved now would overwrite that other check-in. Nothing is saved until the snapshot of the new one arrives.
+    /// The selected check-in has not been resolved from storage yet: visible entry data may belong to another day or slot, so edits
+    /// stay disabled until its snapshot arrives.
     /// </summary>
-    private bool _editorStale;
+    private bool _editorStale = true;
 
     public JournalViewModel(
         JournalMoodLoader journalMoodLoader,
@@ -76,7 +83,8 @@ public sealed class JournalViewModel : BaseViewModel
                 SelectSlotAsync(slot.Value).FireAndForget();
             }
         });
-        FlushNoteCommand = new AsyncCommand(FlushPendingNoteSaveAsync);
+        FlushNoteCommand = new AsyncCommand(() => FlushPendingNoteSaveAsync(reload: true));
+        ReloadCommand = new AsyncCommand(ReloadAsync);
         ShowFactorsCommand = new Command(() =>
         {
             _factorsOpened = true;
@@ -106,8 +114,10 @@ public sealed class JournalViewModel : BaseViewModel
                 _ => 0
             };
 
-            if (level is >= 1 and <= 5 && !_editorStale)
+            if (level is >= 1 and <= 5 && IsEditorReady)
             {
+                Interlocked.Increment(ref _moodRevision);
+                _moodDirty = true;
                 SelectedMoodLevel = level;
                 await SaveMoodAsync();
             }
@@ -152,7 +162,6 @@ public sealed class JournalViewModel : BaseViewModel
                 Label = JournalNoteFactors.GetLabel(key)
             }));
 
-        LoadAsync().FireAndForget();
     }
 
     public string PageTitle => AppStrings.JournalTitle;
@@ -170,6 +179,9 @@ public sealed class JournalViewModel : BaseViewModel
     public string EmptyBody => AppStrings.JournalEmptyBody;
     public string EmptyPrivacy => AppStrings.JournalEmptyPrivacy;
     public string FactorsShowText => AppStrings.JournalFactorsShow;
+    public string EditorLoadingText => AppStrings.SkeletonLoadingLabel;
+    public string EditorLoadFailedText => AppStrings.LoadFailed;
+    public string EditorRetryText => AppStrings.RetryQuestion;
 
     public string PromptText => AppStrings.JournalPrompt(JournalPrompts.For(_editorDay));
 
@@ -278,6 +290,7 @@ public sealed class JournalViewModel : BaseViewModel
 
     public ICommand SelectSlotCommand { get; }
     public ICommand FlushNoteCommand { get; }
+    public ICommand ReloadCommand { get; }
     public ICommand ShowFactorsCommand { get; }
     public ICommand OpenLowMoodBreathCommand { get; }
     public ICommand OpenLowMoodAnchorsCommand { get; }
@@ -304,9 +317,13 @@ public sealed class JournalViewModel : BaseViewModel
     }
 
     public bool HasMoodSelected => SelectedMoodLevel is >= 1 and <= 5;
+    public bool IsEditorReady => !_editorStale && !_isEditorLoading && !_editorLoadFailed;
+    public bool IsEditorLoading => _isEditorLoading;
+    public bool IsEditorLoadFailed => _editorLoadFailed;
     public bool ShowNoteEditor => HasMoodSelected;
-    private JournalLowMoodSupportKind LowMoodSupport =>
-        JournalLowMoodSupport.For(_editorDay == DateOnly.FromDateTime(DateTime.Today), SelectedMoodLevel, _noteLooksLikeCrisis);
+    private JournalLowMoodSupportKind LowMoodSupport => IsEditorReady
+        ? JournalLowMoodSupport.For(_editorDay == DateOnly.FromDateTime(DateTime.Today), SelectedMoodLevel, _noteLooksLikeCrisis)
+        : JournalLowMoodSupportKind.None;
 
     public bool ShowLowMoodSupport => LowMoodSupport != JournalLowMoodSupportKind.None;
     public bool ShowLowMoodPractices => LowMoodSupport == JournalLowMoodSupportKind.PracticesAndHelp;
@@ -329,6 +346,7 @@ public sealed class JournalViewModel : BaseViewModel
             SyncActivityChips();
             if (!_suppressNoteAutosave)
             {
+                Interlocked.Increment(ref _noteRevision);
                 _noteDirty = true;
                 ScheduleNoteAutosave();
             }
@@ -359,6 +377,9 @@ public sealed class JournalViewModel : BaseViewModel
             nameof(EmptyBody),
             nameof(EmptyPrivacy),
             nameof(FactorsShowText),
+            nameof(EditorLoadingText),
+            nameof(EditorLoadFailedText),
+            nameof(EditorRetryText),
             nameof(WeekSummaryText));
         foreach (JournalActivityChip chip in ActivityChips)
         {
@@ -367,14 +388,21 @@ public sealed class JournalViewModel : BaseViewModel
 
 
         NotifySlots();
+        string languageKey = AppStrings.Language;
+        if (!string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            _loadedLanguageKey = languageKey;
+            LoadAsync(keepCurrentEditorReady: true).FireAndForget();
+        }
     }
 
     /// <summary>
     /// On every appearing. Without a day asked for by another page the journal opens on today and the current slot again: a past day
     /// left open in the card read as today's check-in when the person came back, and the face tapped then went to that day.
     /// </summary>
-    public Task ReloadAsync()
+    public async Task ReloadAsync()
     {
+        await FlushPendingNoteSaveAsync();
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
         DateOnly day = _editorContext.ConsumePendingEditorDay() ?? today;
         // The slot stays when the day does (a check-in of today the person was on); back to today it is the current one.
@@ -382,7 +410,7 @@ public sealed class JournalViewModel : BaseViewModel
         // The week ends today unless the day asked for lies before it; then it ends on that day.
         _weekStripEnd = day >= today.AddDays(-6) ? today : day;
         MoveEditor(day, slot);
-        return LoadAsync();
+        await LoadAsync();
     }
 
     private static JournalCheckInSlot CurrentSlot() =>
@@ -396,21 +424,38 @@ public sealed class JournalViewModel : BaseViewModel
             return;
         }
 
+        bool dayChanged = day != _editorDay;
         _editorDay = day;
         _editorSlot = slot;
         _editorStale = true;
+        if (dayChanged)
+        {
+            _morning = null;
+            _evening = null;
+        }
+        OnPropertyChanged(nameof(IsEditorReady));
+        OnPropertyChanged(nameof(DayHeaderText));
+        Notify(nameof(PromptText), nameof(NotePlaceholder), nameof(ShowPrompt));
+        if (dayChanged)
+        {
+            NotifySlots();
+        }
+        NotifyLowMoodSupport();
         CancelNoteAutosave();
     }
 
-    public async Task FlushPendingNoteSaveAsync()
+    public async Task FlushPendingNoteSaveAsync(bool reload = false)
     {
         CancelNoteAutosave();
-        if (!_noteDirty || !HasMoodSelected)
+        while ((_noteDirty || _moodDirty) && HasMoodSelected && !_editorStale)
         {
-            return;
+            long revision = Volatile.Read(ref _noteRevision);
+            await SaveMoodAsync(reload);
+            if (revision == Volatile.Read(ref _noteRevision) && !_noteDirty && !_moodDirty)
+            {
+                return;
+            }
         }
-
-        await SaveMoodAsync(reload: false);
     }
 
     private async Task SelectDayAsync(DateOnly day)
@@ -485,7 +530,7 @@ public sealed class JournalViewModel : BaseViewModel
         try
         {
             await Task.Delay(800, token);
-            await SaveMoodAsync();
+            await SaveMoodAsync(reload: true);
         }
         catch (OperationCanceledException)
         {
@@ -493,9 +538,21 @@ public sealed class JournalViewModel : BaseViewModel
         }
     }
 
-    private async Task LoadAsync()
+    private async Task LoadAsync(bool keepCurrentEditorReady = false)
     {
         int generation = Interlocked.Increment(ref _loadGeneration);
+        long noteRevision = Volatile.Read(ref _noteRevision);
+        long moodRevision = Volatile.Read(ref _moodRevision);
+        bool hasPendingNoteAtStart = _noteDirty;
+        bool hasPendingMoodAtStart = _moodDirty;
+        bool keepReady = keepCurrentEditorReady && IsEditorReady;
+        if (!keepReady)
+        {
+            _isEditorLoading = true;
+            _editorLoadFailed = false;
+            Notify(nameof(IsEditorLoading), nameof(IsEditorLoadFailed), nameof(IsEditorReady));
+            NotifyLowMoodSupport();
+        }
         try
         {
             JournalMoodSnapshot snapshot = await _journalMoodLoader.LoadAsync(
@@ -505,15 +562,46 @@ public sealed class JournalViewModel : BaseViewModel
                 weekStripEnd: _weekStripEnd,
                 editorSlot: _editorSlot,
                 calendarScale: JournalCalendarScale.Week);
-            if (generation != Volatile.Read(ref _loadGeneration))
+            await UiThread.RunAsync(() =>
             {
-                return;
-            }
+                if (generation == Volatile.Read(ref _loadGeneration))
+                {
+                    if (noteRevision == Volatile.Read(ref _noteRevision)
+                        && moodRevision == Volatile.Read(ref _moodRevision)
+                        && !hasPendingNoteAtStart
+                        && !hasPendingMoodAtStart
+                        && !_noteDirty
+                        && !_moodDirty)
+                    {
+                        ApplySnapshot(snapshot);
+                    }
 
-            await UiThread.RunAsync(() => ApplySnapshot(snapshot));
+                    if (!keepReady)
+                    {
+                        _isEditorLoading = false;
+                        _editorLoadFailed = false;
+                        Notify(nameof(IsEditorLoading), nameof(IsEditorLoadFailed), nameof(IsEditorReady));
+                        NotifyLowMoodSupport();
+                    }
+                }
+            });
         }
         catch (Exception bestEffortError)
         {
+            if (!keepReady)
+            {
+                await UiThread.RunAsync(() =>
+                {
+                    if (generation == Volatile.Read(ref _loadGeneration))
+                    {
+                        _isEditorLoading = false;
+                        _editorLoadFailed = true;
+                        Notify(nameof(IsEditorLoading), nameof(IsEditorLoadFailed), nameof(IsEditorReady));
+                        NotifyLowMoodSupport();
+                    }
+                });
+            }
+
             // Journal content is optional; empty state still works.
             BestEffort.Report(bestEffortError);
         }
@@ -523,12 +611,14 @@ public sealed class JournalViewModel : BaseViewModel
     {
         CancelNoteAutosave();
         _noteDirty = false;
+        _moodDirty = false;
         WeekDays = snapshot.WeekDays;
         _weekStripEnd = snapshot.WeekStripEnd;
         _editorEntryId = snapshot.EditorEntryId;
         _editorDay = snapshot.EditorDay;
         _editorSlot = snapshot.EditorSlot;
         _editorStale = false;
+        OnPropertyChanged(nameof(IsEditorReady));
         _morning = snapshot.Morning;
         _evening = snapshot.Evening;
         NotifySlots();
@@ -564,29 +654,67 @@ public sealed class JournalViewModel : BaseViewModel
             return;
         }
 
+        int moodLevel = SelectedMoodLevel;
+        long noteRevision = Volatile.Read(ref _noteRevision);
         string? note = string.IsNullOrWhiteSpace(JournalNote) ? null : JournalNote.Trim();
-        bool looksLikeCrisis = await _journalMoodLoader.SaveMoodAsync(
-            SelectedMoodLevel,
-            note,
-            _editorEntryId,
-            _editorDay,
-            _editorSlot);
+        DateOnly day = _editorDay;
+        JournalCheckInSlot slot = _editorSlot;
+
+        JournalMoodSaveResult saveResult;
+        await _moodSaveGate.WaitAsync();
+        try
+        {
+            // A newer note may have arrived while this save waited behind an earlier write.
+            if (!IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
+            {
+                return;
+            }
+
+            // Resolve the id after entering the gate. An earlier queued insert may have created this slot while this save waited.
+            saveResult = await _journalMoodLoader.SaveMoodWithResultAsync(moodLevel, note, _editorEntryId, day, slot);
+            if (day == _editorDay && slot == _editorSlot && !_editorStale && _editorEntryId is null)
+            {
+                _editorEntryId = saveResult.EntryId;
+            }
+        }
+        finally
+        {
+            _moodSaveGate.Release();
+        }
+
+        if (!IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
+        {
+            return;
+        }
+
         _noteDirty = false;
-        _noteLooksLikeCrisis = looksLikeCrisis;
+        _moodDirty = false;
+        _noteLooksLikeCrisis = saveResult.LooksLikeCrisis;
         OnPropertyChanged(nameof(MoodSavedStatus));
         NotifyLowMoodSupport();
         if (reload)
         {
-            await LoadAsync();
+            await LoadAsync(keepCurrentEditorReady: true);
         }
 
         // Asked once per distinct note text: autosave fires repeatedly while the person is still typing.
-        if (looksLikeCrisis && !string.Equals(note, _crisisOfferedForNote, StringComparison.Ordinal))
+        if (saveResult.LooksLikeCrisis && !string.Equals(note, _crisisOfferedForNote, StringComparison.Ordinal))
         {
             _crisisOfferedForNote = note;
             await OfferCrisisHelpAsync();
         }
     }
+
+    private bool IsCurrentMoodSave(
+        int moodLevel,
+        long noteRevision,
+        DateOnly day,
+        JournalCheckInSlot slot) =>
+        noteRevision == Volatile.Read(ref _noteRevision)
+        && moodLevel == SelectedMoodLevel
+        && day == _editorDay
+        && slot == _editorSlot
+        && !_editorStale;
 
     private async Task OfferCrisisHelpAsync()
     {

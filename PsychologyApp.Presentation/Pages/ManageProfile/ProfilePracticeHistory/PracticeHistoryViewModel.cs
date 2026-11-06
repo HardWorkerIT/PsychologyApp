@@ -12,6 +12,13 @@ public sealed class PracticeHistoryViewModel : BaseViewModel
 {
     private readonly ProfilePracticeHistoryLoader _loader;
     private readonly INavigationService _navigationService;
+    private readonly SemaphoreSlim _loadGate = new(1, 1);
+    private bool _isLoaded;
+    private bool _isLoading;
+    private bool _hasLoadError;
+    private int _languageGeneration;
+    private int _reloadAfterCurrentLoad;
+    private string _languageKey = AppStrings.Language;
 
     public PracticeHistoryViewModel(
         ProfilePracticeHistoryLoader loader,
@@ -21,12 +28,44 @@ public sealed class PracticeHistoryViewModel : BaseViewModel
         _navigationService = navigationService;
         BindNavigation(navigationService);
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
+        RetryCommand = new AsyncCommand(LoadAsync);
         LoadAsync().FireAndForget();
     }
 
     public string PageTitle => AppStrings.PracticeHistoryPageTitle;
     public string EmptyText => AppStrings.PracticeHistoryEmpty;
     public ICommand BackCommand { get; }
+    public ICommand RetryCommand { get; }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                Notify(nameof(ShowInitialLoading));
+            }
+        }
+    }
+
+    public bool HasLoadError
+    {
+        get => _hasLoadError;
+        private set
+        {
+            if (SetProperty(ref _hasLoadError, value))
+            {
+                Notify(nameof(ShowLoadError));
+            }
+        }
+    }
+
+    public bool ShowInitialLoading => IsLoading && !_isLoaded;
+    public bool ShowLoadError => HasLoadError && !_isLoaded;
+    public string LoadErrorText => AppStrings.LoadError;
+    public string RetryText => AppStrings.RetryQuestion;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
 
     private ObservableCollection<PracticeHistoryItem> _items = [];
     public ObservableCollection<PracticeHistoryItem> Items
@@ -43,24 +82,81 @@ public sealed class PracticeHistoryViewModel : BaseViewModel
     }
 
     public bool HasItems => Items.Count > 0;
-    public bool ShowEmpty => !HasItems;
+    public bool ShowEmpty => _isLoaded && !HasItems;
 
     protected override void RefreshLocalizedProperties()
     {
-        Notify(nameof(PageTitle), nameof(EmptyText), nameof(HasItems), nameof(ShowEmpty));
+        Notify(
+            nameof(PageTitle), nameof(EmptyText), nameof(HasItems), nameof(ShowEmpty),
+            nameof(LoadErrorText), nameof(RetryText), nameof(LoadingText));
+
+        string language = AppStrings.Language;
+        if (string.Equals(_languageKey, language, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        _languageKey = language;
+        Interlocked.Increment(ref _languageGeneration);
+        if (_loadGate.CurrentCount == 0)
+        {
+            Interlocked.Exchange(ref _reloadAfterCurrentLoad, 1);
+            return;
+        }
+
+        LoadAsync().FireAndForget();
     }
 
     private async Task LoadAsync()
     {
+        if (!await _loadGate.WaitAsync(0))
+        {
+            return;
+        }
+
         try
         {
+            int languageGeneration = Volatile.Read(ref _languageGeneration);
+            await UiThread.RunAsync(() =>
+            {
+                IsLoading = true;
+                HasLoadError = false;
+            });
+
             IReadOnlyList<PracticeHistoryItem> loaded = await _loader.LoadAsync(40);
-            Items = new ObservableCollection<PracticeHistoryItem>(
-                loaded.Select(item => ProfilePracticeHistoryTapFactory.WithTapCommand(item, _navigationService)));
+            await UiThread.RunAsync(() =>
+            {
+                if (languageGeneration != Volatile.Read(ref _languageGeneration))
+                {
+                    Interlocked.Exchange(ref _reloadAfterCurrentLoad, 1);
+                    return;
+                }
+
+                Items = new ObservableCollection<PracticeHistoryItem>(
+                    loaded.Select(item => ProfilePracticeHistoryTapFactory.WithTapCommand(item, _navigationService)));
+                _isLoaded = true;
+                OnPropertyChanged(nameof(ShowEmpty));
+                IsLoading = false;
+                HasLoadError = false;
+            });
         }
-        catch
+        catch (Exception loadError)
         {
-            Items = [];
+            BestEffort.Report(loadError);
+            await UiThread.RunAsync(() =>
+            {
+                IsLoading = false;
+                // Preserve an existing snapshot if a later reload fails.
+                HasLoadError = !_isLoaded;
+            });
+        }
+        finally
+        {
+            _loadGate.Release();
+            if (Interlocked.Exchange(ref _reloadAfterCurrentLoad, 0) != 0)
+            {
+                LoadAsync().FireAndForget();
+            }
         }
     }
 }

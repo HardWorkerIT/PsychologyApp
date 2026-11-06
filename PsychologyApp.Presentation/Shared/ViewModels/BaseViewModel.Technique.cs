@@ -18,6 +18,9 @@ public partial class BaseViewModel
     protected TechniqueDefinition? AppliedDefinition { get; private set; }
     protected TechniqueUiKind AppliedUiKind => AppliedDefinition?.UiKind ?? default;
     private TechniqueId? _appliedTechniqueId;
+    private string? _appliedTechniqueLanguageKey;
+    private int _techniqueDefinitionRequestId;
+    protected bool IsTechniqueLocalizationRefresh { get; private set; }
 
     public string TechniquePageTitle => AppStrings.TechniqueTitle;
     public string TheoryToolbarText => AppStrings.TechniqueTheory;
@@ -68,9 +71,11 @@ public partial class BaseViewModel
             nameof(AddButtonText),
             nameof(PreIntensityLabel));
 
-        if (_appliedTechniqueId is TechniqueId techniqueId)
+        string languageKey = AppStrings.Language;
+        if (_appliedTechniqueId is TechniqueId techniqueId
+            && !string.Equals(_appliedTechniqueLanguageKey, languageKey, StringComparison.Ordinal))
         {
-            ApplyTechniqueAsync(techniqueId).FireAndForget();
+            ApplyTechniqueAsync(techniqueId, preserveEntryValues: true).FireAndForget();
         }
     }
 
@@ -80,7 +85,7 @@ public partial class BaseViewModel
 
     public Task InitializeTechniqueAsync(TechniqueId id) => ApplyTechniqueAsync(id);
 
-    protected async Task ApplyTechniqueAsync(TechniqueId id)
+    protected async Task ApplyTechniqueAsync(TechniqueId id, bool preserveEntryValues = false)
     {
         if (TechniqueCatalogService is null)
         {
@@ -88,14 +93,31 @@ public partial class BaseViewModel
         }
 
         _appliedTechniqueId = id;
+        string languageKey = AppStrings.Language;
+        _appliedTechniqueLanguageKey = languageKey;
+        int requestId = Interlocked.Increment(ref _techniqueDefinitionRequestId);
         BuiltInTechniqueDefinition builtIn = await TechniqueCatalogService.GetAsync(id).ConfigureAwait(false);
+        if (requestId != Volatile.Read(ref _techniqueDefinitionRequestId)
+            || !string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+        {
+            return;
+        }
+
         TechniqueDefinition definition = TechniqueDefinitionMapper.ToPresentation(builtIn);
 
-        await UiThread.RunAsync(() => ApplyDefinition(definition)).ConfigureAwait(false);
+        await UiThread.RunAsync(() =>
+        {
+            if (requestId == Volatile.Read(ref _techniqueDefinitionRequestId)
+                && string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+            {
+                ApplyDefinition(definition, preserveEntryValues);
+            }
+        }).ConfigureAwait(false);
     }
 
-    private void ApplyDefinition(TechniqueDefinition def)
+    private void ApplyDefinition(TechniqueDefinition def, bool preserveEntryValues)
     {
+        string[] previousAnswers = preserveEntryValues ? Entries.Select(entry => entry.Text).ToArray() : [];
         AppliedDefinition = def;
         ModuleName = def.ModuleName;
         PageName = def.PageName;
@@ -105,15 +127,29 @@ public partial class BaseViewModel
         if (def.Entries is not null)
         {
             Entries.Clear();
-            foreach (EntryItem entry in def.Entries)
+            for (int i = 0; i < def.Entries.Count; i++)
             {
-                Entries.Add(entry.CloneEmpty());
+                EntryItem entry = def.Entries[i].CloneEmpty();
+                if (preserveEntryValues && i < previousAnswers.Length)
+                {
+                    entry.Text = previousAnswers[i];
+                }
+
+                Entries.Add(entry);
             }
 
             OnPropertyChanged(nameof(Entries));
         }
 
-        OnTechniqueContentChanged();
+        IsTechniqueLocalizationRefresh = preserveEntryValues;
+        try
+        {
+            OnTechniqueContentChanged();
+        }
+        finally
+        {
+            IsTechniqueLocalizationRefresh = false;
+        }
     }
 
     protected virtual void OnTechniqueContentChanged()

@@ -38,14 +38,14 @@ public partial class QuestionViewModel
 
             _savedResult ??= await _runCoordinator.SaveQuestionnaireAsync(
                 request,
-                _userProgressService).ConfigureAwait(false);
+                _userProgressService);
 
             await UiThread.RunAsync(async () =>
             {
                 await _runCoordinator.NavigateQuestionnaireResultAsync(
                     _savedResult,
-                    _navigationService).ConfigureAwait(true);
-            }).ConfigureAwait(false);
+                    _navigationService);
+            });
 
             _savedResult = null;
         }

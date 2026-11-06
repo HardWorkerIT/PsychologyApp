@@ -37,8 +37,35 @@ public sealed class AppBackupDTO
 
 public sealed class BackupChatSessionDTO
 {
-    public ChatSessionDTO Session { get; init; } = new();
+    public BackupChatSessionInfoDTO Session { get; init; } = new();
     public IReadOnlyList<ChatMessageDTO> Messages { get; init; } = [];
+}
+
+/// <summary>Persisted chat fields only; preview and counts are derived from messages and do not belong in a backup.</summary>
+public sealed class BackupChatSessionInfoDTO
+{
+    public long Id { get; init; }
+    public string? BackupKey { get; init; }
+    public string Title { get; init; } = string.Empty;
+    public DateTime CreatedAt { get; init; }
+    public DateTime UpdatedAt { get; init; }
+    public string? Emotion { get; init; }
+    public string? Theme { get; init; }
+    public int? FirstIntensity { get; init; }
+    public int? LastIntensity { get; init; }
+    public string? StateJson { get; init; }
+}
+
+/// <summary>Counts and UTF-8 payload size used to reject incomplete or oversized exports before loading their rows.</summary>
+public sealed class BackupExportMetrics
+{
+    public long MoodEntryCount { get; set; }
+    public long TestResultCount { get; set; }
+    public long CompletionCount { get; set; }
+    public long SessionResultCount { get; set; }
+    public long TechniqueCount { get; set; }
+    public long EscalationCount { get; set; }
+    public long Utf8PayloadBytes { get; set; }
 }
 
 /// <summary>A technique the person built in the designer (built-in techniques ship with the app and are not part of a backup).</summary>

@@ -21,6 +21,7 @@ public partial class TestHistoryViewModel : BaseViewModel
     private readonly TestRetakeOperations _retakeOperations;
     private readonly ILogger<TestHistoryViewModel> _logger;
     private readonly string _testId;
+    private int _loadGeneration;
     private string _testTitle;
 
     public string TestFlowId => _testId;

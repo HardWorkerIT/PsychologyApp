@@ -5,6 +5,8 @@ namespace PsychologyApp.Presentation.Pages.RunTests.TestHistory;
 
 public partial class TestHistoryViewModel
 {
+    private string _loadedLanguageKey = AppStrings.Language;
+
     /// <summary>"History" in the bar and the test under it: "History of results: K…" was cut off before the test's name.</summary>
     public string PageTitle => AppStrings.TestHistoryTitle;
     public string TestTitle => _testTitle;
@@ -24,6 +26,11 @@ public partial class TestHistoryViewModel
             nameof(FailedText),
             nameof(RetryText),
             nameof(RetakeButtonText));
-        LoadAsync().FireAndForget();
+        string languageKey = AppStrings.Language;
+        if (!string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            _loadedLanguageKey = languageKey;
+            LoadAsync().FireAndForget();
+        }
     }
 }

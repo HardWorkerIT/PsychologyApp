@@ -46,7 +46,7 @@ public partial class JournalPage : ContentPage, IJournalHubPage
         _lastMoodLevel = level;
 
         // Only a face the person has just tapped blooms: a level that arrives from a reload has no tap behind it.
-        if (changed && level is >= 1 and <= 5)
+        if (changed && level is >= 1 and <= 5 && _viewModel.IsEditorReady)
         {
             BloomAsync(level).FireAndForget();
         }

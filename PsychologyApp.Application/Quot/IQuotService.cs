@@ -4,6 +4,10 @@ namespace PsychologyApp.Application.Quot;
 
 public interface IQuotService
 {
+    /// <summary>Stops and drains mutations that could otherwise write stale quote data after the database is recreated.</summary>
+    Task PrepareForEraseAsync() => Task.CompletedTask;
+    void CompleteErase() { }
+
     Task<IEnumerable<QuotDTO>> GetAllAsync(int count, CancellationToken cancellationToken = default);
     Task<IEnumerable<QuotDTO>> GetUnreadAsync(int count, CancellationToken cancellationToken = default);
     Task<IEnumerable<QuotDTO>> GetUnreadByThemesAsync(

@@ -37,7 +37,8 @@
             BackCommand="{Binding BackCommand}"
             TitleText="{Binding PageTitle}" />
 
-    <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+    <Grid Grid.Row="1">
+    <ScrollView IsVisible="{Binding ShowContent}" VerticalScrollBarVisibility="Never">
         <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource LayoutSpacing}">
             <Label Text="{Binding LeadText}" Style="{StaticResource CaptionStyle}" Margin="4,0" />
             <!-- A card only for what there is to show, each with its icon; the hints of the empty ones are quiet lines at the end, so
@@ -94,5 +95,16 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+        <VerticalStackLayout IsVisible="{Binding ShowInitialLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+            <ActivityIndicator IsRunning="{Binding IsLoading}" />
+            <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+        <ui:EmptyStateView
+            IsVisible="{Binding ShowLoadError}"
+            BodyText="{Binding LoadErrorText}"
+            ActionText="{Binding RetryText}"
+            ActionCommand="{Binding RetryCommand}"
+            IconName="Refresh" />
+    </Grid>
     </Grid>
 </ContentPage>

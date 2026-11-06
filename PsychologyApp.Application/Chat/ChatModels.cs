@@ -48,6 +48,9 @@ public sealed class ChatSessionDTO
     /// <summary>Serialized dialogue state, so a chat can be resumed exactly where it stopped.</summary>
     public string? StateJson { get; set; }
 
+    /// <summary>Stable identity for merging this conversation across backup restores.</summary>
+    public string? BackupKey { get; init; }
+
     /// <summary>Text of the newest message, for the chat list. Filled by queries, not stored.</summary>
     public string? Preview { get; init; }
     public int MessageCount { get; init; }
@@ -55,3 +58,18 @@ public sealed class ChatSessionDTO
     /// <summary>How many of the messages were written by the person. Filled by queries, not stored.</summary>
     public int UserMessageCount { get; init; }
 }
+
+/// <summary>Cheap aggregate used to reject oversized chat exports before loading every message into memory.</summary>
+public sealed class ChatExportMetrics
+{
+    public long SessionCount { get; set; }
+    public long MessageCount { get; set; }
+    public long MemoryCount { get; set; }
+    public long Utf8PayloadBytes { get; set; }
+}
+
+/// <summary>Bounded chat data returned to a backup export.</summary>
+public sealed record ChatExportSnapshot(
+    IReadOnlyList<ChatSessionDTO> Sessions,
+    IReadOnlyList<ChatMessageDTO> Messages,
+    IReadOnlyDictionary<string, string> Memory);

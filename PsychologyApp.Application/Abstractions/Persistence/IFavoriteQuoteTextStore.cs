@@ -8,6 +8,7 @@ public interface IFavoriteQuoteTextStore
 
     Task RemoveTextAsync(string text, CancellationToken cancellationToken = default);
 
+    /// <summary>Merges the supplied favorite texts into storage without removing favorites written concurrently elsewhere.</summary>
     Task SaveTextsAsync(IReadOnlySet<string> texts, CancellationToken cancellationToken = default);
 
     Task<IReadOnlySet<int>> GetLegacyIndicesAsync(CancellationToken cancellationToken = default);

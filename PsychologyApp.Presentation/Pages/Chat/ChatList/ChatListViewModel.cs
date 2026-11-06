@@ -56,6 +56,12 @@ public sealed class ChatListViewModel : BaseViewModel
     private readonly IChatLanguageProvider _language;
     private readonly IDialogService _dialogs;
     private readonly TimeProvider _time;
+    private CancellationTokenSource? _refreshCts;
+    private int _refreshGeneration;
+    private bool _loaded;
+    private bool _isLoading = true;
+    private bool _isLoadFailed;
+    private string _observedLanguageKey = AppStrings.Language;
     private bool _isEmpty;
 
     public ChatListViewModel(
@@ -75,17 +81,51 @@ public sealed class ChatListViewModel : BaseViewModel
         BindNavigation(navigationService);
         NewChatCommand = new AsyncCommand(() => NavigationService!.GoToChatAsync(null));
         OpenCrisisHubCommand = new AsyncCommand(() => NavigationService!.GoToCrisisHubAsync());
+        ReloadCommand = new AsyncCommand(RefreshAsync);
     }
 
     public RangeObservableCollection<ChatListItem> Chats { get; } = [];
 
     public ICommand NewChatCommand { get; }
     public ICommand OpenCrisisHubCommand { get; }
+    public ICommand ReloadCommand { get; }
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                Notify(nameof(ShowInitialLoading));
+            }
+        }
+    }
+
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set
+        {
+            if (SetProperty(ref _isLoadFailed, value))
+            {
+                Notify(nameof(ShowLoadFailed));
+            }
+        }
+    }
+
+    public bool HasLoaded => _loaded;
+    public bool ShowChatList => _loaded && IsChatAvailable;
+    public bool ShowInitialLoading => IsLoading && !_loaded && IsChatAvailable;
+    public bool ShowLoadFailed => IsLoadFailed && !_loaded && IsChatAvailable;
+    public string LoadingText => AppStrings.ChatLoadingText;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     /// <summary>The chat reads crisis words only in its own languages; in any other it stays closed (<see cref="AppLanguages.HasChat"/>).</summary>
     public bool IsChatAvailable => AppLanguages.HasChat(AppStrings.Language);
     public bool IsChatUnavailable => !IsChatAvailable;
-    public bool ShowEmptyState => IsEmpty && IsChatAvailable;
+    public bool ShowEmptyState => _loaded && IsEmpty && IsChatAvailable;
     public string UnavailableTitle => AppStrings.ChatUnavailableTitle;
     public string UnavailableBody => AppStrings.ChatUnavailableBody;
     public string CrisisHubText => AppStrings.CrisisHubTitle;
@@ -106,7 +146,7 @@ public sealed class ChatListViewModel : BaseViewModel
     /// <summary>The tab is named after the assistant, like the other tabs are named after what they hold.</summary>
     public string Title => AppStrings.ShellTabChatShort;
     /// <summary>The round button in the corner is for a second chat; with no chats the empty state has its own big button.</summary>
-    public bool HasChats => !IsEmpty && IsChatAvailable;
+    public bool HasChats => _loaded && !IsEmpty && IsChatAvailable;
 
     public string NewChatText => AppStrings.ChatNew;
     public string StartChatText => AppStrings.ChatHeroStart;
@@ -133,24 +173,125 @@ public sealed class ChatListViewModel : BaseViewModel
 
     public async Task RefreshAsync()
     {
-        IReadOnlyList<ChatSessionDTO> sessions = await _chat.GetChatsAsync();
-        DateTime now = _time.GetUtcNow().UtcDateTime;
-
-        List<ChatListItem> fresh = sessions.Where(s => s.HasConversation()).Select(s => ToItem(s, now)).ToList();
-
-        // Coming back from a chat that changed nothing must not rebuild every row.
-        if (!Chats.Select(c => c.Signature).SequenceEqual(fresh.Select(c => c.Signature)))
+        int requestId = Interlocked.Increment(ref _refreshGeneration);
+        CancellationTokenSource refreshCts = new();
+        CancellationTokenSource? previous = Interlocked.Exchange(ref _refreshCts, refreshCts);
+        if (previous is not null)
         {
-            Chats.ReplaceAll(fresh);
+            CancelAndDisposeAsync(previous).FireAndForget();
         }
 
-        IsEmpty = Chats.Count == 0;
+        string languageKey = AppStrings.Language;
+        if (!_loaded)
+        {
+            await UiThread.RunAsync(() =>
+            {
+                if (requestId == Volatile.Read(ref _refreshGeneration))
+                {
+                    IsLoading = true;
+                    IsLoadFailed = false;
+                }
+            });
+        }
+
+        try
+        {
+            if (!AppLanguages.HasChat(languageKey))
+            {
+                await UiThread.RunAsync(() =>
+                {
+                    if (requestId == Volatile.Read(ref _refreshGeneration))
+                    {
+                        IsLoading = false;
+                        IsLoadFailed = false;
+                    }
+                });
+                return;
+            }
+
+            IReadOnlyList<ChatSessionDTO> sessions = await _chat.GetChatsAsync(refreshCts.Token);
+            DateTime now = _time.GetUtcNow().UtcDateTime;
+            List<ChatListItem> fresh = sessions.Where(s => s.HasConversation()).Select(s => ToItem(s, now)).ToList();
+
+            await UiThread.RunAsync(() =>
+            {
+                if (requestId != Volatile.Read(ref _refreshGeneration)
+                    || refreshCts.IsCancellationRequested
+                    || !string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                // Coming back from a chat that changed nothing must not rebuild every row.
+                if (!Chats.Select(c => c.Signature).SequenceEqual(fresh.Select(c => c.Signature)))
+                {
+                    Chats.ReplaceAll(fresh);
+                }
+
+                IsEmpty = Chats.Count == 0;
+                _loaded = true;
+                IsLoading = false;
+                IsLoadFailed = false;
+                Notify(nameof(HasLoaded), nameof(ShowChatList), nameof(ShowEmptyState), nameof(HasChats));
+            });
+        }
+        catch (OperationCanceledException) when (refreshCts.IsCancellationRequested)
+        {
+            // A newer appearance or language change owns the current refresh state.
+        }
+        catch (Exception loadError)
+        {
+            BestEffort.Report(loadError);
+            await UiThread.RunAsync(() =>
+            {
+                if (requestId == Volatile.Read(ref _refreshGeneration))
+                {
+                    IsLoading = false;
+                    IsLoadFailed = !_loaded;
+                }
+            });
+        }
+        finally
+        {
+            if (ReferenceEquals(Interlocked.CompareExchange(ref _refreshCts, null, refreshCts), refreshCts))
+            {
+                refreshCts.Dispose();
+            }
+        }
     }
 
-    protected override void RefreshLocalizedProperties() =>
+    protected override void RefreshLocalizedProperties()
+    {
         Notify(nameof(Title), nameof(NewChatText), nameof(StartChatText), nameof(EmptyTitle), nameof(EmptyBody), nameof(EmptyPrivacy),
             nameof(OpenersTitle), nameof(Openers), nameof(IsChatAvailable), nameof(IsChatUnavailable), nameof(ShowEmptyState), nameof(HasChats),
-            nameof(UnavailableTitle), nameof(UnavailableBody), nameof(CrisisHubText));
+            nameof(UnavailableTitle), nameof(UnavailableBody), nameof(CrisisHubText), nameof(LoadingText), nameof(LoadFailedText), nameof(RetryText),
+            nameof(ShowChatList), nameof(ShowInitialLoading), nameof(ShowLoadFailed));
+
+        string languageKey = AppStrings.Language;
+        if (string.Equals(_observedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _observedLanguageKey = languageKey;
+        RefreshAsync().FireAndForget();
+    }
+
+    private static async Task CancelAndDisposeAsync(CancellationTokenSource source)
+    {
+        try
+        {
+            await source.CancelAsync().ConfigureAwait(false);
+        }
+        catch (Exception cancellationError)
+        {
+            BestEffort.Report(cancellationError);
+        }
+        finally
+        {
+            source.Dispose();
+        }
+    }
 
     private ChatListItem ToItem(ChatSessionDTO session, DateTime now)
     {

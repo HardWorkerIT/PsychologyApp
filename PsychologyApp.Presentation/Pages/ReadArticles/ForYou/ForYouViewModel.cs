@@ -29,6 +29,10 @@ public sealed class ForYouViewModel : BaseViewModel
     private IReadOnlyList<LibraryCardItem> _saved = [];
     private IReadOnlyList<LibraryCardItem> _starters = [];
     private bool _loaded;
+    private bool _isLoading = true;
+    private bool _isLoadFailed;
+    private string _loadedLanguageKey = AppStrings.Language;
+    private int _refreshGeneration;
 
     public ForYouViewModel(INavigationService navigation, IReadingService reading, IUserProgressService progress, IDatabaseReadySignal databaseReady)
     {
@@ -39,13 +43,30 @@ public sealed class ForYouViewModel : BaseViewModel
         _progress = progress;
         _databaseReady = databaseReady;
         TakeTestCommand = new AsyncCommand(() => _navigation.GoToTestsTabAsync());
+        ReloadCommand = new AsyncCommand(RefreshAsync);
     }
 
     public string PageTitle => AppStrings.ArticlesForYou;
     public string SavedTitle => AppStrings.ForYouSavedTitle;
     public string EmptyText => AppStrings.ForYouEmpty;
     public string TakeTestText => AppStrings.ForYouTakeTest;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
     public ICommand TakeTestCommand { get; }
+    public ICommand ReloadCommand { get; }
+    public bool HasLoaded => _loaded;
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set => SetProperty(ref _isLoading, value);
+    }
+
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set => SetProperty(ref _isLoadFailed, value);
+    }
 
     public IReadOnlyList<LibraryCardItem> Picks
     {
@@ -78,6 +99,13 @@ public sealed class ForYouViewModel : BaseViewModel
     /// <summary>Called whenever the page appears: a course day closed, an article read or a test taken changes it.</summary>
     public async Task RefreshAsync()
     {
+        int generation = Interlocked.Increment(ref _refreshGeneration);
+        if (!_loaded)
+        {
+            IsLoading = true;
+            IsLoadFailed = false;
+        }
+
         try
         {
             await _databaseReady.WaitAsync();
@@ -88,17 +116,40 @@ public sealed class ForYouViewModel : BaseViewModel
             string language = AppStrings.Language;
             await UiThread.RunAsync(() =>
             {
+                if (generation != Volatile.Read(ref _refreshGeneration)
+                    || !string.Equals(language, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
                 Picks = [.. picks.Select(pick => Card(pick, state, language)).OfType<LibraryCardItem>()];
                 Saved = [.. state.Saved.Select(id => ArticleContent.Find(id, language)).OfType<Article>().Select(article => LibraryCards.Article(article, state, _navigation))];
                 Starters = HasPicks || HasSaved ? [] : StarterCards(state, language);
                 _loaded = true;
-                Notify(nameof(HasPicks), nameof(HasSaved), nameof(IsEmpty));
+                _loadedLanguageKey = language;
+                IsLoading = false;
+                IsLoadFailed = false;
+                Notify(nameof(HasLoaded), nameof(HasPicks), nameof(HasSaved), nameof(IsEmpty));
             });
         }
         catch (Exception loadError)
         {
             // The personal part is missing this time; the other Library tabs still work.
-            BestEffort.Report(loadError);
+            if (generation == Volatile.Read(ref _refreshGeneration))
+            {
+                BestEffort.Report(loadError);
+                if (!_loaded)
+                {
+                    await UiThread.RunAsync(() =>
+                    {
+                        if (generation == Volatile.Read(ref _refreshGeneration))
+                        {
+                            IsLoading = false;
+                            IsLoadFailed = true;
+                        }
+                    });
+                }
+            }
         }
     }
 
@@ -150,7 +201,16 @@ public sealed class ForYouViewModel : BaseViewModel
 
     protected override void RefreshLocalizedProperties()
     {
-        Notify(nameof(PageTitle), nameof(SavedTitle), nameof(EmptyText), nameof(TakeTestText));
-        RefreshAsync().FireAndForget();
+        Notify(nameof(PageTitle), nameof(SavedTitle), nameof(EmptyText), nameof(TakeTestText),
+            nameof(LoadingText), nameof(LoadFailedText), nameof(RetryText));
+        string languageKey = AppStrings.Language;
+        if (!string.Equals(_loadedLanguageKey, languageKey, StringComparison.Ordinal))
+        {
+            _loadedLanguageKey = languageKey;
+            if (_loaded || Volatile.Read(ref _refreshGeneration) > 0)
+            {
+                RefreshAsync().FireAndForget();
+            }
+        }
     }
 }

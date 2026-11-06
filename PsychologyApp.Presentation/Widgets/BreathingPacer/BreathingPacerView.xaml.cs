@@ -44,6 +44,7 @@ public partial class BreathingPacerView : ContentView
 
     private BreathingPattern _pattern = BreathingPattern.Square;
     private BreathPhaseKind? _lastPhase;
+    private CancellationTokenSource? _immersiveStartCts;
     private bool _running;
 
     public BreathingPacerView()
@@ -52,7 +53,9 @@ public partial class BreathingPacerView : ContentView
         SemanticProperties.SetDescription(CircleHost, AppStrings.BreathCircleLabel);
         ToggleButton.TapCommand = new Command(Toggle);
         FullscreenButton.BodyText = AppStrings.BreathFullscreen;
-        Unloaded += (_, _) => Stop();
+        SizeChanged += OnSizeChanged;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
         ShowReady();
     }
 
@@ -107,11 +110,61 @@ public partial class BreathingPacerView : ContentView
         Circle.StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = circle / 2 };
     }
 
+    private void OnSizeChanged(object? sender, EventArgs e) => FitCircleToWidth();
+
+    private void OnLoaded(object? sender, EventArgs e) => SafeAsync.Run(StartImmersiveAfterDelayAsync);
+
+    private async Task StartImmersiveAfterDelayAsync()
+    {
+        if (!IsImmersive || _running)
+        {
+            return;
+        }
+
+        CancellationTokenSource startCts = new();
+        _immersiveStartCts?.Cancel();
+        _immersiveStartCts = startCts;
+        try
+        {
+            await Task.Delay(ImmersiveStartDelayMs, startCts.Token);
+            if (!startCts.IsCancellationRequested && UiAnimations.CanAnimate(this) && IsImmersive && !_running)
+            {
+                Start();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // The view was unloaded or the person started/stopped the guide before the delay ended.
+        }
+        finally
+        {
+            if (ReferenceEquals(_immersiveStartCts, startCts))
+            {
+                _immersiveStartCts = null;
+            }
+
+            startCts.Dispose();
+        }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        CancelImmersiveStart();
+        Stop();
+        ShowReady();
+    }
+
+    private void CancelImmersiveStart()
+    {
+        _immersiveStartCts?.Cancel();
+    }
+
     private void ApplyImmersive(bool immersive)
     {
         UpdateFullscreenButton();
         if (!immersive)
         {
+            CancelImmersiveStart();
             return;
         }
 
@@ -121,19 +174,10 @@ public partial class BreathingPacerView : ContentView
         Card.Padding = 0;
         Card.Margin = 0;
         ToggleButton.Variant = "Secondary";
-        SizeChanged += (_, _) => FitCircleToWidth();
         FitCircleToWidth();
         CountLabel.FontSize = 48;
         CycleLabel.TextColor = Color.FromArgb("#CCFFFFFF");
         Render(BreathingPattern.SmallScale, 0);
-        Loaded += async (_, _) =>
-        {
-            await Task.Delay(ImmersiveStartDelayMs);
-            if (!_running && IsImmersive)
-            {
-                Start();
-            }
-        };
     }
 
     private void ShowReady()
@@ -147,6 +191,7 @@ public partial class BreathingPacerView : ContentView
 
     private void Toggle()
     {
+        CancelImmersiveStart();
         if (_running)
         {
             Stop();

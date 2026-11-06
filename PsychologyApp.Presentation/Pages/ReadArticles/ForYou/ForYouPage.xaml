@@ -18,8 +18,9 @@
             BackCommand="{Binding BackCommand}"
             TitleText="{Binding PageTitle}" />
 
-    <ScrollView Grid.Row="1">
-        <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource ListItemSpacing}">
+        <Grid Grid.Row="1">
+            <ScrollView IsVisible="{Binding HasLoaded}">
+                <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource ListItemSpacing}">
             <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" IsVisible="{Binding HasPicks}" BindableLayout.ItemsSource="{Binding Picks}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="card:LibraryCardItem">
@@ -51,7 +52,21 @@
                 </VerticalStackLayout>
                 <ui:ButtonView BodyText="{Binding TakeTestText}" TapCommand="{Binding TakeTestCommand}" Variant="Secondary" />
             </VerticalStackLayout>
-        </VerticalStackLayout>
-    </ScrollView>
+                </VerticalStackLayout>
+            </ScrollView>
+            <ActivityIndicator
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                SemanticProperties.Description="{Binding LoadingText}" />
+            <ui:RetryView
+                IsVisible="{Binding IsLoadFailed}"
+                FailedText="{Binding LoadFailedText}"
+                RetryText="{Binding RetryText}"
+                RetryCommand="{Binding ReloadCommand}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+        </Grid>
     </Grid>
 </ContentPage>

@@ -1485,6 +1485,9 @@
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>文件已可以分享</value>
   </data>
+  <data name="DataBackupExportTooLargeToast" xml:space="preserve">
+    <value>备份文件太大。请删除部分记录，或尝试不加密码保护地导出。</value>
+  </data>
   <data name="ErrorLogTitle" xml:space="preserve">
     <value>错误日志</value>
   </data>

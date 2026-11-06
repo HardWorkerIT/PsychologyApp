@@ -102,6 +102,35 @@
             </CollectionView.Footer>
         </CollectionView>
 
+        <ActivityIndicator
+            Grid.Row="1"
+            IsRunning="{Binding IsLoadingOlderMessages}"
+            IsVisible="{Binding IsLoadingOlderMessages}"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            Margin="0,8,0,0"
+            SemanticProperties.Description="{Binding LoadingText}" />
+
+        <ui:RetryView
+            Grid.Row="1"
+            IsVisible="{Binding IsOlderMessagesLoadFailed}"
+            FailedText="{Binding OlderMessagesLoadFailedText}"
+            RetryText="{Binding RetryOlderMessagesText}"
+            RetryCommand="{Binding LoadOlderMessagesCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            Margin="16,8" />
+
+        <ui:RetryView
+            Grid.Row="1"
+            IsVisible="{Binding IsInitialLoadFailed}"
+            FailedText="{Binding OlderMessagesLoadFailedText}"
+            RetryText="{Binding RetryOlderMessagesText}"
+            RetryCommand="{Binding RetryInitialLoadCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Margin="24" />
+
         <ui:SkeletonView
             Grid.Row="1"
             Kind="Bubbles"
@@ -187,6 +216,7 @@
                 IsVisible="{Binding ShowReplyOptionsToggle}"
                 Margin="20,4,20,0"
                 Padding="12,5"
+                MinimumHeightRequest="44"
                 HorizontalOptions="Start"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 16"
@@ -256,6 +286,7 @@
 
             <ui:ChatInputBar
                 x:Name="InputBar"
+                IsEnabled="{Binding HasLoaded}"
                 Margin="20,8,20,12"
                 Text="{Binding DraftText, Mode=TwoWay}"
                 Placeholder="{Binding Placeholder}"

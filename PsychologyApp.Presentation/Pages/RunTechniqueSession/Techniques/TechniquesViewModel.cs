@@ -30,6 +30,7 @@ public partial class TechniquesViewModel : BaseViewModel
     private readonly ILogger<TechniquesViewModel> _logger;
 
     private readonly IUserPreferencesStore _preferences;
+    private bool _hasLoadedList;
 
     public TechniquesViewModel(
         ITechniqueService techniqueService,

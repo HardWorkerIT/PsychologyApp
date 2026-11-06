@@ -45,7 +45,13 @@ public sealed class InsightsViewModel : BaseViewModel
     private IReadOnlyList<InsightItem> _testItems = [];
     private IReadOnlyList<InsightItem> _moodItems = [];
     private IReadOnlyList<InsightItem> _bodyItems = [];
+    private readonly SemaphoreSlim _loadGate = new(1, 1);
     private bool _isLoaded;
+    private bool _isLoading;
+    private bool _hasLoadError;
+    private int _languageGeneration;
+    private int _reloadAfterCurrentLoad;
+    private string _languageKey = AppStrings.Language;
 
     public InsightsViewModel(
         INavigationService navigation,
@@ -63,7 +69,10 @@ public sealed class InsightsViewModel : BaseViewModel
         _body = body;
         _names = names;
         _databaseReady = databaseReady;
+        RetryCommand = new AsyncCommand(LoadAsync);
     }
+
+    public ICommand RetryCommand { get; }
 
     public string PageTitle => AppStrings.InsightsTitle;
     public string LeadText => AppStrings.InsightsLead;
@@ -90,11 +99,77 @@ public sealed class InsightsViewModel : BaseViewModel
     public bool ShowPracticesEmpty => _isLoaded && !HasPractices;
     public bool ShowTestsEmpty => _isLoaded && !HasTests;
     public bool ShowMoodsEmpty => _isLoaded && !HasMoods;
+    public bool IsLoading
+    {
+        get => _isLoading;
+        private set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                Notify(nameof(ShowInitialLoading), nameof(ShowContent));
+            }
+        }
+    }
+
+    public bool HasLoadError
+    {
+        get => _hasLoadError;
+        private set
+        {
+            if (SetProperty(ref _hasLoadError, value))
+            {
+                Notify(nameof(ShowLoadError), nameof(ShowContent));
+            }
+        }
+    }
+
+    public bool ShowInitialLoading => IsLoading && !_isLoaded;
+    public bool ShowLoadError => HasLoadError && !_isLoaded;
+    public bool ShowContent => !ShowInitialLoading && !ShowLoadError;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadErrorText => AppStrings.LoadError;
+    public string RetryText => AppStrings.RetryQuestion;
+
+    protected override void RefreshLocalizedProperties()
+    {
+        Notify(
+            nameof(PageTitle), nameof(LeadText), nameof(PracticesTitle), nameof(PracticesEmptyText),
+            nameof(TestsTitle), nameof(TestsEmptyText), nameof(MoodTitle), nameof(MoodNote),
+            nameof(MoodEmptyText), nameof(BodyTitle), nameof(LoadErrorText), nameof(RetryText), nameof(LoadingText));
+
+        string language = AppStrings.Language;
+        if (string.Equals(_languageKey, language, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        _languageKey = language;
+        Interlocked.Increment(ref _languageGeneration);
+        if (_loadGate.CurrentCount == 0)
+        {
+            Interlocked.Exchange(ref _reloadAfterCurrentLoad, 1);
+            return;
+        }
+
+        LoadAsync().FireAndForget();
+    }
 
     public async Task LoadAsync()
     {
+        if (!await _loadGate.WaitAsync(0))
+        {
+            return;
+        }
+
         try
         {
+            int languageGeneration = Volatile.Read(ref _languageGeneration);
+            await UiThread.RunAsync(() =>
+            {
+                IsLoading = true;
+                HasLoadError = false;
+            });
+
             await _databaseReady.WaitAsync();
             DateTime now = DateTime.UtcNow;
 
@@ -144,7 +219,15 @@ public sealed class InsightsViewModel : BaseViewModel
 
             await UiThread.RunAsync(() =>
             {
+                if (languageGeneration != Volatile.Read(ref _languageGeneration))
+                {
+                    Interlocked.Exchange(ref _reloadAfterCurrentLoad, 1);
+                    return;
+                }
+
                 _isLoaded = true;
+                IsLoading = false;
+                HasLoadError = false;
                 _practices = practices;
                 _testItems = tests;
                 _moodItems = moodItems;
@@ -157,8 +240,21 @@ public sealed class InsightsViewModel : BaseViewModel
         }
         catch (Exception loadError)
         {
-            // Each section has its own empty hint; a failed load leaves them, never a broken page.
             BestEffort.Report(loadError);
+            await UiThread.RunAsync(() =>
+            {
+                IsLoading = false;
+                // Keep a previous snapshot visible when a later refresh fails. Only the first load needs a retry state.
+                HasLoadError = !_isLoaded;
+            });
+        }
+        finally
+        {
+            _loadGate.Release();
+            if (Interlocked.Exchange(ref _reloadAfterCurrentLoad, 0) != 0)
+            {
+                LoadAsync().FireAndForget();
+            }
         }
     }
 
