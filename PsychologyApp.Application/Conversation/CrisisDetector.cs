@@ -129,11 +129,7 @@ public sealed class KeywordCrisisDetector : ICrisisDetector
         string? previousNormalized = null;
         foreach (string sentence in text.Split(SentenceBoundaries, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            string normalized = UtteranceText.Normalize(sentence);
-            foreach (string idiom in Idioms)
-            {
-                normalized = normalized.Replace(idiom, " ", StringComparison.Ordinal);
-            }
+            string normalized = RemoveIdioms(UtteranceText.Normalize(sentence));
 
             foreach (string marker in Markers)
             {
@@ -175,11 +171,7 @@ public sealed class KeywordCrisisDetector : ICrisisDetector
 
         foreach (string sentence in ellipsisAsPause.Split(SentenceBoundaries, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            string normalized = UtteranceText.Normalize(sentence);
-            foreach (string idiom in Idioms)
-            {
-                normalized = normalized.Replace(idiom, " ", StringComparison.Ordinal);
-            }
+            string normalized = RemoveIdioms(UtteranceText.Normalize(sentence));
 
             if (Markers.Any(marker => normalized.Contains(marker, StringComparison.Ordinal)))
             {
@@ -188,6 +180,32 @@ public sealed class KeywordCrisisDetector : ICrisisDetector
         }
 
         return false;
+    }
+
+    private static string RemoveIdioms(string normalized)
+    {
+        char[] characters = normalized.ToCharArray();
+        foreach (string idiom in Idioms)
+        {
+            // Chinese has no spaces between words, so its idioms must still be recognized inside a sentence.
+            bool canMatchWithinText = idiom.Any(c => c is >= '\u3400' and <= '\u9FFF');
+            int searchFrom = 0;
+            while ((searchFrom = normalized.IndexOf(idiom, searchFrom, StringComparison.Ordinal)) >= 0)
+            {
+                int end = searchFrom + idiom.Length;
+                bool wholeWords = (searchFrom == 0 || normalized[searchFrom - 1] == ' ')
+                    && (end == normalized.Length || normalized[end] == ' ');
+                if ((canMatchWithinText || wholeWords)
+                    && characters.AsSpan(searchFrom, idiom.Length).SequenceEqual(idiom.AsSpan()))
+                {
+                    Array.Fill(characters, ' ', searchFrom, idiom.Length);
+                }
+
+                searchFrom = end;
+            }
+        }
+
+        return new string(characters);
     }
 
     private static string ReplaceEllipsesWithPauses(string text, out bool hadEllipsis)
