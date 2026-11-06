@@ -95,10 +95,9 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-        <VerticalStackLayout IsVisible="{Binding ShowInitialLoading}" HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
-            <ActivityIndicator IsRunning="{Binding IsLoading}" />
-            <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-        </VerticalStackLayout>
+        <ui:ProgressBarView IsVisible="{Binding ShowInitialLoading}" IsLoading="{Binding IsLoading}"
+                            ProgressText="{Binding LoadingText}"
+                            HorizontalOptions="Center" VerticalOptions="Center" />
         <ui:EmptyStateView
             IsVisible="{Binding ShowLoadError}"
             BodyText="{Binding LoadErrorText}"

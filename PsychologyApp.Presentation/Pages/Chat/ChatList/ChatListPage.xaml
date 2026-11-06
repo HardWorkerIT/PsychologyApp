@@ -320,14 +320,12 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <VerticalStackLayout
+        <ui:ProgressBarView
             IsVisible="{Binding ShowInitialLoading}"
+            IsLoading="{Binding IsLoading}"
+            ProgressText="{Binding LoadingText}"
             HorizontalOptions="Center"
-            VerticalOptions="Center"
-            Spacing="10">
-            <ActivityIndicator IsRunning="{Binding IsLoading}" />
-            <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-        </VerticalStackLayout>
+            VerticalOptions="Center" />
 
         <ui:RetryView
             IsVisible="{Binding ShowLoadFailed}"

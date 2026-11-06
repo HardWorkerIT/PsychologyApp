@@ -102,13 +102,14 @@
             </CollectionView.Footer>
         </CollectionView>
 
-        <ActivityIndicator
+        <ui:ProgressBarView
             Grid.Row="1"
-            IsRunning="{Binding IsLoadingOlderMessages}"
+            IsLoading="{Binding IsLoadingOlderMessages}"
             IsVisible="{Binding IsLoadingOlderMessages}"
             HorizontalOptions="Center"
             VerticalOptions="Start"
             Margin="0,8,0,0"
+            ProgressText="{Binding LoadingText}"
             SemanticProperties.Description="{Binding LoadingText}" />
 
         <ui:RetryView

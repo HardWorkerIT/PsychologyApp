@@ -68,12 +68,13 @@
                 </vm:JournalTimelineItemTemplateSelector>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <ActivityIndicator
+        <ui:ProgressBarView
             Grid.Row="3"
-            IsRunning="{Binding IsLoading}"
+            IsLoading="{Binding IsLoading}"
             IsVisible="{Binding IsLoading}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
+            ProgressText="{Binding LoadingText}"
             SemanticProperties.Description="{Binding LoadingText}" />
         <ui:RetryView
             Grid.Row="3"

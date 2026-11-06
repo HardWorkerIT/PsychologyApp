@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -40,7 +41,7 @@ public sealed class UserViewModelTests
     }
 
     [Fact]
-    public void Constructor_BuildsFeaturedTechniquesFromOnboardingConcern()
+    public async Task Constructor_BuildsFeaturedTechniquesFromOnboardingConcern()
     {
         Mock<IUserProgressService> progress = new();
         Mock<IQuotService> quotService = new();
@@ -64,6 +65,22 @@ public sealed class UserViewModelTests
             new ProfileScreenCoordinator(new UserProfileRefreshCoordinator()),
             TopViewModelTestHelpers.CreateLanguageReloader(quotService.Object, preferences.Object),
             preferences.Object);
+
+        TaskCompletionSource<bool> initialized = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        NotifyCollectionChangedEventHandler onTechniquesChanged = (_, _) =>
+        {
+            if (viewModel.Techniques.Count == 4)
+            {
+                initialized.TrySetResult(true);
+            }
+        };
+        viewModel.Techniques.CollectionChanged += onTechniquesChanged;
+        if (viewModel.Techniques.Count != 4)
+        {
+            await initialized.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+
+        viewModel.Techniques.CollectionChanged -= onTechniquesChanged;
 
         Assert.Equal(4, viewModel.Techniques.Count);
         Assert.Equal("0", viewModel.TechniquesCompletedCount);

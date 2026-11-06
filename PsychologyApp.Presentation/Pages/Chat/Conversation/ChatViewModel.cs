@@ -366,7 +366,11 @@ public sealed class ChatViewModel : BaseViewModel
         Task<ChatMessagePage>? paged = _chat.GetMessagesPageAsync(sessionId, beforeMessageId, HistoryPageSize, cancellationToken);
         if (paged is not null)
         {
-            return await paged;
+            ChatMessagePage? page = await paged;
+            if (page is not null)
+            {
+                return page;
+            }
         }
 
         // Older test doubles and third-party hosts that have not implemented paging retain the original API behavior.

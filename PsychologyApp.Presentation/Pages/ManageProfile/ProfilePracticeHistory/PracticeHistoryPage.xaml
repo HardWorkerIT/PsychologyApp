@@ -26,10 +26,9 @@
                     IsVisible="{Binding ShowEmpty}"
                     BodyText="{Binding EmptyText}"
                     IconName="History" />
-                <VerticalStackLayout IsVisible="{Binding ShowInitialLoading}" HorizontalOptions="Center" Spacing="10" Padding="0,16">
-                    <ActivityIndicator IsRunning="{Binding IsLoading}" />
-                    <Label Text="{Binding LoadingText}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
-                </VerticalStackLayout>
+                <ui:ProgressBarView IsVisible="{Binding ShowInitialLoading}" IsLoading="{Binding IsLoading}"
+                                    ProgressText="{Binding LoadingText}"
+                                    HorizontalOptions="Center" Padding="0,16" />
                 <ui:EmptyStateView
                     IsVisible="{Binding ShowLoadError}"
                     BodyText="{Binding LoadErrorText}"

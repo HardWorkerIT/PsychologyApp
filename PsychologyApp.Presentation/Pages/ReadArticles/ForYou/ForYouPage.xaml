@@ -54,11 +54,12 @@
             </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
-            <ActivityIndicator
-                IsRunning="{Binding IsLoading}"
+            <ui:ProgressBarView
+                IsLoading="{Binding IsLoading}"
                 IsVisible="{Binding IsLoading}"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
+                ProgressText="{Binding LoadingText}"
                 SemanticProperties.Description="{Binding LoadingText}" />
             <ui:RetryView
                 IsVisible="{Binding IsLoadFailed}"

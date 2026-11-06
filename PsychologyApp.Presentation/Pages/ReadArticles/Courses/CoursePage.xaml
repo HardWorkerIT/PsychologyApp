@@ -82,9 +82,10 @@
             <ui:ButtonView BodyText="{Binding PrimaryText}" TapCommand="{Binding PrimaryCommand}" IsEnabled="{Binding CanAct}" />
         </Border>
 
-        <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                           HorizontalOptions="Center" VerticalOptions="Center"
-                           SemanticProperties.Description="{Binding LoadingText}" />
+        <ui:ProgressBarView Grid.RowSpan="2" IsLoading="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                            ProgressText="{Binding LoadingText}"
+                            HorizontalOptions="Center" VerticalOptions="Center"
+                            SemanticProperties.Description="{Binding LoadingText}" />
         <ui:RetryView Grid.RowSpan="2" IsVisible="{Binding IsLoadFailed}"
                       FailedText="{Binding LoadFailedText}"
                       RetryText="{Binding RetryText}"

@@ -279,8 +279,9 @@
 
                     <!-- Morning, open: its name and the faces. -->
                     <VerticalStackLayout IsVisible="{Binding IsMorningSelected}" Spacing="{StaticResource CompactSpacing}" Padding="8,4,8,0">
-                        <ActivityIndicator IsRunning="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}" HorizontalOptions="Center"
-                                           SemanticProperties.Description="{Binding EditorLoadingText}" />
+                        <ui:ProgressBarView IsLoading="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}"
+                                            ProgressText="{Binding EditorLoadingText}" HorizontalOptions="Center"
+                                            SemanticProperties.Description="{Binding EditorLoadingText}" />
                         <ui:RetryView
                             IsVisible="{Binding IsEditorLoadFailed}"
                             FailedText="{Binding EditorLoadFailedText}"
@@ -348,8 +349,9 @@
 
                     <!-- Evening, open. -->
                     <VerticalStackLayout IsVisible="{Binding IsEveningSelected}" Spacing="{StaticResource CompactSpacing}" Padding="8,4,8,0">
-                        <ActivityIndicator IsRunning="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}" HorizontalOptions="Center"
-                                           SemanticProperties.Description="{Binding EditorLoadingText}" />
+                        <ui:ProgressBarView IsLoading="{Binding IsEditorLoading}" IsVisible="{Binding IsEditorLoading}"
+                                            ProgressText="{Binding EditorLoadingText}" HorizontalOptions="Center"
+                                            SemanticProperties.Description="{Binding EditorLoadingText}" />
                         <ui:RetryView
                             IsVisible="{Binding IsEditorLoadFailed}"
                             FailedText="{Binding EditorLoadFailedText}"

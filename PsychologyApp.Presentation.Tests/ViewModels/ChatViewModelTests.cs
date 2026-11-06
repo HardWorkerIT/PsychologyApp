@@ -11,6 +11,7 @@ namespace PsychologyApp.Presentation.Tests.ViewModels;
 public sealed class ChatViewModelTests
 {
     private static readonly DateTime Now = new(2026, 10, 6, 12, 0, 0, DateTimeKind.Utc);
+    private static long _nextMessageId;
 
     private sealed class FixedTime : TimeProvider
     {
@@ -37,7 +38,7 @@ public sealed class ChatViewModelTests
     }
 
     private static ChatMessageDTO Message(ChatRole role, string text, DateTime at, params ChatQuickReply[] chips) =>
-        new() { SessionId = 5, Role = role, Text = text, CreatedAt = at, QuickReplies = chips };
+        new() { Id = Interlocked.Increment(ref _nextMessageId), SessionId = 5, Role = role, Text = text, CreatedAt = at, QuickReplies = chips };
 
     private static ChatTurnResult Turn(DialogueAction? action, params string[] companionTexts) =>
         new(
