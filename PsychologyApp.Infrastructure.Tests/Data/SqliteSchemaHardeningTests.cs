@@ -66,6 +66,7 @@ public class SqliteSchemaHardeningTests
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync();
         await SqliteSchema.EnsureSchemaAsync(connection);
+        await SqliteSchemaTestSupport.RevertBackupKeyMigrationAsync(connection);
         // Rewind to the pre-FK shape of version 12.
         await connection.ExecuteAsync(
             """
@@ -91,6 +92,7 @@ public class SqliteSchemaHardeningTests
         await using var connection = new SqliteConnection("Data Source=:memory:");
         await connection.OpenAsync();
         await SqliteSchema.EnsureSchemaAsync(connection);
+        await SqliteSchemaTestSupport.RevertBackupKeyMigrationAsync(connection);
         await connection.ExecuteAsync(
             """
             DROP INDEX UX_Quots_Text;

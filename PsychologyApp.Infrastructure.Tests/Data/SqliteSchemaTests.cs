@@ -145,6 +145,7 @@ public class SqliteSchemaTests
         await using SqliteConnection connection = await CreateSchemaConnectionAsync();
         await connection.ExecuteAsync("INSERT INTO ChatSessions (Title, CreatedAt, UpdatedAt) VALUES ('saved', '2025-01-01', '2025-01-02');");
         await connection.ExecuteAsync("CREATE INDEX IX_ChatSessions_UpdatedAt_SessionId ON ChatSessions(UpdatedAt DESC, SessionId DESC);");
+        await SqliteSchemaTestSupport.RevertBackupKeyMigrationAsync(connection);
         await connection.ExecuteAsync("DELETE FROM SchemaVersion WHERE Version > 14;");
 
         await SqliteSchema.EnsureSchemaAsync(connection);
