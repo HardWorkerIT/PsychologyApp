@@ -2,8 +2,10 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using System.Diagnostics;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Features.ManageJournal;
+using PsychologyApp.Presentation.Shared.Common.Diagnostics;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 
 namespace PsychologyApp.Presentation.App;
@@ -15,9 +17,14 @@ public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        long started = Stopwatch.GetTimestamp();
+        PerfTrace.Event("MainActivity.OnCreate before base");
         base.OnCreate(savedInstanceState);
+        PerfTrace.Measure("MainActivity base.OnCreate", started);
         // The language may have been applied before this activity existed: its resources still carry the phone's locale.
+        started = Stopwatch.GetTimestamp();
         Shared.Common.AndroidLocale.Apply(System.Globalization.CultureInfo.CurrentUICulture.Name);
+        PerfTrace.Measure("MainActivity AndroidLocale.Apply", started);
         HandleReminderIntent(Intent);
     }
 

@@ -24,6 +24,9 @@ public static class PerfTrace
     }
 
     [Conditional("DEBUG"), Conditional("PERFTRACE")]
+    public static void Event(string what) => Write(what);
+
+    [Conditional("DEBUG"), Conditional("PERFTRACE")]
     public static void Measure(string what, long startTimestamp)
     {
         double ms = Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds;

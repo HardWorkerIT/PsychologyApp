@@ -4,6 +4,7 @@ using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Lib.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 using PsychologyApp.Presentation.Features.ManageJournal;
+using PsychologyApp.Presentation.Shared.Common.Diagnostics;
 
 namespace PsychologyApp.Presentation.App;
 
@@ -13,15 +14,26 @@ public partial class App : Microsoft.Maui.Controls.Application
 
     public App(IServiceProvider services, GlobalExceptionHandler exceptionHandler)
     {
+        long started = System.Diagnostics.Stopwatch.GetTimestamp();
+        PerfTrace.Event("App constructor entered");
         _services = services;
+        long componentStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         InitializeComponent();
+        PerfTrace.Measure("App.InitializeComponent", componentStarted);
+        componentStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         UserPreferences.ApplyAll();
+        PerfTrace.Measure("UserPreferences.ApplyAll", componentStarted);
         exceptionHandler.Attach(this);
+        PerfTrace.Measure("App constructor", started);
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
+        long started = System.Diagnostics.Stopwatch.GetTimestamp();
+        PerfTrace.Event("App.CreateWindow entered");
+        long shellStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         AppShell shell = _services.GetRequiredService<AppShell>();
+        PerfTrace.Measure("AppShell resolved", shellStarted);
         IShellTabNavigator tabNavigator = _services.GetRequiredService<IShellTabNavigator>();
         IUserPreferencesStore preferences = _services.GetRequiredService<IUserPreferencesStore>();
         PracticeReminderTapHandler.Configure(tabNavigator, preferences);
@@ -35,7 +47,9 @@ public partial class App : Microsoft.Maui.Controls.Application
 #if DEBUG
         Shared.Common.Infrastructure.DemoDataImporter.TryImportAsync(_services).FireAndForget();
 #endif
-        return new(shell);
+        Window window = new(shell);
+        PerfTrace.Measure("App.CreateWindow", started);
+        return window;
     }
 
     protected override void OnResume()

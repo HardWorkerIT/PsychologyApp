@@ -18,6 +18,7 @@ using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Lib.Navigation;
 using PsychologyApp.Presentation.App.Routes;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
+using PsychologyApp.Presentation.Shared.Common.Diagnostics;
 #if ANDROID
 using PsychologyApp.Presentation.Platforms.Android;
 #endif
@@ -28,6 +29,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        PerfTrace.Event("MauiProgram.CreateMauiApp entered");
         MauiAppBuilder builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -101,7 +103,10 @@ public static class MauiProgram
                 () => sp.GetRequiredService<AppShell>(),
                 ShellNavigation(sp)));
 
+        PerfTrace.Event("MauiProgram.Build starting");
+        long buildStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         MauiApp app = builder.Build();
+        PerfTrace.Measure("MauiProgram.Build", buildStarted);
         NavigationCoordinator.SetLogger(
             app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("NavigationCoordinator"));
         return app;

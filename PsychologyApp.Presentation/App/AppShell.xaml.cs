@@ -60,6 +60,8 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         Func<INavigationService> navigationServiceFactory,
         PsychologyApp.Presentation.Features.ManageProfile.AppLockCoordinator appLock)
     {
+        long constructorStarted = System.Diagnostics.Stopwatch.GetTimestamp();
+        PerfTrace.Event("AppShell constructor entered");
         _navigationServiceFactory = navigationServiceFactory;
         _appLock = appLock;
         _preferences = preferences;
@@ -71,10 +73,18 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         _moodReminderCoordinator = moodReminderCoordinator;
         _chatReminderCoordinator = chatReminderCoordinator;
         _logger = logger;
+        long stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         InitializeComponent();
+        PerfTrace.Measure("AppShell.InitializeComponent", stepStarted);
+        stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         ApplyLocalization();
+        PerfTrace.Measure("AppShell.ApplyLocalization", stepStarted);
+        stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         UpdateTabIcons();
+        PerfTrace.Measure("AppShell.UpdateTabIcons", stepStarted);
+        stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         EnsureLazyTabsReady();
+        PerfTrace.Measure("AppShell.EnsureLazyTabsReady", stepStarted);
         _preferences.Changed += OnPreferencesChanged;
         if (Microsoft.Maui.Controls.Application.Current is { } app)
         {
@@ -87,6 +97,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         // While the app lock is due, nothing of the app is drawn: the lock screen is a modal page above this, unaffected.
         _appLock.CoveringChanged += (_, _) => Opacity = _appLock.IsCovering ? 0 : 1;
         _ = InitializeAppAsync();
+        PerfTrace.Measure("AppShell constructor", constructorStarted);
     }
 
     private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
