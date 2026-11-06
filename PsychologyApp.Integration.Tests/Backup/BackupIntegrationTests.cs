@@ -152,7 +152,7 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
         {
             ChatSessions = [new BackupChatSessionDTO
             {
-                Session = new ChatSessionDTO { Title = "chat", CreatedAt = LongAgo, UpdatedAt = LongAgo.AddMinutes(count), StateJson = count.ToString() },
+                Session = new BackupChatSessionInfoDTO { Title = "chat", CreatedAt = LongAgo, UpdatedAt = LongAgo.AddMinutes(count), StateJson = count.ToString() },
                 Messages = Enumerable.Range(1, count).Select(i => new ChatMessageDTO
                 { Id = i, Role = ChatRole.User, Text = "repeated message", CreatedAt = LongAgo }).ToList()
             }]
@@ -174,7 +174,7 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
         {
             ChatSessions = [new BackupChatSessionDTO
             {
-                Session = new ChatSessionDTO
+                Session = new BackupChatSessionInfoDTO
                 {
                     Title = "chat",
                     CreatedAt = LongAgo,
