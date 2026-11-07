@@ -72,15 +72,16 @@ public static partial class ArticleContent
                         H("Was hilft"),
                         List(
                             "Eine Stunde vor dem Schlafengehen: gedämpftes Licht und ruhige Tätigkeiten ohne Bildschirme",
-                            "Kaffee, starker Tee und Energydrinks nicht später als 14 Uhr",
+                            "Verzichte mindestens 6 Stunden vor dem Schlafengehen auf Kaffee, starken Tee und Energydrinks; wenn sie deinen Schlaf stören, hör früher damit auf",
                             "Alkohol hilft beim Einschlafen, macht den Schlaf aber flach und weckt gegen Morgen",
                             "Ein schweres Abendessen 2–3 Stunden vor dem Schlafengehen",
                             "Morgens mindestens 15 Minuten Tageslicht: Es stellt die innere Uhr"),
+                        P("Ein-Minuten-Plan: Wähle, wann deine Ruhephase beginnt, und eine ruhige Tätigkeit, zum Beispiel ein paar Seiten lesen. Wenn keine Stunde frei ist, wähle vorher eine kürzere Variante. Zum Beispiel: „Nach meinen Abendaufgaben dimme ich das Licht und lese ein wenig.“"),
                         H("Entspannen vor dem Schlafen"),
                         P("Langsames Atmen mit langer Ausatmung senkt die Anspannung. Probier es jetzt."),
                         Breathe("Auf 4 einatmen, auf 6 ausatmen")
                     ],
-                    "Gestalte dein eigenes Ritual für die letzte Stunde vor dem Schlafengehen und mach es jeden Abend. Bring das Handy aus dem Schlafzimmer, oder zumindest aus dem Bett.",
+                    "Probiere deinen Plan heute Abend: Nimm dir nach Möglichkeit Zeit für ruhige Tätigkeiten vor dem Schlafen; wenn keine Stunde frei ist, nutze die kurze Variante. Leg das Handy aus dem Bett und lass wichtige Benachrichtigungen aktiv.",
                     "Was gehört zu deinem Abendritual? Was hat sich als schwer erwiesen?"),
                 new(
                     "Gedanken, die wach halten",
@@ -192,7 +193,9 @@ public static partial class ArticleContent
                             "Wenn eine Sorge zu einer anderen Zeit kommt, schreib das Thema in einer Zeile auf und sag dir: „Darüber denke ich in meiner Sorgenzeit nach“",
                             "Geh in deiner Sorgenzeit die Liste durch: Plane einen Schritt für das, was du tun kannst, lass los, was du nicht tun kannst",
                             "Oft wirkt das Thema zur vereinbarten Zeit nicht mehr wichtig"),
-                        Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken")
+                        Practice(TechniqueId.ThoughtDefusion, "Abstand zu einem Gedanken"),
+                        P("Wenn du die Nachrichten aus Unsicherheit immer wieder öffnest, notiere deine konkrete Frage und überlege, ob du jetzt handeln musst. Wenn nicht, lege fest, wann du wieder nachsiehst."),
+                        See(ArticleIds.NewsLoop, "Wenn Nachrichten nicht loslassen")
                     ],
                     "Leg dir eine Sorgenzeit fest und verschiebe ängstliche Gedanken auf sie.",
                     "Ist es dir gelungen, Sorgen zu verschieben? Was ist mit den Themen bis zur vereinbarten Zeit passiert?"),
@@ -273,7 +276,9 @@ public static partial class ArticleContent
                             "Zerlege sie bis zu einem Schritt, der fünf Minuten dauert",
                             "Leg Zeit und Ort fest: „nach dem Frühstück, in der Küche“",
                             "Notiere danach, wie sich deine Stimmung verändert hat"),
-                        Practice(TechniqueId.SmallStep, "Ein kleiner Schritt")
+                        Practice(TechniqueId.SmallStep, "Ein kleiner Schritt"),
+                        P("Das Ziel ist nicht, dass sich die Stimmung sofort hebt. Bleibt sie gleich, achte darauf, wie machbar die Tätigkeit war, und passe den nächsten Schritt an."),
+                        See(ArticleIds.SmallStepReview, "Wenn ein kleiner Schritt die Stimmung nicht hebt")
                     ],
                     "Mach jeden Tag zur festgelegten Zeit eine angenehme Tätigkeit und eine „Ich habe es geschafft“-Tätigkeit.",
                     "Was hast du geschafft? Wie hat sich deine Stimmung danach verändert?"),
@@ -302,7 +307,9 @@ public static partial class ArticleContent
                             "Ein kurzes Treffen oder ein Anruf ist besser als keines",
                             "Du musst nicht alles erklären: „Es ist gerade schwer, lass uns einfach spazieren gehen“",
                             "Wenn die Kraft fehlt, wähle Menschen, mit denen es leicht ist"),
-                        Practice(TechniqueId.SmallStep, "Ein kleiner Schritt")
+                        Practice(TechniqueId.SmallStep, "Ein kleiner Schritt"),
+                        P("Du musst nicht alles erzählen: Bitte konkret um etwas, etwa Zuhören, Gesellschaft oder Hilfe bei einer Aufgabe."),
+                        See(ArticleIds.SupportRequest, "Um Unterstützung bitten")
                     ],
                     "Melde dich in den nächsten zwei Tagen bei mindestens einem Menschen.",
                     "Bei wem hast du dich gemeldet? Wie war es?"),
@@ -362,7 +369,9 @@ public static partial class ArticleContent
                             "Etwas, das du bei dir trägst: ein Kiesel, ein Ring, etwas mit einem Duft",
                             "Ein Mensch, dem du schreiben kannst",
                             "Etwas Kaltes: Wasser, Eis"),
-                        Breathe("Die Ausatmung länger als die Einatmung")
+                        Breathe("Die Ausatmung länger als die Einatmung"),
+                        P("Wenn die Aufmerksamkeit auf Atem oder Körper die Belastung verstärkt, hör auf. Öffne die Augen, wähle einen neutralen Gegenstand in deiner Nähe oder lass die Übung aus."),
+                        See(ArticleIds.TraumaGrounding, "Wenn Erdung die Belastung verstärkt")
                     ],
                     "Stell dein Erdungsset zusammen und probier die Übung „Eine Erinnerung hat mich überwältigt“ in einem ruhigen Moment aus, damit du sie vorher kennst.",
                     "Was gehört zu deinem Erdungsset?"),

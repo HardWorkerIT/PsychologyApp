@@ -4057,6 +4057,15 @@
   <data name="MoodLevelName5" xml:space="preserve">
     <value>Muy bien</value>
   </data>
+  <data name="JournalCalendarDayWithMood" xml:space="preserve">
+    <value>{0}, estado de ánimo: {1}{2}</value>
+  </data>
+  <data name="JournalCalendarDayWithoutMood" xml:space="preserve">
+    <value>{0}, sin estado de ánimo registrado{1}</value>
+  </data>
+  <data name="JournalCalendarDaySelectedSuffix" xml:space="preserve">
+    <value>, seleccionado</value>
+  </data>
   <data name="JournalPastDayPlaceholder" xml:space="preserve">
     <value>Una nota sobre el día, si quieres</value>
   </data>
@@ -4158,5 +4167,17 @@
   </data>
   <data name="DesignerAddStep" xml:space="preserve">
     <value>+ Añadir un paso</value>
+  </data>
+  <data name="MusicPreviousTrack" xml:space="preserve">
+    <value>Pista anterior</value>
+  </data>
+  <data name="MusicPlay" xml:space="preserve">
+    <value>Reproducir</value>
+  </data>
+  <data name="MusicPause" xml:space="preserve">
+    <value>Pausar</value>
+  </data>
+  <data name="MusicNextTrack" xml:space="preserve">
+    <value>Pista siguiente</value>
   </data>
 </root>

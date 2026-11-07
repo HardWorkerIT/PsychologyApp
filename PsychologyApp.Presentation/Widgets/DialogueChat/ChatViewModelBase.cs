@@ -28,6 +28,7 @@ public abstract class ChatViewModelBase : BaseViewModel
     private bool _isFinished;
     private string _finishText = string.Empty;
     private bool _offersEmotions;
+    private bool _isComposerFocused;
 
     protected ChatViewModelBase(INavigationService navigationService)
     {
@@ -59,6 +60,14 @@ public abstract class ChatViewModelBase : BaseViewModel
     }
 
     public bool HasSuggestions => Suggestions.Count > 0;
+
+    public bool ShowSuggestions => HasSuggestions && !_isComposerFocused;
+
+    public bool ShowEmotionPicker => OffersEmotions && !_isComposerFocused;
+
+    public bool ShowReplyOptionsToggle => IsTextInput && _isComposerFocused && (HasSuggestions || OffersEmotions);
+
+    public string ReplyOptionsText => AppStrings.ChatShowReplyOptions;
 
     public IReadOnlyList<DialogueRatingItem> RatingItems { get; }
 
@@ -100,6 +109,18 @@ public abstract class ChatViewModelBase : BaseViewModel
     public string StatusText => IsTyping ? AppStrings.DialogueTyping : AppStrings.ChatStatusPractice;
 
     public string RatingScaleText => AppStrings.DialogueRatingScale;
+
+    /// <summary>The answer shortcuts collapse while the keyboard is open, leaving more room for the conversation.</summary>
+    internal void SetComposerFocused(bool focused)
+    {
+        if (_isComposerFocused == focused)
+        {
+            return;
+        }
+
+        _isComposerFocused = focused;
+        Notify(nameof(ShowSuggestions), nameof(ShowEmotionPicker), nameof(ShowReplyOptionsToggle));
+    }
 
     public bool IsTyping
     {
@@ -194,7 +215,7 @@ public abstract class ChatViewModelBase : BaseViewModel
     protected virtual Task OnEndedAsync(ConversationStatus status, DialogueAction? action) => Task.CompletedTask;
 
     protected override void RefreshLocalizedProperties() =>
-        Notify(nameof(InputPlaceholder), nameof(SendText), nameof(TypingText), nameof(RatingScaleText));
+        Notify(nameof(InputPlaceholder), nameof(SendText), nameof(TypingText), nameof(RatingScaleText), nameof(ReplyOptionsText));
 
     private void Run(Func<Task> action)
     {
@@ -321,6 +342,7 @@ public abstract class ChatViewModelBase : BaseViewModel
         }
 
         OnPropertyChanged(nameof(HasSuggestions));
+        Notify(nameof(ShowSuggestions), nameof(ShowReplyOptionsToggle));
         RefreshSuggestionSelection();
 
         NotifyInputChanged();
@@ -370,11 +392,18 @@ public abstract class ChatViewModelBase : BaseViewModel
 
         Suggestions.Insert(0, new DialogueSuggestionItem(AppStrings.PracticeRecentProblem(AnswerText.Shorten(recent, 32)), recent, SuggestCommand));
         OnPropertyChanged(nameof(HasSuggestions));
+        Notify(nameof(ShowSuggestions), nameof(ShowReplyOptionsToggle));
         RefreshSuggestionSelection();
     }
 
     private void NotifyInputChanged() =>
-        Notify(nameof(IsTextInput), nameof(IsChoiceInput), nameof(IsRatingInput));
+        Notify(
+            nameof(IsTextInput),
+            nameof(IsChoiceInput),
+            nameof(IsRatingInput),
+            nameof(ShowSuggestions),
+            nameof(ShowEmotionPicker),
+            nameof(ShowReplyOptionsToggle));
 
     private void AppendMessage(string text, bool isUser) =>
         Messages.Add(new DialogueMessage(text, isUser));

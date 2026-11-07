@@ -39,12 +39,12 @@
                 <Border
                     x:Name="MicButton"
                     Grid.Column="1"
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    Margin="0,4"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    Margin="0,2"
                     VerticalOptions="End"
                     StrokeThickness="0"
-                    StrokeShape="RoundRectangle 20"
+                    StrokeShape="RoundRectangle 22"
                     BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}">
                     <Label
                         x:Name="MicIcon"
@@ -63,6 +63,7 @@
         <Border
             x:Name="RecentChip"
             IsVisible="False"
+            MinimumHeightRequest="44"
             HorizontalOptions="Start"
             Padding="12,8"
             StrokeThickness="1.2"

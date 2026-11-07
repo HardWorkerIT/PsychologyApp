@@ -56,6 +56,8 @@ public partial class TechniquesPage : ContentPage
         base.OnHandlerChanged();
         if (Handler is null)
         {
+            _viewModel?.UnsubscribeFromTechniqueChanges();
+
             _animationHelper?.Dispose();
             _animationHelper = null;
         }

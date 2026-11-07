@@ -9,7 +9,7 @@
              x:Name="BarRoot">
     <CollectionView
         ItemsSource="{Binding ItemsSource, Source={x:Reference BarRoot}}"
-        HeightRequest="40"
+        HeightRequest="44"
         SelectionMode="None"
         HorizontalScrollBarVisibility="Never"
         VerticalScrollBarVisibility="Never">

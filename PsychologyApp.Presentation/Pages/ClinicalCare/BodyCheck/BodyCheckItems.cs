@@ -30,9 +30,13 @@ public sealed class BodyChoiceItem : INotifyPropertyChanged
             {
                 _isSelected = value;
                 Changed();
+                Changed(nameof(AccessibilitySelectionState));
             }
         }
     }
+
+    public string AccessibilitySelectionState =>
+        IsSelected ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -42,6 +46,7 @@ public sealed class BodyChoiceItem : INotifyPropertyChanged
         {
             _text = text;
             Changed(nameof(Text));
+            Changed(nameof(AccessibilitySelectionState));
         }
     }
 

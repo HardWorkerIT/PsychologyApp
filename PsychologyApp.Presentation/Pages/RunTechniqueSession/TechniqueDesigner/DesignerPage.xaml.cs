@@ -7,6 +7,7 @@ namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueDesigner
 public partial class DesignerPage : ContentPage
 {
     private readonly DesignerViewModel _viewModel;
+    private readonly KeyboardResize _keyboard = new();
     private PageAnimationHelper? _animationHelper;
 
     public DesignerPage(
@@ -22,8 +23,15 @@ public partial class DesignerPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _keyboard.Enable();
         _animationHelper?.TryRevealAsync();
         _viewModel.EnsureInitializedAsync().FireAndForget();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _keyboard.Restore();
     }
 
     protected override void OnHandlerChanged()

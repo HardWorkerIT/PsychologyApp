@@ -59,7 +59,7 @@
                 Grid.Column="2"
                 IsVisible="{Binding HasShareCommand, Source={x:Reference Root}}"
                 Style="{StaticResource IconActionStyle}"
-                WidthRequest="40"
+                WidthRequest="44"
                 VerticalOptions="Center"
                 Text="{mi:Material Icon=Share}"
                 SemanticProperties.Description="{Binding ShareDescription, Source={x:Reference Root}}">

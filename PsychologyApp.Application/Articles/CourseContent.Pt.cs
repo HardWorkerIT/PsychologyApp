@@ -72,15 +72,16 @@ public static partial class ArticleContent
                         H("O que ajuda"),
                         List(
                             "Uma hora antes de deitar: luz baixa e atividades tranquilas sem telas",
-                            "Café, chá forte e energéticos no máximo até as 14h",
+                            "Evite café, chá forte e energéticos por pelo menos 6 horas antes de dormir; se atrapalharem seu sono, experimente parar mais cedo",
                             "O álcool ajuda a adormecer, mas deixa o sono superficial e faz acordar de madrugada",
                             "Um jantar pesado 2–3 horas antes de deitar",
                             "De manhã, luz do dia por pelo menos 15 minutos: ela acerta o relógio interno"),
+                        P("Plano de um minuto: escolha quando vai começar a desacelerar e uma atividade tranquila, como ler algumas páginas. Se não tiver uma hora livre, escolha antes uma versão mais curta. Por exemplo: «Depois das tarefas da noite, vou diminuir a luz e ler um pouco»."),
                         H("Relaxar antes de dormir"),
                         P("A respiração lenta com uma expiração longa diminui a ativação. Experimente agora."),
                         Breathe("Inspire contando 4, expire contando 6")
                     ],
-                    "Crie seu próprio ritual para a última hora antes de deitar e faça-o todas as noites. Tire o celular do quarto, ou pelo menos da cama.",
+                    "Experimente seu plano hoje à noite: reserve tempo para atividades tranquilas antes de deitar quando puder e use a versão curta se não tiver uma hora. Deixe o celular fora da cama, mantendo os avisos importantes.",
                     "O que entrou no seu ritual da noite? O que se mostrou difícil?"),
                 new(
                     "Pensamentos que não deixam dormir",
@@ -192,7 +193,9 @@ public static partial class ArticleContent
                             "Quando a preocupação vier em outra hora, anote o assunto numa linha e diga a si mesmo: «vou pensar nisso no meu horário da preocupação»",
                             "No seu horário da preocupação, repasse a lista: planeje um passo para o que você pode fazer, solte o que não pode",
                             "Muitas vezes, na hora marcada, o assunto já não parece importante"),
-                        Practice(TechniqueId.ThoughtDefusion, "Tomar distância de um pensamento")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distância de um pensamento"),
+                        P("Se você volta às notícias em busca de certeza, anote a pergunta específica e decida se precisa agir agora. Se não, escolha quando vai conferir novamente."),
+                        See(ArticleIds.NewsLoop, "Quando as notícias não deixam você se desligar")
                     ],
                     "Defina um horário da preocupação e adie para ele os pensamentos ansiosos.",
                     "Você conseguiu adiar a preocupação? O que aconteceu com os assuntos na hora marcada?"),
@@ -273,7 +276,9 @@ public static partial class ArticleContent
                             "Divida-a até chegar a um passo de cinco minutos",
                             "Defina um horário e um lugar: «depois do café da manhã, na cozinha»",
                             "Depois, anote como seu humor mudou"),
-                        Practice(TechniqueId.SmallStep, "Um pequeno passo")
+                        Practice(TechniqueId.SmallStep, "Um pequeno passo"),
+                        P("O objetivo não é melhorar o humor na hora. Se ele continuar igual, observe se a atividade foi viável e ajuste o próximo passo."),
+                        See(ArticleIds.SmallStepReview, "Quando um pequeno passo não melhora o humor")
                     ],
                     "Todos os dias, faça uma atividade agradável e uma de «eu consegui» no horário que você definiu.",
                     "O que você conseguiu fazer? Como seu humor mudou depois?"),
@@ -302,7 +307,9 @@ public static partial class ArticleContent
                             "Um encontro curto ou uma ligação é melhor do que nada",
                             "Você não precisa explicar tudo: «está difícil agora, vamos só dar uma volta»",
                             "Se as forças estiverem baixas, escolha pessoas com quem é fácil estar"),
-                        Practice(TechniqueId.SmallStep, "Um pequeno passo")
+                        Practice(TechniqueId.SmallStep, "Um pequeno passo"),
+                        P("Você não precisa contar tudo: pode pedir algo concreto, como ser ouvido, ter companhia ou receber ajuda com uma tarefa."),
+                        See(ArticleIds.SupportRequest, "Como pedir apoio")
                     ],
                     "Entre em contato com pelo menos uma pessoa nos próximos dois dias.",
                     "Com quem você entrou em contato? Como foi?"),
@@ -362,7 +369,9 @@ public static partial class ArticleContent
                             "Algo para levar com você: uma pedrinha, um anel, algo com cheiro",
                             "Uma pessoa para quem você pode mandar mensagem",
                             "Algo frio: água, gelo"),
-                        Breathe("A expiração mais longa que a inspiração")
+                        Breathe("A expiração mais longa que a inspiração"),
+                        P("Se focar na respiração ou no corpo aumentar o desconforto, pare. Abra os olhos, escolha um objeto neutro ao seu redor ou pule o exercício."),
+                        See(ArticleIds.TraumaGrounding, "Quando a ancoragem aumenta o desconforto")
                     ],
                     "Monte seu kit de ancoragem e experimente a prática «Uma lembrança tomou conta» num momento tranquilo, para conhecê-la antes.",
                     "O que entrou no seu kit de ancoragem?"),

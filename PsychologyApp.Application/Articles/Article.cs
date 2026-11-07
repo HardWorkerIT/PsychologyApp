@@ -82,6 +82,7 @@ public static class ArticleIds
     public const string Thoughts = "thoughts";
     public const string Rumination = "rumination";
     public const string LowMood = "low-mood";
+    public const string SmallStepReview = "small-step-review";
     public const string SelfCriticism = "self-criticism";
     public const string Sleep = "sleep";
     public const string Specialist = "specialist";
@@ -104,12 +105,14 @@ public static class ArticleIds
     public const string TraumaFlashbacks = "trauma-flashbacks";
     public const string TraumaNightmares = "trauma-nightmares";
     public const string TraumaTreatment = "trauma-treatment";
+    public const string TraumaGrounding = "trauma-grounding-choice";
     public const string Ocd = "ocd";
     public const string Depression = "depression";
     public const string Numbing = "numbing";
     public const string ChronicPain = "chronic-pain";
     public const string ParentStress = "parent-stress";
     public const string HelpingLovedOne = "helping-loved-one";
+    public const string SupportRequest = "support-request";
     public const string EatingDisorders = "eating-disorders";
     public const string Bipolar = "bipolar";
     public const string Psychosis = "psychosis";
@@ -117,6 +120,7 @@ public static class ArticleIds
     public const string SelfEsteem = "self-esteem";
     public const string Mindfulness = "mindfulness";
     public const string Uncertainty = "uncertainty";
+    public const string NewsLoop = "news-loop";
     public const string JealousyAndEnvy = "jealousy-envy";
     public const string Breakup = "breakup";
 }

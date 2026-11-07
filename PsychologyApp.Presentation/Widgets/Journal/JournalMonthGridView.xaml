@@ -44,6 +44,7 @@
                         Stroke="Transparent"
                         StrokeThickness="2"
                         Opacity="1"
+                        SemanticProperties.Description="{Binding AccessibilityDescription}"
                         IsEnabled="{Binding IsEnabled}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="12" />

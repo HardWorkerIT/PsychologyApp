@@ -72,15 +72,16 @@ public static partial class ArticleContent
                         H("Ce qui aide"),
                         List(
                             "Une heure avant le coucher : lumière douce et activités calmes sans écrans",
-                            "Café, thé fort et boissons énergisantes pas plus tard que 14 h",
+                            "Évitez le café, le thé fort et les boissons énergisantes pendant au moins 6 heures avant le coucher ; s’ils perturbent votre sommeil, arrêtez plus tôt",
                             "L'alcool aide à s'endormir mais rend le sommeil superficiel et réveille vers le matin",
                             "Un dîner copieux 2 à 3 heures avant le coucher",
                             "Le matin, la lumière du jour pendant au moins 15 minutes : elle règle l'horloge interne"),
+                        P("Plan en une minute : choisissez quand commencera votre temps calme et une activité tranquille, par exemple lire quelques pages. Si vous n’avez pas une heure, prévoyez une version plus courte. Par exemple : « Après mes tâches du soir, je tamiserai la lumière et lirai un peu. »"),
                         H("Se détendre avant de dormir"),
                         P("Une respiration lente avec une longue expiration diminue l'activation. Essayez maintenant."),
                         Breathe("Inspirez sur 4, expirez sur 6")
                     ],
-                    "Créez votre propre rituel pour la dernière heure avant le coucher et faites-le chaque soir. Sortez le téléphone de la chambre, ou au moins du lit.",
+                    "Essayez votre plan ce soir : prenez si possible du temps pour une activité calme avant le coucher ; si vous n’avez pas une heure, utilisez la version courte. Gardez le téléphone hors du lit en conservant les alertes importantes.",
                     "Qu'avez-vous mis dans votre rituel du soir ? Qu'est-ce qui s'est révélé difficile ?"),
                 new(
                     "Les pensées qui empêchent de dormir",
@@ -192,7 +193,9 @@ public static partial class ArticleContent
                             "Quand un souci arrive à un autre moment, notez le sujet en une ligne et dites-vous : « j'y penserai pendant mon temps des soucis »",
                             "Pendant votre temps des soucis, parcourez la liste : prévoyez un pas pour ce que vous pouvez faire, lâchez ce que vous ne pouvez pas",
                             "Souvent, à l'heure prévue, le sujet ne semble plus important"),
-                        Practice(TechniqueId.ThoughtDefusion, "Prendre du recul sur une pensée")
+                        Practice(TechniqueId.ThoughtDefusion, "Prendre du recul sur une pensée"),
+                        P("Si vous rouvrez les nouvelles pour être rassuré, notez la question précise et demandez-vous s’il faut agir maintenant. Sinon, choisissez le moment de votre prochaine vérification."),
+                        See(ArticleIds.NewsLoop, "Quand les nouvelles ne vous lâchent pas")
                     ],
                     "Fixez-vous un temps des soucis et reportez-y les pensées anxieuses.",
                     "Avez-vous réussi à reporter les soucis ? Que sont devenus les sujets à l'heure prévue ?"),
@@ -273,7 +276,9 @@ public static partial class ArticleContent
                             "Découpez-la jusqu'à un pas qui prend cinq minutes",
                             "Fixez un moment et un lieu : « après le petit-déjeuner, dans la cuisine »",
                             "Ensuite, notez comment votre humeur a changé"),
-                        Practice(TechniqueId.SmallStep, "Un petit pas")
+                        Practice(TechniqueId.SmallStep, "Un petit pas"),
+                        P("Le but n’est pas de faire remonter l’humeur immédiatement. Si elle reste la même, notez si l’activité était faisable et ajustez le prochain pas."),
+                        See(ArticleIds.SmallStepReview, "Quand un petit pas ne change pas l’humeur")
                     ],
                     "Chaque jour, faites une activité agréable et une activité « j'y suis arrivé » au moment prévu.",
                     "Qu'avez-vous réussi à faire ? Comment votre humeur a-t-elle changé ensuite ?"),
@@ -302,7 +307,9 @@ public static partial class ArticleContent
                             "Une courte rencontre ou un appel vaut mieux que rien",
                             "Vous n'êtes pas obligé de tout expliquer : « c'est difficile en ce moment, allons juste marcher »",
                             "Si l'énergie manque, choisissez des personnes avec qui c'est facile"),
-                        Practice(TechniqueId.SmallStep, "Un petit pas")
+                        Practice(TechniqueId.SmallStep, "Un petit pas"),
+                        P("Vous n’avez pas à tout raconter : vous pouvez demander quelque chose de précis, comme être écouté, avoir de la compagnie ou de l’aide pour une tâche."),
+                        See(ArticleIds.SupportRequest, "Comment demander du soutien")
                     ],
                     "Prenez contact avec au moins une personne dans les deux prochains jours.",
                     "Avec qui avez-vous pris contact ? Comment cela s'est-il passé ?"),
@@ -362,7 +369,9 @@ public static partial class ArticleContent
                             "Un objet à garder sur vous : un galet, une bague, quelque chose de parfumé",
                             "Une personne à qui vous pouvez écrire",
                             "Quelque chose de froid : de l'eau, de la glace"),
-                        Breathe("L'expiration plus longue que l'inspiration")
+                        Breathe("L'expiration plus longue que l'inspiration"),
+                        P("Si l’attention portée à la respiration ou au corps augmente le malaise, arrêtez-vous. Ouvrez les yeux, choisissez un objet neutre autour de vous ou passez l’exercice."),
+                        See(ArticleIds.TraumaGrounding, "Quand l’ancrage augmente le malaise")
                     ],
                     "Préparez votre trousse d'ancrage et essayez la pratique « Un souvenir a pris le dessus » à un moment calme, pour la connaître à l'avance.",
                     "Qu'avez-vous mis dans votre trousse d'ancrage ?"),

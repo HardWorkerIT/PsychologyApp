@@ -72,15 +72,16 @@ public static partial class ArticleContent
                         H("Qué ayuda"),
                         List(
                             "Una hora antes de acostarte: luz tenue y actividades tranquilas sin pantallas",
-                            "Café, té fuerte y bebidas energéticas no más tarde de las 14:00",
+                            "Evita el café, el té fuerte y las bebidas energéticas al menos 6 horas antes de acostarte; si afectan a tu sueño, prueba a dejarlos antes",
                             "El alcohol ayuda a dormirse pero hace el sueño superficial y despierta de madrugada",
                             "Una cena pesada 2–3 horas antes de acostarte",
                             "Por la mañana, luz del día durante al menos 15 minutos: ajusta el reloj interno"),
+                        P("Plan de un minuto: elige cuándo empezarás a desconectar y una actividad tranquila, como leer unas páginas. Si no dispones de una hora, elige antes una versión más corta. Por ejemplo: «Después de mis tareas de la tarde, bajaré la luz y leeré un poco»."),
                         H("Relajarse antes de dormir"),
                         P("La respiración lenta con una exhalación larga baja la activación. Pruébalo ahora."),
                         Breathe("Inhala contando 4, exhala contando 6")
                     ],
-                    "Crea tu propio ritual para la última hora antes de acostarte y hazlo cada tarde. Saca el móvil del dormitorio o, al menos, de la cama.",
+                    "Prueba tu plan esta noche: reserva tiempo para actividades tranquilas antes de acostarte cuando puedas y usa la versión corta si no tienes una hora. Deja el móvil fuera de la cama manteniendo los avisos importantes.",
                     "¿Qué incluiste en tu ritual de la tarde? ¿Qué resultó difícil?"),
                 new(
                     "Pensamientos que no dejan dormir",
@@ -192,7 +193,9 @@ public static partial class ArticleContent
                             "Cuando aparezca una preocupación en otro momento, apunta el tema en una línea y dite: «pensaré en esto en mi tiempo para preocuparme»",
                             "En tu tiempo para preocuparte, repasa la lista: planifica un paso para lo que puedes hacer y suelta lo que no",
                             "A menudo, a la hora fijada, el tema ya no parece importante"),
-                        Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento")
+                        Practice(TechniqueId.ThoughtDefusion, "Tomar distancia de un pensamiento"),
+                        P("Si vuelves a abrir las noticias para sentir más seguridad, anota la pregunta concreta y decide si tienes que actuar ahora. Si no, elige cuándo volverás a consultarlas."),
+                        See(ArticleIds.NewsLoop, "Cuando las noticias no te dejan desconectar")
                     ],
                     "Fíjate un tiempo para preocuparte y aplaza a él los pensamientos ansiosos.",
                     "¿Conseguiste aplazar la preocupación? ¿Qué pasó con los temas a la hora fijada?"),
@@ -273,7 +276,9 @@ public static partial class ArticleContent
                             "Divídela hasta un paso que lleve cinco minutos",
                             "Fija un momento y un lugar: «después del desayuno, en la cocina»",
                             "Después, apunta cómo cambió tu ánimo"),
-                        Practice(TechniqueId.SmallStep, "Un pequeño paso")
+                        Practice(TechniqueId.SmallStep, "Un pequeño paso"),
+                        P("El objetivo no es que el ánimo suba de inmediato. Si sigue igual, fíjate en si la actividad era asumible y ajusta el siguiente paso."),
+                        See(ArticleIds.SmallStepReview, "Si un pequeño paso no mejora el ánimo")
                     ],
                     "Cada día, haz una actividad agradable y una de «lo he conseguido» a la hora que fijaste.",
                     "¿Qué conseguiste hacer? ¿Cómo cambió tu ánimo después?"),
@@ -302,7 +307,9 @@ public static partial class ArticleContent
                             "Un encuentro corto o una llamada es mejor que nada",
                             "No tienes que explicarlo todo: «ahora mismo estoy pasando una mala racha, vamos solo a dar un paseo»",
                             "Si hay pocas fuerzas, elige a personas con las que estar sea fácil"),
-                        Practice(TechniqueId.SmallStep, "Un pequeño paso")
+                        Practice(TechniqueId.SmallStep, "Un pequeño paso"),
+                        P("No tienes que contarlo todo: puedes pedir algo concreto, como que te escuchen, te acompañen o te ayuden con una tarea."),
+                        See(ArticleIds.SupportRequest, "Cómo pedir apoyo")
                     ],
                     "Ponte en contacto con al menos una persona en los próximos dos días.",
                     "¿Con quién te pusiste en contacto? ¿Cómo fue?"),
@@ -362,7 +369,9 @@ public static partial class ArticleContent
                             "Algo que llevar contigo: una piedrecita, un anillo, algo con olor",
                             "Una persona a la que puedas escribir",
                             "Algo frío: agua, hielo"),
-                        Breathe("La exhalación más larga que la inhalación")
+                        Breathe("La exhalación más larga que la inhalación"),
+                        P("Si centrarte en la respiración o el cuerpo aumenta el malestar, para. Abre los ojos, elige un objeto neutro a tu alrededor o sáltate el ejercicio."),
+                        See(ArticleIds.TraumaGrounding, "Cuando el anclaje aumenta el malestar")
                     ],
                     "Prepara tu kit de anclaje y prueba la práctica «Un recuerdo me ha desbordado» en un momento tranquilo, para conocerla de antemano.",
                     "¿Qué incluiste en tu kit de anclaje?"),

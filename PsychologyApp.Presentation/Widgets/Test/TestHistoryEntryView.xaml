@@ -65,6 +65,8 @@
                 <Label
                     Text="{Binding DurationText, Source={x:Reference Root}}"
                     Style="{StaticResource CaptionStyle}"
+                    MinimumHeightRequest="44"
+                    VerticalTextAlignment="Center"
                     TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ToggleDetailCommand, Source={x:Reference Root}}" />

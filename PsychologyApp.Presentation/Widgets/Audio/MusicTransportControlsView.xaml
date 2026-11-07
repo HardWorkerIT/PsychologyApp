@@ -14,6 +14,7 @@
 
     <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="{StaticResource PlayerControlSpacing}">
         <Border
+            x:Name="PreviousTrackButton"
             Grid.Column="0"
             Style="{StaticResource PlayerTransportButtonStyle}">
             <Border.GestureRecognizers>
@@ -28,6 +29,7 @@
         </Border>
 
         <Border
+            x:Name="PlayPauseButton"
             Grid.Column="1"
             Style="{StaticResource PlayerPlayButtonStyle}">
             <Border.GestureRecognizers>
@@ -69,6 +71,7 @@
         </Border>
 
         <Border
+            x:Name="NextTrackButton"
             Grid.Column="2"
             Style="{StaticResource PlayerTransportButtonStyle}">
             <Border.GestureRecognizers>

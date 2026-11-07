@@ -30,6 +30,9 @@
                     <Setter Property="StrokeThickness" Value="2" />
                     <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Success}, Dark={StaticResource SuccessDark}}" />
                 </DataTrigger>
+                <DataTrigger TargetType="Border" Binding="{Binding IsDistractorAfterAnswer}" Value="True">
+                    <Setter Property="Opacity" Value="0.7" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="ParagraphTemplate" x:DataType="local:ArticleBlockItem">
@@ -83,7 +86,11 @@
                     <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Choices}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="local:ArticleChoiceItem">
-                                <Border Style="{StaticResource ChoiceBorderStyle}" SemanticProperties.Description="{Binding Text}">
+                                <Border
+                                    Style="{StaticResource ChoiceBorderStyle}"
+                                    IsEnabled="{Binding IsChoiceEnabled}"
+                                    SemanticProperties.Description="{Binding Text}"
+                                    SemanticProperties.Hint="{Binding AccessibilityHint}">
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding TapCommand}" />
                                     </Border.GestureRecognizers>
@@ -112,7 +119,11 @@
                     <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Choices}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="local:ArticleChoiceItem">
-                                <Border Style="{StaticResource ChoiceBorderStyle}" SemanticProperties.Description="{Binding Text}">
+                                <Border
+                                    Style="{StaticResource ChoiceBorderStyle}"
+                                    IsEnabled="{Binding IsChoiceEnabled}"
+                                    SemanticProperties.Description="{Binding Text}"
+                                    SemanticProperties.Hint="{Binding AccessibilityHint}">
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding TapCommand}" />
                                     </Border.GestureRecognizers>

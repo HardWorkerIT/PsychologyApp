@@ -1,3 +1,5 @@
+using PsychologyApp.Presentation.Common;
+
 namespace PsychologyApp.Presentation.Entities.Journal;
 
 public sealed class JournalMonthCell
@@ -9,4 +11,7 @@ public sealed class JournalMonthCell
     public bool IsEnabled { get; init; }
     public bool IsSelected { get; init; }
     public bool IsPlaceholder => Date is null;
+    public string AccessibilityDescription => Date is DateOnly date
+        ? AppStrings.JournalCalendarDayAccessibility(date, MoodLevel, IsSelected)
+        : string.Empty;
 }

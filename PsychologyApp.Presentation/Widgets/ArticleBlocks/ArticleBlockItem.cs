@@ -11,6 +11,7 @@ public sealed class ArticleChoiceItem : INotifyPropertyChanged
     private bool _isChecked;
     private bool _isRight;
     private bool _isWrong;
+    private bool _isQuizAnswered;
 
     public required string Text { get; init; }
     public required int Index { get; init; }
@@ -39,6 +40,22 @@ public sealed class ArticleChoiceItem : INotifyPropertyChanged
         set => Set(ref _isWrong, value);
     }
 
+    public bool IsQuizAnswered
+    {
+        get => _isQuizAnswered;
+        set => Set(ref _isQuizAnswered, value);
+    }
+
+    public bool IsChoiceEnabled => !IsQuizOption || !IsQuizAnswered;
+
+    public bool IsDistractorAfterAnswer => IsQuizOption && IsQuizAnswered && !IsRight && !IsWrong;
+
+    public string AccessibilityHint =>
+        IsRight ? AppStrings.ArticleRight
+        : IsWrong ? AppStrings.ArticleNotQuite
+        : IsChecked ? AppStrings.TestsAnswerSelected
+        : AppStrings.TestsAnswerNotSelected;
+
     public string Icon => IsQuizOption
         ? IsRight ? "CheckCircle" : IsWrong ? "Cancel" : "RadioButtonUnchecked"
         : IsChecked ? "CheckBox" : "CheckBoxOutlineBlank";
@@ -52,6 +69,9 @@ public sealed class ArticleChoiceItem : INotifyPropertyChanged
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AccessibilityHint)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsChoiceEnabled)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDistractorAfterAnswer)));
         }
     }
 }

@@ -31,7 +31,8 @@
                         HeightRequest="60"
                         Padding="2"
                         Stroke="Transparent"
-                        StrokeThickness="2">
+                        StrokeThickness="2"
+                        SemanticProperties.Description="{Binding AccessibilityDescription}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="14" />
                         </Border.StrokeShape>

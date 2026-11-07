@@ -64,3 +64,40 @@ Performance and engineering-quality backlog: [docs/performance-quality-roadmap.m
 - [x] Reduce repeated metadata in the practice catalog and tighten spacing on the anchor-thought list.
 - [x] Add the chat control label in all seven supported languages; parse the changed XAML and resource files and run the Presentation test suite (910 passed).
 - [ ] Verify the layouts on an Android device in light/dark themes and enlarged text. Blocked: no local device is available, and `D:\Android\Sdk` contains only partial installer state (no platform-tools, platforms, build-tools, or emulator binary); `dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android -c Debug --no-restore -p:AndroidSdkDirectory=D:\Android\Sdk` still fails with XA5300.
+
+## Full application defects and style pass — 2026-11-07
+- [x] Review all 138 Presentation XAML files, 284 declared resources, 225 static/dynamic resource references, and seven locale resource sets: all XAML parses, all references resolve, and locale key sets match.
+- [x] Fix the journal calendar's screen-reader descriptions, align active calendar actions to 44 dp, correct the microphone button's circular radius, and raise the shared input minimum height to 44 dp. The remaining 18 dp year-heatmap cell belongs to an unreferenced view and is not part of the active UI.
+- [x] Run all five test projects in Release: 2,882 passed, 0 failed. The CI blocking-async check and `git diff --check` pass.
+- [ ] Android compilation and on-device visual review remain blocked by the missing Android SDK (`XA5300`); no runtime/device result is claimed.
+
+## SQLite interrupted-migration recovery — 2026-11-07
+- [x] On startup, restore a validated plaintext `.plain.bak` if the main database is missing, empty, or unreadable after interrupted encryption; preserve unreadable backups and refuse to initialize a new database over them.
+- [x] Regression tests reproduce both recoverable interruption states and reject the corrupted-backup fresh-install path. Release Infrastructure tests: 113 passed, 0 failed; `git diff --check` passed.
+- [ ] Android Release build and on-device behavior remain unverified because the local Android SDK is unavailable (`XA5300`).
+
+## Memory lifecycle review — 2026-11-07
+- [x] Unsubscribe the singleton technique messenger when its tab page handler is removed; avoid retaining its view model after tab reset.
+- [x] Keep the event delegate strongly referenced only while the view model is subscribed. Reviewed weak preference listeners and active page timers for cleanup paths.
+- [ ] Runtime heap profiling across repeated tab recreation remains unverified; this host lacks the Android SDK and required .NET workload locator components.
+
+## Новые материалы о просьбе о поддержке — 2026-11-07
+- [x] Добавить статью, связанный материал в курс настроения, опорную мысль и авторскую цитату на семи языках; UI не менялся, лечебный эффект не заявляется.
+- [ ] Провести клиническую проверку психологом и вычитку всех переводов носителями языка до выпуска.
+
+## Настройка посильной активности — 2026-11-07
+- [x] Добавить статью о пересмотре шага, связь с днём курса «Маленькие шаги», опорную мысль и авторскую цитату на семи языках; UI не менялся, лечебный эффект не заявляется.
+- [ ] Провести клиническое ревью и вычитку переводов носителями языка до выпуска.
+## Адаптация заземления при травматических реакциях — 2026-11-07
+- [x] Добавить локализованную статью о выборе и остановке заземления, подсказку и ссылку в курсе, опорную мысль и авторскую цитату на семи языках; проверить JSON цитат, UI не менялся.
+- [ ] Провести клиническую проверку статьи и курса специалистом по травме и вычитать все семь переводов носителями языка до выпуска.
+- [x] Run all five .NET test projects in Release for net10.0: 2,885 passed, 0 failed. Android targets remain blocked by the missing Android SDK (`XA5300`).
+## Целенаправленное потребление новостей — 2026-11-07
+- [x] Добавить статью, связь с курсом тревоги, опорную мысль и авторскую цитату на семи языках; UI не менялся, терапевтический эффект не заявляется.
+- [ ] Провести клиническое ревью материала и вычитать переводы носителями всех поддерживаемых языков до выпуска.
+## Пауза при злости — 2026-11-07
+- [x] Уточнить статью о злости: смягчить формулировку о «выпускании пара» по метаанализу 2024 года, добавить понятную договорённость о паузе, безопасный сценарий и мини-вопрос с опорной мыслью на семи языках; UI не менялся.
+- [ ] Провести клиническое ревью материала и вычитать все семь переводов носителями языка до выпуска. Источники: https://doi.org/10.1016/j.cpr.2024.102414; https://www.veterantraining.va.gov/aims/media/AngerManagementWorkbook-508.pdf
+## Контент: паника и вечерний план сна — 2026-11-07
+- [x] Уточнить статью и опорные мысли о панике, дополнить курс сна минутным планом и добавить две авторские цитаты на семи языках.
+- [ ] Провести клиническое ревью и вычитку переводов носителями языка до выпуска.

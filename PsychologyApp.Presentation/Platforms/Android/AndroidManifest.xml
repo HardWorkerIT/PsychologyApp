@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 	<application android:allowBackup="false" android:dataExtractionRules="@xml/data_extraction_rules" android:icon="@mipmap/logo" android:roundIcon="@mipmap/logo_round" android:supportsRtl="true">
+		<!-- Temporary Android 16 opt-out: screens are designed for a phone-sized portrait window.
+		     Remove this and make the UI adaptive before raising target SDK to 37. -->
+		<property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />

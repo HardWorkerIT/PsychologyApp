@@ -37,32 +37,32 @@ public static partial class ArticleContent
             ]),
         new(
             ArticleIds.Panic,
-            "Panic attacks: what happens and why they are not dangerous",
+            "Panic attacks: what happens and when to seek help",
             "The heart races, there is no air, it feels like dying. What is really going on in the body",
             "Air",
             4,
             [
-                P("A panic attack is a sudden and very strong surge of fear. The heart pounds, there is not enough air, the head spins, hands go numb, you feel hot or cold, and it seems that a heart attack, fainting or going mad is about to happen. It is one of the most frightening experiences there is."),
+                P("A panic attack is a sudden wave of intense fear with physical sensations. Other conditions can cause similar symptoms. If sudden chest pain or pressure does not go away, spreads to an arm, jaw or back, or comes with cold sweat or nausea, call your local emergency service immediately. Severe breathlessness or fainting also requires emergency help. Do not try to determine the cause yourself."),
                 H("What is really happening"),
-                P("The same fight-or-flight response switches on as in real danger, only without the danger. Adrenaline speeds up the heart, and fast deep breathing upsets the balance of gases in the blood: hence the tingling, the dizziness and the feeling that there is too little air, although there is enough."),
-                P("An attack usually peaks within the first minutes and then subsides by itself, as a rule within half an hour. In a healthy heart a panic attack does not cause a heart attack, it does not lead to madness, and fainting is rare, because blood pressure tends to be raised during it."),
+                P("During panic, the fight-or-flight response may cause a racing heart, faster breathing, shaking or dizziness. These sensations alone cannot establish their cause."),
+                P("A panic attack often peaks within minutes and gradually subsides; its duration varies. A panic attack itself is not life-threatening, but similar symptoms need assessment when they are new, different or uncertain."),
                 H("Why attacks come back"),
-                P("After the first attack many people start fearing the next one: they listen to their heart, carry water and pills, avoid coffee, stairs, the metro, stay close to the exit. This fear of the sensations and these safety nets are what keep the panic going: the brain never learns that the sensations are safe."),
+                P("Fear of another attack can lead to repeated checking and avoidance, which may maintain anxiety. Do not stop or change prescribed medication without your clinician."),
                 Cycle("The panic loop", "A sensation in the body", "The thought \"something terrible is happening\"", "Fear", "Even stronger sensations"),
                 H("What to do during an attack"),
                 List(
-                    "Name it: \"This is a panic attack. It is unpleasant but not dangerous, and it will pass\"",
-                    "Do not fight the sensations or run away if you can stay",
-                    "Lengthen the out-breath: in for 4 counts, out for 6",
+                    "If a clinician has confirmed panic attacks and the symptoms are familiar: “This will pass; I can give myself time”",
+                    "Stay or move somewhere safe if possible; do not make yourself remain in an unsafe place",
+                    "Breathe gently and naturally; if comfortable, try a slightly longer out-breath without forcing it",
                     "Bring attention back to your surroundings: what you see, hear, touch"),
                 Practice(TechniqueId.Breathing, "Gentle paced breathing"),
                 Practice(TechniqueId.Grounding, "5-4-3-2-1 grounding"),
                 Breathe("If comfortable, try a gentle out-breath slightly longer than your in-breath. If it feels worse, return to your natural breathing and name a few things around you."),
                 H("How to make attacks rarer"),
-                P("What works best is gradually going back to avoided places and situations without safety nets, and exercises that deliberately bring on similar sensations in a safe setting. This is how the brain relearns: \"a pounding heart is just a pounding heart\"."),
+                P("Gradually returning to avoided situations can help; discuss a plan with a therapist or clinician. Exercises that bring on physical sensations should be chosen with your health in mind and, when needed, guided by a professional."),
                 Ladder("Fear ladder"),
-                Warning("Rule out illness first"),
-                P("If it happened for the first time, if chest pain comes on exertion, or if you have heart disease, see a doctor first. Panic attacks are diagnosed once physical causes have been checked.")
+                Warning("When to seek help"),
+                P("See a clinician for a first episode, new or unfamiliar symptoms: sensations alone cannot reliably distinguish panic from other causes. For the emergency signs described at the start, call your local emergency service immediately.")
             ]),
         new(
             ArticleIds.Avoidance,
@@ -159,6 +159,32 @@ public static partial class ArticleContent
                 Check("Do I recognise myself?", 3, "This seems to be more than a bad week. Take the PHQ-9 questionnaire in the Tests tab and show the result to a doctor or psychologist: depression is very treatable.", "This looks more like a hard period. Try the steps above, and if it gets worse or drags on, take the PHQ-9.", "Low mood nearly every day for two weeks or more", "Nothing brings joy, even what you used to like", "Sleep or appetite have changed a lot", "Hard to concentrate, everything slips out of your hands", "Feelings of guilt or worthlessness"),
                 Warning("If it has been bad for more than two weeks"),
                 P("If your mood has been low nearly all the time for more than two weeks, you have lost interest in everything, and sleep and appetite are off, it may be depression, and it is worth seeing a specialist. And if thoughts of death or of harming yourself appear, help is needed now."),
+                Crisis("I need help now")
+            ]),
+        new(
+            ArticleIds.SmallStepReview,
+            "When a small step does not lift your mood",
+            "A way to review how manageable an activity was and adjust the next step without blaming yourself.",
+            "DirectionsWalk",
+            3,
+            [
+                P("Sometimes your mood feels the same after a planned activity. That does not mean you failed: one attempt is not enough to tell whether the plan fits."),
+                H("A quick review"),
+                List(
+                    "What did I plan, and what part did I manage to do?",
+                    "How manageable was it for my time and energy?",
+                    "What helped or got in the way: size, timing, place, tiredness or support?",
+                    "Was any part pleasant, meaningful or neutral — or did it only drain me?"
+                ),
+                H("Adjust the next step"),
+                List(
+                    "If it fit and felt manageable, keep it even if your mood did not change right away",
+                    "If it was too big, shrink it to the first action or one or two minutes",
+                    "If it did not fit, try another kind: something pleasant, a sense of completion, connection or basic self-care",
+                    "Change the time or place, or ask for support if useful"
+                ),
+                Warning("When to seek more support"),
+                P("If even small activities repeatedly intensify distress, your condition is clearly worsening, or daily needs feel impossible, stop pushing and talk with a health professional."),
                 Crisis("I need help now")
             ]),
         new(
@@ -274,13 +300,20 @@ public static partial class ArticleContent
             [
                 P("Anger is a normal feeling. It signals that our boundaries have been crossed, that we have been treated unfairly, or that something blocks an important goal. The problem is not anger but how it comes out: in an outburst you regret later, or in holding it in, after which resentment builds up and your head aches."),
                 H("The myth of \"letting off steam\""),
-                P("It seems that anger has to be let out: hit a pillow, shout. Research shows the opposite: such \"release\" makes people angrier and more aggressive, not calmer. What helps is not letting it out but turning it down, and then saying what matters."),
+                P("Shouting or hitting a pillow may feel like release, but it does not guarantee relief. Research suggests that approaches which lower arousal, such as slow breathing or relaxation, reduce anger; activities that keep arousal high have not shown the same benefit. After a pause, you can return to what needs to be said."),
                 H("When anger takes over"),
                 List(
                     "Notice the body's signals: a hot face, clenched jaw and fists, a racing heart",
                     "Take a pause: \"I need ten minutes, I'll come back to this\"",
                     "Take a few slow out-breaths, longer than the in-breath",
                     "Do not write or send anything at the peak"),
+                H("Make the pause clear"),
+                P("A pause should not mean disappearing: say that you need time and when you will return. For example: “I’m too worked up to talk calmly. I need 20 minutes; I’ll come back at 7:30.” If you are not ready then, suggest a specific new time. If you or the other person may be unsafe, move to safety first and seek help."),
+                List(
+                    "If both of you feel safe, agree in advance that either person can call a pause and the conversation stops",
+                    "Use the break to settle: move somewhere calm, take a short walk or slow your breathing; do not keep arguing by text",
+                    "Return at the time you named; if you need longer, say so and agree on a new time"),
+                Quiz("What makes a pause a clear plan rather than an unfinished argument?", 1, "Naming a return time gives both people a clear next step: stop, let the intensity come down, then return or agree on a new time. If there is danger, focus on safety first.", "Leave without saying whether or when you will return", "Say you need a pause and name when you will return", "Keep arguing by text until you feel completely calm"),
                 H("Once you have cooled down"),
                 List(
                     "Ask yourself: what really hurt me? Which boundary was crossed?",
@@ -827,6 +860,26 @@ public static partial class ArticleContent
                 Crisis("I need help now")
             ]),
         new(
+            ArticleIds.TraumaGrounding,
+            "When grounding increases distress",
+            "How to stop, choose a gentler anchor and know when to seek support",
+            "Bolt",
+            2,
+            [
+                P("Grounding is an option, not a test. After trauma, focusing on the body, breathing, smells or touch can sometimes increase distress or bring up reminders. That does not mean you are doing it wrong."),
+                H("Stop what is making it harder"),
+                List(
+                    "Open your eyes if they are closed, and look around if that feels okay",
+                    "Name where you are and today's date; skip this if it does not help",
+                    "Choose a neutral point outside you: an object's color, a window's shape or a familiar sound",
+                    "Move around, drink some water or contact someone you trust only if it feels right. You do not have to count breaths or track body sensations"),
+                H("Choose a gentler anchor"),
+                P("Try something neutral: describe an object, listen to a familiar sound or contact someone you trust. If distress rises, stop; you do not have to finish a technique at any cost."),
+                H("When to seek support"),
+                P("If flashbacks become more frequent, disorientation does not ease or symptoms interfere with daily life, discuss them with a clinician experienced in trauma. Self-help is not a substitute for care; you do not need to force yourself to relive or describe the event in detail."),
+                See(ArticleIds.TraumaTreatment, "How trauma is treated and how to choose a specialist")
+            ]),
+        new(
             ArticleIds.Ocd,
             "Intrusive thoughts and rituals (OCD)",
             "Why frightening thoughts stick, and why checking and rituals make them stronger",
@@ -974,6 +1027,27 @@ public static partial class ArticleContent
                 Warning("If they talk about death"),
                 P("Ask directly whether they are thinking about suicide: it doesn't push them, it helps. Don't leave them alone when in danger, and help them reach help."),
                 See(ArticleIds.SupportInCrisis, "How to support someone in crisis"),
+                Crisis("I need help now")
+            ]),
+        new(
+            ArticleIds.SupportRequest,
+            "How to ask for support",
+            "A short plan for choosing a safe person, naming the help you want and making a manageable request.",
+            "VolunteerActivism",
+            3,
+            [
+                P("Asking for support can feel awkward. You do not have to prove that things are bad enough or explain everything at once. You can start with one small request."),
+                H("Before you ask"),
+                List(
+                    "Choose someone you feel reasonably safe and at ease with",
+                    "Check whether this is a good time to talk",
+                    "Say what you need: someone to listen, keep you company or help with one task",
+                    "Keep the request specific and manageable, such as ten minutes to talk or a short walk"
+                ),
+                H("A short example"),
+                P("“Things are hard for me right now. Would you have ten minutes just to listen, without advice? If not, I understand.”"),
+                H("If they are unavailable"),
+                P("A no right now may be about their time or capacity. You can ask when would suit them or reach out to another safe person. You do not have to contact someone who does not feel safe."),
                 Crisis("I need help now")
             ]),
         new(
@@ -1205,6 +1279,29 @@ public static partial class ArticleContent
                 Crisis("I need help now"),
                 Practice(TechniqueId.SelfCompassion, "Kind words to yourself"),
                 Practice(TechniqueId.SmallStep, "One small step")
+            ]),
+        new(
+            ArticleIds.NewsLoop,
+            "When the news keeps pulling you back",
+            "A quick way to check what matters and step out of endless refreshing",
+            "TipsAndUpdates",
+            3,
+            [
+                P("Following the news can help you stay informed, but repeated checking can become a way to manage uncertainty. New updates do not always bring more clarity or a new action. Taking a planned break is not ignoring important information: if something affects your safety or a major decision, get the information you need."),
+                H("Name the question first"),
+                List(
+                    "What specific thing am I trying to find out?",
+                    "Do I need to act now? If so, find official guidance and take one concrete step",
+                    "If no action is needed now, choose one reliable source and a short time to check",
+                    "Once you have the answer, you do not have to keep reading comments and reactions"),
+                H("End the check with a next step"),
+                List(
+                    "Write down the answer or action. If there is nothing to do yet, decide when you will check again",
+                    "Mute nonessential notifications while keeping alerts needed for safety, work or family",
+                    "After checking, switch to one concrete activity: drink water, take a short walk, do a small task or message someone you trust"),
+                Quiz("You found the information you needed, but anxiety urges you to refresh. What could you try?", 1, "If no urgent action is needed, choose a time for your next check and return to one concrete task. If safety is involved, follow official guidance.", "Keep refreshing until you feel completely calm", "Choose a time to check again and return to a small task", "Forbid yourself from reading any news"),
+                H("If stopping feels difficult"),
+                P("Notice the urge to refresh without judging yourself. You do not have to give up the news completely: try one planned check and see whether that routine suits you. If anxiety keeps disrupting sleep, work or daily life, talk it through with a professional.")
             ])
     ];
 }

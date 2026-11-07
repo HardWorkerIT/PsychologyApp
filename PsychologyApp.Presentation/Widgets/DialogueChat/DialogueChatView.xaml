@@ -75,12 +75,12 @@
 
             <!-- Typical answers and, for a feeling, the emotion palette: tapped into the draft instead of typed. -->
             <ui:EmotionPickerView
-                IsVisible="{Binding OffersEmotions}"
+                IsVisible="{Binding ShowEmotionPicker}"
                 Margin="0,10,0,0"
                 Text="{Binding DraftText, Mode=TwoWay}" />
             <!-- Quick answers stay in one horizontally scrollable row, preserving room for the conversation and keyboard. -->
             <ScrollView
-                IsVisible="{Binding HasSuggestions}"
+                IsVisible="{Binding ShowSuggestions}"
                 Orientation="Horizontal"
                 HorizontalScrollBarVisibility="Never"
                 Margin="0,8,0,0">
@@ -88,6 +88,28 @@
                     BindableLayout.ItemsSource="{Binding Suggestions}"
                     BindableLayout.ItemTemplate="{StaticResource SuggestionChipTemplate}" />
             </ScrollView>
+
+            <!-- Match the main chat: collapse optional answers while the keyboard is open; tap to reveal them again. -->
+            <Border
+                IsVisible="{Binding ShowReplyOptionsToggle}"
+                Margin="0,4,0,0"
+                Padding="12,5"
+                MinimumHeightRequest="44"
+                HorizontalOptions="Start"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 16"
+                BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                SemanticProperties.Description="{Binding ReplyOptionsText}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnReplyOptionsTapped" />
+                </Border.GestureRecognizers>
+                <Label
+                    Text="{Binding ReplyOptionsText}"
+                    FontSize="13"
+                    FontFamily="{StaticResource MediumFontFamily}"
+                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                    VerticalOptions="Center" />
+            </Border>
 
             <!-- Free text answer -->
             <ui:ChatInputBar
@@ -114,6 +136,7 @@
                             Margin="0,0,8,8"
                             FlexLayout.Shrink="0"
                             Padding="14,8"
+                            MinimumHeightRequest="44"
                             StrokeThickness="1.2"
                             Stroke="{DynamicResource Primary}"
                             StrokeShape="RoundRectangle 18"

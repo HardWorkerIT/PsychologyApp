@@ -1,12 +1,10 @@
 name: android-smoke
 
-# Builds the Release package (AOT, trimming, R8) and runs it on an emulator: the crashes that only exist in Release
-# (see CHANGELOG, "profiled AOT") are invisible to unit tests. It runs on every push and pull request of the working
-# branches; a newer push cancels the run still going for the same branch.
-# The runner image is pinned (not ubuntu-latest): a new image can break the emulator, and that should be a change of its own.
+# Build one Release package, verify its 16 KB ZIP alignment, then exercise OS-version boundaries.
+# Emulator coverage includes the minimum API, APIs that introduced app-lock/notification behavior, current releases,
+# and an Android 15 16 KB-page-size image. Device/OEM variation still needs release QA.
 on:
   workflow_dispatch:
-  # main runs it through the release workflow, which publishes only after it passed.
   workflow_call:
   push:
     branches: [master, stage, features/re-design, "features/**", "bugfixes/**", "release/**"]
@@ -23,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  smoke:
+  build:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -35,27 +33,88 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Enable KVM
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
       - run: dotnet workload install maui-android
-      - name: Build Release APK (x86_64 for the emulator)
+      - name: Build Release APK (x86_64 for emulator coverage)
         run: >
           dotnet publish PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android -c Release
           -p:AndroidReleaseRid=android-x64 -p:AndroidPackageFormats=apk
           -p:AndroidKeyStore=false -p:PerfTrace=true -o out
-      - name: Run on emulator
+      - name: Verify 16 KB APK alignment
+        shell: bash
+        run: |
+          tools=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          apk=$(find out -maxdepth 1 -name '*.apk' -print -quit)
+          test -n "$apk"
+          "$tools/zipalign" -c -P 16 -v 4 "$apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-smoke-apk
+          path: out/*.apk
+          if-no-files-found: error
+
+  smoke:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - api_level: 24
+            target: default
+            name: api24-minimum
+          - api_level: 26
+            target: default
+            name: api26-notification-audio
+          - api_level: 29
+            target: default
+            name: api29-biometric-boundary
+          - api_level: 31
+            target: default
+            name: api31-pending-intent
+          - api_level: 33
+            target: default
+            name: api33-notification-boundary
+          - api_level: 34
+            target: default
+            name: api34
+          - api_level: 35
+            target: default
+            name: api35-edge-to-edge
+          - api_level: 35
+            target: google_apis_ps16k
+            name: api35-16kb
+          - api_level: 36
+            target: default
+            name: api36-target
+          - api_level: 36
+            target: default
+            name: api36-large-screen
+            profile: pixel_tablet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: android-smoke-apk
+          path: out
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Run on Android ${{ matrix.api_level }} (${{ matrix.name }})
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: ${{ matrix.api_level }}
+          target: ${{ matrix.target }}
           arch: x86_64
+          profile: ${{ matrix.profile }}
           script: bash tools/android-smoke.sh out
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: smoke-logs
+          name: smoke-logs-${{ matrix.name }}
           path: |
             logcat.txt
             monkey.txt
             start.txt
+          if-no-files-found: ignore

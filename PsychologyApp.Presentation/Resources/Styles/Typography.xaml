@@ -147,7 +147,10 @@
         <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
         <Setter Property="TextColor" Value="{DynamicResource Primary}" />
         <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="End" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
     </Style>
 
     <Style x:Key="NavTitleStyle" TargetType="Label">

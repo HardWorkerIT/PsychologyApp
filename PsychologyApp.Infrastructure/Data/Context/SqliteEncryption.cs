@@ -45,27 +45,35 @@ public static partial class SqliteEncryption
     public static async Task<bool> EnsureEncryptedAsync(string path, string key, CancellationToken cancellationToken = default)
     {
         SqliteProvider.EnsureInitialized();
+        string plainCopy = path + PlainCopySuffix;
         if (!File.Exists(path) || new FileInfo(path).Length == 0)
         {
-            return true;
+            if (!await TryRestorePlainCopyAsync(path, plainCopy, cancellationToken).ConfigureAwait(false))
+            {
+                // An unreadable backup may be the only remaining copy of the user's data: refuse to initialize a fresh database.
+                return !File.Exists(plainCopy);
+            }
         }
 
-        string plainCopy = path + PlainCopySuffix;
         if (!await IsPlainAsync(path, cancellationToken).ConfigureAwait(false))
         {
             // An existing encrypted database must open with this key; a missing or corrupted secure-store value must not be accepted.
-            if (!await CanOpenWithKeyAsync(path, key, cancellationToken).ConfigureAwait(false))
+            if (await CanOpenWithKeyAsync(path, key, cancellationToken).ConfigureAwait(false))
+            {
+                // A copy left behind by an interrupted move is removed only after the encrypted file opens with its key.
+                if (File.Exists(plainCopy))
+                {
+                    File.Delete(plainCopy);
+                }
+
+                return true;
+            }
+
+            // Rekeying may have been interrupted after the main file became unreadable.
+            if (!await TryRestorePlainCopyAsync(path, plainCopy, cancellationToken).ConfigureAwait(false))
             {
                 return false;
             }
-
-            // A copy left behind by an interrupted move is removed only after the encrypted file opens with its key.
-            if (File.Exists(plainCopy))
-            {
-                File.Delete(plainCopy);
-            }
-
-            return true;
         }
 
         // Fold committed WAL frames into the main file before taking the rollback copy.
@@ -114,6 +122,17 @@ public static partial class SqliteEncryption
         }
 
         return await IsPlainAsync(path, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<bool> TryRestorePlainCopyAsync(string path, string plainCopy, CancellationToken cancellationToken)
+    {
+        if (!File.Exists(plainCopy) || !await IsPlainAsync(plainCopy, cancellationToken).ConfigureAwait(false))
+        {
+            return false;
+        }
+
+        RestorePlainCopy(path, plainCopy);
+        return true;
     }
 
     private static bool RestorePlainCopy(string path, string plainCopy)

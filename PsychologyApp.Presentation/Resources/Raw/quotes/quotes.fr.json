@@ -993,5 +993,35 @@
     "author": "Épictète",
     "text": "Ce n'est pas celui qui t'injurie ou te frappe qui t'outrage, mais ton opinion que ces choses sont outrageantes.",
     "theme": "calm"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Demander du soutien peut être simple : « Peux-tu simplement m’écouter un moment ? »",
+    "theme": "relationships"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Un petit pas n’a pas besoin de changer toute la journée pour compter.",
+    "theme": "motivation"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Une pratique doit laisser le choix : s’arrêter est aussi une étape valable.",
+    "theme": "calm"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "S’informer ne signifie pas suivre chaque nouvelle inquiétante.",
+    "theme": "calm"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Vous pouvez prévoir du repos avant d’être complètement épuisé.",
+    "theme": "calm"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Vous pouvez reconnaître une erreur et demander comment la réparer, sans exiger un pardon immédiat.",
+    "theme": "relationships"
   }
 ]

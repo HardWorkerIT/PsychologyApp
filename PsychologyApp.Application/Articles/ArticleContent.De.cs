@@ -37,32 +37,32 @@ public static partial class ArticleContent
             ]),
         new(
             ArticleIds.Panic,
-            "Panikattacken: was passiert und warum sie nicht gefährlich sind",
+            "Panikattacken: Was passiert und wann Hilfe nötig ist",
             "Das Herz rast, die Luft wird knapp, es fühlt sich an wie Sterben. Was im Körper wirklich geschieht",
             "Air",
             4,
             [
-                P("Eine Panikattacke ist ein plötzlicher, sehr starker Anstieg der Angst. Das Herz hämmert, die Luft wird knapp, dir wird schwindlig, die Hände kribbeln, dir ist heiß oder kalt, und es scheint, als stünden ein Herzinfarkt, eine Ohnmacht oder der Verstandesverlust unmittelbar bevor. Es ist eine der beängstigendsten Erfahrungen überhaupt."),
+                P("Eine Panikattacke ist eine plötzliche starke Angstwelle mit körperlichen Empfindungen. Andere Erkrankungen können ähnliche Symptome verursachen. Wenn plötzlich auftretende Brustschmerzen oder Druck nicht nachlassen, in Arm, Kiefer oder Rücken ausstrahlen oder mit kaltem Schweiß oder Übelkeit einhergehen, rufe sofort den örtlichen Rettungsdienst. Auch bei starker Atemnot oder Ohnmacht ist sofortige Hilfe nötig. Versuche nicht, die Ursache selbst festzustellen."),
                 H("Was wirklich geschieht"),
-                P("Dieselbe Kampf-oder-Flucht-Reaktion springt an wie bei echter Gefahr, nur ohne Gefahr. Adrenalin beschleunigt das Herz, und schnelles, tiefes Atmen bringt die Blutgase aus dem Gleichgewicht: Daher kommen Kribbeln, Schwindel und das Gefühl von Luftnot, obwohl genug Luft da ist."),
-                P("Eine Attacke erreicht ihren Höhepunkt meist in den ersten Minuten und klingt dann von selbst ab, in der Regel innerhalb einer halben Stunde. Bei gesundem Herzen verursacht eine Panikattacke keinen Herzinfarkt und keinen Wahnsinn, und Ohnmachten sind selten, weil der Blutdruck eher steigt."),
+                P("Bei Panik kann die Kampf-oder-Flucht-Reaktion Herzschlag und Atmung beschleunigen sowie Zittern oder Schwindel auslösen. Aus diesen Empfindungen allein lässt sich die Ursache nicht feststellen."),
+                P("Eine Panikattacke erreicht oft nach wenigen Minuten ihren Höhepunkt und klingt dann ab; ihre Dauer ist unterschiedlich. Die Panikattacke selbst ist nicht lebensbedrohlich, ähnliche neue, veränderte oder unklare Symptome müssen aber abgeklärt werden."),
                 H("Warum die Attacken wiederkommen"),
-                P("Nach der ersten Attacke fangen viele an, sich vor der nächsten zu fürchten: Sie horchen auf ihr Herz, tragen Wasser und Tabletten bei sich, meiden Kaffee, Treppen und die U-Bahn, bleiben in der Nähe des Ausgangs. Diese Angst vor den Empfindungen und diese Sicherheitsnetze halten die Panik am Leben: Das Gehirn lernt nie, dass die Empfindungen ungefährlich sind."),
+                P("Die Angst vor einer weiteren Attacke kann zu häufigem Kontrollieren und Vermeiden führen und die Angst aufrechterhalten. Setze verordnete Medikamente nicht ohne ärztliche Rücksprache ab und ändere sie nicht eigenständig."),
                 Cycle("Der Panikkreislauf", "Eine Empfindung im Körper", "Der Gedanke „mit mir stimmt etwas Schlimmes nicht“", "Angst", "Noch stärkere Empfindungen"),
                 H("Was während einer Attacke hilft"),
                 List(
-                    "Sie benennen: „Das ist eine Panikattacke. Sie ist unangenehm, aber nicht gefährlich, und sie geht vorbei“",
-                    "Nicht gegen die Empfindungen kämpfen und nicht fliehen, wenn du bleiben kannst",
-                    "Die Ausatmung verlängern: auf 4 einatmen, auf 6 ausatmen",
+                    "Wenn eine Fachperson Panikattacken festgestellt hat und die Symptome vertraut sind: „Es geht vorbei; ich darf mir Zeit geben“",
+                    "Bleib an einem sicheren Ort oder geh dorthin, wenn möglich; bleib nicht gegen deinen Willen an einem unsicheren Ort",
+                    "Atme sanft und natürlich; wenn es angenehm ist, atme etwas länger aus, ohne dich zu zwingen",
                     "Die Aufmerksamkeit nach außen lenken: was du siehst, hörst, berührst"),
                 Practice(TechniqueId.Breathing, "Sanftes Atemtempo"),
                 Practice(TechniqueId.Grounding, "Erdung 5-4-3-2-1"),
                 Breathe("Wenn es angenehm ist, atme sanft etwas länger aus als ein. Wenn es unangenehmer wird, atme wieder natürlich und benenne einige Dinge um dich herum."),
                 H("Wie Attacken seltener werden"),
-                P("Am besten wirkt es, schrittweise ohne Sicherheitsnetze an gemiedene Orte und in gemiedene Situationen zurückzukehren und Übungen zu machen, die in sicherem Rahmen absichtlich ähnliche Empfindungen auslösen. So lernt das Gehirn neu: „Ein schnell schlagendes Herz ist einfach ein schnell schlagendes Herz.“"),
+                P("Die schrittweise Rückkehr zu vermiedenen Situationen kann helfen; besprich einen Plan mit einer therapeutischen oder ärztlichen Fachperson. Übungen, die Körperempfindungen auslösen, werden passend zum Gesundheitszustand und bei Bedarf mit fachlicher Begleitung gewählt."),
                 Ladder("Angstleiter"),
-                Warning("Schließe zuerst eine Krankheit aus"),
-                P("Wenn es zum ersten Mal passiert, wenn Brustschmerzen bei Belastung auftreten oder du eine Herzerkrankung hast, geh zuerst zu einer Ärztin oder einem Arzt. Von einer Panikattacke spricht man, nachdem körperliche Ursachen abgeklärt sind.")
+                Warning("Wann du Hilfe brauchst"),
+                P("Lass eine erste Episode sowie neue oder ungewohnte Symptome ärztlich abklären: An den Empfindungen allein lässt sich Panik nicht zuverlässig von anderen Ursachen unterscheiden. Bei den oben beschriebenen Notfallzeichen rufe sofort den örtlichen Rettungsdienst.")
             ]),
         new(
             ArticleIds.Avoidance,
@@ -159,6 +159,32 @@ public static partial class ArticleContent
                 Check("Erkenne ich mich wieder?", 3, "Das klingt nach mehr als einer schlechten Woche. Mach den Fragebogen PHQ-9 im Tab Tests und zeig das Ergebnis einer Ärztin, einem Arzt oder einer Psychologin: Depression lässt sich sehr gut behandeln.", "Das klingt eher nach einer schweren Phase. Probier die Schritte oben, und wenn es schlimmer wird oder anhält, mach den PHQ-9.", "Gedrückte Stimmung fast jeden Tag, seit zwei Wochen oder länger", "Nichts macht Freude, auch nicht, was du früher mochtest", "Schlaf oder Appetit haben sich stark verändert", "Schwer, sich zu konzentrieren, alles fällt aus der Hand", "Ein Gefühl von Schuld oder Wertlosigkeit"),
                 Warning("Wenn es länger als zwei Wochen schlecht geht"),
                 P("Wenn die Stimmung seit mehr als zwei Wochen fast ständig gedrückt ist, du das Interesse an allem verloren hast und Schlaf und Appetit gestört sind, kann das eine Depression sein, und es lohnt sich, eine Fachperson aufzusuchen. Und wenn Gedanken an den Tod oder daran, dir etwas anzutun, auftauchen, brauchst du jetzt Hilfe."),
+                Crisis("Ich brauche jetzt Hilfe")
+            ]),
+        new(
+            ArticleIds.SmallStepReview,
+            "Wenn ein kleiner Schritt die Stimmung nicht hebt",
+            "So kannst du ohne Selbstvorwürfe prüfen, wie machbar eine Tätigkeit war, und den nächsten Schritt anpassen.",
+            "DirectionsWalk",
+            3,
+            [
+                P("Manchmal bleibt die Stimmung nach einer geplanten Tätigkeit gleich. Das heißt nicht, dass du versagt hast: Ein Versuch reicht nicht aus, um zu wissen, ob der Plan passt."),
+                H("Kurzer Rückblick"),
+                List(
+                    "Was hatte ich vor, und welchen Teil davon habe ich geschafft?",
+                    "Wie machbar war es mit meiner Zeit und Kraft?",
+                    "Was hat geholfen oder gestört: Umfang, Zeitpunkt, Ort, Müdigkeit oder Unterstützung?",
+                    "War etwas daran angenehm, sinnvoll oder neutral — oder hat es mich nur erschöpft?"
+                ),
+                H("Den nächsten Schritt anpassen"),
+                List(
+                    "Wenn die Tätigkeit gepasst hat und machbar war, kannst du sie beibehalten, auch wenn sich die Stimmung nicht sofort verändert hat",
+                    "War sie zu groß, verkleinere sie auf den ersten Handgriff oder ein bis zwei Minuten",
+                    "Hat sie nicht gepasst, wähle etwas anderes: Angenehmes, ein Gefühl von Abschluss, Kontakt oder grundlegende Selbstfürsorge",
+                    "Ändere bei Bedarf Zeit oder Ort oder bitte um Unterstützung"
+                ),
+                Warning("Wann zusätzliche Hilfe sinnvoll ist"),
+                P("Wenn selbst kleine Tätigkeiten wiederholt stark belasten, sich dein Zustand deutlich verschlechtert oder der Alltag kaum zu bewältigen ist, zwing dich nicht weiter und sprich mit einer Fachperson."),
                 Crisis("Ich brauche jetzt Hilfe")
             ]),
         new(
@@ -274,13 +300,20 @@ public static partial class ArticleContent
             [
                 P("Wut ist ein normales Gefühl. Sie zeigt, dass unsere Grenzen überschritten wurden, dass wir ungerecht behandelt wurden oder dass etwas ein wichtiges Ziel blockiert. Das Problem ist nicht die Wut, sondern wie sie herauskommt: in einem Ausbruch, den man später bereut, oder in Zurückhaltung, nach der sich Groll ansammelt und der Kopf schmerzt."),
                 H("Der Mythos vom „Dampf ablassen“"),
-                P("Man glaubt, Wut müsse heraus: auf ein Kissen schlagen, schreien. Studien zeigen das Gegenteil: Solches „Dampfablassen“ macht wütender und aggressiver, nicht ruhiger. Was hilft, ist nicht, sie herauszulassen, sondern die Intensität zu senken und dann zu sagen, was wichtig ist."),
+                P("Schreien oder auf ein Kissen zu schlagen kann sich wie ein Ventil anfühlen, garantiert aber keine Erleichterung. Studien deuten darauf hin, dass Methoden, die die Erregung senken, etwa langsames Atmen oder Entspannung, Wut verringern; bei Aktivitäten, die die Erregung hoch halten, zeigte sich derselbe Nutzen nicht. Nach einer Pause kannst du ansprechen, was wichtig ist."),
                 H("Wenn die Wut überhandnimmt"),
                 List(
                     "Achte auf die Signale des Körpers: heißes Gesicht, zusammengebissener Kiefer, geballte Fäuste, schnellerer Herzschlag",
                     "Mach eine Pause: „Ich brauche zehn Minuten, ich komme darauf zurück“",
                     "Atme ein paar Mal langsam aus, länger als die Einatmung",
                     "Schreib und schick nichts auf dem Höhepunkt"),
+                H("Die Pause klar vereinbaren"),
+                P("Eine Pause bedeutet nicht, einfach zu verschwinden: Sag, dass du Zeit brauchst und wann du zurückkommst. Zum Beispiel: „Ich bin gerade zu aufgewühlt, um ruhig zu sprechen. Ich brauche 20 Minuten und komme um 19:30 Uhr zurück.“ Wenn du dann noch nicht bereit bist, schlag eine konkrete neue Zeit vor. Wenn du oder die andere Person nicht sicher seid, bring dich zuerst in Sicherheit und hol dir Unterstützung."),
+                List(
+                    "Wenn ihr euch beide sicher fühlt, vereinbart vorher, dass jede Person eine Pause vorschlagen kann und das Gespräch dann endet",
+                    "Nutze die Pause zum Runterkommen: Geh an einen ruhigen Ort, mach einen kurzen Spaziergang oder atme langsam; streite nicht per Nachricht weiter",
+                    "Komm zum genannten Zeitpunkt zurück; brauchst du länger, sag Bescheid und vereinbare eine neue Zeit"),
+                Quiz("Was macht aus einer Pause einen klaren Plan statt eines ungelösten Streits?", 1, "Eine vereinbarte Rückkehrzeit gibt beiden einen nächsten Schritt: das Gespräch unterbrechen, den Druck senken und später fortsetzen oder eine neue Zeit vereinbaren. Bei Gefahr geht Sicherheit vor.", "Weggehen, ohne zu sagen, ob oder wann du zurückkommst", "Die Pause ankündigen und sagen, wann du zurückkommst", "Per Nachricht weiterstreiten, bis du völlig ruhig bist"),
                 H("Wenn du dich beruhigt hast"),
                 List(
                     "Frag dich: Was hat mich wirklich verletzt? Welche Grenze wurde überschritten?",
@@ -827,6 +860,26 @@ public static partial class ArticleContent
                 Crisis("Ich brauche jetzt Hilfe")
             ]),
         new(
+            ArticleIds.TraumaGrounding,
+            "Wenn Erdung die Belastung verstärkt",
+            "Wie du stoppst, eine sanftere Orientierung wählst und erkennst, wann Unterstützung sinnvoll ist",
+            "Bolt",
+            2,
+            [
+                P("Erdung ist eine Möglichkeit, kein Test. Nach einem Trauma kann es die Belastung verstärken oder Erinnerungen auslösen, wenn du dich auf Körper, Atmung, Gerüche oder Berührungen konzentrierst. Das bedeutet nicht, dass du etwas falsch machst."),
+                H("Beende zuerst, was es schwerer macht"),
+                List(
+                    "Öffne die Augen, falls sie geschlossen sind, und sieh dich um, wenn sich das gut anfühlt",
+                    "Benenne deinen Ort und das heutige Datum; überspringe das, wenn es nicht hilft",
+                    "Wähle einen neutralen äußeren Anhaltspunkt: die Farbe eines Gegenstands, die Form eines Fensters oder ein vertrautes Geräusch",
+                    "Bewege dich, trink etwas Wasser oder schreib einer vertrauten Person, wenn das gerade passt. Du musst weder Atemzüge zählen noch Körpersignale beobachten"),
+                H("Wähle eine sanftere Orientierung"),
+                P("Probiere etwas Neutrales: Beschreibe einen Gegenstand, höre ein vertrautes Geräusch oder wende dich an eine vertraute Person. Wenn die Belastung zunimmt, hör auf; du musst keine Übung um jeden Preis beenden."),
+                H("Wann Unterstützung sinnvoll ist"),
+                P("Wenn Flashbacks häufiger werden, die Orientierung nicht zurückkehrt oder Symptome den Alltag beeinträchtigen, sprich mit einer Fachperson mit Traumaerfahrung. Selbsthilfe ersetzt keine Behandlung; du musst dich nicht zwingen, das Ereignis erneut zu durchleben oder ausführlich zu beschreiben."),
+                See(ArticleIds.TraumaTreatment, "Wie Trauma behandelt wird und wie du eine Fachperson auswählst")
+            ]),
+        new(
             ArticleIds.Ocd,
             "Zwangsgedanken und Rituale (Zwangsstörung)",
             "Warum beängstigende Gedanken haften bleiben und warum Kontrollen und Rituale sie verstärken",
@@ -974,6 +1027,27 @@ public static partial class ArticleContent
                 Warning("Wenn er vom Tod spricht"),
                 P("Frag direkt, ob er an Suizid denkt: Das bringt ihn nicht darauf, es hilft. Lass ihn bei Gefahr nicht allein und hilf ihm, Hilfe zu erreichen."),
                 See(ArticleIds.SupportInCrisis, "Wie du jemanden in einer Krise unterstützt"),
+                Crisis("Ich brauche jetzt Hilfe")
+            ]),
+        new(
+            ArticleIds.SupportRequest,
+            "Um Unterstützung bitten",
+            "Ein kurzer Plan: eine sichere Person wählen, die gewünschte Hilfe benennen und eine machbare Bitte formulieren.",
+            "VolunteerActivism",
+            3,
+            [
+                P("Um Unterstützung zu bitten kann sich ungewohnt anfühlen. Du musst nicht erst beweisen, dass es dir „schlecht genug“ geht, und auch nicht alles auf einmal erzählen. Eine kleine konkrete Bitte reicht für den Anfang."),
+                H("Bevor du fragst"),
+                List(
+                    "Wähle eine Person, bei der du dich einigermaßen sicher und wohl fühlst",
+                    "Frag, ob es gerade ein guter Zeitpunkt zum Reden ist",
+                    "Sag, was du brauchst: Zuhören, Gesellschaft oder Hilfe bei einer konkreten Aufgabe",
+                    "Halte die Bitte konkret und überschaubar, zum Beispiel zehn Minuten zuhören oder ein kurzer Spaziergang"
+                ),
+                H("Ein kurzes Beispiel"),
+                P("„Mir geht es gerade nicht gut. Hast du zehn Minuten Zeit, mir einfach zuzuhören, ohne Ratschläge? Wenn nicht, ist das in Ordnung.“"),
+                H("Wenn die Person gerade nicht kann"),
+                P("Ein Nein kann mit der Zeit oder Kraft der anderen Person zu tun haben. Du kannst nach einem passenderen Zeitpunkt fragen oder dich an eine andere sichere Person wenden. Du musst niemanden kontaktieren, bei dem du dich unsicher fühlst."),
                 Crisis("Ich brauche jetzt Hilfe")
             ]),
         new(
@@ -1205,6 +1279,29 @@ public static partial class ArticleContent
                 Crisis("Ich brauche jetzt Hilfe"),
                 Practice(TechniqueId.SelfCompassion, "Freundliche Worte an dich selbst"),
                 Practice(TechniqueId.SmallStep, "Ein kleiner Schritt")
+            ]),
+        new(
+            ArticleIds.NewsLoop,
+            "Wenn Nachrichten nicht loslassen",
+            "Wichtiges prüfen und endloses Aktualisieren unterbrechen",
+            "TipsAndUpdates",
+            3,
+            [
+                P("Nachrichten können helfen, informiert zu bleiben. Wiederholtes Nachsehen kann aber zum Versuch werden, Unsicherheit loszuwerden. Neue Meldungen bringen nicht immer mehr Klarheit oder einen nächsten Schritt. Eine Pause heißt nicht, Wichtiges zu ignorieren: Wenn es um deine Sicherheit oder eine wichtige Entscheidung geht, hole dir die nötigen Informationen."),
+                H("Formuliere zuerst deine Frage"),
+                List(
+                    "Was genau möchte ich herausfinden?",
+                    "Muss ich jetzt handeln? Wenn ja, suche nach offiziellen Hinweisen und setze einen konkreten Schritt um",
+                    "Wenn gerade nichts zu tun ist, wähle eine verlässliche Quelle und ein kurzes Zeitfenster zum Nachsehen",
+                    "Wenn du die Antwort hast, musst du Kommentare und Reaktionen nicht weiterverfolgen"),
+                H("Beende den Check mit einem nächsten Schritt"),
+                List(
+                    "Notiere die Antwort oder den Schritt. Wenn du noch nichts tun kannst, lege fest, wann du wieder nachsiehst",
+                    "Schalte nicht wichtige Benachrichtigungen stumm, aber lass Hinweise für Sicherheit, Arbeit oder Familie aktiv",
+                    "Wende dich danach einer konkreten Sache zu: trink Wasser, geh kurz hinaus, erledige eine kleine Aufgabe oder schreib einer vertrauten Person"),
+                Quiz("Du hast die gesuchte Information gefunden, möchtest aber aus Angst weiter aktualisieren. Was könntest du versuchen?", 1, "Wenn kein dringender Schritt nötig ist, lege eine Zeit für den nächsten Check fest und widme dich einer konkreten kleinen Aufgabe. Wenn es um Sicherheit geht, befolge offizielle Hinweise.", "Weiter aktualisieren, bis du dich völlig ruhig fühlst", "Einen Zeitpunkt für den nächsten Check festlegen und eine kleine Aufgabe beginnen", "Dir Nachrichten vollständig verbieten"),
+                H("Wenn das Aufhören schwerfällt"),
+                P("Nimm den Drang zum Aktualisieren wahr, ohne dich dafür zu verurteilen. Du musst nicht ganz auf Nachrichten verzichten: Probiere einen geplanten Check aus und sieh, ob dir dieser Ablauf liegt. Wenn Angst Schlaf, Arbeit oder Alltag länger beeinträchtigt, sprich mit einer Fachperson.")
             ])
     ];
 }

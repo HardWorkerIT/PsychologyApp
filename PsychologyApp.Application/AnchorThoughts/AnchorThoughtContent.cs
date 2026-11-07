@@ -29,7 +29,7 @@ public sealed record AnchorThought(string Id, AnchorTheme Theme, string Text, st
 
 /// <summary>
 /// Short thoughts to lean on: about one's worth, mistakes, other people's words, feelings and hard times. Each speaks about an action
-/// or about oneself, never labels the other person, and says why it holds. Clinical copy: reviewed by a psychologist before release.
+/// or about oneself, never labels the other person, and says why it holds. Clinical copy needs psychologist review before release.
 /// </summary>
 public static partial class AnchorThoughtContent
 {
@@ -69,9 +69,11 @@ public static partial class AnchorThoughtContent
         ("calm-body-first", AnchorTheme.ThoughtsAndFeelings, ArticleIds.BodyAndStress),
         ("uncertainty-bearable", AnchorTheme.ThoughtsAndFeelings, ArticleIds.Uncertainty),
         ("let-thoughts-pass", AnchorTheme.ThoughtsAndFeelings, ArticleIds.Mindfulness),
+        ("news-checking", AnchorTheme.ThoughtsAndFeelings, ArticleIds.NewsLoop),
 
         ("saying-no", AnchorTheme.Relationships, ArticleIds.Boundaries),
         ("my-needs", AnchorTheme.Relationships, ArticleIds.Boundaries),
+        ("anger-timeout", AnchorTheme.Relationships, ArticleIds.Anger),
         ("others-feelings", AnchorTheme.Relationships, ArticleIds.Conflicts),
         ("say-what-i-need", AnchorTheme.Relationships, ArticleIds.Conflicts),
         ("repair", AnchorTheme.Relationships, ArticleIds.Conflicts),
@@ -79,8 +81,10 @@ public static partial class AnchorThoughtContent
         ("envy-shows-wants", AnchorTheme.Relationships, ArticleIds.JealousyAndEnvy),
         ("breakup-not-worth", AnchorTheme.Relationships, ArticleIds.Breakup),
         ("different-not-wrong", AnchorTheme.Relationships, ArticleIds.Conflicts),
+        ("ask-for-support", AnchorTheme.Relationships, ArticleIds.SupportRequest),
 
         ("small-step", AnchorTheme.HardTimes, ArticleIds.LowMood),
+        ("adjust-the-step", AnchorTheme.HardTimes, ArticleIds.SmallStepReview),
         ("one-day", AnchorTheme.HardTimes, ArticleIds.LowMood),
         ("rest", AnchorTheme.HardTimes, ArticleIds.Burnout),
         ("not-a-straight-line", AnchorTheme.HardTimes, ArticleIds.Depression),
@@ -89,7 +93,8 @@ public static partial class AnchorThoughtContent
         ("basic-care", AnchorTheme.HardTimes, ArticleIds.LowMood),
         ("small-hope", AnchorTheme.HardTimes, ArticleIds.Depression),
         ("not-forever", AnchorTheme.HardTimes, ArticleIds.Depression),
-        ("asking-for-help", AnchorTheme.HardTimes, ArticleIds.Specialist)
+        ("asking-for-help", AnchorTheme.HardTimes, ArticleIds.Specialist),
+        ("grounding-choice", AnchorTheme.ThoughtsAndFeelings, ArticleIds.TraumaGrounding)
     ];
 
     /// <summary>The thoughts in a language by its key ("ru", "en", "fr"…); a language without its own gets the English ones.</summary>

@@ -1,11 +1,13 @@
 using System.Globalization;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Presentation.Common;
 using PsychologyApp.Presentation.Entities.Journal;
 using PsychologyApp.Presentation.Features.ManageJournal;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests;
 
+[Collection("Localization")]
 public sealed class JournalHelpersTests
 {
     [Theory]
@@ -136,5 +138,76 @@ public sealed class JournalHelpersTests
         Assert.True(selected.HasEntry);
         Assert.Equal(3, selected.MoodLevel);
         Assert.Contains(cells, cell => cell.Date == DateOnly.Parse("2026-12-31") && !cell.IsEnabled);
+    }
+
+    [Theory]
+    [InlineData("ru", ", выбрано", "настроение не отмечено")]
+    [InlineData("en", ", selected", "no mood recorded")]
+    [InlineData("de", ", ausgewählt", "keine Stimmung eingetragen")]
+    [InlineData("es", ", seleccionado", "sin estado de ánimo registrado")]
+    [InlineData("fr", ", sélectionné", "aucune humeur enregistrée")]
+    [InlineData("pt", ", selecionado", "humor não registrado")]
+    [InlineData("zh", "，已选中", "未记录心情")]
+    public void JournalCalendarDayAccessibility_AnnouncesDateMoodAndSelectionInEveryLanguage(
+        string language,
+        string selectedSuffix,
+        string noMoodPhrase)
+    {
+        string? previousLanguage = AppStrings.LanguageOverride;
+        AppStrings.LanguageOverride = language;
+
+        try
+        {
+            DateOnly date = new(2026, 7, 26);
+            string expectedDate = date.ToDateTime(TimeOnly.MinValue)
+                .ToString("D", CultureInfo.GetCultureInfo(AppLanguages.CultureName(language)));
+
+            string description = AppStrings.JournalCalendarDayAccessibility(date, 4, isSelected: true);
+
+            Assert.Contains(expectedDate, description);
+            Assert.Contains(AppStrings.MoodLevelName(4), description);
+            Assert.EndsWith(selectedSuffix, description);
+
+            string noMoodDescription = AppStrings.JournalCalendarDayAccessibility(date, null, isSelected: false);
+
+            Assert.Contains(expectedDate, noMoodDescription);
+            Assert.Contains(noMoodPhrase, noMoodDescription);
+            Assert.DoesNotContain(selectedSuffix.TrimStart(',', '，', ' '), noMoodDescription);
+        }
+        finally
+        {
+            AppStrings.LanguageOverride = previousLanguage;
+        }
+    }
+
+    [Fact]
+    public void JournalDayChip_NotifiesBindingsWhenAccessibleSelectionStateChanges()
+    {
+        string? previousLanguage = AppStrings.LanguageOverride;
+        AppStrings.LanguageOverride = "en";
+
+        try
+        {
+            JournalDayChip chip = new()
+            {
+                Date = new DateOnly(2026, 7, 26),
+                MoodLevel = 2,
+                HasEntry = true
+            };
+            string before = chip.AccessibilityDescription;
+            bool descriptionChanged = false;
+            chip.PropertyChanged += (_, args) =>
+                descriptionChanged |= args.PropertyName == nameof(JournalDayChip.AccessibilityDescription);
+
+            chip.IsSelected = true;
+
+            Assert.NotEqual(before, chip.AccessibilityDescription);
+            Assert.EndsWith(", selected", chip.AccessibilityDescription);
+            Assert.True(descriptionChanged);
+        }
+        finally
+        {
+            AppStrings.LanguageOverride = previousLanguage;
+        }
     }
 }

@@ -993,5 +993,35 @@
     "author": "Epiktet",
     "text": "Nicht wer dich schmäht oder schlägt, beleidigt dich, sondern deine Meinung, dass dies beleidigend sei.",
     "theme": "calm"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Um Unterstützung zu bitten kann ganz einfach sein: „Kannst du mir einfach eine Weile zuhören?“",
+    "theme": "relationships"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Ein kleiner Schritt muss nicht den ganzen Tag verändern, um zu zählen.",
+    "theme": "motivation"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Eine Übung sollte Wahlfreiheit lassen: Aufzuhören ist ebenfalls ein guter Schritt.",
+    "theme": "calm"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Informiert zu bleiben heißt nicht, jede beunruhigende Meldung zu verfolgen.",
+    "theme": "calm"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Du kannst Erholung einplanen, bevor deine Kräfte völlig aufgebraucht sind.",
+    "theme": "calm"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Du kannst einen Fehler eingestehen und fragen, wie du ihn wiedergutmachen kannst, ohne sofortige Vergebung zu verlangen.",
+    "theme": "relationships"
   }
 ]

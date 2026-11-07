@@ -84,7 +84,7 @@
                         <Label
                             Grid.Column="0"
                             Style="{StaticResource IconActionStyle}"
-                            WidthRequest="40"
+                            WidthRequest="44"
                             VerticalOptions="Center"
                             Text="{mi:Material Icon=KeyboardArrowLeft}"
                             SemanticProperties.Description="{Binding PeriodNavPrevLabel}">
@@ -104,7 +104,7 @@
                         <Label
                             Grid.Column="2"
                             Style="{StaticResource IconActionStyle}"
-                            WidthRequest="40"
+                            WidthRequest="44"
                             VerticalOptions="Center"
                             IsEnabled="{Binding CanGoNextPeriod}"
                             Opacity="0.35"

@@ -47,6 +47,7 @@
                         <Grid
                             IsVisible="{Binding HasTitle}"
                             ColumnDefinitions="*,Auto"
+                            MinimumHeightRequest="44"
                             Padding="4,8,4,2"
                             SemanticProperties.Description="{Binding HeaderText}">
                             <Grid.GestureRecognizers>

@@ -4063,6 +4063,15 @@
   <data name="MoodLevelName5" xml:space="preserve">
     <value>Отлично</value>
   </data>
+  <data name="JournalCalendarDayWithMood" xml:space="preserve">
+    <value>{0}, настроение: {1}{2}</value>
+  </data>
+  <data name="JournalCalendarDayWithoutMood" xml:space="preserve">
+    <value>{0}, настроение не отмечено{1}</value>
+  </data>
+  <data name="JournalCalendarDaySelectedSuffix" xml:space="preserve">
+    <value>, выбрано</value>
+  </data>
   <data name="JournalPastDayPlaceholder" xml:space="preserve">
     <value>Заметка о дне — по желанию</value>
   </data>
@@ -4164,5 +4173,17 @@
   </data>
   <data name="DesignerAddStep" xml:space="preserve">
     <value>+ Добавить шаг</value>
+  </data>
+  <data name="MusicPreviousTrack" xml:space="preserve">
+    <value>Предыдущий трек</value>
+  </data>
+  <data name="MusicPlay" xml:space="preserve">
+    <value>Воспроизвести</value>
+  </data>
+  <data name="MusicPause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="MusicNextTrack" xml:space="preserve">
+    <value>Следующий трек</value>
   </data>
 </root>

@@ -19,6 +19,7 @@
              under the conversation. The base sits in the style, so the practice chip's fill in a trigger is not overridden. -->
         <Style x:Key="ChatQuickReplyStyle" TargetType="Border">
             <Setter Property="Padding" Value="14,8" />
+            <Setter Property="MinimumHeightRequest" Value="44" />
             <Setter Property="StrokeThickness" Value="0" />
             <Setter Property="StrokeShape" Value="RoundRectangle 18" />
             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
@@ -88,7 +89,7 @@
                                     HorizontalOptions="End">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsUser}" Value="True">
-                                            <Setter Property="TextColor" Value="#CCFFFFFF" />
+                                            <Setter Property="TextColor" Value="{DynamicResource OnPrimary}" />
                                         </DataTrigger>
                                     </Label.Triggers>
                                 </Label>

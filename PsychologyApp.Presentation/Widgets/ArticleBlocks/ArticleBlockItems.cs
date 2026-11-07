@@ -86,6 +86,10 @@ public static class ArticleBlockItems
                 options[block.Correct].IsRight = true;
                 UiHaptics.Tick();
                 item.Feedback = $"{(right ? AppStrings.ArticleRight : AppStrings.ArticleNotQuite)} {block.Explanation}";
+                foreach (ArticleChoiceItem choice in options)
+                {
+                    choice.IsQuizAnswered = true;
+                }
             });
         }
 

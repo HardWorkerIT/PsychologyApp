@@ -37,32 +37,32 @@ public static partial class ArticleContent
             ]),
         new(
             ArticleIds.Panic,
-            "Les crises de panique : ce qui se passe et pourquoi ce n'est pas dangereux",
+            "Crises de panique : ce qui se passe et quand demander de l’aide",
             "Le cœur s'emballe, l'air manque, on a l'impression de mourir. Ce qui se passe vraiment dans le corps",
             "Air",
             4,
             [
-                P("Une crise de panique est une montée soudaine et très forte de la peur. Le cœur cogne, l'air manque, la tête tourne, les mains s'engourdissent, on a chaud ou froid, et il semble qu'une crise cardiaque, un évanouissement ou la folie soient imminents. C'est l'une des expériences les plus effrayantes qui soient."),
+                P("Une crise de panique est une vague soudaine de peur intense accompagnée de sensations physiques. D’autres problèmes peuvent provoquer des symptômes similaires. Si une douleur ou une pression soudaine dans la poitrine persiste, se propage au bras, à la mâchoire ou au dos, ou s’accompagne de sueurs froides ou de nausées, appelez immédiatement les secours locaux. Un essoufflement important ou un évanouissement nécessite aussi une aide urgente. Ne cherchez pas à déterminer vous-même la cause."),
                 H("Ce qui se passe vraiment"),
-                P("La même réaction de lutte ou de fuite se déclenche que face à un vrai danger, mais sans danger. L'adrénaline accélère le cœur, et la respiration rapide et profonde déséquilibre les gaz du sang : d'où les fourmillements, les vertiges et l'impression de manquer d'air alors qu'il y en a assez."),
-                P("Une crise atteint généralement son maximum dans les premières minutes, puis retombe d'elle-même, en règle générale en moins d'une demi-heure. Avec un cœur en bonne santé, une crise de panique ne provoque pas d'infarctus, ne rend pas fou, et l'évanouissement est rare, car la tension artérielle a plutôt tendance à monter."),
+                P("En cas de panique, la réaction de lutte ou de fuite peut accélérer le cœur et la respiration, et provoquer des tremblements ou des vertiges. Ces sensations seules ne permettent pas d’en établir la cause."),
+                P("Une crise de panique atteint souvent son maximum en quelques minutes puis diminue progressivement ; sa durée varie. La crise elle-même ne menace pas la vie, mais des symptômes similaires nouveaux, différents ou incertains doivent être évalués."),
                 H("Pourquoi les crises reviennent"),
-                P("Après la première crise, beaucoup de gens se mettent à redouter la suivante : ils écoutent leur cœur, gardent de l'eau et des comprimés sur eux, évitent le café, les escaliers, le métro, restent près de la sortie. Cette peur des sensations et ces béquilles entretiennent la panique : le cerveau n'apprend jamais que les sensations sont sans danger."),
+                P("La peur d’une nouvelle crise peut entraîner des vérifications répétées et des évitements qui entretiennent l’anxiété. Ne modifiez pas et n’arrêtez pas un traitement prescrit sans avis médical."),
                 Cycle("Le cercle de la panique", "Une sensation dans le corps", "La pensée « il m'arrive quelque chose de grave »", "La peur", "Des sensations encore plus fortes"),
                 H("Que faire pendant une crise"),
                 List(
-                    "La nommer : « C'est une crise de panique. C'est désagréable mais pas dangereux, et ça va passer »",
-                    "Ne pas lutter contre les sensations et ne pas fuir si vous pouvez rester",
-                    "Allonger l'expiration : inspirer sur 4 temps, expirer sur 6",
+                    "Si un professionnel a confirmé les crises de panique et que les symptômes sont habituels : « Cela va passer ; je peux me donner du temps »",
+                    "Restez ou allez dans un lieu sûr si possible ; ne vous forcez pas à rester dans un endroit dangereux",
+                    "Respirez doucement et naturellement ; si cela vous convient, expirez un peu plus longtemps sans forcer",
                     "Ramener l'attention vers l'extérieur : ce que vous voyez, entendez, touchez"),
                 Practice(TechniqueId.Breathing, "Respiration guidée en douceur"),
                 Practice(TechniqueId.Grounding, "Ancrage 5-4-3-2-1"),
                 Breathe("Si cela vous convient, essayez d’expirer doucement un peu plus longtemps que vous n’inspirez. Si l’inconfort augmente, reprenez votre respiration naturelle et nommez quelques objets autour de vous."),
                 H("Comment rendre les crises plus rares"),
-                P("Ce qui marche le mieux, c'est de revenir progressivement dans les lieux et situations évités sans béquilles, et de faire des exercices qui provoquent volontairement des sensations semblables dans un cadre sûr. C'est ainsi que le cerveau réapprend : « un cœur qui bat fort, c'est juste un cœur qui bat fort »."),
+                P("Revenir progressivement aux situations évitées peut aider ; discutez d’un plan avec un professionnel. Les exercices qui provoquent des sensations physiques doivent être adaptés à votre santé et, si nécessaire, accompagnés par un professionnel."),
                 Ladder("Échelle de la peur"),
-                Warning("Écartez d'abord une maladie"),
-                P("Si c'est la première fois, si une douleur thoracique apparaît à l'effort ou si vous avez une maladie cardiaque, consultez d'abord un médecin. On parle de crise de panique une fois les causes physiques vérifiées.")
+                Warning("Quand demander de l’aide"),
+                P("Consultez pour un premier épisode ou des symptômes nouveaux ou inhabituels : les sensations seules ne permettent pas de distinguer la panique d’autres causes. Pour les signes d’urgence décrits au début, appelez immédiatement les secours locaux.")
             ]),
         new(
             ArticleIds.Avoidance,
@@ -160,6 +160,32 @@ public static partial class ArticleContent
                 Warning("Si ça va mal depuis plus de deux semaines"),
                 P("Si votre humeur est basse presque tout le temps depuis plus de deux semaines, que vous avez perdu l'intérêt pour tout, et que le sommeil et l'appétit sont perturbés, il peut s'agir d'une dépression, et il vaut la peine de consulter un spécialiste. Et si des pensées de mort ou de vous faire du mal apparaissent, il faut de l'aide maintenant."),
                 Crisis("J'ai besoin d'aide maintenant")
+            ]),
+        new(
+            ArticleIds.SmallStepReview,
+            "Quand un petit pas ne change pas l’humeur",
+            "Faire le point sans s’autocritiquer sur la faisabilité d’une activité et ajuster le prochain pas.",
+            "DirectionsWalk",
+            3,
+            [
+                P("Parfois, l’humeur reste la même après une activité prévue. Cela ne veut pas dire que vous avez échoué : un seul essai ne suffit pas à savoir si le plan vous convient."),
+                H("Un bilan rapide"),
+                List(
+                    "Qu’avais-je prévu et quelle partie ai-je pu faire ?",
+                    "Dans quelle mesure était-ce faisable avec mon temps et mon énergie ?",
+                    "Qu’est-ce qui a aidé ou gêné : la taille de la tâche, le moment, le lieu, la fatigue ou le soutien ?",
+                    "Y avait-il quelque chose d’agréable, d’important ou de neutre, ou cela m’a-t-il seulement épuisé ?"
+                ),
+                H("Ajuster le prochain pas"),
+                List(
+                    "Si l’activité vous convenait et était faisable, vous pouvez la garder même si votre humeur n’a pas changé tout de suite",
+                    "Si elle était trop grande, réduisez-la au premier geste ou à une ou deux minutes",
+                    "Si elle ne vous convenait pas, choisissez autre chose : du plaisir, un sentiment d’accomplissement, du lien ou un soin de base",
+                    "Au besoin, changez l’heure ou le lieu, ou demandez du soutien"
+                ),
+                Warning("Quand demander davantage de soutien"),
+                P("Si même les petites activités augmentent régulièrement votre détresse, si votre état se dégrade nettement ou si le quotidien devient impossible, ne vous forcez pas et parlez-en à un professionnel de santé."),
+                Crisis("J’ai besoin d’aide maintenant")
             ]),
         new(
             ArticleIds.Burnout,
@@ -274,13 +300,20 @@ public static partial class ArticleContent
             [
                 P("La colère est une émotion normale. Elle signale que nos limites ont été franchies, qu'on nous a traités injustement ou que quelque chose bloque un but important. Le problème n'est pas la colère, mais la façon dont elle sort : dans une explosion qu'on regrette ensuite, ou dans une retenue après laquelle la rancœur s'accumule et la tête fait mal."),
                 H("Le mythe du « défoulement »"),
-                P("On croit que la colère doit sortir : frapper un coussin, crier. Les recherches montrent l'inverse : ce « défoulement » rend plus en colère et plus agressif, pas plus calme. Ce qui aide, ce n'est pas de la laisser sortir, mais de baisser l'intensité, puis de dire ce qui compte."),
+                P("Crier ou frapper un coussin peut donner l’impression de se défouler, sans garantir un apaisement. Les recherches suggèrent que les méthodes qui abaissent l’activation, comme la respiration lente ou la relaxation, réduisent la colère ; les activités qui la maintiennent élevée n’ont pas montré le même bénéfice. Après une pause, vous pourrez revenir à ce qui compte."),
                 H("Quand la colère prend le dessus"),
                 List(
                     "Remarquez les signaux du corps : visage chaud, mâchoire et poings serrés, cœur qui s'accélère",
                     "Faites une pause : « j'ai besoin de dix minutes, j'y reviendrai »",
                     "Faites quelques expirations lentes, plus longues que l'inspiration",
                     "N'écrivez et n'envoyez rien au moment le plus fort"),
+                H("Convenir clairement de la pause"),
+                P("Faire une pause ne signifie pas disparaître : dites que vous avez besoin de temps et précisez quand vous reviendrez. Par exemple : « Je suis trop tendu pour parler calmement. J’ai besoin de 20 minutes ; je reviens à 19 h 30. » Si vous n’êtes pas prêt à ce moment-là, proposez une nouvelle heure précise. Si vous ou l’autre personne n’êtes pas en sécurité, mettez-vous d’abord à l’abri et demandez de l’aide."),
+                List(
+                    "Si vous êtes tous les deux en sécurité, convenez à l’avance que chacun peut demander une pause et que la discussion s’arrête",
+                    "Profitez de la pause pour faire baisser la tension : allez dans un endroit calme, marchez un peu ou respirez lentement ; ne poursuivez pas la dispute par messages",
+                    "Revenez au moment annoncé ; si vous avez besoin de plus de temps, dites-le et convenez d’une nouvelle heure"),
+                Quiz("Qu’est-ce qui transforme une pause en plan clair plutôt qu’en dispute inachevée ?", 1, "Annoncer l’heure du retour donne une suite claire : arrêter la discussion, laisser retomber la tension, puis reprendre ou convenir d’une nouvelle heure. En cas de danger, la sécurité passe d’abord.", "Partir sans dire si vous reviendrez ni quand", "Dire que vous faites une pause et préciser quand vous reviendrez", "Continuer la dispute par messages jusqu’à être parfaitement calme"),
                 H("Une fois calmé"),
                 List(
                     "Demandez-vous : qu'est-ce qui m'a vraiment blessé ? Quelle limite a été franchie ?",
@@ -827,6 +860,26 @@ public static partial class ArticleContent
                 Crisis("J'ai besoin d'aide maintenant")
             ]),
         new(
+            ArticleIds.TraumaGrounding,
+            "Quand l’ancrage augmente le malaise",
+            "Comment s’arrêter, choisir un repère plus doux et savoir quand demander de l’aide",
+            "Bolt",
+            2,
+            [
+                P("L’ancrage est une possibilité, pas une épreuve. Après un traumatisme, se concentrer sur le corps, la respiration, les odeurs ou le toucher peut parfois accroître le malaise ou faire revenir des souvenirs. Cela ne signifie pas que vous vous y prenez mal."),
+                H("Arrêtez d’abord ce qui rend les choses plus difficiles"),
+                List(
+                    "Ouvrez les yeux s’ils sont fermés et regardez autour de vous si cela vous convient",
+                    "Nommez l’endroit où vous êtes et la date du jour ; passez cette étape si elle ne vous aide pas",
+                    "Choisissez un repère extérieur neutre : la couleur d’un objet, la forme d’une fenêtre ou un son familier",
+                    "Bougez, buvez un peu d’eau ou contactez une personne de confiance seulement si cela vous convient. Vous n’avez pas à compter votre respiration ni à suivre les sensations du corps"),
+                H("Choisissez un repère plus doux"),
+                P("Essayez quelque chose de neutre : décrire un objet, écouter un son familier ou contacter une personne de confiance. Si le malaise augmente, arrêtez-vous ; vous n’avez pas à terminer un exercice à tout prix."),
+                H("Quand demander de l’aide"),
+                P("Si les reviviscences deviennent plus fréquentes, si la désorientation persiste ou si les symptômes gênent la vie quotidienne, parlez-en à un professionnel formé au trauma. L’auto-assistance ne remplace pas les soins ; vous n’avez pas à vous forcer à revivre ou à raconter l’événement en détail."),
+                See(ArticleIds.TraumaTreatment, "Comment on soigne un traumatisme et comment choisir un spécialiste")
+            ]),
+        new(
             ArticleIds.Ocd,
             "Pensées intrusives et rituels (TOC)",
             "Pourquoi les pensées effrayantes collent, et pourquoi vérifications et rituels les renforcent",
@@ -975,6 +1028,27 @@ public static partial class ArticleContent
                 P("Demandez-lui directement s'il pense au suicide : cela ne le pousse pas, cela aide. Ne le laissez pas seul en cas de danger, et aidez-le à accéder à de l'aide."),
                 See(ArticleIds.SupportInCrisis, "Comment soutenir quelqu'un en crise"),
                 Crisis("J'ai besoin d'aide maintenant")
+            ]),
+        new(
+            ArticleIds.SupportRequest,
+            "Comment demander du soutien",
+            "Un plan simple : choisir une personne sûre, préciser l’aide souhaitée et formuler une demande réaliste.",
+            "VolunteerActivism",
+            3,
+            [
+                P("Demander du soutien peut sembler gênant. Vous n’avez pas à prouver que ça va « assez mal » ni à tout raconter d’un coup. Vous pouvez commencer par une petite demande."),
+                H("Avant de demander"),
+                List(
+                    "Choisissez une personne auprès de qui vous vous sentez suffisamment en sécurité et à l’aise",
+                    "Demandez si c’est un bon moment pour parler",
+                    "Précisez ce dont vous avez besoin : être écouté, avoir de la compagnie ou recevoir de l’aide pour une tâche",
+                    "Faites une demande concrète et raisonnable, par exemple dix minutes d’écoute ou une courte promenade"
+                ),
+                H("Un exemple simple"),
+                P("« C’est difficile pour moi en ce moment. Auriez-vous dix minutes pour m’écouter, sans me donner de conseils ? Si ce n’est pas possible, je comprends. »"),
+                H("Si la personne n’est pas disponible"),
+                P("Un refus peut être lié à son temps ou à son énergie. Vous pouvez demander un moment plus adapté ou contacter une autre personne de confiance. Vous n’avez pas à contacter quelqu’un auprès de qui vous ne vous sentez pas en sécurité."),
+                Crisis("J’ai besoin d’aide maintenant")
             ]),
         new(
             ArticleIds.EatingDisorders,
@@ -1205,6 +1279,29 @@ public static partial class ArticleContent
                 Crisis("J'ai besoin d'aide maintenant"),
                 Practice(TechniqueId.SelfCompassion, "Des mots bienveillants pour soi"),
                 Practice(TechniqueId.SmallStep, "Un petit pas")
+            ]),
+        new(
+            ArticleIds.NewsLoop,
+            "Quand les nouvelles ne vous lâchent pas",
+            "Vérifier l’essentiel et sortir du défilement sans fin",
+            "TipsAndUpdates",
+            3,
+            [
+                P("Suivre l’actualité peut aider à rester informé. Mais vérifier sans cesse peut devenir une façon de gérer l’incertitude. Les nouvelles mises à jour n’apportent pas toujours plus de clarté ni une action à faire. Faire une pause ne signifie pas ignorer l’essentiel : si une information concerne votre sécurité ou une décision importante, cherchez ce dont vous avez besoin."),
+                H("Formulez d’abord votre question"),
+                List(
+                    "Qu’est-ce que je cherche précisément à savoir ?",
+                    "Dois-je agir maintenant ? Si oui, consultez une consigne officielle et faites une action concrète",
+                    "S’il n’y a rien à faire tout de suite, choisissez une source fiable et un court créneau pour vérifier",
+                    "Une fois la réponse trouvée, vous n’êtes pas obligé de lire les commentaires et réactions"),
+                H("Terminez la vérification par une étape"),
+                List(
+                    "Notez la réponse ou l’action. Si vous ne pouvez rien faire pour l’instant, décidez quand vous consulterez à nouveau",
+                    "Coupez les notifications non essentielles, en gardant celles qui comptent pour la sécurité, le travail ou la famille",
+                    "Après la vérification, passez à une activité concrète : boire de l’eau, marcher un peu, faire une petite tâche ou écrire à une personne de confiance"),
+                Quiz("Vous avez trouvé l’information recherchée, mais l’anxiété vous pousse à actualiser. Que pouvez-vous essayer ?", 1, "S’il n’y a pas d’action urgente à faire, choisissez l’heure de votre prochaine vérification et reprenez une petite activité concrète. Si votre sécurité est en jeu, suivez les consignes officielles.", "Continuer à actualiser jusqu’à être complètement rassuré", "Choisir l’heure de la prochaine vérification et reprendre une petite activité", "S’interdire complètement toute actualité"),
+                H("Si arrêter est difficile"),
+                P("Remarquez l’envie d’actualiser sans vous juger. Vous n’avez pas à renoncer complètement aux nouvelles : essayez une vérification prévue et voyez si ce rythme vous convient. Si l’anxiété perturbe durablement le sommeil, le travail ou la vie quotidienne, parlez-en à un professionnel.")
             ])
     ];
 }

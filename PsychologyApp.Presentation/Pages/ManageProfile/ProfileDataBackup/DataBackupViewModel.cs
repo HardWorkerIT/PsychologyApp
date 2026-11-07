@@ -316,7 +316,17 @@ public sealed class DataBackupViewModel : BaseViewModel
                 throw new BackupFormatException("The file is too large to be a backup.");
             }
 
-            string json = await File.ReadAllTextAsync(file.FullPath, Encoding.UTF8, cancellationToken);
+            string json;
+            try
+            {
+                // Do not silently replace invalid UTF-8 bytes: this is a restore path, so replacement characters could
+                // corrupt notes and chat messages while still allowing the backup to be imported.
+                json = await File.ReadAllTextAsync(file.FullPath, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true), cancellationToken);
+            }
+            catch (DecoderFallbackException ex)
+            {
+                throw new BackupFormatException("The backup file is not valid UTF-8.", ex);
+            }
             bool isEncrypted = await Task.Run(() => _backupService.IsEncrypted(json), cancellationToken);
             BackupImportResult? imported = isEncrypted
                 ? await ImportProtectedAsync(json, cancellationToken)

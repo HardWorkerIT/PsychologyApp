@@ -2888,5 +2888,35 @@
     "author": "Simone de Beauvoir",
     "text": "One is not born, but rather becomes, a woman.",
     "theme": "self-esteem"
+  },
+  {
+    "author": "PsychologyApp team",
+    "text": "A request for support can be simple: “Could you just listen for a while?”",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp team",
+    "text": "A small step does not have to change the whole day to count.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "A practice should leave room for choice: stopping is also a valid step.",
+    "theme": "calm"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Staying informed does not mean following every unsettling update.",
+    "theme": "calm"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "You can plan time to rest before you are completely exhausted.",
+    "theme": "calm"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "You can acknowledge a mistake and ask how to make amends without demanding immediate forgiveness.",
+    "theme": "relationships"
   }
 ]

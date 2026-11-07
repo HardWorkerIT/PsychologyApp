@@ -1,8 +1,8 @@
 namespace PsychologyApp.Application.Articles;
 
 /// <summary>
-/// The articles of the app in every language, matched one to one with English (tested). Psychoeducation and health copy: reviewed by
-/// a psychologist (and the "when to see a doctor" lists by a physician) before release.
+/// The articles of the app in every language, matched one to one with English (tested). Clinical health copy needs review by
+/// a psychologist (and a physician for the “when to see a doctor” lists) before release.
 /// </summary>
 public static partial class ArticleContent
 {

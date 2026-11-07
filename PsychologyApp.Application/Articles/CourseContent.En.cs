@@ -72,15 +72,16 @@ public static partial class ArticleContent
                         H("What helps"),
                         List(
                             "An hour before bed: dim light and calm activities without screens",
-                            "Coffee, strong tea and energy drinks no later than 2 pm",
+                            "Avoid coffee, strong tea and energy drinks for at least 6 hours before bed; if they disturb your sleep, try stopping earlier",
                             "Alcohol helps you fall asleep but makes sleep shallow and wakes you towards morning",
                             "A heavy dinner 2–3 hours before bed",
                             "In the morning, daylight for at least 15 minutes: it sets the internal clock"),
+                        P("One-minute plan: choose when your wind-down will begin and one quiet activity, such as reading a few pages. If an hour is not available, choose a shorter version in advance. For example: “After my evening tasks, I’ll dim the lights and read a little.”"),
                         H("Relaxing before sleep"),
                         P("Slow breathing with a long out-breath lowers arousal. Try it now."),
                         Breathe("Breathe in for 4, out for 6")
                     ],
-                    "Create your own ritual for the last hour before bed and do it every evening. Take the phone out of the bedroom, or at least off the bed.",
+                    "Try your plan tonight: allow time for quiet activities before bed when you can, and use your shorter version when an hour is not available. Keep your phone off the bed while retaining important alerts.",
                     "What went into your evening ritual? What turned out to be hard?"),
                 new(
                     "Thoughts that keep you awake",
@@ -192,7 +193,9 @@ public static partial class ArticleContent
                             "When worry comes at another time, write the topic down in one line and tell yourself: \"I'll think about it in my worry time\"",
                             "In your worry time, go through the list: plan a step for what you can do, let go of what you can't",
                             "Often, by the appointed time, the topic no longer seems important"),
-                        Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought")
+                        Practice(TechniqueId.ThoughtDefusion, "Unhook from a thought"),
+                        P("If you keep reopening the news for certainty, write down the exact question and decide whether you need to act now. If there is no action to take, choose when to check again."),
+                        See(ArticleIds.NewsLoop, "When the news keeps pulling you back")
                     ],
                     "Set yourself a worry time and postpone anxious thoughts to it.",
                     "Did you manage to postpone worry? What happened to the topics by the appointed time?"),
@@ -273,7 +276,9 @@ public static partial class ArticleContent
                             "Break it down to a step that takes five minutes",
                             "Set a time and place: \"after breakfast, in the kitchen\"",
                             "Afterwards, note how your mood changed"),
-                        Practice(TechniqueId.SmallStep, "One small step")
+                        Practice(TechniqueId.SmallStep, "One small step"),
+                        P("The aim is not to make your mood lift right away. If it stays the same, note how manageable the activity was and adjust the next step."),
+                        See(ArticleIds.SmallStepReview, "When a small step does not lift your mood")
                     ],
                     "Every day, do one pleasant activity and one \"I managed\" activity at the time you set.",
                     "What did you manage to do? How did your mood change afterwards?"),
@@ -302,7 +307,9 @@ public static partial class ArticleContent
                             "A short meeting or call is better than none",
                             "You don't have to explain everything: \"things are hard right now, let's just go for a walk\"",
                             "If energy is low, choose people who are easy to be with"),
-                        Practice(TechniqueId.SmallStep, "One small step")
+                        Practice(TechniqueId.SmallStep, "One small step"),
+                        P("You do not have to explain everything: you can ask for something concrete, such as listening, company or help with one task."),
+                        See(ArticleIds.SupportRequest, "How to ask for support")
                     ],
                     "Get in touch with at least one person in the next two days.",
                     "Who did you contact? How was it?"),
@@ -362,7 +369,9 @@ public static partial class ArticleContent
                             "Something to carry with you: a pebble, a ring, something with a scent",
                             "A person you can message",
                             "Something cold: water, ice"),
-                        Breathe("The out-breath longer than the in-breath")
+                        Breathe("The out-breath longer than the in-breath"),
+                        P("If focusing on breath or body increases distress, stop. Open your eyes, choose a neutral object around you, or skip the exercise."),
+                        See(ArticleIds.TraumaGrounding, "When grounding increases distress")
                     ],
                     "Put together your grounding kit and try the \"A memory took over\" practice at a calm moment, so you know it in advance.",
                     "What went into your grounding kit?"),

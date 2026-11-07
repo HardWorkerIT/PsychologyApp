@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using PsychologyApp.Presentation.Common;
 
 namespace PsychologyApp.Presentation.Entities.Journal;
 
@@ -12,6 +13,8 @@ public sealed class JournalDayChip : INotifyPropertyChanged
     public string DayNumber { get; init; } = string.Empty;
     public int? MoodLevel { get; init; }
     public bool HasEntry { get; init; }
+    public string AccessibilityDescription =>
+        AppStrings.JournalCalendarDayAccessibility(Date, MoodLevel, IsSelected);
 
     public bool IsSelected
     {
@@ -25,6 +28,7 @@ public sealed class JournalDayChip : INotifyPropertyChanged
 
             _isSelected = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(AccessibilityDescription));
         }
     }
 

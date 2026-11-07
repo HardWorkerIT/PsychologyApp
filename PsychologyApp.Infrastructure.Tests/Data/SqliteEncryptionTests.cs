@@ -87,6 +87,44 @@ public sealed class SqliteEncryptionTests : IDisposable
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task InterruptedEncryptionRestoresThePlainBackup(bool mainFileExists)
+    {
+        await CreatePlainDatabaseAsync(wal: false);
+        File.Copy(_path, _path + ".plain.bak");
+
+        if (mainFileExists)
+        {
+            await File.WriteAllTextAsync(_path, "interrupted rekey");
+        }
+        else
+        {
+            File.Delete(_path);
+        }
+
+        bool encrypted = await SqliteEncryption.EnsureEncryptedAsync(_path, Key);
+
+        Assert.True(encrypted);
+        Assert.False(File.Exists(_path + ".plain.bak"));
+        await using SqliteConnection connection = await OpenWithKeyAsync(Key);
+        Assert.Equal("a secret thought", await connection.ExecuteScalarAsync<string>("SELECT Text FROM Quots;"));
+        Assert.Equal(1, await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM ChatSessions;"));
+    }
+
+    [Fact]
+    public async Task MissingDatabaseWithInvalidPlainBackupDoesNotLookLikeNewInstall()
+    {
+        await File.WriteAllTextAsync(_path + ".plain.bak", "not a sqlite database");
+
+        bool encrypted = await SqliteEncryption.EnsureEncryptedAsync(_path, Key);
+
+        Assert.False(encrypted);
+        Assert.False(File.Exists(_path));
+        Assert.True(File.Exists(_path + ".plain.bak"));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task APlainDatabaseIsMovedToTheKeyAndKeepsEveryRow(bool wal)
     {
         await CreatePlainDatabaseAsync(wal);

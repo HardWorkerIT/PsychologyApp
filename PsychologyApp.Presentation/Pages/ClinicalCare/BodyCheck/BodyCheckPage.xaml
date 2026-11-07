@@ -19,7 +19,11 @@
     <ContentPage.Resources>
         <!-- A chip of a place, a sensation or a feeling; the chosen one turns solid accent (base look in the style, see AGENTS.md). -->
         <DataTemplate x:Key="ChoiceChipTemplate" x:DataType="vm:BodyChoiceItem">
-            <Border Style="{StaticResource AnswerChipStyle}" FlexLayout.Shrink="0" SemanticProperties.Description="{Binding Text}">
+            <Border
+                Style="{StaticResource AnswerChipStyle}"
+                FlexLayout.Shrink="0"
+                SemanticProperties.Description="{Binding Text}"
+                SemanticProperties.Hint="{Binding AccessibilitySelectionState}">
                 <Border.Triggers>
                     <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
                         <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryFill}" />

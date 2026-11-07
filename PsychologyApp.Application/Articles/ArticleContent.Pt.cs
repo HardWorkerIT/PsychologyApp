@@ -37,32 +37,32 @@ public static partial class ArticleContent
             ]),
         new(
             ArticleIds.Panic,
-            "Ataques de pânico: o que acontece e por que não são perigosos",
+            "Ataques de pânico: o que acontece e quando buscar ajuda",
             "O coração dispara, falta ar, parece que você vai morrer. O que realmente acontece no corpo",
             "Air",
             4,
             [
-                P("Um ataque de pânico é uma subida repentina e muito forte do medo. O coração bate forte, falta ar, a cabeça gira, as mãos formigam, você sente calor ou frio, e parece que um infarto, um desmaio ou a loucura estão para chegar. É uma das experiências mais assustadoras que existem."),
+                P("Um ataque de pânico é uma onda repentina de medo intenso acompanhada de sensações físicas. Outras condições podem causar sintomas semelhantes. Se uma dor ou pressão súbita no peito não passar, se espalhar para braço, mandíbula ou costas, ou vier com suor frio ou náusea, chame imediatamente o serviço local de emergência. Falta de ar intensa ou desmaio também exigem ajuda de emergência. Não tente determinar a causa sozinho."),
                 H("O que realmente acontece"),
-                P("Dispara a mesma reação de luta ou fuga de um perigo real, só que sem perigo. A adrenalina acelera o coração, e a respiração rápida e profunda desequilibra os gases do sangue: daí o formigamento, a tontura e a sensação de falta de ar mesmo havendo ar suficiente."),
-                P("Um ataque costuma chegar ao auge nos primeiros minutos e depois passa sozinho, em geral em menos de meia hora. Com o coração saudável, um ataque de pânico não causa infarto nem loucura, e o desmaio é raro, porque a pressão arterial tende a subir."),
+                P("Durante o pânico, a resposta de luta ou fuga pode acelerar o coração e a respiração e causar tremor ou tontura. Essas sensações, sozinhas, não determinam a causa."),
+                P("Um ataque de pânico costuma atingir o pico em poucos minutos e depois diminuir; a duração varia. O ataque em si não ameaça a vida, mas sintomas semelhantes novos, diferentes ou incertos precisam de avaliação."),
                 H("Por que os ataques voltam"),
-                P("Depois do primeiro ataque, muitas pessoas passam a temer o próximo: prestam atenção no coração, carregam água e remédios, evitam café, escadas e metrô, ficam perto da saída. Esse medo das sensações e essas muletas mantêm o pânico: o cérebro nunca aprende que as sensações são seguras."),
+                P("O medo de outro ataque pode levar a verificações repetidas e à evitação, o que pode manter a ansiedade. Não interrompa nem altere medicamentos prescritos sem orientação profissional."),
                 Cycle("O ciclo do pânico", "Uma sensação no corpo", "O pensamento «tem algo grave comigo»", "Medo", "Sensações ainda mais fortes"),
                 H("O que fazer durante um ataque"),
                 List(
-                    "Dar nome: «É um ataque de pânico. É desagradável, mas não é perigoso, e vai passar»",
-                    "Não lutar contra as sensações nem fugir, se puder ficar",
-                    "Alongar a expiração: inspire contando 4, expire contando 6",
+                    "Se um profissional confirmou ataques de pânico e os sintomas são conhecidos: «Isso vai passar; posso me dar tempo»",
+                    "Fique ou vá para um lugar seguro, se possível; não se obrigue a permanecer em um lugar perigoso",
+                    "Respire de forma suave e natural; se for confortável, experimente soltar o ar um pouco mais lentamente, sem forçar",
                     "Levar a atenção para fora: o que você vê, ouve e toca"),
                 Practice(TechniqueId.Breathing, "Respiração guiada suave"),
                 Practice(TechniqueId.Grounding, "Ancoragem 5-4-3-2-1"),
                 Breathe("Se for confortável, tente expirar suavemente por um pouco mais de tempo do que inspira. Se o desconforto aumentar, volte à respiração natural e nomeie alguns objetos ao seu redor."),
                 H("Como tornar os ataques mais raros"),
-                P("O que melhor funciona é voltar aos poucos, sem muletas, aos lugares e situações evitados, e fazer exercícios que provoquem de propósito sensações parecidas num ambiente seguro. Assim o cérebro reaprende: «um coração batendo rápido é só um coração batendo rápido»."),
+                P("Voltar aos poucos às situações evitadas pode ajudar; converse sobre um plano com um profissional. Exercícios que provocam sensações físicas devem considerar sua saúde e, quando necessário, ser acompanhados por um profissional."),
                 Ladder("Escada do medo"),
-                Warning("Descarte primeiro uma doença"),
-                P("Se é a primeira vez, se surge dor no peito com esforço ou se você tem doença cardíaca, procure primeiro um médico. Fala-se em ataque de pânico depois que as causas físicas foram verificadas.")
+                Warning("Quando buscar ajuda"),
+                P("Procure avaliação para um primeiro episódio ou sintomas novos ou incomuns: as sensações sozinhas não distinguem com segurança o pânico de outras causas. Diante dos sinais de emergência descritos no início, chame imediatamente o serviço local de emergência.")
             ]),
         new(
             ArticleIds.Avoidance,
@@ -159,6 +159,32 @@ public static partial class ArticleContent
                 Check("Eu me reconheço?", 3, "Parece mais do que uma semana ruim. Faça o questionário PHQ-9 na aba Testes e mostre o resultado a um médico ou psicólogo: a depressão tem tratamento muito bom.", "Parece mais uma fase difícil. Tente os passos acima e, se piorar ou se arrastar, faça o PHQ-9.", "Humor baixo quase todos os dias há duas semanas ou mais", "Nada dá alegria, nem o que você gostava antes", "O sono ou o apetite mudaram muito", "Difícil se concentrar, tudo escapa das mãos", "Sensação de culpa ou de não valer nada"),
                 Warning("Se você está mal há mais de duas semanas"),
                 P("Se o seu humor está baixo quase o tempo todo há mais de duas semanas, você perdeu o interesse por tudo e o sono e o apetite estão alterados, pode ser depressão, e vale a pena procurar um especialista. E se surgirem pensamentos sobre a morte ou sobre se machucar, você precisa de ajuda agora."),
+                Crisis("Preciso de ajuda agora")
+            ]),
+        new(
+            ArticleIds.SmallStepReview,
+            "Quando um pequeno passo não melhora o humor",
+            "Como avaliar sem se culpar se uma atividade foi viável e ajustar o próximo passo.",
+            "DirectionsWalk",
+            3,
+            [
+                P("Às vezes o humor continua igual depois de uma atividade planejada. Isso não significa que você falhou: uma tentativa não basta para saber se o plano combina com você."),
+                H("Uma revisão rápida"),
+                List(
+                    "O que eu planejei e que parte consegui fazer?",
+                    "Foi viável para o tempo e a energia que eu tinha?",
+                    "O que ajudou ou atrapalhou: o tamanho, o horário, o lugar, o cansaço ou o apoio?",
+                    "Houve algo agradável, importante ou neutro, ou a atividade só me esgotou?"
+                ),
+                H("Ajuste o próximo passo"),
+                List(
+                    "Se a atividade combinou com você e foi viável, pode mantê-la mesmo que o humor não mude logo",
+                    "Se foi grande demais, reduza ao primeiro gesto ou a um ou dois minutos",
+                    "Se não combinou, escolha outra coisa: algo prazeroso, uma sensação de conclusão, conexão ou cuidado básico",
+                    "Se ajudar, mude o horário ou o lugar, ou peça apoio"
+                ),
+                Warning("Quando buscar mais apoio"),
+                P("Se até atividades pequenas aumentam o sofrimento repetidamente, seu estado piora de forma clara ou o dia a dia fica impossível, não se force e converse com um profissional de saúde."),
                 Crisis("Preciso de ajuda agora")
             ]),
         new(
@@ -274,13 +300,20 @@ public static partial class ArticleContent
             [
                 P("A raiva é uma emoção normal. Ela indica que nossos limites foram ultrapassados, que fomos tratados com injustiça ou que algo bloqueia um objetivo importante. O problema não é a raiva, mas como ela sai: numa explosão da qual depois você se arrepende, ou numa contenção depois da qual o ressentimento se acumula e a cabeça dói."),
                 H("O mito de «botar para fora»"),
-                P("Acredita-se que a raiva precisa sair: socar uma almofada, gritar. Estudos mostram o contrário: esse «desabafo» deixa a pessoa com mais raiva e mais agressiva, não mais calma. O que ajuda não é soltá-la, mas baixar a intensidade e depois dizer o que importa."),
+                P("Gritar ou bater em um travesseiro pode parecer uma forma de aliviar, mas não garante alívio. Pesquisas indicam que estratégias que diminuem a ativação, como respirar devagar ou relaxar, reduzem a raiva; atividades que a mantêm alta não demonstraram o mesmo benefício. Depois de uma pausa, você pode voltar ao que precisa dizer."),
                 H("Quando a raiva toma conta"),
                 List(
                     "Repare nos sinais do corpo: rosto quente, maxilar e punhos cerrados, coração acelerando",
                     "Faça uma pausa: «preciso de dez minutos, depois voltamos a isso»",
                     "Faça algumas expirações lentas, mais longas que a inspiração",
                     "Não escreva nem envie nada no auge"),
+                H("Combinar uma pausa clara"),
+                P("Fazer uma pausa não significa desaparecer: diga que precisa de um tempo e quando vai voltar. Por exemplo: «Estou muito agitado para conversar com calma. Preciso de 20 minutos; volto às 19h30». Se ainda não estiver pronto, proponha um novo horário específico. Se você ou a outra pessoa não estiverem em segurança, vá primeiro para um lugar seguro e peça ajuda."),
+                List(
+                    "Se ambos se sentirem seguros, combinem antes que qualquer um pode pedir uma pausa e a conversa será interrompida",
+                    "Use esse tempo para diminuir a tensão: vá para um lugar tranquilo, caminhe um pouco ou respire devagar; não continue discutindo por mensagens",
+                    "Volte no horário combinado; se precisar de mais tempo, avise e combinem outro horário"),
+                Quiz("O que transforma a pausa em um plano claro, em vez de uma discussão inacabada?", 1, "Dizer quando vai voltar dá um próximo passo claro: parar a conversa, baixar a tensão e depois retomar ou combinar outro horário. Se houver perigo, a segurança vem primeiro.", "Sair sem dizer se ou quando vai voltar", "Avisar que precisa de uma pausa e dizer quando vai voltar", "Continuar discutindo por mensagens até ficar totalmente calmo"),
                 H("Depois de se acalmar"),
                 List(
                     "Pergunte a si mesmo: o que me feriu de verdade? Que limite foi ultrapassado?",
@@ -827,6 +860,26 @@ public static partial class ArticleContent
                 Crisis("Preciso de ajuda agora")
             ]),
         new(
+            ArticleIds.TraumaGrounding,
+            "Quando a ancoragem aumenta o desconforto",
+            "Como parar, escolher um apoio mais suave e saber quando procurar ajuda",
+            "Bolt",
+            2,
+            [
+                P("A ancoragem é uma opção, não uma prova. Depois de um trauma, focar no corpo, na respiração, em cheiros ou no toque pode aumentar o desconforto ou trazer lembranças. Isso não significa que você esteja fazendo algo errado."),
+                H("Pare primeiro o que está tornando tudo mais difícil"),
+                List(
+                    "Abra os olhos, se estiverem fechados, e olhe ao redor se isso for confortável",
+                    "Diga onde você está e que dia é hoje; pule esta etapa se ela não ajudar",
+                    "Escolha um ponto externo e neutro: a cor de um objeto, o formato de uma janela ou um som conhecido",
+                    "Movimente-se, beba água ou escreva para alguém de confiança apenas se isso fizer sentido agora. Você não precisa contar a respiração nem observar as sensações do corpo"),
+                H("Escolha um apoio mais suave"),
+                P("Experimente algo neutro: descreva um objeto, ouça um som conhecido ou fale com alguém de confiança. Se o desconforto aumentar, pare; você não precisa terminar uma técnica a qualquer custo."),
+                H("Quando procurar apoio"),
+                P("Se os flashbacks ficarem mais frequentes, a desorientação não passar ou os sintomas atrapalharem o dia a dia, converse com um profissional com experiência em trauma. A autoajuda não substitui o tratamento; você não precisa se forçar a reviver nem a descrever o acontecimento em detalhes."),
+                See(ArticleIds.TraumaTreatment, "Como o trauma é tratado e como escolher um especialista")
+            ]),
+        new(
             ArticleIds.Ocd,
             "Pensamentos intrusivos e rituais (TOC)",
             "Por que os pensamentos assustadores grudam e por que conferências e rituais os reforçam",
@@ -974,6 +1027,27 @@ public static partial class ArticleContent
                 Warning("Se a pessoa fala de morte"),
                 P("Pergunte diretamente se ela pensa em suicídio: isso não a empurra, ajuda. Não a deixe sozinha se houver perigo e ajude-a a chegar à ajuda."),
                 See(ArticleIds.SupportInCrisis, "Como apoiar alguém em crise"),
+                Crisis("Preciso de ajuda agora")
+            ]),
+        new(
+            ArticleIds.SupportRequest,
+            "Como pedir apoio",
+            "Um plano curto para escolher alguém seguro, dizer de que ajuda você precisa e fazer um pedido possível.",
+            "VolunteerActivism",
+            3,
+            [
+                P("Pedir apoio pode ser desconfortável. Você não precisa provar que está «mal o bastante» nem contar tudo de uma vez. Pode começar com um pedido pequeno."),
+                H("Antes de pedir"),
+                List(
+                    "Escolha alguém com quem você se sinta suficientemente seguro e à vontade",
+                    "Pergunte se é um bom momento para conversar",
+                    "Diga do que precisa: ser ouvido, ter companhia ou receber ajuda numa tarefa concreta",
+                    "Faça um pedido específico e viável, como conversar por dez minutos ou dar uma volta curta"
+                ),
+                H("Um exemplo simples"),
+                P("“Estou passando por um momento difícil. Você tem dez minutos para apenas me ouvir, sem dar conselhos? Se não puder, eu entendo.”"),
+                H("Se a pessoa não puder"),
+                P("Um não agora pode ter a ver com o tempo ou a energia da outra pessoa. Você pode perguntar por outro momento ou procurar outra pessoa segura. Você não precisa procurar alguém perto de quem não se sinta seguro."),
                 Crisis("Preciso de ajuda agora")
             ]),
         new(
@@ -1205,6 +1279,29 @@ public static partial class ArticleContent
                 Crisis("Preciso de ajuda agora"),
                 Practice(TechniqueId.SelfCompassion, "Palavras gentis para si"),
                 Practice(TechniqueId.SmallStep, "Um pequeno passo")
+            ]),
+        new(
+            ArticleIds.NewsLoop,
+            "Quando as notícias não deixam você se desligar",
+            "Como verificar o que importa e sair do ciclo de atualizações",
+            "TipsAndUpdates",
+            3,
+            [
+                P("Acompanhar as notícias pode ajudar você a se manter informado, mas conferir o tempo todo pode virar uma tentativa de lidar com a incerteza. Novas atualizações nem sempre trazem mais clareza ou uma nova ação. Fazer uma pausa não é ignorar algo importante: se uma informação afeta sua segurança ou uma decisão importante, procure o que você precisa saber."),
+                H("Formule a pergunta primeiro"),
+                List(
+                    "O que exatamente quero descobrir?",
+                    "Preciso agir agora? Se sim, procure orientações oficiais e dê um passo concreto",
+                    "Se não há nada para fazer neste momento, escolha uma fonte confiável e um intervalo curto para conferir",
+                    "Depois de encontrar a resposta, você não precisa continuar lendo comentários e reações"),
+                H("Encerre a consulta com um próximo passo"),
+                List(
+                    "Anote a resposta ou a ação. Se ainda não puder fazer nada, decida quando vai conferir de novo",
+                    "Silencie notificações não essenciais, mantendo ativas as necessárias para segurança, trabalho ou família",
+                    "Depois, passe para algo concreto: beba água, caminhe um pouco, faça uma tarefa pequena ou escreva para alguém de confiança"),
+                Quiz("Você encontrou a informação de que precisava, mas a ansiedade dá vontade de atualizar. O que pode tentar?", 1, "Se não houver uma ação urgente, escolha um horário para consultar novamente e retome uma tarefa concreta. Se a questão envolver segurança, siga as orientações oficiais.", "Continuar atualizando até sentir calma completa", "Definir quando vai consultar novamente e retomar uma tarefa pequena", "Proibir-se de ler qualquer notícia"),
+                H("Se for difícil parar"),
+                P("Perceba a vontade de atualizar sem se julgar. Você não precisa abandonar as notícias por completo: experimente uma consulta planejada e veja se essa rotina funciona para você. Se a ansiedade continuar atrapalhando o sono, o trabalho ou o dia a dia, converse com um profissional.")
             ])
     ];
 }
