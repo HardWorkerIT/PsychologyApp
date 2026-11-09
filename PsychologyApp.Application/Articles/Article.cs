@@ -84,6 +84,7 @@ public static class ArticleIds
     public const string CaregiverWellbeing = "caregiver-wellbeing";
     public const string ValuesAction = "values-action";
     public const string MoodSupportPlan = "mood-support-plan";
+    public const string AttentionAssessment = "attention-assessment";
     public const string Panic = "panic";
     public const string Avoidance = "avoidance";
     public const string Thoughts = "thoughts";

@@ -137,6 +137,11 @@ public static partial class AnchorThoughtContent
         ["mood-plan-is-care"] = ("Ein Unterstützungsplan ist Fürsorge, keine Erwartung des Scheiterns.", "Vorab notierte Schritte lassen in einem angespannten Moment weniger Entscheidungen offen."),
         ["mood-ask-early"] = ("Ich darf um Hilfe bitten, bevor es kaum auszuhalten ist.", "Früh Unterstützung zu suchen ist vernünftig; ich muss das nicht allein schaffen."),
         ["mood-not-alone"] = ("Ich muss eine schwierige Zeit nicht allein durchstehen.", "Eine Vertrauensperson oder Fachkraft kann mir helfen, den nächsten sicheren Schritt zu finden."),
+        ["attention-not-laziness"] = ("Aufmerksamkeitsprobleme beweisen keine Faulheit.", "Viele Dinge können die Aufmerksamkeit beeinflussen; ich kann zunächst Muster beobachten und Unterstützung suchen."),
+        ["attention-checklist-not-diagnosis"] = ("Ein Fragebogen kann ein Gespräch anstoßen, ist aber keine Diagnose.", "Bei einer Abklärung zählen Vorgeschichte, Lebensumstände und Auswirkungen."),
+        ["attention-support-before-label"] = ("Praktische Unterstützung ist auch ohne bekannte Ursache möglich.", "Ich kann Hilfen auswählen, die zur Aufgabe und zu meinen Vorlieben passen."),
+        ["attention-history-without-blame"] = ("Ein Blick zurück dient dem Verstehen, nicht der Schuldzuweisung.", "Die Entwicklungsgeschichte kann Zusammenhänge zeigen, ohne mich oder andere zu beschuldigen."),
+        ["attention-needs-individual"] = ("Dieselben Organisationshilfen passen nicht für alle.", "Hilfen lassen sich an Aufgabe, Umgebung und eigene Kraft anpassen."),
         ["try-adjust"] = ("Auch eine unpassende Möglichkeit liefert Informationen.", "Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt.")
     };
 }

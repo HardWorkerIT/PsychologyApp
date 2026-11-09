@@ -14,6 +14,7 @@ This project follows a Keep a Changelog style and Semantic Versioning principles
 - Added two more articles in seven languages, on exam anxiety and caregiver wellbeing, with six linked anchor thoughts. The 53-article library remains virtualized, and the quote feed already loads more on demand, so this content batch does not need pagination. Clinical and native-speaker review is still required before release.
 - Added a values-based action article in seven languages with five linked anchor thoughts. The library now has 54 articles; its virtualized `CollectionView` needs no pagination, and quote loading already supports additional items. Content requires clinical and native-speaker review before release.
 - Added a seven-language support-planning article for people who notice low mood returning, with five linked anchor thoughts. The article count is now 55; the existing virtualized list and quote loading do not require new pagination. Clinical and native-speaker review is still required before release.
+- Added a seven-language guide to persistent attention difficulties and ADHD assessment, with five linked anchor thoughts. The catalog now has 56 articles; its virtualized list does not need pagination, and quote loading already fetches more items. Clinical and native-speaker review remains required before release.
 
 
 - Removed the donation screen and its navigation.

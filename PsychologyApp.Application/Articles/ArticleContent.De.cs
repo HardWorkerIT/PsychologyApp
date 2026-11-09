@@ -1438,6 +1438,27 @@ public static partial class ArticleContent
                 See(ArticleIds.Depression, "Depression: was sie ist und wie sie behandelt wird"),
                 See(ArticleIds.Specialist, "Wann du eine Fachperson aufsuchen solltest und wie du sie auswählst")
             ]),
+        new(
+            ArticleIds.AttentionAssessment,
+            "Aufmerksamkeitsprobleme im Erwachsenenalter: ADHS abklären lassen",
+            "Beispiele sammeln und entscheiden, wann ein Gespräch sinnvoll ist",
+            "SupportAgent",
+            5,
+            [
+                P("Vergesslichkeit oder Konzentrationsprobleme bedeuten für sich genommen kein ADHS. Schlaf, Stress, Angst, eine gedrückte Stimmung, die körperliche Gesundheit und andere Umstände können die Aufmerksamkeit ebenfalls beeinflussen."),
+                P("Bei einer ADHS-Abklärung wird die längerfristige Entwicklung betrachtet, einschließlich möglicher Anzeichen in der Kindheit und der Auswirkungen in verschiedenen Lebensbereichen. Ein Online-Fragebogen oder ein einzelnes Merkmal reicht für eine Diagnose nicht aus."),
+                H("Konkrete Beispiele sammeln"),
+                List(
+                    "Notieren Sie einige Situationen, in denen es schwer war anzufangen, bei einer Sache zu bleiben, Aufgaben zu ordnen oder sie abzuschließen.",
+                    "Halten Sie fest, wo es sich auswirkt: zu Hause, bei der Arbeit oder beim Lernen, in Beziehungen. Wenn möglich, auch seit wann ähnliche Schwierigkeiten bestehen.",
+                    "Beobachten Sie, was Aufgaben erleichtert: schriftliche Anweisungen, eine kurze Liste, eine Erinnerung zur passenden Zeit oder weniger Ablenkung."
+                ),
+                H("Wann eine Abklärung ansprechen"),
+                P("Wenn die Schwierigkeiten schon lange bestehen, in der Kindheit begonnen haben, in verschiedenen Situationen auftreten und den Alltag deutlich beeinträchtigen, besprechen Sie sie mit einer Ärztin, einem Arzt oder einer Fachperson mit Erfahrung in der ADHS-Abklärung. Dabei können auch andere mögliche Erklärungen und Begleiterkrankungen berücksichtigt werden."),
+                Quiz("Was ist sinnvoll, wenn anhaltende Aufmerksamkeitsprobleme mehrere Lebensbereiche beeinträchtigen?", 1, "Eine Fachperson kann Verlauf und Auswirkungen einordnen. Eine Übereinstimmung mit einer Beschreibung im Internet bestätigt keine Diagnose.", "Eine verpasste Frist als Beweis für ADHS nehmen", "Beispiele notieren und mit einer Fachperson besprechen", "Eine verordnete Behandlung ohne Rücksprache ändern"),
+                P("Sie können eigene Beispiele zum Gespräch mitbringen und, wenn es sich gut anfühlt, eine nahestehende Person nach ihren Beobachtungen fragen. Alte Schulunterlagen hat nicht jede Person. Praktische Hilfen können Sie auch vor einer Erklärung ausprobieren."),
+                See(ArticleIds.Specialist, "Wann du eine Fachperson aufsuchen solltest und wie du sie auswählst")
+            ]),
         new(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", 3,
             [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen.")])
     ];

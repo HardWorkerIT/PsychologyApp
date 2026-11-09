@@ -137,6 +137,11 @@ public static partial class AnchorThoughtContent
         ["mood-plan-is-care"] = ("Un plan de soutien est une attention, pas l’annonce d’un échec.", "Des étapes écrites à l’avance évitent d’avoir trop de décisions à prendre sous pression."),
         ["mood-ask-early"] = ("Je peux demander de l’aide avant que tout devienne insupportable.", "Chercher du soutien tôt est raisonnable ; je n’ai pas à tout gérer seul."),
         ["mood-not-alone"] = ("Je n’ai pas à traverser une période difficile seul.", "Un proche ou un professionnel peut m’aider à choisir une prochaine étape sûre."),
+        ["attention-not-laziness"] = ("Les difficultés d’attention ne prouvent pas un manque d’effort.", "Plusieurs facteurs peuvent jouer ; je peux commencer par observer et chercher des aides utiles."),
+        ["attention-checklist-not-diagnosis"] = ("Un questionnaire peut ouvrir une discussion, mais ce n’est pas un diagnostic.", "Un bilan tient compte de l’histoire, du contexte et des effets au quotidien."),
+        ["attention-support-before-label"] = ("Des aides pratiques sont possibles avant de connaître la cause.", "Je peux choisir des repères adaptés à la tâche et à mes préférences."),
+        ["attention-history-without-blame"] = ("Revenir sur le passé aide à comprendre, pas à chercher un coupable.", "L’histoire du développement apporte du contexte sans m’accuser ni accuser mes proches."),
+        ["attention-needs-individual"] = ("Les mêmes méthodes d’organisation ne conviennent pas à tout le monde.", "Je peux adapter les aides à la tâche, au cadre et à mon énergie."),
         ["try-adjust"] = ("Une option inadaptée peut aussi fournir des informations.", "Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre.")
     };
 }

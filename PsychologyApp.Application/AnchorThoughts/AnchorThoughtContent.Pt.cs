@@ -137,6 +137,11 @@ public static partial class AnchorThoughtContent
         ["mood-plan-is-care"] = ("Um plano de apoio é cuidado, não uma expectativa de fracasso.", "Deixar os passos escritos reduz as decisões em um momento de tensão."),
         ["mood-ask-early"] = ("Posso pedir ajuda antes de tudo parecer insuportável.", "Buscar apoio cedo é sensato; não preciso lidar com isso sem companhia."),
         ["mood-not-alone"] = ("Não preciso passar por uma fase difícil sozinho.", "Alguém de confiança ou um profissional pode me ajudar a escolher um próximo passo seguro."),
+        ["attention-not-laziness"] = ("Dificuldades de atenção não provam que sou preguiçoso.", "Muitas coisas podem influenciar a atenção; posso observar padrões e buscar apoios úteis."),
+        ["attention-checklist-not-diagnosis"] = ("Um questionário pode iniciar uma conversa, mas não é um diagnóstico.", "A avaliação considera a história, o contexto e o impacto na vida."),
+        ["attention-support-before-label"] = ("Posso usar apoios práticos antes de saber a causa.", "Posso escolher lembretes e outros recursos que combinem com a tarefa e minhas preferências."),
+        ["attention-history-without-blame"] = ("Olhar para o passado ajuda a compreender, não a procurar culpados.", "A história do desenvolvimento traz contexto sem culpar a mim ou a pessoas próximas."),
+        ["attention-needs-individual"] = ("As mesmas estratégias de organização não servem para todas as pessoas.", "Posso adaptar os apoios à tarefa, ao ambiente e à minha energia."),
         ["try-adjust"] = ("Uma opção que não serviu também traz informação.", "Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro.")
     };
 }

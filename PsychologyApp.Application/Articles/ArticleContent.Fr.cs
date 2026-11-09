@@ -1438,6 +1438,27 @@ public static partial class ArticleContent
                 See(ArticleIds.Depression, "La dépression : ce qu'elle est et comment on la soigne"),
                 See(ArticleIds.Specialist, "Quand consulter un spécialiste et comment le choisir")
             ]),
+        new(
+            ArticleIds.AttentionAssessment,
+            "Difficultés d’attention chez l’adulte : parler d’un bilan TDAH",
+            "Rassembler des exemples et savoir quand en parler à un professionnel",
+            "SupportAgent",
+            5,
+            [
+                P("Les oublis ou les difficultés de concentration ne signifient pas à eux seuls un TDAH. Le sommeil, le stress, l’anxiété, une humeur basse, la santé physique et d’autres circonstances peuvent aussi jouer sur l’attention."),
+                P("Un bilan du TDAH examine une histoire plus longue, notamment les signes éventuels dans l’enfance et leurs effets dans plusieurs domaines de vie. Un questionnaire en ligne ou un trait isolé ne suffit pas à poser un diagnostic."),
+                H("Rassembler des exemples concrets"),
+                List(
+                    "Notez quelques situations où commencer, rester concentré, organiser des tâches ou les terminer était difficile.",
+                    "Repérez les domaines touchés : à la maison, au travail ou aux études, dans les relations. Si possible, notez depuis quand ces difficultés existent.",
+                    "Observez ce qui facilite les tâches : des consignes écrites, une courte liste, un rappel au bon moment ou moins de distractions."
+                ),
+                H("Quand parler d’un bilan"),
+                P("Si ces difficultés durent depuis longtemps, ont commencé dans l’enfance, se manifestent dans différentes situations et gênent beaucoup le quotidien, parlez-en à un médecin ou à un professionnel formé au bilan du TDAH. Il pourra aussi examiner d’autres explications possibles et les troubles associés."),
+                Quiz("Si des difficultés d’attention durables touchent plusieurs domaines de vie, quelle est l’étape la plus utile ?", 1, "Un professionnel peut examiner l’histoire et les effets. Se reconnaître dans une description en ligne ne confirme pas un diagnostic.", "Prendre un délai manqué comme preuve de TDAH", "Noter des exemples et en parler à un professionnel", "Modifier seul un traitement prescrit"),
+                P("Vous pouvez apporter vos exemples au rendez-vous et, si vous le souhaitez, demander à un proche ce qu’il a observé. Tout le monde n’a pas gardé ses anciens bulletins scolaires. Des aides pratiques peuvent être essayées avant de connaître la cause."),
+                See(ArticleIds.Specialist, "Quand consulter un spécialiste et comment le choisir")
+            ]),
         new(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée", "Découper un problème et revoir son plan", "Checklist", 3,
             [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien.")])
     ];

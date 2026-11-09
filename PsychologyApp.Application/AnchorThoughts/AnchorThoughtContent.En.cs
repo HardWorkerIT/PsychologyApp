@@ -137,6 +137,11 @@ public static partial class AnchorThoughtContent
         ["mood-plan-is-care"] = ("A support plan is care, not an expectation of failure.", "Steps written down ahead of time leave fewer decisions for a stressful moment."),
         ["mood-ask-early"] = ("I can ask for help before things feel unbearable.", "Reaching out early is sensible; I do not have to handle this alone."),
         ["mood-not-alone"] = ("I do not have to go through a difficult stretch alone.", "Someone I trust or a professional can help me choose a safe next step."),
+        ["attention-not-laziness"] = ("Attention difficulties do not prove that I am lazy.", "Many things can affect attention; I can start by noticing patterns and finding useful support."),
+        ["attention-checklist-not-diagnosis"] = ("A questionnaire can start a conversation; it is not a diagnosis.", "An assessment considers history, context, and how difficulties affect life."),
+        ["attention-support-before-label"] = ("Practical support is possible before I know the cause.", "I can choose reminders and other supports that fit the task and my preferences."),
+        ["attention-history-without-blame"] = ("Looking back is about understanding, not finding someone to blame.", "Developmental history can add context without blaming me or people close to me."),
+        ["attention-needs-individual"] = ("The same organising strategies do not work for everyone.", "Supports can be chosen to fit the task, environment, and my energy."),
         ["try-adjust"] = ("An option that did not fit can still offer information.", "Write down several options, even if none seems perfect. Choose one small, safe step.")
     };
 }

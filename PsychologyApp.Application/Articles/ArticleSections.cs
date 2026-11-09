@@ -23,7 +23,7 @@ public static partial class ArticleContent
         ("help", "Тело и помощь", "Body and help",
             [ArticleIds.BodyAndStress, ArticleIds.Mindfulness, ArticleIds.ChronicPain, ArticleIds.Specialist, ArticleIds.SupportInCrisis]),
         ("recognise", "Распознать и обратиться", "Recognise and get help",
-            [ArticleIds.EatingDisorders, ArticleIds.Bipolar, ArticleIds.Psychosis])
+            [ArticleIds.EatingDisorders, ArticleIds.Bipolar, ArticleIds.Psychosis, ArticleIds.AttentionAssessment])
     ];
 
     /// <summary>The section titles of the other languages, in the order of <see cref="Layout"/>.</summary>

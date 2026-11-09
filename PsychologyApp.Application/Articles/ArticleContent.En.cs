@@ -1438,6 +1438,27 @@ public static partial class ArticleContent
                 See(ArticleIds.Depression, "Depression: what it is and how it is treated"),
                 See(ArticleIds.Specialist, "When to see a specialist and how to choose one")
             ]),
+        new(
+            ArticleIds.AttentionAssessment,
+            "Adult attention difficulties: when to discuss an ADHD assessment",
+            "Gather examples and decide when to talk with a professional",
+            "SupportAgent",
+            5,
+            [
+                P("Forgetfulness or difficulty concentrating by themselves do not mean ADHD. Sleep, stress, anxiety, low mood, physical health, and other circumstances can also affect attention."),
+                P("An ADHD assessment considers a longer history of difficulties, including signs in childhood and their impact across different areas of life. An online questionnaire or one trait cannot make a diagnosis."),
+                H("Gather specific examples"),
+                List(
+                    "Write down a few situations when it was hard to get started, stay focused, organise tasks, or finish them.",
+                    "Note where this gets in the way: at home, work or study, or in relationships. If you can, note when similar difficulties began.",
+                    "Notice what makes tasks easier: written instructions, a short list, a reminder at the right time, or fewer distractions."
+                ),
+                H("When to discuss an assessment"),
+                P("If the difficulties have lasted a long time, began in childhood, show up in different situations, and significantly affect daily life, discuss them with a doctor or a professional trained in ADHD assessment. They can also consider other possible explanations and coexisting conditions."),
+                Quiz("If ongoing attention difficulties affect several parts of life, what is the most useful next step?", 1, "A professional can review the history and impact. Matching something online does not confirm a diagnosis.", "Treat one missed deadline as proof of ADHD", "Write down examples and discuss them with a professional", "Change prescribed treatment without consulting anyone"),
+                P("You can bring your examples to the appointment and, if you feel comfortable, ask someone close to you what they have noticed. Not everyone has old school records. Practical supports can be tried before you know the cause."),
+                See(ArticleIds.Specialist, "When to see a specialist and how to choose one")
+            ]),
         new(ArticleIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", 3,
             [P("First name one specific problem. Not everything is in your control; choose what you can influence."), P("Write down several options, even if none seems perfect. Choose one small, safe step."), P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support.")])
     ];

@@ -1438,6 +1438,27 @@ public static partial class ArticleContent
                 See(ArticleIds.Depression, "A depressão: o que é e como se trata"),
                 See(ArticleIds.Specialist, "Quando procurar um especialista e como escolher")
             ]),
+        new(
+            ArticleIds.AttentionAssessment,
+            "Dificuldades de atenção em adultos: quando conversar sobre TDAH",
+            "Reúna exemplos e saiba quando conversar com um profissional",
+            "SupportAgent",
+            5,
+            [
+                P("Esquecimentos ou dificuldade de concentração, por si só, não significam TDAH. Sono, estresse, ansiedade, desânimo, saúde física e outras circunstâncias também podem afetar a atenção."),
+                P("Uma avaliação de TDAH considera uma história mais longa, incluindo possíveis sinais na infância e o impacto em diferentes áreas da vida. Um questionário on-line ou uma característica isolada não faz um diagnóstico."),
+                H("Reunir exemplos concretos"),
+                List(
+                    "Anote algumas situações em que foi difícil começar, manter a atenção, organizar tarefas ou concluí-las.",
+                    "Observe onde isso atrapalha: em casa, no trabalho ou estudo, ou nos relacionamentos. Se puder, anote quando dificuldades parecidas começaram.",
+                    "Perceba o que facilita as tarefas: instruções por escrito, uma lista curta, um lembrete na hora certa ou menos distrações."
+                ),
+                H("Quando conversar sobre uma avaliação"),
+                P("Se as dificuldades duram há bastante tempo, começaram na infância, aparecem em diferentes situações e afetam muito o dia a dia, converse com um médico ou profissional capacitado para avaliar TDAH. Ele também pode considerar outras explicações e condições que ocorram junto."),
+                Quiz("Se dificuldades persistentes de atenção afetam várias áreas da vida, qual é o próximo passo mais útil?", 1, "Um profissional pode avaliar a história e o impacto. Identificar-se com uma descrição on-line não confirma um diagnóstico.", "Tomar um prazo perdido como prova de TDAH", "Anotar exemplos e conversar com um profissional", "Mudar um tratamento prescrito sem conversar com o médico"),
+                P("Você pode levar seus exemplos à consulta e, se se sentir à vontade, perguntar a alguém próximo o que percebeu. Nem todo mundo tem documentos escolares antigos. Apoios práticos também podem ser tentados antes de saber a causa."),
+                See(ArticleIds.Specialist, "Quando procurar um especialista e como escolher")
+            ]),
         new(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis", "Divida um problema em passos e reveja o plano", "Checklist", 3,
             [P("Primeiro identifique um problema específico. Nem tudo depende de você; escolha aquilo que pode influenciar."), P("Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro."), P("Depois observe o que ajudou e o que foi difícil demais. Você pode ajustar o plano ou pedir apoio.")])
     ];

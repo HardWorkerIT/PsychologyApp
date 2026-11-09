@@ -1438,6 +1438,27 @@ public static partial class ArticleContent
                 See(ArticleIds.Depression, "La depresión: qué es y cómo se trata"),
                 See(ArticleIds.Specialist, "Cuándo acudir a un especialista y cómo elegirlo")
             ]),
+        new(
+            ArticleIds.AttentionAssessment,
+            "Dificultades de atención en adultos: cuándo consultar por TDAH",
+            "Reúne ejemplos y decide cuándo hablar con un profesional",
+            "SupportAgent",
+            5,
+            [
+                P("Olvidar cosas o tener dificultades para concentrarse, por sí solos, no significan TDAH. El sueño, el estrés, la ansiedad, el ánimo bajo, la salud física y otras circunstancias también pueden influir en la atención."),
+                P("Una evaluación de TDAH considera una trayectoria más amplia, incluidas posibles señales en la infancia y su impacto en distintas áreas de la vida. Un cuestionario en internet o un solo rasgo no permiten diagnosticarlo."),
+                H("Reunir ejemplos concretos"),
+                List(
+                    "Anota algunas situaciones en las que te costó empezar, mantener la atención, organizar tareas o terminarlas.",
+                    "Observa dónde te afecta: en casa, en el trabajo o los estudios, o en tus relaciones. Si puedes, apunta desde cuándo ocurre algo parecido.",
+                    "Fíjate en qué facilita las tareas: instrucciones por escrito, una lista breve, un recordatorio oportuno o menos distracciones."
+                ),
+                H("Cuándo hablar de una evaluación"),
+                P("Si las dificultades llevan tiempo, comenzaron en la infancia, aparecen en distintas situaciones y afectan de forma importante tu vida diaria, coméntalas con un médico o un profesional con formación en evaluación del TDAH. También podrá valorar otras explicaciones y condiciones que puedan coexistir."),
+                Quiz("Si las dificultades persistentes de atención afectan varias áreas de la vida, ¿cuál es el paso más útil?", 1, "Un profesional puede revisar la historia y el impacto. Coincidir con una descripción en internet no confirma un diagnóstico.", "Tomar un plazo incumplido como prueba de TDAH", "Anotar ejemplos y hablarlos con un profesional", "Cambiar un tratamiento recetado sin consultarlo"),
+                P("Puedes llevar tus ejemplos a la consulta y, si te resulta cómodo, preguntar a alguien cercano qué ha observado. No todo el mundo conserva informes escolares antiguos. También puedes probar apoyos prácticos antes de saber la causa."),
+                See(ArticleIds.Specialist, "Cuándo acudir a un especialista y cómo elegirlo")
+            ]),
         new(ArticleIds.ProblemPlanning, "Un plan para tareas manejables", "Divide un problema en pasos y revisa el plan", "Checklist", 3,
             [P("Primero identifica un problema concreto. No todo depende de ti; elige aquello en lo que puedas influir."), P("Escribe varias opciones, aunque ninguna parezca perfecta. Elige un paso pequeño y seguro."), P("Después observa qué ayudó y qué fue demasiado difícil. Puedes ajustar el plan o pedir apoyo.")])
     ];
