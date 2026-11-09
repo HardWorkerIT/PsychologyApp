@@ -12,8 +12,8 @@
        FlyoutWidth="300"
        FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
        Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}"
-       Shell.TabBarForegroundColor="{StaticResource Primary}"
-       Shell.TabBarTitleColor="{StaticResource Primary}"
+       Shell.TabBarForegroundColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+       Shell.TabBarTitleColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
        Shell.TabBarUnselectedColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
        Shell.NavBarIsVisible="False">
 

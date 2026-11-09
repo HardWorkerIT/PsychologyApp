@@ -226,7 +226,6 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
     private void ApplyTabBarChrome()
     {
         ResourceDictionary? resources = Microsoft.Maui.Controls.Application.Current?.Resources;
-        Color primary = ResolveColor(resources, "Primary", Color.FromArgb("#0085FF"));
         Color unselected = ResolveColor(resources, "Gray400", Color.FromArgb("#919191"));
         Color tabBarBackground = ResolveColor(resources, "White", Colors.White);
 
@@ -236,8 +235,9 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         }
 
         SetValue(Shell.TabBarBackgroundColorProperty, tabBarBackground);
-        SetValue(Shell.TabBarForegroundColorProperty, primary);
-        SetValue(Shell.TabBarTitleColorProperty, primary);
+        string accentTextKey = IsDarkRequestedTheme() ? "PrimaryTextDark" : "PrimaryTextLight";
+        SetDynamicResource(Shell.TabBarForegroundColorProperty, accentTextKey);
+        SetDynamicResource(Shell.TabBarTitleColorProperty, accentTextKey);
         SetValue(Shell.TabBarUnselectedColorProperty, unselected);
     }
 

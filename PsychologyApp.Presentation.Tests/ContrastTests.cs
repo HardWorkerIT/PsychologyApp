@@ -366,4 +366,20 @@ public class ContrastTests(ITestOutputHelper output)
             Assert.True(ColorContrast.Ratio(ColorContrast.AccentText(accent, dark: true), surface) >= ColorContrast.BodyTextMinimum, surface);
         }
     }
+    // The selected tab text, chart line and chosen silhouette area must be visible for every user-selected accent.
+    [Theory]
+    [InlineData("#0085FF", "#D6EBFF", "#1A2A3D")]
+    [InlineData("#E53935", "#FFE0E0", "#3D1A1A")]
+    [InlineData("#F7B548", "#FFF3D6", "#3D331A")]
+    [InlineData("#2E9E5B", "#DCEFE4", "#1A3D2A")]
+    public void SelectedAccentIsVisibleAgainstTheTabAndTheUnselectedShape(string accent, string lightTint, string darkTint)
+    {
+        string light = ColorContrast.AccentText(accent, dark: false);
+        string dark = ColorContrast.AccentText(accent, dark: true);
+        Assert.True(ColorContrast.Ratio(light, "#FFFFFF") >= ColorContrast.BodyTextMinimum);
+        Assert.True(ColorContrast.Ratio(dark, "#141414") >= ColorContrast.BodyTextMinimum);
+        Assert.True(ColorContrast.Ratio(light, lightTint) >= ColorContrast.LargeTextMinimum);
+        Assert.True(ColorContrast.Ratio(dark, darkTint) >= ColorContrast.LargeTextMinimum);
+    }
+
 }

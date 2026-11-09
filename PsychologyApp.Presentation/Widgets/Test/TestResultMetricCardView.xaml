@@ -14,17 +14,17 @@
                         <Span
                             Text="{Binding MetricName, Source={x:Reference Root}}"
                             FontFamily="{StaticResource SemiBoldFontFamily}"
-                            FontSize="{StaticResource SectionTitleFontSize}"
+                            FontSize="{DynamicResource SectionTitleFontSize}"
                             TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         <Span
                             Text=": "
-                            FontFamily="{StaticResource BodyFontFamily}"
-                            FontSize="{StaticResource BodyFontSize}"
+                            FontFamily="{DynamicResource BodyFontFamily}"
+                            FontSize="{DynamicResource BodyFontSize}"
                             TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
                         <Span
                             Text="{Binding MetricValue, Source={x:Reference Root}}"
                             FontFamily="{StaticResource SemiBoldFontFamily}"
-                            FontSize="{StaticResource SectionTitleFontSize}"
+                            FontSize="{DynamicResource SectionTitleFontSize}"
                             TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                     </FormattedString>
                 </Label.FormattedText>

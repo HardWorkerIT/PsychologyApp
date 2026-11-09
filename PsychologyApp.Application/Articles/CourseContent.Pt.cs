@@ -424,6 +424,12 @@ public static partial class ArticleContent
                     ],
                     "Encontre um ou dois especialistas que trabalhem com trauma e marque uma consulta.",
                     "O que foi mais útil no curso? Sobre o que você quer conversar com o especialista?")
+            ]),
+        new(CourseIds.ProblemPlanning, "Um plano para tarefas possíveis", "Divida um problema em passos e reveja o plano", "Checklist", "gad7", "GAD-7",
+            [
+                new("Escolha um problema", 3, [P("Primeiro identifique um problema específico. Nem tudo depende de você; escolha aquilo que pode influenciar."), See(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis")], "Anote um problema e o que depende de você.", "Em que parte da situação você pode influir?"),
+                new("Escolha um passo", 3, [P("Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro."), See(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis")], "Anote duas opções e escolha um passo possível.", "O que pode atrapalhar e qual seria uma alternativa?"),
+                new("Reveja o plano", 3, [P("Depois observe o que ajudou e o que foi difícil demais. Você pode ajustar o plano ou pedir apoio."), See(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis")], "Experimente o passo se for seguro e anote o resultado.", "O que manter, mudar ou conversar com alguém?")
             ])
     ];
 }

@@ -1,6 +1,5 @@
 using PsychologyApp.Presentation.App.Providers;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileSettings;
-using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDonate;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileInfo;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileOptions;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDataBackup;
@@ -71,19 +70,6 @@ public sealed class OptionsViewModelFactory(Func<NavigationContext, INavigationS
 {
     public OptionsViewModel Create(ContentPage page) =>
         new(ResolveNavigation(navigationServiceFactory, page));
-}
-
-public interface IDonateViewModelFactory
-{
-    DonateViewModel Create(ContentPage page);
-}
-
-public sealed class DonateViewModelFactory(
-    IDialogService dialogService,
-    Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IDonateViewModelFactory
-{
-    public DonateViewModel Create(ContentPage page) =>
-        new(dialogService, ResolveNavigation(navigationServiceFactory, page));
 }
 
 public interface IDataBackupViewModelFactory

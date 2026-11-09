@@ -424,6 +424,12 @@ public static partial class ArticleContent
                     ],
                     "Trouvez un ou deux spécialistes qui travaillent avec le traumatisme et prenez rendez-vous pour une consultation.",
                     "Qu'est-ce qui a été le plus utile dans le cours ? De quoi voulez-vous parler avec le spécialiste ?")
+            ]),
+        new(CourseIds.ProblemPlanning, "Un plan pour les tâches à votre portée", "Découper un problème et revoir son plan", "Checklist", "gad7", "GAD-7",
+            [
+                new("Choisir un problème", 3, [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), See(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée")], "Notez un problème et ce qui dépend de vous.", "Sur quelle partie pouvez-vous agir ?"),
+                new("Choisir une étape", 3, [P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), See(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée")], "Notez deux options et choisissez une étape à votre portée.", "Quel obstacle pourrait surgir et quelle solution de rechange avez-vous ?"),
+                new("Revoir le plan", 3, [P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien."), See(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée")], "Essayez cette étape si elle est sûre et notez le résultat.", "Que garder, modifier ou discuter avec quelqu’un ?")
             ])
     ];
 }

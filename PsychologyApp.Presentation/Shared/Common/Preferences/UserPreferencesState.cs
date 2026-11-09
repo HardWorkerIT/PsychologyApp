@@ -12,6 +12,7 @@ public sealed record UserPreferencesState
     public string Form { get; init; } = UserPreferences.DefaultForm;
     public string Size { get; init; } = UserPreferences.DefaultSize;
     public bool IsBold { get; init; }
+    public bool AdsDisabled { get; init; }
     public bool QuestionnaireAutoAdvance { get; init; } = true;
     public bool HasCompletedOnboarding { get; init; }
     public string OnboardingConcern { get; init; } = "explore";

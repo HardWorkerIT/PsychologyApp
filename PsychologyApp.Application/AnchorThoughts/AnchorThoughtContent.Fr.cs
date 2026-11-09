@@ -113,6 +113,30 @@ public static partial class AnchorThoughtContent
         ["anger-timeout"] = ("Je peux demander une pause et préciser quand je reviendrai",
             "La pause est plus claire si vous indiquez quand vous reviendrez. Si quelqu’un est en danger, mettez-vous d’abord à l’abri et demandez de l’aide."),
         ["news-checking"] = ("Je peux m’informer sans consulter les nouvelles sans arrêt",
-            "Je peux formuler une question précise, consulter une source fiable et décider quand je vérifierai à nouveau. Je n’ai pas à suivre chaque mise à jour.")
+            "Je peux formuler une question précise, consulter une source fiable et décider quand je vérifierai à nouveau. Je n’ai pas à suivre chaque mise à jour."),
+        ["plan-adjustable"] = ("Un plan peut changer quand la situation devient plus claire.", "Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien."),
+        ["one-step-choice"] = ("Choisir une petite étape ne signifie pas tout résoudre à la fois.", "Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."),
+        ["habit-cue"] = ("Un repère familier peut aider davantage que la seule volonté.", "Une petite action est plus facile à retrouver si elle est liée à un moment qui revient. La répéter dans un contexte similaire peut la rendre plus familière avec le temps."),
+        ["habit-lapse"] = ("Manquer une occasion n’efface pas les essais précédents.", "Dans une étude, manquer une seule occasion n’a pas modifié de façon notable la formation de l’habitude. Je peux reprendre au prochain repère adapté."),
+        ["rest-not-task"] = ("Le repos n’a pas à devenir une tâche de plus.", "Récupérer peut passer par le fait de décrocher, de se détendre, de faire autre chose ou de choisir comment occuper un moment. Je n’ai pas à tout faire."),
+        ["choose-recovery"] = ("Je peux choisir une forme de repos qui m’est accessible.", "Ce qui est possible dépend du travail et des circonstances. Une courte pause compte aussi ; avoir des limites n’est pas un échec personnel."),
+
+        ["exam-plan"] = ("Je peux me préparer étape par étape.", "Un plan court peut m’aider à commencer et à voir quoi réviser."),
+        ["exam-anxiety-not-failure"] = ("L’anxiété avant un examen ne définit pas ce que je sais.", "Le stress est une réaction, pas une note sur ma préparation."),
+        ["exam-practice-is-learning"] = ("Une question d’entraînement peut m’indiquer quoi réviser.", "Une erreur à l’entraînement peut guider la prochaine étape."),
+        ["care-can-be-shared"] = ("On peut partager l’aide apportée à un proche.", "Une demande précise permet aux autres de proposer leur aide ; partager les tâches n’efface pas mon attention."),
+        ["care-is-not-perfect"] = ("Je n’ai pas besoin d’aider parfaitement.", "Je peux chercher une façon d’aider qui soit réaliste et sûre."),
+        ["care-needs-pause"] = ("J’ai moi aussi besoin de repos et de soutien.", "Une pause peut m’aider à repérer mes besoins ; je n’ai pas à la mériter en faisant tout parfaitement."),
+        ["values-direction"] = ("Une valeur est une direction, pas une destination.", "Je peux avancer à petits pas vers ce qui compte, même si le résultat reste incertain."),
+        ["values-not-checklist"] = ("Mes valeurs ne sont pas une liste d’exigences envers moi-même.", "Elles peuvent guider mes choix sans me noter."),
+        ["values-small-step"] = ("Un petit pas peut aussi exprimer ce qui compte pour moi.", "Je peux adapter l’ampleur de l’action à mon énergie et à ma situation."),
+        ["values-can-change"] = ("Je peux réexaminer ma direction.", "Les priorités évoluent avec l’expérience, la sécurité et les circonstances."),
+        ["values-rest-counts"] = ("Se reposer peut aussi être un choix important.", "Protéger mon énergie peut m’aider à rester proche de ce qui compte pour moi."),
+        ["mood-early-signal"] = ("Un signe précoce m’invite à prendre de mes nouvelles.", "Il ne prouve pas que les symptômes sont revenus ; je peux consulter mon plan."),
+        ["mood-skills-stay"] = ("Une journée difficile n’efface pas ce qui m’a aidé.", "Mon expérience et mes ressources restent là, même si aujourd’hui est plus dur."),
+        ["mood-plan-is-care"] = ("Un plan de soutien est une attention, pas l’annonce d’un échec.", "Des étapes écrites à l’avance évitent d’avoir trop de décisions à prendre sous pression."),
+        ["mood-ask-early"] = ("Je peux demander de l’aide avant que tout devienne insupportable.", "Chercher du soutien tôt est raisonnable ; je n’ai pas à tout gérer seul."),
+        ["mood-not-alone"] = ("Je n’ai pas à traverser une période difficile seul.", "Un proche ou un professionnel peut m’aider à choisir une prochaine étape sûre."),
+        ["try-adjust"] = ("Une option inadaptée peut aussi fournir des informations.", "Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre.")
     };
 }

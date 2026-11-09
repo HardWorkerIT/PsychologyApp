@@ -424,6 +424,12 @@ public static partial class ArticleContent
                     ],
                     "Such dir ein oder zwei Fachpersonen, die mit Trauma arbeiten, und vereinbare einen Beratungstermin.",
                     "Was war im Kurs am nützlichsten? Worüber möchtest du mit der Fachperson sprechen?")
+            ]),
+        new(CourseIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", "gad7", "GAD-7",
+            [
+                new("Ein Problem wählen", 3, [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), See(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben")], "Notieren Sie ein Problem und was Sie beeinflussen können.", "Welchen Teil der Situation können Sie beeinflussen?"),
+                new("Einen Schritt wählen", 3, [P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), See(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben")], "Notieren Sie zwei Möglichkeiten und wählen Sie einen machbaren Schritt.", "Was könnte im Weg stehen und was wäre eine Alternative?"),
+                new("Den Plan überprüfen", 3, [P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen."), See(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben")], "Probieren Sie den Schritt aus, wenn es sicher ist, und notieren Sie das Ergebnis.", "Was möchten Sie beibehalten, ändern oder mit jemandem besprechen?")
             ])
     ];
 }

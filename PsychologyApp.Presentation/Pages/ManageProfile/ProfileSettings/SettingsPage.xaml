@@ -60,7 +60,8 @@
                                         StrokeShape="RoundRectangle 22"
                                         StrokeThickness="2"
                                         Stroke="Transparent"
-                                        SemanticProperties.Description="{Binding Label}">
+                                        SemanticProperties.Description="{Binding Label}"
+                                        SemanticProperties.Hint="{Binding SelectionState}">
                                         <Border.Triggers>
                                             <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
                                                 <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
@@ -220,6 +221,19 @@
                         LabelText="{Binding QuestionnaireAutoAdvanceLabel}"
                         IsToggled="{Binding QuestionnaireAutoAdvance}"
                         ShowDivider="False" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding AdsTitle}" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{Binding AdsHelp}" Style="{StaticResource CaptionStyle}" />
+                    <Entry Text="{Binding AdCode}" Placeholder="{Binding AdCodePlaceholder}"
+                           IsVisible="{Binding CanEnterAdCode}" MaxLength="40"
+                           SemanticProperties.Description="{Binding AdCodePlaceholder}" />
+                    <ui:ButtonView Variant="Secondary" BodyText="{Binding ApplyAdCodeText}"
+                                   TapCommand="{Binding ApplyAdCodeCommand}" IsVisible="{Binding CanEnterAdCode}" />
+                    <Label Text="{Binding AdCodeStatus}" Style="{StaticResource BodyStyle}" />
                 </VerticalStackLayout>
             </Border>
 

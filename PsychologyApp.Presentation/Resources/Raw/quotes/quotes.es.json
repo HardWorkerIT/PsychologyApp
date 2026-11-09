@@ -1023,5 +1023,15 @@
     "author": "Equipo PsychologyApp",
     "text": "Puedes reconocer un error y preguntar cómo repararlo sin exigir que te perdonen de inmediato.",
     "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Elegir un paso pequeño no obliga a resolverlo todo de inmediato.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Una opción que no encajó también aporta información.",
+    "theme": "motivation"
   }
 ]

@@ -23,6 +23,10 @@ public partial class SettingsViewModel : BaseViewModel
     private readonly SemaphoreSlim _saveLock = new(1, 1);
     private CancellationTokenSource? _autoSaveDebounceCts;
     private UserPreferencesState _savedState;
+    private UserPreferencesState _practiceReminderState;
+    private UserPreferencesState _quoteReminderState;
+    private UserPreferencesState _moodReminderState;
+    private UserPreferencesState _chatReminderState;
 
     public bool AreRemindersSupported => _areRemindersSupported;
 
@@ -53,13 +57,17 @@ public partial class SettingsViewModel : BaseViewModel
 
         BindNavigation(navigationService);
         _savedState = _userPreferencesStore.Load();
+        _adsDisabled = _savedState.AdsDisabled;
+        _practiceReminderState = _quoteReminderState = _moodReminderState = _chatReminderState = _savedState;
         LoadFromPreferences();
         RefreshPickerDisplays();
         NotifyLocalizedLabelsChanged();
 
         Finish = new AsyncCommand(SaveAndGoBackAsync);
         ReplayOnboardingCommand = new AsyncCommand(ReplayOnboardingAsync);
+        ApplyAdCodeCommand = new Command(ApplyAdCode);
     }
 
     public ICommand ReplayOnboardingCommand { get; }
+    public ICommand ApplyAdCodeCommand { get; }
 }

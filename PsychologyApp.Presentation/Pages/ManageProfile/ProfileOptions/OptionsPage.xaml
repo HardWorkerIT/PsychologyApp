@@ -105,21 +105,6 @@
                         </Grid>
                         <BoxView Style="{StaticResource SettingRowDividerStyle}" />
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="52"
-                              SemanticProperties.Description="{Binding DonateTitle}">
-                            <Grid.Behaviors>
-                                <behaviors:PressFeedbackBehavior />
-                            </Grid.Behaviors>
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding OpenDonatePageCommand}" />
-                            </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="VolunteerActivism" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                <Label Text="{Binding DonateTitle}" Style="{StaticResource BodyStyle}" />
-                            </VerticalStackLayout>
-                            <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
-                        </Grid>
-                        <BoxView Style="{StaticResource SettingRowDividerStyle}" />
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="52"
                               SemanticProperties.Description="{Binding AboutTitle}">
                             <Grid.Behaviors>
                                 <behaviors:PressFeedbackBehavior />

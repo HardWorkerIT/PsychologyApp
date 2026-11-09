@@ -77,6 +77,13 @@ public static class ArticleIds
     /// <summary>How stress is felt in the body, what helps, and when a doctor is needed instead.</summary>
     public const string BodyAndStress = "body-stress";
     public const string Anxiety = "anxiety";
+    public const string ProblemPlanning = "problem-planning";
+    public const string HabitFormation = "habit-formation";
+    public const string WorkRecovery = "work-recovery";
+    public const string ExamAnxiety = "exam-anxiety";
+    public const string CaregiverWellbeing = "caregiver-wellbeing";
+    public const string ValuesAction = "values-action";
+    public const string MoodSupportPlan = "mood-support-plan";
     public const string Panic = "panic";
     public const string Avoidance = "avoidance";
     public const string Thoughts = "thoughts";

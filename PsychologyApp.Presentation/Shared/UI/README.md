@@ -143,7 +143,7 @@ Onboarding widgets (`Widgets/Onboarding/`):
 | Start physics | `NavigationBarSimpleView` | — | — | — |
 | Physics search | `NavigationBarSimpleView` | `ProgressBarView` | `EmptyStateView` / `Search` + `SearchOff` | `RetryView` |
 | Profile user | `NavigationBarSimpleView` | `ProgressBarView` (init) | `EmptyStateView` (quotes, history) | `RetryView` (quotes) |
-| Settings / Options / Info / Donate | `NavigationBarSimpleView` | — | — | — |
+| Settings / Options / Info | `NavigationBarSimpleView` | — | — | — |
 | Review form | `NavigationBarSimpleView` | — | — | — |
 | Test flow (FindProblem → Result) | `NavigationBarSimpleView` | per screen | — | `RetryView` where applicable |
 | Test history | `NavigationBarSimpleView` | `ProgressBarView` | `EmptyStateView` / `History` | `RetryView` |

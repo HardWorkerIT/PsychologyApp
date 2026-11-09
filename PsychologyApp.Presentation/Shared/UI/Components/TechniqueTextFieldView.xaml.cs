@@ -53,6 +53,7 @@ public partial class TechniqueTextFieldView : ContentView
     public TechniqueTextFieldView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         _dictation = new VoiceDictation(() => Text ?? string.Empty, value => Text = value);
         _dictation.Changed += (_, _) => RefreshVoice();
         _dictation.Attach(MicButton, InputEditor.Unfocus);
@@ -383,6 +384,21 @@ public partial class TechniqueTextFieldView : ContentView
         Text = RecentText;
         UiHaptics.Tick();
     }
+
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(() =>
+    {
+        Color ink = AppResources.ThemedColor("PrimaryTextLight", "PrimaryTextDark", Colors.Gray);
+        Color stroke = AppResources.ThemedColor("Primary", "PrimaryTextDark", Colors.Gray);
+        if (_moreLabel is not null) _moreLabel.TextColor = ink;
+        if (_moreChip is not null) _moreChip.Stroke = new SolidColorBrush(stroke);
+        if (_assistMoreLabel is not null) _assistMoreLabel.TextColor = ink;
+        if (_assistMoreChip is not null) _assistMoreChip.Stroke = new SolidColorBrush(stroke);
+        foreach ((string _, Border view) in _phrases)
+            view.BackgroundColor = AppResources.ThemedColor("SurfaceLight", "SurfaceDark", Colors.Gray);
+        AssistTitle.Text = AppStrings.PracticeAssistTitle;
+        RefreshChipSelection();
+        RefreshVoice();
+    });
 
     private void RefreshVoice()
     {

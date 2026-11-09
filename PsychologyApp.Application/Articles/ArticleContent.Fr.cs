@@ -1302,6 +1302,143 @@ public static partial class ArticleContent
                 Quiz("Vous avez trouvé l’information recherchée, mais l’anxiété vous pousse à actualiser. Que pouvez-vous essayer ?", 1, "S’il n’y a pas d’action urgente à faire, choisissez l’heure de votre prochaine vérification et reprenez une petite activité concrète. Si votre sécurité est en jeu, suivez les consignes officielles.", "Continuer à actualiser jusqu’à être complètement rassuré", "Choisir l’heure de la prochaine vérification et reprendre une petite activité", "S’interdire complètement toute actualité"),
                 H("Si arrêter est difficile"),
                 P("Remarquez l’envie d’actualiser sans vous juger. Vous n’avez pas à renoncer complètement aux nouvelles : essayez une vérification prévue et voyez si ce rythme vous convient. Si l’anxiété perturbe durablement le sommeil, le travail ou la vie quotidienne, parlez-en à un professionnel.")
-            ])
+            ]),
+        new(
+            ArticleIds.HabitFormation,
+            "Créer une habitude : un petit geste et un repère",
+            "Relier une action accessible à un moment familier et la reprendre après une pause",
+            "SelfImprovement",
+            4,
+            [
+                P("Une habitude n’est pas une promesse d’agir sans interruption. C’est une action qu’il devient peu à peu plus facile de retrouver dans une situation familière. Dans une étude menée dans la vie quotidienne, les personnes répétaient une action choisie dans le même contexte ; le geste devenait automatique à des rythmes différents."),
+                P("Il n’existe pas de délai unique. Pour les personnes dont les données correspondaient au modèle, le passage à une action presque automatique a pris de 18 à 254 jours ; manquer une occasion n’a pas, à lui seul, perturbé le processus de façon notable. C’est le résultat d’une étude, pas un calendrier valable pour tout le monde."),
+                H("Rendre le plan concret"),
+                List(
+                    "Choisissez une action sûre et accessible de 1 à 5 minutes : lire une page, vous étirer ou faire une courte marche, selon ce qui vous convient.",
+                    "Reliez-la à un moment qui revient : après le petit-déjeuner ou quand vous fermez votre ordinateur.",
+                    "Facilitez le démarrage : préparez ce qu’il vous faut ou retirez une étape inutile.",
+                    "Notez les essais, pas une série parfaite. Si vous manquez une occasion, reprenez au prochain repère adapté."),
+                Quiz("Qu’est-ce qui rend un plan d’habitude plus facile à suivre ?", 1, "Une action accessible liée à un repère familier est plus facile à retrouver. Une occasion manquée ne vous oblige pas à repartir de zéro.", "Attendre une forte motivation", "Relier un petit geste à un moment qui revient", "Fixer un délai strict de 21 jours"),
+                H("Formuler un plan simple"),
+                P("Après [moment], je ferai [action] pendant [durée]. Si je n’y arrive pas, je réessaierai au prochain repère adapté. Je peux ajuster l’action si les circonstances changent.")
+            ]),
+        new(
+            ArticleIds.WorkRecovery,
+            "Récupérer après le travail : trouver ce qui vous convient",
+            "Se détacher après une journée chargée et essayer une forme de repos accessible",
+            "Bedtime",
+            4,
+            [
+                P("Après une journée de travail, les pensées peuvent revenir aux tâches inachevées. Les recherches sur la récupération étudient plusieurs expériences : prendre mentalement ses distances avec le travail, se détendre, faire autre chose et choisir soi-même comment occuper son temps libre."),
+                P("Une étude longitudinale a observé des liens entre les expériences de récupération pendant le week-end et l’état émotionnel en fin de week-end puis pendant la semaine de travail suivante. Cela ne prouve pas qu’une méthode provoque la récupération ni qu’elle convient à tout le monde. Vous pouvez essayer ce qui est à votre portée."),
+                H("Quatre possibilités, pas une liste obligatoire"),
+                List(
+                    "Décrocher : noter la prochaine étape du travail et fermer les tâches du jour, si c’est possible et sûr.",
+                    "Se détendre : choisir une pause calme qui ne demande pas d’effort supplémentaire.",
+                    "Faire autre chose : écouter de la musique, marcher, cuisiner ou pratiquer un loisir sans évaluer le résultat.",
+                    "Choisir : décider quoi faire pendant les dix prochaines minutes, même si le choix est modeste."),
+                Quiz("Comment choisir une façon de récupérer ?", 1, "Ce sont des possibilités, pas une liste à terminer. Essayez une option accessible et voyez si elle vous convient.", "Faire les quatre chaque jour", "Essayer une option qui est à votre portée", "Adopter le même repos que tout le monde"),
+                H("Quand le temps manque"),
+                P("Ne faites pas du repos une obligation de plus. Essayez une transition courte : reconnaître ce qui suffit pour aujourd’hui, noter une prochaine étape pour demain et couper les notifications professionnelles si cela ne nuit ni à la sécurité ni à vos responsabilités. Si la charge ne laisse aucune place à la récupération, ce n’est pas un échec personnel ; si possible, parlez des aides ou des changements réalisables."),
+                H("Un petit essai"),
+                P("Dans les prochains jours, choisissez une façon accessible de décrocher pendant dix minutes. Ensuite, remarquez s’il est devenu un peu plus facile de laisser les pensées professionnelles de côté. La réponse est une information, pas un jugement sur vous.")
+            ]),
+        new(
+            ArticleIds.ExamAnxiety,
+            "Avant un examen : se préparer et apprivoiser l’anxiété",
+            "Répartir les révisions en séances accessibles et utiliser les questions d’entraînement pour apprendre, pas pour se juger",
+            "Psychology",
+            5,
+            [
+                P("L’inquiétude peut augmenter avant un examen, surtout si les révisions semblent interminables ou si le résultat paraît tout décider. Le fait d’être nerveux ne dit pas ce que vous savez."),
+                P("Une méta-analyse d’interventions auprès d’étudiants universitaires a observé une baisse de l’anxiété aux examens après plusieurs types d’intervention. Les données sur les effets à long terme étaient moins nombreuses et la qualité de certaines études limite la certitude. Les questions d’entraînement peuvent aider à apprendre et parfois réduire l’anxiété ; des exercices trop difficiles ou trop stressants peuvent aussi ajouter de la pression."),
+                H("Réviser par petits cycles"),
+                List(
+                    "Divisez le programme en thèmes. Choisissez un thème et une séance courte plutôt que de tout apprendre d’un coup.",
+                    "Espacez les révisions : plusieurs séances courtes à des jours différents peuvent être plus utiles qu’un marathon.",
+                    "Essayez de retrouver les idées principales sans regarder vos notes, puis vérifiez et comblez les lacunes. Une indication peut aider à démarrer.",
+                    "Gardez les questions d’entraînement sans enjeu élevé : elles servent à repérer ce qu’il faut revoir, pas à mesurer votre valeur."),
+                Quiz("Que faire si vous ne trouvez pas la réponse à une question d’entraînement ?", 1, "Une erreur indique ce qu’il reste à revoir ou à demander. Elle ne prédit pas toute la note à venir.", "Abandonner le thème et conclure que vous ne pouvez pas apprendre", "Lire l’explication et choisir un point à revoir", "Passer tout de suite au test le plus difficile"),
+                H("Le jour de l’examen"),
+                List(
+                    "Vérifiez à l’avance l’heure, le lieu et le matériel nécessaire pour éviter les décisions de dernière minute.",
+                    "Ne sacrifiez pas tout votre sommeil pour relire encore ; la fatigue peut rendre la concentration plus difficile.",
+                    "Lisez les questions une par une. Si l’anxiété monte, faites une courte pause, sentez l’appui sous vos pieds et revenez à la question la plus proche."),
+                H("Après l’examen"),
+                P("Ne vous jugez pas entièrement à partir d’une seule épreuve. Notez ce qui vous a aidé et un changement concret pour la prochaine fois. Si l’anxiété perturbe longtemps les études, le sommeil ou vous pousse à éviter les examens, parlez-en à un référent scolaire ou universitaire, à un psychologue ou à un médecin.")
+            ]),
+        new(
+            ArticleIds.CaregiverWellbeing,
+            "Quand on prend soin d’un proche : préserver aussi ses forces",
+            "Repérer la surcharge, demander une aide précise et ne pas tout porter seul",
+            "Favorite",
+            5,
+            [
+                P("Prendre soin d’un proche peut mêler amour, fatigue, irritation et culpabilité. Être épuisé ne signifie pas aimer moins ni mal s’occuper de l’autre."),
+                P("Une revue d’études randomisées auprès d’aidants informels a observé une petite baisse moyenne de la détresse psychologique grâce aux interventions de soutien, avec des résultats très variables. Le soutien peut aider, mais aucun conseil ne convient à tout le monde et il ne remplace pas les soins professionnels nécessaires."),
+                H("Commencer par voir toute la charge"),
+                List(
+                    "Notez les tâches régulières, les décisions et les moments où vous devez rester disponible.",
+                    "Distinguez ce qui est indispensable, ce qui peut être simplifié et ce qui peut raisonnablement être partagé.",
+                    "Repérez les signes de surcharge, par exemple un manque de sommeil qui dure, l’irritabilité ou le retrait social."),
+                H("Demander une aide précise"),
+                List(
+                    "Au lieu de demander de l’aide un jour, nommez une tâche et une heure : Peux-tu rester avec maman samedi de 15 h à 17 h pendant que je fais une pause ?",
+                    "Si votre proche reçoit une aide médicale ou sociale, demandez à l’équipe quels services, groupes ou temps de répit sont disponibles.",
+                    "Gardez, si possible, un court moment pour vos propres besoins importants."),
+                Quiz("Quelle première étape est plus facile à essayer et à réévaluer ?", 1, "Une demande précise est plus facile à discuter et à ajuster au besoin. Elle n’oblige pas l’autre personne à accepter.", "Se taire jusqu’à ce que quelqu’un devine ce dont vous avez besoin", "Demander à une personne une tâche précise à un moment précis", "Se promettre de tout gérer seul sans pause"),
+                P("Si demander de l’aide suscite de la culpabilité, rappelez-vous qu’une pause n’annule pas les soins. Si la charge perturbe longtemps le sommeil, le travail ou la vie quotidienne, cherchez aussi du soutien pour vous."),
+                Crisis("Si votre proche est en danger immédiat")
+            ]),
+        new(
+            ArticleIds.ValuesAction,
+            "Les valeurs comme repère : choisir un petit pas",
+            "Distinguer ce qui compte d’un résultat et choisir une action à sa portée",
+            "SelfImprovement",
+            5,
+            [
+                P("Les valeurs sont des directions choisies, comme la curiosité, le respect, l’attention aux autres ou l’honnêteté. Un objectif est un résultat précis ; une valeur peut guider la manière d’agir en chemin. Ce n’est ni une obligation ni une note sur votre vie."),
+                P("Une revue méta-analytique d’études sur la thérapie d’acceptation et d’engagement (ACT) a relevé des changements dans des processus de flexibilité psychologique, dont l’action guidée par les valeurs. Ces résultats concernent la thérapie dans son ensemble, pas la promesse d’un exercice isolé ni d’un résultat identique pour tous."),
+                H("Trouver une direction"),
+                List(
+                    "Choisissez un domaine auquel réfléchir : relations, travail ou études, repos, santé ou créativité.",
+                    "Terminez la phrase : Dans ce domaine, j’aimerais manifester davantage… Un seul mot suffit.",
+                    "Demandez-vous quelle petite action, sûre et à votre portée, pourrait refléter cette direction prochainement.",
+                    "Si aucune action ne vient, vous pouvez d’abord remarquer ce qui bloque, demander du soutien ou remettre la décision à plus tard."
+                ),
+                Quiz("Qu’est-ce qui ressemble davantage à une valeur qu’à un résultat ?", 1, "Une valeur décrit une direction d’action ; une promotion et un rapport sont des résultats avec une échéance.", "Obtenir une promotion d’ici l’été", "Faire preuve de curiosité et de respect au travail", "Terminer un rapport ce soir"),
+                H("Garder un repère sans en faire une exigence"),
+                P("Les valeurs peuvent changer et entrer en conflit. Votre énergie, votre sécurité et votre situation comptent aussi. Parfois, se reposer, attendre ou demander de l’aide correspond mieux à vos priorités que faire davantage d’efforts."),
+                See(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée")
+            ]),
+        new(
+            ArticleIds.MoodSupportPlan,
+            "Si le moral baisse à nouveau : préparer du soutien",
+            "Repérer ses premiers signes, choisir les prochaines étapes et demander de l’aide à temps",
+            "Cloud",
+            5,
+            [
+                P("Après une période plus facile, des jours difficiles peuvent revenir. À eux seuls, ils ne prouvent pas que la dépression est revenue et n’annulent pas ce qui vous a aidé auparavant."),
+                P("Les recommandations de prévention des rechutes invitent à discuter avec un professionnel de ses signes précoces et des prochaines étapes. Ce support général ne pose pas de diagnostic et ne remplace pas un traitement."),
+                H("Ce qui change d’abord pour moi"),
+                List(
+                    "Repensez à une période difficile passée : qu’est-ce qui a changé en premier dans le sommeil, l’intérêt, les contacts ou les tâches quotidiennes ?",
+                    "Retenez seulement les signes que vous avez réellement observés chez vous. Il n’existe pas de liste universelle.",
+                    "Un signe est une raison de consulter son plan, pas une preuve que la dépression est revenue."
+                ),
+                H("Un plan de soutien simple"),
+                List(
+                    "Si je remarque un changement familier, quelle petite étape sûre et réaliste pourrais-je essayer ?",
+                    "Qui contacter si les choses deviennent plus difficiles : un proche de confiance, un psychologue ou un médecin ?",
+                    "Comment garder ce plan en tête et quand le revoir avec un professionnel ?"
+                ),
+                Quiz("Si des changements familiers persistent ou gênent le quotidien, quelle suite est raisonnable ?", 1, "Un échange précoce permet de parler des options. Ne modifiez pas seul une dose prescrite par votre médecin.", "Modifier soi-même la dose du médicament", "Contacter un professionnel et revoir le plan", "Se reprocher d’avoir plus de mal"),
+                P("Si les symptômes s’intensifient, inutile d’attendre d’être à bout pour demander un soutien professionnel. Préparez le plan avec un médecin ou un psychologue et adaptez-le si besoin."),
+                Crisis("Si des pensées de mort apparaissent ou si vous ne pouvez pas rester en sécurité"),
+                See(ArticleIds.Depression, "La dépression : ce qu'elle est et comment on la soigne"),
+                See(ArticleIds.Specialist, "Quand consulter un spécialiste et comment le choisir")
+            ]),
+        new(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée", "Découper un problème et revoir son plan", "Checklist", 3,
+            [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien.")])
     ];
 }

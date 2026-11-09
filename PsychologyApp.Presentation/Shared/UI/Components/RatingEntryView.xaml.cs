@@ -11,6 +11,7 @@ public partial class RatingEntryView : ContentView
     public RatingEntryView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
 
         // The default kind does not raise a change, so the scale captions are set once here as well.
         OnKindChanged(this, Kind, Kind);
@@ -286,4 +287,6 @@ public partial class RatingEntryView : ContentView
             from.Blue + (to.Blue - from.Blue) * t,
             from.Alpha + (to.Alpha - from.Alpha) * t);
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(UpdateValueDisplay);
+
 }

@@ -4180,4 +4180,22 @@
   <data name="MusicNextTrack" xml:space="preserve">
     <value>Nächster Titel</value>
   </data>
+  <data name="AdsTitle" xml:space="preserve">
+    <value>Werbung</value>
+  </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Es gibt noch keine Werbung. Mit einem Code lässt sich künftige Werbung ausschalten.</value>
+  </data>
+  <data name="AdsCodePlaceholder" xml:space="preserve">
+    <value>Codewort</value>
+  </data>
+  <data name="AdsApplyCode" xml:space="preserve">
+    <value>Code anwenden</value>
+  </data>
+  <data name="AdsDisabledStatus" xml:space="preserve">
+    <value>Künftige Werbung ist auf diesem Gerät deaktiviert.</value>
+  </data>
+  <data name="AdsInvalidCode" xml:space="preserve">
+    <value>Dieser Code ist ungültig.</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@ public partial class MoodTrendChartView : ContentView
     public MoodTrendChartView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         Title = AppStrings.ProfileMoodTrendTitle;
         HasTitle = true;
         ChartView.Drawable = _drawable;
@@ -129,4 +130,10 @@ public partial class MoodTrendChartView : ContentView
             view.HasTitle = newValue is string title && !string.IsNullOrWhiteSpace(title);
         }
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(() =>
+    {
+        OnPropertyChanged(nameof(LegendText));
+        ChartView.Invalidate();
+    });
+
 }

@@ -113,6 +113,30 @@ public static partial class AnchorThoughtContent
         ["anger-timeout"] = ("I can pause and say when I will return",
             "A pause is clearer when you name a return time. If anyone may be unsafe, move to safety first and seek help."),
         ["news-checking"] = ("I can stay informed without checking every few minutes",
-            "I can name what I need to know, use one reliable source and decide when I will check again. I do not have to follow every update.")
+            "I can name what I need to know, use one reliable source and decide when I will check again. I do not have to follow every update."),
+        ["plan-adjustable"] = ("A plan can change as the situation becomes clearer.", "After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support."),
+        ["one-step-choice"] = ("Choosing one small step does not mean solving everything at once.", "First name one specific problem. Not everything is in your control; choose what you can influence."),
+        ["habit-cue"] = ("A familiar cue can help more than willpower.", "A small action is easier to remember when it is linked to a recurring moment. Repeating it in a similar context can gradually make it feel more familiar."),
+        ["habit-lapse"] = ("Missing one chance does not erase earlier attempts.", "In one study, a single missed opportunity did not materially change habit formation. I can return to the action at the next suitable cue."),
+        ["rest-not-task"] = ("Rest does not have to become another task.", "Recovery can include switching off, relaxing, doing something different, or choosing how to spend some time. I do not have to do all of these."),
+        ["choose-recovery"] = ("I can choose a way to rest that is available to me.", "What is possible depends on my work and circumstances. Even a short pause can count; having limits is not a personal failure."),
+
+        ["exam-plan"] = ("I can prepare one small step at a time.", "A short plan can help me begin and show what to review."),
+        ["exam-anxiety-not-failure"] = ("Anxiety before an exam does not define what I know.", "Worry is a response, not a grade for my preparation."),
+        ["exam-practice-is-learning"] = ("A practice question can show me what to review.", "A mistake during practice can guide my next learning step."),
+        ["care-can-be-shared"] = ("Care for someone can be shared.", "A specific request gives others a chance to help; sharing tasks does not cancel my care."),
+        ["care-is-not-perfect"] = ("I do not have to care perfectly.", "I can look for a way to help that is manageable and safe."),
+        ["care-needs-pause"] = ("I need rest and support too.", "A pause can help me notice my needs; it does not have to be earned by doing everything perfectly."),
+        ["values-direction"] = ("A value is a direction, not a destination.", "I can take small steps toward what matters even when the outcome is uncertain."),
+        ["values-not-checklist"] = ("My values are not a list of demands for myself.", "They can guide choices without grading me."),
+        ["values-small-step"] = ("A small step can still express what matters to me.", "I can fit the size of an action to my energy and circumstances."),
+        ["values-can-change"] = ("I can reconsider my direction.", "Priorities can shift with experience, safety, and circumstances."),
+        ["values-rest-counts"] = ("Rest can be a meaningful choice too.", "Protecting my energy can help me stay close to what matters to me."),
+        ["mood-early-signal"] = ("An early sign is a reason to check in with myself.", "It does not prove symptoms are back; it invites me to look at my plan."),
+        ["mood-skills-stay"] = ("A hard day does not erase what has helped me.", "My experience and skills are still with me, even when today is harder."),
+        ["mood-plan-is-care"] = ("A support plan is care, not an expectation of failure.", "Steps written down ahead of time leave fewer decisions for a stressful moment."),
+        ["mood-ask-early"] = ("I can ask for help before things feel unbearable.", "Reaching out early is sensible; I do not have to handle this alone."),
+        ["mood-not-alone"] = ("I do not have to go through a difficult stretch alone.", "Someone I trust or a professional can help me choose a safe next step."),
+        ["try-adjust"] = ("An option that did not fit can still offer information.", "Write down several options, even if none seems perfect. Choose one small, safe step.")
     };
 }

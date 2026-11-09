@@ -4180,4 +4180,22 @@
   <data name="MusicNextTrack" xml:space="preserve">
     <value>Próxima faixa</value>
   </data>
+  <data name="AdsTitle" xml:space="preserve">
+    <value>Publicidade</value>
+  </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Ainda não há anúncios. Um código pode desativar anúncios futuros.</value>
+  </data>
+  <data name="AdsCodePlaceholder" xml:space="preserve">
+    <value>Palavra-código</value>
+  </data>
+  <data name="AdsApplyCode" xml:space="preserve">
+    <value>Aplicar código</value>
+  </data>
+  <data name="AdsDisabledStatus" xml:space="preserve">
+    <value>Os anúncios futuros estão desativados neste dispositivo.</value>
+  </data>
+  <data name="AdsInvalidCode" xml:space="preserve">
+    <value>O código é inválido.</value>
+  </data>
 </root>

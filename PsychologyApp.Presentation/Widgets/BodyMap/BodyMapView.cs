@@ -28,6 +28,7 @@ public sealed class BodyMapView : GraphicsView
 
     public BodyMapView()
     {
+        UserPreferences.Changed += OnPreferencesChanged;
         Drawable = _drawable;
         BackgroundColor = Colors.Transparent;
         AutomationProperties.SetIsInAccessibleTree(this, false);
@@ -64,6 +65,8 @@ public sealed class BodyMapView : GraphicsView
         set => SetValue(TapCommandProperty, value);
     }
 
+    private void OnPreferencesChanged() => Invalidate();
+
     private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e) => Invalidate();
 
     private void OnTapped(object? sender, TappedEventArgs e)
@@ -89,7 +92,7 @@ public sealed class BodyMapView : GraphicsView
         {
             bool dark = Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
             Color idle = AppResources.Color(dark ? "PrimaryTintDark" : "PrimaryTint", Colors.LightBlue);
-            Color chosen = AppResources.Color("PrimaryFill", Colors.RoyalBlue);
+            Color chosen = AppResources.ThemedColor("PrimaryTextLight", "PrimaryTextDark", Colors.RoyalBlue);
             Color outline = AppResources.Color(dark ? "BorderSubtleDark" : "BorderSubtleLight", Colors.LightGray);
 
             (double scale, double offsetX, double offsetY) = BodyMapLayout.Fit(dirtyRect.Width, dirtyRect.Height);

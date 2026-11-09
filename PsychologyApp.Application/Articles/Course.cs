@@ -13,6 +13,7 @@ public static class CourseIds
 {
     public const string Sleep = "sleep";
     public const string Anxiety = "anxiety";
+    public const string ProblemPlanning = "problem-planning";
     public const string Mood = "mood";
     public const string Trauma = "trauma";
 }

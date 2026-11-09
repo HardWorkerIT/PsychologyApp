@@ -1023,5 +1023,15 @@
     "author": "Team PsychologyApp",
     "text": "Du kannst einen Fehler eingestehen und fragen, wie du ihn wiedergutmachen kannst, ohne sofortige Vergebung zu verlangen.",
     "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Ein kleiner Schritt verpflichtet nicht dazu, alles sofort zu lösen.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Auch eine unpassende Möglichkeit liefert Informationen.",
+    "theme": "motivation"
   }
 ]

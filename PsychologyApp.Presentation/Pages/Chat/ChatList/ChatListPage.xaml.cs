@@ -10,6 +10,7 @@ public partial class ChatListPage : ContentPage
 
     private readonly ChatListViewModel _viewModel;
     private readonly HashSet<long> _revealed = [];
+    private AppTheme _requestedTheme = GetRequestedTheme();
 
     public ChatListPage(IChatViewModelFactory viewModelFactory, INavigation? hostNavigation)
     {
@@ -22,8 +23,41 @@ public partial class ChatListPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        _viewModel.RefreshAsync().FireAndForget();
+        if (Microsoft.Maui.Controls.Application.Current is { } application)
+        {
+            application.RequestedThemeChanged -= OnRequestedThemeChanged;
+            application.RequestedThemeChanged += OnRequestedThemeChanged;
+        }
+
+        AppTheme requestedTheme = GetRequestedTheme();
+        bool themeChanged = requestedTheme != _requestedTheme;
+        _requestedTheme = requestedTheme;
+        _viewModel.RefreshAsync(forceReplace: themeChanged).FireAndForget();
     }
+
+    protected override void OnDisappearing()
+    {
+        if (Microsoft.Maui.Controls.Application.Current is { } application)
+        {
+            application.RequestedThemeChanged -= OnRequestedThemeChanged;
+        }
+
+        base.OnDisappearing();
+    }
+
+    private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e)
+    {
+        if (e.RequestedTheme == _requestedTheme)
+        {
+            return;
+        }
+
+        _requestedTheme = e.RequestedTheme;
+        _viewModel.RefreshAsync(forceReplace: true).FireAndForget();
+    }
+
+    private static AppTheme GetRequestedTheme() =>
+        Microsoft.Maui.Controls.Application.Current?.RequestedTheme ?? AppTheme.Light;
 
     /// <summary>Rows slide in one after another the first time they are shown. Rows already shown (recycled while scrolling, or rebuilt on refresh) stay put.</summary>
     private void OnChatRowContextChanged(object? sender, EventArgs e)

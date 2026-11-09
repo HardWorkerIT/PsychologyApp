@@ -1,6 +1,5 @@
 using PsychologyApp.Presentation.Features.ManageProfile.DependencyInjection;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileSettings;
-using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDonate;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileInfo;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileOptions;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDataBackup;
@@ -16,7 +15,6 @@ public interface IProfilePageFactory
     UserPage CreateUserPage();
     OptionsPage CreateOptionsPage();
     InfoPage CreateInfoPage();
-    DonatePage CreateDonatePage();
     SettingsPage CreateSettingsPage();
     PracticeHistoryPage CreatePracticeHistoryPage();
     InsightsPage CreateInsightsPage();
@@ -28,7 +26,6 @@ public sealed class ProfilePageFactory(
     IUserViewModelFactory userViewModelFactory,
     IOptionsViewModelFactory optionsViewModelFactory,
     IInfoViewModelFactory infoViewModelFactory,
-    IDonateViewModelFactory donateViewModelFactory,
     ISettingsViewModelFactory settingsViewModelFactory,
     IPracticeHistoryViewModelFactory practiceHistoryViewModelFactory,
     IInsightsViewModelFactory insightsViewModelFactory,
@@ -42,9 +39,6 @@ public sealed class ProfilePageFactory(
 
     public InfoPage CreateInfoPage() =>
         new(pageViewModelActivator, infoViewModelFactory);
-
-    public DonatePage CreateDonatePage() =>
-        new(donateViewModelFactory);
 
     public SettingsPage CreateSettingsPage() =>
         new(pageViewModelActivator, settingsViewModelFactory);

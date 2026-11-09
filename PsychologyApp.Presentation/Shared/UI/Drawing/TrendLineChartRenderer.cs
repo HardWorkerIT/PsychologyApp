@@ -31,7 +31,7 @@ public static class TrendLineChartRenderer
         float plotRight = plotLeft + plotWidth;
         float plotBottom = plotTop + plotHeight;
 
-        Color primary = AppResources.Color("Primary", Colors.SteelBlue);
+        Color primary = AppResources.ThemedColor("PrimaryTextLight", "PrimaryTextDark", Colors.SteelBlue);
         Color primaryTint = AppResources.ThemedColor("PrimaryTint", "PrimaryTintDark", primary.WithAlpha(0.25f));
         Color gridColor = AppResources.ThemedColor("NeutralBorder", "InputBorderDark", Colors.Gray.WithAlpha(0.35f));
         Color labelColor = AppResources.ThemedColor("TextSecondaryLight", "TextSecondaryDark", Colors.Gray);
@@ -76,7 +76,7 @@ public static class TrendLineChartRenderer
         }
 
         Color good = AppResources.ThemedColor("Success", "SuccessDark", Colors.SeaGreen);
-        Color quiet = AppResources.Color("Primary", Colors.SteelBlue);
+        Color quiet = AppResources.ThemedColor("PrimaryTextLight", "PrimaryTextDark", Colors.SteelBlue);
         foreach (PlacedAnnotation mark in TrendLineChartLayout.PlaceAnnotations(options.Points, annotations, options.DomainMin, options.DomainMax))
         {
             (float x, float y) = TrendLineChartLayout.ToCanvasPoint(new NormalizedChartPoint(mark.X, mark.Y), plotLeft, plotTop, plotWidth, plotHeight);

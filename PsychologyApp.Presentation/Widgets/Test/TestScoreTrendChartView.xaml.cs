@@ -12,6 +12,7 @@ public partial class TestScoreTrendChartView : ContentView
     public TestScoreTrendChartView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         Title = AppStrings.TestHistoryTrendTitle;
         ChartView.Drawable = _drawable;
     }
@@ -115,4 +116,10 @@ public partial class TestScoreTrendChartView : ContentView
             view.HasSubtitle = newValue is string subtitle && !string.IsNullOrWhiteSpace(subtitle);
         }
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(() =>
+    {
+        Title = AppStrings.TestHistoryTrendTitle;
+        ChartView.Invalidate();
+    });
+
 }

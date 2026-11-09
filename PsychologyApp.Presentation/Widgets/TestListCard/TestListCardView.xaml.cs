@@ -8,6 +8,7 @@ public partial class TestListCardView : ContentView
     public TestListCardView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         ApplyLook();
         Loaded += (_, _) =>
         {
@@ -72,7 +73,7 @@ public partial class TestListCardView : ContentView
         IconName = icon;
         (Color tile, Color? tint) = FlavorTile.Colours(flavor);
         TileColor = tile;
-        IconTint = tint ?? AppResources.Color("Primary", Colors.DodgerBlue);
+        IconTint = tint ?? AppResources.ThemedColor("PrimaryTextLight", "PrimaryTextDark", Colors.DodgerBlue);
     }
 
     public static readonly BindableProperty TitleProperty =
@@ -188,4 +189,6 @@ public partial class TestListCardView : ContentView
         get => (string)GetValue(RetakeLabelProperty);
         set => SetValue(RetakeLabelProperty, value);
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(ApplyLook);
+
 }

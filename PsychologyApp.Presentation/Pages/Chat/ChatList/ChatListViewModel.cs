@@ -81,7 +81,7 @@ public sealed class ChatListViewModel : BaseViewModel
         BindNavigation(navigationService);
         NewChatCommand = new AsyncCommand(() => NavigationService!.GoToChatAsync(null));
         OpenCrisisHubCommand = new AsyncCommand(() => NavigationService!.GoToCrisisHubAsync());
-        ReloadCommand = new AsyncCommand(RefreshAsync);
+        ReloadCommand = new AsyncCommand(() => RefreshAsync());
     }
 
     public RangeObservableCollection<ChatListItem> Chats { get; } = [];
@@ -171,7 +171,7 @@ public sealed class ChatListViewModel : BaseViewModel
     private ChatOpener Opener(string text) =>
         new(text, new AsyncCommand(() => NavigationService!.GoToChatAsync(opener: text)));
 
-    public async Task RefreshAsync()
+    public async Task RefreshAsync(bool forceReplace = false)
     {
         int requestId = Interlocked.Increment(ref _refreshGeneration);
         CancellationTokenSource refreshCts = new();
@@ -222,8 +222,8 @@ public sealed class ChatListViewModel : BaseViewModel
                     return;
                 }
 
-                // Coming back from a chat that changed nothing must not rebuild every row.
-                if (!Chats.Select(c => c.Signature).SequenceEqual(fresh.Select(c => c.Signature)))
+                // Unchanged rows can be reused on return; a theme change must recreate them because their color converter reads the active palette.
+                if (forceReplace || !Chats.Select(c => c.Signature).SequenceEqual(fresh.Select(c => c.Signature)))
                 {
                     Chats.ReplaceAll(fresh);
                 }

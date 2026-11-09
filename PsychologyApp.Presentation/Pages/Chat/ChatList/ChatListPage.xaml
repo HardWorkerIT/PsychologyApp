@@ -20,7 +20,7 @@
         <vm:ChatTileColorConverter x:Key="ChatTileColor" />
         <!-- The neutral colour sits in the style: a local TextColor would win over the improving / worsening triggers. -->
         <Style x:Key="ChatMoodTrendStyle" TargetType="Label" BasedOn="{StaticResource CaptionStyle}">
-            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
         </Style>
     </ContentPage.Resources>
 
@@ -85,7 +85,7 @@
                                             Text="{Binding Initial}"
                                             FontSize="19"
                                             FontFamily="{StaticResource SemiBoldFontFamily}"
-                                            TextColor="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}"
+                                            TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                                             HorizontalOptions="Center"
                                             VerticalOptions="Center" />
                                     </Grid>

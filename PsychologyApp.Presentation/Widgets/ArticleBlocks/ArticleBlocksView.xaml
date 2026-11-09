@@ -19,8 +19,8 @@
             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
             <Style.Triggers>
                 <DataTrigger TargetType="Border" Binding="{Binding IsChecked}" Value="True">
-                    <Setter Property="Stroke" Value="{StaticResource Primary}" />
-                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryTint}, Dark={StaticResource PrimaryTintDark}}" />
+                    <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
                 </DataTrigger>
                 <DataTrigger TargetType="Border" Binding="{Binding IsWrong}" Value="True">
                     <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
@@ -65,12 +65,12 @@
                     <TapGestureRecognizer Command="{Binding LinkCommand}" />
                 </Border.GestureRecognizers>
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                    <ui:MaterialIconView IconName="{Binding LinkIcon}" IconSize="24" VerticalOptions="Center" />
+                    <ui:MaterialIconView IconName="{Binding LinkIcon}" IconSize="24" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                     <VerticalStackLayout Grid.Column="1" Spacing="0" VerticalOptions="Center">
                         <Label Text="{Binding LinkCaption}" Style="{StaticResource CaptionStyle}" />
                         <Label Text="{Binding Text}" Style="{StaticResource BodyStyle}" FontFamily="{StaticResource MediumFontFamily}" />
                     </VerticalStackLayout>
-                    <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="22" VerticalOptions="Center" />
+                    <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                 </Grid>
             </Border>
         </DataTemplate>
@@ -79,7 +79,7 @@
             <Border Style="{StaticResource BrandCardStyle}" Margin="0,6,0,0" Padding="14,12">
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <ui:MaterialIconView IconName="Checklist" IconSize="22" VerticalOptions="Center" />
+                        <ui:MaterialIconView IconName="Checklist" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                         <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource SectionTitleStyle}" VerticalOptions="Center" />
                     </Grid>
                     <Label Text="{x:Static common:AppStrings.ArticleChecklistHint}" Style="{StaticResource CaptionStyle}" />
@@ -95,7 +95,7 @@
                                         <TapGestureRecognizer Command="{Binding TapCommand}" />
                                     </Border.GestureRecognizers>
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                        <ui:MaterialIconView IconName="{Binding Icon}" IconSize="22" VerticalOptions="Center" />
+                                        <ui:MaterialIconView IconName="{Binding Icon}" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                                         <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
                                     </Grid>
                                 </Border>
@@ -112,7 +112,7 @@
             <Border Style="{StaticResource BrandCardStyle}" Margin="0,6,0,0" Padding="14,12">
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                        <ui:MaterialIconView IconName="Quiz" IconSize="22" VerticalOptions="Center" />
+                        <ui:MaterialIconView IconName="Quiz" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                         <Label Grid.Column="1" Text="{x:Static common:AppStrings.ArticleQuizCaption}" Style="{StaticResource CaptionStyle}" VerticalOptions="Center" />
                     </Grid>
                     <Label Text="{Binding Text}" Style="{StaticResource SectionTitleStyle}" />
@@ -128,7 +128,7 @@
                                         <TapGestureRecognizer Command="{Binding TapCommand}" />
                                     </Border.GestureRecognizers>
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                        <ui:MaterialIconView IconName="{Binding Icon}" IconSize="22" VerticalOptions="Center" />
+                                        <ui:MaterialIconView IconName="{Binding Icon}" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                                         <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
                                     </Grid>
                                 </Border>
@@ -145,7 +145,7 @@
                     SemanticProperties.Description="{Binding CycleDescription}">
                 <VerticalStackLayout Spacing="4">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="0,0,0,6">
-                        <ui:MaterialIconView IconName="Loop" IconSize="22" VerticalOptions="Center" />
+                        <ui:MaterialIconView IconName="Loop" IconSize="22" VerticalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                         <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource SectionTitleStyle}" VerticalOptions="Center" />
                     </Grid>
                     <VerticalStackLayout Spacing="2" BindableLayout.ItemsSource="{Binding Choices}">
@@ -154,20 +154,20 @@
                                 <VerticalStackLayout Spacing="2">
                                     <Grid ColumnDefinitions="32,*" ColumnSpacing="10">
                                         <Border WidthRequest="28" HeightRequest="28" StrokeThickness="0" StrokeShape="RoundRectangle 14" VerticalOptions="Center"
-                                                BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryTint}, Dark={StaticResource PrimaryTintDark}}">
+                                                BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}">
                                             <Label Text="{Binding Index}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}"
                                                    HorizontalOptions="Center" VerticalOptions="Center"
-                                                   TextColor="{AppThemeBinding Light={StaticResource PrimaryTextLight}, Dark={StaticResource PrimaryTextDark}}" />
+                                                   TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                                         </Border>
                                         <Label Grid.Column="1" Text="{Binding Text}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
                                     </Grid>
-                                    <ui:MaterialIconView IconName="ArrowDownward" IconSize="16" HorizontalOptions="Start" Margin="6,0,0,0" />
+                                    <ui:MaterialIconView IconName="ArrowDownward" IconSize="16" HorizontalOptions="Start" Margin="6,0,0,0"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                                 </VerticalStackLayout>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </VerticalStackLayout>
                     <Grid ColumnDefinitions="32,*" ColumnSpacing="10">
-                        <ui:MaterialIconView IconName="Autorenew" IconSize="22" HorizontalOptions="Center" />
+                        <ui:MaterialIconView IconName="Autorenew" IconSize="22" HorizontalOptions="Center"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                         <Label Grid.Column="1" Text="{x:Static common:AppStrings.ArticleCycleLoop}" Style="{StaticResource CaptionStyle}" VerticalOptions="Center" />
                     </Grid>
                 </VerticalStackLayout>
@@ -184,7 +184,7 @@
             <!-- A course day's task stands apart from the reading. -->
             <Border Style="{StaticResource BrandCardStyle}" Margin="0,6,0,0" Padding="14,12">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                    <ui:MaterialIconView IconName="TaskAlt" IconSize="24" VerticalOptions="Start" />
+                    <ui:MaterialIconView IconName="TaskAlt" IconSize="24" VerticalOptions="Start"  IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                     <VerticalStackLayout Grid.Column="1" Spacing="2">
                         <Label Text="{x:Static common:AppStrings.ArticleTaskCaption}" Style="{StaticResource CaptionStyle}" />
                         <Label Text="{Binding Text}" Style="{StaticResource BodyStyle}" />

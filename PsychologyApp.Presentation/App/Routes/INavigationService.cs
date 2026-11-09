@@ -19,7 +19,6 @@ public interface INavigationService
     Task GoToJournalTimelineAsync();
     Task GoToOptionsAsync();
     Task GoToInfoAsync();
-    Task GoToDonateAsync();
     Task GoToFormAsync();
     Task GoToSettingsAsync();
     Task GoToTheoryAsync(string content, TechniqueId? techniqueId = null);

@@ -1302,6 +1302,143 @@ public static partial class ArticleContent
                 Quiz("You found the information you needed, but anxiety urges you to refresh. What could you try?", 1, "If no urgent action is needed, choose a time for your next check and return to one concrete task. If safety is involved, follow official guidance.", "Keep refreshing until you feel completely calm", "Choose a time to check again and return to a small task", "Forbid yourself from reading any news"),
                 H("If stopping feels difficult"),
                 P("Notice the urge to refresh without judging yourself. You do not have to give up the news completely: try one planned check and see whether that routine suits you. If anxiety keeps disrupting sleep, work or daily life, talk it through with a professional.")
-            ])
+            ]),
+        new(
+            ArticleIds.HabitFormation,
+            "A new habit: one small action and a cue",
+            "Choose a manageable action, link it to a familiar moment, and return after a missed day",
+            "SelfImprovement",
+            4,
+            [
+                P("A habit is not a promise to act without interruption. It is an action that can become easier to remember in a familiar situation. In a real-world study, people repeated a chosen action in the same context; how quickly it became more automatic varied from person to person."),
+                P("There is no single deadline. For participants whose data fit the model, reaching near-automatic performance took 18 to 254 days; missing one opportunity did not materially disrupt the process. These findings describe one study, not a schedule for everyone."),
+                H("Make the plan specific"),
+                List(
+                    "Choose a safe, manageable action that takes 1–5 minutes: read a page, stretch, or take a short walk—whatever suits you.",
+                    "Link it to a recurring moment: after breakfast or when you close your laptop.",
+                    "Make starting easier: prepare what you need or remove one extra step.",
+                    "Track attempts, not a perfect streak. If you miss a chance, return at the next suitable cue."),
+                Quiz("What makes a habit plan easier to follow?", 1, "A manageable action linked to a familiar cue is easier to remember. A missed chance does not mean starting over.", "Wait until strong motivation appears", "Pair a small action with a recurring moment", "Set a strict 21-day deadline"),
+                H("Write a simple plan"),
+                P("After [event], I will [action] for [time]. If I miss it, I will try again at the next suitable cue. I can adapt the action when circumstances change.")
+            ]),
+        new(
+            ArticleIds.WorkRecovery,
+            "Recovering after work: find a way that fits",
+            "How to switch off after a demanding day and try a kind of rest available to you",
+            "Bedtime",
+            4,
+            [
+                P("After a workday, thoughts can keep returning to unfinished tasks. Recovery research looks at different experiences: mentally switching off from work, relaxing, doing something unrelated to work, and choosing for yourself how to spend free time."),
+                P("One longitudinal study linked weekend recovery experiences with people’s emotional state at the end of the weekend and during the following workweek. This does not prove that one technique causes recovery or works for everyone. You can try what is available to you."),
+                H("Four options, not a required checklist"),
+                List(
+                    "Switch off: write down the next work step and close the day’s tasks, if that is possible and safe.",
+                    "Relax: choose a quiet pause that does not take extra effort.",
+                    "Do something different: music, a walk, cooking, or a hobby without judging the result.",
+                    "Choose for yourself: decide what to do for the next 10 minutes, even if the choice is small."),
+                Quiz("How can you choose a way to recover?", 1, "These are options, not a checklist. Start with one available option and notice whether it suits you.", "Do all four every day", "Try one option that is available to you", "Use the same kind of rest as everyone else"),
+                H("When there is hardly any time"),
+                P("Do not turn rest into another obligation. Try a short transition: name what is enough for today, write down one next step for tomorrow, and silence work notifications if that does not interfere with safety or responsibilities. If the workload leaves no room to recover, that is not a personal failure; discuss support or workable changes if you can."),
+                H("Try a small experiment"),
+                P("On a day soon, choose one available way to switch off for 10 minutes. Afterwards, notice whether it was a little easier to step away from work thoughts. The answer is information, not a judgement of you.")
+            ]),
+        new(
+            ArticleIds.ExamAnxiety,
+            "Before an exam: prepare and work with anxiety",
+            "Break studying into manageable sessions and use practice questions as learning, not a verdict",
+            "Psychology",
+            5,
+            [
+                P("Worry can rise before an exam, especially when preparation feels endless or the result seems to decide everything. Feeling anxious does not show how much you know."),
+                P("A meta-analysis of interventions for university students found that several approaches reduced test anxiety after treatment, but there was less evidence about longer-term effects and study quality limits confidence. Practice questions can support learning and may reduce anxiety for some people, but very difficult or high-pressure practice can add stress."),
+                H("Prepare in small cycles"),
+                List(
+                    "Divide the material into topics. Pick one topic and a short study block instead of trying to learn everything at once.",
+                    "Leave time between reviews: several short sessions on different days may be more useful than one marathon.",
+                    "Try recalling the main points with your notes closed, then check and fill gaps. Use a hint if getting started feels hard.",
+                    "Keep practice questions low-stakes: use them to find what to review, not to judge your worth."),
+                Quiz("What can you do when a practice question goes wrong?", 1, "A mistake shows what to review or ask about. It does not predict your whole exam result.", "Give up on the topic and decide you cannot learn it", "Read the explanation and choose one point to review", "Move straight to the hardest test"),
+                H("On exam day"),
+                List(
+                    "Check the time, location, and materials ahead of time so you do not have to solve that at the last minute.",
+                    "Do not trade all your sleep for another round of rereading; tiredness can make it harder to focus.",
+                    "Read one question at a time. If anxiety rises, pause briefly, notice the support under your feet, and return to the nearest question."),
+                H("After the exam"),
+                P("Do not judge your whole self by one paper. Note what helped and one step you might change next time. If anxiety keeps interfering with study, sleep, or makes you avoid exams, talk with a school or university support person, a psychologist, or a doctor.")
+            ]),
+        new(
+            ArticleIds.CaregiverWellbeing,
+            "When you care for someone: keep some strength for yourself",
+            "Notice overload, ask for specific help, and avoid carrying everything alone",
+            "Favorite",
+            5,
+            [
+                P("Caring for someone can include love, tiredness, frustration, and guilt all at once. Feeling worn out does not mean you care less or are doing a poor job."),
+                P("A review of randomized studies of informal caregivers found a small average reduction in psychological distress from support interventions, with substantial differences between studies. Support may help, but one tip will not fit everyone or replace needed professional care."),
+                H("First, see the whole load"),
+                List(
+                    "Write down recurring tasks, decisions, and the hours when you need to be available.",
+                    "Mark what is essential, what could be simplified, and what could realistically be shared.",
+                    "Notice signs of overload, such as ongoing lack of sleep, irritability, or withdrawing from other people."),
+                H("Ask for specific help"),
+                List(
+                    "Instead of asking someone to help sometime, name a task and a time: Could you stay with Mum on Saturday from 3 to 5 while I take a break?",
+                    "If your loved one receives medical or social care, ask the team about available services, a support group, or a break for caregivers.",
+                    "Keep at least a short space for your own important needs when that is possible."),
+                Quiz("Which first step is easier to try and review?", 1, "A specific request is easier to discuss and adjust if needed. It does not oblige the other person to say yes.", "Stay silent until someone guesses what you need", "Ask one person for one task at a specific time", "Promise yourself to manage everything without a break"),
+                P("If asking brings guilt, remind yourself that a break does not cancel care. If the strain keeps affecting sleep, work, or daily life, seek support for yourself too."),
+                Crisis("If your loved one is in immediate danger")
+            ]),
+        new(
+            ArticleIds.ValuesAction,
+            "Values as a guide: choose one manageable step",
+            "Tell what matters to you apart from an outcome and choose a small action",
+            "SelfImprovement",
+            5,
+            [
+                P("Values are chosen directions, such as curiosity, respect, care, or honesty. A goal is a specific outcome; a value can guide how you want to act along the way. It is not an obligation or a score for your life."),
+                P("A meta-analytic review of Acceptance and Commitment Therapy (ACT) studies reported changes in psychological flexibility processes, including values-based action. This is evidence about therapy as a whole, not a promise about one exercise or the same result for everyone."),
+                H("Find a direction"),
+                List(
+                    "Choose an area to reflect on: relationships, work or study, rest, health, or creativity.",
+                    "Finish the sentence: In this area, I would like to show more… One word is enough.",
+                    "Ask yourself: what small, safe, manageable action in the near future could reflect this direction?",
+                    "If no action comes to mind, you can first notice what is getting in the way, ask for support, or leave the decision for later."
+                ),
+                Quiz("Which is more like a value than an outcome?", 1, "A value describes a direction for action; a promotion and a report are outcomes with a deadline.", "Get promoted by summer", "Show curiosity and respect at work", "Finish a report by tonight"),
+                H("Keep a guide from becoming a demand"),
+                P("Values can change and sometimes conflict. Your energy, safety, and circumstances matter too. At times, resting, waiting, or asking for help may fit your priorities better than pushing harder."),
+                See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")
+            ]),
+        new(
+            ArticleIds.MoodSupportPlan,
+            "If low mood returns: make a support plan",
+            "Notice personal early signs, choose next steps, and reach out for help in time",
+            "Cloud",
+            5,
+            [
+                P("Difficult days can happen after a period of feeling better. By themselves, they do not prove that depression has returned or erase what has helped before."),
+                P("Guidance on preventing a return of depression includes discussing personal early signs and next steps with a professional. This general worksheet does not diagnose a relapse or replace treatment."),
+                H("What changes first for me"),
+                List(
+                    "Think about a previous difficult period: what changed first in your sleep, interest, contact with people, or everyday tasks?",
+                    "Choose only signs you have actually noticed in yourself. There is no universal checklist.",
+                    "One sign is a reason to check your plan, not proof that depression is back."
+                ),
+                H("A short support plan"),
+                List(
+                    "If I notice a familiar change, what is one safe, manageable step I could try?",
+                    "Who will I contact if things keep getting harder: someone I trust, a psychologist, or a doctor?",
+                    "How will I keep this plan in view, and when will I review it with a professional?"
+                ),
+                Quiz("If familiar changes continue or affect daily life, what is a sensible next step?", 1, "An early check-in can help you discuss options. Do not change a prescribed dose without your doctor.", "Change the medication dose on your own", "Contact a professional and review the plan", "Blame yourself for finding things harder"),
+                P("If symptoms intensify, you do not have to wait until things feel unbearable to seek professional support. Make the plan with a doctor or psychologist and adjust it when needed."),
+                Crisis("If you have thoughts of death or cannot stay safe"),
+                See(ArticleIds.Depression, "Depression: what it is and how it is treated"),
+                See(ArticleIds.Specialist, "When to see a specialist and how to choose one")
+            ]),
+        new(ArticleIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", 3,
+            [P("First name one specific problem. Not everything is in your control; choose what you can influence."), P("Write down several options, even if none seems perfect. Choose one small, safe step."), P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support.")])
     ];
 }

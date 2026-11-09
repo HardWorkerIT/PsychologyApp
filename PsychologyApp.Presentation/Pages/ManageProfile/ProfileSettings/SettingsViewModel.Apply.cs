@@ -65,10 +65,30 @@ public partial class SettingsViewModel
             _savedState = _userPreferencesStore.Load();
             _userPreferencesStore.ApplyAll();
             await _languageContentReloader.EnsureReloadedAsync();
-            await _practiceReminderCoordinator.SyncAsync();
-            await _quoteReminderCoordinator.SyncAsync();
-            await _moodReminderCoordinator.SyncAsync();
-            await _chatReminderCoordinator.SyncAsync();
+
+            if (_practiceReminderState.PracticeRemindersEnabled != _savedState.PracticeRemindersEnabled)
+                await _practiceReminderCoordinator.SyncAsync();
+            else if (_practiceReminderState.Language != _savedState.Language || _practiceReminderState.PracticeReminderHour != _savedState.PracticeReminderHour || _practiceReminderState.OnboardingConcern != _savedState.OnboardingConcern)
+                await _practiceReminderCoordinator.RescheduleAsync();
+            _practiceReminderState = _savedState;
+
+            if (_quoteReminderState.QuoteRemindersEnabled != _savedState.QuoteRemindersEnabled)
+                await _quoteReminderCoordinator.SyncAsync();
+            else if (_quoteReminderState.Language != _savedState.Language || _quoteReminderState.QuoteReminderHour != _savedState.QuoteReminderHour)
+                await _quoteReminderCoordinator.RescheduleAsync();
+            _quoteReminderState = _savedState;
+
+            if (_moodReminderState.MoodRemindersEnabled != _savedState.MoodRemindersEnabled)
+                await _moodReminderCoordinator.SyncAsync();
+            else if (_moodReminderState.Language != _savedState.Language || _moodReminderState.MoodReminderHour != _savedState.MoodReminderHour)
+                await _moodReminderCoordinator.RescheduleAsync();
+            _moodReminderState = _savedState;
+
+            if (_chatReminderState.ChatRemindersEnabled != _savedState.ChatRemindersEnabled)
+                await _chatReminderCoordinator.SyncAsync();
+            else if (_chatReminderState.Language != _savedState.Language || _chatReminderState.ChatReminderHour != _savedState.ChatReminderHour)
+                await _chatReminderCoordinator.RescheduleAsync();
+            _chatReminderState = _savedState;
         }
         finally
         {

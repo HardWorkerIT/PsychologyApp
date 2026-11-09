@@ -1023,5 +1023,15 @@
     "author": "Équipe PsychologyApp",
     "text": "Vous pouvez reconnaître une erreur et demander comment la réparer, sans exiger un pardon immédiat.",
     "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Choisir une petite étape ne signifie pas tout résoudre à la fois.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp Team",
+    "text": "Une option inadaptée peut aussi fournir des informations.",
+    "theme": "motivation"
   }
 ]

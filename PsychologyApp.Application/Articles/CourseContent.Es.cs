@@ -424,6 +424,12 @@ public static partial class ArticleContent
                     ],
                     "Busca uno o dos especialistas que trabajen con trauma y pide una cita de consulta.",
                     "¿Qué fue lo más útil del curso? ¿De qué quieres hablar con el especialista?")
+            ]),
+        new(CourseIds.ProblemPlanning, "Un plan para tareas manejables", "Divide un problema en pasos y revisa el plan", "Checklist", "gad7", "GAD-7",
+            [
+                new("Elige un problema", 3, [P("Primero identifica un problema concreto. No todo depende de ti; elige aquello en lo que puedas influir."), See(ArticleIds.ProblemPlanning, "Un plan para tareas manejables")], "Escribe un problema y qué depende de ti.", "¿En qué parte de la situación puedes influir?"),
+                new("Elige un paso", 3, [P("Escribe varias opciones, aunque ninguna parezca perfecta. Elige un paso pequeño y seguro."), See(ArticleIds.ProblemPlanning, "Un plan para tareas manejables")], "Escribe dos opciones y elige un paso manejable.", "¿Qué podría impedirlo y cuál sería una alternativa?"),
+                new("Revisa el plan", 3, [P("Después observa qué ayudó y qué fue demasiado difícil. Puedes ajustar el plan o pedir apoyo."), See(ArticleIds.ProblemPlanning, "Un plan para tareas manejables")], "Prueba el paso si es seguro y anota qué ocurrió.", "¿Qué conservarías, cambiarías o hablarías con alguien?")
             ])
     ];
 }

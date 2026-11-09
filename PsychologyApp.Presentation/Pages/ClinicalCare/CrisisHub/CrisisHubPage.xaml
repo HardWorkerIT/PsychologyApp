@@ -29,7 +29,7 @@
             <VerticalStackLayout Spacing="10">
                 <!-- The emergency number as the one filled button on the page, in the fill of the app's main buttons (white text passes on it in both themes). -->
                 <Border
-                    BackgroundColor="{StaticResource PrimaryFill}"
+                    BackgroundColor="{DynamicResource PrimaryFill}"
                     StrokeThickness="0"
                     Padding="16,0"
                     MinimumHeightRequest="56"

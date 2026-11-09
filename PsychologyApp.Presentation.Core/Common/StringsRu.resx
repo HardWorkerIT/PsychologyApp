@@ -4186,4 +4186,22 @@
   <data name="MusicNextTrack" xml:space="preserve">
     <value>Следующий трек</value>
   </data>
+  <data name="AdsTitle" xml:space="preserve">
+    <value>Реклама</value>
+  </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Рекламы пока нет. Код отключит её, если она появится.</value>
+  </data>
+  <data name="AdsCodePlaceholder" xml:space="preserve">
+    <value>Кодовое слово</value>
+  </data>
+  <data name="AdsApplyCode" xml:space="preserve">
+    <value>Применить код</value>
+  </data>
+  <data name="AdsDisabledStatus" xml:space="preserve">
+    <value>Будущая реклама отключена на этом устройстве.</value>
+  </data>
+  <data name="AdsInvalidCode" xml:space="preserve">
+    <value>Неверное кодовое слово.</value>
+  </data>
 </root>

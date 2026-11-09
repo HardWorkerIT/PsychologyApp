@@ -1302,6 +1302,143 @@ public static partial class ArticleContent
                 Quiz("Você encontrou a informação de que precisava, mas a ansiedade dá vontade de atualizar. O que pode tentar?", 1, "Se não houver uma ação urgente, escolha um horário para consultar novamente e retome uma tarefa concreta. Se a questão envolver segurança, siga as orientações oficiais.", "Continuar atualizando até sentir calma completa", "Definir quando vai consultar novamente e retomar uma tarefa pequena", "Proibir-se de ler qualquer notícia"),
                 H("Se for difícil parar"),
                 P("Perceba a vontade de atualizar sem se julgar. Você não precisa abandonar as notícias por completo: experimente uma consulta planejada e veja se essa rotina funciona para você. Se a ansiedade continuar atrapalhando o sono, o trabalho ou o dia a dia, converse com um profissional.")
-            ])
+            ]),
+        new(
+            ArticleIds.HabitFormation,
+            "Criar um hábito: uma ação pequena e um sinal",
+            "Associe uma ação possível a um momento conhecido e retoma depois de uma pausa",
+            "SelfImprovement",
+            4,
+            [
+                P("Um hábito não é uma promessa de agir sem interrupções. É uma ação que, com o tempo, fica mais fácil de lembrar em uma situação conhecida. Em um estudo sobre hábitos no dia a dia, as pessoas repetiram uma ação escolhida no mesmo contexto; a automatização aconteceu em ritmos diferentes."),
+                P("Não existe um prazo único. Entre as pessoas cujos dados se ajustaram ao modelo, chegar a uma ação quase automática levou de 18 a 254 dias; perder uma oportunidade não interrompeu o processo de forma relevante por si só. Esse é o resultado de um estudo, não um calendário para todas as pessoas."),
+                H("Deixe o plano concreto"),
+                List(
+                    "Escolha uma ação segura e possível de 1–5 minutos: ler uma página, alongar-se ou fazer uma caminhada curta, o que for adequado para você.",
+                    "Associe-a a um momento que se repete: depois do café da manhã ou ao fechar o computador.",
+                    "Facilite o começo: deixe o que precisa preparado ou retire uma etapa desnecessária.",
+                    "Registre as tentativas, não uma sequência perfeita. Se perder uma oportunidade, retome no próximo sinal adequado."),
+                Quiz("O que deixa um plano de hábito mais fácil de seguir?", 1, "Uma ação possível ligada a um sinal conhecido fica mais fácil de lembrar. Uma oportunidade perdida não exige começar do zero.", "Esperar até sentir muita motivação", "Ligar uma ação pequena a um momento recorrente", "Definir um prazo rígido de 21 dias"),
+                H("Escreva um plano simples"),
+                P("Depois de [momento], vou fazer [ação] por [tempo]. Se não der certo, vou tentar de novo no próximo sinal adequado. Posso adaptar a ação se as circunstâncias mudarem.")
+            ]),
+        new(
+            ArticleIds.WorkRecovery,
+            "Recuperar-se depois do trabalho: encontrar um jeito possível",
+            "Como se desligar depois de um dia exigente e experimentar um descanso ao seu alcance",
+            "Bedtime",
+            4,
+            [
+                P("Depois do expediente, os pensamentos podem continuar voltando às tarefas inacabadas. A pesquisa sobre recuperação observa experiências diferentes: afastar mentalmente o trabalho, relaxar, fazer algo diferente e escolher como usar o tempo livre."),
+                P("Um estudo longitudinal relacionou as experiências de recuperação no fim de semana ao estado emocional no final desse período e durante a semana de trabalho seguinte. Essa associação não prova que uma técnica cause recuperação nem que funcione para todas as pessoas. Você pode experimentar o que estiver ao seu alcance."),
+                H("Quatro opções, não uma lista obrigatória"),
+                List(
+                    "Desligar-se: anotar o próximo passo do trabalho e encerrar as tarefas do dia, se isso for possível e seguro.",
+                    "Relaxar: escolher uma pausa tranquila que não exija esforço extra.",
+                    "Fazer algo diferente: ouvir música, caminhar, cozinhar ou praticar um hobby sem avaliar o resultado.",
+                    "Escolher por conta própria: decidir o que fazer nos próximos 10 minutos, mesmo que a escolha seja pequena."),
+                Quiz("Como escolher uma forma de recuperação?", 1, "São opções, não uma lista a cumprir. Experimente uma possibilidade disponível e observe se ela funciona para você.", "Fazer as quatro coisas todos os dias", "Experimentar uma opção ao seu alcance", "Usar o mesmo tipo de descanso que todo mundo"),
+                H("Quando quase não há tempo"),
+                P("Não transforme o descanso em mais uma obrigação. Tente uma transição curta: reconheça o que basta por hoje, anote um próximo passo para amanhã e silencie as notificações do trabalho se isso não prejudicar a segurança nem suas responsabilidades. Se a carga não deixa espaço para se recuperar, isso não é uma falha pessoal; se puder, converse sobre apoio ou mudanças viáveis."),
+                H("Um pequeno experimento"),
+                P("Nos próximos dias, escolha uma forma disponível de se desligar por 10 minutos. Depois, observe se ficou um pouco mais fácil afastar os pensamentos do trabalho. A resposta é informação, não uma avaliação sobre você.")
+            ]),
+        new(
+            ArticleIds.ExamAnxiety,
+            "Antes de uma prova: preparar-se e lidar com a ansiedade",
+            "Divida o estudo em sessões possíveis e use questões de prática para aprender, não para se julgar",
+            "Psychology",
+            5,
+            [
+                P("A preocupação pode aumentar antes de uma prova, sobretudo quando a preparação parece não ter fim ou o resultado parece decidir tudo. Sentir nervosismo não mostra quanto você sabe."),
+                P("Uma metanálise de intervenções com universitários encontrou redução da ansiedade de prova depois de diferentes abordagens. Havia menos dados sobre efeitos de longo prazo e a qualidade de alguns estudos limita a certeza. Questões de prática podem ajudar a aprender e às vezes reduzir a ansiedade, mas exercícios difíceis ou com muita pressão também podem aumentar o estresse."),
+                H("Estude em ciclos pequenos"),
+                List(
+                    "Divida o conteúdo em temas. Escolha um tema e um bloco curto em vez de tentar aprender tudo de uma vez.",
+                    "Espalhe as revisões: várias sessões curtas em dias diferentes podem ser mais úteis do que uma maratona.",
+                    "Tente lembrar os pontos principais sem olhar as anotações; depois confira e complete o que faltou. Use uma dica se for difícil começar.",
+                    "Mantenha as questões de prática sem muita pressão: elas ajudam a escolher o que rever, não medem seu valor."),
+                Quiz("O que fazer quando você não acerta uma questão de prática?", 1, "O erro mostra o que vale a pena rever ou perguntar. Ele não prevê toda a nota da prova.", "Desistir do tema e concluir que você não consegue aprender", "Ler a explicação e escolher um ponto para rever", "Passar direto para o teste mais difícil"),
+                H("No dia da prova"),
+                List(
+                    "Confira o horário, o local e o material com antecedência para não resolver tudo no último minuto.",
+                    "Não troque todo o sono por mais uma leitura; o cansaço pode dificultar a concentração.",
+                    "Leia uma questão de cada vez. Se a ansiedade aumentar, faça uma pausa breve, perceba o apoio dos pés no chão e volte à questão mais próxima."),
+                H("Depois da prova"),
+                P("Não avalie quem você é por inteiro a partir de uma única prova. Anote o que ajudou e uma mudança concreta para a próxima vez. Se a ansiedade atrapalha por muito tempo o estudo ou o sono, ou leva você a evitar provas, converse com alguém da escola ou universidade, um psicólogo ou um médico.")
+            ]),
+        new(
+            ArticleIds.CaregiverWellbeing,
+            "Ao cuidar de alguém: preservar suas próprias forças",
+            "Perceba a sobrecarga, peça ajuda concreta e evite carregar tudo sozinho",
+            "Favorite",
+            5,
+            [
+                P("Cuidar de alguém pode misturar amor, cansaço, irritação e culpa. Estar esgotado não significa amar menos nem cuidar mal."),
+                P("Uma revisão de estudos randomizados com cuidadores informais encontrou uma pequena redução média do sofrimento psicológico com intervenções de apoio, mas os resultados variaram bastante. O apoio pode ajudar, porém uma dica não serve para todas as pessoas nem substitui o atendimento profissional necessário."),
+                H("Primeiro, veja toda a carga"),
+                List(
+                    "Anote as tarefas regulares, as decisões e os horários em que você precisa estar disponível.",
+                    "Separe o que é essencial, o que pode ser simplificado e o que pode ser dividido de forma realista.",
+                    "Perceba sinais de sobrecarga, como falta de sono persistente, irritabilidade ou afastamento de outras pessoas."),
+                H("Peça ajuda concreta"),
+                List(
+                    "Em vez de pedir ajuda algum dia, diga uma tarefa e um horário: Você pode ficar com a minha mãe no sábado, das 15h às 17h, enquanto eu descanso?",
+                    "Se a pessoa recebe atendimento médico ou social, pergunte à equipe sobre serviços disponíveis, grupos de apoio ou uma pausa para cuidadores.",
+                    "Reserve, se for possível, um tempo curto para necessidades importantes suas."),
+                Quiz("Qual primeiro passo é mais fácil de experimentar e rever?", 1, "Um pedido específico é mais fácil de conversar e ajustar se necessário. Ele não obriga a outra pessoa a aceitar.", "Ficar em silêncio até alguém adivinhar do que você precisa", "Pedir a uma pessoa uma tarefa específica em um horário definido", "Prometer que vai dar conta de tudo sem pausa"),
+                P("Se pedir ajuda traz culpa, lembre-se: uma pausa não cancela o cuidado. Se a sobrecarga prejudica o sono, o trabalho ou a vida diária por muito tempo, procure apoio para você também."),
+                Crisis("Se a pessoa próxima estiver em perigo imediato")
+            ]),
+        new(
+            ArticleIds.ValuesAction,
+            "Valores como direção: escolher um passo possível",
+            "Diferencie o que importa de um resultado e escolha uma ação pequena",
+            "SelfImprovement",
+            5,
+            [
+                P("Valores são direções escolhidas, como curiosidade, respeito, cuidado ou honestidade. Uma meta é um resultado específico; um valor pode orientar como você quer agir ao longo do caminho. Não é uma obrigação nem uma nota sobre a sua vida."),
+                P("Uma revisão metanalítica de estudos sobre terapia de aceitação e compromisso (ACT) relatou mudanças em processos de flexibilidade psicológica, incluindo ações guiadas por valores. São dados sobre a terapia como um todo, não uma promessa sobre um exercício isolado ou um resultado igual para todas as pessoas."),
+                H("Encontrar uma direção"),
+                List(
+                    "Escolha uma área para refletir: relacionamentos, trabalho ou estudo, descanso, saúde ou criatividade.",
+                    "Complete a frase: Nessa área, eu gostaria de demonstrar mais… Uma palavra basta.",
+                    "Pergunte a si: que ação pequena, segura e possível em breve poderia refletir essa direção?",
+                    "Se nenhuma ação vier à mente, você pode primeiro notar o que está dificultando, pedir apoio ou deixar a decisão para depois."
+                ),
+                Quiz("O que se parece mais com um valor do que com um resultado?", 1, "Um valor descreve uma direção de ação; uma promoção e um relatório são resultados com prazo.", "Conseguir uma promoção até o verão", "Demonstrar curiosidade e respeito no trabalho", "Terminar um relatório até hoje à noite"),
+                H("Usar a direção sem transformá-la em cobrança"),
+                P("Os valores podem mudar e entrar em conflito. Sua energia, segurança e circunstâncias também importam. Às vezes, descansar, esperar ou pedir ajuda combina melhor com suas prioridades do que se esforçar ainda mais."),
+                See(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis")
+            ]),
+        new(
+            ArticleIds.MoodSupportPlan,
+            "Se o desânimo voltar: preparar um plano de apoio",
+            "Perceba seus primeiros sinais, escolha os próximos passos e peça ajuda a tempo",
+            "Cloud",
+            5,
+            [
+                P("Depois de um período melhor, também podem surgir dias difíceis. Sozinhos, eles não provam que a depressão voltou nem apagam o que ajudou antes."),
+                P("As recomendações para prevenir recaídas incluem conversar com um profissional sobre sinais iniciais pessoais e próximos passos. Este roteiro geral não diagnostica uma recaída nem substitui tratamento."),
+                H("O que muda primeiro no meu caso"),
+                List(
+                    "Lembre de um período difícil anterior: o que mudou primeiro no sono, no interesse pelas coisas, no contato com pessoas ou nas tarefas do dia a dia?",
+                    "Escolha apenas sinais que você realmente percebeu em si. Não existe uma lista universal.",
+                    "Um sinal é um motivo para consultar o plano, não uma prova de que a depressão voltou."
+                ),
+                H("Um plano de apoio simples"),
+                List(
+                    "Se eu notar uma mudança conhecida, que passo seguro e possível posso tentar?",
+                    "Com quem vou falar se as coisas ficarem mais difíceis: alguém de confiança, um psicólogo ou um médico?",
+                    "Como vou manter este plano por perto e quando vou revê-lo com um profissional?"
+                ),
+                Quiz("Se mudanças conhecidas continuarem ou atrapalharem o dia a dia, qual é um próximo passo razoável?", 1, "Conversar cedo ajuda a discutir opções. Não altere uma dose prescrita sem falar com seu médico.", "Mudar a dose do remédio por conta própria", "Procurar um profissional e rever o plano", "Se culpar por estar com mais dificuldade"),
+                P("Se os sintomas aumentarem, você não precisa esperar chegar ao limite para buscar apoio profissional. Faça o plano com um médico ou psicólogo e ajuste-o quando for preciso."),
+                Crisis("Se surgirem pensamentos de morte ou você não conseguir se manter em segurança"),
+                See(ArticleIds.Depression, "A depressão: o que é e como se trata"),
+                See(ArticleIds.Specialist, "Quando procurar um especialista e como escolher")
+            ]),
+        new(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis", "Divida um problema em passos e reveja o plano", "Checklist", 3,
+            [P("Primeiro identifique um problema específico. Nem tudo depende de você; escolha aquilo que pode influenciar."), P("Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro."), P("Depois observe o que ajudou e o que foi difícil demais. Você pode ajustar o plano ou pedir apoio.")])
     ];
 }

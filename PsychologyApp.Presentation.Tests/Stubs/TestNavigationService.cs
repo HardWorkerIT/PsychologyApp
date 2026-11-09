@@ -33,7 +33,6 @@ public class TestNavigationService(INavigation navigation) : INavigationService
 
     public Task GoToInfoAsync() => Task.CompletedTask;
 
-    public Task GoToDonateAsync() => Task.CompletedTask;
 
     public Task GoToFormAsync() => Task.CompletedTask;
 

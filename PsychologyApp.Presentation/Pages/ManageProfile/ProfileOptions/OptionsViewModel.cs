@@ -7,7 +7,6 @@ namespace PsychologyApp.Presentation.Pages.ManageProfile.ProfileOptions;
 public class OptionsViewModel : BaseViewModel
 {
     public ICommand OpenAboutPageCommand { get; private set; } = default!;
-    public ICommand OpenDonatePageCommand { get; private set; } = default!;
     public ICommand OpenFeedbackPageCommand { get; private set; } = default!;
     public ICommand OpenSettingsPageCommand { get; private set; } = default!;
     public ICommand OpenCrisisHubCommand { get; private set; } = default!;
@@ -24,7 +23,6 @@ public class OptionsViewModel : BaseViewModel
     public string CrisisSubtitle => AppStrings.OptionsCrisisSubtitle;
     public string AboutTitle => AppStrings.OptionsAboutTitle;
     public string FeedbackTitle => AppStrings.OptionsFeedbackTitle;
-    public string DonateTitle => AppStrings.OptionsDonateTitle;
     public string DataBackupTitle => AppStrings.DataBackupTitle;
 
     public OptionsViewModel(INavigationService navigationService)
@@ -32,7 +30,6 @@ public class OptionsViewModel : BaseViewModel
         BindNavigation(navigationService);
 
         OpenAboutPageCommand = new AsyncCommand(() => navigationService.GoToInfoAsync());
-        OpenDonatePageCommand = new AsyncCommand(() => navigationService.GoToDonateAsync());
         OpenFeedbackPageCommand = new AsyncCommand(() => navigationService.GoToFormAsync());
         OpenSettingsPageCommand = new AsyncCommand(() => navigationService.GoToSettingsAsync());
         OpenCrisisHubCommand = new AsyncCommand(() => navigationService.GoToCrisisHubAsync());
@@ -53,7 +50,6 @@ public class OptionsViewModel : BaseViewModel
             nameof(CrisisSubtitle),
             nameof(AboutTitle),
             nameof(FeedbackTitle),
-            nameof(DonateTitle),
             nameof(DataBackupTitle));
     }
 }

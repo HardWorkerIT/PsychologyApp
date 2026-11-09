@@ -33,6 +33,10 @@ public sealed class SettingsViewModelTests
         _quotes.Setup(c => c.SyncAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _mood.Setup(c => c.SyncAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _chat.Setup(c => c.SyncAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _practice.Setup(c => c.RescheduleAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _quotes.Setup(c => c.RescheduleAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _mood.Setup(c => c.RescheduleAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _chat.Setup(c => c.RescheduleAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoBackAsync()).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.ShowOnboardingAsync()).Returns(Task.CompletedTask);
         Mock<IPracticeReminderScheduler> scheduler = new();
@@ -48,6 +52,35 @@ public sealed class SettingsViewModelTests
             _mood.Object,
             _chat.Object,
             scheduler.Object);
+    }
+
+    [Fact]
+    public async Task AValidAdCodeIsSavedAndSurvivesOtherSettingChanges()
+    {
+        SettingsViewModel viewModel = Create();
+        viewModel.AdCode = "  eisbrecher  ";
+        viewModel.ApplyAdCodeCommand.Execute(null);
+        Assert.True(viewModel.AdsDisabled);
+        Assert.Equal(string.Empty, viewModel.AdCode);
+        viewModel.Theme = "dark";
+        await VmTestHelpers.WaitUntilAsync(() => _saved.Count > 0, 3000);
+        Assert.True(_state.AdsDisabled);
+        Assert.Equal("dark", _state.Theme);
+        Assert.True(Create().AdsDisabled);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("EISBRECHERx")]
+    [InlineData("wrong")]
+    public void InvalidAdCodeDoesNotDisableAds(string code)
+    {
+        SettingsViewModel viewModel = Create();
+        viewModel.AdCode = code;
+        viewModel.ApplyAdCodeCommand.Execute(null);
+        Assert.False(viewModel.AdsDisabled);
+        Assert.False(_state.AdsDisabled);
+        Assert.Equal(string.Empty, viewModel.AdCode);
     }
 
     [Fact]
@@ -86,10 +119,47 @@ public sealed class SettingsViewModelTests
         Assert.Equal("en", _saved[0].Language);
         _store.Verify(s => s.ApplyAll(), Times.AtLeastOnce);
         _reloader.Verify(r => r.EnsureReloadedAsync(), Times.Once);
-        _practice.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _practice.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _quotes.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _mood.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _chat.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ChangingAppearanceDoesNotRequestNotificationPermission()
+    {
+        SettingsViewModel viewModel = Create();
+        viewModel.Color = "green";
+        await VmTestHelpers.WaitUntilAsync(() => _saved.Count == 1, 3000);
+        await VmTestHelpers.RunAsync(viewModel.Finish);
+        _practice.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _quotes.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _mood.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Never);
+        _chat.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task EnablingAReminderRequestsPermission()
+    {
+        SettingsViewModel viewModel = Create();
+        viewModel.QuoteRemindersEnabled = true;
+        await VmTestHelpers.WaitUntilAsync(() => _quotes.Invocations.Count > 0, 3000);
         _quotes.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _mood.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Once);
-        _chat.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task FailedReminderRescheduleIsRetriedOnNextSave()
+    {
+        SettingsViewModel viewModel = Create();
+        _mood.SetupSequence(c => c.RescheduleAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("temporary failure"))
+            .Returns(Task.CompletedTask);
+        viewModel.Language = "en";
+        await VmTestHelpers.WaitUntilAsync(() => _mood.Invocations.Count == 1, 3000);
+        viewModel.Color = "green";
+        await VmTestHelpers.WaitUntilAsync(() => _mood.Invocations.Count == 2, 3000);
+        _mood.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+        _chat.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -147,6 +217,8 @@ public sealed class SettingsViewModelTests
 
         Assert.Equal("green", viewModel.Color);
         Assert.Equal("green", Assert.Single(viewModel.ColorSwatches, swatch => swatch.IsSelected).Key);
+        Assert.Equal(AppStrings.TestsAnswerSelected, Assert.Single(viewModel.ColorSwatches, swatch => swatch.IsSelected).SelectionState);
+        Assert.All(viewModel.ColorSwatches.Where(swatch => !swatch.IsSelected), swatch => Assert.Equal(AppStrings.TestsAnswerNotSelected, swatch.SelectionState));
         Assert.Equal("green", _saved[0].Color);
     }
 

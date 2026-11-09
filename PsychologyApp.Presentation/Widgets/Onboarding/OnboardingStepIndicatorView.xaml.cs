@@ -7,11 +7,10 @@ public partial class OnboardingStepIndicatorView : ContentView
     public OnboardingStepIndicatorView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         BuildDots();
-        if (Microsoft.Maui.Controls.Application.Current is not null)
-        {
-            Microsoft.Maui.Controls.Application.Current.RequestedThemeChanged += OnRequestedThemeChanged;
-        }
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     public static readonly BindableProperty StepProperty =
@@ -58,6 +57,22 @@ public partial class OnboardingStepIndicatorView : ContentView
         }
     }
 
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        if (Microsoft.Maui.Controls.Application.Current is { } app)
+        {
+            app.RequestedThemeChanged -= OnRequestedThemeChanged;
+            app.RequestedThemeChanged += OnRequestedThemeChanged;
+        }
+        BuildDots();
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        if (Microsoft.Maui.Controls.Application.Current is { } app)
+            app.RequestedThemeChanged -= OnRequestedThemeChanged;
+    }
+
     private void OnRequestedThemeChanged(object? sender, AppThemeChangedEventArgs e) => BuildDots();
 
     private void BuildDots()
@@ -83,4 +98,6 @@ public partial class OnboardingStepIndicatorView : ContentView
             DotsLayout.Children.Add(dot);
         }
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(BuildDots);
+
 }

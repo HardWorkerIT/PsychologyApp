@@ -25,6 +25,13 @@ public static partial class AppStrings
     public static string OptionsFeedbackTitle => R(nameof(OptionsFeedbackTitle));
     public static string OptionsDonateTitle => R(nameof(OptionsDonateTitle));
 
+    public static string AdsTitle => R(nameof(AdsTitle));
+    public static string AdsHelp => R(nameof(AdsHelp));
+    public static string AdsCodePlaceholder => R(nameof(AdsCodePlaceholder));
+    public static string AdsApplyCode => R(nameof(AdsApplyCode));
+    public static string AdsDisabledStatus => R(nameof(AdsDisabledStatus));
+    public static string AdsInvalidCode => R(nameof(AdsInvalidCode));
+
     public static string SettingsTitle => R(nameof(SettingsTitle));
     public static string SettingsDesignSection => R(nameof(SettingsDesignSection));
     public static string SettingsFontSection => R(nameof(SettingsFontSection));

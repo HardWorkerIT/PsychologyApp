@@ -1302,6 +1302,143 @@ public static partial class ArticleContent
                 Quiz("Du hast die gesuchte Information gefunden, möchtest aber aus Angst weiter aktualisieren. Was könntest du versuchen?", 1, "Wenn kein dringender Schritt nötig ist, lege eine Zeit für den nächsten Check fest und widme dich einer konkreten kleinen Aufgabe. Wenn es um Sicherheit geht, befolge offizielle Hinweise.", "Weiter aktualisieren, bis du dich völlig ruhig fühlst", "Einen Zeitpunkt für den nächsten Check festlegen und eine kleine Aufgabe beginnen", "Dir Nachrichten vollständig verbieten"),
                 H("Wenn das Aufhören schwerfällt"),
                 P("Nimm den Drang zum Aktualisieren wahr, ohne dich dafür zu verurteilen. Du musst nicht ganz auf Nachrichten verzichten: Probiere einen geplanten Check aus und sieh, ob dir dieser Ablauf liegt. Wenn Angst Schlaf, Arbeit oder Alltag länger beeinträchtigt, sprich mit einer Fachperson.")
-            ])
+            ]),
+        new(
+            ArticleIds.HabitFormation,
+            "Eine neue Gewohnheit: eine kleine Handlung und ein Auslöser",
+            "Eine machbare Handlung an einen vertrauten Moment knüpfen und nach einer Pause wieder aufnehmen",
+            "SelfImprovement",
+            4,
+            [
+                P("Eine Gewohnheit ist kein Versprechen, immer ohne Unterbrechung weiterzumachen. Es ist eine Handlung, an die man sich in einer vertrauten Situation mit der Zeit leichter erinnert. In einer Alltagsstudie wiederholten die Teilnehmenden eine gewählte Handlung im gleichen Kontext; wie schnell sie automatischer wurde, war unterschiedlich."),
+                P("Es gibt keine feste Frist. Bei den Teilnehmenden, deren Daten sich im Modell abbilden ließen, dauerte es bis zu einer nahezu automatischen Ausführung 18 bis 254 Tage. Eine einzelne Auslassung störte den Prozess nicht wesentlich. Das beschreibt eine Studie und ist kein Zeitplan für alle."),
+                H("Den Plan konkret machen"),
+                List(
+                    "Wählen Sie eine sichere, machbare Handlung von 1–5 Minuten: eine Seite lesen, sich strecken oder kurz spazieren gehen—was zu Ihnen passt.",
+                    "Knüpfen Sie sie an einen wiederkehrenden Moment: nach dem Frühstück oder wenn Sie den Laptop schließen.",
+                    "Erleichtern Sie den Anfang: Legen Sie vorher alles bereit oder streichen Sie einen unnötigen Schritt.",
+                    "Notieren Sie Versuche statt einer perfekten Serie. Wenn Sie etwas auslassen, steigen Sie beim nächsten passenden Auslöser wieder ein."),
+                Quiz("Was macht einen Gewohnheitsplan leichter umsetzbar?", 1, "Eine machbare Handlung, die an einen vertrauten Auslöser geknüpft ist, lässt sich leichter erinnern. Nach einer Pause müssen Sie nicht von vorn anfangen.", "Auf starke Motivation warten", "Eine kleine Handlung mit einem wiederkehrenden Moment verbinden", "Eine feste Frist von 21 Tagen setzen"),
+                H("Einen einfachen Plan formulieren"),
+                P("Nach [Ereignis] werde ich [Handlung] [Zeit] lang tun. Wenn ich es verpasse, versuche ich es beim nächsten passenden Auslöser erneut. Wenn sich die Umstände ändern, kann ich die Handlung anpassen.")
+            ]),
+        new(
+            ArticleIds.WorkRecovery,
+            "Erholung nach der Arbeit: einen passenden Weg finden",
+            "Nach einem anstrengenden Tag abschalten und eine für Sie mögliche Erholung ausprobieren",
+            "Bedtime",
+            4,
+            [
+                P("Nach einem Arbeitstag können die Gedanken zu unerledigten Aufgaben zurückkehren. In der Erholungsforschung geht es um verschiedene Erfahrungen: innerlich Abstand von der Arbeit gewinnen, sich entspannen, etwas anderes tun und selbst entscheiden, wie man die freie Zeit verbringt."),
+                P("Eine Längsschnittstudie fand Zusammenhänge zwischen Erholungserfahrungen am Wochenende und dem emotionalen Befinden am Ende des Wochenendes sowie in der folgenden Arbeitswoche. Das beweist nicht, dass eine bestimmte Methode Erholung verursacht oder allen hilft. Sie können ausprobieren, was für Sie erreichbar ist."),
+                H("Vier Möglichkeiten, keine Pflichtliste"),
+                List(
+                    "Abschalten: den nächsten Arbeitsschritt notieren und die Aufgaben für heute schließen, sofern das möglich und sicher ist.",
+                    "Entspannen: eine ruhige Pause wählen, die keine zusätzliche Anstrengung verlangt.",
+                    "Etwas anderes tun: Musik, ein Spaziergang, Kochen oder ein Hobby ohne Ergebnisdruck.",
+                    "Selbst entscheiden: für die nächsten 10 Minuten selbst wählen, was Sie tun—auch wenn die Auswahl klein ist."),
+                Quiz("Wie lässt sich eine passende Erholung finden?", 1, "Das sind Möglichkeiten, keine Checkliste. Probieren Sie eine erreichbare Option aus und achten Sie darauf, ob sie zu Ihnen passt.", "Jeden Tag alle vier Punkte erledigen", "Eine verfügbare Möglichkeit ausprobieren", "Für alle ist dieselbe Art von Erholung am besten"),
+                H("Wenn kaum Zeit bleibt"),
+                P("Machen Sie aus Erholung keine weitere Pflicht. Versuchen Sie einen kurzen Übergang: benennen Sie, was für heute reicht, notieren Sie einen nächsten Schritt für morgen und schalten Sie Arbeitsbenachrichtigungen aus, wenn das Sicherheit oder Verpflichtungen nicht beeinträchtigt. Lässt die Belastung keine Erholung zu, ist das kein persönliches Versagen; sprechen Sie nach Möglichkeit über Unterstützung oder machbare Änderungen."),
+                H("Ein kleines Experiment"),
+                P("Wählen Sie in den nächsten Tagen eine verfügbare Möglichkeit, zehn Minuten abzuschalten. Achten Sie danach darauf, ob es etwas leichter war, die Arbeitsgedanken loszulassen. Die Antwort ist eine Information, keine Bewertung Ihrer Person.")
+            ]),
+        new(
+            ArticleIds.ExamAnxiety,
+            "Vor einer Prüfung: gut vorbereiten und mit Angst umgehen",
+            "Lernstoff in machbare Einheiten teilen und Übungsfragen zum Lernen nutzen, nicht als Urteil",
+            "Psychology",
+            5,
+            [
+                P("Vor einer Prüfung kann die Anspannung steigen, besonders wenn die Vorbereitung endlos wirkt oder das Ergebnis alles zu entscheiden scheint. Nervosität zeigt nicht, wie viel Sie wissen."),
+                P("Eine Metaanalyse zu Interventionen für Studierende fand, dass verschiedene Ansätze die Prüfungsangst nach der Behandlung verringerten. Zu längerfristigen Wirkungen gab es weniger Daten, und die Qualität einzelner Studien begrenzt die Sicherheit der Ergebnisse. Übungsfragen können beim Lernen helfen und Angst bei manchen verringern; sehr schwierige oder stark belastende Übungen können aber zusätzlichen Stress auslösen."),
+                H("In kleinen Einheiten lernen"),
+                List(
+                    "Teilen Sie den Stoff in Themen auf. Wählen Sie ein Thema und eine kurze Lerneinheit, statt alles auf einmal schaffen zu wollen.",
+                    "Legen Sie Pausen zwischen Wiederholungen: Mehrere kurze Einheiten an verschiedenen Tagen können hilfreicher sein als ein Marathon.",
+                    "Versuchen Sie, die wichtigsten Punkte ohne Notizen abzurufen. Prüfen Sie danach Ihre Antwort und schließen Sie Lücken. Eine Hilfestellung kann den Einstieg erleichtern.",
+                    "Halten Sie Übungsfragen möglichst ohne Leistungsdruck: Sie sollen zeigen, was Sie wiederholen können, nicht Ihren Wert messen."),
+                Quiz("Was können Sie tun, wenn eine Übungsfrage nicht klappt?", 1, "Ein Fehler zeigt, was Sie wiederholen oder nachfragen können. Er sagt nicht die ganze Prüfungsnote voraus.", "Das Thema aufgeben und sich für unfähig halten", "Die Erklärung lesen und einen Punkt zum Wiederholen auswählen", "Sofort zum schwierigsten Test wechseln"),
+                H("Am Prüfungstag"),
+                List(
+                    "Prüfen Sie Zeit, Ort und benötigte Dinge vorher, damit das nicht im letzten Moment geklärt werden muss.",
+                    "Verzichten Sie nicht auf den ganzen Schlaf für eine weitere Leserunde; Müdigkeit kann die Konzentration erschweren.",
+                    "Lesen Sie die Aufgaben einzeln. Steigt die Angst, machen Sie eine kurze Pause, spüren Sie den Boden unter den Füßen und kehren Sie zur nächsten Frage zurück."),
+                H("Nach der Prüfung"),
+                P("Bewerten Sie nicht Ihre ganze Person anhand einer Arbeit. Notieren Sie, was geholfen hat und was Sie beim nächsten Mal an einer Stelle ändern möchten. Wenn Angst Lernen oder Schlaf länger beeinträchtigt oder Sie Prüfungen vermeiden lässt, wenden Sie sich an eine Ansprechperson der Schule oder Hochschule, eine psychologische Fachkraft oder eine Ärztin beziehungsweise einen Arzt.")
+            ]),
+        new(
+            ArticleIds.CaregiverWellbeing,
+            "Wenn Sie einen nahestehenden Menschen begleiten: eigene Kräfte bewahren",
+            "Überlastung bemerken, konkret um Hilfe bitten und nicht alles allein tragen",
+            "Favorite",
+            5,
+            [
+                P("Für einen nahestehenden Menschen zu sorgen kann zugleich Liebe, Müdigkeit, Gereiztheit und Schuldgefühl bedeuten. Erschöpfung heißt nicht, dass Sie weniger lieben oder schlecht für jemanden sorgen."),
+                P("Eine Übersicht randomisierter Studien zu informell Pflegenden fand im Durchschnitt eine kleine Verringerung psychischer Belastung durch Unterstützungsangebote; die Ergebnisse unterschieden sich deutlich. Unterstützung kann helfen, doch ein einzelner Tipp passt nicht für alle und ersetzt keine nötige fachliche Hilfe."),
+                H("Zuerst die ganze Belastung ansehen"),
+                List(
+                    "Notieren Sie wiederkehrende Aufgaben, Entscheidungen und Zeiten, in denen Sie erreichbar sein müssen.",
+                    "Markieren Sie, was nötig ist, was sich vereinfachen lässt und was sich realistisch teilen lässt.",
+                    "Achten Sie auf Anzeichen von Überlastung, zum Beispiel anhaltenden Schlafmangel, Gereiztheit oder Rückzug."),
+                H("Konkret um Hilfe bitten"),
+                List(
+                    "Nennen Sie statt einer allgemeinen Bitte eine Aufgabe und einen Zeitpunkt: Kannst du am Samstag von 15 bis 17 Uhr bei meiner Mutter bleiben, während ich eine Pause mache?",
+                    "Wenn Ihr Angehöriger medizinische oder soziale Hilfe erhält, fragen Sie das Team nach verfügbaren Angeboten, einer Gruppe oder einer Entlastungsmöglichkeit.",
+                    "Reservieren Sie, wenn möglich, wenigstens etwas Zeit für eigene wichtige Bedürfnisse."),
+                Quiz("Welcher erste Schritt lässt sich leichter ausprobieren und prüfen?", 1, "Eine konkrete Bitte lässt sich leichter besprechen und bei Bedarf anpassen. Sie verpflichtet die andere Person nicht zu einer Zusage.", "Schweigen, bis jemand errät, was Sie brauchen", "Eine Person um eine bestimmte Aufgabe zu einer bestimmten Zeit bitten", "Sich versprechen, alles ohne Pause allein zu schaffen"),
+                P("Wenn eine Bitte Schuldgefühle auslöst, erinnern Sie sich: Eine Pause hebt die Fürsorge nicht auf. Wenn die Belastung länger Schlaf, Arbeit oder Alltag beeinträchtigt, suchen Sie auch für sich Unterstützung."),
+                Crisis("Wenn Ihr Angehöriger in unmittelbarer Gefahr ist")
+            ]),
+        new(
+            ArticleIds.ValuesAction,
+            "Werte als Orientierung: ein machbarer Schritt",
+            "Wichtiges von einem Ergebnis unterscheiden und eine kleine Handlung wählen",
+            "SelfImprovement",
+            5,
+            [
+                P("Werte sind selbst gewählte Richtungen, zum Beispiel Neugier, Respekt, Fürsorge oder Ehrlichkeit. Ein Ziel ist ein konkretes Ergebnis; ein Wert kann zeigen, wie Sie unterwegs handeln möchten. Er ist weder Pflicht noch Bewertung Ihres Lebens."),
+                P("Eine metaanalytische Übersicht zu Studien der Akzeptanz- und Commitmenttherapie (ACT) berichtete Veränderungen bei Prozessen psychischer Flexibilität, darunter werteorientiertes Handeln. Das sind Befunde zur Therapie insgesamt, keine Wirkungszusage für eine einzelne Übung oder für alle Menschen."),
+                H("Eine Richtung finden"),
+                List(
+                    "Wählen Sie einen Bereich, über den Sie nachdenken möchten: Beziehungen, Arbeit oder Lernen, Erholung, Gesundheit oder Kreativität.",
+                    "Vervollständigen Sie den Satz: In diesem Bereich möchte ich öfter … zeigen. Ein Wort genügt.",
+                    "Fragen Sie sich: Welche kleine, sichere und machbare Handlung könnte diese Richtung in nächster Zeit ausdrücken?",
+                    "Wenn Ihnen noch nichts einfällt, können Sie zuerst bemerken, was im Weg steht, um Unterstützung bitten oder die Entscheidung vertagen."
+                ),
+                Quiz("Was ist eher ein Wert als ein Ergebnis?", 1, "Ein Wert beschreibt eine Handlungsrichtung; eine Beförderung und ein Bericht sind Ergebnisse mit einem Termin.", "Bis zum Sommer befördert werden", "Bei der Arbeit Neugier und Respekt zeigen", "Den Bericht bis heute Abend fertigstellen"),
+                H("Orientierung statt zusätzlicher Forderung"),
+                P("Werte können sich verändern und miteinander in Konflikt geraten. Ihre Kraft, Sicherheit und Lebensumstände zählen ebenfalls. Manchmal passen Erholung, Abwarten oder eine Bitte um Hilfe besser zu Ihren Prioritäten als noch mehr Anstrengung."),
+                See(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben")
+            ]),
+        new(
+            ArticleIds.MoodSupportPlan,
+            "Wenn die Stimmung wieder sinkt: Unterstützung planen",
+            "Eigene frühe Anzeichen bemerken, nächste Schritte wählen und rechtzeitig Hilfe holen",
+            "Cloud",
+            5,
+            [
+                P("Nach einer besseren Zeit kann es wieder schwierige Tage geben. Für sich genommen beweisen sie nicht, dass eine Depression zurückgekehrt ist, und machen frühere hilfreiche Schritte nicht zunichte."),
+                P("Empfehlungen zur Vorbeugung eines Rückfalls bei Depressionen sehen vor, persönliche frühe Anzeichen und nächste Schritte mit einer Fachperson zu besprechen. Diese allgemeine Vorlage stellt keine Diagnose und ersetzt keine Behandlung."),
+                H("Was verändert sich bei mir zuerst?"),
+                List(
+                    "Denken Sie an eine frühere schwierige Zeit: Was veränderte sich zuerst bei Schlaf, Interesse, Kontakt zu anderen oder Alltagsaufgaben?",
+                    "Wählen Sie nur Anzeichen, die Sie tatsächlich bei sich bemerkt haben. Eine allgemeingültige Checkliste gibt es nicht.",
+                    "Ein einzelnes Anzeichen ist ein Anlass, den Plan anzusehen, aber kein Beweis für eine Rückkehr der Depression."
+                ),
+                H("Ein kurzer Unterstützungsplan"),
+                List(
+                    "Wenn ich eine bekannte Veränderung bemerke: Welchen sicheren, machbaren Schritt könnte ich ausprobieren?",
+                    "Wen spreche ich an, wenn es weiter schwieriger wird: eine Vertrauensperson, eine psychologische Fachkraft oder eine Ärztin oder einen Arzt?",
+                    "Wie erinnere ich mich an den Plan, und wann bespreche ich ihn erneut mit einer Fachperson?"
+                ),
+                Quiz("Was ist sinnvoll, wenn bekannte Veränderungen anhalten oder den Alltag beeinträchtigen?", 1, "Ein frühes Gespräch hilft, Möglichkeiten zu besprechen. Ändern Sie eine verordnete Dosis nicht ohne ärztliche Rücksprache.", "Die Medikamentendosis selbst ändern", "Eine Fachperson kontaktieren und den Plan ansehen", "Sich dafür Vorwürfe machen, dass es schwerer ist"),
+                P("Wenn Beschwerden zunehmen, müssen Sie nicht warten, bis es kaum noch auszuhalten ist. Erstellen Sie den Plan mit einer Ärztin, einem Arzt oder einer psychologischen Fachkraft und passen Sie ihn bei Bedarf an."),
+                Crisis("Wenn Gedanken an den Tod auftreten oder Sie nicht sicher bleiben können"),
+                See(ArticleIds.Depression, "Depression: was sie ist und wie sie behandelt wird"),
+                See(ArticleIds.Specialist, "Wann du eine Fachperson aufsuchen solltest und wie du sie auswählst")
+            ]),
+        new(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", 3,
+            [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen.")])
     ];
 }

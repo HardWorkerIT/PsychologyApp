@@ -25,7 +25,6 @@ using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Pages.RunTests.AlternativeTest;
 using PsychologyApp.Presentation.Pages.RunTests.FindProblem;
 using PsychologyApp.Presentation.Pages.PlayMusic.MusicPlayer;
-using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDonate;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileInfo;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileOptions;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileSettings;
@@ -114,9 +113,6 @@ public sealed class PageRegistry(
 
     public InfoPage CreateInfoPage() =>
         WithPressFeedback(profilePageFactory().CreateInfoPage());
-
-    public DonatePage CreateDonatePage() =>
-        WithPressFeedback(profilePageFactory().CreateDonatePage());
 
     public FormPage CreateFormPage() =>
         WithPressFeedback(reviewPageFactory().CreateFormPage());

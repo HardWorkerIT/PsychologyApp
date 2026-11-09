@@ -5,6 +5,7 @@ public partial class AlgorithmBoxView : ContentView
     public AlgorithmBoxView()
     {
         InitializeComponent();
+        UserPreferences.Changed += OnPreferencesChanged;
         ApplyBadgeColours();
         Loaded += (_, _) =>
         {
@@ -152,4 +153,6 @@ public partial class AlgorithmBoxView : ContentView
         view.UseItemTemplate = useTemplate;
         view.UseStringItems = !useTemplate;
     }
+    private void OnPreferencesChanged() => Dispatcher.Dispatch(ApplyBadgeColours);
+
 }

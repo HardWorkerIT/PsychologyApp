@@ -108,6 +108,11 @@ public partial class SettingsViewModel
 
     private void NotifyLocalizedLabelsChanged()
     {
+        OnPropertyChanged(nameof(AdsTitle));
+        OnPropertyChanged(nameof(AdsHelp));
+        OnPropertyChanged(nameof(AdCodePlaceholder));
+        OnPropertyChanged(nameof(ApplyAdCodeText));
+        OnPropertyChanged(nameof(AdCodeStatus));
         OnPropertyChanged(nameof(PageTitle));
         OnPropertyChanged(nameof(DesignSectionTitle));
         OnPropertyChanged(nameof(FontSectionTitle));
@@ -160,4 +165,7 @@ public partial class SettingsViewModel
 }
 
 /// <summary>One accent colour in the settings: its key, its name for screen readers, whether it is the chosen one.</summary>
-public sealed record ColorSwatch(string Key, string Label, bool IsSelected, ICommand Command);
+public sealed record ColorSwatch(string Key, string Label, bool IsSelected, ICommand Command)
+{
+    public string SelectionState => IsSelected ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected;
+}

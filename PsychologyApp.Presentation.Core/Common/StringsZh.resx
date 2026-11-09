@@ -4180,4 +4180,22 @@
   <data name="MusicNextTrack" xml:space="preserve">
     <value>下一首</value>
   </data>
+  <data name="AdsTitle" xml:space="preserve">
+    <value>广告</value>
+  </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>目前没有广告。代码可关闭将来出现的广告。</value>
+  </data>
+  <data name="AdsCodePlaceholder" xml:space="preserve">
+    <value>代码</value>
+  </data>
+  <data name="AdsApplyCode" xml:space="preserve">
+    <value>应用代码</value>
+  </data>
+  <data name="AdsDisabledStatus" xml:space="preserve">
+    <value>此设备上的未来广告已关闭。</value>
+  </data>
+  <data name="AdsInvalidCode" xml:space="preserve">
+    <value>代码无效。</value>
+  </data>
 </root>

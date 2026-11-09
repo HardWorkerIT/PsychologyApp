@@ -424,6 +424,12 @@ public static partial class ArticleContent
                     ],
                     "Find one or two specialists who work with trauma and book a consultation.",
                     "What in the course was most useful? What do you want to discuss with the specialist?")
+            ]),
+        new(CourseIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", "gad7", "GAD-7",
+            [
+                new("Choose a problem", 3, [P("First name one specific problem. Not everything is in your control; choose what you can influence."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Write down one problem and what is within your control.", "Which part of the situation can you influence?"),
+                new("Choose a step", 3, [P("Write down several options, even if none seems perfect. Choose one small, safe step."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Write down two options and choose one manageable step.", "What might get in the way, and what is a backup option?"),
+                new("Review the plan", 3, [P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Try the step if it is safe, and note what happened.", "What would you keep, change or discuss with someone?")
             ])
     ];
 }
