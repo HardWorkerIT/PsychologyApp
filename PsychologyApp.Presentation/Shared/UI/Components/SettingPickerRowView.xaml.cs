@@ -66,8 +66,8 @@ public partial class SettingPickerRowView : ContentView
         }
 
         string value = GetDisplayLabel(SelectedItem);
-        SelectionButton.Text = string.IsNullOrEmpty(value) ? PickerTitle : value;
-        SemanticProperties.SetDescription(SelectionButton, $"{LabelText}: {SelectionButton.Text}");
+        SelectedValueLabel.Text = string.IsNullOrEmpty(value) ? PickerTitle : value;
+        SemanticProperties.SetDescription(SelectionButton, $"{LabelText}: {SelectedValueLabel.Text}");
     }
 
     private void OnSelectionButtonClicked(object? sender, EventArgs e)

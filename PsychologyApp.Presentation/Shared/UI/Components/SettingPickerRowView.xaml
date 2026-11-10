@@ -24,20 +24,17 @@
             HorizontalOptions="Fill"
             VerticalOptions="Center"
             ColumnDefinitions="*,Auto">
-            <Button
-                x:Name="SelectionButton"
-                Grid.ColumnSpan="2"
-                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                BackgroundColor="Transparent"
+            <Label
+                x:Name="SelectedValueLabel"
+                Grid.Column="0"
                 FontSize="15"
-                Padding="0,0,24,0"
-                CornerRadius="0"
-                BorderWidth="0"
-                HorizontalOptions="Fill"
+                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                 HorizontalTextAlignment="End"
-                VerticalOptions="Center"
-                IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
-                Clicked="OnSelectionButtonClicked" />
+                VerticalTextAlignment="Center"
+                LineBreakMode="TailTruncation"
+                MaxLines="1"
+                InputTransparent="True"
+                AutomationProperties.IsInAccessibleTree="False" />
             <Label
                 Grid.Column="1"
                 Text="⌄"
@@ -46,6 +43,17 @@
                 VerticalOptions="Center"
                 InputTransparent="True"
                 AutomationProperties.IsInAccessibleTree="False" />
+            <Button
+                x:Name="SelectionButton"
+                Grid.ColumnSpan="2"
+                BackgroundColor="Transparent"
+                Padding="0"
+                CornerRadius="0"
+                BorderWidth="0"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center"
+                IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
+                Clicked="OnSelectionButtonClicked" />
         </Grid>
     </Grid>
 
