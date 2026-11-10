@@ -35,12 +35,11 @@
                 MaxLines="1"
                 InputTransparent="True"
                 AutomationProperties.IsInAccessibleTree="False" />
-            <Label
+            <self:MaterialIconView
                 Grid.Column="1"
-                Text="⌄"
-                Style="{StaticResource BodyStyle}"
-                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                VerticalOptions="Center"
+                IconName="ExpandMore"
+                IconSize="18"
+                IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                 InputTransparent="True"
                 AutomationProperties.IsInAccessibleTree="False" />
             <Button
