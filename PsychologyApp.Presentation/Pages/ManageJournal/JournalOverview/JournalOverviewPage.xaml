@@ -159,9 +159,15 @@
             </Label>
         </VerticalStackLayout>
     </ScrollView>
+        <ui:SkeletonView
+            Kind="Cards"
+            Count="3"
+            Margin="20,76,20,20"
+            BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+            IsActive="{Binding ShowInitialLoading}" />
         <ui:ProgressBarView
-            IsLoading="{Binding IsLoading}"
-            IsVisible="{Binding IsLoading}"
+            IsLoading="{Binding ShowRefreshLoading}"
+            IsVisible="{Binding ShowRefreshLoading}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             ProgressText="{Binding LoadingText}"

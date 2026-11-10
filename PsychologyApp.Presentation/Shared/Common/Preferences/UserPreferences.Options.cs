@@ -9,7 +9,6 @@ public static partial class UserPreferences
 {
     public const string DefaultLanguage = "ru";
     public const string DefaultTheme = "light";
-    public const string DefaultColor = "blue";
     public const string DefaultForm = "rounded";
     public const string DefaultSize = "medium";
     public const string DefaultOnboardingConcern = OnboardingConcernKeys.Explore;
@@ -37,15 +36,6 @@ public static partial class UserPreferences
         _ => KeyOfLabel(value, ThemeKeys, ThemeLabelKey) ?? (string.IsNullOrWhiteSpace(value) ? DefaultTheme : value)
     };
 
-    public static string NormalizeColorKey(string value) => value switch
-    {
-        "blue" or "Blue" or "Синий" => "blue",
-        "red" or "Red" or "Красный" => "red",
-        "yellow" or "Yellow" or "Желтый" => "yellow",
-        "green" or "Green" or "Зелёный" or "Зеленый" => "green",
-        _ => KeyOfLabel(value, ColorKeys, ColorLabelKey) ?? (string.IsNullOrWhiteSpace(value) ? DefaultColor : value)
-    };
-
     public static string NormalizeFormKey(string value) => value switch
     {
         "rounded" or "Rounded" or "Normal" or "С закруглением" => "rounded",
@@ -67,9 +57,6 @@ public static partial class UserPreferences
     public static string GetThemeLabel(string key, string? language = null) =>
         AppStrings.In(language ?? Current.Language, ThemeLabelKey(NormalizeThemeKey(key)));
 
-    public static string GetColorLabel(string key, string? language = null) =>
-        AppStrings.In(language ?? Current.Language, ColorLabelKey(NormalizeColorKey(key)));
-
     public static string GetFormLabel(string key, string? language = null) =>
         AppStrings.In(language ?? Current.Language, FormLabelKey(NormalizeFormKey(key)));
 
@@ -77,14 +64,6 @@ public static partial class UserPreferences
         AppStrings.In(language ?? Current.Language, SizeLabelKey(NormalizeSizeKey(key)));
 
     private static string ThemeLabelKey(string key) => key == "dark" ? "SettingsThemeDark" : "SettingsThemeLight";
-
-    private static string ColorLabelKey(string key) => key switch
-    {
-        "red" => "SettingsColorRed",
-        "yellow" => "SettingsColorYellow",
-        "green" => "SettingsColorGreen",
-        _ => "SettingsColorBlue"
-    };
 
     private static string FormLabelKey(string key) => key == "square" ? "SettingsFormSquare" : "SettingsFormRounded";
 
@@ -192,8 +171,6 @@ public static partial class UserPreferences
 
     public static IReadOnlyList<string> ThemeKeys { get; } = ["dark", "light"];
 
-    public static IReadOnlyList<string> ColorKeys { get; } = ["blue", "red", "yellow", "green"];
-
     public static IReadOnlyList<string> FormKeys { get; } = ["rounded", "square"];
 
     public static IReadOnlyList<string> SizeKeys { get; } = ["large", "medium", "small"];
@@ -236,8 +213,6 @@ public static partial class UserPreferences
         NormalizeOnboardingConcernKey(displayOrKey);
 
     public static string ParseThemeKey(string displayOrKey) => NormalizeThemeKey(displayOrKey);
-
-    public static string ParseColorKey(string displayOrKey) => NormalizeColorKey(displayOrKey);
 
     public static string ParseFormKey(string displayOrKey) => NormalizeFormKey(displayOrKey);
 

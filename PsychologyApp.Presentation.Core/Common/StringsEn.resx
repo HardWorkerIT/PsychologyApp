@@ -163,7 +163,7 @@
     <value>Settings</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Theme, color, and display options</value>
+    <value>Appearance and theme</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>App</value>
@@ -200,9 +200,6 @@
   </data>
   <data name="SettingsThemeLabel" xml:space="preserve">
     <value>Theme</value>
-  </data>
-  <data name="SettingsColorLabel" xml:space="preserve">
-    <value>Color</value>
   </data>
   <data name="SettingsFormLabel" xml:space="preserve">
     <value>Shape</value>
@@ -257,9 +254,6 @@
   </data>
   <data name="SettingsFormHelper" xml:space="preserve">
     <value>Corner rounding for cards and input fields</value>
-  </data>
-  <data name="SettingsColorHelper" xml:space="preserve">
-    <value>Primary color for buttons and accents</value>
   </data>
   <data name="SettingsReplayOnboarding" xml:space="preserve">
     <value>Retake onboarding</value>
@@ -3726,18 +3720,6 @@
   </data>
   <data name="SettingsThemeLight" xml:space="preserve">
     <value>Light</value>
-  </data>
-  <data name="SettingsColorBlue" xml:space="preserve">
-    <value>Blue</value>
-  </data>
-  <data name="SettingsColorRed" xml:space="preserve">
-    <value>Red</value>
-  </data>
-  <data name="SettingsColorYellow" xml:space="preserve">
-    <value>Yellow</value>
-  </data>
-  <data name="SettingsColorGreen" xml:space="preserve">
-    <value>Green</value>
   </data>
   <data name="SettingsFormRounded" xml:space="preserve">
     <value>Rounded</value>

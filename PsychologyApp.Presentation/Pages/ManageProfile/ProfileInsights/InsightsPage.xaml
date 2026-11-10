@@ -95,9 +95,9 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-        <ui:ProgressBarView IsVisible="{Binding ShowInitialLoading}" IsLoading="{Binding IsLoading}"
-                            ProgressText="{Binding LoadingText}"
-                            HorizontalOptions="Center" VerticalOptions="Center" />
+        <ui:SkeletonView Kind="Cards" Count="4"
+                         Margin="{StaticResource LayoutTabPageMarginThickness}"
+                         IsActive="{Binding ShowInitialLoading}" />
         <ui:EmptyStateView
             IsVisible="{Binding ShowLoadError}"
             BodyText="{Binding LoadErrorText}"

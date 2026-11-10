@@ -35,18 +35,6 @@ public sealed class PreferenceLabelConverterTests : IDisposable
     }
 
     [Fact]
-    public void Convert_WithColorKind_ReturnsColorLabelNotLanguageLabel()
-    {
-        AppStrings.LanguageOverride = "ru";
-        PreferenceLabelConverter converter = new();
-
-        string label = Assert.IsType<string>(
-            converter.Convert("blue", typeof(string), PreferenceLabelKind.Color, CultureInfo.InvariantCulture));
-
-        Assert.Equal("Синий", label);
-    }
-
-    [Fact]
     public void Convert_WithoutParameter_PassesValueThrough()
     {
         AppStrings.LanguageOverride = "ru";

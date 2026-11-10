@@ -163,7 +163,7 @@
     <value>Настройки</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Тема, цвет и параметры отображения</value>
+    <value>Оформление и тема</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Приложение</value>
@@ -200,9 +200,6 @@
   </data>
   <data name="SettingsThemeLabel" xml:space="preserve">
     <value>Тема</value>
-  </data>
-  <data name="SettingsColorLabel" xml:space="preserve">
-    <value>Цвет</value>
   </data>
   <data name="SettingsFormLabel" xml:space="preserve">
     <value>Форма</value>
@@ -257,9 +254,6 @@
   </data>
   <data name="SettingsFormHelper" xml:space="preserve">
     <value>Скругление углов карточек и полей ввода</value>
-  </data>
-  <data name="SettingsColorHelper" xml:space="preserve">
-    <value>Основной цвет кнопок и акцентов</value>
   </data>
   <data name="SettingsReplayOnboarding" xml:space="preserve">
     <value>Пройти знакомство снова</value>
@@ -3732,18 +3726,6 @@
   </data>
   <data name="SettingsThemeLight" xml:space="preserve">
     <value>Светлая</value>
-  </data>
-  <data name="SettingsColorBlue" xml:space="preserve">
-    <value>Синий</value>
-  </data>
-  <data name="SettingsColorRed" xml:space="preserve">
-    <value>Красный</value>
-  </data>
-  <data name="SettingsColorYellow" xml:space="preserve">
-    <value>Желтый</value>
-  </data>
-  <data name="SettingsColorGreen" xml:space="preserve">
-    <value>Зелёный</value>
   </data>
   <data name="SettingsFormRounded" xml:space="preserve">
     <value>С закруглением</value>

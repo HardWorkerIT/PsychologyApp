@@ -20,7 +20,7 @@ Design tokens and reusable components live under `PsychologyApp.Presentation/Res
 | `HeroQuoteStyle` / `HeroCaptionStyle` | Daily quote hero and featured captions |
 | `QuoteDisplayStyle` | Quote cards in feeds |
 
-Font sizes and quote hero sizes scale via `UserPreferences.ApplyTypography`. Accent colors via `UserPreferences.ApplyAccentColor`.
+Font sizes and quote hero sizes scale via `UserPreferences.ApplyTypography`. Accent colors are fixed design tokens in `Resources/Styles/Colors.xaml`.
 
 ## Layout tokens
 

@@ -54,13 +54,11 @@
             </VerticalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
-            <ui:ProgressBarView
-                IsLoading="{Binding IsLoading}"
-                IsVisible="{Binding IsLoading}"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                ProgressText="{Binding LoadingText}"
-                SemanticProperties.Description="{Binding LoadingText}" />
+            <ui:SkeletonView
+                Kind="Cards"
+                Count="3"
+                Margin="{StaticResource LayoutTabPageMarginThickness}"
+                IsActive="{Binding IsLoading}" />
             <ui:RetryView
                 IsVisible="{Binding IsLoadFailed}"
                 FailedText="{Binding LoadFailedText}"

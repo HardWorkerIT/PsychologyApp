@@ -86,13 +86,12 @@ public sealed class SettingsViewModelTests
     [Fact]
     public void TheSavedChoicesAreShownWhenTheScreenOpens()
     {
-        _state = new UserPreferencesState { Language = "en", Theme = "dark", Color = "green", Form = "square", Size = "large", IsBold = true, QuestionnaireAutoAdvance = false };
+        _state = new UserPreferencesState { Language = "en", Theme = "dark", Form = "square", Size = "large", IsBold = true, QuestionnaireAutoAdvance = false };
 
         SettingsViewModel viewModel = Create();
 
         Assert.Equal("en", viewModel.Language);
         Assert.Equal("dark", viewModel.Theme);
-        Assert.Equal("green", viewModel.Color);
         Assert.Equal("square", viewModel.Form);
         Assert.Equal("large", viewModel.Size);
         Assert.True(viewModel.IsThick);
@@ -129,7 +128,7 @@ public sealed class SettingsViewModelTests
     public async Task ChangingAppearanceDoesNotRequestNotificationPermission()
     {
         SettingsViewModel viewModel = Create();
-        viewModel.Color = "green";
+        viewModel.Theme = "dark";
         await VmTestHelpers.WaitUntilAsync(() => _saved.Count == 1, 3000);
         await VmTestHelpers.RunAsync(viewModel.Finish);
         _practice.Verify(c => c.SyncAsync(It.IsAny<CancellationToken>()), Times.Never);
@@ -156,7 +155,7 @@ public sealed class SettingsViewModelTests
             .Returns(Task.CompletedTask);
         viewModel.Language = "en";
         await VmTestHelpers.WaitUntilAsync(() => _mood.Invocations.Count == 1, 3000);
-        viewModel.Color = "green";
+        viewModel.Form = "square";
         await VmTestHelpers.WaitUntilAsync(() => _mood.Invocations.Count == 2, 3000);
         _mood.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
         _chat.Verify(c => c.RescheduleAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -169,14 +168,14 @@ public sealed class SettingsViewModelTests
 
         viewModel.Theme = "dark";
         await Task.Delay(100);
-        viewModel.Color = "red";
+        viewModel.Form = "square";
         await Task.Delay(100);
         viewModel.Size = "large";
         await VmTestHelpers.WaitUntilAsync(() => _saved.Count >= 1, 3000);
         await Task.Delay(300);
 
         UserPreferencesState only = Assert.Single(_saved);
-        Assert.Equal(("dark", "red", "large"), (only.Theme, only.Color, only.Size));
+        Assert.Equal(("dark", "square", "large"), (only.Theme, only.Form, only.Size));
     }
 
     [Fact]
@@ -204,22 +203,6 @@ public sealed class SettingsViewModelTests
 
         Assert.Equal("dark", Assert.Single(_saved).Theme);
         _navigation.Verify(n => n.GoBackAsync(), Times.Once);
-    }
-
-    // The accent is picked from its swatches: a tap chooses it, marks only that one and is kept like any other change.
-    [Fact]
-    public async Task TappingASwatchPicksTheAccentAndMarksIt()
-    {
-        SettingsViewModel viewModel = Create();
-
-        viewModel.SelectColorCommand.Execute("green");
-        await VmTestHelpers.WaitUntilAsync(() => _saved.Count == 1, 3000);
-
-        Assert.Equal("green", viewModel.Color);
-        Assert.Equal("green", Assert.Single(viewModel.ColorSwatches, swatch => swatch.IsSelected).Key);
-        Assert.Equal(AppStrings.TestsAnswerSelected, Assert.Single(viewModel.ColorSwatches, swatch => swatch.IsSelected).SelectionState);
-        Assert.All(viewModel.ColorSwatches.Where(swatch => !swatch.IsSelected), swatch => Assert.Equal(AppStrings.TestsAnswerNotSelected, swatch.SelectionState));
-        Assert.Equal("green", _saved[0].Color);
     }
 
     [Fact]

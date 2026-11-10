@@ -16,6 +16,7 @@
         <Label
             Grid.Column="0"
             Style="{StaticResource NavBackIconStyle}"
+            TextColor="{DynamicResource NavigationBackIconColor}"
             Text="{mi:Material Icon=KeyboardArrowLeft}">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding BackCommand, Source={x:Reference Root}}" />

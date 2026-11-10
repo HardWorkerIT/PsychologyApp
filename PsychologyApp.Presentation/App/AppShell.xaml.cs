@@ -183,13 +183,13 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
 
     public void ApplyLocalization()
     {
+        ApplyTabBarChrome();
+        ApplyStatusBarChrome(IsDarkRequestedTheme());
         PracticeTab.Title = AppStrings.ShellTabPracticeShort;
         ChatTab.Title = AppStrings.ShellTabChatShort;
         DetectorTab.Title = AppStrings.ShellTabDetectorShort;
         JournalTab.Title = AppStrings.ShellTabJournalShort;
         BuildMenu();
-        ApplyTabBarChrome();
-        ApplyStatusBarChrome(IsDarkRequestedTheme());
     }
 
     private void RefreshShellTabPageTitles()
@@ -236,6 +236,13 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
 
         SetValue(Shell.TabBarBackgroundColorProperty, tabBarBackground);
         string accentTextKey = IsDarkRequestedTheme() ? "PrimaryTextDark" : "PrimaryTextLight";
+        // A single active resource lets open navigation templates repaint when the requested theme changes.
+        Color navigationBackIconColor = ResolveColor(resources, accentTextKey, Colors.DodgerBlue);
+        if (resources is not null)
+        {
+            resources["NavigationBackIconColor"] = navigationBackIconColor;
+        }
+
         SetDynamicResource(Shell.TabBarForegroundColorProperty, accentTextKey);
         SetDynamicResource(Shell.TabBarTitleColorProperty, accentTextKey);
         SetValue(Shell.TabBarUnselectedColorProperty, unselected);

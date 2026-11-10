@@ -11,7 +11,6 @@ public sealed class SettingsPreferencesPresenter
         UserPreferencesState state,
         Action<string> setLanguage,
         Action<string> setTheme,
-        Action<string> setColor,
         Action<string> setForm,
         Action<string> setSize,
         Action<bool> setBold,
@@ -28,7 +27,6 @@ public sealed class SettingsPreferencesPresenter
     {
         setLanguage(UserPreferences.ParseLanguageKey(state.Language));
         setTheme(UserPreferences.ParseThemeKey(state.Theme));
-        setColor(UserPreferences.ParseColorKey(state.Color));
         setForm(UserPreferences.ParseFormKey(state.Form));
         setSize(UserPreferences.ParseSizeKey(state.Size));
         setBold(state.IsBold);
@@ -47,7 +45,6 @@ public sealed class SettingsPreferencesPresenter
     public UserPreferencesState BuildState(
         string language,
         string theme,
-        string color,
         string form,
         string size,
         bool isBold,
@@ -67,7 +64,6 @@ public sealed class SettingsPreferencesPresenter
         {
             Language = UserPreferences.ParseLanguageKey(language),
             Theme = UserPreferences.ParseThemeKey(theme),
-            Color = UserPreferences.ParseColorKey(color),
             Form = UserPreferences.ParseFormKey(form),
             Size = UserPreferences.ParseSizeKey(size),
             IsBold = isBold,

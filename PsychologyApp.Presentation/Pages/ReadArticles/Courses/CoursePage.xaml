@@ -82,10 +82,10 @@
             <ui:ButtonView BodyText="{Binding PrimaryText}" TapCommand="{Binding PrimaryCommand}" IsEnabled="{Binding CanAct}" />
         </Border>
 
-        <ui:ProgressBarView Grid.RowSpan="2" IsLoading="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                            ProgressText="{Binding LoadingText}"
-                            HorizontalOptions="Center" VerticalOptions="Center"
-                            SemanticProperties.Description="{Binding LoadingText}" />
+        <ui:SkeletonView Grid.RowSpan="2" Kind="Cards" Count="4"
+                         Margin="20,72,20,96" VerticalOptions="Start"
+                         BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+                         IsActive="{Binding IsLoading}" />
         <ui:RetryView Grid.RowSpan="2" IsVisible="{Binding IsLoadFailed}"
                       FailedText="{Binding LoadFailedText}"
                       RetryText="{Binding RetryText}"

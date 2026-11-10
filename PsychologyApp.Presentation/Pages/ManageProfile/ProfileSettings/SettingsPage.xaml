@@ -11,10 +11,6 @@
              Title="{Binding PageTitle}"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
-    <ContentPage.Resources>
-        <vm:AccentSwatchColorConverter x:Key="AccentSwatchColor" />
-    </ContentPage.Resources>
-
     <Grid
         Margin="{StaticResource LayoutPageMarginThickness}"
         RowDefinitions="Auto,*"
@@ -45,45 +41,6 @@
                         PickerTitle="{Binding ThemePickerTitle}"
                         ItemsSource="{Binding ThemeOptions}"
                         SelectedItem="{Binding Theme}" />
-                    <BoxView Style="{StaticResource SettingRowDividerStyle}" />
-                    <!-- The accent as the colours themselves, one tap each: a list of colour names hid what each one looks like. -->
-                    <Grid ColumnDefinitions="*,Auto" MinimumHeightRequest="52">
-                        <Label Text="{Binding ColorLabel}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
-                        <HorizontalStackLayout Grid.Column="1" Spacing="4" BindableLayout.ItemsSource="{Binding ColorSwatches}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="vm:ColorSwatch">
-                                    <!-- A 44-point target around a 28-point circle; the chosen one is ringed. -->
-                                    <Border
-                                        WidthRequest="44"
-                                        HeightRequest="44"
-                                        Padding="6"
-                                        StrokeShape="RoundRectangle 22"
-                                        StrokeThickness="2"
-                                        Stroke="Transparent"
-                                        SemanticProperties.Description="{Binding Label}"
-                                        SemanticProperties.Hint="{Binding SelectionState}">
-                                        <Border.Triggers>
-                                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
-                                                <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
-                                            </DataTrigger>
-                                        </Border.Triggers>
-                                        <Border.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Command}" CommandParameter="{Binding Key}" />
-                                        </Border.GestureRecognizers>
-                                        <Border
-                                            StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 14"
-                                            InputTransparent="True"
-                                            BackgroundColor="{Binding Key, Converter={StaticResource AccentSwatchColor}}" />
-                                    </Border>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </HorizontalStackLayout>
-                    </Grid>
-                    <Label
-                        Text="{Binding ColorHelperText}"
-                        Style="{StaticResource CaptionStyle}"
-                        Margin="0,4,0,8" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Form}"

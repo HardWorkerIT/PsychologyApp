@@ -163,7 +163,7 @@
     <value>Ajustes</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Tema, color y visualización</value>
+    <value>Apariencia y tema</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Aplicación</value>
@@ -200,9 +200,6 @@
   </data>
   <data name="SettingsThemeLabel" xml:space="preserve">
     <value>Tema</value>
-  </data>
-  <data name="SettingsColorLabel" xml:space="preserve">
-    <value>Color</value>
   </data>
   <data name="SettingsFormLabel" xml:space="preserve">
     <value>Forma</value>
@@ -257,9 +254,6 @@
   </data>
   <data name="SettingsFormHelper" xml:space="preserve">
     <value>Redondeo de tarjetas y campos de texto</value>
-  </data>
-  <data name="SettingsColorHelper" xml:space="preserve">
-    <value>Color principal de botones y acentos</value>
   </data>
   <data name="SettingsReplayOnboarding" xml:space="preserve">
     <value>Repetir la introducción</value>
@@ -3726,18 +3720,6 @@
   </data>
   <data name="SettingsThemeLight" xml:space="preserve">
     <value>Claro</value>
-  </data>
-  <data name="SettingsColorBlue" xml:space="preserve">
-    <value>Azul</value>
-  </data>
-  <data name="SettingsColorRed" xml:space="preserve">
-    <value>Rojo</value>
-  </data>
-  <data name="SettingsColorYellow" xml:space="preserve">
-    <value>Amarillo</value>
-  </data>
-  <data name="SettingsColorGreen" xml:space="preserve">
-    <value>Verde</value>
   </data>
   <data name="SettingsFormRounded" xml:space="preserve">
     <value>Redondeado</value>

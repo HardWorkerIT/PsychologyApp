@@ -137,11 +137,17 @@
             </Border>
         </Grid>
 
+        <ui:SkeletonView
+            Kind="Rows"
+            Count="5"
+            Margin="{StaticResource LayoutTabPageMarginThickness}"
+            IsActive="{Binding IsLoadingOverlayVisible}" />
+
         <ui:ProgressBarView
             VerticalOptions="Center"
             HorizontalOptions="Center"
-            IsVisible="{Binding IsLoadingOverlayVisible}"
-            IsLoading="{Binding IsLoadingOverlayVisible}"
+            IsVisible="{Binding IsSlowLoadingVisible}"
+            IsLoading="{Binding IsSlowLoadingVisible}"
             ProgressText="{Binding LoadingText}"
             CancelCommand="{Binding Cancel}" />
 

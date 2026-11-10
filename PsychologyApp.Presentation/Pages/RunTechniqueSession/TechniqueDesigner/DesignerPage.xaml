@@ -111,12 +111,19 @@
                 TapCommand="{Binding ExecuteTechnique}" />
         </Grid>
 
+        <ui:SkeletonView
+            Kind="Cards"
+            Count="4"
+            Margin="20,72,20,96"
+            BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+            IsActive="{Binding IsLoadingOverlayVisible}" />
+
         <ui:ProgressBarView
             x:Name="LoadingProgress"
             VerticalOptions="Center"
             HorizontalOptions="Center"
-            IsVisible="{Binding IsLoadingOverlayVisible}"
-            IsLoading="{Binding IsLoadingOverlayVisible}"
+            IsVisible="{Binding IsSlowLoadingVisible}"
+            IsLoading="{Binding IsSlowLoadingVisible}"
             ProgressText="{Binding LoadingText}"
             CancelCommand="{Binding Cancel}" />
 

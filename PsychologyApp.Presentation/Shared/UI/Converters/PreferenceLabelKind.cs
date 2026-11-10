@@ -5,7 +5,6 @@ public enum PreferenceLabelKind
     PassThrough,
     Language,
     Theme,
-    Color,
     Form,
     Size,
     Concern

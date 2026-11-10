@@ -133,7 +133,6 @@ public sealed class MoodReminderCoordinatorTests
         UserPreferencesState built = presenter.BuildState(
             UserPreferences.DefaultLanguage,
             UserPreferences.DefaultTheme,
-            UserPreferences.DefaultColor,
             UserPreferences.DefaultForm,
             UserPreferences.DefaultSize,
             isBold: false,

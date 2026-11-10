@@ -32,6 +32,7 @@
                     </Border.GestureRecognizers>
                     <Label
                         Style="{StaticResource NavBackIconStyle}"
+                        TextColor="{DynamicResource NavigationBackIconColor}"
                         WidthRequest="-1"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"

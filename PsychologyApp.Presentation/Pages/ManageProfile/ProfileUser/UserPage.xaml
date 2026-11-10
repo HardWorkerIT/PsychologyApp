@@ -176,11 +176,17 @@
             RetryText="{Binding RetryText}"
             RetryCommand="{Binding ReloadQuotesCommand}" />
 
+        <ui:SkeletonView
+            Kind="Profile"
+            Margin="{StaticResource LayoutPageMarginThickness}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+            IsActive="{Binding IsLoadingOverlayVisible}" />
+
         <ui:ProgressBarView
             VerticalOptions="Center"
             HorizontalOptions="Center"
-            IsVisible="{Binding IsLoadingOverlayVisible}"
-            IsLoading="{Binding IsLoadingOverlayVisible}"
+            IsVisible="{Binding IsSlowLoadingVisible}"
+            IsLoading="{Binding IsSlowLoadingVisible}"
             ProgressText="{Binding LoadingText}" />
     </Grid>
 </ContentPage>

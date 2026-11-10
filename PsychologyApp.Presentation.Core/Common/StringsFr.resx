@@ -163,7 +163,7 @@
     <value>Réglages</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Thème, couleur et affichage</value>
+    <value>Apparence et thème</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Application</value>
@@ -200,9 +200,6 @@
   </data>
   <data name="SettingsThemeLabel" xml:space="preserve">
     <value>Thème</value>
-  </data>
-  <data name="SettingsColorLabel" xml:space="preserve">
-    <value>Couleur</value>
   </data>
   <data name="SettingsFormLabel" xml:space="preserve">
     <value>Forme</value>
@@ -257,9 +254,6 @@
   </data>
   <data name="SettingsFormHelper" xml:space="preserve">
     <value>Arrondi des cartes et des champs de saisie</value>
-  </data>
-  <data name="SettingsColorHelper" xml:space="preserve">
-    <value>Couleur principale des boutons et des accents</value>
   </data>
   <data name="SettingsReplayOnboarding" xml:space="preserve">
     <value>Revoir la présentation</value>
@@ -3726,18 +3720,6 @@
   </data>
   <data name="SettingsThemeLight" xml:space="preserve">
     <value>Clair</value>
-  </data>
-  <data name="SettingsColorBlue" xml:space="preserve">
-    <value>Bleu</value>
-  </data>
-  <data name="SettingsColorRed" xml:space="preserve">
-    <value>Rouge</value>
-  </data>
-  <data name="SettingsColorYellow" xml:space="preserve">
-    <value>Jaune</value>
-  </data>
-  <data name="SettingsColorGreen" xml:space="preserve">
-    <value>Vert</value>
   </data>
   <data name="SettingsFormRounded" xml:space="preserve">
     <value>Arrondi</value>

@@ -8,7 +8,6 @@ public sealed record UserPreferencesState
 {
     public string Language { get; init; } = UserPreferences.DefaultLanguage;
     public string Theme { get; init; } = UserPreferences.DefaultTheme;
-    public string Color { get; init; } = UserPreferences.DefaultColor;
     public string Form { get; init; } = UserPreferences.DefaultForm;
     public string Size { get; init; } = UserPreferences.DefaultSize;
     public bool IsBold { get; init; }

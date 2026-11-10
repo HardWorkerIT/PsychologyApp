@@ -1,4 +1,3 @@
-using System.Windows.Input;
 using PsychologyApp.Presentation.Shared.Common;
 
 namespace PsychologyApp.Presentation.Pages.ManageProfile.ProfileSettings;
@@ -10,15 +9,6 @@ public partial class SettingsViewModel
 
     public IReadOnlyList<string> LanguageOptions { get; private set; } = [];
     public IReadOnlyList<string> ThemeOptions { get; private set; } = [];
-    public IReadOnlyList<string> ColorOptions { get; private set; } = [];
-
-    /// <summary>The accent colours as swatches, the chosen one marked; a tap picks it, as the picker did.</summary>
-    public IReadOnlyList<ColorSwatch> ColorSwatches =>
-        [.. ColorOptions.Select(key => new ColorSwatch(key, UserPreferences.GetColorLabel(key), key == Color, SelectColorCommand))];
-
-    public ICommand SelectColorCommand => _selectColorCommand ??= new Command<string>(key => Color = key);
-
-    private ICommand? _selectColorCommand;
     public IReadOnlyList<string> FormOptions { get; private set; } = [];
     public IReadOnlyList<string> SizeOptions { get; private set; } = [];
     public IReadOnlyList<string> PracticeReminderHourOptions { get; private set; } = [];
@@ -36,7 +26,6 @@ public partial class SettingsViewModel
                 _savedState,
                 value => language = value,
                 value => theme = value,
-                value => color = value,
                 value => form = value,
                 value => size = value,
                 value => isThick = value,
@@ -70,7 +59,6 @@ public partial class SettingsViewModel
     {
         LanguageOptions = UserPreferences.LanguageKeys.ToArray();
         ThemeOptions = UserPreferences.ThemeKeys.ToArray();
-        ColorOptions = UserPreferences.ColorKeys.ToArray();
         FormOptions = UserPreferences.FormKeys.ToArray();
         SizeOptions = UserPreferences.SizeKeys.ToArray();
         PracticeReminderHourOptions = UserPreferences.GetPracticeReminderHourOptions().ToArray();
@@ -81,8 +69,6 @@ public partial class SettingsViewModel
 
         OnPropertyChanged(nameof(LanguageOptions));
         OnPropertyChanged(nameof(ThemeOptions));
-        OnPropertyChanged(nameof(ColorOptions));
-        OnPropertyChanged(nameof(ColorSwatches));
         OnPropertyChanged(nameof(FormOptions));
         OnPropertyChanged(nameof(SizeOptions));
         OnPropertyChanged(nameof(PracticeReminderHourOptions));
@@ -96,7 +82,6 @@ public partial class SettingsViewModel
     {
         OnPropertyChanged(nameof(Language));
         OnPropertyChanged(nameof(Theme));
-        OnPropertyChanged(nameof(Color));
         OnPropertyChanged(nameof(Form));
         OnPropertyChanged(nameof(Size));
         OnPropertyChanged(nameof(PracticeReminderHour));
@@ -118,7 +103,6 @@ public partial class SettingsViewModel
         OnPropertyChanged(nameof(FontSectionTitle));
         OnPropertyChanged(nameof(LanguageLabel));
         OnPropertyChanged(nameof(ThemeLabel));
-        OnPropertyChanged(nameof(ColorLabel));
         OnPropertyChanged(nameof(FormLabel));
         OnPropertyChanged(nameof(SizeLabel));
         OnPropertyChanged(nameof(BoldLabel));
@@ -142,7 +126,6 @@ public partial class SettingsViewModel
         OnPropertyChanged(nameof(PrimaryConcernPickerTitle));
         OnPropertyChanged(nameof(ReplayOnboardingText));
         OnPropertyChanged(nameof(FormHelperText));
-        OnPropertyChanged(nameof(ColorHelperText));
         OnPropertyChanged(nameof(LanguagePickerTitle));
         OnPropertyChanged(nameof(ThemePickerTitle));
         OnPropertyChanged(nameof(FormPickerTitle));
@@ -162,10 +145,4 @@ public partial class SettingsViewModel
         RefreshPickerDisplays();
         NotifyLocalizedLabelsChanged();
     }
-}
-
-/// <summary>One accent colour in the settings: its key, its name for screen readers, whether it is the chosen one.</summary>
-public sealed record ColorSwatch(string Key, string Label, bool IsSelected, ICommand Command)
-{
-    public string SelectionState => IsSelected ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected;
 }

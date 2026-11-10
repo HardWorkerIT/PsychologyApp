@@ -68,10 +68,15 @@
                 </vm:JournalTimelineItemTemplateSelector>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        <ui:SkeletonView
+            Grid.Row="3"
+            Kind="Rows"
+            Count="5"
+            IsActive="{Binding ShowInitialLoading}" />
         <ui:ProgressBarView
             Grid.Row="3"
-            IsLoading="{Binding IsLoading}"
-            IsVisible="{Binding IsLoading}"
+            IsLoading="{Binding ShowRefreshLoading}"
+            IsVisible="{Binding ShowRefreshLoading}"
             HorizontalOptions="Center"
             VerticalOptions="Center"
             ProgressText="{Binding LoadingText}"

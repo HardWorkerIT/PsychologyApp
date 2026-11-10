@@ -27,9 +27,8 @@
                     IsVisible="{Binding ShowEmpty}"
                     BodyText="{Binding EmptyText}"
                     IconName="History" />
-                <ui:ProgressBarView IsVisible="{Binding ShowInitialLoading}" IsLoading="{Binding IsLoading}"
-                                    ProgressText="{Binding LoadingText}"
-                                    HorizontalOptions="Center" Padding="0,16" />
+                <ui:SkeletonView Kind="Rows" Count="4" Margin="0,8,0,12"
+                                 IsActive="{Binding ShowInitialLoading}" />
                 <ui:EmptyStateView
                     IsVisible="{Binding ShowLoadError}"
                     BodyText="{Binding LoadErrorText}"

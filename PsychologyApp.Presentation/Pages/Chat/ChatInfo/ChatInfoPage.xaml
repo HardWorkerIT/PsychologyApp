@@ -117,10 +117,8 @@
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
-            <ui:ProgressBarView IsLoading="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
-                                ProgressText="{Binding LoadingText}"
-                                HorizontalOptions="Center" VerticalOptions="Center"
-                                SemanticProperties.Description="{Binding LoadingText}" />
+            <ui:SkeletonView Kind="Cards" Count="3" Margin="0,16,0,0"
+                             IsActive="{Binding IsLoading}" />
             <ui:RetryView IsVisible="{Binding IsLoadFailed}"
                           FailedText="{Binding LoadFailedText}"
                           RetryText="{Binding RetryText}"

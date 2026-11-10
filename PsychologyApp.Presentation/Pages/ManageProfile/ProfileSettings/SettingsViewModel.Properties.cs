@@ -41,25 +41,6 @@ public partial class SettingsViewModel
         }
     }
 
-    public string color { get; private set; } = string.Empty;
-    public string Color
-    {
-        get => color;
-        set
-        {
-            string normalized = UserPreferences.ParseColorKey(value);
-            if (_isSyncingPickers || string.Equals(color, normalized, StringComparison.Ordinal))
-            {
-                return;
-            }
-
-            color = normalized;
-            OnPropertyChanged(nameof(Color));
-            OnPropertyChanged(nameof(ColorSwatches));
-            OnSettingsChanged();
-        }
-    }
-
     public string form { get; private set; } = string.Empty;
     public string Form
     {
@@ -280,7 +261,6 @@ public partial class SettingsViewModel
         _presenter.BuildState(
             Language,
             Theme,
-            Color,
             Form,
             Size,
             IsThick,

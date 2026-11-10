@@ -13,7 +13,7 @@ public sealed class SettingsPreferencesPresenterTests
         UserPreferencesState saved = new() { HasCompletedOnboarding = true, Theme = "light" };
 
         UserPreferencesState built = new SettingsPreferencesPresenter().BuildState(
-            "Русский", "Тёмная", "Синий", "Скруглённая", "Средний",
+            "Русский", "Тёмная", "Скруглённая", "Средний",
             isBold: false, questionnaireAutoAdvance: true,
             practiceRemindersEnabled: true, practiceReminderHour: 19,
             quoteRemindersEnabled: false, quoteReminderHour: 9,

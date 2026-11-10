@@ -162,7 +162,6 @@
 
     <Style x:Key="NavBackIconStyle" TargetType="Label">
         <Setter Property="FontSize" Value="24" />
-        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />

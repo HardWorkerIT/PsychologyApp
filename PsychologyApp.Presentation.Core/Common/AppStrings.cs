@@ -37,7 +37,6 @@ public static partial class AppStrings
     public static string SettingsFontSection => R(nameof(SettingsFontSection));
     public static string SettingsLanguageLabel => R(nameof(SettingsLanguageLabel));
     public static string SettingsThemeLabel => R(nameof(SettingsThemeLabel));
-    public static string SettingsColorLabel => R(nameof(SettingsColorLabel));
     public static string SettingsFormLabel => R(nameof(SettingsFormLabel));
     public static string SettingsSizeLabel => R(nameof(SettingsSizeLabel));
     public static string SettingsBoldLabel => R(nameof(SettingsBoldLabel));
@@ -61,7 +60,6 @@ public static partial class AppStrings
     public static string SettingsPickerSizes => R(nameof(SettingsPickerSizes));
     public static string SettingsPickerLanguages => R(nameof(SettingsPickerLanguages));
     public static string SettingsFormHelper => R(nameof(SettingsFormHelper));
-    public static string SettingsColorHelper => R(nameof(SettingsColorHelper));
     public static string SettingsReplayOnboarding => R(nameof(SettingsReplayOnboarding));
 
     public static string TechniqueTheory => R(nameof(TechniqueTheory));

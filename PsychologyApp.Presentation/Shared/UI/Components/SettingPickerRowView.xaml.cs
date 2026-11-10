@@ -141,7 +141,6 @@ public partial class SettingPickerRowView : ContentView
             PreferenceLabelKind.PassThrough => value?.ToString() ?? string.Empty,
             PreferenceLabelKind.Language => UserPreferences.ParseLanguageKey(value?.ToString() ?? string.Empty),
             PreferenceLabelKind.Theme => UserPreferences.ParseThemeKey(value?.ToString() ?? string.Empty),
-            PreferenceLabelKind.Color => UserPreferences.ParseColorKey(value?.ToString() ?? string.Empty),
             PreferenceLabelKind.Form => UserPreferences.ParseFormKey(value?.ToString() ?? string.Empty),
             PreferenceLabelKind.Size => UserPreferences.ParseSizeKey(value?.ToString() ?? string.Empty),
             PreferenceLabelKind.Concern => UserPreferences.ParseOnboardingConcernKey(value?.ToString() ?? string.Empty),

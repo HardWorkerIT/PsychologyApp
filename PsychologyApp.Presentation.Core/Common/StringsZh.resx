@@ -163,7 +163,7 @@
     <value>设置</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>主题、颜色和显示</value>
+    <value>外观与主题</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>应用</value>
@@ -200,9 +200,6 @@
   </data>
   <data name="SettingsThemeLabel" xml:space="preserve">
     <value>主题</value>
-  </data>
-  <data name="SettingsColorLabel" xml:space="preserve">
-    <value>颜色</value>
   </data>
   <data name="SettingsFormLabel" xml:space="preserve">
     <value>形状</value>
@@ -257,9 +254,6 @@
   </data>
   <data name="SettingsFormHelper" xml:space="preserve">
     <value>卡片和输入框的圆角</value>
-  </data>
-  <data name="SettingsColorHelper" xml:space="preserve">
-    <value>按钮和强调色的主色</value>
   </data>
   <data name="SettingsReplayOnboarding" xml:space="preserve">
     <value>重新查看引导</value>
@@ -3726,18 +3720,6 @@
   </data>
   <data name="SettingsThemeLight" xml:space="preserve">
     <value>浅色</value>
-  </data>
-  <data name="SettingsColorBlue" xml:space="preserve">
-    <value>蓝色</value>
-  </data>
-  <data name="SettingsColorRed" xml:space="preserve">
-    <value>红色</value>
-  </data>
-  <data name="SettingsColorYellow" xml:space="preserve">
-    <value>黄色</value>
-  </data>
-  <data name="SettingsColorGreen" xml:space="preserve">
-    <value>绿色</value>
   </data>
   <data name="SettingsFormRounded" xml:space="preserve">
     <value>圆角</value>

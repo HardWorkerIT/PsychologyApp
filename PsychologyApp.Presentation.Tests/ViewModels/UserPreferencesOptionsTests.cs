@@ -18,16 +18,6 @@ public sealed class UserPreferencesOptionsTests
         Assert.Equal(expected, UserPreferences.NormalizeThemeKey(input));
 
     [Theory]
-    [InlineData("Blue", "blue")]
-    [InlineData("Красный", "red")]
-    [InlineData("Желтый", "yellow")]
-    [InlineData("Зеленый", "green")]
-    [InlineData("Зелёный", "green")]
-    [InlineData("", "blue")]
-    public void ColorsMapToTheStoredKey(string input, string expected) =>
-        Assert.Equal(expected, UserPreferences.NormalizeColorKey(input));
-
-    [Theory]
     [InlineData("Normal", "rounded")]
     [InlineData("С закруглением", "rounded")]
     [InlineData("Без закругления", "square")]
@@ -62,7 +52,6 @@ public sealed class UserPreferencesOptionsTests
         foreach (string language in AppLanguages.All)
         {
             foreach (string key in UserPreferences.ThemeKeys) Assert.False(string.IsNullOrWhiteSpace(UserPreferences.GetThemeLabel(key, language)));
-            foreach (string key in UserPreferences.ColorKeys) Assert.False(string.IsNullOrWhiteSpace(UserPreferences.GetColorLabel(key, language)));
             foreach (string key in UserPreferences.FormKeys) Assert.False(string.IsNullOrWhiteSpace(UserPreferences.GetFormLabel(key, language)));
             foreach (string key in UserPreferences.SizeKeys) Assert.False(string.IsNullOrWhiteSpace(UserPreferences.GetSizeLabel(key, language)));
             foreach (string key in UserPreferences.LanguageKeys) Assert.False(string.IsNullOrWhiteSpace(UserPreferences.GetLanguageLabel(key, language)));
@@ -75,7 +64,6 @@ public sealed class UserPreferencesOptionsTests
         foreach (string language in AppLanguages.All)
         {
             foreach (string key in UserPreferences.ThemeKeys) Assert.Equal(key, UserPreferences.ParseThemeKey(UserPreferences.GetThemeLabel(key, language)));
-            foreach (string key in UserPreferences.ColorKeys) Assert.Equal(key, UserPreferences.ParseColorKey(UserPreferences.GetColorLabel(key, language)));
             foreach (string key in UserPreferences.FormKeys) Assert.Equal(key, UserPreferences.ParseFormKey(UserPreferences.GetFormLabel(key, language)));
             foreach (string key in UserPreferences.SizeKeys) Assert.Equal(key, UserPreferences.ParseSizeKey(UserPreferences.GetSizeLabel(key, language)));
             foreach (string key in UserPreferences.LanguageKeys) Assert.Equal(key, UserPreferences.ParseLanguageKey(UserPreferences.GetLanguageLabel(key, language)));
@@ -129,7 +117,6 @@ public sealed class UserPreferencesOptionsTests
     public void TheSettingValuesAreShownInTheInterfaceLanguageNotInEnglish()
     {
         Assert.Equal("Sombre", UserPreferences.GetThemeLabel("dark", AppLanguages.French));
-        Assert.Equal("Grün", UserPreferences.GetColorLabel("green", AppLanguages.German));
         Assert.Equal("圆角", UserPreferences.GetFormLabel("rounded", AppLanguages.Chinese));
         Assert.Equal("Pequeño", UserPreferences.GetSizeLabel("small", AppLanguages.Spanish));
     }

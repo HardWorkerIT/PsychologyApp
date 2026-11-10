@@ -65,6 +65,8 @@ public sealed class JournalTimelineViewModel : BaseViewModel
 
     public bool HasMoodNotes => TimelineItems.Count > 0;
     public bool ShowMoodNotesEmpty => _loaded && !IsLoading && !IsLoadFailed && !HasMoodNotes;
+    public bool ShowInitialLoading => IsLoading && !_loaded;
+    public bool ShowRefreshLoading => IsLoading && _loaded;
 
     public bool IsLoading
     {
@@ -74,6 +76,8 @@ public sealed class JournalTimelineViewModel : BaseViewModel
             if (SetProperty(ref _isLoading, value))
             {
                 OnPropertyChanged(nameof(ShowMoodNotesEmpty));
+                OnPropertyChanged(nameof(ShowInitialLoading));
+                OnPropertyChanged(nameof(ShowRefreshLoading));
             }
         }
     }

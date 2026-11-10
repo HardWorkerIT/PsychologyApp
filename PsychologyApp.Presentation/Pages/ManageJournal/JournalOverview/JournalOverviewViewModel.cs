@@ -123,10 +123,13 @@ public sealed class JournalOverviewViewModel : BaseViewModel
         {
             if (SetProperty(ref _isLoading, value))
             {
-                Notify(nameof(ShowPeriodEmpty), nameof(ShowMoodTrendHint));
+                Notify(nameof(ShowPeriodEmpty), nameof(ShowMoodTrendHint), nameof(ShowInitialLoading), nameof(ShowRefreshLoading));
             }
         }
     }
+
+    public bool ShowInitialLoading => IsLoading && !_loaded;
+    public bool ShowRefreshLoading => IsLoading && _loaded;
 
     public bool IsLoadFailed
     {
