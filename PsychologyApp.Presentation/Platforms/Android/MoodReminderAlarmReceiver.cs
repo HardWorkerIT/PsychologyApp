@@ -30,7 +30,7 @@ public sealed class MoodReminderAlarmReceiver : BroadcastReceiver
 
         AndroidMoodReminderScheduler.EnsureNotificationChannel(context);
         PendingIntent tapIntent = AndroidMoodReminderScheduler.CreateTapPendingIntent(context);
-        int smallIcon = context.ApplicationInfo?.Icon ?? Resource.Mipmap.logo;
+        int smallIcon = context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo;
 
         var builder = new NotificationCompat.Builder(context, MoodReminderConstants.ChannelId);
         builder.SetContentTitle(title);

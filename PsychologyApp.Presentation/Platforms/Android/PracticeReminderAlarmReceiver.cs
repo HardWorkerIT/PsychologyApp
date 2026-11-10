@@ -42,7 +42,7 @@ public sealed class PracticeReminderAlarmReceiver : BroadcastReceiver
         AndroidPracticeReminderScheduler.EnsureNotificationChannel(context);
 
         PendingIntent tapIntent = AndroidPracticeReminderScheduler.CreateTapPendingIntent(context, techniqueId);
-        int smallIcon = context.ApplicationInfo?.Icon ?? Resource.Mipmap.logo;
+        int smallIcon = context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo;
         var builder = new NotificationCompat.Builder(context, PracticeReminderConstants.ChannelId);
         builder.SetContentTitle(title);
         builder.SetContentText(body);

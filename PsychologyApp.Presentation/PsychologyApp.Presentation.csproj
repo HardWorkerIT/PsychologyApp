@@ -158,7 +158,9 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\logo.jpeg" />
+		<MauiIcon Include="Resources\AppIcon\logo.jpeg"
+		          ForegroundFile="Resources\AppIcon\logo-foreground.png"
+		          Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\AppIcon\logo.jpeg" Color="#FFFFFF" BaseSize="512,512" />

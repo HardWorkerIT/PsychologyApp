@@ -12,7 +12,6 @@
         Margin="32"
         VerticalOptions="Center"
         HorizontalOptions="Center">
-        <Border Style="{StaticResource AppDialogShadowLayerStyle}" />
         <Border
             x:Name="DialogCard"
             Style="{StaticResource AppDialogPopupCardStyle}"

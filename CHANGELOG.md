@@ -6,6 +6,7 @@ This project follows a Keep a Changelog style and Semantic Versioning principles
 
 ## [Unreleased]
 
+- Android icon source uses the established blue mark with a transparent adaptive foreground; Android themed-icon mode can still tint it from the wallpaper. Device verification is pending because the local Android SDK is incomplete. Custom popups use theme-aware outlines instead of hard-edged shadow layers, and the AI psychologist and chat details pages have a clearer visual hierarchy.
 - Удалён выбор акцентного цвета: приложение использует фиксированную контрастную палитру, а старое значение очищается без потери статуса онбординга.
 - Initial loading on chat, journal, profile, insights, recommendations, course, music catalog and technique screens now uses content-shaped skeletons. Existing action-level progress indicators remain, and cancelable indicators on long page loads appear after 2.5 seconds. Navigation back arrows use a shared dynamic theme-aware, contrast-adjusted brand color and update immediately when the theme changes. Android packaging and on-device visual verification remain pending; the emulator still has an older APK.
 - Changing appearance no longer requests notification permission; enabling a reminder still can.

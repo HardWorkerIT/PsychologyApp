@@ -30,7 +30,7 @@ public sealed class ChatReminderAlarmReceiver : BroadcastReceiver
 
         AndroidChatReminderScheduler.EnsureNotificationChannel(context);
         PendingIntent tapIntent = AndroidChatReminderScheduler.CreateTapPendingIntent(context);
-        int smallIcon = context.ApplicationInfo?.Icon ?? Resource.Mipmap.logo;
+        int smallIcon = context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo;
 
         var builder = new NotificationCompat.Builder(context, ChatReminderConstants.ChannelId);
         builder.SetContentTitle(title);

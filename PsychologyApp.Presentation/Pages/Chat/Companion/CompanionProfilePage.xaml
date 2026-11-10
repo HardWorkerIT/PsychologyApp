@@ -11,13 +11,41 @@
              Title="{Binding Title}"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
+    <ContentPage.Resources>
+        <Style x:Key="ChatProfileCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource BorderSubtleLight}, Dark={StaticResource BorderSubtleDark}}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
+            <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusShape}" />
+            <Setter Property="Shadow" Value="{x:Null}" />
+        </Style>
+
+        <Style x:Key="ChatProfileActionRowStyle" TargetType="Border">
+            <Setter Property="Padding" Value="16,12" />
+            <Setter Property="MinimumHeightRequest" Value="68" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="Stroke" Value="Transparent" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusCompactShape}" />
+        </Style>
+
+        <Style x:Key="ChatProfileIconTileStyle" TargetType="Border">
+            <Setter Property="WidthRequest" Value="44" />
+            <Setter Property="HeightRequest" Value="44" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
+            <Setter Property="Stroke" Value="Transparent" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusCompactShape}" />
+        </Style>
+    </ContentPage.Resources>
+
     <ContentPage.Behaviors>
         <behaviors:PageAnalyticsBehavior />
     </ContentPage.Behaviors>
 
     <Grid RowDefinitions="Auto,*" Margin="{StaticResource LayoutPageMarginThickness}">
-
-        <!-- Kept outside the loading gate below: going back must always work, even while the page is still loading. -->
         <ui:NavigationBarSimpleView
             Grid.Row="0"
             TitleText="{Binding Title}"
@@ -30,57 +58,207 @@
             Margin="20,20,20,0"
             IsActive="{Binding IsLoading}" />
 
-        <!-- Laid out like the app's settings: who it is and what it is not, then its actions as rows in the cards of the settings
-             screen. Nothing hides behind a sheet, and there is no slogan or tiles of text: the rows are the page. -->
         <ScrollView Grid.Row="1" IsVisible="{Binding HasLoaded}" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="0,16,0,24">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14" Margin="4,0,4,8">
-                    <avatar:CompanionAvatarView
-                        WidthRequest="56"
-                        HeightRequest="56"
-                        IconSize="28"
-                        VerticalOptions="Center"
-                        AutomationProperties.IsInAccessibleTree="False" />
-                    <!-- What it is not stays at the top, under its name, in one sentence. -->
-                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                        <Label Text="{Binding Title}" Style="{StaticResource SectionTitleStyle}" />
-                        <Label Text="{Binding Disclaimer}" Style="{StaticResource CaptionStyle}" LineBreakMode="WordWrap" />
+            <VerticalStackLayout Spacing="16" Padding="0,16,0,24">
+                <Border Style="{StaticResource ChatProfileCardStyle}" Padding="22">
+                    <VerticalStackLayout Spacing="10">
+                        <avatar:CompanionAvatarView
+                            WidthRequest="72"
+                            HeightRequest="72"
+                            IconSize="36"
+                            HorizontalOptions="Center"
+                            AutomationProperties.IsInAccessibleTree="False" />
+                        <Label
+                            Text="{Binding Title}"
+                            Style="{StaticResource SectionTitleStyle}"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap" />
+                        <Label
+                            Text="{Binding Disclaimer}"
+                            Style="{StaticResource BodyStyle}"
+                            HorizontalTextAlignment="Center"
+                            LineBreakMode="WordWrap" />
                     </VerticalStackLayout>
-                </Grid>
+                </Border>
 
-                <ui:SettingsLinkCardView Title="{Binding NewChatText}" IconName="AddComment" TapCommand="{Binding NewChatCommand}" />
-                <ui:SettingsLinkCardView
-                    Title="{Binding NameTitle}"
-                    IconName="Person"
-                    Subtitle="{Binding UserName}"
-                    TapCommand="{Binding EditNameCommand}" />
+                <ui:ButtonView
+                    BodyText="{Binding NewChatText}"
+                    AccessibilityLabel="{Binding NewChatText}"
+                    TapCommand="{Binding NewChatCommand}" />
 
-                <ui:SettingsLinkCardView
-                    Margin="0,8,0,0"
-                    Title="{Binding CrisisText}"
-                    IconName="HealthAndSafety"
-                    TapCommand="{Binding CrisisCommand}" />
+                <Border Style="{StaticResource ChatProfileCardStyle}" Padding="0">
+                    <Border
+                        Style="{StaticResource ChatProfileActionRowStyle}"
+                        SemanticProperties.Description="{Binding NameTitle}">
+                        <Border.Behaviors>
+                            <behaviors:PressFeedbackBehavior />
+                        </Border.Behaviors>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding EditNameCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border Style="{StaticResource ChatProfileIconTileStyle}">
+                                <ui:MaterialIconView
+                                    IconName="Person"
+                                    IconSize="22"
+                                    IconColor="{DynamicResource Primary}"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    AutomationProperties.IsInAccessibleTree="False" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding NameTitle}" Style="{StaticResource BodyStyle}" LineBreakMode="WordWrap" />
+                                <Label
+                                    Text="{Binding UserName}"
+                                    IsVisible="{Binding HasUserName}"
+                                    Style="{StaticResource CaptionStyle}"
+                                    MaxLines="2"
+                                    LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+                            <ui:MaterialIconView
+                                Grid.Column="2"
+                                IconName="ChevronRight"
+                                IconSize="22"
+                                IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                VerticalOptions="Center"
+                                AutomationProperties.IsInAccessibleTree="False" />
+                        </Grid>
+                    </Border>
+                </Border>
 
-                <!-- The two that erase, apart from the rest; each still asks first. Deleting chats only when there are some. -->
-                <ui:SettingsLinkCardView
-                    Margin="0,8,0,0"
-                    Title="{Binding ForgetText}"
-                    IconName="PersonOff"
-                    TapCommand="{Binding ForgetCommand}" />
-                <ui:SettingsLinkCardView
-                    IsVisible="{Binding HasHistory}"
-                    Title="{Binding DeleteAllText}"
-                    IconName="DeleteOutline"
-                    TapCommand="{Binding DeleteAllCommand}" />
+                <Border Style="{StaticResource ChatProfileCardStyle}" Padding="0">
+                    <Border
+                        Style="{StaticResource ChatProfileActionRowStyle}"
+                        SemanticProperties.Description="{Binding CrisisText}">
+                        <Border.Behaviors>
+                            <behaviors:PressFeedbackBehavior />
+                        </Border.Behaviors>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CrisisCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border Style="{StaticResource ChatProfileIconTileStyle}">
+                                <ui:MaterialIconView
+                                    IconName="HealthAndSafety"
+                                    IconSize="22"
+                                    IconColor="{DynamicResource Primary}"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    AutomationProperties.IsInAccessibleTree="False" />
+                            </Border>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding CrisisText}"
+                                Style="{StaticResource BodyStyle}"
+                                VerticalOptions="Center"
+                                LineBreakMode="WordWrap" />
+                            <ui:MaterialIconView
+                                Grid.Column="2"
+                                IconName="ChevronRight"
+                                IconSize="22"
+                                IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                VerticalOptions="Center"
+                                AutomationProperties.IsInAccessibleTree="False" />
+                        </Grid>
+                    </Border>
+                </Border>
 
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Margin="4,8,4,0">
+                <Border Style="{StaticResource ChatProfileCardStyle}" Padding="0">
+                    <VerticalStackLayout Spacing="0">
+                        <Border
+                            Style="{StaticResource ChatProfileActionRowStyle}"
+                            SemanticProperties.Description="{Binding ForgetText}">
+                            <Border.Behaviors>
+                                <behaviors:PressFeedbackBehavior />
+                            </Border.Behaviors>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ForgetCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border
+                                    Style="{StaticResource ChatProfileIconTileStyle}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource DangerSurface}, Dark={StaticResource DangerSurfaceDark}}">
+                                    <ui:MaterialIconView
+                                        IconName="PersonOff"
+                                        IconSize="22"
+                                        IconColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        AutomationProperties.IsInAccessibleTree="False" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding ForgetText}"
+                                    Style="{StaticResource BodyStyle}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                    VerticalOptions="Center"
+                                    LineBreakMode="WordWrap" />
+                                <ui:MaterialIconView
+                                    Grid.Column="2"
+                                    IconName="ChevronRight"
+                                    IconSize="22"
+                                    IconColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                    VerticalOptions="Center"
+                                    AutomationProperties.IsInAccessibleTree="False" />
+                            </Grid>
+                        </Border>
+
+                        <BoxView Style="{StaticResource SettingRowDividerStyle}" Margin="16,0" IsVisible="{Binding HasHistory}" />
+
+                        <Border
+                            IsVisible="{Binding HasHistory}"
+                            Style="{StaticResource ChatProfileActionRowStyle}"
+                            SemanticProperties.Description="{Binding DeleteAllText}">
+                            <Border.Behaviors>
+                                <behaviors:PressFeedbackBehavior />
+                            </Border.Behaviors>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding DeleteAllCommand}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border
+                                    Style="{StaticResource ChatProfileIconTileStyle}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource DangerSurface}, Dark={StaticResource DangerSurfaceDark}}">
+                                    <ui:MaterialIconView
+                                        IconName="DeleteOutline"
+                                        IconSize="22"
+                                        IconColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        AutomationProperties.IsInAccessibleTree="False" />
+                                </Border>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding DeleteAllText}"
+                                    Style="{StaticResource BodyStyle}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                    VerticalOptions="Center"
+                                    LineBreakMode="WordWrap" />
+                                <ui:MaterialIconView
+                                    Grid.Column="2"
+                                    IconName="ChevronRight"
+                                    IconSize="22"
+                                    IconColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                                    VerticalOptions="Center"
+                                    AutomationProperties.IsInAccessibleTree="False" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Margin="4,0">
                     <ui:MaterialIconView
                         IconName="Lock"
-                        IconSize="16"
+                        IconSize="18"
                         IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                         VerticalOptions="Start"
-                        Margin="0,2,0,0" />
-                    <Label Grid.Column="1" Text="{Binding PrivacyText}" Style="{StaticResource CaptionStyle}" LineBreakMode="WordWrap" />
+                        Margin="0,2,0,0"
+                        AutomationProperties.IsInAccessibleTree="False" />
+                    <Label
+                        Grid.Column="1"
+                        Text="{Binding PrivacyText}"
+                        Style="{StaticResource CaptionStyle}"
+                        LineBreakMode="WordWrap" />
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>

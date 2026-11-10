@@ -30,7 +30,7 @@ public sealed class QuoteReminderAlarmReceiver : BroadcastReceiver
 
         AndroidQuoteReminderScheduler.EnsureNotificationChannel(context);
         PendingIntent tapIntent = AndroidQuoteReminderScheduler.CreateTapPendingIntent(context);
-        int smallIcon = context.ApplicationInfo?.Icon ?? Resource.Mipmap.logo;
+        int smallIcon = context.ApplicationInfo?.Icon ?? global::Android.Resource.Drawable.IcDialogInfo;
 
         var builder = new NotificationCompat.Builder(context, QuoteReminderConstants.ChannelId);
         builder.SetContentTitle(title);

@@ -533,64 +533,17 @@
         <Setter Property="Margin" Value="0,6,0,0" />
     </Style>
 
-    <Shadow
-        x:Key="AppToastShadowLight"
-        Brush="#33152238"
-        Offset="0,10"
-        Radius="28"
-        Opacity="0.28" />
-
-    <Shadow
-        x:Key="AppToastShadowDark"
-        Brush="#000000"
-        Offset="0,8"
-        Radius="24"
-        Opacity="0.55" />
-
-    <Shadow
-        x:Key="AppDialogShadowLight"
-        Brush="#40152238"
-        Offset="0,16"
-        Radius="32"
-        Opacity="0.30" />
-
-    <Shadow
-        x:Key="AppDialogShadowDark"
-        Brush="#000000"
-        Offset="0,12"
-        Radius="28"
-        Opacity="0.62" />
-
-    <Style x:Key="AppPopupShadowLayerStyle" TargetType="Border">
-        <Setter Property="Stroke" Value="Transparent" />
-        <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusShape}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#33152238, Dark=#80000000}" />
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="TranslationY" Value="10" />
-        <Setter Property="VerticalOptions" Value="Fill" />
-        <Setter Property="HorizontalOptions" Value="Fill" />
-    </Style>
-
-    <Style x:Key="AppDialogShadowLayerStyle" TargetType="Border" BasedOn="{StaticResource AppPopupShadowLayerStyle}">
-        <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusAlertShape}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#40152238, Dark=#99000000}" />
-        <Setter Property="TranslationY" Value="12" />
-    </Style>
-
     <Style x:Key="AppToastStyle" TargetType="Border">
         <Setter Property="Padding" Value="16,14" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="MinimumHeightRequest" Value="52" />
-        <Setter Property="Stroke" Value="Transparent" />
-        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource BorderSubtleLight}, Dark={StaticResource BorderSubtleDark}}" />
+        <Setter Property="StrokeThickness" Value="0.5" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
         <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusShape}" />
-        <Setter Property="Shadow" Value="{AppThemeBinding Light={StaticResource AppToastShadowLight}, Dark={StaticResource AppToastShadowDark}}" />
     </Style>
 
     <Style x:Key="AppToastPopupCardStyle" TargetType="Border" BasedOn="{StaticResource AppToastStyle}">
-        <Setter Property="Shadow" Value="{x:Null}" />
     </Style>
 
     <Style x:Key="AppToastMessageStyle" TargetType="Label" BasedOn="{StaticResource BodyStyle}">
@@ -602,15 +555,13 @@
 
     <Style x:Key="AppOptionsSheetStyle" TargetType="Border">
         <Setter Property="Padding" Value="0,12,0,8" />
-        <Setter Property="Stroke" Value="Transparent" />
-        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource BorderSubtleLight}, Dark={StaticResource BorderSubtleDark}}" />
+        <Setter Property="StrokeThickness" Value="0.5" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
         <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusShape}" />
-        <Setter Property="Shadow" Value="{AppThemeBinding Light={StaticResource AppDialogShadowLight}, Dark={StaticResource AppDialogShadowDark}}" />
     </Style>
 
     <Style x:Key="AppOptionsSheetPopupCardStyle" TargetType="Border" BasedOn="{StaticResource AppOptionsSheetStyle}">
-        <Setter Property="Shadow" Value="{x:Null}" />
     </Style>
 
     <Style x:Key="AppOptionsSheetTitleStyle" TargetType="Label" BasedOn="{StaticResource SectionTitleStyle}">
@@ -627,15 +578,9 @@
         <Setter Property="StrokeThickness" Value="0.5" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
         <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusAlertShape}" />
-        <Setter Property="Shadow" Value="{AppThemeBinding Light={StaticResource AppDialogShadowLight}, Dark={StaticResource AppDialogShadowDark}}" />
     </Style>
 
     <Style x:Key="AppDialogPopupCardStyle" TargetType="Border" BasedOn="{StaticResource AppDialogCardStyle}">
-        <Setter Property="Shadow" Value="{x:Null}" />
-    </Style>
-
-    <Style x:Key="AppOptionsSheetShadowLayerStyle" TargetType="Border" BasedOn="{StaticResource AppPopupShadowLayerStyle}">
-        <Setter Property="TranslationY" Value="6" />
     </Style>
 
     <Style x:Key="AppDialogTitleStyle" TargetType="Label">
