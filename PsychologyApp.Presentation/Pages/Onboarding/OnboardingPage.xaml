@@ -137,6 +137,7 @@
                                     PickerTitle="{Binding OnboardingReminderHourPickerTitle}"
                                     ItemsSource="{Binding PracticeReminderHourOptions}"
                                     SelectedItem="{Binding PracticeReminderHour}"
+                                    SelectionRequested="OnSettingSelectionRequested"
                                     IsRowEnabled="{Binding PracticeRemindersEnabled}" />
                             </VerticalStackLayout>
                         </Border>

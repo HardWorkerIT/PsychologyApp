@@ -40,14 +40,16 @@
                         LabelText="{Binding ThemeLabel}"
                         PickerTitle="{Binding ThemePickerTitle}"
                         ItemsSource="{Binding ThemeOptions}"
-                        SelectedItem="{Binding Theme}" />
+                        SelectedItem="{Binding Theme}"
+                        SelectionRequested="OnSettingSelectionRequested" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Form}"
                         LabelText="{Binding FormLabel}"
                         PickerTitle="{Binding FormPickerTitle}"
                         ItemsSource="{Binding FormOptions}"
-                        SelectedItem="{Binding Form}" />
+                        SelectedItem="{Binding Form}"
+                        SelectionRequested="OnSettingSelectionRequested" />
                     <Label
                         Text="{Binding FormHelperText}"
                         Style="{StaticResource CaptionStyle}"
@@ -69,7 +71,8 @@
                         LabelText="{Binding SizeLabel}"
                         PickerTitle="{Binding SizePickerTitle}"
                         ItemsSource="{Binding SizeOptions}"
-                        SelectedItem="{Binding Size}" />
+                        SelectedItem="{Binding Size}"
+                        SelectionRequested="OnSettingSelectionRequested" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
                     <ui:SettingSwitchRowView
                         LabelText="{Binding BoldLabel}"
@@ -92,14 +95,16 @@
                         LabelText="{Binding PrimaryConcernLabel}"
                         PickerTitle="{Binding PrimaryConcernPickerTitle}"
                         ItemsSource="{Binding OnboardingConcernOptions}"
-                        SelectedItem="{Binding OnboardingConcern}" />
+                        SelectedItem="{Binding OnboardingConcern}"
+                        SelectionRequested="OnSettingSelectionRequested" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Language}"
                         LabelText="{Binding LanguageLabel}"
                         PickerTitle="{Binding LanguagePickerTitle}"
                         ItemsSource="{Binding LanguageOptions}"
-                        SelectedItem="{Binding Language}" />
+                        SelectedItem="{Binding Language}"
+                        SelectionRequested="OnSettingSelectionRequested" />
                 </VerticalStackLayout>
             </Border>
 
@@ -125,6 +130,7 @@
                         PickerTitle="{Binding PracticeReminderHourPickerTitle}"
                         ItemsSource="{Binding PracticeReminderHourOptions}"
                         SelectedItem="{Binding PracticeReminderHour}"
+                        SelectionRequested="OnSettingSelectionRequested"
                         IsRowEnabled="{Binding PracticeRemindersEnabled}" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
 
@@ -137,6 +143,7 @@
                         PickerTitle="{Binding QuoteReminderHourPickerTitle}"
                         ItemsSource="{Binding QuoteReminderHourOptions}"
                         SelectedItem="{Binding QuoteReminderHour}"
+                        SelectionRequested="OnSettingSelectionRequested"
                         IsRowEnabled="{Binding QuoteRemindersEnabled}" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
 
@@ -149,6 +156,7 @@
                         PickerTitle="{Binding MoodReminderHourPickerTitle}"
                         ItemsSource="{Binding MoodReminderHourOptions}"
                         SelectedItem="{Binding MoodReminderHour}"
+                        SelectionRequested="OnSettingSelectionRequested"
                         IsRowEnabled="{Binding MoodRemindersEnabled}" />
                     <BoxView Style="{StaticResource SettingRowDividerStyle}" />
 
@@ -161,6 +169,7 @@
                         PickerTitle="{Binding ChatReminderHourPickerTitle}"
                         ItemsSource="{Binding ChatReminderHourOptions}"
                         SelectedItem="{Binding ChatReminderHour}"
+                        SelectionRequested="OnSettingSelectionRequested"
                         IsRowEnabled="{Binding ChatRemindersEnabled}" />
                 </VerticalStackLayout>
             </Border>

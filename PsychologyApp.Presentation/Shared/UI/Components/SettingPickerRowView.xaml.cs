@@ -1,49 +1,49 @@
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.UI.Converters;
 using System.Collections;
+using System.Globalization;
 
 namespace PsychologyApp.Presentation.Shared.UI.Components;
 
 public partial class SettingPickerRowView : ContentView
 {
     private static readonly PreferenceLabelConverter LabelConverter = new();
-    private bool _isSyncingPicker;
+
+    public event EventHandler? SelectionRequested;
 
     public SettingPickerRowView()
     {
         InitializeComponent();
-        ApplyItemDisplayBinding();
         Loaded += OnLoaded;
     }
 
     private void OnLoaded(object? sender, EventArgs e)
     {
         VisualElementPressFeedback.Attach(SettingLabel);
-        ApplyItemDisplayBinding();
-        SyncPickerFromViewModel();
+        VisualElementPressFeedback.Attach(SelectionButton);
+        RefreshSelectedValue();
         RefreshPresentation();
     }
 
     protected override void OnBindingContextChanged()
     {
         base.OnBindingContextChanged();
-        SyncPickerFromViewModel();
+        RefreshSelectedValue();
     }
 
     protected override void OnPropertyChanged(string? propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
 
-        if (propertyName is nameof(ItemsSource))
+        if (propertyName is nameof(ItemsSource) or nameof(LabelKind))
         {
-            ApplyItemDisplayBinding();
-            SyncPickerFromViewModel();
+            RefreshSelectedValue();
             return;
         }
 
-        if (propertyName is nameof(SelectedItem))
+        if (propertyName is nameof(SelectedItem) or nameof(PickerTitle) or nameof(LabelText))
         {
-            SyncPickerFromViewModel();
+            RefreshSelectedValue();
             return;
         }
 
@@ -58,94 +58,63 @@ public partial class SettingPickerRowView : ContentView
         RowOpacity = IsRowEnabled ? 1d : (double)Microsoft.Maui.Controls.Application.Current!.Resources["DisabledOpacity"];
     }
 
-    private void ApplyItemDisplayBinding()
+    private void RefreshSelectedValue()
     {
-        if (SettingPicker is null)
+        if (SelectionButton is null)
         {
             return;
         }
 
-        SettingPicker.ItemDisplayBinding = new Binding(".")
-        {
-            Converter = LabelConverter,
-            ConverterParameter = LabelKind
-        };
+        string value = GetDisplayLabel(SelectedItem);
+        SelectionButton.Text = string.IsNullOrEmpty(value) ? PickerTitle : value;
+        SemanticProperties.SetDescription(SelectionButton, $"{LabelText}: {SelectionButton.Text}");
     }
 
-    private void SyncPickerFromViewModel()
+    private void OnSelectionButtonClicked(object? sender, EventArgs e)
     {
-        if (SettingPicker is null)
+        if (!IsRowEnabled || ItemsSource is not { Count: > 0 })
         {
             return;
         }
 
-        _isSyncingPicker = true;
-        try
-        {
-            object? selected = SelectedItem;
-            IList? items = ItemsSource;
+        SelectionRequested?.Invoke(this, EventArgs.Empty);
+    }
 
-            if (items is null || items.Count == 0)
+    public IReadOnlyList<string> GetOptionLabels()
+    {
+        if (ItemsSource is null)
+        {
+            return [];
+        }
+
+        var labels = new List<string>(ItemsSource.Count);
+        foreach (object? item in ItemsSource)
+        {
+            labels.Add(GetDisplayLabel(item));
+        }
+
+        return labels;
+    }
+
+    public void SelectOption(string label)
+    {
+        if (ItemsSource is null)
+        {
+            return;
+        }
+
+        foreach (object? item in ItemsSource)
+        {
+            if (string.Equals(GetDisplayLabel(item), label, StringComparison.Ordinal))
             {
-                SettingPicker.SelectedIndex = -1;
+                SelectedItem = item;
                 return;
             }
-
-            if (selected is null)
-            {
-                SettingPicker.SelectedIndex = -1;
-                return;
-            }
-
-            string selectedKey = NormalizeKey(selected);
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (KeysMatch(items[i], selectedKey))
-                {
-                    SettingPicker.SelectedIndex = i;
-                    return;
-                }
-            }
-
-            SettingPicker.SelectedIndex = -1;
-        }
-        finally
-        {
-            _isSyncingPicker = false;
         }
     }
 
-    private void OnPickerSelectedIndexChanged(object? sender, EventArgs e)
-    {
-        if (_isSyncingPicker || SettingPicker.SelectedIndex < 0)
-        {
-            return;
-        }
-
-        object? selected = SettingPicker.SelectedItem;
-        if (KeysMatch(SelectedItem, selected))
-        {
-            return;
-        }
-
-        SelectedItem = selected;
-    }
-
-    private bool KeysMatch(object? left, object? right) =>
-        string.Equals(NormalizeKey(left), NormalizeKey(right), StringComparison.Ordinal);
-
-    private string NormalizeKey(object? value) =>
-        LabelKind switch
-        {
-            PreferenceLabelKind.PassThrough => value?.ToString() ?? string.Empty,
-            PreferenceLabelKind.Language => UserPreferences.ParseLanguageKey(value?.ToString() ?? string.Empty),
-            PreferenceLabelKind.Theme => UserPreferences.ParseThemeKey(value?.ToString() ?? string.Empty),
-            PreferenceLabelKind.Form => UserPreferences.ParseFormKey(value?.ToString() ?? string.Empty),
-            PreferenceLabelKind.Size => UserPreferences.ParseSizeKey(value?.ToString() ?? string.Empty),
-            PreferenceLabelKind.Concern => UserPreferences.ParseOnboardingConcernKey(value?.ToString() ?? string.Empty),
-            _ => value?.ToString() ?? string.Empty
-        };
+    private string GetDisplayLabel(object? value) =>
+        LabelConverter.Convert(value, typeof(string), LabelKind, CultureInfo.CurrentCulture)?.ToString() ?? string.Empty;
 
     public static readonly BindableProperty LabelTextProperty =
         BindableProperty.Create(nameof(LabelText), typeof(string), typeof(SettingPickerRowView), string.Empty);
@@ -170,8 +139,7 @@ public partial class SettingPickerRowView : ContentView
             nameof(LabelKind),
             typeof(PreferenceLabelKind),
             typeof(SettingPickerRowView),
-            PreferenceLabelKind.PassThrough,
-            propertyChanged: static (bindable, _, _) => ((SettingPickerRowView)bindable).ApplyItemDisplayBinding());
+            PreferenceLabelKind.PassThrough);
 
     public PreferenceLabelKind LabelKind
     {

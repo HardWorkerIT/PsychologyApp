@@ -19,21 +19,34 @@
             VerticalOptions="Center"
             LineBreakMode="TailTruncation"
             MaxLines="2" />
-        <Picker
-            x:Name="SettingPicker"
+        <Grid
             Grid.Column="1"
-            FontSize="15"
-            Title="{Binding PickerTitle, Source={x:Reference Root}}"
-            TitleColor="{DynamicResource Primary}"
-            TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-            BackgroundColor="Transparent"
             HorizontalOptions="Fill"
-            HorizontalTextAlignment="End"
             VerticalOptions="Center"
-            VerticalTextAlignment="Center"
-            IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
-            ItemsSource="{Binding ItemsSource, Source={x:Reference Root}}"
-            SelectedIndexChanged="OnPickerSelectedIndexChanged" />
+            ColumnDefinitions="*,Auto">
+            <Button
+                x:Name="SelectionButton"
+                Grid.ColumnSpan="2"
+                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                BackgroundColor="Transparent"
+                FontSize="15"
+                Padding="0,0,24,0"
+                CornerRadius="0"
+                BorderWidth="0"
+                HorizontalOptions="Fill"
+                HorizontalTextAlignment="End"
+                VerticalOptions="Center"
+                IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
+                Clicked="OnSelectionButtonClicked" />
+            <Label
+                Grid.Column="1"
+                Text="⌄"
+                Style="{StaticResource BodyStyle}"
+                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                VerticalOptions="Center"
+                InputTransparent="True"
+                AutomationProperties.IsInAccessibleTree="False" />
+        </Grid>
     </Grid>
 
 </ContentView>

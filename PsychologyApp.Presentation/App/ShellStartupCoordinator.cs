@@ -10,6 +10,7 @@ using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Pages.Onboarding;
 using PsychologyApp.Presentation.Features.Onboarding.DependencyInjection;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.App.Routes;
 using PsychologyApp.Presentation.Shared.UI.Overlays;
 
@@ -20,6 +21,7 @@ public sealed class ShellStartupCoordinator(
     IOnboardingViewModelFactory onboardingViewModelFactory,
     IClinicalCareService clinicalCareService,
     IPageFactory pageFactory,
+    IDialogService dialogService,
     IOptions<AppSettings> settings,
     IDatabaseReadySignal databaseReadySignal,
     IToastService toastService,
@@ -75,7 +77,7 @@ public sealed class ShellStartupCoordinator(
                     await Task.Yield();
                     await navigation.PopModalAsync(false);
                     await onTechniqueSelected(techniqueId);
-                });
+                }, dialogService);
 
                 PressFeedbackHost.AttachToPage(onboardingPage);
                 await navigation.PushModalAsync(onboardingPage, false);

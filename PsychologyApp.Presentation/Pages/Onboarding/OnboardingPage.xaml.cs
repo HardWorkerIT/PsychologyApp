@@ -2,7 +2,9 @@ using System.ComponentModel;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Features.Onboarding.DependencyInjection;
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Pages.Onboarding;
+using PsychologyApp.Presentation.Shared.UI.Components;
 using PsychologyApp.Presentation.Widgets.Onboarding;
 
 namespace PsychologyApp.Presentation.Pages.Onboarding;
@@ -10,17 +12,42 @@ namespace PsychologyApp.Presentation.Pages.Onboarding;
 public partial class OnboardingPage : ContentPage
 {
     private readonly OnboardingViewModel _viewModel;
+    private readonly IDialogService _dialogService;
     private int _currentStep = -1;
     private CancellationTokenSource? _stepMotionCts;
 
-    public OnboardingPage(IOnboardingViewModelFactory factory, Func<TechniqueId?, Task> onCompleted)
+    public OnboardingPage(
+        IOnboardingViewModelFactory factory,
+        Func<TechniqueId?, Task> onCompleted,
+        IDialogService dialogService)
     {
+        _dialogService = dialogService;
         InitializeComponent();
         _viewModel = factory.Create(this, onCompleted);
         BindingContext = _viewModel;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         StepScrollView.SizeChanged += OnStepScrollSizeChanged;
         HideAllSteps();
+    }
+
+    private async void OnSettingSelectionRequested(object? sender, EventArgs e)
+    {
+        if (sender is not SettingPickerRowView row)
+        {
+            return;
+        }
+
+        IReadOnlyList<string> options = row.GetOptionLabels();
+        if (options.Count == 0)
+        {
+            return;
+        }
+
+        string? selected = await _dialogService.PickOptionAsync(row.PickerTitle, options, AppStrings.Cancel);
+        if (selected is not null)
+        {
+            row.SelectOption(selected);
+        }
     }
 
     private void OnStepScrollSizeChanged(object? sender, EventArgs e)

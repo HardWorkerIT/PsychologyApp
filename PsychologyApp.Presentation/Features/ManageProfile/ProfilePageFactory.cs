@@ -7,6 +7,7 @@ using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileUser;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfilePracticeHistory;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileInsights;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 
 namespace PsychologyApp.Presentation.Features.ManageProfile;
 
@@ -27,6 +28,7 @@ public sealed class ProfilePageFactory(
     IOptionsViewModelFactory optionsViewModelFactory,
     IInfoViewModelFactory infoViewModelFactory,
     ISettingsViewModelFactory settingsViewModelFactory,
+    IDialogService dialogService,
     IPracticeHistoryViewModelFactory practiceHistoryViewModelFactory,
     IInsightsViewModelFactory insightsViewModelFactory,
     IDataBackupViewModelFactory dataBackupViewModelFactory) : IProfilePageFactory
@@ -41,7 +43,7 @@ public sealed class ProfilePageFactory(
         new(pageViewModelActivator, infoViewModelFactory);
 
     public SettingsPage CreateSettingsPage() =>
-        new(pageViewModelActivator, settingsViewModelFactory);
+        new(pageViewModelActivator, settingsViewModelFactory, dialogService);
 
     public PracticeHistoryPage CreatePracticeHistoryPage() =>
         new(practiceHistoryViewModelFactory);
