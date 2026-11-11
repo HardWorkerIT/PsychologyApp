@@ -10,6 +10,8 @@ namespace PsychologyApp.Presentation.Widgets.BodyMap;
 /// </summary>
 public sealed class BodyMapView : GraphicsView
 {
+    private const float TapMovementThreshold = 8;
+
     public static readonly BindableProperty SelectedAreaProperty = BindableProperty.Create(
         nameof(SelectedArea),
         typeof(BodyArea?),
@@ -25,6 +27,8 @@ public sealed class BodyMapView : GraphicsView
     public static readonly BindableProperty TapCommandProperty = BindableProperty.Create(nameof(TapCommand), typeof(ICommand), typeof(BodyMapView));
 
     private readonly BodyMapDrawable _drawable = new();
+    private PointF? _interactionStart;
+    private bool _interactionMoved;
 
     public BodyMapView()
     {
@@ -33,9 +37,10 @@ public sealed class BodyMapView : GraphicsView
         BackgroundColor = Colors.Transparent;
         AutomationProperties.SetIsInAccessibleTree(this, false);
 
-        TapGestureRecognizer tap = new();
-        tap.Tapped += OnTapped;
-        GestureRecognizers.Add(tap);
+        StartInteraction += OnInteractionStarted;
+        DragInteraction += OnInteractionDragged;
+        EndInteraction += OnInteractionEnded;
+        CancelInteraction += OnInteractionCancelled;
 
         Loaded += (_, _) =>
         {
@@ -69,9 +74,47 @@ public sealed class BodyMapView : GraphicsView
 
     private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e) => Invalidate();
 
-    private void OnTapped(object? sender, TappedEventArgs e)
+    private void OnInteractionStarted(object? sender, TouchEventArgs e)
     {
-        if (e.GetPosition(this) is not { } point || BodyMapLayout.AreaAt(point.X, point.Y, Width, Height) is not { } area)
+        _interactionStart = e.Touches.Length > 0 ? e.Touches[0] : null;
+        _interactionMoved = false;
+    }
+
+    private void OnInteractionDragged(object? sender, TouchEventArgs e)
+    {
+        if (_interactionStart is not { } start || e.Touches.Length == 0)
+        {
+            _interactionMoved = true;
+            return;
+        }
+
+        PointF current = e.Touches[0];
+        float deltaX = current.X - start.X;
+        float deltaY = current.Y - start.Y;
+        _interactionMoved |= deltaX * deltaX + deltaY * deltaY >= TapMovementThreshold * TapMovementThreshold;
+    }
+
+    private void OnInteractionEnded(object? sender, TouchEventArgs e)
+    {
+        if (!_interactionMoved && e.IsInsideBounds && _interactionStart is { } point)
+        {
+            SelectAreaAt(point.X, point.Y);
+        }
+
+        ResetInteraction();
+    }
+
+    private void OnInteractionCancelled(object? sender, EventArgs e) => ResetInteraction();
+
+    private void ResetInteraction()
+    {
+        _interactionStart = null;
+        _interactionMoved = false;
+    }
+
+    private void SelectAreaAt(float x, float y)
+    {
+        if (BodyMapLayout.AreaAt(x, y, Width, Height) is not { } area)
         {
             return;
         }
