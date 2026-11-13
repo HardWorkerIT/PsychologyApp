@@ -16,6 +16,7 @@ public static class CourseIds
     public const string ProblemPlanning = "problem-planning";
     public const string Mood = "mood";
     public const string Trauma = "trauma";
+    public const string MoneyStress = "money-stress";
 }
 
 public static partial class ArticleContent

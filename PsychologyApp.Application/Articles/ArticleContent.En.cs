@@ -1459,6 +1459,26 @@ public static partial class ArticleContent
                 P("You can bring your examples to the appointment and, if you feel comfortable, ask someone close to you what they have noticed. Not everyone has old school records. Practical supports can be tried before you know the cause."),
                 See(ArticleIds.Specialist, "When to see a specialist and how to choose one")
             ]),
+        new(
+            ArticleIds.MoneyStress,
+            "Money worries: facts and predictions",
+            "Notice urgent needs, sort out uncertainty, and choose a manageable step without financial advice.",
+            "AccountBalanceWallet",
+            5,
+            [
+                P("Money strain can take up attention and increase worry. This does not mean a person has failed. First, it may help to sort what needs action now from what is still uncertain."),
+                P("Under stress, a fact can blend with a prediction. A worried thought deserves care, but it does not always describe something that has already happened."),
+                H("Check urgency first"),
+                Warning("If food, housing, essential medicine, or safety is at risk now, practical help matters more than this exercise. Contact someone you trust or a local support service today."),
+                List("Describe the situation in general terms; do not write amounts, account or card numbers, passwords, or verification codes.", "Check unexpected messages through a known official channel. Do not share secret details or transfer money because of an unfamiliar message or call.", "If it is hard to sort things out alone, ask someone to stay with you while you look for support."),
+                Crisis("If you are in immediate danger"),
+                H("Check what you remember"),
+                Quiz("Which is a checkable fact rather than a prediction?", 1, "A fact can be checked against a source. A feared outcome is a worry, not an event already established.", "I will definitely lose everything", "The notice gives Friday as the due date", "I will never cope"),
+                Quiz("What matters most if food or essential medicine is at risk today?", 1, "When basic needs are at risk, practical help is needed now; the exercise can wait.", "Finish the exercise first", "Contact someone you trust or a local service today", "Wait for the worry to go away"),
+                P("These two questions check only whether you understood the article. They are not a psychological test, diagnosis, or assessment of your finances. The exercise is not financial or legal advice."),
+                Practice(TechniqueId.MoneyWorryPlan, "Sort a Money Worry")
+            ]),
+
         new(ArticleIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", 3,
             [P("First name one specific problem. Not everything is in your control; choose what you can influence."), P("Write down several options, even if none seems perfect. Choose one small, safe step."), P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support.")])
     ];

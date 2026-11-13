@@ -61,7 +61,8 @@ public enum TechniqueId
     WorryTime,
     ImplementationIntention,
     SensoryComfort,
-    UrgeSurfing
+    UrgeSurfing,
+    MoneyWorryPlan
 }
 
 public enum TechniqueUiKind

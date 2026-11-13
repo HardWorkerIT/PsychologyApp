@@ -425,6 +425,100 @@ public static partial class ArticleContent
                     "Find one or two specialists who work with trauma and book a consultation.",
                     "What in the course was most useful? What do you want to discuss with the specialist?")
             ]),
+        new(
+            CourseIds.MoneyStress,
+            "Money worries: 14 days of support",
+            "Fourteen short steps to check urgency, separate facts from predictions, and find support. GAD-7 covers general anxiety over the past two weeks, not finances; a score change does not prove the course caused it. This is not financial or legal advice.",
+            "AccountBalanceWallet",
+            "gad7",
+            "GAD-7",
+            [
+                new(
+                    "One worry",
+                    4,
+                    [P("GAD-7 covers general anxiety symptoms over the past two weeks, not money concerns. Choose one worry and describe it without amounts, account details, or names."), TestsTab("Open GAD-7: general anxiety over the past two weeks", "gad7"), See(ArticleIds.MoneyStress, "Money worries: facts and predictions")],
+                    "Write it in general terms or say it aloud.",
+                    "What most often brings your attention back to it?"),
+                new(
+                    "Check urgency first",
+                    4,
+                    [P("If food, housing, essential medicine, or safety is at risk, seek real-world practical help today; the course can wait.")],
+                    "Name one need that requires attention today and someone you could contact.",
+                    "What needs attention first?"),
+                new(
+                    "Facts and predictions",
+                    4,
+                    [P("Separate known facts, what needs checking, and a fear about the future. You can acknowledge uncertainty without filling it with the worst prediction."), Practice(TechniqueId.MoneyWorryPlan, "Sort a Money Worry"), See(ArticleIds.MoneyStress, "Money worries: facts and predictions")],
+                    "Try the practice using general notes.",
+                    "What could you separate from the fear?"),
+                new(
+                    "One question to check",
+                    4,
+                    [P("Choose a question whose answer may reduce uncertainty. For a bill or service, use a familiar official channel.")],
+                    "Write one question and where you can safely check the answer.",
+                    "What is clearer now?"),
+                new(
+                    "Protect personal information",
+                    4,
+                    [P("Do not share passwords, PINs, verification codes, or full account details. Verify unexpected requests for transfers another way.")],
+                    "Choose a pause rule before sharing data or sending money.",
+                    "Which boundary adds safety?"),
+                new(
+                    "Make a specific request",
+                    4,
+                    [P("Support need not be money: company, making a call together, or finding a local service. The other person may agree or decline."), See(ArticleIds.SupportRequest, "How to ask for support")],
+                    "Draft a request for one task and time, without financial secrets.",
+                    "Who could you ask?"),
+                new(
+                    "A manageable step",
+                    4,
+                    [P("Choose a safe action within your control that can be reviewed. Specialist financial or legal questions need a qualified local professional."), Practice(TechniqueId.MoneyWorryPlan, "Sort a Money Worry")],
+                    "Choose one small reversible step or ask for support.",
+                    "What helps you avoid taking everything on at once?"),
+                new(
+                    "A backup option",
+                    4,
+                    [P("A plan is more flexible when it includes another option in case of delay or refusal. It need not solve everything.")],
+                    "Name one alternative and a support contact.",
+                    "Which option seems realistic?"),
+                new(
+                    "Time to review",
+                    4,
+                    [P("If nothing urgent needs action, set a short time to check information, then return to the present task. Do not delay necessary help.")],
+                    "Choose a calm time to review your plan.",
+                    "What can wait?"),
+                new(
+                    "Practical support",
+                    4,
+                    [P("Your area may have social, community, or health services. Options vary; the app does not recommend financial decisions.")],
+                    "Find a familiar local source to ask what support is available.",
+                    "What would you ask?"),
+                new(
+                    "Talk without sharing secrets",
+                    4,
+                    [P("You might tell someone: I feel worried and would like company for a while. You do not need to share amounts or account details.")],
+                    "Decide what you are comfortable sharing in general terms.",
+                    "What kind of help would you like?"),
+                new(
+                    "Support yourself",
+                    4,
+                    [P("Rest, water, food, or a familiar calming activity will not solve a money problem, but may help you get through today.")],
+                    "Choose one available act of care that does not require spending.",
+                    "What could give you a little breathing room?"),
+                new(
+                    "Review your limits",
+                    4,
+                    [P("Notice what is clearer, what is unknown, and where another person’s help is needed. You can simplify the plan.")],
+                    "Keep one next step and set the rest aside if safe.",
+                    "What need not be solved today?"),
+                new(
+                    "Choose what comes next",
+                    4,
+                    [P("After about two weeks, you may repeat GAD-7. It does not assess finances or prove the course caused a change. If anxiety keeps disrupting daily life, discuss support with a professional."), TestsTab("Repeat GAD-7; scores do not assess finances or show what caused a change", "gad7"), Crisis("I need help now")],
+                    "Choose one support or step to continue.",
+                    "What would you keep or discuss with a professional?")
+            ]),
+
         new(CourseIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", "gad7", "GAD-7",
             [
                 new("Choose a problem", 3, [P("First name one specific problem. Not everything is in your control; choose what you can influence."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Write down one problem and what is within your control.", "Which part of the situation can you influence?"),

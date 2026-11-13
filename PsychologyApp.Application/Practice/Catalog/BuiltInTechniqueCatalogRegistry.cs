@@ -274,6 +274,10 @@ internal static class BuiltInTechniqueCatalogRegistry
             complete.Add(id, definition);
         }
 
+        foreach ((TechniqueId id, BuiltInTechniqueDefinition definition) in TechniqueCatalogContentMoneyWorryPlan.For(language))
+        {
+            complete.Add(id, definition);
+        }
         return complete;
     }
 }

@@ -1459,6 +1459,26 @@ public static partial class ArticleContent
                 P("Sie können eigene Beispiele zum Gespräch mitbringen und, wenn es sich gut anfühlt, eine nahestehende Person nach ihren Beobachtungen fragen. Alte Schulunterlagen hat nicht jede Person. Praktische Hilfen können Sie auch vor einer Erklärung ausprobieren."),
                 See(ArticleIds.Specialist, "Wann du eine Fachperson aufsuchen solltest und wie du sie auswählst")
             ]),
+        new(
+            ArticleIds.MoneyStress,
+            "Geldsorgen: Fakten und Befürchtungen unterscheiden",
+            "Dringende Bedürfnisse erkennen, Ungewissheit ordnen und einen machbaren Schritt wählen – ohne Finanzberatung.",
+            "AccountBalanceWallet",
+            5,
+            [
+                P("Geldsorgen können viel Aufmerksamkeit beanspruchen und Angst verstärken. Das bedeutet nicht, dass jemand versagt hat. Unterscheiden Sie zuerst, was jetzt getan werden muss und was noch unklar ist."),
+                P("Unter Stress vermischen sich Fakten leicht mit Vorhersagen. Ein beunruhigender Gedanke verdient Aufmerksamkeit, beschreibt aber nicht immer etwas, das bereits geschehen ist."),
+                H("Zuerst die Dringlichkeit prüfen"),
+                Warning("Sind Nahrung, Unterkunft, notwendige Medikamente oder Sicherheit jetzt gefährdet, ist konkrete Hilfe wichtiger als diese Übung. Wenden Sie sich heute an eine vertraute Person oder eine lokale Unterstützungsstelle."),
+                List("Beschreiben Sie die Lage allgemein; notieren Sie keine Beträge, Konto- oder Kartennummern, Passwörter oder Bestätigungscodes.", "Prüfen Sie unerwartete Nachrichten über einen bekannten offiziellen Kanal. Teilen Sie keine geheimen Daten und überweisen Sie wegen unbekannter Nachrichten oder Anrufe kein Geld.", "Wenn es allein schwerfällt, bitten Sie eine nahestehende Person, bei der Suche nach Unterstützung dabeizubleiben."),
+                Crisis("Wenn Sie unmittelbar in Gefahr sind"),
+                H("Was ist hängen geblieben?"),
+                Quiz("Was ist ein überprüfbarer Fakt und keine Vorhersage?", 1, "Einen Fakt kann man anhand einer Quelle prüfen. Ein befürchteter Ausgang ist eine Sorge und kein bereits bestätigtes Ereignis.", "Ich werde ganz sicher alles verlieren", "Im Schreiben steht Freitag als Frist", "Ich werde niemals zurechtkommen"),
+                Quiz("Was ist am wichtigsten, wenn Nahrung oder notwendige Medikamente heute gefährdet sind?", 1, "Wenn grundlegende Bedürfnisse bedroht sind, braucht es jetzt konkrete Hilfe; die Übung kann warten.", "Zuerst die Übung beenden", "Heute eine vertraute Person oder lokale Stelle um Hilfe bitten", "Warten, bis die Sorge nachlässt"),
+                P("Diese beiden Fragen prüfen nur das Verständnis des Artikels. Sie sind kein psychologischer Test, keine Diagnose und keine Bewertung Ihrer finanziellen Lage. Die Übung bietet keine Finanz- oder Rechtsberatung."),
+                Practice(TechniqueId.MoneyWorryPlan, "Geldsorgen ordnen")
+            ]),
+
         new(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", 3,
             [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen.")])
     ];

@@ -1459,6 +1459,26 @@ public static partial class ArticleContent
                 P("Puedes llevar tus ejemplos a la consulta y, si te resulta cómodo, preguntar a alguien cercano qué ha observado. No todo el mundo conserva informes escolares antiguos. También puedes probar apoyos prácticos antes de saber la causa."),
                 See(ArticleIds.Specialist, "Cuándo acudir a un especialista y cómo elegirlo")
             ]),
+        new(
+            ArticleIds.MoneyStress,
+            "Preocupaciones económicas: hechos y predicciones",
+            "Reconoce necesidades urgentes, ordena la incertidumbre y elige un paso posible sin asesoramiento financiero.",
+            "AccountBalanceWallet",
+            5,
+            [
+                P("Las dificultades económicas pueden ocupar la atención y aumentar la preocupación. Esto no significa que alguien haya fracasado. Primero puede ayudar separar lo que necesita acción ahora de lo que aún no se sabe."),
+                P("Con tensión, un hecho puede mezclarse con una predicción. Un pensamiento preocupado merece atención, pero no siempre describe algo que ya ocurrió."),
+                H("Comprueba primero la urgencia"),
+                Warning("Si ahora están en riesgo la comida, la vivienda, los medicamentos esenciales o la seguridad, la ayuda práctica importa más que este ejercicio. Contacta hoy con alguien de confianza o un servicio local."),
+                List("Describe la situación de forma general; no escribas cantidades, números de cuenta o tarjeta, contraseñas ni códigos de verificación.", "Comprueba mensajes inesperados por un canal oficial conocido. No compartas datos secretos ni envíes dinero por un mensaje o llamada desconocidos.", "Si te cuesta aclararlo a solas, pide a alguien que te acompañe mientras buscas apoyo."),
+                Crisis("Si estás en peligro inmediato"),
+                H("Comprueba qué recuerdas"),
+                Quiz("¿Cuál es un hecho comprobable y no una predicción?", 1, "Un hecho se puede verificar en una fuente. Temer un mal resultado no significa que ya haya ocurrido.", "Seguro que lo perderé todo", "El aviso indica el viernes como fecha límite", "Nunca podré con esto"),
+                Quiz("¿Qué importa más si hoy están en riesgo los alimentos o medicamentos esenciales?", 1, "Si las necesidades básicas están en riesgo, hace falta ayuda práctica ahora; el ejercicio puede esperar.", "Terminar primero el ejercicio", "Contactar hoy con alguien de confianza o un servicio local", "Esperar a que la preocupación desaparezca"),
+                P("Estas dos preguntas solo comprueban la comprensión del artículo. No son un test psicológico, diagnóstico ni evaluación económica. El ejercicio no ofrece asesoramiento financiero ni legal."),
+                Practice(TechniqueId.MoneyWorryPlan, "Ordenar una preocupación por el dinero")
+            ]),
+
         new(ArticleIds.ProblemPlanning, "Un plan para tareas manejables", "Divide un problema en pasos y revisa el plan", "Checklist", 3,
             [P("Primero identifica un problema concreto. No todo depende de ti; elige aquello en lo que puedas influir."), P("Escribe varias opciones, aunque ninguna parezca perfecta. Elige un paso pequeño y seguro."), P("Después observa qué ayudó y qué fue demasiado difícil. Puedes ajustar el plan o pedir apoyo.")])
     ];

@@ -131,4 +131,5 @@ public static class ArticleIds
     public const string NewsLoop = "news-loop";
     public const string JealousyAndEnvy = "jealousy-envy";
     public const string Breakup = "breakup";
+    public const string MoneyStress = "money-stress";
 }

@@ -425,6 +425,100 @@ public static partial class ArticleContent
                     "Such dir ein oder zwei Fachpersonen, die mit Trauma arbeiten, und vereinbare einen Beratungstermin.",
                     "Was war im Kurs am nützlichsten? Worüber möchtest du mit der Fachperson sprechen?")
             ]),
+        new(
+            CourseIds.MoneyStress,
+            "Geldsorgen: 14 Tage Unterstützung",
+            "Vierzehn kurze Schritte zu Dringlichkeit, Fakten und Unterstützung. Der GAD-7 erfasst allgemeine Angst der letzten zwei Wochen, nicht Finanzen; eine Veränderung beweist keine Kurswirkung. Keine Finanz- oder Rechtsberatung.",
+            "AccountBalanceWallet",
+            "gad7",
+            "GAD-7",
+            [
+                new(
+                    "Eine Sorge",
+                    4,
+                    [P("Der GAD-7 erfasst allgemeine Angstsymptome der letzten zwei Wochen, nicht Geldsorgen. Beschreiben Sie eine Sorge ohne Beträge, Kontodaten oder Namen."), TestsTab("GAD-7 öffnen: allgemeine Angst der letzten zwei Wochen", "gad7"), See(ArticleIds.MoneyStress, "Geldsorgen: Fakten und Befürchtungen unterscheiden")],
+                    "Notieren Sie sie allgemein oder sprechen Sie sie leise aus.",
+                    "Was lenkt Ihre Aufmerksamkeit am häufigsten dorthin?"),
+                new(
+                    "Zuerst die Dringlichkeit",
+                    4,
+                    [P("Sind Nahrung, Unterkunft, notwendige Medikamente oder Sicherheit gefährdet, suchen Sie heute konkrete Hilfe; der Kurs kann warten.")],
+                    "Benennen Sie einen Bedarf für heute und eine Person, die Sie kontaktieren könnten.",
+                    "Was braucht zuerst Aufmerksamkeit?"),
+                new(
+                    "Fakten und Vorhersagen",
+                    4,
+                    [P("Trennen Sie bekannte Fakten, offene Fragen und eine Befürchtung. Sie können Ungewissheit anerkennen, ohne sie mit dem schlimmsten Ausgang zu füllen."), Practice(TechniqueId.MoneyWorryPlan, "Geldsorgen ordnen"), See(ArticleIds.MoneyStress, "Geldsorgen: Fakten und Befürchtungen unterscheiden")],
+                    "Probieren Sie die Übung mit allgemeinen Notizen.",
+                    "Was konnten Sie von der Befürchtung trennen?"),
+                new(
+                    "Eine Frage überprüfen",
+                    4,
+                    [P("Wählen Sie eine Frage, deren Antwort Unklarheit verringern könnte. Nutzen Sie bei Rechnungen oder Diensten einen bekannten offiziellen Kanal.")],
+                    "Notieren Sie eine Frage und einen sicheren Prüfweg.",
+                    "Was ist jetzt klarer?"),
+                new(
+                    "Persönliche Daten schützen",
+                    4,
+                    [P("Teilen Sie keine Passwörter, PINs, Bestätigungscodes oder vollständigen Kontodaten. Prüfen Sie unerwartete Überweisungsbitten auf anderem Weg.")],
+                    "Legen Sie eine Pause fest, bevor Sie Daten teilen oder Geld senden.",
+                    "Welche Grenze gibt mehr Sicherheit?"),
+                new(
+                    "Konkret um Hilfe bitten",
+                    4,
+                    [P("Unterstützung muss kein Geld sein: Begleitung, gemeinsam telefonieren oder eine lokale Stelle suchen. Die andere Person kann zustimmen oder ablehnen."), See(ArticleIds.SupportRequest, "Um Unterstützung bitten")],
+                    "Formulieren Sie eine Bitte um eine Aufgabe zu einer bestimmten Zeit, ohne Finanzgeheimnisse.",
+                    "Wen könnten Sie fragen?"),
+                new(
+                    "Ein machbarer Schritt",
+                    4,
+                    [P("Wählen Sie eine sichere, überprüfbare Handlung in Ihrem Einfluss. Für Finanz- oder Rechtsfragen ist eine qualifizierte lokale Fachperson zuständig."), Practice(TechniqueId.MoneyWorryPlan, "Geldsorgen ordnen")],
+                    "Wählen Sie einen kleinen umkehrbaren Schritt oder bitten Sie um Hilfe.",
+                    "Was hilft, nicht alles auf einmal zu übernehmen?"),
+                new(
+                    "Eine Ausweichmöglichkeit",
+                    4,
+                    [P("Ein Plan ist flexibler, wenn es bei Verzögerung oder Absage eine weitere Möglichkeit gibt. Sie muss nicht alles lösen.")],
+                    "Benennen Sie eine Alternative und einen Kontakt für Unterstützung.",
+                    "Welche Möglichkeit ist realistisch?"),
+                new(
+                    "Zeit zum Überprüfen",
+                    4,
+                    [P("Wenn nichts dringend ist, legen Sie eine kurze Zeit für Informationssuche fest und kehren danach zur aktuellen Aufgabe zurück. Notwendige Hilfe nicht aufschieben.")],
+                    "Wählen Sie eine ruhige Zeit für die Planprüfung.",
+                    "Was kann warten?"),
+                new(
+                    "Praktische Unterstützung",
+                    4,
+                    [P("In Ihrer Region gibt es vielleicht soziale, gemeinschaftliche oder medizinische Angebote. Möglichkeiten unterscheiden sich; die App empfiehlt keine Finanzentscheidungen.")],
+                    "Fragen Sie eine bekannte lokale Stelle nach verfügbaren Hilfen.",
+                    "Was möchten Sie fragen?"),
+                new(
+                    "Sprechen ohne Geheimnisse",
+                    4,
+                    [P("Sie können sagen: Ich bin besorgt und möchte, dass du eine Weile bei mir bleibst. Beträge und Kontodaten müssen Sie nicht teilen.")],
+                    "Überlegen Sie, was Sie allgemein erzählen möchten.",
+                    "Welche Unterstützung wünschen Sie sich?"),
+                new(
+                    "Sich selbst unterstützen",
+                    4,
+                    [P("Pause, Wasser, Essen oder eine vertraute beruhigende Tätigkeit lösen kein Geldproblem, können aber durch den heutigen Tag helfen.")],
+                    "Wählen Sie eine verfügbare Selbstfürsorge ohne zusätzliche Ausgaben.",
+                    "Was könnte etwas Entlastung geben?"),
+                new(
+                    "Grenzen überprüfen",
+                    4,
+                    [P("Achten Sie darauf, was klarer ist, was offen bleibt und wo Hilfe nötig ist. Sie können den Plan vereinfachen.")],
+                    "Behalten Sie einen nächsten Schritt; legen Sie anderes sicher beiseite.",
+                    "Was muss heute nicht gelöst werden?"),
+                new(
+                    "Weiteren Schritt wählen",
+                    4,
+                    [P("Nach etwa zwei Wochen können Sie den GAD-7 wiederholen. Er bewertet keine Finanzen und beweist keine Kurswirkung. Wenn Angst den Alltag anhaltend stört, besprechen Sie Hilfe mit einer Fachperson."), TestsTab("GAD-7 wiederholen; der Wert bewertet keine Finanzen und erklärt keine Veränderung", "gad7"), Crisis("Ich brauche jetzt Hilfe")],
+                    "Wählen Sie eine Unterstützung oder einen Schritt für danach.",
+                    "Was möchten Sie beibehalten oder besprechen?")
+            ]),
+
         new(CourseIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", "gad7", "GAD-7",
             [
                 new("Ein Problem wählen", 3, [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), See(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben")], "Notieren Sie ein Problem und was Sie beeinflussen können.", "Welchen Teil der Situation können Sie beeinflussen?"),

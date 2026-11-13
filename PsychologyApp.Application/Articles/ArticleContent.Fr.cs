@@ -1459,6 +1459,26 @@ public static partial class ArticleContent
                 P("Vous pouvez apporter vos exemples au rendez-vous et, si vous le souhaitez, demander à un proche ce qu’il a observé. Tout le monde n’a pas gardé ses anciens bulletins scolaires. Des aides pratiques peuvent être essayées avant de connaître la cause."),
                 See(ArticleIds.Specialist, "Quand consulter un spécialiste et comment le choisir")
             ]),
+        new(
+            ArticleIds.MoneyStress,
+            "Inquiétudes d’argent : distinguer faits et scénarios",
+            "Repérer les besoins urgents, clarifier l’incertitude et choisir une étape à votre portée, sans conseil financier.",
+            "AccountBalanceWallet",
+            5,
+            [
+                P("Les difficultés d’argent peuvent accaparer l’attention et augmenter l’inquiétude. Cela ne signifie pas que la personne a échoué. Il peut être utile de distinguer ce qui exige une action maintenant de ce qui reste incertain."),
+                P("Sous tension, un fait peut se confondre avec une prédiction. Une pensée inquiète mérite de l’attention, mais ne décrit pas toujours quelque chose qui s’est déjà produit."),
+                H("Vérifier d’abord l’urgence"),
+                Warning("Si la nourriture, le logement, des médicaments indispensables ou la sécurité sont menacés maintenant, une aide concrète passe avant cet exercice. Contactez aujourd’hui une personne de confiance ou un service local d’aide."),
+                List("Décrivez la situation de façon générale ; ne notez aucun montant, numéro de compte ou de carte, mot de passe ni code de vérification.", "Vérifiez les messages inattendus par un canal officiel connu. Ne partagez pas de données secrètes et ne transférez pas d’argent à la suite d’un message ou appel inconnu.", "Si c’est difficile seul, demandez à un proche de rester avec vous pendant que vous cherchez du soutien."),
+                Crisis("Si vous êtes en danger immédiat"),
+                H("Vérifier ce que vous retenez"),
+                Quiz("Quel élément est un fait vérifiable plutôt qu’une prédiction ?", 1, "Un fait peut être vérifié auprès d’une source. Craindre un mauvais résultat ne signifie pas qu’il s’est déjà produit.", "Je vais certainement tout perdre", "Le courrier indique vendredi comme date limite", "Je ne m’en sortirai jamais"),
+                Quiz("Que faut-il privilégier si la nourriture ou des médicaments indispensables sont menacés aujourd’hui ?", 1, "Quand les besoins essentiels sont menacés, une aide concrète est nécessaire maintenant ; l’exercice peut attendre.", "Finir d’abord l’exercice", "Contacter aujourd’hui une personne de confiance ou un service local", "Attendre que l’inquiétude disparaisse"),
+                P("Ces deux questions vérifient uniquement la compréhension de l’article. Ce n’est ni un test psychologique, ni un diagnostic, ni une évaluation financière. L’exercice ne donne aucun conseil financier ou juridique."),
+                Practice(TechniqueId.MoneyWorryPlan, "Faire le tri dans une inquiétude d’argent")
+            ]),
+
         new(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée", "Découper un problème et revoir son plan", "Checklist", 3,
             [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien.")])
     ];
