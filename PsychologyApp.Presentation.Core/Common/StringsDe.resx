@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Dieser Code ist ungültig.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Banner können in den Katalogen für Übungen, Kurse und Artikel sowie im allgemeinen Zitate-Feed (nicht im personalisierten Feed „Für dich“) erscheinen. VK kann technische und Werbekennungen verarbeiten. Chat-, Tagebuch- und Antworttexte werden nicht übertragen. Weitere Informationen finden Sie in der Datenschutzerklärung.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Datenverarbeitung für Werbung erlauben</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>Werbung in der App erlauben?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Erlauben und fortfahren</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Nicht jetzt</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>Mit Ihrer Zustimmung können Banner in den Katalogen für Übungen, Kurse und Artikel sowie im allgemeinen Zitate-Feed erscheinen, nicht im personalisierten Feed „Für dich“. Der Code deaktiviert Werbung auf diesem Gerät.</value>
+  </data>
 </root>

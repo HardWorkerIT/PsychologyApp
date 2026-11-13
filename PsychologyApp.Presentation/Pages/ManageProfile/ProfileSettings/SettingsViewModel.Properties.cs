@@ -274,7 +274,7 @@ public partial class SettingsViewModel
             ChatRemindersEnabled,
             chatReminderHour,
             OnboardingConcern,
-            _savedState) with { AdsDisabled = _adsDisabled };
+            _savedState) with { AdsDisabled = _adsDisabled, AdsConsentGranted = _adsConsentGranted };
 
     private void ApplyLivePreview()
     {

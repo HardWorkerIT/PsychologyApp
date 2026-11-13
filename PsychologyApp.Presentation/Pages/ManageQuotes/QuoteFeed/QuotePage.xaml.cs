@@ -6,6 +6,9 @@ using PsychologyApp.Presentation.Features.ManageQuotes;
 using PsychologyApp.Presentation.Features.ManageQuotes.DependencyInjection;
 using PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed;
 using System.ComponentModel;
+#if ANDROID
+using PsychologyApp.Presentation.Platforms.Android;
+#endif
 
 namespace PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed;
 
@@ -28,6 +31,14 @@ public partial class QuotePage : ContentPage
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName is nameof(QuoteViewModel.IsDone)
+            or nameof(QuoteViewModel.FeedMode)
+            or nameof(QuoteViewModel.IsSearching)
+            or nameof(QuoteViewModel.ShowAllReadEmpty))
+        {
+            ViewModel.RefreshQuoteAdEligibility();
+        }
+
         if (e.PropertyName == nameof(QuoteViewModel.FeedMode) && ViewModel.FeedMode != _lastFeedMode)
         {
             _lastFeedMode = ViewModel.FeedMode;
@@ -93,7 +104,22 @@ public partial class QuotePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+#if ANDROID
+        VkBannerView adView = new();
+        adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(QuoteViewModel.IsQuoteAdEligible));
+        AdHost.Content = adView;
+#endif
+        ViewModel.RefreshQuoteAdEligibility();
         HandleOnAppearingAsync().FireAndForget();
+    }
+
+    protected override void OnDisappearing()
+    {
+#if ANDROID
+        AdHost.Content?.Handler?.DisconnectHandler();
+        AdHost.Content = null;
+#endif
+        base.OnDisappearing();
     }
 
     private async Task HandleOnAppearingAsync()

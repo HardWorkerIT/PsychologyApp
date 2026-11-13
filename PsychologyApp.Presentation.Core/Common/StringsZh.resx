@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>代码无效。</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>横幅广告可能显示在练习、课程和文章目录以及普通引言信息流中（不会显示在“为你推荐”个性化信息流中）。VK 可能处理技术标识符和广告标识符。聊天、日记和回答文本不会发送。详情请参阅隐私政策。</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>允许处理广告数据</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>允许在应用中显示广告吗？</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>允许并继续</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>暂不</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>隐私政策</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>经您同意后，练习、课程和文章目录以及普通引言信息流中可能显示横幅广告，不会显示在个性化推荐信息流中。此代码可在此设备上关闭广告。</value>
+  </data>
 </root>

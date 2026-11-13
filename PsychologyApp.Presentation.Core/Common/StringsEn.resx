@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>That code is not valid.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Banners may appear in the practice, course, and article catalogs and in the general quote feed (not the For you feed). VK may process technical and advertising identifiers. Chat, journal, and answer text is not sent. See the privacy policy for details.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Allow data processing for advertising</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>Allow ads in the app?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Allow and continue</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Not now</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>With your consent, banners may appear in the practice, course, and article catalogs and in the general quote feed, not the For you feed. The code disables ads on this device.</value>
+  </data>
 </root>

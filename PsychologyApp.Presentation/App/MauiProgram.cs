@@ -46,9 +46,12 @@ public static class MauiProgram
                 fonts.AddFont("Inter-SemiBold.ttf", "InterSemiBold");
             })
 #if ANDROID
-            .ConfigureMauiHandlers(handlers => handlers.AddHandler<
-                PsychologyApp.Presentation.Widgets.TechniqueListCard.TechniqueCardNativeView,
-                PsychologyApp.Presentation.Platforms.Android.TechniqueCardHandler>())
+            .ConfigureMauiHandlers(handlers =>
+            {
+                handlers.AddHandler<PsychologyApp.Presentation.Widgets.TechniqueListCard.TechniqueCardNativeView,
+                    PsychologyApp.Presentation.Platforms.Android.TechniqueCardHandler>();
+                handlers.AddHandler<VkBannerView, VkBannerHandler>();
+            })
 #endif
             ;
 

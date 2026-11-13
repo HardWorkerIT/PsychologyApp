@@ -30,14 +30,14 @@ public partial class TechniquesViewModel
     private void OnTechniqueMessage(TechniqueMessage message) =>
         ApplyTechniqueMessageAsync(message).FireAndForget();
 
-    public Task RefreshOnAppearAsync()
+    public async Task RefreshOnAppearAsync()
     {
         if (!_initialized)
         {
-            return EnsureInitializedAsync();
+            await EnsureInitializedAsync();
         }
 
-        return RefreshDashboardOnAppearAsync();
+        await RefreshDashboardOnAppearAsync();
     }
 
     public async Task TryOpenPendingTechniqueAsync()

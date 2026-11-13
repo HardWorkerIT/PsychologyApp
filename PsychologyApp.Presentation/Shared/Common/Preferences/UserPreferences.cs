@@ -12,6 +12,7 @@ public static partial class UserPreferences
     public const string ThemeKey = "Theme";
     private const string LegacyAccentColorKey = "Color";
     public const string AdsDisabledKey = "AdsDisabled";
+    public const string AdsConsentGrantedKey = "AdsConsentGranted";
     public const string FormKey = "Form";
     public const string SizeKey = "Size";
     public const string IsBoldKey = "IsBold";
@@ -81,6 +82,7 @@ public static partial class UserPreferences
             Size = NormalizeSizeKey(Preferences.Get(SizeKey, DefaultSize)),
             IsBold = Preferences.Get(IsBoldKey, false),
             AdsDisabled = Preferences.Get(AdsDisabledKey, false),
+            AdsConsentGranted = Preferences.Get(AdsConsentGrantedKey, false),
             QuestionnaireAutoAdvance = Preferences.Get(QuestionnaireAutoAdvanceKey, true),
             HasCompletedOnboarding = Preferences.ContainsKey(HasCompletedOnboardingKey)
                 ? Preferences.Get(HasCompletedOnboardingKey, false)
@@ -116,6 +118,7 @@ public static partial class UserPreferences
         Preferences.Set(SizeKey, NormalizeSizeKey(state.Size));
         Preferences.Set(IsBoldKey, state.IsBold);
         Preferences.Set(AdsDisabledKey, state.AdsDisabled);
+        Preferences.Set(AdsConsentGrantedKey, state.AdsConsentGranted);
         Preferences.Set(QuestionnaireAutoAdvanceKey, state.QuestionnaireAutoAdvance);
         Preferences.Set(HasCompletedOnboardingKey, state.HasCompletedOnboarding);
         Preferences.Set(OnboardingConcernKey, state.OnboardingConcern);

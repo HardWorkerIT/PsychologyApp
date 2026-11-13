@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>El código no es válido.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Pueden aparecer banners en los catálogos de prácticas, cursos y artículos, y en el catálogo general de citas (no en la selección personalizada «Para ti»). VK puede procesar identificadores técnicos y publicitarios. No se envían textos del chat, del diario ni de las respuestas. Consulta la política de privacidad.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Permitir el tratamiento de datos publicitarios</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>¿Permitir anuncios en la app?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Permitir y continuar</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Ahora no</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Política de privacidad</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>Con tu consentimiento, pueden aparecer anuncios en los catálogos de prácticas, cursos y artículos y en el catálogo general de citas, no en la selección personalizada «Para ti». El código desactiva la publicidad en este dispositivo.</value>
+  </data>
 </root>

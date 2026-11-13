@@ -124,6 +124,27 @@
                         TitleText="{Binding PracticeCatalogLabel}"
                         ActionText="{Binding CreateButtonText}"
                         ActionCommand="{Binding ConstructorTapped}" />
+                    <VerticalStackLayout IsVisible="{Binding IsPracticeAdPlacementVisible}" Spacing="8" Margin="0,8">
+                        <Border IsVisible="{Binding IsPracticeAdConsentPromptVisible}"
+                                Style="{StaticResource TestFlatCardStyle}"
+                                Padding="16">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="{Binding AdsConsentPromptTitle}" Style="{StaticResource SectionTitleStyle}" />
+                                <Label Text="{Binding AdsConsentDetails}" Style="{StaticResource CaptionStyle}" />
+                                <ui:ButtonView Variant="Secondary"
+                                               BodyText="{Binding AdsPrivacyPolicyText}"
+                                               TapCommand="{Binding OpenAdsPrivacyPolicyCommand}" />
+                                <ui:ButtonView BodyText="{Binding AdsConsentPromptAllowText}"
+                                               TapCommand="{Binding AllowAdsCommand}" />
+                                <ui:ButtonView Variant="Secondary"
+                                               BodyText="{Binding AdsConsentPromptNotNowText}"
+                                               TapCommand="{Binding DismissAdsPromptCommand}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <ContentView x:Name="PracticeAdHost"
+                                     IsVisible="{Binding IsPracticeAdEligible}"
+                                     Margin="0,8" />
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </CollectionView.Header>
 

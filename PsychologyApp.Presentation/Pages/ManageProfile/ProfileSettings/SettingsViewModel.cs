@@ -58,6 +58,7 @@ public partial class SettingsViewModel : BaseViewModel
         BindNavigation(navigationService);
         _savedState = _userPreferencesStore.Load();
         _adsDisabled = _savedState.AdsDisabled;
+        _adsConsentGranted = _savedState.AdsConsentGranted;
         _practiceReminderState = _quoteReminderState = _moodReminderState = _chatReminderState = _savedState;
         LoadFromPreferences();
         RefreshPickerDisplays();
@@ -66,8 +67,10 @@ public partial class SettingsViewModel : BaseViewModel
         Finish = new AsyncCommand(SaveAndGoBackAsync);
         ReplayOnboardingCommand = new AsyncCommand(ReplayOnboardingAsync);
         ApplyAdCodeCommand = new Command(ApplyAdCode);
+        OpenAdsPrivacyPolicyCommand = new AsyncCommand(OpenAdsPrivacyPolicyAsync);
     }
 
     public ICommand ReplayOnboardingCommand { get; }
     public ICommand ApplyAdCodeCommand { get; }
+    public ICommand OpenAdsPrivacyPolicyCommand { get; }
 }

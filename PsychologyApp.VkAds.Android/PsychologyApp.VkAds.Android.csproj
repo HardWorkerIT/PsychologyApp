@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <IsBindingProject>true</IsBindingProject>
+    <Nullable>enable</Nullable>
+    <!-- The private Java listener uses an SDK interface and is intentionally not exposed to C#. -->
+    <NoWarn>$(NoWarn);BG8605;BG8606</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- VK Ads SDK is supplied to the Java host and packaged by the application. -->
+    <AndroidMavenLibrary Include="com.my.target:mytarget-sdk" Version="5.52.5" Repository="https://repo.maven.apache.org/maven2" Bind="false" VerifyDependencies="false" />
+  </ItemGroup>
+</Project>

@@ -32,6 +32,9 @@ public sealed class CoursesViewModel : BaseViewModel
 
     public string PageTitle => AppStrings.ArticlesCourses;
     public string LeadText => AppStrings.ArticlesCoursesLead;
+    public bool IsCourseAdEligible => OperatingSystem.IsAndroid() && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+
+    public void RefreshAdEligibility() => OnPropertyChanged(nameof(IsCourseAdEligible));
 
     public IReadOnlyList<LibraryCardItem> Courses
     {
@@ -65,6 +68,6 @@ public sealed class CoursesViewModel : BaseViewModel
     protected override void RefreshLocalizedProperties()
     {
         Load();
-        Notify(nameof(PageTitle), nameof(LeadText));
+        Notify(nameof(PageTitle), nameof(LeadText), nameof(IsCourseAdEligible));
     }
 }

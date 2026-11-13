@@ -27,6 +27,13 @@ public static partial class AppStrings
 
     public static string AdsTitle => R(nameof(AdsTitle));
     public static string AdsHelp => R(nameof(AdsHelp));
+    public static string AdsHelpActive => R(nameof(AdsHelpActive));
+    public static string AdsConsentDetails => R(nameof(AdsConsentDetails));
+    public static string AdsConsentLabel => R(nameof(AdsConsentLabel));
+    public static string AdsConsentPromptTitle => R(nameof(AdsConsentPromptTitle));
+    public static string AdsConsentPromptAllow => R(nameof(AdsConsentPromptAllow));
+    public static string AdsConsentPromptNotNow => R(nameof(AdsConsentPromptNotNow));
+    public static string AdsPrivacyPolicy => R(nameof(AdsPrivacyPolicy));
     public static string AdsCodePlaceholder => R(nameof(AdsCodePlaceholder));
     public static string AdsApplyCode => R(nameof(AdsApplyCode));
     public static string AdsDisabledStatus => R(nameof(AdsDisabledStatus));

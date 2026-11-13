@@ -2,6 +2,9 @@ using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Features.RunTechniqueSession.DependencyInjection;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques;
+#if ANDROID
+using PsychologyApp.Presentation.Platforms.Android;
+#endif
 
 namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques;
 
@@ -28,14 +31,14 @@ public partial class TechniquesPage : ContentPage
             return;
         }
 
-        if (_viewModel.HasInitialized)
-        {
-            _viewModel.RefreshOnAppearAsync().FireAndForget();
-        }
-        else
-        {
-            _viewModel.EnsureInitializedAsync().FireAndForget();
-        }
+#if ANDROID
+        VkBannerView adView = new();
+        adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(TechniquesViewModel.IsPracticeAdEligible));
+        PracticeAdHost.Content = adView;
+#endif
+        _viewModel.RefreshPracticeAdEligibility();
+
+        _viewModel.RefreshOnAppearAsync().FireAndForget();
 
         _viewModel.TryOpenPendingTechniqueAsync().FireAndForget();
         _viewModel.TryOpenPendingJournalAsync().FireAndForget();
@@ -49,6 +52,15 @@ public partial class TechniquesPage : ContentPage
         }
 
         _viewModel.LoadMoreCustomTechniquesCommand.Execute(null);
+    }
+
+    protected override void OnDisappearing()
+    {
+#if ANDROID
+        PracticeAdHost.Content?.Handler?.DisconnectHandler();
+        PracticeAdHost.Content = null;
+#endif
+        base.OnDisappearing();
     }
 
     protected override void OnHandlerChanged()

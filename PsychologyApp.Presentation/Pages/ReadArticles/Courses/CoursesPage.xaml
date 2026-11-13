@@ -28,6 +28,7 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
+            <ContentView x:Name="AdHost" IsVisible="{Binding IsCourseAdEligible}" />
         </VerticalStackLayout>
     </ScrollView>
     </Grid>

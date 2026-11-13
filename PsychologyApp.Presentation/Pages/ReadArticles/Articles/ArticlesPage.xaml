@@ -50,7 +50,10 @@
         </CollectionView.ItemTemplate>
 
         <CollectionView.Footer>
-            <BoxView HeightRequest="20" Color="Transparent" />
+            <VerticalStackLayout Spacing="10" Padding="0,12,0,0">
+                <ContentView x:Name="AdHost" IsVisible="{Binding IsArticleAdEligible}" />
+                <BoxView HeightRequest="20" Color="Transparent" />
+            </VerticalStackLayout>
         </CollectionView.Footer>
     </CollectionView>
     </Grid>

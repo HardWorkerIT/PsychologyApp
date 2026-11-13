@@ -55,6 +55,8 @@ public partial class TechniquesViewModel
                 HasTodayDraft = hasDraft;
                 TherapyProgramBanner = clinical.TherapyProgramBanner;
                 ClinicalRiskBanner = clinical.ClinicalRiskBanner;
+                _clinicalDashboardLoaded = true;
+                NotifyPracticeAdProperties();
                 _todayTechniqueId = recommendation.TechniqueId;
                 TodayReasonText = recommendation.ReasonText;
                 // Returning to the tab usually yields the same recommendation: keep the bound card instead of rebuilding it.

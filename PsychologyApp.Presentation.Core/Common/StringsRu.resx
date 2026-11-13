@@ -4186,4 +4186,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Неверное кодовое слово.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Баннеры могут появляться в каталогах практик, курсов и статей, а также в общей ленте цитат (не в подборке «Для вас»). VK может обрабатывать технические и рекламные идентификаторы. Тексты чатов, дневника и ответов не передаются. Подробнее — в политике конфиденциальности.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Разрешить обработку данных для рекламы</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>Разрешить рекламу в приложении?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Разрешить и продолжить</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Не сейчас</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>После вашего согласия баннеры могут показываться в каталогах практик, курсов и статей и в общей ленте цитат, не в подборке «Для вас». Код отключает рекламу на этом устройстве.</value>
+  </data>
 </root>

@@ -87,6 +87,46 @@ public partial class TechniquesViewModel
     public bool HasTherapyProgramBanner => !string.IsNullOrWhiteSpace(TherapyProgramBanner);
 
     private string _clinicalRiskBanner = string.Empty;
+    private bool _clinicalDashboardLoaded;
+    private bool _adsConsentPromptDismissed;
+
+    public bool IsPracticeAdPlacementAvailable => OperatingSystem.IsAndroid()
+        && AdvertisingConfiguration.CanOfferAds
+        && IsDone
+        && _clinicalDashboardLoaded
+        && !HasClinicalRiskBanner
+        && TechniqueGroups.Any(group => group.Count > 0)
+        && !UserPreferencesStore.Load().AdsDisabled;
+
+    public bool IsPracticeAdEligible => IsPracticeAdPlacementAvailable
+        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+
+    public bool IsPracticeAdConsentPromptVisible => IsPracticeAdPlacementAvailable
+        && !UserPreferencesStore.Load().AdsConsentGranted
+        && !_adsConsentPromptDismissed;
+
+    public bool IsPracticeAdPlacementVisible => IsPracticeAdEligible || IsPracticeAdConsentPromptVisible;
+
+    public string AdsConsentPromptTitle => AppStrings.AdsConsentPromptTitle;
+    public string AdsConsentPromptAllowText => AppStrings.AdsConsentPromptAllow;
+    public string AdsConsentPromptNotNowText => AppStrings.AdsConsentPromptNotNow;
+    public string AdsConsentDetails => AppStrings.AdsConsentDetails;
+    public string AdsPrivacyPolicyText => AppStrings.AdsPrivacyPolicy;
+
+    private void NotifyPracticeAdProperties()
+    {
+        OnPropertyChanged(nameof(IsPracticeAdPlacementAvailable));
+        OnPropertyChanged(nameof(IsPracticeAdEligible));
+        OnPropertyChanged(nameof(IsPracticeAdConsentPromptVisible));
+        OnPropertyChanged(nameof(IsPracticeAdPlacementVisible));
+    }
+
+    public void RefreshPracticeAdEligibility()
+    {
+        _clinicalDashboardLoaded = false;
+        NotifyPracticeAdProperties();
+    }
+
     public string ClinicalRiskBanner
     {
         get => _clinicalRiskBanner;
@@ -95,6 +135,7 @@ public partial class TechniquesViewModel
             if (SetProperty(ref _clinicalRiskBanner, value))
             {
                 OnPropertyChanged(nameof(HasClinicalRiskBanner));
+                NotifyPracticeAdProperties();
             }
         }
     }

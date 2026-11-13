@@ -26,6 +26,13 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | Crash / error log reveals data | Logs carry exception types and technical messages, never chat or journal text | Exception messages may include SQL fragments |
 | Network eavesdropping | No chat, journal or practice text leaves the device. Network traffic is limited to prayer audio. | Prayer-audio request metadata (IP address and requested resource) is visible to the hosting provider |
 
+The Android package includes the VK Ads (myTarget) SDK for banners in the practice, course, article, and general quotes catalogs. The quote banner is limited to the non-personal All feed; ads stay out of personalized recommendations, tests, and crisis/help screens. The VK banner slot ID is configured,
+but no SDK view is created until the public privacy-policy URL is configured and the person explicitly opts in;
+the empty privacy-policy URL and default refusal of consent prevent banner creation and requests. Once the owner configures a
+policy URL and a person explicitly allows advertising, VK may receive device or advertising identifiers and request metadata.
+No chat, journal, practice answer, test result or health data is supplied to the SDK for targeting. Review the SDK's actual network
+activity, its current data disclosures and the app's public policy before enabling advertising.
+
 ## Safety (not security) risks the app handles
 
 Crisis wording in chat and journal notes, the suicide items of the Beck inventory and PHQ-9, and a red risk check each route to the crisis

@@ -2,6 +2,7 @@
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
 using PsychologyApp.Presentation.Shared.Navigation;
+using Microsoft.Maui.ApplicationModel;
 using System.Windows.Input;
 
 namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques;
@@ -15,6 +16,9 @@ public partial class TechniquesViewModel
 
     public ICommand OpenTraumaCommand { get; private set; } = default!;
     public ICommand LoadMoreCustomTechniquesCommand { get; private set; } = default!;
+    public ICommand AllowAdsCommand { get; private set; } = default!;
+    public ICommand DismissAdsPromptCommand { get; private set; } = default!;
+    public ICommand OpenAdsPrivacyPolicyCommand { get; private set; } = default!;
 
     private void WireCommands()
     {
@@ -27,6 +31,36 @@ public partial class TechniquesViewModel
         Cancel = new Command(CancelProgress);
         Reload = new AsyncCommand(() => InitializeAsync(showLoadingOverlay: true));
         LoadMoreCustomTechniquesCommand = new AsyncCommand(LoadMoreCustomTechniquesAsync);
+        AllowAdsCommand = new Command(AllowAds);
+        DismissAdsPromptCommand = new Command(DismissAdsPrompt);
+        OpenAdsPrivacyPolicyCommand = new AsyncCommand(OpenAdsPrivacyPolicyAsync);
+    }
+
+    private void AllowAds()
+    {
+        UserPreferencesState preferences = _preferences.Load();
+        if (!IsPracticeAdPlacementAvailable || preferences.AdsDisabled || preferences.AdsConsentGranted)
+        {
+            return;
+        }
+
+        _preferences.Save(preferences with { AdsConsentGranted = true });
+        _preferences.ApplyAll();
+    }
+
+    private void DismissAdsPrompt()
+    {
+        _adsConsentPromptDismissed = true;
+        OnPropertyChanged(nameof(IsPracticeAdConsentPromptVisible));
+        OnPropertyChanged(nameof(IsPracticeAdPlacementVisible));
+    }
+
+    private async Task OpenAdsPrivacyPolicyAsync()
+    {
+        if (AdvertisingConfiguration.IsPrivacyPolicyConfigured)
+        {
+            await Browser.Default.OpenAsync(AdvertisingConfiguration.PrivacyPolicyUrl, BrowserLaunchMode.SystemPreferred);
+        }
     }
 
     private async Task StartTodayPracticeAsync()

@@ -62,6 +62,13 @@ public sealed class ArticlesViewModel : BaseViewModel
     public string SearchPlaceholder => AppStrings.ArticlesSearchPlaceholder;
     public ICommand SelectFilterCommand { get; }
 
+    public bool IsArticleAdEligible => OperatingSystem.IsAndroid()
+        && _query.Trim().Length == 0
+        && Sections.Count > 0
+        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+
+    public void RefreshAdEligibility() => OnPropertyChanged(nameof(IsArticleAdEligible));
+
     public ObservableCollection<FilterChipTabItem> Filters { get; } = [];
 
     /// <summary>What is typed in the search field; the list follows it as it is typed.</summary>
@@ -73,6 +80,7 @@ public sealed class ArticlesViewModel : BaseViewModel
             if (SetProperty(ref _query, value ?? string.Empty))
             {
                 Load();
+                OnPropertyChanged(nameof(IsArticleAdEligible));
             }
         }
     }
@@ -82,7 +90,13 @@ public sealed class ArticlesViewModel : BaseViewModel
     public IReadOnlyList<ArticleSectionItem> Sections
     {
         get => _sections;
-        private set => SetProperty(ref _sections, value);
+        private set
+        {
+            if (SetProperty(ref _sections, value))
+            {
+                OnPropertyChanged(nameof(IsArticleAdEligible));
+            }
+        }
     }
 
     public string EmptyText

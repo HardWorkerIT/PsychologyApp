@@ -110,6 +110,7 @@ public partial class QuoteViewModel : BaseViewModel
         Notify(
             nameof(SearchQuery),
             nameof(IsSearching),
+            nameof(IsQuoteAdEligible),
             nameof(IsSearchFilteringVisible),
             nameof(IsQuoteListVisible),
             nameof(IsFeedFiltersVisible),

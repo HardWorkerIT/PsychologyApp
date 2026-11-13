@@ -12,6 +12,7 @@ Psychology App uses a **modular monolith**: Clean Architecture layers at the sol
 | `PsychologyApp.Bootstrap` | Composition root: `AddPsychologyAppCore()` |
 | `PsychologyApp.Presentation.Core` | Shared strings, chart layout math (`Charts/`), small models without MAUI |
 | `PsychologyApp.Presentation` | MAUI UI (FSD slices) |
+| `PsychologyApp.VkAds.Android` | Narrow Java binding for the VK Ads Android SDK; no app data or business rules |
 
 Dependency flow:
 
@@ -57,6 +58,11 @@ A list card that is built often while scrolling may be drawn natively on Android
 resources (colours, fonts, text size) and takes the click itself; other platforms keep the XAML card through `OnPlatform` in the
 template. Only where a Release measurement shows the XAML card costs frames: the practice card was about 17 native views with a MAUI
 handler each.
+
+The courses catalog hosts an Android banner through a MAUI handler and `PsychologyApp.VkAds.Android`. The handler controls the
+native view's lifecycle and checks the policy URL, VK slot, local consent, and ad-free preferences before creating an ad view. Until
+these values are configured, the banner and SDK requests remain disabled. The binding
+exposes only the banner host; its private Java callback is not a .NET API. Other platforms do not create the banner.
 
 Small documents that are read and written whole (the fear ladder, the reading state, the body log) are JSON in `AppMetadata` through
 `AppMetadataDocumentRepository<T>`; a document that cannot be read is copied to `<key>.unreadable` before a save replaces it.

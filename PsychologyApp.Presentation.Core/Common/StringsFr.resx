@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Ce code est incorrect.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Des bannières peuvent apparaître dans les catalogues de pratiques, de cours et d’articles, ainsi que dans le fil général de citations (pas dans le fil personnalisé « Pour vous »). VK peut traiter des identifiants techniques et publicitaires. Les textes des discussions, du journal et des réponses ne sont pas transmis. Consultez la politique de confidentialité.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Autoriser le traitement des données publicitaires</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>Autoriser les publicités dans l’application ?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Autoriser et continuer</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Pas maintenant</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Politique de confidentialité</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>Avec votre accord, des bannières peuvent apparaître dans les catalogues de pratiques, de cours et d’articles ainsi que dans le fil général de citations, pas dans le fil personnalisé « Pour vous ». Le code désactive les publicités sur cet appareil.</value>
+  </data>
 </root>

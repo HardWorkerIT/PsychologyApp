@@ -4180,4 +4180,25 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>O código é inválido.</value>
   </data>
+  <data name="AdsConsentDetails" xml:space="preserve">
+    <value>Banners podem aparecer nos catálogos de práticas, cursos e artigos, e no feed geral de citações (não no feed personalizado «Para você»). O VK pode processar identificadores técnicos e de publicidade. Textos de conversas, do diário e das respostas não são enviados. Consulte a política de privacidade.</value>
+  </data>
+  <data name="AdsConsentLabel" xml:space="preserve">
+    <value>Permitir tratamento de dados para publicidade</value>
+  </data>
+  <data name="AdsConsentPromptTitle" xml:space="preserve">
+    <value>Permitir anúncios no aplicativo?</value>
+  </data>
+  <data name="AdsConsentPromptAllow" xml:space="preserve">
+    <value>Permitir e continuar</value>
+  </data>
+  <data name="AdsConsentPromptNotNow" xml:space="preserve">
+    <value>Agora não</value>
+  </data>
+  <data name="AdsPrivacyPolicy" xml:space="preserve">
+    <value>Política de privacidade</value>
+  </data>
+  <data name="AdsHelpActive" xml:space="preserve">
+    <value>Com o seu consentimento, banners podem aparecer nos catálogos de práticas, cursos e artigos e no feed geral de citações, não no feed personalizado «Para você». O código desativa anúncios neste dispositivo.</value>
+  </data>
 </root>

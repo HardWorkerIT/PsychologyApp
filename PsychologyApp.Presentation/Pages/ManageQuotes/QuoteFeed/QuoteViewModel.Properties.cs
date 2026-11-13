@@ -1,4 +1,5 @@
 using PsychologyApp.Presentation.Entities.Quote;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.UI.Components;
 using System.Windows.Input;
 
@@ -15,9 +16,20 @@ public partial class QuoteViewModel
             if (SetProperty(ref _showAllReadEmpty, value))
             {
                 NotifyEmptyStateProperties();
+                OnPropertyChanged(nameof(IsQuoteAdEligible));
             }
         }
     }
+
+    public bool IsQuoteAdEligible => OperatingSystem.IsAndroid()
+        && IsDone
+        && FeedMode == QuoteFeedMode.All
+        && !IsSearching
+        && !ShowAllReadEmpty
+        && DisplayItems.Count > 0
+        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+
+    public void RefreshQuoteAdEligibility() => OnPropertyChanged(nameof(IsQuoteAdEligible));
 
     private QuoteItem? _dailyQuote;
     public QuoteItem? DailyQuote
