@@ -43,13 +43,14 @@ jobs:
         shell: bash
         run: |
           tools=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
-          apk=$(find out -maxdepth 1 -name '*.apk' -print -quit)
+          apk=$(find out -maxdepth 1 -name '*-Signed.apk' -print -quit)
+          test -n "$apk" || { echo "No signed APK was produced"; exit 1; }
           test -n "$apk"
           "$tools/zipalign" -c -P 16 -v 4 "$apk"
       - uses: actions/upload-artifact@v4
         with:
           name: android-smoke-apk
-          path: out/*.apk
+          path: out/*-Signed.apk
           if-no-files-found: error
 
   smoke:
