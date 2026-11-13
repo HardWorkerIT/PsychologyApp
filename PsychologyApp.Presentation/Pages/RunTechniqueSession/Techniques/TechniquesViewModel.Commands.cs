@@ -46,6 +46,7 @@ public partial class TechniquesViewModel
 
         _preferences.Save(preferences with { AdsConsentGranted = true });
         _preferences.ApplyAll();
+        NotifyPracticeAdProperties();
     }
 
     private void DismissAdsPrompt()
