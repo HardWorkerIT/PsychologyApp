@@ -4172,10 +4172,10 @@
     <value>Datenschutzerklärung</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
-    <value>Werbung ist derzeit nicht verfügbar. Mit dem Code EISBRECHER lässt sie sich deaktivieren, sobald sie verfügbar ist.</value>
+    <value>Sie haben einen Code zur Deaktivierung der Werbung erhalten? Geben Sie ihn hier ein.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Banner werden beim Öffnen der Kataloge für Übungen, Kurse und Artikel sowie des allgemeinen Zitate-Feeds automatisch angezeigt, nicht im personalisierten Feed „Für dich“. Der Code EISBRECHER deaktiviert Werbung auf diesem Gerät.</value>
+    <value>Banner werden in ausgewählten Katalogen automatisch geladen. Ein bereitgestellter Code deaktiviert künftige Werbeanfragen auf diesem Gerät.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Beschreibe ein Problem oder eine Idee. Die App öffnet deine E-Mail- oder SMS-App, damit du die Nachricht prüfen und selbst entscheiden kannst, ob du sie sendest.</value>

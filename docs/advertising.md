@@ -2,7 +2,7 @@
 
 The Android app loads VK Ads banners automatically in eligible practice, course, article, and general quotes catalogs. The quote banner is limited to the non-personal All feed. The official [myTarget Android SDK repository](https://github.com/myTargetSDK/mytarget-android) identifies the SDK as `com.my.target:mytarget-sdk`; the project currently pins version 5.52.5.
 
-The public [privacy policy](https://hardworkerit.github.io/PsychologyApp/privacy-policy/) and an HTTPS policy URL are required before an ad view can be created. Banners load automatically in eligible catalogs; no in-app consent prompt is shown. The ad-free EISBRECHER preference disables ad views and requests.
+The public [privacy policy](https://hardworkerit.github.io/PsychologyApp/privacy-policy/) and an HTTPS policy URL are required before an ad view can be created. Banners load automatically in eligible catalogs; no in-app consent prompt is shown. The local ad-free preference disables ad views and requests.
 
 - `AdvertisingConfiguration.PrivacyPolicyUrl` points to the public HTTPS policy.
 - `AdvertisingConfiguration.VkReadingCatalogBannerSlotId` is set to the registered banner block `2107995`.
@@ -22,4 +22,4 @@ The earlier Yandex block ID R-M-20382360-1 belongs to Yandex and cannot be used 
 - Do not send personal text, health data, chat messages, journal entries, practice answers, or test results to VK or use them for ad targeting.
 - Before production rollout, verify SDK network activity and automatic banner presentation on a test device. This device check has not been done yet.
 
-The EISBRECHER code is stored only as a local `AdsDisabled` preference; the code itself is not stored. It is a convenience switch, not a secret or tamper-resistant entitlement. Preference changes retain this flag, and deleting app settings clears it.
+Applying an invitation code sets a local `AdsDisabled` preference; the code itself is not stored. This is a convenience switch, not a secret or tamper-resistant entitlement. Preference changes retain this flag, and deleting app settings clears it.

@@ -4172,10 +4172,10 @@
     <value>Politique de confidentialité</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
-    <value>La publicité reste indisponible. Le code EISBRECHER la désactivera si elle est ajoutée.</value>
+    <value>Avez-vous reçu un code d’invitation pour désactiver la publicité ? Saisissez-le ici.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Les bannières apparaissent automatiquement quand vous ouvrez les catalogues consacrés aux pratiques, aux cours et aux articles ou le fil général de citations, mais pas le fil personnalisé « Pour vous ». Le code EISBRECHER désactive les publicités sur cet appareil.</value>
+    <value>Les bannières se chargent automatiquement dans les catalogues concernés. Un code fourni désactive les prochaines requêtes publicitaires sur cet appareil.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Décrivez un problème ou une idée. L’application ouvrira votre messagerie ou vos SMS afin que vous puissiez relire le message et décider de l’envoyer ou non.</value>

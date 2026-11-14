@@ -4172,10 +4172,10 @@
     <value>Privacy policy</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
-    <value>Advertising is not available yet. EISBRECHER will turn it off if it becomes available.</value>
+    <value>Received an ad-free invitation code? Enter it here.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Banners appear automatically when you open the practice, course, and article catalogs or the general quote feed, not the personalized For you feed. EISBRECHER turns off ads on this device.</value>
+    <value>Banners load automatically in eligible catalogs. An issued code disables future ad requests on this device.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Describe a problem or idea. The app opens your email or SMS app so you can review the message and choose whether to send it.</value>

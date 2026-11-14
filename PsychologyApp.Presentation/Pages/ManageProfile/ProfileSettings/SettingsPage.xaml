@@ -199,8 +199,9 @@
                         <ui:ButtonView Variant="Secondary" BodyText="{Binding AdsPrivacyPolicyText}"
                                        TapCommand="{Binding OpenAdsPrivacyPolicyCommand}" />
                     </VerticalStackLayout>
-                    <Entry Text="{Binding AdCode}" Placeholder="{Binding AdCodePlaceholder}"
+                    <Entry Text="{Binding AdCode, Mode=TwoWay}" Placeholder="{Binding AdCodePlaceholder}"
                            IsVisible="{Binding CanEnterAdCode}" MaxLength="40"
+                           Keyboard="Plain" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
                            SemanticProperties.Description="{Binding AdCodePlaceholder}" />
                     <ui:ButtonView Variant="Secondary" BodyText="{Binding ApplyAdCodeText}"
                                    TapCommand="{Binding ApplyAdCodeCommand}" IsVisible="{Binding CanEnterAdCode}" />

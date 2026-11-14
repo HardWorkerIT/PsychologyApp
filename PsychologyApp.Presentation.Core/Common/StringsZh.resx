@@ -4172,10 +4172,10 @@
     <value>隐私政策</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
-    <value>广告暂不可用。如以后启用，EISBRECHER 代码可关闭广告。</value>
+    <value>如果您收到关闭广告的邀请码，请在此输入。</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>打开练习、课程、文章目录或普通引言信息流时会自动显示横幅广告，但不会显示在个性化“为你推荐”信息流中。EISBRECHER 代码可在此设备上关闭广告。</value>
+    <value>广告横幅会在符合条件的目录中自动加载。使用发放的代码可在此设备上关闭后续广告请求。</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>描述问题或想法。应用会打开邮件或短信应用，供你检查内容并决定是否发送。</value>

@@ -4172,10 +4172,10 @@
     <value>Política de privacidad</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
-    <value>La publicidad aún no está disponible. El código EISBRECHER la desactivará cuando aparezca.</value>
+    <value>¿Has recibido un código de invitación para quitar la publicidad? Introdúcelo aquí.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Los banners aparecen automáticamente al abrir los catálogos de prácticas, cursos y artículos o el catálogo general de citas, pero no la selección personalizada «Para ti». El código EISBRECHER desactiva la publicidad en este dispositivo.</value>
+    <value>Los banners se cargan automáticamente en los catálogos habilitados. Un código emitido desactiva futuras solicitudes de anuncios en este dispositivo.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Describe un problema o una idea. La aplicación abrirá tu correo o SMS para que revises el mensaje y decidas si quieres enviarlo.</value>

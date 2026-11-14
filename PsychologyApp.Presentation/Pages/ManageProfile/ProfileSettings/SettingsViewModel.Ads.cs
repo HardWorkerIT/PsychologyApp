@@ -23,7 +23,14 @@ public partial class SettingsViewModel
     public string AdCode
     {
         get => _adCode;
-        set => SetProperty(ref _adCode, value ?? string.Empty);
+        set
+        {
+            if (SetProperty(ref _adCode, value ?? string.Empty) && _invalidAdCode)
+            {
+                _invalidAdCode = false;
+                OnPropertyChanged(nameof(AdCodeStatus));
+            }
+        }
     }
 
     private void ApplyAdCode()
