@@ -360,9 +360,6 @@
   <data name="ReviewPage" xml:space="preserve">
     <value>Review</value>
   </data>
-  <data name="ReviewExplanation" xml:space="preserve">
-    <value>You can report a problem or suggest ideas to improve the app. Support will receive your message.</value>
-  </data>
   <data name="ReviewExplanationShare" xml:space="preserve">
     <value>Describe a problem or an idea and choose where to send it: email, a messenger or notes. The app does not send anything to the developer by itself.</value>
   </data>
@@ -374,12 +371,6 @@
   </data>
   <data name="ReviewMessageRequired" xml:space="preserve">
     <value>Enter a message before sending</value>
-  </data>
-  <data name="ReviewSendSuccessTitle" xml:space="preserve">
-    <value>Thank you</value>
-  </data>
-  <data name="ReviewSendSuccessMessage" xml:space="preserve">
-    <value>Your message has been sent</value>
   </data>
   <data name="ReviewEmailSubject" xml:space="preserve">
     <value>Psychology App feedback</value>
@@ -4165,9 +4156,6 @@
   <data name="AdsTitle" xml:space="preserve">
     <value>Advertising</value>
   </data>
-  <data name="AdsHelp" xml:space="preserve">
-    <value>There are no ads yet. A code can turn off future ads.</value>
-  </data>
   <data name="AdsCodePlaceholder" xml:space="preserve">
     <value>Code word</value>
   </data>
@@ -4180,25 +4168,139 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>That code is not valid.</value>
   </data>
-  <data name="AdsConsentDetails" xml:space="preserve">
-    <value>Banners may appear in the practice, course, and article catalogs and in the general quote feed (not the For you feed). VK may process technical and advertising identifiers. Chat, journal, and answer text is not sent. See the privacy policy for details.</value>
-  </data>
-  <data name="AdsConsentLabel" xml:space="preserve">
-    <value>Allow data processing for advertising</value>
-  </data>
-  <data name="AdsConsentPromptTitle" xml:space="preserve">
-    <value>Allow ads in the app?</value>
-  </data>
-  <data name="AdsConsentPromptAllow" xml:space="preserve">
-    <value>Allow and continue</value>
-  </data>
-  <data name="AdsConsentPromptNotNow" xml:space="preserve">
-    <value>Not now</value>
-  </data>
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>Privacy policy</value>
   </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Advertising is not available yet. EISBRECHER will turn it off if it becomes available.</value>
+  </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>With your consent, banners may appear in the practice, course, and article catalogs and in the general quote feed, not the For you feed. The code disables ads on this device.</value>
+    <value>Banners appear automatically when you open the practice, course, and article catalogs or the general quote feed, not the personalized For you feed. EISBRECHER turns off ads on this device.</value>
+  </data>
+  <data name="ReviewExplanation" xml:space="preserve">
+    <value>Describe a problem or idea. The app opens your email or SMS app so you can review the message and choose whether to send it.</value>
+  </data>
+  <data name="AdsDisclosure" xml:space="preserve">
+    <value>The app automatically loads a banner when you open an eligible catalog. VK may receive your IP address, technical device and app information, an available advertising identifier, and ad request, impression, and click events. The exact data depends on the SDK version and device settings. The app does not send chat or journal text, practice answers, test results, or health information to VK. See the privacy policy for details.</value>
+  </data>
+  <data name="NextStepTitle" xml:space="preserve">
+    <value>Quick actions</value>
+  </data>
+  <data name="NextStepPrompt" xml:space="preserve">
+    <value>Save up to three actions for one-tap access.</value>
+  </data>
+  <data name="NextStepGrounding" xml:space="preserve">
+    <value>Try grounding</value>
+  </data>
+  <data name="NextStepThought" xml:space="preserve">
+    <value>Explore a thought</value>
+  </data>
+  <data name="NextStepSmallStep" xml:space="preserve">
+    <value>Choose a small step</value>
+  </data>
+  <data name="NextStepMood" xml:space="preserve">
+    <value>Check in with your mood</value>
+  </data>
+  <data name="NextStepChoose" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="NextStepStart" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="NextStepSave" xml:space="preserve">
+    <value>Add to quick actions</value>
+  </data>
+  <data name="NextStepRemove" xml:space="preserve">
+    <value>Remove from quick actions</value>
+  </data>
+  <data name="NextStepChange" xml:space="preserve">
+    <value>Manage actions</value>
+  </data>
+  <data name="NextStepCollapse" xml:space="preserve">
+    <value>Hide options</value>
+  </data>
+  <data name="NextStepSelectHint" xml:space="preserve">
+    <value>Select an option. Then open it or save it as support.</value>
+  </data>
+  <data name="NextStepToggleHint" xml:space="preserve">
+    <value>Show or hide the available options.</value>
+  </data>
+  <data name="NextStepSaveHint" xml:space="preserve">
+    <value>Adds the selected action to quick actions.</value>
+  </data>
+  <data name="NextStepRemoveHint" xml:space="preserve">
+    <value>Removes the selected action from quick actions.</value>
+  </data>
+  <data name="NextStepOpenHint" xml:space="preserve">
+    <value>Open this saved action.</value>
+  </data>
+  <data name="NextStepChooseHint" xml:space="preserve">
+    <value>Shows the available options.</value>
+  </data>
+  <data name="NextStepChoiceSelected" xml:space="preserve">
+    <value>Selected: {0}</value>
+  </data>
+  <data name="NextStepSavedSummary" xml:space="preserve">
+    <value>Quick actions: {0} of 3</value>
+  </data>
+  <data name="NextStepCapacity" xml:space="preserve">
+    <value>Saved: {0} of 3</value>
+  </data>
+  <data name="NextStepLimitReached" xml:space="preserve">
+    <value>You can save up to three actions. Remove one to add another.</value>
+  </data>
+  <data name="PracticeFinderButton" xml:space="preserve">
+    <value>Find a practice</value>
+  </data>
+  <data name="PracticeFinderAccessibilityHint" xml:space="preserve">
+    <value>Choose a time or situation to see suitable practices.</value>
+  </data>
+  <data name="PracticeFinderTitle" xml:space="preserve">
+    <value>What fits right now?</value>
+  </data>
+  <data name="PracticeFinderQuick" xml:space="preserve">
+    <value>I have up to 2 minutes</value>
+  </data>
+  <data name="PracticeFinderEyesOpen" xml:space="preserve">
+    <value>Keep my eyes open</value>
+  </data>
+  <data name="PracticeFinderNoBreath" xml:space="preserve">
+    <value>No breath focus</value>
+  </data>
+  <data name="PracticeFinderNoTyping" xml:space="preserve">
+    <value>No typing — I can skip answers</value>
+  </data>
+  <data name="PracticeFinderPublic" xml:space="preserve">
+    <value>I&apos;m in a public place</value>
+  </data>
+  <data name="PracticeFinderSituations" xml:space="preserve">
+    <value>Choose a situation</value>
+  </data>
+  <data name="PracticeFinderBeforeConversation" xml:space="preserve">
+    <value>Before a difficult conversation</value>
+  </data>
+  <data name="PracticeFinderPassengerCommute" xml:space="preserve">
+    <value>On the way — as a passenger or when stopped</value>
+  </data>
+  <data name="PracticeFinderBeforeSleep" xml:space="preserve">
+    <value>Before sleep</value>
+  </data>
+  <data name="PracticeFinderAfterConflict" xml:space="preserve">
+    <value>After a conflict</value>
+  </data>
+  <data name="PracticeFinderResultsTitle" xml:space="preserve">
+    <value>Practices for: {0}</value>
+  </data>
+  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
+    <value>A set for {0}. Choose any practice to start.</value>
+  </data>
+  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
+    <value>You can skip the answers</value>
+  </data>
+  <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
+    <value>No suitable practices found</value>
+  </data>
+  <data name="PracticeFinderNoResultsBody" xml:space="preserve">
+    <value>Try another option or browse the practice catalog.</value>
   </data>
 </root>

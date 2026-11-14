@@ -58,7 +58,6 @@ public partial class SettingsViewModel : BaseViewModel
         BindNavigation(navigationService);
         _savedState = _userPreferencesStore.Load();
         _adsDisabled = _savedState.AdsDisabled;
-        _adsConsentGranted = _savedState.AdsConsentGranted;
         _practiceReminderState = _quoteReminderState = _moodReminderState = _chatReminderState = _savedState;
         LoadFromPreferences();
         RefreshPickerDisplays();

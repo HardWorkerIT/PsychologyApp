@@ -426,6 +426,16 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
             await WriteDocument(BodyRepository.MetadataKey, BodyService.Merge(local, body), BodyJsonContext.Default.BodyLog);
         }
 
+        if (backup.SavedNextStep is { } savedNextStep)
+        {
+            await connection.ExecuteAsync(DapperCommandFactory.Create(
+                UserProgressSql.UpsertSavedNextStep,
+                new { key = UserProgressSql.SavedNextStepMetadataKey, value = savedNextStep },
+                transaction,
+                CommandTimeoutSeconds,
+                cancellationToken)).ConfigureAwait(false);
+        }
+
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         return new BackupImportResult(moods, tests, completions, sessionResults, chats, safetyPlanImported, techniques);
     }

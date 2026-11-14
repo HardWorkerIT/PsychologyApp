@@ -21,14 +21,21 @@
     <ScrollView Grid.Row="1">
         <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource ListItemSpacing}">
             <Label Text="{Binding LeadText}" Style="{StaticResource CaptionStyle}" Margin="4,0,4,4" />
-            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding Courses}">
+            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding CoursesBeforeAd}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="card:LibraryCardItem">
                         <card:LibraryCardView />
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </VerticalStackLayout>
-            <ContentView x:Name="AdHost" IsVisible="{Binding IsCourseAdEligible}" />
+            <ContentView x:Name="AdHost" IsVisible="False" />
+            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding CoursesAfterAd}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="card:LibraryCardItem">
+                        <card:LibraryCardView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
     </Grid>

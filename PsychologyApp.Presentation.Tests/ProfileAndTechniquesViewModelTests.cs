@@ -327,6 +327,7 @@ public sealed class TechniquesViewModelTests
         return new TechniquesViewModel(
             techniqueService,
             Mock.Of<IToastService>(),
+            Mock.Of<PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService>(),
             techniqueMessenger ?? Mock.Of<ITechniqueMessenger>(),
             navigationService,
             new TechniqueListBuilder(userProgressService, TechniqueCatalogTestHelper.CreateGateway()),

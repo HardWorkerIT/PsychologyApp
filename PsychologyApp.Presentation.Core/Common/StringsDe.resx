@@ -360,9 +360,6 @@
   <data name="ReviewPage" xml:space="preserve">
     <value>Rückmeldung</value>
   </data>
-  <data name="ReviewExplanation" xml:space="preserve">
-    <value>Du kannst ein Problem melden oder Ideen zur Verbesserung der App vorschlagen. Der Support erhält deine Nachricht.</value>
-  </data>
   <data name="ReviewExplanationShare" xml:space="preserve">
     <value>Beschreibe ein Problem oder eine Idee und wähle, wohin du sie sendest: E-Mail, Messenger oder Notizen. Die App sendet von sich aus nichts an den Entwickler.</value>
   </data>
@@ -374,12 +371,6 @@
   </data>
   <data name="ReviewMessageRequired" xml:space="preserve">
     <value>Gib vor dem Senden eine Nachricht ein</value>
-  </data>
-  <data name="ReviewSendSuccessTitle" xml:space="preserve">
-    <value>Danke</value>
-  </data>
-  <data name="ReviewSendSuccessMessage" xml:space="preserve">
-    <value>Deine Nachricht wurde gesendet</value>
   </data>
   <data name="ReviewEmailSubject" xml:space="preserve">
     <value>Feedback zu Psychology App</value>
@@ -4165,9 +4156,6 @@
   <data name="AdsTitle" xml:space="preserve">
     <value>Werbung</value>
   </data>
-  <data name="AdsHelp" xml:space="preserve">
-    <value>Es gibt noch keine Werbung. Mit einem Code lässt sich künftige Werbung ausschalten.</value>
-  </data>
   <data name="AdsCodePlaceholder" xml:space="preserve">
     <value>Codewort</value>
   </data>
@@ -4180,25 +4168,139 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Dieser Code ist ungültig.</value>
   </data>
-  <data name="AdsConsentDetails" xml:space="preserve">
-    <value>Banner können in den Katalogen für Übungen, Kurse und Artikel sowie im allgemeinen Zitate-Feed (nicht im personalisierten Feed „Für dich“) erscheinen. VK kann technische und Werbekennungen verarbeiten. Chat-, Tagebuch- und Antworttexte werden nicht übertragen. Weitere Informationen finden Sie in der Datenschutzerklärung.</value>
-  </data>
-  <data name="AdsConsentLabel" xml:space="preserve">
-    <value>Datenverarbeitung für Werbung erlauben</value>
-  </data>
-  <data name="AdsConsentPromptTitle" xml:space="preserve">
-    <value>Werbung in der App erlauben?</value>
-  </data>
-  <data name="AdsConsentPromptAllow" xml:space="preserve">
-    <value>Erlauben und fortfahren</value>
-  </data>
-  <data name="AdsConsentPromptNotNow" xml:space="preserve">
-    <value>Nicht jetzt</value>
-  </data>
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>Datenschutzerklärung</value>
   </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Werbung ist derzeit nicht verfügbar. Mit dem Code EISBRECHER lässt sie sich deaktivieren, sobald sie verfügbar ist.</value>
+  </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Mit Ihrer Zustimmung können Banner in den Katalogen für Übungen, Kurse und Artikel sowie im allgemeinen Zitate-Feed erscheinen, nicht im personalisierten Feed „Für dich“. Der Code deaktiviert Werbung auf diesem Gerät.</value>
+    <value>Banner werden beim Öffnen der Kataloge für Übungen, Kurse und Artikel sowie des allgemeinen Zitate-Feeds automatisch angezeigt, nicht im personalisierten Feed „Für dich“. Der Code EISBRECHER deaktiviert Werbung auf diesem Gerät.</value>
+  </data>
+  <data name="ReviewExplanation" xml:space="preserve">
+    <value>Beschreibe ein Problem oder eine Idee. Die App öffnet deine E-Mail- oder SMS-App, damit du die Nachricht prüfen und selbst entscheiden kannst, ob du sie sendest.</value>
+  </data>
+  <data name="AdsDisclosure" xml:space="preserve">
+    <value>Beim Öffnen geeigneter Kataloge lädt die App automatisch ein Werbebanner. VK kann die IP-Adresse, technische Geräte- und App-Informationen, eine verfügbare Werbekennung sowie Ereignisse zu Anfrage, Anzeige und Klick erhalten. Die genauen Daten hängen von SDK-Version und Geräteeinstellungen ab. Die App übermittelt keine Chat- oder Tagebuchtexte, Übungsantworten, Testergebnisse oder Gesundheitsdaten an VK. Details finden Sie in der Datenschutzerklärung.</value>
+  </data>
+  <data name="NextStepTitle" xml:space="preserve">
+    <value>Schnellaktionen</value>
+  </data>
+  <data name="NextStepPrompt" xml:space="preserve">
+    <value>Wähle bis zu drei Aktionen für den Schnellzugriff.</value>
+  </data>
+  <data name="NextStepGrounding" xml:space="preserve">
+    <value>Erdung ausprobieren</value>
+  </data>
+  <data name="NextStepThought" xml:space="preserve">
+    <value>Einen Gedanken betrachten</value>
+  </data>
+  <data name="NextStepSmallStep" xml:space="preserve">
+    <value>Einen kleinen Schritt wählen</value>
+  </data>
+  <data name="NextStepMood" xml:space="preserve">
+    <value>Stimmung festhalten</value>
+  </data>
+  <data name="NextStepChoose" xml:space="preserve">
+    <value>Wählen</value>
+  </data>
+  <data name="NextStepStart" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="NextStepSave" xml:space="preserve">
+    <value>Zu Schnellaktionen hinzufügen</value>
+  </data>
+  <data name="NextStepRemove" xml:space="preserve">
+    <value>Aus Schnellaktionen entfernen</value>
+  </data>
+  <data name="NextStepChange" xml:space="preserve">
+    <value>Aktionen verwalten</value>
+  </data>
+  <data name="NextStepCollapse" xml:space="preserve">
+    <value>Optionen ausblenden</value>
+  </data>
+  <data name="NextStepSelectHint" xml:space="preserve">
+    <value>Wähle eine Option. Öffne sie danach oder speichere sie als Unterstützung.</value>
+  </data>
+  <data name="NextStepToggleHint" xml:space="preserve">
+    <value>Verfügbare Optionen anzeigen oder ausblenden.</value>
+  </data>
+  <data name="NextStepSaveHint" xml:space="preserve">
+    <value>Fügt die ausgewählte Aktion zu den Schnellaktionen hinzu.</value>
+  </data>
+  <data name="NextStepRemoveHint" xml:space="preserve">
+    <value>Entfernt die ausgewählte Aktion aus den Schnellaktionen.</value>
+  </data>
+  <data name="NextStepOpenHint" xml:space="preserve">
+    <value>Gespeicherte Aktion öffnen.</value>
+  </data>
+  <data name="NextStepChooseHint" xml:space="preserve">
+    <value>Zeigt die verfügbaren Optionen.</value>
+  </data>
+  <data name="NextStepChoiceSelected" xml:space="preserve">
+    <value>Ausgewählt: {0}</value>
+  </data>
+  <data name="NextStepSavedSummary" xml:space="preserve">
+    <value>Schnellaktionen: {0} von 3</value>
+  </data>
+  <data name="NextStepCapacity" xml:space="preserve">
+    <value>Ausgewählt: {0} von 3</value>
+  </data>
+  <data name="NextStepLimitReached" xml:space="preserve">
+    <value>Du kannst bis zu drei Aktionen speichern. Entferne eine, um eine weitere hinzuzufügen.</value>
+  </data>
+  <data name="PracticeFinderButton" xml:space="preserve">
+    <value>Passende Übung finden</value>
+  </data>
+  <data name="PracticeFinderAccessibilityHint" xml:space="preserve">
+    <value>Wähle Zeit oder Situation, um passende Übungen zu sehen.</value>
+  </data>
+  <data name="PracticeFinderTitle" xml:space="preserve">
+    <value>Was passt gerade?</value>
+  </data>
+  <data name="PracticeFinderQuick" xml:space="preserve">
+    <value>Ich habe höchstens 2 Minuten</value>
+  </data>
+  <data name="PracticeFinderEyesOpen" xml:space="preserve">
+    <value>Augen offen lassen</value>
+  </data>
+  <data name="PracticeFinderNoBreath" xml:space="preserve">
+    <value>Ohne Fokus auf den Atem</value>
+  </data>
+  <data name="PracticeFinderNoTyping" xml:space="preserve">
+    <value>Ohne Texteingabe — Antworten können übersprungen werden</value>
+  </data>
+  <data name="PracticeFinderPublic" xml:space="preserve">
+    <value>Ich bin an einem öffentlichen Ort</value>
+  </data>
+  <data name="PracticeFinderSituations" xml:space="preserve">
+    <value>Situation auswählen</value>
+  </data>
+  <data name="PracticeFinderBeforeConversation" xml:space="preserve">
+    <value>Vor einem schwierigen Gespräch</value>
+  </data>
+  <data name="PracticeFinderPassengerCommute" xml:space="preserve">
+    <value>Unterwegs — als Beifahrer:in oder wenn das Fahrzeug steht</value>
+  </data>
+  <data name="PracticeFinderBeforeSleep" xml:space="preserve">
+    <value>Vor dem Schlafengehen</value>
+  </data>
+  <data name="PracticeFinderAfterConflict" xml:space="preserve">
+    <value>Nach einem Konflikt</value>
+  </data>
+  <data name="PracticeFinderResultsTitle" xml:space="preserve">
+    <value>Passende Übungen: {0}</value>
+  </data>
+  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
+    <value>Auswahl für „{0}“. Du kannst eine Übung wählen.</value>
+  </data>
+  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
+    <value>Antworten können übersprungen werden</value>
+  </data>
+  <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
+    <value>Keine passende Übung gefunden</value>
+  </data>
+  <data name="PracticeFinderNoResultsBody" xml:space="preserve">
+    <value>Probiere eine andere Auswahl oder öffne den Übungskatalog.</value>
   </data>
 </root>

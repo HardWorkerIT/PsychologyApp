@@ -3,15 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed.QuotePage"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed"
-             xmlns:quotes="clr-namespace:PsychologyApp.Presentation.Entities.Quote"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
              xmlns:quoteCard="clr-namespace:PsychologyApp.Presentation.Widgets.QuoteCard"
+             xmlns:features="clr-namespace:PsychologyApp.Presentation.Features.ManageQuotes"
              xmlns:dailyHero="clr-namespace:PsychologyApp.Presentation.Widgets.DailyQuoteHero"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              x:DataType="vm:QuoteViewModel"
              Shell.NavBarIsVisible="False"
              x:Name="page"
              Title="{Binding PageTitle}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="QuoteCardRowTemplate" x:DataType="features:QuoteFeedDisplayItem">
+                <quoteCard:QuoteCardView
+                    Text="{Binding Quote.Text}"
+                    Author="{Binding Quote.Author}"
+                    IsFavourite="{Binding Quote.IsFavourite, Mode=TwoWay}"
+                    LikeCommand="{Binding Quote.LikeCommand}"
+                    CopyCommand="{Binding Quote.CopyCommand}"
+                    ShareCommand="{Binding Quote.ShareCommand}"
+                    MarkReadCommand="{Binding Quote.MarkReadCommand}">
+                    <quoteCard:QuoteCardView.Behaviors>
+                        <behaviors:ListItemRevealBehavior />
+                    </quoteCard:QuoteCardView.Behaviors>
+                </quoteCard:QuoteCardView>
+            </DataTemplate>
+            <DataTemplate x:Key="QuoteAdRowTemplate" x:DataType="features:QuoteFeedDisplayItem">
+                <VerticalStackLayout IsVisible="False"
+                                     BindingContextChanged="OnQuoteAdRowBindingContextChanged">
+                    <ContentView />
+                </VerticalStackLayout>
+            </DataTemplate>
+            <vm:QuoteFeedDisplayTemplateSelector
+                x:Key="QuoteFeedDisplayTemplateSelector"
+                QuoteTemplate="{StaticResource QuoteCardRowTemplate}"
+                AdTemplate="{StaticResource QuoteAdRowTemplate}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <!-- Opened over the tabs: the same back arrow and title as every other pushed page, instead of the system bar. -->
     <Grid RowDefinitions="Auto,*">
@@ -107,7 +136,8 @@
                     SelectionMode="None"
                     RemainingItemsThreshold="2"
                     RemainingItemsThresholdReached="OnRemainingItemsThresholdReached"
-                    ItemsSource="{Binding DisplayItems}">
+                    ItemTemplate="{StaticResource QuoteFeedDisplayTemplateSelector}"
+                    ItemsSource="{Binding DisplayRows}">
 
                     <CollectionView.Behaviors>
                         <behaviors:RevealOnAppearingBehavior RevealOnTabAppearOnly="True" />
@@ -134,28 +164,8 @@
                             ItemSpacing="{StaticResource ListItemSpacing}" />
                     </CollectionView.ItemsLayout>
 
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="quotes:QuoteItem">
-                            <quoteCard:QuoteCardView
-                                Text="{Binding Text}"
-                                Author="{Binding Author}"
-                                IsFavourite="{Binding IsFavourite, Mode=TwoWay}"
-                                LikeCommand="{Binding LikeCommand}"
-                                CopyCommand="{Binding CopyCommand}"
-                                ShareCommand="{Binding ShareCommand}"
-                                MarkReadCommand="{Binding MarkReadCommand}">
-                                <quoteCard:QuoteCardView.Behaviors>
-                                    <behaviors:ListItemRevealBehavior />
-                                </quoteCard:QuoteCardView.Behaviors>
-                            </quoteCard:QuoteCardView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-
                     <CollectionView.Footer>
                         <VerticalStackLayout Spacing="8" Padding="0,12,0,0">
-                            <ContentView x:Name="AdHost"
-                                         IsVisible="{Binding IsQuoteAdEligible}"
-                                         HorizontalOptions="Center" />
                             <BoxView HeightRequest="20" Color="Transparent" />
                         </VerticalStackLayout>
                     </CollectionView.Footer>

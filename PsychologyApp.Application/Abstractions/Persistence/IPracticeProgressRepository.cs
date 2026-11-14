@@ -17,6 +17,8 @@ public interface IPracticeProgressRepository
     Task<string?> GetSessionDraftAsync(string techniqueKey, CancellationToken cancellationToken = default);
     Task<IReadOnlySet<string>> GetSessionDraftKeysAsync(IReadOnlyList<string> techniqueKeys, CancellationToken cancellationToken = default);
     Task DeleteSessionDraftAsync(string techniqueKey, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<SavedNextStep>> GetSavedNextStepsAsync(CancellationToken cancellationToken = default);
+    Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default);
 
     Task UpdateSessionResultPostIntensityAsync(long sessionResultId, int postIntensity, CancellationToken cancellationToken = default);
     Task UpdateSessionResultNoteAsync(long sessionResultId, string note, CancellationToken cancellationToken = default);

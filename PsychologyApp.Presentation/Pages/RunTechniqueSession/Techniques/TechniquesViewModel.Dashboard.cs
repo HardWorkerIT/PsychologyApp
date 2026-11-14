@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using PsychologyApp.Application.Models;
 using PsychologyApp.Domain.UserProgress;
 using PsychologyApp.Presentation.Entities.Technique;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
@@ -21,17 +22,18 @@ public partial class TechniquesViewModel
             await _databaseReadySignal.WaitAsync(cancellationToken);
 
             Task<int> streakTask = _dashboardLoader.LoadStreakDaysAsync(cancellationToken);
-            Task<bool> returningTask = _dashboardLoader.LoadIsReturningAsync(cancellationToken);
+            Task<(bool HasAnyActivity, bool IsReturning)> engagementTask =
+                _dashboardLoader.LoadEngagementStateAsync(cancellationToken);
             Task<IReadOnlyList<TechniqueItem>> staticItemsTask =
                 _techniqueListBuilder.BuildStaticItemsAsync(_navigationService, cancellationToken);
 
             await Task.WhenAll(
                 streakTask,
-                returningTask,
+                engagementTask,
                 staticItemsTask);
 
             int streakDays = await streakTask;
-            bool returning = await returningTask;
+            (bool hasAnyActivity, bool isReturning) = await engagementTask;
             IReadOnlyList<TechniqueItem> staticItems = await staticItemsTask;
 
             TodayRecommendationResult recommendation = await _dashboardLoader.ResolveTodayRecommendationAsync(
@@ -44,6 +46,7 @@ public partial class TechniquesViewModel
                 cancellationToken);
 
             bool hasDraft = await _dashboardLoader.HasSessionDraftAsync(recommendation.TechniqueId, cancellationToken);
+            IReadOnlyList<SavedNextStep> savedNextSteps = await _dashboardLoader.GetSavedNextStepsAsync(cancellationToken);
 
             PracticeClinicalDashboardSnapshot clinical =
                 await _clinicalDashboardEnricher.LoadAsync(cancellationToken);
@@ -51,12 +54,15 @@ public partial class TechniquesViewModel
             await UiThread.RunAsync(() =>
             {
                 StreakDays = streakDays;
-                IsReturning = returning;
+                IsReturning = isReturning;
                 HasTodayDraft = hasDraft;
+                _hasAnyActivity = hasAnyActivity;
                 TherapyProgramBanner = clinical.TherapyProgramBanner;
                 ClinicalRiskBanner = clinical.ClinicalRiskBanner;
                 _clinicalDashboardLoaded = true;
+                OnPropertyChanged(nameof(IsPracticeFinderVisible));
                 NotifyPracticeAdProperties();
+                ApplySavedNextSteps(savedNextSteps);
                 _todayTechniqueId = recommendation.TechniqueId;
                 TodayReasonText = recommendation.ReasonText;
                 // Returning to the tab usually yields the same recommendation: keep the bound card instead of rebuilding it.

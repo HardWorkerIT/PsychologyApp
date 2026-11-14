@@ -7,7 +7,52 @@
     <NoWarn>$(NoWarn);BG8605;BG8606</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <!-- VK Ads SDK is supplied to the Java host and packaged by the application. -->
-    <AndroidMavenLibrary Include="com.my.target:mytarget-sdk" Version="5.52.5" Repository="https://repo.maven.apache.org/maven2" Bind="false" VerifyDependencies="false" />
+    <!-- AndroidMavenLibrary does not include transitive artifacts; the SDK and its runtime dependencies must be listed explicitly. -->
+    <!-- Re-enable POM verification once a clean build resolves myTarget's Media3 dependency graph without XA4237. -->
+    <AndroidMavenLibrary Include="com.my.target:mytarget-sdk" Version="5.52.5" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="com.my.tracker:mytracker-sdk" Version="3.6.0" Bind="false" />
+
+    <!-- Keep Media3 modules explicit; re-enable POM verification when a clean build resolves them without XA4237/404. -->
+    <AndroidMavenLibrary Include="androidx.media3:media3-exoplayer" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-exoplayer-hls" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-common" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-container" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-datasource" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-decoder" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-extractor" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="androidx.media3:media3-database" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
+
+    <!-- myTracker dependencies include billing/referrer and Google Play Services tasks used at startup. -->
+    <AndroidMavenLibrary Include="com.android.billingclient:billing" Version="9.1.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.android.installreferrer:installreferrer" Version="2.2" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-ads-identifier" Version="18.2.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-appset" Version="16.1.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-base" Version="18.5.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-basement" Version="18.9.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-location" Version="19.0.0" Repository="Google" Bind="false" />
+    <!-- play-services-location 19.0.0 declares this Java dependency even though the app does not bind its API. -->
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-places-placereport" Version="17.0.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.gms:play-services-tasks" Version="18.2.0" Repository="Google" Bind="false" />
+
+    <!-- Google Play Billing pulls these transport encoders into the SDK dependency graph. -->
+    <AndroidMavenLibrary Include="com.google.android.datatransport:transport-api" Version="3.0.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.datatransport:transport-backend-cct" Version="3.1.8" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.android.datatransport:transport-runtime" Version="3.1.8" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders" Version="17.0.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders-json" Version="18.0.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders-proto" Version="16.0.0" Repository="Google" Bind="false" />
+    <AndroidMavenLibrary Include="javax.inject:javax.inject" Version="1" Bind="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Use MAUI's existing AndroidX/Kotlin bindings so dependency verification passes without duplicate AARs. -->
+    <PackageReference Include="Xamarin.AndroidX.Activity" Version="1.10.1.3" />
+    <PackageReference Include="Xamarin.AndroidX.Annotation" Version="1.9.1.5" />
+    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.5.0.3" />
+    <PackageReference Include="Xamarin.AndroidX.Core" Version="1.16.0.3" />
+    <PackageReference Include="Xamarin.AndroidX.CustomView" Version="1.2.0.1" />
+    <PackageReference Include="Xamarin.AndroidX.ExifInterface" Version="1.4.1.1" />
+    <PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.8.8.1" />
+    <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.3" />
+    <PackageReference Include="Xamarin.Kotlin.StdLib" Version="2.2.0.1" />
   </ItemGroup>
 </Project>

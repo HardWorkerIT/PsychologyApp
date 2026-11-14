@@ -14,6 +14,37 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class QuoteSearchControllerTests
 {
     [Fact]
+    public void SetFeedItems_PlacesOneAdRowAfterEightQuotesAndPreservesOrder()
+    {
+        QuoteFeedState feedState = new();
+        QuoteItem[] quotes = Enumerable.Range(1, 17)
+            .Select(index => CreateFeedItem($"Quote {index}"))
+            .ToArray();
+
+        feedState.SetFeedItems(quotes);
+
+        Assert.Equal(18, feedState.DisplayRows.Count);
+        Assert.True(feedState.DisplayRows[8].IsAdPlacement);
+        Assert.Single(feedState.DisplayRows, row => row.IsAdPlacement);
+        Assert.Equal(
+            quotes.Select(quote => quote.Text),
+            feedState.DisplayRows.Select(row => row.Quote).OfType<QuoteItem>().Select(quote => quote.Text));
+    }
+
+    [Fact]
+    public void AppendItems_AddsAdRowWhenFeedReachesEightQuotes()
+    {
+        QuoteFeedState feedState = new();
+        feedState.SetFeedItems(Enumerable.Range(1, 7).Select(index => CreateFeedItem($"Quote {index}")).ToArray());
+
+        feedState.AppendItems([CreateFeedItem("Quote 8")]);
+
+        Assert.Equal(9, feedState.DisplayRows.Count);
+        Assert.True(feedState.DisplayRows[8].IsAdPlacement);
+        Assert.Equal(8, feedState.DisplayRows.Count(row => row.Quote is not null));
+    }
+
+    [Fact]
     public async Task SearchAsync_ReplacesDisplayItemsWithResults()
     {
         QuoteFeedState feedState = new();

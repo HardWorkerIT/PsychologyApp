@@ -6,27 +6,25 @@ namespace PsychologyApp.Presentation.Tests.ViewModels;
 public sealed class AdvertisingGateTests
 {
     [Fact]
-    public void AdvertisingIsConfiguredButRemainsOptIn()
+    public void AdvertisingIsConfiguredAndEnabledWithoutAnAdFreeCode()
     {
         Assert.True(AdvertisingConfiguration.IsPrivacyPolicyConfigured);
         Assert.True(AdvertisingConfiguration.IsVkBannerConfigured);
         Assert.True(AdvertisingConfiguration.CanOfferAds);
-        Assert.False(AdvertisingConfiguration.CanRequestAds(new UserPreferencesState()));
-        Assert.True(AdvertisingConfiguration.CanRequestAds(new UserPreferencesState { AdsConsentGranted = true }));
-        Assert.False(AdvertisingConfiguration.CanRequestAds(new UserPreferencesState { AdsConsentGranted = true, AdsDisabled = true }));
+        Assert.True(AdvertisingConfiguration.CanRequestAds(new UserPreferencesState()));
+        Assert.False(AdvertisingConfiguration.CanRequestAds(new UserPreferencesState { AdsDisabled = true }));
     }
 
     [Theory]
-    [InlineData(null, 123, true, false, false)]
-    [InlineData("", 123, true, false, false)]
-    [InlineData("http://example.com/privacy", 123, true, false, false)]
-    [InlineData("https://example.com/privacy", 0, true, false, false)]
-    [InlineData("https://example.com/privacy", 123, false, false, false)]
-    [InlineData("https://example.com/privacy", 123, true, true, false)]
-    [InlineData("https://example.com/privacy", 123, true, false, true)]
-    public void AdvertisingRequiresPolicyConsentSlotAndNoAdFreeCode(string? policy, int slotId, bool consent, bool disabled, bool allowed)
+    [InlineData(null, 123, false, false)]
+    [InlineData("", 123, false, false)]
+    [InlineData("http://example.com/privacy", 123, false, false)]
+    [InlineData("https://example.com/privacy", 0, false, false)]
+    [InlineData("https://example.com/privacy", 123, true, false)]
+    [InlineData("https://example.com/privacy", 123, false, true)]
+    public void AdvertisingRequiresSecurePolicySlotAndNoAdFreeCode(string? policy, int slotId, bool disabled, bool allowed)
     {
-        var preferences = new UserPreferencesState { AdsConsentGranted = consent, AdsDisabled = disabled };
+        var preferences = new UserPreferencesState { AdsDisabled = disabled };
         Assert.Equal(allowed, AdvertisingConfiguration.CanRequestAds(preferences, policy, slotId));
     }
 }

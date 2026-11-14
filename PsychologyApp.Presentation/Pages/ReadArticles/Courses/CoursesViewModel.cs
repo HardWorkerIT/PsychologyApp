@@ -11,6 +11,8 @@ namespace PsychologyApp.Presentation.Pages.ReadArticles.Courses;
 /// <summary>The "Courses" top tab of the Library: what guided self-help is, and the courses with their progress.</summary>
 public sealed class CoursesViewModel : BaseViewModel
 {
+    private const int CoursesBeforeAdCount = 3;
+
     /// <summary>The same back arrow as on every other pushed page (the page hides the system bar).</summary>
     public ICommand BackCommand { get; }
 
@@ -32,14 +34,39 @@ public sealed class CoursesViewModel : BaseViewModel
 
     public string PageTitle => AppStrings.ArticlesCourses;
     public string LeadText => AppStrings.ArticlesCoursesLead;
-    public bool IsCourseAdEligible => OperatingSystem.IsAndroid() && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+    public bool IsCourseAdEligible => OperatingSystem.IsAndroid()
+        && Courses.Count >= CoursesBeforeAdCount + 2
+        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
 
-    public void RefreshAdEligibility() => OnPropertyChanged(nameof(IsCourseAdEligible));
+    public IReadOnlyList<LibraryCardItem> CoursesBeforeAd => IsCourseAdEligible
+        ? Courses.Take(CoursesBeforeAdCount).ToArray()
+        : Courses;
+
+    public IReadOnlyList<LibraryCardItem> CoursesAfterAd => IsCourseAdEligible
+        ? Courses.Skip(CoursesBeforeAdCount).ToArray()
+        : [];
+
+    public void RefreshAdEligibility()
+    {
+        OnPropertyChanged(nameof(IsCourseAdEligible));
+        OnPropertyChanged(nameof(CoursesBeforeAd));
+        OnPropertyChanged(nameof(CoursesAfterAd));
+    }
 
     public IReadOnlyList<LibraryCardItem> Courses
     {
         get => _courses;
-        private set => SetProperty(ref _courses, value);
+        private set
+        {
+            if (!SetProperty(ref _courses, value))
+            {
+                return;
+            }
+
+            OnPropertyChanged(nameof(IsCourseAdEligible));
+            OnPropertyChanged(nameof(CoursesBeforeAd));
+            OnPropertyChanged(nameof(CoursesAfterAd));
+        }
     }
 
     /// <summary>Called whenever the page appears: a day closed meanwhile changes a course's progress.</summary>

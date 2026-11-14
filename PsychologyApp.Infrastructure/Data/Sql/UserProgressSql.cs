@@ -124,6 +124,20 @@ internal static class UserProgressSql
     internal const string DeleteSessionDraft =
         "DELETE FROM SessionDrafts WHERE TechniqueKey = @techniqueKey;";
 
+    internal const string SavedNextStepMetadataKey = "SavedNextStep";
+
+    internal const string SelectSavedNextStep =
+        "SELECT Value FROM AppMetadata WHERE Key = @key;";
+
+    internal const string UpsertSavedNextStep = """
+        INSERT INTO AppMetadata (Key, Value)
+        VALUES (@key, @value)
+        ON CONFLICT(Key) DO UPDATE SET Value = excluded.Value;
+        """;
+
+    internal const string DeleteSavedNextStep =
+        "DELETE FROM AppMetadata WHERE Key = @key;";
+
     internal const string InsertMoodEntry = """
         INSERT INTO MoodEntries (MoodLevel, Note, RecordedAt)
         VALUES (@MoodLevel, @Note, @RecordedAt);

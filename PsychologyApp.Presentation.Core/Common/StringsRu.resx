@@ -360,9 +360,6 @@
   <data name="ReviewPage" xml:space="preserve">
     <value>Отзыв</value>
   </data>
-  <data name="ReviewExplanation" xml:space="preserve">
-    <value>Вы можете сообщить о проблеме или предложить свои идеи о том, как сделать приложение ещё лучше. Служба поддержки получит ваше сообщение.</value>
-  </data>
   <data name="ReviewExplanationShare" xml:space="preserve">
     <value>Опишите проблему или идею и выберите, куда отправить сообщение: почта, мессенджер или заметки. Приложение само ничего не отправляет разработчику.</value>
   </data>
@@ -374,12 +371,6 @@
   </data>
   <data name="ReviewMessageRequired" xml:space="preserve">
     <value>Введите сообщение перед отправкой</value>
-  </data>
-  <data name="ReviewSendSuccessTitle" xml:space="preserve">
-    <value>Спасибо</value>
-  </data>
-  <data name="ReviewSendSuccessMessage" xml:space="preserve">
-    <value>Ваше сообщение отправлено</value>
   </data>
   <data name="ReviewEmailSubject" xml:space="preserve">
     <value>Отзыв о приложении Psychology</value>
@@ -4171,9 +4162,6 @@
   <data name="AdsTitle" xml:space="preserve">
     <value>Реклама</value>
   </data>
-  <data name="AdsHelp" xml:space="preserve">
-    <value>Рекламы пока нет. Код отключит её, если она появится.</value>
-  </data>
   <data name="AdsCodePlaceholder" xml:space="preserve">
     <value>Кодовое слово</value>
   </data>
@@ -4186,25 +4174,139 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Неверное кодовое слово.</value>
   </data>
-  <data name="AdsConsentDetails" xml:space="preserve">
-    <value>Баннеры могут появляться в каталогах практик, курсов и статей, а также в общей ленте цитат (не в подборке «Для вас»). VK может обрабатывать технические и рекламные идентификаторы. Тексты чатов, дневника и ответов не передаются. Подробнее — в политике конфиденциальности.</value>
-  </data>
-  <data name="AdsConsentLabel" xml:space="preserve">
-    <value>Разрешить обработку данных для рекламы</value>
-  </data>
-  <data name="AdsConsentPromptTitle" xml:space="preserve">
-    <value>Разрешить рекламу в приложении?</value>
-  </data>
-  <data name="AdsConsentPromptAllow" xml:space="preserve">
-    <value>Разрешить и продолжить</value>
-  </data>
-  <data name="AdsConsentPromptNotNow" xml:space="preserve">
-    <value>Не сейчас</value>
-  </data>
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>Политика конфиденциальности</value>
   </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>Реклама пока недоступна. Код EISBRECHER отключит её, если она появится.</value>
+  </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>После вашего согласия баннеры могут показываться в каталогах практик, курсов и статей и в общей ленте цитат, не в подборке «Для вас». Код отключает рекламу на этом устройстве.</value>
+    <value>Баннеры автоматически показываются при открытии каталогов практик, курсов и статей и общей ленты цитат, но не подборки «Для вас». Код EISBRECHER отключает рекламу на этом устройстве.</value>
+  </data>
+  <data name="ReviewExplanation" xml:space="preserve">
+    <value>Опишите проблему или идею. Приложение откроет почту или SMS, где вы сможете проверить сообщение и решить, отправлять ли его.</value>
+  </data>
+  <data name="AdsDisclosure" xml:space="preserve">
+    <value>При открытии подходящих каталогов приложение автоматически загружает рекламный баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, доступный рекламный идентификатор и события запроса, показа и нажатия. Состав данных зависит от версии SDK и настроек устройства. Приложение не передаёт VK Ads тексты разговоров и дневника, ответы практик, результаты тестов и сведения о здоровье. Подробнее — в политике конфиденциальности.</value>
+  </data>
+  <data name="NextStepTitle" xml:space="preserve">
+    <value>Быстрые действия</value>
+  </data>
+  <data name="NextStepPrompt" xml:space="preserve">
+    <value>Выберите до трёх действий для быстрого доступа.</value>
+  </data>
+  <data name="NextStepGrounding" xml:space="preserve">
+    <value>Сделать заземление</value>
+  </data>
+  <data name="NextStepThought" xml:space="preserve">
+    <value>Разобрать мысль</value>
+  </data>
+  <data name="NextStepSmallStep" xml:space="preserve">
+    <value>Выбрать небольшой шаг</value>
+  </data>
+  <data name="NextStepMood" xml:space="preserve">
+    <value>Отметить настроение</value>
+  </data>
+  <data name="NextStepChoose" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="NextStepStart" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="NextStepSave" xml:space="preserve">
+    <value>Добавить в быстрые действия</value>
+  </data>
+  <data name="NextStepRemove" xml:space="preserve">
+    <value>Убрать из быстрых действий</value>
+  </data>
+  <data name="NextStepChange" xml:space="preserve">
+    <value>Настроить</value>
+  </data>
+  <data name="NextStepCollapse" xml:space="preserve">
+    <value>Свернуть варианты</value>
+  </data>
+  <data name="NextStepSelectHint" xml:space="preserve">
+    <value>Выберите вариант. Затем откройте его или сохраните как опору.</value>
+  </data>
+  <data name="NextStepToggleHint" xml:space="preserve">
+    <value>Показать или скрыть доступные варианты.</value>
+  </data>
+  <data name="NextStepSaveHint" xml:space="preserve">
+    <value>Добавит выбранное действие в быстрые действия.</value>
+  </data>
+  <data name="NextStepRemoveHint" xml:space="preserve">
+    <value>Уберёт выбранное действие из быстрых действий.</value>
+  </data>
+  <data name="NextStepOpenHint" xml:space="preserve">
+    <value>Открыть сохранённое действие.</value>
+  </data>
+  <data name="NextStepChooseHint" xml:space="preserve">
+    <value>Покажет доступные варианты.</value>
+  </data>
+  <data name="NextStepChoiceSelected" xml:space="preserve">
+    <value>Выбрано: {0}</value>
+  </data>
+  <data name="NextStepSavedSummary" xml:space="preserve">
+    <value>Быстрых действий: {0} из 3</value>
+  </data>
+  <data name="NextStepCapacity" xml:space="preserve">
+    <value>Выбрано действий: {0} из 3</value>
+  </data>
+  <data name="NextStepLimitReached" xml:space="preserve">
+    <value>Можно сохранить не больше трёх действий. Уберите одно, чтобы добавить другое.</value>
+  </data>
+  <data name="PracticeFinderButton" xml:space="preserve">
+    <value>Подобрать практику</value>
+  </data>
+  <data name="PracticeFinderAccessibilityHint" xml:space="preserve">
+    <value>Выберите доступное время или ситуацию, чтобы увидеть подходящие практики.</value>
+  </data>
+  <data name="PracticeFinderTitle" xml:space="preserve">
+    <value>Что подходит сейчас?</value>
+  </data>
+  <data name="PracticeFinderQuick" xml:space="preserve">
+    <value>У меня есть до 2 минут</value>
+  </data>
+  <data name="PracticeFinderEyesOpen" xml:space="preserve">
+    <value>Хочу оставить глаза открытыми</value>
+  </data>
+  <data name="PracticeFinderNoBreath" xml:space="preserve">
+    <value>Без фокуса на дыхании</value>
+  </data>
+  <data name="PracticeFinderNoTyping" xml:space="preserve">
+    <value>Без ввода текста — ответы можно пропустить</value>
+  </data>
+  <data name="PracticeFinderPublic" xml:space="preserve">
+    <value>Я в общественном месте</value>
+  </data>
+  <data name="PracticeFinderSituations" xml:space="preserve">
+    <value>Подборка под ситуацию</value>
+  </data>
+  <data name="PracticeFinderBeforeConversation" xml:space="preserve">
+    <value>Перед трудным разговором</value>
+  </data>
+  <data name="PracticeFinderPassengerCommute" xml:space="preserve">
+    <value>В дороге — пассажиру или на остановке</value>
+  </data>
+  <data name="PracticeFinderBeforeSleep" xml:space="preserve">
+    <value>Перед сном</value>
+  </data>
+  <data name="PracticeFinderAfterConflict" xml:space="preserve">
+    <value>После конфликта</value>
+  </data>
+  <data name="PracticeFinderResultsTitle" xml:space="preserve">
+    <value>Подходящие практики: {0}</value>
+  </data>
+  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
+    <value>Подборка «{0}». Можно выбрать любую практику.</value>
+  </data>
+  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
+    <value>Ответы можно пропустить</value>
+  </data>
+  <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
+    <value>Подходящие практики не найдены</value>
+  </data>
+  <data name="PracticeFinderNoResultsBody" xml:space="preserve">
+    <value>Попробуйте выбрать другой вариант или открыть каталог практик.</value>
   </data>
 </root>

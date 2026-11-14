@@ -49,9 +49,17 @@
             </DataTemplate>
         </CollectionView.ItemTemplate>
 
+        <CollectionView.GroupFooterTemplate>
+            <DataTemplate x:DataType="vm:ArticleSectionItem">
+                <VerticalStackLayout IsVisible="False"
+                                     BindingContextChanged="OnArticleAdFooterBindingContextChanged">
+                    <ContentView />
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.GroupFooterTemplate>
+
         <CollectionView.Footer>
             <VerticalStackLayout Spacing="10" Padding="0,12,0,0">
-                <ContentView x:Name="AdHost" IsVisible="{Binding IsArticleAdEligible}" />
                 <BoxView HeightRequest="20" Color="Transparent" />
             </VerticalStackLayout>
         </CollectionView.Footer>

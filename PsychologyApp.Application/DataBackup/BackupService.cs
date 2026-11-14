@@ -5,6 +5,7 @@ using PsychologyApp.Application.Body;
 using PsychologyApp.Application.Chat;
 using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Application.UserProgress;
 using System.Text.Json;
 
 namespace PsychologyApp.Application.DataBackup;
@@ -144,7 +145,9 @@ public sealed class BackupService(
             Escalations = escalations,
             ExposurePlan = await exposureRepository.GetAsync(cancellationToken).ConfigureAwait(false),
             Reading = await readingRepository.GetAsync(cancellationToken).ConfigureAwait(false),
-            Body = await bodyRepository.GetAsync(cancellationToken).ConfigureAwait(false)
+            Body = await bodyRepository.GetAsync(cancellationToken).ConfigureAwait(false),
+            SavedNextStep = SavedNextStepCollection.Serialize(
+                await progress.GetSavedNextStepsAsync(cancellationToken).ConfigureAwait(false))
         };
 
         BoundedBackupBufferWriter output = new(MaxImportCharacters);
@@ -435,7 +438,8 @@ public sealed class BackupService(
         Escalations = backup.Escalations.Where(e => e.CreatedAt != default).ToList(),
         ExposurePlan = backup.ExposurePlan,
         Reading = backup.Reading,
-        Body = BodyService.Sanitize(backup.Body)
+        Body = BodyService.Sanitize(backup.Body),
+        SavedNextStep = SavedNextStepCollection.Serialize(SavedNextStepCollection.Parse(backup.SavedNextStep))
     };
 
     private static BackupChatSessionInfoDTO SanitizeChatSession(BackupChatSessionInfoDTO session) => new()

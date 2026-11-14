@@ -11,10 +11,18 @@ using PsychologyApp.Presentation.Widgets.LibraryCard;
 namespace PsychologyApp.Presentation.Pages.ReadArticles.Articles;
 
 /// <summary>A section of the list: a group of a grouped CollectionView is a list of its items with a header.</summary>
-public sealed class ArticleSectionItem(string title, IEnumerable<LibraryCardItem> articles) : List<LibraryCardItem>(articles)
+public sealed class ArticleSectionItem : List<LibraryCardItem>
 {
-    public string Title { get; } = title;
+    public ArticleSectionItem(string title, IEnumerable<LibraryCardItem> articles, bool hasAdPlacement = false)
+        : base(articles)
+    {
+        Title = title;
+        HasAdPlacement = hasAdPlacement;
+    }
+
+    public string Title { get; }
     public bool HasTitle => Title.Length > 0;
+    public bool HasAdPlacement { get; }
 }
 
 /// <summary>
@@ -26,6 +34,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     public ICommand BackCommand { get; }
 
     private const string AllKey = "all";
+    private const int ArticlesBeforeAdCount = 6;
 
     private readonly INavigationService _navigation;
     private readonly IReadingService _reading;
@@ -35,6 +44,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     private ReadingState _state = new();
     private IReadOnlyList<ArticleSectionItem> _sections = [];
     private string _emptyText = string.Empty;
+    private bool? _lastCanPlaceArticleAd;
 
     public ArticlesViewModel(INavigationService navigation, IReadingService reading, IDatabaseReadySignal databaseReady)
     {
@@ -62,12 +72,22 @@ public sealed class ArticlesViewModel : BaseViewModel
     public string SearchPlaceholder => AppStrings.ArticlesSearchPlaceholder;
     public ICommand SelectFilterCommand { get; }
 
-    public bool IsArticleAdEligible => OperatingSystem.IsAndroid()
+    private bool CanPlaceArticleAd => OperatingSystem.IsAndroid()
         && _query.Trim().Length == 0
-        && Sections.Count > 0
         && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
 
-    public void RefreshAdEligibility() => OnPropertyChanged(nameof(IsArticleAdEligible));
+    public bool IsArticleAdEligible => Sections.Any(section => section.HasAdPlacement)
+        && CanPlaceArticleAd;
+
+    public void RefreshAdEligibility()
+    {
+        if (_lastCanPlaceArticleAd != CanPlaceArticleAd)
+        {
+            Load();
+        }
+
+        OnPropertyChanged(nameof(IsArticleAdEligible));
+    }
 
     public ObservableCollection<FilterChipTabItem> Filters { get; } = [];
 
@@ -153,6 +173,8 @@ public sealed class ArticlesViewModel : BaseViewModel
 
     private void Load()
     {
+        _lastCanPlaceArticleAd = CanPlaceArticleAd;
+
         if (IsSearching)
         {
             IReadOnlyList<Article> found = ArticleSearch.Find(_query, Language);
@@ -162,10 +184,48 @@ public sealed class ArticlesViewModel : BaseViewModel
         }
 
         EmptyText = string.Empty;
-        Sections = ArticleContent.Sections(Language)
+        IReadOnlyList<ArticleSection> sourceSections = ArticleContent.Sections(Language)
             .Where(section => _selectedKey == AllKey || section.Key == _selectedKey)
-            .Select(section => new ArticleSectionItem(section.Title, section.Articles.Select(Card)))
             .ToList();
+        int articleCount = sourceSections.Sum(section => section.Articles.Count);
+        if (!CanPlaceArticleAd || articleCount < ArticlesBeforeAdCount)
+        {
+            Sections = sourceSections
+                .Select(section => new ArticleSectionItem(section.Title, section.Articles.Select(Card)))
+                .ToList();
+            return;
+        }
+
+        List<ArticleSectionItem> displaySections = [];
+        int articlesUntilAd = ArticlesBeforeAdCount;
+        bool adPlaced = false;
+        foreach (ArticleSection section in sourceSections)
+        {
+            List<LibraryCardItem> cards = section.Articles.Select(Card).ToList();
+            if (!adPlaced && cards.Count >= articlesUntilAd)
+            {
+                displaySections.Add(new ArticleSectionItem(
+                    section.Title,
+                    cards.Take(articlesUntilAd),
+                    hasAdPlacement: true));
+                cards = cards.Skip(articlesUntilAd).ToList();
+                adPlaced = true;
+                if (cards.Count > 0)
+                {
+                    displaySections.Add(new ArticleSectionItem(string.Empty, cards));
+                }
+            }
+            else
+            {
+                displaySections.Add(new ArticleSectionItem(section.Title, cards));
+                if (!adPlaced)
+                {
+                    articlesUntilAd -= cards.Count;
+                }
+            }
+        }
+
+        Sections = displaySections;
     }
 
     private LibraryCardItem Card(Article article) => LibraryCards.Article(article, _state, _navigation);

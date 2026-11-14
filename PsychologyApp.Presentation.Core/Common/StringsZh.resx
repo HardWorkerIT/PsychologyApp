@@ -360,9 +360,6 @@
   <data name="ReviewPage" xml:space="preserve">
     <value>评价</value>
   </data>
-  <data name="ReviewExplanation" xml:space="preserve">
-    <value>你可以报告问题或提出改进应用的建议。支持团队会收到你的消息。</value>
-  </data>
   <data name="ReviewExplanationShare" xml:space="preserve">
     <value>描述问题或想法，并选择发送方式：电子邮件、聊天软件或笔记。应用不会自行向开发者发送任何内容。</value>
   </data>
@@ -374,12 +371,6 @@
   </data>
   <data name="ReviewMessageRequired" xml:space="preserve">
     <value>请先输入消息再发送</value>
-  </data>
-  <data name="ReviewSendSuccessTitle" xml:space="preserve">
-    <value>谢谢</value>
-  </data>
-  <data name="ReviewSendSuccessMessage" xml:space="preserve">
-    <value>你的消息已发送</value>
   </data>
   <data name="ReviewEmailSubject" xml:space="preserve">
     <value>Psychology App 反馈</value>
@@ -4165,9 +4156,6 @@
   <data name="AdsTitle" xml:space="preserve">
     <value>广告</value>
   </data>
-  <data name="AdsHelp" xml:space="preserve">
-    <value>目前没有广告。代码可关闭将来出现的广告。</value>
-  </data>
   <data name="AdsCodePlaceholder" xml:space="preserve">
     <value>代码</value>
   </data>
@@ -4180,25 +4168,139 @@
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>代码无效。</value>
   </data>
-  <data name="AdsConsentDetails" xml:space="preserve">
-    <value>横幅广告可能显示在练习、课程和文章目录以及普通引言信息流中（不会显示在“为你推荐”个性化信息流中）。VK 可能处理技术标识符和广告标识符。聊天、日记和回答文本不会发送。详情请参阅隐私政策。</value>
-  </data>
-  <data name="AdsConsentLabel" xml:space="preserve">
-    <value>允许处理广告数据</value>
-  </data>
-  <data name="AdsConsentPromptTitle" xml:space="preserve">
-    <value>允许在应用中显示广告吗？</value>
-  </data>
-  <data name="AdsConsentPromptAllow" xml:space="preserve">
-    <value>允许并继续</value>
-  </data>
-  <data name="AdsConsentPromptNotNow" xml:space="preserve">
-    <value>暂不</value>
-  </data>
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>隐私政策</value>
   </data>
+  <data name="AdsHelp" xml:space="preserve">
+    <value>广告暂不可用。如以后启用，EISBRECHER 代码可关闭广告。</value>
+  </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>经您同意后，练习、课程和文章目录以及普通引言信息流中可能显示横幅广告，不会显示在个性化推荐信息流中。此代码可在此设备上关闭广告。</value>
+    <value>打开练习、课程、文章目录或普通引言信息流时会自动显示横幅广告，但不会显示在个性化“为你推荐”信息流中。EISBRECHER 代码可在此设备上关闭广告。</value>
+  </data>
+  <data name="ReviewExplanation" xml:space="preserve">
+    <value>描述问题或想法。应用会打开邮件或短信应用，供你检查内容并决定是否发送。</value>
+  </data>
+  <data name="AdsDisclosure" xml:space="preserve">
+    <value>打开符合条件的目录时，应用会自动加载横幅广告。VK 可能会收到 IP 地址、设备和应用的技术信息、可用的广告标识符，以及广告请求、展示和点击事件。具体数据取决于 SDK 版本和设备设置。应用不会向 VK 发送聊天或日记文本、练习回答、测试结果或健康信息。详情请参阅隐私政策。</value>
+  </data>
+  <data name="NextStepTitle" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="NextStepPrompt" xml:space="preserve">
+    <value>保存最多三个操作，方便快速打开。</value>
+  </data>
+  <data name="NextStepGrounding" xml:space="preserve">
+    <value>尝试落地练习</value>
+  </data>
+  <data name="NextStepThought" xml:space="preserve">
+    <value>梳理一个想法</value>
+  </data>
+  <data name="NextStepSmallStep" xml:space="preserve">
+    <value>选择一个小步骤</value>
+  </data>
+  <data name="NextStepMood" xml:space="preserve">
+    <value>记录此刻的心情</value>
+  </data>
+  <data name="NextStepChoose" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="NextStepStart" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="NextStepSave" xml:space="preserve">
+    <value>添加到快捷操作</value>
+  </data>
+  <data name="NextStepRemove" xml:space="preserve">
+    <value>从快捷操作中移除</value>
+  </data>
+  <data name="NextStepChange" xml:space="preserve">
+    <value>管理操作</value>
+  </data>
+  <data name="NextStepCollapse" xml:space="preserve">
+    <value>收起选项</value>
+  </data>
+  <data name="NextStepSelectHint" xml:space="preserve">
+    <value>选择一个选项，然后打开它或将其保存为支持方式。</value>
+  </data>
+  <data name="NextStepToggleHint" xml:space="preserve">
+    <value>显示或隐藏可用选项。</value>
+  </data>
+  <data name="NextStepSaveHint" xml:space="preserve">
+    <value>将所选操作添加到快捷操作。</value>
+  </data>
+  <data name="NextStepRemoveHint" xml:space="preserve">
+    <value>从快捷操作中移除所选操作。</value>
+  </data>
+  <data name="NextStepOpenHint" xml:space="preserve">
+    <value>打开此已保存操作。</value>
+  </data>
+  <data name="NextStepChooseHint" xml:space="preserve">
+    <value>显示可选内容。</value>
+  </data>
+  <data name="NextStepChoiceSelected" xml:space="preserve">
+    <value>已选择：{0}</value>
+  </data>
+  <data name="NextStepSavedSummary" xml:space="preserve">
+    <value>快捷操作：{0}/3</value>
+  </data>
+  <data name="NextStepCapacity" xml:space="preserve">
+    <value>已保存：{0}/3</value>
+  </data>
+  <data name="NextStepLimitReached" xml:space="preserve">
+    <value>最多可保存三个操作。移除一个后才能添加另一个。</value>
+  </data>
+  <data name="PracticeFinderButton" xml:space="preserve">
+    <value>寻找合适的练习</value>
+  </data>
+  <data name="PracticeFinderAccessibilityHint" xml:space="preserve">
+    <value>选择可用时间或当前情境，查看适合的练习。</value>
+  </data>
+  <data name="PracticeFinderTitle" xml:space="preserve">
+    <value>现在什么更适合？</value>
+  </data>
+  <data name="PracticeFinderQuick" xml:space="preserve">
+    <value>我有两分钟以内</value>
+  </data>
+  <data name="PracticeFinderEyesOpen" xml:space="preserve">
+    <value>睁着眼睛</value>
+  </data>
+  <data name="PracticeFinderNoBreath" xml:space="preserve">
+    <value>不关注呼吸</value>
+  </data>
+  <data name="PracticeFinderNoTyping" xml:space="preserve">
+    <value>不输入文字——可以跳过回答</value>
+  </data>
+  <data name="PracticeFinderPublic" xml:space="preserve">
+    <value>我在公共场所</value>
+  </data>
+  <data name="PracticeFinderSituations" xml:space="preserve">
+    <value>选择当前情境</value>
+  </data>
+  <data name="PracticeFinderBeforeConversation" xml:space="preserve">
+    <value>重要谈话前</value>
+  </data>
+  <data name="PracticeFinderPassengerCommute" xml:space="preserve">
+    <value>途中——仅限乘客或已停下时</value>
+  </data>
+  <data name="PracticeFinderBeforeSleep" xml:space="preserve">
+    <value>睡前</value>
+  </data>
+  <data name="PracticeFinderAfterConflict" xml:space="preserve">
+    <value>发生冲突后</value>
+  </data>
+  <data name="PracticeFinderResultsTitle" xml:space="preserve">
+    <value>适合“{0}”的练习</value>
+  </data>
+  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
+    <value>“{0}”情境练习。可任选一项开始。</value>
+  </data>
+  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
+    <value>可以跳过回答</value>
+  </data>
+  <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
+    <value>未找到合适的练习</value>
+  </data>
+  <data name="PracticeFinderNoResultsBody" xml:space="preserve">
+    <value>请尝试其他选项，或打开练习目录。</value>
   </data>
 </root>

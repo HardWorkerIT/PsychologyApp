@@ -24,6 +24,7 @@ public partial class CoursesPage : ContentPage
         VkBannerView adView = new();
         adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(CoursesViewModel.IsCourseAdEligible));
         AdHost.Content = adView;
+        AdHost.SetBinding(VisualElement.IsVisibleProperty, new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
 #endif
         _viewModel.RefreshAdEligibility();
         _viewModel.RefreshAsync().FireAndForget();
@@ -32,6 +33,8 @@ public partial class CoursesPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        AdHost.RemoveBinding(VisualElement.IsVisibleProperty);
+        AdHost.IsVisible = false;
         AdHost.Content?.Handler?.DisconnectHandler();
         AdHost.Content = null;
 #endif

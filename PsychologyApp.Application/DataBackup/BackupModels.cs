@@ -33,6 +33,7 @@ public sealed class AppBackupDTO
     public ExposurePlan? ExposurePlan { get; init; }
     public PsychologyApp.Application.Articles.ReadingState? Reading { get; init; }
     public BodyLog? Body { get; init; }
+    public string? SavedNextStep { get; init; }
 }
 
 public sealed class BackupChatSessionDTO

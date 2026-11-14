@@ -1,6 +1,7 @@
 ﻿using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Entities.Technique;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
+using PsychologyApp.Application.Models;
 
 namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques;
 
@@ -88,7 +89,28 @@ public partial class TechniquesViewModel
 
     private string _clinicalRiskBanner = string.Empty;
     private bool _clinicalDashboardLoaded;
-    private bool _adsConsentPromptDismissed;
+    private bool _hasAnyActivity;
+    private SavedNextStep? _selectedNextStep;
+    private IReadOnlyList<SavedNextStep> _savedNextSteps = [];
+    private bool _isNextStepChooserExpanded;
+
+    public bool IsNextStepVisible =>
+        _clinicalDashboardLoaded &&
+        !HasClinicalRiskBanner &&
+        (_hasAnyActivity || HasSavedNextStep);
+    public bool IsPracticeFinderVisible => _clinicalDashboardLoaded && !HasClinicalRiskBanner;
+    public bool HasNextStepSelection => _selectedNextStep.HasValue;
+    public bool HasSavedNextStep => _savedNextSteps.Count > 0;
+    public bool IsNextStepChooserExpanded => _isNextStepChooserExpanded;
+    public bool IsNextStepPrimaryActionVisible =>
+        (!_isNextStepChooserExpanded && !HasSavedNextStep) || (_isNextStepChooserExpanded && HasNextStepSelection);
+    public bool IsNextStepChoiceToggleVisible =>
+        _isNextStepChooserExpanded || HasNextStepSelection || HasSavedNextStep;
+    public bool IsNextStepSaveActionEnabled => _selectedNextStep is { } selected
+        && (_savedNextSteps.Contains(selected) || _savedNextSteps.Count < SavedNextStepCollection.MaximumCount);
+    public bool IsNextStepLimitMessageVisible => _savedNextSteps.Count >= SavedNextStepCollection.MaximumCount
+        && _selectedNextStep is { } selected
+        && !_savedNextSteps.Contains(selected);
 
     public bool IsPracticeAdPlacementAvailable => OperatingSystem.IsAndroid()
         && AdvertisingConfiguration.CanOfferAds
@@ -101,30 +123,18 @@ public partial class TechniquesViewModel
     public bool IsPracticeAdEligible => IsPracticeAdPlacementAvailable
         && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
 
-    public bool IsPracticeAdConsentPromptVisible => IsPracticeAdPlacementAvailable
-        && !UserPreferencesStore.Load().AdsConsentGranted
-        && !_adsConsentPromptDismissed;
-
-    public bool IsPracticeAdPlacementVisible => IsPracticeAdEligible || IsPracticeAdConsentPromptVisible;
-
-    public string AdsConsentPromptTitle => AppStrings.AdsConsentPromptTitle;
-    public string AdsConsentPromptAllowText => AppStrings.AdsConsentPromptAllow;
-    public string AdsConsentPromptNotNowText => AppStrings.AdsConsentPromptNotNow;
-    public string AdsConsentDetails => AppStrings.AdsConsentDetails;
-    public string AdsPrivacyPolicyText => AppStrings.AdsPrivacyPolicy;
-
     private void NotifyPracticeAdProperties()
     {
         OnPropertyChanged(nameof(IsPracticeAdPlacementAvailable));
         OnPropertyChanged(nameof(IsPracticeAdEligible));
-        OnPropertyChanged(nameof(IsPracticeAdConsentPromptVisible));
-        OnPropertyChanged(nameof(IsPracticeAdPlacementVisible));
     }
 
     public void RefreshPracticeAdEligibility()
     {
         _clinicalDashboardLoaded = false;
+        OnPropertyChanged(nameof(IsPracticeFinderVisible));
         NotifyPracticeAdProperties();
+        NotifyNextStepProperties();
     }
 
     public string ClinicalRiskBanner
@@ -135,12 +145,43 @@ public partial class TechniquesViewModel
             if (SetProperty(ref _clinicalRiskBanner, value))
             {
                 OnPropertyChanged(nameof(HasClinicalRiskBanner));
+                OnPropertyChanged(nameof(IsPracticeFinderVisible));
                 NotifyPracticeAdProperties();
+                NotifyNextStepProperties();
             }
         }
     }
 
     public bool HasClinicalRiskBanner => !string.IsNullOrWhiteSpace(ClinicalRiskBanner);
+
+    private void NotifyNextStepProperties()
+    {
+        OnPropertyChanged(nameof(IsNextStepVisible));
+        OnPropertyChanged(nameof(HasNextStepSelection));
+        OnPropertyChanged(nameof(HasSavedNextStep));
+        OnPropertyChanged(nameof(IsNextStepChooserExpanded));
+        OnPropertyChanged(nameof(IsNextStepPrimaryActionVisible));
+        OnPropertyChanged(nameof(IsNextStepChoiceToggleVisible));
+        OnPropertyChanged(nameof(IsNextStepSaveActionEnabled));
+        OnPropertyChanged(nameof(IsNextStepLimitMessageVisible));
+        OnPropertyChanged(nameof(SavedQuickActions));
+        OnPropertyChanged(nameof(NextStepCapacityText));
+        OnPropertyChanged(nameof(NextStepLimitReachedText));
+        OnPropertyChanged(nameof(NextStepSummaryText));
+        OnPropertyChanged(nameof(NextStepPrimaryActionText));
+        OnPropertyChanged(nameof(NextStepPrimaryActionHint));
+        OnPropertyChanged(nameof(NextStepChoiceToggleText));
+        OnPropertyChanged(nameof(NextStepSaveActionText));
+        OnPropertyChanged(nameof(NextStepSaveActionHint));
+        OnPropertyChanged(nameof(NextStepGroundingVariant));
+        OnPropertyChanged(nameof(NextStepThoughtVariant));
+        OnPropertyChanged(nameof(NextStepSmallStepVariant));
+        OnPropertyChanged(nameof(NextStepMoodVariant));
+        OnPropertyChanged(nameof(NextStepGroundingAccessibilityLabel));
+        OnPropertyChanged(nameof(NextStepThoughtAccessibilityLabel));
+        OnPropertyChanged(nameof(NextStepSmallStepAccessibilityLabel));
+        OnPropertyChanged(nameof(NextStepMoodAccessibilityLabel));
+    }
 
     private void NotifyEngagementNudge()
     {

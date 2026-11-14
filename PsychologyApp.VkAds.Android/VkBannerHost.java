@@ -19,7 +19,7 @@ public final class VkBannerHost extends FrameLayout {
     private Runnable loaded;
     private Runnable failed;
     private boolean active;
-    private boolean consentSet;
+    private boolean privacyStateSet;
     private int generation;
 
     public VkBannerHost(Context context) { super(context); }
@@ -34,8 +34,9 @@ public final class VkBannerHost extends FrameLayout {
         active = true;
         final int requestGeneration = ++generation;
         try {
-            MyTargetPrivacy.setUserConsent(true);
-            consentSet = true;
+            // Do not signal affirmative user consent when banners load automatically.
+            MyTargetPrivacy.setUserConsent(false);
+            privacyStateSet = true;
             LinearLayout layout = new LinearLayout(getContext());
             layout.setOrientation(LinearLayout.VERTICAL);
             TextView label = new TextView(getContext());
@@ -85,10 +86,10 @@ public final class VkBannerHost extends FrameLayout {
     public void stop() {
         active = false;
         generation++;
-        if (consentSet) {
+        if (privacyStateSet) {
             try { MyTargetPrivacy.setUserConsent(false); }
             catch (RuntimeException | LinkageError error) { logFailure(error); }
-            consentSet = false;
+            privacyStateSet = false;
         }
         if (banner != null) {
             try { banner.destroy(); }

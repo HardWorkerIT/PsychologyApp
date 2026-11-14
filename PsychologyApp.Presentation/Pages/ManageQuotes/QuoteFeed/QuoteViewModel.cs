@@ -27,6 +27,7 @@ public partial class QuoteViewModel : BaseViewModel
     private readonly QuoteSearchController _searchController;
 
     public ObservableRangeCollection<QuoteItem> DisplayItems => _feedState.DisplayItems;
+    public ObservableRangeCollection<QuoteFeedDisplayItem> DisplayRows => _feedState.DisplayRows;
     public ObservableCollection<FilterChipTabItem> FeedFilters { get; } = [];
     public ObservableCollection<FilterChipTabItem> ThemeFilters { get; } = [];
     public ICommand LoadMoreQuotesCommand { get; private set; } = default!;

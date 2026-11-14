@@ -28,20 +28,14 @@ public partial class FormViewModel
             return;
         }
 
-        bool sent = ResolveChannel(_settings) switch
+        // The platform can open a composer, but it cannot confirm that the person sent the message.
+        Task composerTask = ResolveChannel(_settings) switch
         {
-            FeedbackChannel.Email => await SendEmailAsync(MessageText, _settings.ReviewEmailAddress),
-            FeedbackChannel.Sms => await SendSmsAsync(MessageText, _settings.ReviewSmsRecipient),
-            FeedbackChannel.Share => await SendShareAsync(MessageText),
-            _ => false
+            FeedbackChannel.Email => OpenEmailComposerAsync(MessageText, _settings.ReviewEmailAddress),
+            FeedbackChannel.Sms => OpenSmsComposerAsync(MessageText, _settings.ReviewSmsRecipient),
+            FeedbackChannel.Share => OpenShareSheetAsync(MessageText),
+            _ => Task.CompletedTask
         };
-
-        if (!sent || NavigationService is null)
-        {
-            return;
-        }
-
-        await _dialogService.ShowAsync(AppStrings.ReviewSendSuccessTitle, AppStrings.ReviewSendSuccessMessage);
-        await NavigationService.GoBackAsync();
+        await composerTask;
     }
 }

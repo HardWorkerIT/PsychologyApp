@@ -11,11 +11,20 @@ public sealed class VkBannerView : View
     public static readonly BindableProperty IsEligibleProperty = BindableProperty.Create(
         nameof(IsEligible), typeof(bool), typeof(VkBannerView), false);
 
+    private static readonly BindablePropertyKey IsAdLoadedPropertyKey = BindableProperty.CreateReadOnly(
+        nameof(IsAdLoaded), typeof(bool), typeof(VkBannerView), false);
+
+    public static readonly BindableProperty IsAdLoadedProperty = IsAdLoadedPropertyKey.BindableProperty;
+
     public bool IsEligible
     {
         get => (bool)GetValue(IsEligibleProperty);
         set => SetValue(IsEligibleProperty, value);
     }
+
+    public bool IsAdLoaded => (bool)GetValue(IsAdLoadedProperty);
+
+    internal void SetAdLoaded(bool isLoaded) => SetValue(IsAdLoadedPropertyKey, isLoaded);
 
     public VkBannerView() => HeightRequest = 0;
 }
@@ -44,10 +53,24 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
         _loaded = new Java.Lang.Runnable(() => MainThread.BeginInvokeOnMainThread(() =>
         {
             if (!_connected) return;
-            if (AdvertisingConfiguration.CanRequestAds(UserPreferences.Load())) VirtualView.HeightRequest = platformView.MeasureContentHeightDp();
-            else platformView.Stop();
+            if (AdvertisingConfiguration.CanRequestAds(UserPreferences.Load()))
+            {
+                VirtualView.HeightRequest = platformView.MeasureContentHeightDp();
+                VirtualView.SetAdLoaded(true);
+            }
+            else
+            {
+                platformView.Stop();
+                VirtualView.HeightRequest = 0;
+                VirtualView.SetAdLoaded(false);
+            }
         }));
-        _failed = new Java.Lang.Runnable(() => MainThread.BeginInvokeOnMainThread(() => { if (_connected) VirtualView.HeightRequest = 0; }));
+        _failed = new Java.Lang.Runnable(() => MainThread.BeginInvokeOnMainThread(() =>
+        {
+            if (!_connected) return;
+            VirtualView.HeightRequest = 0;
+            VirtualView.SetAdLoaded(false);
+        }));
         platformView.SetCallbacks(_loaded, _failed);
         UserPreferences.Changed += OnPreferencesChanged;
         Refresh();
@@ -57,6 +80,7 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
     {
         UserPreferences.Changed -= OnPreferencesChanged;
         _connected = false;
+        VirtualView.SetAdLoaded(false);
         platformView.Stop();
         platformView.SetCallbacks(null, null);
         base.DisconnectHandler(platformView);
@@ -75,6 +99,7 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
         {
             PlatformView.Stop();
             VirtualView.HeightRequest = 0;
+            VirtualView.SetAdLoaded(false);
             return;
         }
         const int slotId = AdvertisingConfiguration.VkReadingCatalogBannerSlotId;

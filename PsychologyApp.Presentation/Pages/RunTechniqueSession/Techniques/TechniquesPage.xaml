@@ -119,32 +119,111 @@
                         </today:TodayPracticeRowView.Behaviors>
                     </today:TodayPracticeRowView>
 
+                    <Border IsVisible="{Binding IsNextStepVisible}"
+                            Style="{StaticResource TestFlatCardStyle}"
+                            Margin="{StaticResource CardBottomMargin}">
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding NextStepTitle}" Style="{StaticResource SectionTitleStyle}" />
+                                    <Label Text="{Binding NextStepSummaryText}" Style="{StaticResource CaptionStyle}" />
+                                </VerticalStackLayout>
+                                <ui:ButtonView Grid.Column="1"
+                                               BodyText="{Binding NextStepPrimaryActionText}"
+                                               TapCommand="{Binding StartNextStepCommand}"
+                                               AccessibilityHint="{Binding NextStepPrimaryActionHint}"
+                                               IsVisible="{Binding IsNextStepPrimaryActionVisible}"
+                                               IsCompact="True" />
+                            </Grid>
+                            <FlexLayout BindableLayout.ItemsSource="{Binding SavedQuickActions}"
+                                        Direction="Row"
+                                        Wrap="Wrap"
+                                        AlignItems="Start"
+                                        AlignContent="Start"
+                                        IsVisible="{Binding HasSavedNextStep}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SavedNextStepQuickAction">
+                                        <ui:ButtonView Margin="0,0,8,8"
+                                                       FlexLayout.Shrink="0"
+                                                       FlexLayout.AlignSelf="Start"
+                                                       BodyText="{Binding Label}"
+                                                       AccessibilityLabel="{Binding AccessibilityLabel}"
+                                                       AccessibilityHint="{Binding AccessibilityHint}"
+                                                       TapCommand="{Binding StartSavedNextStepCommand, Source={RelativeSource AncestorType={x:Type vm:TechniquesViewModel}}, x:DataType=vm:TechniquesViewModel}"
+                                                       CommandParameter="{Binding .}"
+                                                       Variant="Secondary"
+                                                       IsCompact="True" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                            <ui:ButtonView BodyText="{Binding NextStepChoiceToggleText}"
+                                           TapCommand="{Binding ToggleNextStepChooserCommand}"
+                                           IsVisible="{Binding IsNextStepChoiceToggleVisible}"
+                                           AccessibilityHint="{Binding NextStepToggleHint}"
+                                           Variant="Secondary"
+                                           IsCompact="True" />
+                            <VerticalStackLayout IsVisible="{Binding IsNextStepChooserExpanded}" Spacing="8">
+                                <Label Text="{Binding NextStepCapacityText}" Style="{StaticResource CaptionStyle}" />
+                                <Label Text="{Binding NextStepLimitReachedText}"
+                                       Style="{StaticResource CaptionStyle}"
+                                       IsVisible="{Binding IsNextStepLimitMessageVisible}" />
+                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                                    <ui:ButtonView Grid.Row="0" Grid.Column="0"
+                                                   BodyText="{Binding NextStepGroundingLabel}"
+                                                   AccessibilityLabel="{Binding NextStepGroundingAccessibilityLabel}"
+                                                   AccessibilityHint="{Binding NextStepSelectionHint}"
+                                                   TapCommand="{Binding SelectNextStepGroundingCommand}"
+                                                   Variant="{Binding NextStepGroundingVariant}"
+                                                   IsCompact="True" />
+                                    <ui:ButtonView Grid.Row="0" Grid.Column="1"
+                                                   BodyText="{Binding NextStepThoughtLabel}"
+                                                   AccessibilityLabel="{Binding NextStepThoughtAccessibilityLabel}"
+                                                   AccessibilityHint="{Binding NextStepSelectionHint}"
+                                                   TapCommand="{Binding SelectNextStepThoughtCommand}"
+                                                   Variant="{Binding NextStepThoughtVariant}"
+                                                   IsCompact="True" />
+                                    <ui:ButtonView Grid.Row="1" Grid.Column="0"
+                                                   BodyText="{Binding NextStepSmallStepLabel}"
+                                                   AccessibilityLabel="{Binding NextStepSmallStepAccessibilityLabel}"
+                                                   AccessibilityHint="{Binding NextStepSelectionHint}"
+                                                   TapCommand="{Binding SelectNextStepSmallStepCommand}"
+                                                   Variant="{Binding NextStepSmallStepVariant}"
+                                                   IsCompact="True" />
+                                    <ui:ButtonView Grid.Row="1" Grid.Column="1"
+                                                   BodyText="{Binding NextStepMoodLabel}"
+                                                   AccessibilityLabel="{Binding NextStepMoodAccessibilityLabel}"
+                                                   AccessibilityHint="{Binding NextStepSelectionHint}"
+                                                   TapCommand="{Binding SelectNextStepMoodCommand}"
+                                                   Variant="{Binding NextStepMoodVariant}"
+                                                   IsCompact="True" />
+                                </Grid>
+                                <ui:ButtonView BodyText="{Binding NextStepSaveActionText}"
+                                               TapCommand="{Binding ToggleSavedNextStepCommand}"
+                                               IsVisible="{Binding HasNextStepSelection}"
+                                               IsEnabled="{Binding IsNextStepSaveActionEnabled}"
+                                               AccessibilityHint="{Binding NextStepSaveActionHint}"
+                                               Variant="Secondary"
+                                               IsCompact="True" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
                     <ui:SectionHeaderView
                         Margin="0"
                         TitleText="{Binding PracticeCatalogLabel}"
                         ActionText="{Binding CreateButtonText}"
                         ActionCommand="{Binding ConstructorTapped}" />
-                    <VerticalStackLayout IsVisible="{Binding IsPracticeAdPlacementVisible}" Spacing="8" Margin="0,8">
-                        <Border IsVisible="{Binding IsPracticeAdConsentPromptVisible}"
-                                Style="{StaticResource TestFlatCardStyle}"
-                                Padding="16">
-                            <VerticalStackLayout Spacing="10">
-                                <Label Text="{Binding AdsConsentPromptTitle}" Style="{StaticResource SectionTitleStyle}" />
-                                <Label Text="{Binding AdsConsentDetails}" Style="{StaticResource CaptionStyle}" />
-                                <ui:ButtonView Variant="Secondary"
-                                               BodyText="{Binding AdsPrivacyPolicyText}"
-                                               TapCommand="{Binding OpenAdsPrivacyPolicyCommand}" />
-                                <ui:ButtonView BodyText="{Binding AdsConsentPromptAllowText}"
-                                               TapCommand="{Binding AllowAdsCommand}" />
-                                <ui:ButtonView Variant="Secondary"
-                                               BodyText="{Binding AdsConsentPromptNotNowText}"
-                                               TapCommand="{Binding DismissAdsPromptCommand}" />
-                            </VerticalStackLayout>
-                        </Border>
-                        <ContentView x:Name="PracticeAdHost"
-                                     IsVisible="{Binding IsPracticeAdEligible}"
-                                     Margin="0,8" />
-                    </VerticalStackLayout>
+                    <HorizontalStackLayout HorizontalOptions="End" Margin="0,4,0,8"
+                                           IsVisible="{Binding IsPracticeFinderVisible}">
+                        <ui:ButtonView BodyText="{Binding PracticeFinderButtonText}"
+                                      AccessibilityHint="{Binding PracticeFinderAccessibilityHint}"
+                                      TapCommand="{Binding FindPracticeCommand}"
+                                      Variant="Secondary"
+                                      IsCompact="True" />
+                    </HorizontalStackLayout>
+                    <ContentView x:Name="PracticeAdHost"
+                                 IsVisible="False"
+                                 Margin="0,8" />
                 </VerticalStackLayout>
             </CollectionView.Header>
 

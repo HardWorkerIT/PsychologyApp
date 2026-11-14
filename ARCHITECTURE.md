@@ -59,10 +59,7 @@ resources (colours, fonts, text size) and takes the click itself; other platform
 template. Only where a Release measurement shows the XAML card costs frames: the practice card was about 17 native views with a MAUI
 handler each.
 
-The courses catalog hosts an Android banner through a MAUI handler and `PsychologyApp.VkAds.Android`. The handler controls the
-native view's lifecycle and checks the policy URL, VK slot, local consent, and ad-free preferences before creating an ad view. Until
-these values are configured, the banner and SDK requests remain disabled. The binding
-exposes only the banner host; its private Java callback is not a .NET API. Other platforms do not create the banner.
+The VK Ads Android binding exposes only the banner host; its private Java callback is not a .NET API. MAUI handlers own the native view lifecycle and create ads only for eligible placements in the practices, courses, articles, and non-personal general quotes catalogs when the policy URL and slot are configured and the person has not disabled ads. The app does not ask for separate advertising consent. Other platforms do not create the banner.
 
 Small documents that are read and written whole (the fear ladder, the reading state, the body log) are JSON in `AppMetadata` through
 `AppMetadataDocumentRepository<T>`; a document that cannot be read is copied to `<key>.unreadable` before a save replaces it.

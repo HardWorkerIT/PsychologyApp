@@ -347,6 +347,39 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<SavedNextStep>> GetSavedNextStepsAsync(CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        string? value = await connection.QuerySingleOrDefaultAsync<string>(DapperCommandFactory.Create(
+            UserProgressSql.SelectSavedNextStep,
+            new { key = UserProgressSql.SavedNextStepMetadataKey },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+
+        return SavedNextStepCollection.Parse(value);
+    }
+
+    public async Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default)
+    {
+        string? value = SavedNextStepCollection.Serialize(nextSteps);
+        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        if (value is not null)
+        {
+            await connection.ExecuteAsync(DapperCommandFactory.Create(
+                UserProgressSql.UpsertSavedNextStep,
+                new { key = UserProgressSql.SavedNextStepMetadataKey, value },
+                commandTimeout: CommandTimeoutSeconds,
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
+            return;
+        }
+
+        await connection.ExecuteAsync(DapperCommandFactory.Create(
+            UserProgressSql.DeleteSavedNextStep,
+            new { key = UserProgressSql.SavedNextStepMetadataKey },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+    }
+
     public async Task<long> RecordMoodAsync(MoodEntryDTO entry, CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);

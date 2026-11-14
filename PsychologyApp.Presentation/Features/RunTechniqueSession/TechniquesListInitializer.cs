@@ -27,7 +27,8 @@ public sealed class TechniquesListInitializer
         int pageSize = CatalogListPolicy.CustomTechniquesPageSize;
 
         Task<int> streakTask = dashboardLoader.LoadStreakDaysAsync(cancellationToken);
-        Task<bool> returningTask = dashboardLoader.LoadIsReturningAsync(cancellationToken);
+        Task<(bool HasAnyActivity, bool IsReturning)> engagementTask =
+            dashboardLoader.LoadEngagementStateAsync(cancellationToken);
         Task<IReadOnlyList<TechniqueItem>> staticItemsTask =
             listBuilder.BuildStaticItemsAsync(navigation, cancellationToken);
         Task<IEnumerable<TechniqueDTO>> customTechniquesTask =
@@ -35,7 +36,7 @@ public sealed class TechniquesListInitializer
 
         await Task.WhenAll(
             streakTask,
-            returningTask,
+            engagementTask,
             staticItemsTask,
             customTechniquesTask);
 
@@ -50,7 +51,7 @@ public sealed class TechniquesListInitializer
 
         return new TechniquesInitSnapshot(
             await streakTask,
-            await returningTask,
+            (await engagementTask).IsReturning,
             uiState,
             staticItems,
             hasMoreCustomTechniques,

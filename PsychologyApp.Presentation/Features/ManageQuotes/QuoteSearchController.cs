@@ -141,7 +141,7 @@ public sealed class QuoteSearchController
                     return;
                 }
 
-                _feedState.DisplayItems.ReplaceRange(results);
+                _feedState.SetDisplayItems(results);
                 _onStateChanged();
             });
         }
@@ -170,6 +170,6 @@ public sealed class QuoteSearchController
             return Task.CompletedTask;
         }
 
-        return UiThread.RunAsync(() => _feedState.DisplayItems[index] = quoteItem);
+        return UiThread.RunAsync(() => _feedState.UpdateDisplayItem(index, quoteItem));
     }
 }

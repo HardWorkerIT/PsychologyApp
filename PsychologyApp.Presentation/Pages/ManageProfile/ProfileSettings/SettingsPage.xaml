@@ -190,14 +190,12 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" IsVisible="{Binding CanOfferAds}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{Binding AdsTitle}" Style="{StaticResource SectionTitleStyle}" />
                     <Label Text="{Binding AdsHelp}" Style="{StaticResource CaptionStyle}" />
-                    <VerticalStackLayout Spacing="8" IsVisible="{Binding CanManageAdsConsent}">
-                        <Label Text="{Binding AdsConsentDetails}" Style="{StaticResource CaptionStyle}" />
-                        <ui:SettingSwitchRowView LabelText="{Binding AdsConsentLabel}"
-                                                 IsToggled="{Binding AdsConsentGranted}" ShowDivider="False" />
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="{Binding AdsDisclosure}" Style="{StaticResource CaptionStyle}" />
                         <ui:ButtonView Variant="Secondary" BodyText="{Binding AdsPrivacyPolicyText}"
                                        TapCommand="{Binding OpenAdsPrivacyPolicyCommand}" />
                     </VerticalStackLayout>

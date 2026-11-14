@@ -93,6 +93,8 @@ public sealed class UserProgressServiceStreakTests
         public Task<IReadOnlySet<string>> GetSessionDraftKeysAsync(IReadOnlyList<string> techniqueKeys, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlySet<string>>(new HashSet<string>(StringComparer.Ordinal));
         public Task DeleteSessionDraftAsync(string techniqueKey, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<IReadOnlyList<SavedNextStep>> GetSavedNextStepsAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<SavedNextStep>>([]);
+        public Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<long> RecordMoodAsync(MoodEntryDTO entry, CancellationToken cancellationToken = default) => Task.FromResult(0L);
         public Task UpdateMoodEntryAsync(long moodEntryId, int moodLevel, string? note, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default) => Task.CompletedTask;

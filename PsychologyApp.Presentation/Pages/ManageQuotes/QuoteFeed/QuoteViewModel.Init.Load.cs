@@ -135,7 +135,14 @@ public partial class QuoteViewModel
                 SetFail,
                 effectiveToken);
 
-            await UiThread.RunAsync(() => _feedState.AppendItems(items));
+            await UiThread.RunAsync(() =>
+            {
+                _feedState.AppendItems(items);
+                if (items.Count > 0)
+                {
+                    OnPropertyChanged(nameof(IsQuoteAdEligible));
+                }
+            });
 
             bool allReadEmpty = await _feedCoordinator.ShouldShowAllReadEmptyAsync(
                 _feedState.FeedItemCount,

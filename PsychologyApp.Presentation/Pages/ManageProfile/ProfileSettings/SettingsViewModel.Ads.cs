@@ -9,25 +9,12 @@ public partial class SettingsViewModel
     private bool _adsDisabled;
     private bool _invalidAdCode;
     private string _adCode = string.Empty;
-    private bool _adsConsentGranted;
 
     public string AdsTitle => AppStrings.AdsTitle;
-    public string AdsHelp => AdvertisingConfiguration.CanOfferAds ? AppStrings.AdsHelpActive : AppStrings.AdsHelp;
-    public string AdsConsentDetails => AppStrings.AdsConsentDetails;
-    public string AdsConsentLabel => AppStrings.AdsConsentLabel;
+    public string AdsHelp => CanOfferAds ? AppStrings.AdsHelpActive : AppStrings.AdsHelp;
+    public string AdsDisclosure => AppStrings.AdsDisclosure;
     public string AdsPrivacyPolicyText => AppStrings.AdsPrivacyPolicy;
-    public bool CanManageAdsConsent => AdvertisingConfiguration.CanOfferAds && !_adsDisabled;
-    public bool AdsConsentGranted
-    {
-        get => _adsConsentGranted;
-        set
-        {
-            if (_adsConsentGranted == value) return;
-            _adsConsentGranted = value;
-            OnPropertyChanged();
-            OnSettingsChanged();
-        }
-    }
+    public bool CanOfferAds => OperatingSystem.IsAndroid() && AdvertisingConfiguration.CanOfferAds;
     public string AdCodePlaceholder => AppStrings.AdsCodePlaceholder;
     public string ApplyAdCodeText => AppStrings.AdsApplyCode;
     public bool AdsDisabled => _adsDisabled;
@@ -48,11 +35,8 @@ public partial class SettingsViewModel
         if (accepted)
         {
             _adsDisabled = true;
-            _adsConsentGranted = false;
             OnPropertyChanged(nameof(AdsDisabled));
             OnPropertyChanged(nameof(CanEnterAdCode));
-            OnPropertyChanged(nameof(CanManageAdsConsent));
-            OnPropertyChanged(nameof(AdsConsentGranted));
             OnSettingsChanged();
         }
         OnPropertyChanged(nameof(AdCodeStatus));

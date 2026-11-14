@@ -28,11 +28,7 @@ public static partial class AppStrings
     public static string AdsTitle => R(nameof(AdsTitle));
     public static string AdsHelp => R(nameof(AdsHelp));
     public static string AdsHelpActive => R(nameof(AdsHelpActive));
-    public static string AdsConsentDetails => R(nameof(AdsConsentDetails));
-    public static string AdsConsentLabel => R(nameof(AdsConsentLabel));
-    public static string AdsConsentPromptTitle => R(nameof(AdsConsentPromptTitle));
-    public static string AdsConsentPromptAllow => R(nameof(AdsConsentPromptAllow));
-    public static string AdsConsentPromptNotNow => R(nameof(AdsConsentPromptNotNow));
+    public static string AdsDisclosure => R(nameof(AdsDisclosure));
     public static string AdsPrivacyPolicy => R(nameof(AdsPrivacyPolicy));
     public static string AdsCodePlaceholder => R(nameof(AdsCodePlaceholder));
     public static string AdsApplyCode => R(nameof(AdsApplyCode));
@@ -112,8 +108,6 @@ public static partial class AppStrings
     public static string ReviewShareButton => R(nameof(ReviewShareButton));
     public static string ReviewMessagePlaceholder => R(nameof(ReviewMessagePlaceholder));
     public static string ReviewMessageRequired => R(nameof(ReviewMessageRequired));
-    public static string ReviewSendSuccessTitle => R(nameof(ReviewSendSuccessTitle));
-    public static string ReviewSendSuccessMessage => R(nameof(ReviewSendSuccessMessage));
     public static string ReviewEmailSubject => R(nameof(ReviewEmailSubject));
     public static string ReviewSmsRecipientMissing => R(nameof(ReviewSmsRecipientMissing));
     public static string ReviewSmsNotSupported => R(nameof(ReviewSmsNotSupported));

@@ -95,11 +95,9 @@ public partial class SettingsViewModel
     {
         OnPropertyChanged(nameof(AdsTitle));
         OnPropertyChanged(nameof(AdsHelp));
-        OnPropertyChanged(nameof(AdsConsentDetails));
-        OnPropertyChanged(nameof(AdsConsentLabel));
+        OnPropertyChanged(nameof(AdsDisclosure));
         OnPropertyChanged(nameof(AdsPrivacyPolicyText));
-        OnPropertyChanged(nameof(CanManageAdsConsent));
-        OnPropertyChanged(nameof(AdsConsentGranted));
+        OnPropertyChanged(nameof(CanOfferAds));
         OnPropertyChanged(nameof(AdCodePlaceholder));
         OnPropertyChanged(nameof(ApplyAdCodeText));
         OnPropertyChanged(nameof(AdCodeStatus));
@@ -148,11 +146,8 @@ public partial class SettingsViewModel
 
         _savedState = _userPreferencesStore.Load();
         _adsDisabled = _savedState.AdsDisabled;
-        _adsConsentGranted = _savedState.AdsConsentGranted;
         OnPropertyChanged(nameof(AdsDisabled));
         OnPropertyChanged(nameof(CanEnterAdCode));
-        OnPropertyChanged(nameof(CanManageAdsConsent));
-        OnPropertyChanged(nameof(AdsConsentGranted));
         LoadFromPreferences();
         RefreshPickerDisplays();
         NotifyLocalizedLabelsChanged();

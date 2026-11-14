@@ -31,12 +31,15 @@ public partial class TechniquesPage : ContentPage
             return;
         }
 
+        _viewModel.RefreshPracticeAdEligibility();
 #if ANDROID
         VkBannerView adView = new();
         adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(TechniquesViewModel.IsPracticeAdEligible));
         PracticeAdHost.Content = adView;
+        PracticeAdHost.SetBinding(
+            VisualElement.IsVisibleProperty,
+            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
 #endif
-        _viewModel.RefreshPracticeAdEligibility();
 
         _viewModel.RefreshOnAppearAsync().FireAndForget();
 
@@ -57,6 +60,8 @@ public partial class TechniquesPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        PracticeAdHost.RemoveBinding(VisualElement.IsVisibleProperty);
+        PracticeAdHost.IsVisible = false;
         PracticeAdHost.Content?.Handler?.DisconnectHandler();
         PracticeAdHost.Content = null;
 #endif

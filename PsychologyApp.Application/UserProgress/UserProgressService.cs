@@ -139,6 +139,15 @@ public sealed class UserProgressService(IUserProgressRepository repository) : IU
     public Task DeleteSessionDraftAsync(string techniqueKey, CancellationToken cancellationToken = default) =>
         repository.DeleteSessionDraftAsync(techniqueKey, cancellationToken);
 
+    public Task<IReadOnlyList<SavedNextStep>> GetSavedNextStepsAsync(CancellationToken cancellationToken = default) =>
+        repository.GetSavedNextStepsAsync(cancellationToken);
+
+    public Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default)
+    {
+        IReadOnlyList<SavedNextStep> validated = SavedNextStepCollection.Validate(nextSteps);
+        return repository.SetSavedNextStepsAsync(validated, cancellationToken);
+    }
+
     public Task<long> RecordMoodAsync(
         int moodLevel,
         string? note = null,

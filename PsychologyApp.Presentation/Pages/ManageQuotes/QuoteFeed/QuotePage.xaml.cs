@@ -18,6 +18,9 @@ public partial class QuotePage : ContentPage
     private PageAnimationHelper? _animationHelper;
     private bool _wasSearching;
     private QuoteFeedMode _lastFeedMode;
+#if ANDROID
+    private VerticalStackLayout? _quoteAdRow;
+#endif
 
     public QuotePage(IPageViewModelActivator pageViewModelActivator, IQuoteViewModelFactory quoteViewModelFactory)
     {
@@ -105,9 +108,7 @@ public partial class QuotePage : ContentPage
     {
         base.OnAppearing();
 #if ANDROID
-        VkBannerView adView = new();
-        adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(QuoteViewModel.IsQuoteAdEligible));
-        AdHost.Content = adView;
+        ReconnectQuoteAdRow();
 #endif
         ViewModel.RefreshQuoteAdEligibility();
         HandleOnAppearingAsync().FireAndForget();
@@ -116,11 +117,93 @@ public partial class QuotePage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
-        AdHost.Content?.Handler?.DisconnectHandler();
-        AdHost.Content = null;
+        DisconnectQuoteAdRow();
 #endif
         base.OnDisappearing();
     }
+
+    private void OnQuoteAdRowBindingContextChanged(object? sender, EventArgs e)
+    {
+#if ANDROID
+        if (sender is not VerticalStackLayout row)
+        {
+            return;
+        }
+
+        if (row.BindingContext is not QuoteFeedDisplayItem { IsAdPlacement: true })
+        {
+            DisconnectQuoteAdRow(row);
+            if (ReferenceEquals(_quoteAdRow, row))
+            {
+                _quoteAdRow = null;
+            }
+
+            return;
+        }
+
+        if (_quoteAdRow is not null && !ReferenceEquals(_quoteAdRow, row))
+        {
+            DisconnectQuoteAdRow(_quoteAdRow);
+        }
+
+        _quoteAdRow = row;
+        ReconnectQuoteAdRow();
+#else
+        if (sender is VisualElement footer)
+        {
+            footer.IsVisible = false;
+        }
+#endif
+    }
+
+#if ANDROID
+    private void ReconnectQuoteAdRow()
+    {
+        if (_quoteAdRow is null)
+        {
+            return;
+        }
+
+        ContentView? host = _quoteAdRow.Children.OfType<ContentView>().FirstOrDefault();
+        if (host is null)
+        {
+            return;
+        }
+
+        if (host.Content is not VkBannerView adView)
+        {
+            adView = new VkBannerView();
+            adView.SetBinding(
+                VkBannerView.IsEligibleProperty,
+                new Binding(nameof(QuoteViewModel.IsQuoteAdEligible)) { Source = ViewModel });
+            host.Content = adView;
+        }
+
+        _quoteAdRow.SetBinding(
+            VisualElement.IsVisibleProperty,
+            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
+    }
+
+    private void DisconnectQuoteAdRow() => DisconnectQuoteAdRow(_quoteAdRow);
+
+    private static void DisconnectQuoteAdRow(VerticalStackLayout? row)
+    {
+        if (row is null)
+        {
+            return;
+        }
+
+        ContentView? host = row.Children.OfType<ContentView>().FirstOrDefault();
+        host?.Content?.Handler?.DisconnectHandler();
+        if (host is not null)
+        {
+            host.Content = null;
+        }
+
+        row.RemoveBinding(VisualElement.IsVisibleProperty);
+        row.IsVisible = false;
+    }
+#endif
 
     private async Task HandleOnAppearingAsync()
     {

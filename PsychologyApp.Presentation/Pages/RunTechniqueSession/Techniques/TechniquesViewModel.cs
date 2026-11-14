@@ -5,6 +5,7 @@ using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Configuration;
 using PsychologyApp.Application.Technique;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
@@ -17,6 +18,7 @@ public partial class TechniquesViewModel : BaseViewModel
     private readonly SemaphoreSlim _initGate = new(1, 1);
     private readonly ITechniqueService _techniqueService;
     private readonly IToastService _toastService;
+    private readonly IDialogService _dialogService;
     private readonly ITechniqueMessenger _techniqueMessenger;
     private readonly INavigationService _navigationService;
     private readonly TechniqueListBuilder _techniqueListBuilder;
@@ -35,6 +37,7 @@ public partial class TechniquesViewModel : BaseViewModel
     public TechniquesViewModel(
         ITechniqueService techniqueService,
         IToastService toastService,
+        IDialogService dialogService,
         ITechniqueMessenger techniqueMessenger,
         INavigationService navigationService,
         TechniqueListBuilder techniqueListBuilder,
@@ -51,6 +54,7 @@ public partial class TechniquesViewModel : BaseViewModel
         _preferences = preferences;
         _techniqueService = techniqueService;
         _toastService = toastService;
+        _dialogService = dialogService;
         _techniqueMessenger = techniqueMessenger;
         _navigationService = navigationService;
         _techniqueListBuilder = techniqueListBuilder;

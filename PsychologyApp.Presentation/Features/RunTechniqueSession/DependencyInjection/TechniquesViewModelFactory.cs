@@ -6,6 +6,7 @@ using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Configuration;
 using PsychologyApp.Application.Technique;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Navigation;
@@ -22,6 +23,7 @@ public interface ITechniquesViewModelFactory
 public sealed class TechniquesViewModelFactory(
     ITechniqueService techniqueService,
     IToastService toastService,
+    IDialogService dialogService,
     ITechniqueMessenger techniqueMessenger,
     Func<NavigationContext, INavigationService> navigationServiceFactory,
     TechniqueListBuilder techniqueListBuilder,
@@ -42,6 +44,7 @@ public sealed class TechniquesViewModelFactory(
 
             techniqueService,
             toastService,
+            dialogService,
             techniqueMessenger,
             navigation,
             techniqueListBuilder,

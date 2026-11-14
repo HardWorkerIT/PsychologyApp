@@ -24,14 +24,11 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | Forged intent to MainActivity | Reminder taps need a per-install secret carried only by our own PendingIntents | Navigation only, no data access |
 | Malicious content over the network | Prayer audio is downloaded over HTTPS with size, content-type and magic-byte checks. | Third-party host compromise |
 | Crash / error log reveals data | Logs carry exception types and technical messages, never chat or journal text | Exception messages may include SQL fragments |
-| Network eavesdropping | No chat, journal or practice text leaves the device. Network traffic is limited to prayer audio. | Prayer-audio request metadata (IP address and requested resource) is visible to the hosting provider |
+| Network eavesdropping | No chat, journal, practice text, test result or health data leaves the device. Network traffic includes prayer audio and, on Android, VK ad requests from eligible catalogs. | Prayer-audio request metadata is visible to the hosting provider; VK may receive the IP address, device/app details, an available advertising identifier and ad request/impression/click events |
 
-The Android package includes the VK Ads (myTarget) SDK for banners in the practice, course, article, and general quotes catalogs. The quote banner is limited to the non-personal All feed; ads stay out of personalized recommendations, tests, and crisis/help screens. The VK banner slot ID is configured,
-but no SDK view is created until the public privacy-policy URL is configured and the person explicitly opts in;
-the empty privacy-policy URL and default refusal of consent prevent banner creation and requests. Once the owner configures a
-policy URL and a person explicitly allows advertising, VK may receive device or advertising identifiers and request metadata.
-No chat, journal, practice answer, test result or health data is supplied to the SDK for targeting. Review the SDK's actual network
-activity, its current data disclosures and the app's public policy before enabling advertising.
+The Android package includes the VK Ads (myTarget) SDK for banners in eligible practice, course, article, and general quotes catalog views. The quote banner is limited to the non-personal All feed; ads stay out of personalized recommendations, tests, and crisis/help screens. Banners load automatically when the HTTPS policy URL and slot are configured; EISBRECHER disables requests. The SDK receives a false value for its personalized-advertising consent setting. VK may receive the IP address, device/app details, an available advertising identifier and ad request/impression/click events. No chat, journal, practice answer, test result or health data is supplied to the SDK for targeting. Review the SDK's actual network activity and current disclosures before production rollout.
+
+The feedback form passes prepared text to the email, SMS, or system share UI only after the person taps a channel. The app does not send this text to its own server and cannot verify whether it is sent; an external app, service, and recipient handle any message the person chooses to send.
 
 ## Safety (not security) risks the app handles
 
