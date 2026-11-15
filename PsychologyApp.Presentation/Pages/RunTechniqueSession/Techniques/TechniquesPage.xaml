@@ -216,18 +216,23 @@
                                Style="{StaticResource SectionTitleStyle}"
                                FlexLayout.Grow="1"
                                FlexLayout.Shrink="0" />
-                        <HorizontalStackLayout Spacing="8" FlexLayout.Shrink="0">
+                        <HorizontalStackLayout Spacing="8"
+                                                 FlexLayout.Shrink="0"
+                                                 FlexLayout.AlignSelf="End">
                             <ui:ButtonView BodyText="{Binding PracticeFinderShortActionText}"
                                            AccessibilityLabel="{Binding PracticeFinderButtonText}"
                                            AccessibilityHint="{Binding PracticeFinderAccessibilityHint}"
                                            TapCommand="{Binding FindPracticeCommand}"
                                            IsVisible="{Binding IsPracticeFinderVisible}"
-                                           Variant="Secondary"
-                                           IsCompact="True" />
-                            <ui:ButtonView BodyText="{Binding CreateButtonText}"
+                                           Variant="Primary"
+                                           IsCompact="True"
+                                           HeightRequest="48" />
+                            <ui:ButtonView BodyText="+"
+                                           AccessibilityLabel="{Binding CreateButtonText}"
                                            TapCommand="{Binding ConstructorTapped}"
                                            Variant="Secondary"
-                                           IsCompact="True" />
+                                           WidthRequest="48"
+                                           HeightRequest="48" />
                         </HorizontalStackLayout>
                     </FlexLayout>
                     <ContentView x:Name="PracticeAdHost"

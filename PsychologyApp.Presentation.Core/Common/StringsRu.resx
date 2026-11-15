@@ -4256,7 +4256,7 @@
     <value>Можно сохранить не больше трёх действий. Уберите одно, чтобы добавить другое.</value>
   </data>
   <data name="PracticeFinderShortAction" xml:space="preserve">
-    <value>Подбор</value>
+    <value>Подобрать</value>
   </data>
   <data name="PracticeFinderButton" xml:space="preserve">
     <value>Подобрать практику</value>
