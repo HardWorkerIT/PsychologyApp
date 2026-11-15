@@ -10,6 +10,7 @@ public partial class TechniquesViewModel
     public string PracticeCatalogLabel => AppStrings.PracticeCatalog;
     public string PracticeCatalogHint => AppStrings.PracticeCatalogHint;
     public string PracticeFinderButtonText => AppStrings.PracticeFinderButton;
+    public string PracticeFinderShortActionText => AppStrings.PracticeFinderShortAction;
     public string PracticeFinderAccessibilityHint => AppStrings.PracticeFinderAccessibilityHint;
     public string CreateButtonText => AppStrings.PracticeCreate;
     public string TodayForYouLabel => AppStrings.TodayForYou;
@@ -62,6 +63,7 @@ public partial class TechniquesViewModel
             nameof(PracticeCatalogLabel),
             nameof(PracticeCatalogHint),
             nameof(PracticeFinderButtonText),
+            nameof(PracticeFinderShortActionText),
             nameof(PracticeFinderAccessibilityHint),
             nameof(CreateButtonText),
             nameof(TodayForYouLabel),

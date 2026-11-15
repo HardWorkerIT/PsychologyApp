@@ -1,9 +1,11 @@
 ﻿using PsychologyApp.Application.Articles;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Application.Models.Practice;
+using PsychologyApp.Application.Recommendations;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using System.Windows.Input;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Entities.Technique;
@@ -80,11 +82,15 @@ public partial class TechniquesViewModel
             new(PracticeFinderNeed.Situations, AppStrings.PracticeFinderSituations)
         ];
 
-        string? selectedChoice = await _dialogService.PickOptionAsync(
+        DialogOptionItem[] choiceOptions = choices
+            .Select(item => new DialogOptionItem(item.Need.ToString(), item.Label))
+            .ToArray();
+        string? selectedChoiceId = await _dialogService.PickOptionAsync(
             AppStrings.PracticeFinderTitle,
-            choices.Select(choice => choice.Label).ToArray(),
+            choiceOptions,
             AppStrings.Cancel);
-        PracticeFinderChoice? choice = choices.FirstOrDefault(item => item.Label == selectedChoice);
+        PracticeFinderChoice? choice = choices.FirstOrDefault(item =>
+            string.Equals(item.Need.ToString(), selectedChoiceId, StringComparison.Ordinal));
         if (choice is null)
         {
             return;
@@ -104,11 +110,15 @@ public partial class TechniquesViewModel
                 new(PracticeFinderNeed.BeforeSleep, AppStrings.PracticeFinderBeforeSleep, IsSituationBundle: true),
                 new(PracticeFinderNeed.AfterConflict, AppStrings.PracticeFinderAfterConflict, IsSituationBundle: true)
             ];
-            string? selectedSituation = await _dialogService.PickOptionAsync(
+            DialogOptionItem[] situationOptions = situationChoices
+                .Select(item => new DialogOptionItem(item.Need.ToString(), item.Label))
+                .ToArray();
+            string? selectedSituationId = await _dialogService.PickOptionAsync(
                 AppStrings.PracticeFinderSituations,
-                situationChoices.Select(item => item.Label).ToArray(),
+                situationOptions,
                 AppStrings.Cancel);
-            choice = situationChoices.FirstOrDefault(item => item.Label == selectedSituation);
+            choice = situationChoices.FirstOrDefault(item =>
+                string.Equals(item.Need.ToString(), selectedSituationId, StringComparison.Ordinal));
             if (choice is null)
             {
                 return;
@@ -138,17 +148,22 @@ public partial class TechniquesViewModel
             _ when choice.IsSituationBundle => AppStrings.PracticeFinderBundleResultsTitle(choice.Label),
             _ => AppStrings.PracticeFinderResultsTitle(choice.Label)
         };
-        string[] practiceOptions = suggestions
-            .Select((entry, index) => $"{index + 1}. {entry.Title} · {AppStrings.TechniqueDuration(entry.DurationMinutes)}")
+        DialogOptionItem[] practiceOptions = suggestions
+            .Select(entry => new DialogOptionItem(
+                entry.TechniqueId.ToString(),
+                entry.Title,
+                entry.Subtitle,
+                AppStrings.TechniqueDuration(entry.DurationMinutes)))
             .ToArray();
-        string? selectedPractice = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Cancel);
-        int selectedIndex = Array.IndexOf(practiceOptions, selectedPractice);
-        if (selectedIndex < 0 || await RouteToCrisisHubIfNeededAsync())
+        string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Cancel);
+        TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
+            string.Equals(entry.TechniqueId.ToString(), selectedPracticeId, StringComparison.Ordinal));
+        if (selectedPractice is null || await RouteToCrisisHubIfNeededAsync())
         {
             return;
         }
 
-        await _navigationService.GoToTechniqueAsync(suggestions[selectedIndex].TechniqueId);
+        await _navigationService.GoToTechniqueAsync(selectedPractice.TechniqueId);
     }
 
     private sealed record PracticeFinderChoice(PracticeFinderNeed Need, string Label, bool IsSituationBundle = false);

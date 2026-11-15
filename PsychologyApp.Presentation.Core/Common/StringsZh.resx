@@ -4249,6 +4249,9 @@
   <data name="NextStepLimitReached" xml:space="preserve">
     <value>最多可保存三个操作。移除一个后才能添加另一个。</value>
   </data>
+  <data name="PracticeFinderShortAction" xml:space="preserve">
+    <value>筛选</value>
+  </data>
   <data name="PracticeFinderButton" xml:space="preserve">
     <value>寻找合适的练习</value>
   </data>

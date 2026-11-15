@@ -4249,6 +4249,9 @@
   <data name="NextStepLimitReached" xml:space="preserve">
     <value>Puedes guardar hasta tres acciones. Quita una para añadir otra.</value>
   </data>
+  <data name="PracticeFinderShortAction" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
   <data name="PracticeFinderButton" xml:space="preserve">
     <value>Buscar una práctica</value>
   </data>

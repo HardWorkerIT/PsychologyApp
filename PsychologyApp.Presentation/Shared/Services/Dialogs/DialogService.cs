@@ -108,6 +108,12 @@ public class DialogService(IPageHost pageHost) : IDialogService
 
     public async Task<string?> PickOptionAsync(string title, IReadOnlyList<string> options, string cancel)
     {
+        DialogOptionItem[] items = options.Select(option => new DialogOptionItem(option, option)).ToArray();
+        return await PickOptionAsync(title, items, cancel);
+    }
+
+    public async Task<string?> PickOptionAsync(string title, IReadOnlyList<DialogOptionItem> options, string cancel)
+    {
         if (!TryEnter())
         {
             return null;
@@ -118,7 +124,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
             Page page = RequireActivePage();
             var popup = new AppOptionsSheetPopup(title, options, cancel);
             await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
-            return popup.SelectedOption;
+            return popup.SelectedValue;
         }
         finally
         {

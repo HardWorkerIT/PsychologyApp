@@ -41,6 +41,7 @@ public static partial class AppStrings
     public static string NextStepLimitReached => R(nameof(NextStepLimitReached));
 
     public static string PracticeFinderButton => R(nameof(PracticeFinderButton));
+    public static string PracticeFinderShortAction => R(nameof(PracticeFinderShortAction));
     public static string PracticeFinderAccessibilityHint => R(nameof(PracticeFinderAccessibilityHint));
     public static string PracticeFinderTitle => R(nameof(PracticeFinderTitle));
     public static string PracticeFinderQuick => R(nameof(PracticeFinderQuick));

@@ -208,19 +208,28 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <ui:SectionHeaderView
-                        Margin="0"
-                        TitleText="{Binding PracticeCatalogLabel}"
-                        ActionText="{Binding CreateButtonText}"
-                        ActionCommand="{Binding ConstructorTapped}" />
-                    <HorizontalStackLayout HorizontalOptions="Start" Margin="4,4,0,8"
-                                           IsVisible="{Binding IsPracticeFinderVisible}">
-                        <ui:ButtonView BodyText="{Binding PracticeFinderButtonText}"
-                                      AccessibilityHint="{Binding PracticeFinderAccessibilityHint}"
-                                      TapCommand="{Binding FindPracticeCommand}"
-                                      Variant="Secondary"
-                                      IsCompact="True" />
-                    </HorizontalStackLayout>
+                    <FlexLayout Direction="Row"
+                                Wrap="Wrap"
+                                AlignItems="Center"
+                                AlignContent="Start">
+                        <Label Text="{Binding PracticeCatalogLabel}"
+                               Style="{StaticResource SectionTitleStyle}"
+                               FlexLayout.Grow="1"
+                               FlexLayout.Shrink="0" />
+                        <HorizontalStackLayout Spacing="8" FlexLayout.Shrink="0">
+                            <ui:ButtonView BodyText="{Binding PracticeFinderShortActionText}"
+                                           AccessibilityLabel="{Binding PracticeFinderButtonText}"
+                                           AccessibilityHint="{Binding PracticeFinderAccessibilityHint}"
+                                           TapCommand="{Binding FindPracticeCommand}"
+                                           IsVisible="{Binding IsPracticeFinderVisible}"
+                                           Variant="Secondary"
+                                           IsCompact="True" />
+                            <ui:ButtonView BodyText="{Binding CreateButtonText}"
+                                           TapCommand="{Binding ConstructorTapped}"
+                                           Variant="Secondary"
+                                           IsCompact="True" />
+                        </HorizontalStackLayout>
+                    </FlexLayout>
                     <ContentView x:Name="PracticeAdHost"
                                  IsVisible="False"
                                  Margin="0,8" />
@@ -296,8 +305,6 @@
                         HorizontalOptions="Center"
                         Margin="0,8" />
                     </Grid>
-                    <!-- Room under the last card for the round chat button. -->
-                    <BoxView HeightRequest="72" Color="Transparent" />
                 </VerticalStackLayout>
             </CollectionView.Footer>
 

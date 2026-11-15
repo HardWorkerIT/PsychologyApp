@@ -32,9 +32,11 @@
 
                     <BoxView Style="{StaticResource AppDialogDividerStyle}" />
 
-                    <VerticalStackLayout
-                        x:Name="OptionsStack"
-                        Spacing="0" />
+                    <ScrollView x:Name="OptionsScroll"
+                                VerticalScrollBarVisibility="Never">
+                        <VerticalStackLayout x:Name="OptionsStack"
+                                             Spacing="0" />
+                    </ScrollView>
 
                     <BoxView Style="{StaticResource AppDialogDividerStyle}" />
 

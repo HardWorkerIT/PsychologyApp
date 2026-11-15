@@ -1,4 +1,5 @@
 using PsychologyApp.Application.Models.Practice;
+using PsychologyApp.Application.Recommendations;
 using PsychologyApp.Application.UserProgress;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Features.RunTechniqueSession.Index;
@@ -18,69 +19,16 @@ public sealed class TechniqueListLayout
     public required object ItemsSource { get; init; }
     public required IReadOnlyList<TechniqueGroup> Groups { get; init; }
 }
-
 public sealed class TechniqueListBuilder(
     IUserProgressService userProgressService,
     TechniqueCatalogGateway techniqueCatalog)
 {
-    // Recommendations reuse existing exercises; the no-typing route relies on the catalog's optional, skippable answers.
-    private static readonly IReadOnlyDictionary<PracticeFinderNeed, TechniqueId[]> FinderPracticeIds =
-        new Dictionary<PracticeFinderNeed, TechniqueId[]>
-        {
-            [PracticeFinderNeed.EyesOpen] =
-            [
-                TechniqueId.Grounding, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
-                TechniqueId.Balloons, TechniqueId.CheckTheFacts
-            ],
-            [PracticeFinderNeed.NoBreathFocus] =
-            [
-                TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
-                TechniqueId.CheckTheFacts, TechniqueId.Observer
-            ],
-            [PracticeFinderNeed.NoTyping] =
-            [TechniqueId.BusyMind, TechniqueId.ThoughtDefusion, TechniqueId.Balloons, TechniqueId.Grounding],
-            [PracticeFinderNeed.Public] =
-            [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Grounding],
-            [PracticeFinderNeed.BeforeConversation] =
-            [TechniqueId.PauseBeforeReaction, TechniqueId.ImplementationIntention, TechniqueId.CheckTheFacts],
-            [PracticeFinderNeed.PassengerCommute] =
-            [TechniqueId.Grounding, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion],
-            [PracticeFinderNeed.BeforeSleep] = [TechniqueId.MuscleRelax, TechniqueId.SelfCompassion],
-            [PracticeFinderNeed.AfterConflict] = [TechniqueId.PauseBeforeReaction, TechniqueId.Grounding, TechniqueId.CheckTheFacts]
-        };
-
     internal async Task<IReadOnlyList<TechniqueListEntry>> FindSuitablePracticesAsync(
         PracticeFinderNeed need,
         CancellationToken cancellationToken = default)
     {
         IReadOnlyList<TechniqueListEntry> entries = await techniqueCatalog.GetBuiltInListEntriesAsync(cancellationToken);
-        Dictionary<TechniqueId, TechniqueListEntry> byId = entries.ToDictionary(entry => entry.TechniqueId);
-        IEnumerable<TechniqueId> preferredIds;
-        if (need == PracticeFinderNeed.Quick)
-        {
-            preferredIds = [TechniqueId.BusyMind, TechniqueId.Observer, TechniqueId.ThoughtDefusion];
-        }
-        else if (FinderPracticeIds.TryGetValue(need, out TechniqueId[]? ids) && ids is not null)
-        {
-            preferredIds = ids;
-        }
-        else
-        {
-            preferredIds = [];
-        }
-
-        List<TechniqueListEntry> results = [];
-        foreach (TechniqueId techniqueId in preferredIds)
-        {
-            if (byId.TryGetValue(techniqueId, out TechniqueListEntry? entry)
-                && entry is not null
-                && (need != PracticeFinderNeed.Quick || entry.DurationMinutes <= 2))
-            {
-                results.Add(entry);
-            }
-        }
-
-        return results;
+        return PracticeFinderRecommendation.FindSuitablePractices(need, entries);
     }
 
     public async Task<IReadOnlyList<TechniqueItem>> BuildStaticItemsAsync(
@@ -185,18 +133,4 @@ public sealed class TechniqueListBuilder(
             ItemsSource = new ObservableCollection<TechniqueItem>(staticItems)
         };
     }
-}
-
-internal enum PracticeFinderNeed
-{
-    Quick,
-    EyesOpen,
-    NoBreathFocus,
-    NoTyping,
-    Public,
-    Situations,
-    BeforeConversation,
-    PassengerCommute,
-    BeforeSleep,
-    AfterConflict
 }
