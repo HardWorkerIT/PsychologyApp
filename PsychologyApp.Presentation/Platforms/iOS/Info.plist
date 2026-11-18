@@ -48,6 +48,6 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Чтобы превращать надиктованный ответ в текст прямо на устройстве. / To turn dictated answers into text right on the device.</string>
 	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/appicon.appiconset</string>
+	<string>Assets.xcassets/logo.appiconset</string>
 </dict>
 </plist>
