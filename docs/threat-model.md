@@ -7,8 +7,8 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 
 | Asset | Where it lives |
 | --- | --- |
-| Chats, mood notes, test results, risk assessments, safety plan, journal | SQLite database in the app's private folder |
-| Preferences (language, reminders, onboarding) | Android SharedPreferences |
+| Chats, mood notes, test results, risk assessments, safety plan, journal, onboarding topic | Encrypted SQLite database in the app's private folder |
+| Preferences (language, reminders, onboarding completion) | Android SharedPreferences |
 | Exported backup / specialist summary | A file the person chooses to share; removed from the cache right after the share sheet closes |
 | Error log | `logs/app-errors.log`, warnings and errors only, no message text; shared only by the person |
 | Downloaded prayer audio | Cache folder, HTTPS only, validated as audio |

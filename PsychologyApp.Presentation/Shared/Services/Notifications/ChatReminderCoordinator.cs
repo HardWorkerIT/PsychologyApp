@@ -52,6 +52,10 @@ public sealed class ChatReminderCoordinator(
     private async Task<DateTime?> GetLastChatActivityUtcAsync(CancellationToken cancellationToken)
     {
         IReadOnlyList<ChatSessionDTO> sessions = await chatRepository.GetSessionsAsync(cancellationToken);
-        return sessions.Count == 0 ? null : sessions[0].UpdatedAt;
+        DateTime nowUtc = DateTime.UtcNow;
+        return sessions
+            .Where(session => session.UpdatedAt <= nowUtc)
+            .Select(session => (DateTime?)session.UpdatedAt)
+            .Max();
     }
 }

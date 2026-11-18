@@ -577,8 +577,8 @@ public static partial class ArticleContent
                 List(
                     "Pequenos contatos regulares: cumprimentar um vizinho, escrever para um velho conhecido, conversar com um atendente",
                     "Fazer algo junto conta mais do que conversar: grupos, esporte, voluntariado, cursos, onde as pessoas se encontram com regularidade",
-                    "Dar você mesmo o primeiro passo, sem esperar um convite",
-                    "Ajudar os outros: um dos remédios mais seguros contra a solidão",
+                    "Se tiver energia e isso parecer seguro, você pode propor um contato simples; não precisa esperar um convite.",
+                    "Uma atividade em comum ou uma ajuda possível pode abrir espaço para contato, se fizer sentido para você; nada disso é obrigação.",
                     "Qualidade em vez de quantidade: uma pessoa com quem você pode ser você mesmo conta mais do que muitos conhecidos"),
                 H("Pensamentos que atrapalham"),
                 List(
@@ -1479,7 +1479,79 @@ public static partial class ArticleContent
                 Practice(TechniqueId.MoneyWorryPlan, "Organizar uma preocupação com dinheiro")
             ]),
 
+        new(ArticleIds.WorryTime, "Um tempo para as preocupações, não o dia todo", "Uma forma breve de deixar preocupações não urgentes para depois e escolher um passo possível.", "Schedule", 5,
+            [
+                P("Quando pensamentos sobre o futuro pedem atenção repetidamente, você pode reservar 10–15 minutos para eles mais tarde. Isso não proíbe pensamentos: anote o tema em poucas palavras e retome o que estava fazendo."),
+                H("Verifique primeiro a urgência"),
+                Warning("Se algo exige ação agora ou afeta a segurança, a saúde ou necessidades básicas, não adie. Entre em contato com alguém de confiança ou procure ajuda prática."),
+                List("Escolha hoje um horário curto para as preocupações, como 10–15 minutos.", "Se uma preocupação surgir antes, anote apenas o tema em poucas palavras, sem dados pessoais, e volte ao que estava fazendo.", "No horário escolhido, pergunte: posso dar um passo concreto e seguro? Se sim, planeje-o. Se não, anote o que está fora do seu controle por enquanto e traga a atenção com gentileza para o presente."),
+                Crisis("Se você estiver em perigo imediato"),
+                H("Confira o que você entendeu"),
+                Quiz("Um pensamento que começa com “e se…” prova que algo vai acontecer?", 1, "Não. Uma previsão preocupante pode ser percebida e verificada; repeti-la não a transforma em fato.", "Sim, se voltar muitas vezes", "Não: é uma previsão, não um fato confirmado", "Significa que não estou dando conta"),
+                Quiz("O que fazer quando um problema precisa de atenção hoje?", 1, "Um problema urgente e possível de manejar não precisa esperar: escolha um passo seguro ou peça ajuda prática.", "Deixar para o horário escolhido", "Escolher um passo seguro ou pedir ajuda", "Tentar parar de se preocupar"),
+                Quiz("E se nada puder ser mudado agora?", 0, "Você pode anotar o tema, marcar quando vai revê-lo e voltar com gentileza ao que está acontecendo no presente.", "Anotar, marcar um momento para rever e voltar ao presente", "Continuar procurando uma solução mental o dia todo", "Se forçar a pensar positivo"),
+                P("Estas perguntas verificam apenas a compreensão do artigo. Não são teste psicológico nem diagnóstico e não prometem que a preocupação desaparecerá."),
+                Practice(TechniqueId.WorryTime, "Reservar um tempo para as preocupações")
+            ]),
+
+
         new(ArticleIds.ProblemPlanning, "Um plano para tarefas possíveis", "Divida um problema em passos e reveja o plano", "Checklist", 3,
-            [P("Primeiro identifique um problema específico. Nem tudo depende de você; escolha aquilo que pode influenciar."), P("Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro."), P("Depois observe o que ajudou e o que foi difícil demais. Você pode ajustar o plano ou pedir apoio.")])
+            [P("Primeiro identifique um problema específico. Nem tudo depende de você; escolha aquilo que pode influenciar."), P("Anote algumas opções, mesmo que nenhuma pareça perfeita. Escolha um passo pequeno e seguro."), P("Depois observe o que ajudou e o que foi difícil demais. Você pode ajustar o plano ou pedir apoio.")]),
+        new(
+            ArticleIds.Overwhelm,
+            "Quando tudo se acumula: escolha o próximo passo",
+            "Separe o que é urgente do restante e comece com uma ação pequena.",
+            "Checklist",
+            4,
+            [
+                P("Quando muitas tarefas pedem atenção ao mesmo tempo, a mente pode juntá-las em um único problema enorme. Organizá-las não resolve tudo, mas ajuda a enxergar o próximo passo."),
+                H("Segurança e necessidades básicas primeiro"),
+                Warning("Se houver perigo imediato ou risco para alimentação, moradia, medicamentos essenciais ou saúde, procure ajuda prática primeiro. Este exercício pode esperar."),
+                List("O que não pode esperar com segurança?", "Qual passo você pode dar hoje?", "O que pode ficar para depois ou ser dividido com alguém?"),
+                H("Deixe a tarefa menor"),
+                P("Descreva uma ação, não um resultado enorme: abra uma mensagem e anote o prazo, em vez de tentar resolver todo o trabalho. Se ainda parecer demais, reduza o passo."),
+                Quiz("Qual é um próximo passo concreto?", 1, "Um passo possível pode ser iniciado e descrito com clareza. Um resultado grande costuma exigir várias ações.", "Resolver tudo hoje", "Abrir um documento e ler o primeiro item", "Parar de se preocupar"),
+                Quiz("O que vem primeiro se uma necessidade básica estiver ameaçada?", 1, "Se alimentação, moradia, medicamentos essenciais ou segurança estiverem em risco, a ajuda prática é prioridade agora.", "Terminar o exercício primeiro", "Falar com alguém de confiança ou um serviço local de apoio", "Esperar a preocupação passar"),
+                P("A lista mostra tarefas, não o seu valor. Você pode mudá-la quando surgirem novos fatos ou energia."),
+                P("Estas perguntas verificam apenas a compreensão do texto. Não são um teste psicológico nem um diagnóstico."),
+                Practice(TechniqueId.ExternalOrientation, "Oriente-se com três detalhes")
+            ]),
+
+        new(
+            ArticleIds.ConversationRepair,
+            "Depois de um desentendimento: retomar a conversa",
+            "Fazer uma pausa, reconhecer a própria parte e escolher o próximo passo, se for seguro",
+            "Forum",
+            4,
+            [
+                P("Não é preciso resolver tudo numa conversa. Primeiro, pense se quer continuar e se isso parece seguro. Uma pausa abre espaço para escolher; não obriga a uma reconciliação."),
+                Warning("Se há medo, controle, humilhação ou violência, você não precisa retomar a conversa para provar boa vontade. Segurança e apoio externo vêm primeiro."),
+                H("Uma forma simples de recomeçar"),
+                List("Descreva um momento concreto, sem julgar a pessoa inteira", "Diga o que sentiu ou precisava, sem atribuir intenções à outra pessoa", "Assuma apenas a parte que cabe a você", "Faça um pedido específico e dê tempo para a resposta"),
+                Quiz("Qual frase ajuda a falar do problema sem rotular a pessoa?", 1, "Um fato concreto e seu efeito são mais fáceis de conversar do que um julgamento de caráter.", "Você sempre estraga tudo", "Quando o plano mudou sem aviso, fiquei perdido. Podemos combinar como avisar um ao outro da próxima vez?", "Vamos fingir que nada aconteceu"),
+                P("Você pode fazer uma pausa, combinar de continuar depois ou encerrar a conversa. Pedir desculpas não exige abrir mão de um limite, e uma tentativa de reaproximação não garante resposta."),
+                Practice(TechniqueId.PauseBeforeReaction, "Faça uma pausa antes de responder"),
+                Quiz("Quando a segurança deve vir antes de uma conversa de reconciliação?", 1, "Diante de medo, coerção ou violência, segurança e apoio prático têm prioridade.", "Só depois que todas as tentativas falharem", "Quando há medo, controle, humilhação ou violência", "Nunca; todo conflito precisa ser resolvido"),
+                new(ArticleBlockKind.Article, "Leia também: como estabelecer limites", ArticleId: ArticleIds.Boundaries)
+            ]),
+        new(
+            ArticleIds.Feedback,
+            "Feedback sem rótulos",
+            "Separe um comentário específico de um julgamento sobre você, peça um exemplo e escolha o próximo passo.",
+            "Forum",
+            4,
+            [
+                P("Um feedback pode ser correto, incompleto ou injusto. Ele se refere a uma situação ou ação; não define todo o seu valor."),
+                H("Faça uma pausa primeiro"),
+                P("Se puder, não responda na hora. Você pode dizer: «Eu ouvi. Quero pensar um pouco e respondo depois»."),
+                H("Separe os fatos dos rótulos"),
+                List("O que exatamente aconteceu ou foi dito?", "Que exemplo, prazo ou critério foi mencionado?", "Que conclusão sobre mim eu acrescentei?"),
+                Quiz("Qual frase traz uma informação específica sobre a qual dá para agir?", 1, "Ela descreve uma ação observável e um prazo; você pode esclarecer os detalhes.", "Você sempre deixa tudo para depois.", "Falta a seção de despesas no relatório para sexta-feira.", "Nunca dá para confiar em você."),
+                H("Escolha o que fazer a seguir"),
+                List("Aproveitar um ponto específico e útil.", "Pedir um exemplo ou critério claro.", "Estabelecer um limite se o tratamento for desrespeitoso."),
+                Practice(TechniqueId.FeedbackReview, "Organizar o feedback"),
+                Warning("Ameaças, humilhação, discriminação e pressão não são feedback comum. Não permaneça numa conversa insegura para se corrigir; procure apoio."),
+                See(ArticleIds.SelfCriticism, "Leia também: falar consigo sem autocrítica")
+            ]),
     ];
 }

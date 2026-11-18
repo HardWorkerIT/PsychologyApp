@@ -67,7 +67,7 @@ public sealed class QuoteReminderCoordinator(
                 body = AppStrings.QuoteReminderBodySnippet(text);
             }
         }
-        catch (Exception bestEffortError)
+        catch (Exception bestEffortError) when (bestEffortError is not OperationCanceledException)
         {
             // Keep generic body if catalog lookup fails.
             BestEffort.Report(bestEffortError);

@@ -1,4 +1,5 @@
-﻿using PsychologyApp.Application.Articles;
+﻿using Microsoft.Extensions.Logging;
+using PsychologyApp.Application.Articles;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Application.Models.Practice;
 using PsychologyApp.Application.Recommendations;
@@ -17,14 +18,6 @@ public partial class TechniquesViewModel
     public ICommand ConstructorTapped { get; private set; } = default!;
     public ICommand StartTodayPracticeCommand { get; private set; } = default!;
     public ICommand FindPracticeCommand { get; private set; } = default!;
-    public ICommand StartNextStepCommand { get; private set; } = default!;
-    public ICommand StartSavedNextStepCommand { get; private set; } = default!;
-    public ICommand ToggleNextStepChooserCommand { get; private set; } = default!;
-    public ICommand ToggleSavedNextStepCommand { get; private set; } = default!;
-    public ICommand SelectNextStepGroundingCommand { get; private set; } = default!;
-    public ICommand SelectNextStepThoughtCommand { get; private set; } = default!;
-    public ICommand SelectNextStepSmallStepCommand { get; private set; } = default!;
-    public ICommand SelectNextStepMoodCommand { get; private set; } = default!;
     public ICommand OpenCrisisHubCommand { get; private set; } = default!;
     public ICommand OpenExposureCommand { get; private set; } = default!;
 
@@ -36,16 +29,6 @@ public partial class TechniquesViewModel
         ConstructorTapped = new AsyncCommand(() => _navigationService.GoToDesignerAsync(-1));
         StartTodayPracticeCommand = new AsyncCommand(StartTodayPracticeAsync);
         FindPracticeCommand = new AsyncCommand(FindPracticeAsync);
-        StartNextStepCommand = new AsyncCommand(StartNextStepAsync);
-        StartSavedNextStepCommand = new AsyncCommand<SavedNextStepQuickAction>(
-            StartSavedNextStepAsync,
-            action => action is not null && _savedNextSteps.Contains(action.Step));
-        ToggleNextStepChooserCommand = new Command(ToggleNextStepChooser);
-        ToggleSavedNextStepCommand = new AsyncCommand(ToggleSavedNextStepAsync);
-        SelectNextStepGroundingCommand = new Command(() => SelectNextStep(SavedNextStep.Grounding));
-        SelectNextStepThoughtCommand = new Command(() => SelectNextStep(SavedNextStep.ThoughtRecord));
-        SelectNextStepSmallStepCommand = new Command(() => SelectNextStep(SavedNextStep.SmallStep));
-        SelectNextStepMoodCommand = new Command(() => SelectNextStep(SavedNextStep.MoodCheckIn));
         OpenCrisisHubCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
         OpenExposureCommand = new AsyncCommand(() => _navigationService.GoToExposureAsync());
         OpenTraumaCommand = new AsyncCommand(() => _navigationService.GoToArticleAsync(ArticleIds.TraumaStart));
@@ -72,6 +55,42 @@ public partial class TechniquesViewModel
             return;
         }
 
+        DialogOptionItem[] featureOptions =
+        [
+            new DialogOptionItem(
+                QuickActionsFeatureOptionId,
+                AppStrings.NextStepTitle,
+                AppStrings.PracticeFinderQuickActionsDescription),
+            new DialogOptionItem(
+                PracticeFinderFeatureOptionId,
+                AppStrings.PracticeFinderContextHeader,
+                AppStrings.PracticeFinderSituationDescription)
+        ];
+        string? selectedFeatureId = await _dialogService.PickOptionAsync(
+            AppStrings.PracticeFinderTitle,
+            featureOptions,
+            AppStrings.Cancel);
+        if (selectedFeatureId is null || await RouteToCrisisHubIfNeededAsync())
+        {
+            return;
+        }
+
+        if (selectedFeatureId == QuickActionsFeatureOptionId)
+        {
+            if (!await ReloadSavedNextStepsAsync())
+            {
+                await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
+                return;
+            }
+            await OpenQuickActionsAsync(AllQuickActionSteps, AppStrings.NextStepTitle);
+            return;
+        }
+
+        if (selectedFeatureId != PracticeFinderFeatureOptionId)
+        {
+            return;
+        }
+
         PracticeFinderChoice[] choices =
         [
             new(PracticeFinderNeed.Quick, AppStrings.PracticeFinderQuick),
@@ -79,115 +98,252 @@ public partial class TechniquesViewModel
             new(PracticeFinderNeed.NoBreathFocus, AppStrings.PracticeFinderNoBreath),
             new(PracticeFinderNeed.NoTyping, AppStrings.PracticeFinderNoTyping),
             new(PracticeFinderNeed.Public, AppStrings.PracticeFinderPublic),
-            new(PracticeFinderNeed.Situations, AppStrings.PracticeFinderSituations)
+            new(PracticeFinderNeed.BeforeConversation, AppStrings.PracticeFinderBeforeConversation, IsSituationBundle: true),
+            new(PracticeFinderNeed.PassengerCommute, AppStrings.PracticeFinderPassengerCommute, IsSituationBundle: true),
+            new(PracticeFinderNeed.BeforeSleep, AppStrings.PracticeFinderBeforeSleep, IsSituationBundle: true),
+            new(PracticeFinderNeed.AfterConflict, AppStrings.PracticeFinderAfterConflict, IsSituationBundle: true)
         ];
-
-        DialogOptionItem[] choiceOptions = choices
-            .Select(item => new DialogOptionItem(item.Need.ToString(), item.Label))
-            .ToArray();
-        string? selectedChoiceId = await _dialogService.PickOptionAsync(
-            AppStrings.PracticeFinderTitle,
-            choiceOptions,
-            AppStrings.Cancel);
-        PracticeFinderChoice? choice = choices.FirstOrDefault(item =>
-            string.Equals(item.Need.ToString(), selectedChoiceId, StringComparison.Ordinal));
-        if (choice is null)
+        DialogOptionItem[] situationOptions =
+        [
+            DialogOptionItem.SectionHeader(AppStrings.PracticeFinderConditionsSection),
+            .. choices
+                .Where(item => !item.IsSituationBundle)
+                .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label)),
+            DialogOptionItem.SectionHeader(AppStrings.PracticeFinderSituationsSection),
+            .. choices
+                .Where(item => item.IsSituationBundle)
+                .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label))
+        ];
+        while (true)
         {
-            return;
-        }
+            if (await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
 
-        if (await RouteToCrisisHubIfNeededAsync())
-        {
-            return;
-        }
-
-        if (choice.Need == PracticeFinderNeed.Situations)
-        {
-            PracticeFinderChoice[] situationChoices =
-            [
-                new(PracticeFinderNeed.BeforeConversation, AppStrings.PracticeFinderBeforeConversation, IsSituationBundle: true),
-                new(PracticeFinderNeed.PassengerCommute, AppStrings.PracticeFinderPassengerCommute, IsSituationBundle: true),
-                new(PracticeFinderNeed.BeforeSleep, AppStrings.PracticeFinderBeforeSleep, IsSituationBundle: true),
-                new(PracticeFinderNeed.AfterConflict, AppStrings.PracticeFinderAfterConflict, IsSituationBundle: true)
-            ];
-            DialogOptionItem[] situationOptions = situationChoices
-                .Select(item => new DialogOptionItem(item.Need.ToString(), item.Label))
-                .ToArray();
-            string? selectedSituationId = await _dialogService.PickOptionAsync(
-                AppStrings.PracticeFinderSituations,
+            string? selectedNeedId = await _dialogService.PickOptionAsync(
+                AppStrings.PracticeFinderContextHeader,
                 situationOptions,
                 AppStrings.Cancel);
-            choice = situationChoices.FirstOrDefault(item =>
-                string.Equals(item.Need.ToString(), selectedSituationId, StringComparison.Ordinal));
+            if (selectedNeedId is null || await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+
+            PracticeFinderChoice? choice = choices.FirstOrDefault(item =>
+                string.Equals(GetPracticeFinderNeedOptionId(item.Need), selectedNeedId, StringComparison.Ordinal));
             if (choice is null)
             {
                 return;
             }
-        }
 
-        if (await RouteToCrisisHubIfNeededAsync())
-        {
+            IReadOnlyList<TechniqueListEntry> suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
+            if (await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+
+            if (suggestions.Count == 0)
+            {
+                await _dialogService.ShowAsync(AppStrings.PracticeFinderNoResultsTitle, AppStrings.PracticeFinderNoResultsBody);
+                continue;
+            }
+
+            string resultTitle = AppStrings.PracticeFinderResultsTitle;
+            DialogOptionItem[] practiceOptions =
+            [
+                DialogOptionItem.SectionHeader(GetPracticeFinderMatchReason(choice.Need)),
+                .. suggestions.Select(entry => new DialogOptionItem(
+                    entry.TechniqueId.ToString(),
+                    entry.Title,
+                    entry.Subtitle,
+                    AppStrings.TechniqueDuration(entry.DurationMinutes)))
+            ];
+            string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Back);
+            if (selectedPracticeId is null)
+            {
+                continue;
+            }
+
+            TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
+                string.Equals(entry.TechniqueId.ToString(), selectedPracticeId, StringComparison.Ordinal));
+            if (selectedPractice is null || await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+
+            await _navigationService.GoToTechniqueAsync(selectedPractice.TechniqueId);
             return;
         }
-
-        IReadOnlyList<TechniqueListEntry> suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
-        if (await RouteToCrisisHubIfNeededAsync())
-        {
-            return;
-        }
-
-        if (suggestions.Count == 0)
-        {
-            await _dialogService.ShowAsync(AppStrings.PracticeFinderNoResultsTitle, AppStrings.PracticeFinderNoResultsBody);
-            return;
-        }
-
-        string resultTitle = choice.Need switch
-        {
-            PracticeFinderNeed.NoTyping => AppStrings.PracticeFinderNoTypingResultsTitle,
-            _ when choice.IsSituationBundle => AppStrings.PracticeFinderBundleResultsTitle(choice.Label),
-            _ => AppStrings.PracticeFinderResultsTitle(choice.Label)
-        };
-        DialogOptionItem[] practiceOptions = suggestions
-            .Select(entry => new DialogOptionItem(
-                entry.TechniqueId.ToString(),
-                entry.Title,
-                entry.Subtitle,
-                AppStrings.TechniqueDuration(entry.DurationMinutes)))
-            .ToArray();
-        string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Cancel);
-        TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
-            string.Equals(entry.TechniqueId.ToString(), selectedPracticeId, StringComparison.Ordinal));
-        if (selectedPractice is null || await RouteToCrisisHubIfNeededAsync())
-        {
-            return;
-        }
-
-        await _navigationService.GoToTechniqueAsync(selectedPractice.TechniqueId);
     }
 
     private sealed record PracticeFinderChoice(PracticeFinderNeed Need, string Label, bool IsSituationBundle = false);
 
-    private async Task StartNextStepAsync()
-    {
-        if (_selectedNextStep is not { } selected)
+    private const string QuickActionsFeatureOptionId = "feature:quick-actions";
+    private const string PracticeFinderFeatureOptionId = "feature:practice-finder";
+    private const string SavedQuickActionOptionPrefix = "saved-quick-action:";
+    private const string ManageQuickActionsOptionId = "manage-quick-actions";
+
+    private static readonly IReadOnlyList<SavedNextStep> AllQuickActionSteps =
+        Enum.GetValues<SavedNextStep>();
+
+    private static string GetSavedQuickActionOptionId(SavedNextStep step) =>
+        $"{SavedQuickActionOptionPrefix}{step}";
+
+    private static string GetPracticeFinderNeedOptionId(PracticeFinderNeed need) =>
+        $"practice-need:{need}";
+
+    private static string GetPracticeFinderMatchReason(PracticeFinderNeed need) =>
+        need switch
         {
-            _isNextStepChooserExpanded = true;
-            NotifyNextStepProperties();
+            PracticeFinderNeed.Quick => AppStrings.PracticeFinderQuickMatchReason,
+            PracticeFinderNeed.EyesOpen => AppStrings.PracticeFinderEyesOpenMatchReason,
+            PracticeFinderNeed.NoBreathFocus => AppStrings.PracticeFinderNoBreathMatchReason,
+            PracticeFinderNeed.NoTyping => AppStrings.PracticeFinderNoTypingMatchReason,
+            PracticeFinderNeed.Public => AppStrings.PracticeFinderPublicMatchReason,
+            PracticeFinderNeed.BeforeConversation => AppStrings.PracticeFinderBeforeConversationMatchReason,
+            PracticeFinderNeed.PassengerCommute => AppStrings.PracticeFinderPassengerCommuteMatchReason,
+            PracticeFinderNeed.BeforeSleep => AppStrings.PracticeFinderBeforeSleepMatchReason,
+            PracticeFinderNeed.AfterConflict => AppStrings.PracticeFinderAfterConflictMatchReason,
+            _ => string.Empty
+        };
+
+    private async Task OpenQuickActionsAsync(
+        IReadOnlyList<SavedNextStep> categorySteps,
+        string categoryTitle)
+    {
+        while (true)
+        {
+            if (await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+
+            SavedNextStep[] savedInCategory = _savedNextSteps.Where(categorySteps.Contains).ToArray();
+            if (savedInCategory.Length == 0)
+            {
+                await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
+                if (!_savedNextSteps.Any(categorySteps.Contains))
+                {
+                    return;
+                }
+
+                continue;
+            }
+
+            DialogOptionItem[] options =
+            [
+                .. savedInCategory.Select(step => new DialogOptionItem(GetSavedQuickActionOptionId(step), GetNextStepLabel(step))),
+                new DialogOptionItem(ManageQuickActionsOptionId, AppStrings.NextStepChange)
+            ];
+            string? selectedOptionId = await _dialogService.PickOptionAsync(categoryTitle, options, AppStrings.Cancel);
+            if (selectedOptionId is null)
+            {
+                return;
+            }
+
+            if (selectedOptionId == ManageQuickActionsOptionId)
+            {
+                if (await RouteToCrisisHubIfNeededAsync())
+                {
+                    return;
+                }
+
+                await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
+                if (!_savedNextSteps.Any(categorySteps.Contains))
+                {
+                    return;
+                }
+
+                continue;
+            }
+
+            if (selectedOptionId.StartsWith(SavedQuickActionOptionPrefix, StringComparison.Ordinal))
+            {
+                string savedValue = selectedOptionId[SavedQuickActionOptionPrefix.Length..];
+                if (Enum.TryParse(savedValue, out SavedNextStep selectedStep)
+                    && Enum.IsDefined(selectedStep)
+                    && categorySteps.Contains(selectedStep)
+                    && savedInCategory.Contains(selectedStep))
+                {
+                    await OpenNextStepAsync(selectedStep);
+                }
+            }
+
             return;
         }
-
-        await OpenNextStepAsync(selected);
     }
 
-    private async Task StartSavedNextStepAsync(SavedNextStepQuickAction? quickAction)
+    private async Task ManageQuickActionsForCategoryAsync(
+        IReadOnlyList<SavedNextStep> categorySteps,
+        string categoryTitle)
     {
-        if (quickAction is null || !_savedNextSteps.Contains(quickAction.Step))
+        int otherSavedCount = _savedNextSteps.Count(step => !categorySteps.Contains(step));
+        int categoryCapacity = SavedNextStepCollection.MaximumCount - otherSavedCount;
+        SavedNextStep[] savedInCategory = _savedNextSteps.Where(categorySteps.Contains).ToArray();
+        if (categoryCapacity == 0 && savedInCategory.Length == 0)
+        {
+            await _dialogService.ShowAsync(
+                AppStrings.NextStepTitle,
+                AppStrings.NextStepLimitReached(SavedNextStepCollection.MaximumCount));
+            return;
+        }
+
+        DialogOptionItem[] options = categorySteps
+            .Select(step => new DialogOptionItem(step.ToString(), GetNextStepLabel(step)))
+            .ToArray();
+        IReadOnlyList<string>? selectedValues = await _dialogService.PickMultipleOptionsAsync(
+            categoryTitle,
+            options,
+            savedInCategory.Select(step => step.ToString()).ToArray(),
+            categoryCapacity,
+            count => otherSavedCount + count == 0
+                ? AppStrings.NextStepPrompt
+                : AppStrings.NextStepCapacity(otherSavedCount + count, SavedNextStepCollection.MaximumCount),
+            AppStrings.NextStepSaveHint,
+            AppStrings.NextStepRemoveHint,
+            AppStrings.NextStepLimitReached(SavedNextStepCollection.MaximumCount),
+            AppStrings.Save,
+            AppStrings.Cancel);
+        if (selectedValues is null)
         {
             return;
         }
 
-        await OpenNextStepAsync(quickAction.Step);
+        List<SavedNextStep> selectedInCategory = [];
+        foreach (string value in selectedValues)
+        {
+            if (Enum.TryParse(value, out SavedNextStep step)
+                && Enum.IsDefined(step)
+                && categorySteps.Contains(step)
+                && !selectedInCategory.Contains(step)
+                && selectedInCategory.Count < categoryCapacity)
+            {
+                selectedInCategory.Add(step);
+            }
+        }
+
+        List<SavedNextStep> orderedSteps = _savedNextSteps
+            .Where(step => !categorySteps.Contains(step) || selectedInCategory.Contains(step))
+            .ToList();
+        orderedSteps.AddRange(selectedInCategory.Where(step => !orderedSteps.Contains(step)));
+        if (orderedSteps.SequenceEqual(_savedNextSteps))
+        {
+            return;
+        }
+
+        try
+        {
+            await _dashboardLoader.SetSavedNextStepsAsync(orderedSteps);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning("Failed to save quick actions ({ExceptionType}).", exception.GetType().Name);
+            await _dialogService.ShowAsync(AppStrings.NextStepTitle, AppStrings.NextStepSaveFailed);
+            return;
+        }
+
+        ApplySavedNextSteps(orderedSteps);
     }
 
     private async Task OpenNextStepAsync(SavedNextStep nextStep)
@@ -197,69 +353,52 @@ public partial class TechniquesViewModel
             return;
         }
 
-        switch (nextStep)
+        if (nextStep == SavedNextStep.MoodCheckIn)
         {
-            case SavedNextStep.Grounding:
-                await _navigationService.GoToTechniqueAsync(TechniqueId.Grounding);
-                break;
-            case SavedNextStep.ThoughtRecord:
-                await _navigationService.GoToTechniqueAsync(TechniqueId.ThoughtRecord);
-                break;
-            case SavedNextStep.SmallStep:
-                await _navigationService.GoToTechniqueAsync(TechniqueId.SmallStep);
-                break;
-            case SavedNextStep.MoodCheckIn:
-                await _navigationService.GoToJournalAsync();
-                break;
+            await _navigationService.GoToJournalAsync();
+            return;
         }
-    }
 
-    private void ToggleNextStepChooser()
-    {
-        _isNextStepChooserExpanded = !_isNextStepChooserExpanded;
-        NotifyNextStepProperties();
-    }
-
-    private void SelectNextStep(SavedNextStep nextStep)
-    {
-        _selectedNextStep = nextStep;
-        NotifyNextStepProperties();
+        if (GetTechniqueId(nextStep) is { } techniqueId)
+        {
+            await _navigationService.GoToTechniqueAsync(techniqueId);
+        }
     }
 
     private void ApplySavedNextSteps(IReadOnlyList<SavedNextStep> nextSteps)
     {
-        _savedNextSteps = nextSteps;
-        _selectedNextStep = nextSteps.Count > 0 ? nextSteps[0] : null;
-        _isNextStepChooserExpanded = false;
-        NotifyNextStepProperties();
+        Interlocked.Increment(ref _savedNextStepsLoadVersion);
+        _savedNextSteps = nextSteps.ToArray();
     }
 
-    private async Task ToggleSavedNextStepAsync()
+    private async Task<bool> ReloadSavedNextStepsAsync()
     {
-        if (_selectedNextStep is not { } selected)
+        int loadVersion = Interlocked.Increment(ref _savedNextStepsLoadVersion);
+        try
+        {
+            IReadOnlyList<SavedNextStep> nextSteps = await _dashboardLoader.GetSavedNextStepsAsync();
+            ApplyLoadedSavedNextSteps(nextSteps, loadVersion);
+            return true;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning("Failed to refresh saved quick actions before opening the picker ({ExceptionType}).", exception.GetType().Name);
+            return false;
+        }
+    }
+
+    private void ApplyLoadedSavedNextSteps(IReadOnlyList<SavedNextStep> nextSteps, int loadVersion)
+    {
+        if (Volatile.Read(ref _savedNextStepsLoadVersion) != loadVersion)
         {
             return;
         }
 
-        List<SavedNextStep> nextSavedSteps = [.. _savedNextSteps];
-        if (nextSavedSteps.Contains(selected))
-        {
-            nextSavedSteps.Remove(selected);
-            _selectedNextStep = nextSavedSteps.Count > 0 ? nextSavedSteps[0] : null;
-        }
-        else
-        {
-            if (nextSavedSteps.Count >= SavedNextStepCollection.MaximumCount)
-            {
-                return;
-            }
-
-            nextSavedSteps.Add(selected);
-        }
-
-        await _dashboardLoader.SetSavedNextStepsAsync(nextSavedSteps);
-        _savedNextSteps = nextSavedSteps;
-        NotifyNextStepProperties();
+        _savedNextSteps = nextSteps.ToArray();
     }
 
     private async Task<bool> RouteToCrisisHubIfNeededAsync()

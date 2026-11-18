@@ -38,13 +38,17 @@ public sealed class TestHistoryLoader(
         ITestCatalogService testCatalogService,
         CancellationToken cancellationToken = default)
     {
-        TestDefinition? definition = await testCatalogService.GetByIdAsync(testId, cancellationToken);
-        string title = definition?.Title ?? fallbackTitle;
-        ScoreDirection direction = definition?.ScoreDirection ?? ScoreDirection.LowerIsBetter;
-        TestKind kind = definition?.Kind ?? TestKind.Questionnaire;
+        Task<TestDefinition?> definitionTask = testCatalogService.GetByIdAsync(testId, cancellationToken);
+        Task<IReadOnlyList<TestResultDTO>> historyTask =
+            userProgressService.GetTestResultHistoryAsync(testId, 50, cancellationToken);
 
-        IReadOnlyList<TestResultDTO> history =
-            await userProgressService.GetTestResultHistoryAsync(testId, 50, cancellationToken);
+        await Task.WhenAll(definitionTask, historyTask).ConfigureAwait(false);
+
+        TestDefinition? definition = await definitionTask.ConfigureAwait(false);
+        string title = definition?.Title ?? fallbackTitle;
+        ScoreDirection direction = definition?.ScoreDirection ?? ScoreDirection.None;
+        TestKind kind = definition?.Kind ?? TestKind.Questionnaire;
+        IReadOnlyList<TestResultDTO> history = await historyTask.ConfigureAwait(false);
 
         List<TestHistoryEntryItem> entries = [];
         for (int i = 0; i < history.Count; i++)

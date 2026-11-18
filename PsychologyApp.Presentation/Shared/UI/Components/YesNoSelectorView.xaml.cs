@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using PsychologyApp.Presentation.Common;
 
 namespace PsychologyApp.Presentation.Shared.UI.Components;
 
@@ -10,6 +11,7 @@ public partial class YesNoSelectorView : ContentView
     public YesNoSelectorView()
     {
         InitializeComponent();
+        RefreshSelectionSemantics();
     }
 
     public static readonly BindableProperty LabelTextProperty =
@@ -22,10 +24,10 @@ public partial class YesNoSelectorView : ContentView
         BindableProperty.Create(nameof(NoText), typeof(string), typeof(YesNoSelectorView), string.Empty);
 
     public static readonly BindableProperty IsYesProperty =
-        BindableProperty.Create(nameof(IsYes), typeof(bool), typeof(YesNoSelectorView), false);
+        BindableProperty.Create(nameof(IsYes), typeof(bool), typeof(YesNoSelectorView), false, propertyChanged: OnSelectionChanged);
 
     public static readonly BindableProperty IsNoProperty =
-        BindableProperty.Create(nameof(IsNo), typeof(bool), typeof(YesNoSelectorView), false);
+        BindableProperty.Create(nameof(IsNo), typeof(bool), typeof(YesNoSelectorView), false, propertyChanged: OnSelectionChanged);
 
     public static readonly BindableProperty SelectCommandProperty =
         BindableProperty.Create(nameof(SelectCommand), typeof(ICommand), typeof(YesNoSelectorView), null);
@@ -64,5 +66,17 @@ public partial class YesNoSelectorView : ContentView
     {
         get => (ICommand?)GetValue(SelectCommandProperty);
         set => SetValue(SelectCommandProperty, value);
+    }
+
+    private static void OnSelectionChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is YesNoSelectorView selector)
+            selector.RefreshSelectionSemantics();
+    }
+
+    private void RefreshSelectionSemantics()
+    {
+        SemanticProperties.SetHint(YesOption, IsYes ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected);
+        SemanticProperties.SetHint(NoOption, IsNo ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected);
     }
 }

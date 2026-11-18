@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls.Shapes;
 using PsychologyApp.Domain.Notifications;
 using PsychologyApp.Domain.Practice;
@@ -87,7 +88,7 @@ public static partial class UserPreferences
                 : Preferences.ContainsKey(LanguageKey)
                   || Preferences.ContainsKey(ThemeKey)
                   || Preferences.ContainsKey(LegacyAccentColorKey),
-            OnboardingConcern = Preferences.Get(OnboardingConcernKey, "explore"),
+            OnboardingConcern = Preferences.Get(OnboardingConcernKey, DefaultOnboardingConcern),
             PracticeRemindersEnabled = Preferences.Get(PracticeRemindersEnabledKey, true),
             PracticeReminderHour = NormalizePracticeReminderHour(Preferences.Get(PracticeReminderHourKey, DefaultPracticeReminderHour)),
             QuoteRemindersEnabled = Preferences.Get(QuoteRemindersEnabledKey, false),
@@ -107,9 +108,6 @@ public static partial class UserPreferences
             return;
         }
 
-        // Re-read after writing: the stored values are normalized, so the cache is rebuilt from what was actually stored.
-        _persistedCache = null;
-
         Preferences.Set(LanguageKey, NormalizeLanguageKey(state.Language));
         Preferences.Set(ThemeKey, NormalizeThemeKey(state.Theme));
         Preferences.Set(FormKey, NormalizeFormKey(state.Form));
@@ -118,7 +116,6 @@ public static partial class UserPreferences
         Preferences.Set(AdsDisabledKey, state.AdsDisabled);
         Preferences.Set(QuestionnaireAutoAdvanceKey, state.QuestionnaireAutoAdvance);
         Preferences.Set(HasCompletedOnboardingKey, state.HasCompletedOnboarding);
-        Preferences.Set(OnboardingConcernKey, state.OnboardingConcern);
         Preferences.Set(PracticeRemindersEnabledKey, state.PracticeRemindersEnabled);
         Preferences.Set(PracticeReminderHourKey, NormalizePracticeReminderHour(state.PracticeReminderHour));
         Preferences.Set(QuoteRemindersEnabledKey, state.QuoteRemindersEnabled);
@@ -128,7 +125,39 @@ public static partial class UserPreferences
         Preferences.Set(ChatRemindersEnabledKey, state.ChatRemindersEnabled);
         Preferences.Set(ChatReminderHourKey, NormalizeChatReminderHour(state.ChatReminderHour));
         Preferences.Remove(LegacyAccentColorKey);
+        // The selected topic is stored in encrypted AppMetadata; keep it in the cache while ordinary settings are refreshed.
+        _persistedCache = ReadPersisted() with
+        {
+            OnboardingConcern = NormalizeOnboardingConcernKey(state.OnboardingConcern)
+        };
     }
+
+    internal static string? GetLegacyOnboardingConcern() =>
+        Preferences.ContainsKey(OnboardingConcernKey)
+            ? NormalizeOnboardingConcernKey(Preferences.Get(OnboardingConcernKey, DefaultOnboardingConcern))
+            : null;
+
+    internal static void SetOnboardingConcernFromEncryptedStore(string concern)
+    {
+        UserPreferencesState current = Current;
+        UserPreferencesState updated = current with
+        {
+            OnboardingConcern = NormalizeOnboardingConcernKey(concern)
+        };
+
+        if (_inMemoryState is not null)
+        {
+            _inMemoryState = updated;
+        }
+        else
+        {
+            _persistedCache = updated;
+        }
+
+        RaiseChanged();
+    }
+
+    internal static void RemoveLegacyOnboardingConcern() => Preferences.Remove(OnboardingConcernKey);
 
     public static void SetPendingTechnique(TechniqueId techniqueId) =>
         Preferences.Set(PendingTechniqueKey, techniqueId.ToString());
@@ -175,22 +204,24 @@ public static partial class UserPreferences
                 ? NormalizePracticeReminderHour(hour)
                 : current.PracticeReminderHour
         });
-        ChangedHandlers.Raise();
+        RaiseChanged();
     }
 
     public static void ApplyAll()
     {
         // A language that follows the system one can change while the process lives on.
+        string concern = Current.OnboardingConcern;
         _persistedCache = null;
         AppStrings.LanguageOverride = null;
         AppStrings.LanguageProvider = () => Current.Language;
-        UserPreferencesState state = Load();
+        UserPreferencesState state = Load() with { OnboardingConcern = concern };
+        _persistedCache = state;
         RemoveLegacyAccentColorPreference(state);
         ApplyLanguage(state.Language);
         ApplyTheme(state.Theme);
         ApplyTypography(state.Size, state.IsBold);
         ApplyForm(state.Form);
-        ChangedHandlers.Raise();
+        RaiseChanged();
     }
 
     public static void ApplyPreview(UserPreferencesState state)
@@ -200,7 +231,18 @@ public static partial class UserPreferences
         ApplyTheme(state.Theme);
         ApplyTypography(state.Size, state.IsBold);
         ApplyForm(state.Form);
-        ChangedHandlers.Raise();
+        RaiseChanged();
+    }
+
+    private static void RaiseChanged()
+    {
+        if (MainThread.IsMainThread)
+        {
+            ChangedHandlers.Raise();
+            return;
+        }
+
+        MainThread.BeginInvokeOnMainThread(ChangedHandlers.Raise);
     }
 
     private static void RemoveLegacyAccentColorPreference(UserPreferencesState state)

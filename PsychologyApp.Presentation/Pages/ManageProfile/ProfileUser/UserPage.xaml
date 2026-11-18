@@ -89,7 +89,7 @@
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
                     <ui:SectionHeaderView TitleText="{Binding RecommendedLabel}" />
                     <CollectionView
-                        HeightRequest="156"
+                        MinimumHeightRequest="156"
                         SelectionMode="None"
                         HorizontalScrollBarVisibility="Never"
                         ItemsSource="{Binding Techniques}">

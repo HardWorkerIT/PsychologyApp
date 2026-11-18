@@ -49,7 +49,24 @@ public partial class TechniquesViewModel
 
     private void RebuildSections()
     {
-        List<TechniqueGroup> groups = [.. TechniqueSections.Build(_staticItemsAll ?? [], SectionTitle, _collapsedSections, key => new Command(() => ToggleSection(key)))];
+        IReadOnlyList<TechniqueItem> catalogItems = _staticItemsAll ?? [];
+        string? todayNumber = TodayTechniqueItem?.Number;
+        if (!string.IsNullOrWhiteSpace(todayNumber))
+        {
+            // The featured row above the category list is this practice's catalog card; don't render a second copy in its section.
+            catalogItems = catalogItems
+                .Where(item => !string.Equals(item.Number, todayNumber, StringComparison.Ordinal))
+                .ToArray();
+        }
+
+        List<TechniqueGroup> groups =
+        [
+            .. TechniqueSections.Build(
+                catalogItems,
+                SectionTitle,
+                _collapsedSections,
+                key => new Command(() => ToggleSection(key)))
+        ];
         if (_customGroup is not null)
         {
             groups.Add(_customGroup);

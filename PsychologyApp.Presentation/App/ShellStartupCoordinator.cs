@@ -34,8 +34,9 @@ public sealed class ShellStartupCoordinator(
         {
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateLargeTimeoutSource(settings);
             await startupService.InitializeAsync(timeoutSource.Token);
+            await preferences.RestoreOnboardingConcernAsync(timeoutSource.Token);
             databaseReadySignal.SignalReady();
-            _ = startupService.WarmupAsync();
+            startupService.WarmupAsync().FireAndForget();
         }
         catch (Exception ex)
         {

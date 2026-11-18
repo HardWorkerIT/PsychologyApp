@@ -42,15 +42,15 @@
                         <Label
                             Text="{TemplateBinding Subtitle}"
                             Style="{StaticResource CaptionStyle}"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
                         <Label
                             Text="{TemplateBinding Theme}"
                             Style="{StaticResource CaptionStyle}"
                             FontFamily="{StaticResource SemiBoldFontFamily}"
                             TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>

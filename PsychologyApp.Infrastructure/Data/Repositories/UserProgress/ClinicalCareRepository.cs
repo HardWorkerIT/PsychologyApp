@@ -9,11 +9,17 @@ using PsychologyApp.Infrastructure.Data;
 using PsychologyApp.Infrastructure.Data.Repositories.Base;
 using PsychologyApp.Infrastructure.Data.Sql;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PsychologyApp.Infrastructure.Data.Repositories.UserProgress;
 
+[JsonSerializable(typeof(SafetyPlanDTO))]
+internal sealed partial class ClinicalCareJsonContext : JsonSerializerContext;
+
 public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCareRepository
 {
+    private static string CurrentUtcUpperBound => SqliteTime.ToIso(DateTime.UtcNow.AddTicks(1));
+
     private const string SafetyPlanMetadataKey = "SafetyPlan";
 
     public ClinicalCareRepository(IDbConnectionFactory connectionFactory, IOptions<AppSettings> settings)
@@ -37,7 +43,7 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
 
         try
         {
-            return JsonSerializer.Deserialize<SafetyPlanDTO>(json);
+            return JsonSerializer.Deserialize(json, ClinicalCareJsonContext.Default.SafetyPlanDTO);
         }
         catch (JsonException)
         {
@@ -47,7 +53,7 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
 
     public async Task SaveSafetyPlanAsync(SafetyPlanDTO plan, CancellationToken cancellationToken = default)
     {
-        string json = JsonSerializer.Serialize(plan);
+        string json = JsonSerializer.Serialize(plan, ClinicalCareJsonContext.Default.SafetyPlanDTO);
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
         await connection.ExecuteAsync(DapperCommandFactory.Create(
             """
@@ -85,6 +91,7 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         ClinicalRiskRow? row = await connection.QuerySingleOrDefaultAsync<ClinicalRiskRow>(DapperCommandFactory.Create(
             ClinicalCareSql.SelectLatestRiskAssessment,
+            new { beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
         return row is null
@@ -180,7 +187,7 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<EscalationRow> rows = await connection.QueryAsync<EscalationRow>(DapperCommandFactory.Create(
             ClinicalCareSql.SelectRecentEscalations,
-            new { limit },
+            new { limit, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 

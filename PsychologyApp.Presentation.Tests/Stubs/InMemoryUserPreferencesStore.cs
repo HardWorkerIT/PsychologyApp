@@ -22,14 +22,27 @@ public sealed class InMemoryUserPreferencesStore : IUserPreferencesStore
         Changed?.Invoke();
     }
 
+    public Task SaveAsync(UserPreferencesState state, CancellationToken cancellationToken = default)
+    {
+        Save(state);
+        return Task.CompletedTask;
+    }
+
     public void ApplyAll()
     {
     }
 
+    public Task RestoreOnboardingConcernAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
     // Like the real store: the look changes and listeners hear of it, what is saved stays as it was.
     public void ApplyPreview(UserPreferencesState state) => Changed?.Invoke();
 
-    public void CompleteOnboarding(string concern, bool? practiceRemindersEnabled = null, int? practiceReminderHour = null) =>
+    public Task CompleteOnboardingAsync(
+        string concern,
+        bool? practiceRemindersEnabled = null,
+        int? practiceReminderHour = null,
+        CancellationToken cancellationToken = default)
+    {
         Save(_state with
         {
             HasCompletedOnboarding = true,
@@ -37,6 +50,8 @@ public sealed class InMemoryUserPreferencesStore : IUserPreferencesStore
             PracticeRemindersEnabled = practiceRemindersEnabled ?? _state.PracticeRemindersEnabled,
             PracticeReminderHour = practiceReminderHour ?? _state.PracticeReminderHour
         });
+        return Task.CompletedTask;
+    }
 
     public void ResetOnboardingCompletion() => Save(_state with { HasCompletedOnboarding = false });
 

@@ -13,7 +13,9 @@
 
     <ContentView.ControlTemplate>
         <ControlTemplate x:DataType="self:TestListCardView">
-            <Border Style="{StaticResource TestListCardStyle}">
+            <Border
+                Style="{StaticResource TestListCardStyle}"
+                SemanticProperties.Description="{TemplateBinding Title}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{TemplateBinding TapCommand}" />
                 </Border.GestureRecognizers>
@@ -39,8 +41,8 @@
                         <Label
                             Text="{TemplateBinding Subtitle}"
                             Style="{StaticResource CaptionStyle}"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
                         <Label
                             IsVisible="{TemplateBinding HasMetaText}"
                             Text="{TemplateBinding MetaText}"
@@ -54,6 +56,7 @@
                                 FontFamily="{StaticResource MediumFontFamily}"
                                 MinimumHeightRequest="44"
                                 VerticalTextAlignment="Center"
+                                SemanticProperties.Hint="{TemplateBinding HistoryLabel}"
                                 MaxLines="2"
                                 LineBreakMode="WordWrap">
                                 <Label.GestureRecognizers>
@@ -70,7 +73,8 @@
                                     Padding="14,8"
                                     FlexLayout.Shrink="0"
                                     Margin="0,0,8,4"
-                                    MinimumHeightRequest="44">
+                                    MinimumHeightRequest="44"
+                                    SemanticProperties.Description="{TemplateBinding RetakeLabel}">
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{TemplateBinding RetakeCommand}" />
                                     </Border.GestureRecognizers>
@@ -87,7 +91,8 @@
                                     Padding="14,8"
                                     FlexLayout.Shrink="0"
                                     Margin="0,0,8,4"
-                                    MinimumHeightRequest="44">
+                                    MinimumHeightRequest="44"
+                                    SemanticProperties.Description="{TemplateBinding HistoryLabel}">
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{TemplateBinding OpenHistoryCommand}" />
                                     </Border.GestureRecognizers>

@@ -12,6 +12,8 @@ namespace PsychologyApp.Infrastructure.Data.Repositories.UserProgress;
 
 public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgressRepository
 {
+    private static string CurrentUtcUpperBound => SqliteTime.ToIso(DateTime.UtcNow.AddTicks(1));
+
     public UserProgressRepository(IDbConnectionFactory connectionFactory, IOptions<AppSettings> settings)
         : base(connectionFactory, settings)
     {
@@ -39,7 +41,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.QuerySingleOrDefaultAsync<TestResultDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectLatestTestResult,
-            new { testId },
+            new { testId, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -49,7 +51,11 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.QuerySingleOrDefaultAsync<TestResultDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectMostRecentTestResultSince,
-            new { sinceUtc = SqliteTime.ToIso(DateTime.UtcNow.Subtract(within)) },
+            new
+            {
+                sinceUtc = SqliteTime.ToIso(DateTime.UtcNow.Subtract(within)),
+                beforeUtc = CurrentUtcUpperBound
+            },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -59,7 +65,28 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<TestResultDTO> rows = await connection.QueryAsync<TestResultDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectTestResultHistory,
-            new { testId, limit },
+            new { testId, limit, beforeUtc = CurrentUtcUpperBound },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+
+        return rows.ToList();
+    }
+
+    public async Task<IReadOnlyList<TestResultDTO>> GetTestResultsBetweenAsync(
+        DateTime sinceUtc,
+        DateTime beforeUtc,
+        int limit,
+        CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        IEnumerable<TestResultDTO> rows = await connection.QueryAsync<TestResultDTO>(DapperCommandFactory.Create(
+            UserProgressSql.SelectTestResultsInRange,
+            new
+            {
+                sinceUtc = SqliteTime.ToIso(sinceUtc),
+                beforeUtc = SqliteTime.ToIso(beforeUtc),
+                limit
+            },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -90,7 +117,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<TestResultDTO> rows = await connection.QueryAsync<TestResultDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectLatestTestResults,
-            new { testIds },
+            new { testIds, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -110,7 +137,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         IEnumerable<(string TestId, int Count)> rows =
             await connection.QueryAsync<(string TestId, int Count)>(DapperCommandFactory.Create(
                 UserProgressSql.SelectTestResultCounts,
-                new { testIds },
+                new { testIds, beforeUtc = CurrentUtcUpperBound },
                 commandTimeout: CommandTimeoutSeconds,
                 cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -122,6 +149,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         string? value = await connection.QuerySingleOrDefaultAsync<string>(DapperCommandFactory.Create(
             UserProgressSql.SelectLastTechniqueCompletionDate,
+            new { beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -133,6 +161,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
             UserProgressSql.CountTestResults,
+            new { beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -227,6 +256,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
             UserProgressSql.CountTechniqueCompletions,
+            new { beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -236,11 +266,28 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<CompletionDTO> rows = await connection.QueryAsync<CompletionDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectRecentTechniqueCompletions,
-            new { limit },
+            new { limit, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return rows.ToList();
+    }
+
+    public async Task<int> CountTechniqueCompletionsBetweenAsync(
+        DateTime sinceUtc,
+        DateTime beforeUtc,
+        CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await connection.ExecuteScalarAsync<int>(DapperCommandFactory.Create(
+            UserProgressSql.CountTechniqueCompletionsBetween,
+            new
+            {
+                sinceUtc = SqliteTime.ToIso(sinceUtc),
+                beforeUtc = SqliteTime.ToIso(beforeUtc)
+            },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<DateOnly>> GetCompletionDatesAsync(CancellationToken cancellationToken = default)
@@ -248,6 +295,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<string> rows = await connection.QueryAsync<string>(DapperCommandFactory.Create(
             UserProgressSql.SelectCompletionDates,
+            new { beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -260,7 +308,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         string? value = await connection.QuerySingleOrDefaultAsync<string>(DapperCommandFactory.Create(
             UserProgressSql.SelectLastCompletionForItem,
-            new { itemKey },
+            new { itemKey, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -280,7 +328,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         IEnumerable<(string ItemKey, string CompletedAt)> rows = await connection.QueryAsync<(string ItemKey, string CompletedAt)>(
             DapperCommandFactory.Create(
                 UserProgressSql.SelectLastPracticeDates,
-                new { itemKeys },
+                new { itemKeys, beforeUtc = CurrentUtcUpperBound },
                 commandTimeout: CommandTimeoutSeconds,
                 cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -427,7 +475,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<MoodEntryDTO> rows = await connection.QueryAsync<MoodEntryDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectRecentMoods,
-            new { limit },
+            new { limit, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
@@ -515,7 +563,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
             UserProgressSql.SelectLastSessionNoteForItem,
-            new { itemKey },
+            new { itemKey, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -535,7 +583,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         IEnumerable<SessionResultDTO> rows = await connection.QueryAsync<SessionResultDTO>(DapperCommandFactory.Create(
             UserProgressSql.SelectRecentSessionResults,
-            new { limit },
+            new { limit, beforeUtc = CurrentUtcUpperBound },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 

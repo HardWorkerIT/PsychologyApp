@@ -34,7 +34,7 @@
     <Color x:Key="SurfaceElevatedDark">#282828</Color>
     <Color x:Key="TextPrimaryLight">#343434</Color>
     <Color x:Key="TextSecondaryLight">#666666</Color>
-    <Color x:Key="TextTertiaryLight">#999999</Color>
+    <Color x:Key="TextTertiaryLight">#888888</Color>
     <Color x:Key="TextPrimaryDark">#EEEEEE</Color>
     <Color x:Key="TextSecondaryDark">#AAAAAA</Color>
     <Color x:Key="TextSecondary">#666666</Color>

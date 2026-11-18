@@ -196,7 +196,8 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         IReadOnlyList<JournalActivityInsight> activityInsights = JournalNoteFactors.Analyze(
             statsSource.Select(entry => (entry.Note, entry.MoodLevel)));
 
-        string practiceInsight = await BuildPracticeMoodInsightAsync(
+        (string practiceInsight, IReadOnlyList<TrendAnnotation> practiceMarks) = await BuildPracticeMoodDetailsAsync(
+            points,
             rangeStart,
             today,
             byDay,
@@ -234,7 +235,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             onThisDay,
             stripEnd,
             activityInsights,
-            await LoadPracticeMarksAsync(points, cancellationToken),
+            practiceMarks,
             hasEarlierEntries,
             ToSlotPreview(morningEntry),
             ToSlotPreview(eveningEntry));
@@ -369,32 +370,9 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             .ToList();
     }
 
-    /// <summary>Practices done between the first and the last reading, to mark on the mood chart.</summary>
-    private async Task<IReadOnlyList<TrendAnnotation>> LoadPracticeMarksAsync(IReadOnlyList<MoodChartPoint> points, CancellationToken cancellationToken)
-    {
-        if (points.Count < 2)
-        {
-            return [];
-        }
-
-        try
-        {
-            IReadOnlyList<CompletionDTO> completions = await userProgressService.GetRecentTechniqueCompletionsAsync(50, cancellationToken)
-                ?? Array.Empty<CompletionDTO>();
-            DateTime first = points[0].RecordedAtLocal;
-            DateTime last = points[^1].RecordedAtLocal;
-            return [.. completions
-                .Select(completion => completion.CompletedAt.ToLocalTime())
-                .Where(at => at >= first && at <= last)
-                .Select(at => new TrendAnnotation(at))];
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            return [];
-        }
-    }
-
-    private async Task<string> BuildPracticeMoodInsightAsync(
+    /// <summary>Load recent practices once for both the chart markers and the mood insight.</summary>
+    private async Task<(string Insight, IReadOnlyList<TrendAnnotation> Marks)> BuildPracticeMoodDetailsAsync(
+        IReadOnlyList<MoodChartPoint> points,
         DateOnly rangeStart,
         DateOnly today,
         IReadOnlyDictionary<DateOnly, MoodEntryDTO> byDay,
@@ -406,11 +384,40 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             completions = await userProgressService.GetRecentTechniqueCompletionsAsync(50, cancellationToken)
                 ?? Array.Empty<CompletionDTO>();
         }
-        catch
+        catch (OperationCanceledException) when (points.Count < 2)
         {
-            return string.Empty;
+            return (string.Empty, []);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return (string.Empty, []);
         }
 
+        if (points.Count >= 2)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        IReadOnlyList<TrendAnnotation> marks = [];
+        if (points.Count >= 2)
+        {
+            DateTime first = points[0].RecordedAtLocal;
+            DateTime last = points[^1].RecordedAtLocal;
+            marks = [.. completions
+                .Select(completion => completion.CompletedAt.ToLocalTime())
+                .Where(at => at >= first && at <= last)
+                .Select(at => new TrendAnnotation(at))];
+        }
+
+        return (BuildPracticeMoodInsight(completions, rangeStart, today, byDay), marks);
+    }
+
+    private static string BuildPracticeMoodInsight(
+        IReadOnlyList<CompletionDTO> completions,
+        DateOnly rangeStart,
+        DateOnly today,
+        IReadOnlyDictionary<DateOnly, MoodEntryDTO> byDay)
+    {
         HashSet<DateOnly> practiceDays = completions
             .Select(completion => DateOnly.FromDateTime(completion.CompletedAt.ToLocalTime()))
             .ToHashSet();

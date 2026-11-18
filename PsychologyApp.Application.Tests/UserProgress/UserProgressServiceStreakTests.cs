@@ -73,6 +73,7 @@ public sealed class UserProgressServiceStreakTests
         public Task<TestResultDTO?> GetLatestTestResultAsync(string testId, CancellationToken cancellationToken = default) => Task.FromResult<TestResultDTO?>(null);
         public Task<TestResultDTO?> GetMostRecentTestResultAsync(TimeSpan within, CancellationToken cancellationToken = default) => Task.FromResult<TestResultDTO?>(null);
         public Task<IReadOnlyList<TestResultDTO>> GetTestResultHistoryAsync(string testId, int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
+        public Task<IReadOnlyList<TestResultDTO>> GetTestResultsBetweenAsync(DateTime sinceUtc, DateTime beforeUtc, int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
         public Task<IReadOnlyList<TestResultDTO>> GetAllTestResultsAsync(int limit = 10000, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
         public Task<IReadOnlyList<TestResultDTO>> GetLatestTestResultsAsync(IReadOnlyList<string> testIds, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
@@ -83,6 +84,7 @@ public sealed class UserProgressServiceStreakTests
         public Task RecordCompletionAsync(CompletionDTO completion, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<long> RecordSessionOutcomeAsync(SessionOutcomeRequest request, CancellationToken cancellationToken = default) => Task.FromResult(1L);
         public Task<long> CountTechniqueCompletionsAsync(CancellationToken cancellationToken = default) => Task.FromResult(0L);
+        public Task<int> CountTechniqueCompletionsBetweenAsync(DateTime sinceUtc, DateTime beforeUtc, CancellationToken cancellationToken = default) => Task.FromResult(0);
         public Task<IReadOnlyList<CompletionDTO>> GetRecentTechniqueCompletionsAsync(int limit, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<CompletionDTO>>([]);
         public Task<DateTime?> GetLastCompletionForItemAsync(string itemKey, CancellationToken cancellationToken = default) => Task.FromResult<DateTime?>(null);

@@ -77,8 +77,8 @@
 | `PsychologyApp.Presentation` | .NET MAUI: App, Pages, Widgets, Features, Entities, Shared |
 | `*.Tests`, `PsychologyApp.Testing` | модульные, интеграционные и архитектурные тесты |
 
-Стек: .NET 10, .NET MAUI 10, Dapper, SQLite с шифрованием (SQLitePCLRaw e_sqlite3mc), CommunityToolkit.Maui, Material
-Icons, xUnit. Платформы: Android 5.0+ (API 21) — основная; проект также собирается под iOS 11+ и Mac Catalyst 13.1+.
+Стек: .NET 11, .NET MAUI 11, Dapper, SQLite с шифрованием (SQLitePCLRaw e_sqlite3mc), CommunityToolkit.Maui, Material
+Icons, xUnit. Платформы: Android 7.0+ (API 24) — основная; проект также собирается под iOS 15+ и Mac Catalyst 17+.
 
 ## Сборка и запуск
 

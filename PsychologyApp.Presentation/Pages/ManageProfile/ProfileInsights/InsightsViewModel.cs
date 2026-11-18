@@ -188,7 +188,10 @@ public sealed class InsightsViewModel : BaseViewModel
 
             IReadOnlyList<TestDefinition> catalog = await _tests.GetCatalogAsync();
             Dictionary<string, TestDefinition> definitions = catalog.ToDictionary(test => test.TestId, StringComparer.Ordinal);
-            IReadOnlyList<TestResultDTO> results = await _progress.GetAllTestResultsAsync(1000);
+            IReadOnlyList<TestResultDTO> results = await _progress.GetTestResultsBetweenAsync(
+                DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc),
+                now.AddTicks(1),
+                1000);
             List<InsightItem> tests = [.. HelpInsights
                 .TestProgress(
                     results.Where(result => definitions.ContainsKey(result.TestId)),

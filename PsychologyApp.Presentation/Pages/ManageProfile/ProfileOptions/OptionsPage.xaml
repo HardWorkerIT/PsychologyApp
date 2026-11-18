@@ -39,7 +39,7 @@
                             <ui:MaterialIconView IconName="Tune" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding SettingsTitle}" Style="{StaticResource BodyStyle}" />
-                                <Label Text="{Binding SettingsSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="1" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding SettingsSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                             <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                         </Grid>
@@ -77,7 +77,7 @@
                             <ui:MaterialIconView IconName="HealthAndSafety" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding CrisisTitle}" Style="{StaticResource BodyStyle}" />
-                                <Label Text="{Binding CrisisSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="1" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding CrisisSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                             <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                         </Grid>

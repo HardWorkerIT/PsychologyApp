@@ -23,7 +23,11 @@ public sealed class ClinicalCareService(
     private DateTime UtcNow => time.GetUtcNow().UtcDateTime;
 
     /// <summary>An explicit check is the person's own word for a week; after that it says nothing about today.</summary>
-    private bool IsCurrent(RiskAssessmentDTO assessment) => UtcNow - assessment.AssessedAt <= DefaultRiskCheckInterval;
+    private bool IsCurrent(RiskAssessmentDTO assessment)
+    {
+        TimeSpan age = UtcNow - assessment.AssessedAt;
+        return age >= TimeSpan.Zero && age <= DefaultRiskCheckInterval;
+    }
 
     public async Task<RiskAssessmentDTO> AssessRiskAsync(
         RiskAssessmentInput input,
@@ -190,15 +194,24 @@ public sealed class ClinicalCareService(
     {
         DateOnly today = DateOnly.FromDateTime(time.GetLocalNow().DateTime);
         DateOnly weekStart = today.AddDays(-6);
+        DateTime localWeekStart = weekStart.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
+        DateTime weekStartUtc = TimeZoneInfo.ConvertTimeToUtc(localWeekStart, time.LocalTimeZone);
+        DateTime nowUtc = UtcNow;
 
-        IReadOnlyList<CompletionDTO> completions =
-            await userProgressService.GetRecentTechniqueCompletionsAsync(50, cancellationToken).ConfigureAwait(false);
-        int practiceCount = completions.Count(entry =>
-            DateOnly.FromDateTime(entry.CompletedAt.ToLocalTime()) >= weekStart);
+        int practiceCount = await userProgressService.CountTechniqueCompletionsBetweenAsync(
+            weekStartUtc,
+            nowUtc.AddTicks(1),
+            cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<MoodEntryDTO> moods = await userProgressService.GetRecentMoodsAsync(21, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MoodEntryDTO> moods = await userProgressService.GetMoodsAsync(
+            weekStartUtc,
+            nowUtc.AddTicks(1),
+            60,
+            cancellationToken).ConfigureAwait(false);
         IReadOnlyList<MoodEntryDTO> weekMoods = moods
-            .Where(entry => DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()) >= weekStart)
+            .Where(entry => entry.RecordedAt <= nowUtc
+                && DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()) >= weekStart
+                && DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()) <= today)
             .ToList();
         double avgMood = weekMoods.Count == 0 ? 0 : weekMoods.Average(entry => entry.MoodLevel);
 
@@ -258,9 +271,13 @@ public sealed class ClinicalCareService(
         IReadOnlyList<EscalationEventDTO> recent = await repository.GetRecentEscalationsAsync(20, cancellationToken).ConfigureAwait(false);
         DateTime now = UtcNow;
         bool alreadyRecorded = recent.Any(e =>
-            e.TriggerSource == ScorecardTriggerSource
-            && e.Action == action
-            && now - e.CreatedAt < ScorecardEscalationCooldown);
+        {
+            TimeSpan age = now - e.CreatedAt;
+            return e.TriggerSource == ScorecardTriggerSource
+                && e.Action == action
+                && age >= TimeSpan.Zero
+                && age < ScorecardEscalationCooldown;
+        });
         if (alreadyRecorded)
         {
             return;

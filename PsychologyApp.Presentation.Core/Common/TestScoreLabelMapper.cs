@@ -5,7 +5,7 @@ namespace PsychologyApp.Presentation.Shared.Common;
 
 /// <summary>
 /// Maps analyzer ids + scores to localized copy. Lives in Core so Features
-/// (RunTests, RunTechniqueSession) and net10.0 tests can share without MAUI.
+/// (RunTests, RunTechniqueSession) and net11.0 tests can share without MAUI.
 /// </summary>
 public static class TestScoreLabelMapper
 {

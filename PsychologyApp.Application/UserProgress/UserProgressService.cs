@@ -25,6 +25,13 @@ public sealed class UserProgressService(IUserProgressRepository repository) : IU
     public Task<IReadOnlyList<TestResultDTO>> GetTestResultHistoryAsync(string testId, int limit = 20, CancellationToken cancellationToken = default) =>
         repository.GetTestResultHistoryAsync(testId, limit, cancellationToken);
 
+    public Task<IReadOnlyList<TestResultDTO>> GetTestResultsBetweenAsync(
+        DateTime sinceUtc,
+        DateTime beforeUtc,
+        int limit = 1000,
+        CancellationToken cancellationToken = default) =>
+        repository.GetTestResultsBetweenAsync(sinceUtc, beforeUtc, limit, cancellationToken);
+
     public Task<IReadOnlyList<TestResultDTO>> GetAllTestResultsAsync(int limit = 10000, CancellationToken cancellationToken = default) =>
         repository.GetAllTestResultsAsync(limit, cancellationToken);
 
@@ -94,6 +101,12 @@ public sealed class UserProgressService(IUserProgressRepository repository) : IU
 
     public Task<long> CountTechniqueCompletionsAsync(CancellationToken cancellationToken = default) =>
         repository.CountTechniqueCompletionsAsync(cancellationToken);
+
+    public Task<int> CountTechniqueCompletionsBetweenAsync(
+        DateTime sinceUtc,
+        DateTime beforeUtc,
+        CancellationToken cancellationToken = default) =>
+        repository.CountTechniqueCompletionsBetweenAsync(sinceUtc, beforeUtc, cancellationToken);
 
     public Task<IReadOnlyList<CompletionDTO>> GetRecentTechniqueCompletionsAsync(int limit = 20, CancellationToken cancellationToken = default) =>
         repository.GetRecentTechniqueCompletionsAsync(limit, cancellationToken);

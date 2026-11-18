@@ -29,7 +29,7 @@ public sealed class TestTrendService(ITestCatalogService testCatalogService) : I
     public async Task<ScoreDirection> ResolveDirectionAsync(string testId, CancellationToken cancellationToken = default)
     {
         TestDefinition? definition = await testCatalogService.GetByIdAsync(testId, cancellationToken).ConfigureAwait(false);
-        return definition?.ScoreDirection ?? ScoreDirection.LowerIsBetter;
+        return definition?.ScoreDirection ?? ScoreDirection.None;
     }
 
     public async Task<TestTrendEvaluation?> LoadLatestTrendAsync(

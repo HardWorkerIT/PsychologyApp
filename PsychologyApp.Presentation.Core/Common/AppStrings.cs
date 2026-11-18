@@ -70,6 +70,7 @@ public static partial class AppStrings
     public static string TechniqueFinish => R(nameof(TechniqueFinish));
     public static string TechniqueTitle => R(nameof(TechniqueTitle));
     public static string Back => R(nameof(Back));
+    public static string FilterChipSelected(object arg0) => F(nameof(FilterChipSelected), arg0);
     public static string Save => R(nameof(Save));
     public static string Send => R(nameof(Send));
     public static string Edit => R(nameof(Edit));
@@ -191,6 +192,8 @@ public static partial class AppStrings
     public static string TechniqueStepNext => R(nameof(TechniqueStepNext));
     public static string ProverbLabel => R(nameof(ProverbLabel));
     public static string QuoteAddFavoriteHint => R(nameof(QuoteAddFavoriteHint));
+    public static string QuoteRemoveFavoriteHint => R(nameof(QuoteRemoveFavoriteHint));
+
     public static string QuoteCopyHint => R(nameof(QuoteCopyHint));
     public static string QuoteShareHint => R(nameof(QuoteShareHint));
     public static string PolarityNegativePlaceholder => R(nameof(PolarityNegativePlaceholder));

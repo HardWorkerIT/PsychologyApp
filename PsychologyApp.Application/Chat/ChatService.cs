@@ -676,8 +676,9 @@ public sealed class ChatService(
     {
         // Heavy days that keep coming back are measured: earlier chats of two weeks that ended at 7 or more, and the questionnaires already taken.
         IReadOnlyList<ChatSessionDTO> sessions = await repository.GetSessionsAsync(cancellationToken).ConfigureAwait(false);
-        DateTime since = Now() - HeavyWindow;
-        int heavyChats = sessions.Count(s => s.Id != currentSessionId && s.UpdatedAt >= since
+        DateTime now = Now();
+        DateTime since = now - HeavyWindow;
+        int heavyChats = sessions.Count(s => s.Id != currentSessionId && s.UpdatedAt >= since && s.UpdatedAt <= now
             && (s.LastIntensity ?? s.FirstIntensity) is >= 0 and <= 10 and >= HeavyTension);
 
         Task<IReadOnlyDictionary<string, TestResultDTO>> takenTask = progress.GetLatestTestResultsAsync(["phq9", "gad7", "pcl5"], cancellationToken);
@@ -691,10 +692,11 @@ public sealed class ChatService(
         IReadOnlyList<QuotSeed> availableQuotes = await quotesTask.ConfigureAwait(false);
         TestResultDTO? latestStressTest = await stressTestTask.ConfigureAwait(false);
         IReadOnlyList<MoodEntryDTO> recentMoods = await moodsTask.ConfigureAwait(false);
-        HashSet<string> recentlyTaken = [.. taken.Where(pair => pair.Value.CompletedAt >= since).Select(pair => pair.Key)];
+        HashSet<string> recentlyTaken = [.. taken.Where(pair => pair.Value.CompletedAt >= since && pair.Value.CompletedAt <= now).Select(pair => pair.Key)];
 
-        DateTime now = Now();
-        TestResultDTO? stressTest = latestStressTest is { } result && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
+        TestResultDTO? stressTest = latestStressTest is { } result
+            && result.CompletedAt <= now
+            && (now - result.CompletedAt).TotalDays <= StressTestRelevantDays
             ? result
             : null;
         MoodEntryDTO? todayLowMood = recentMoods.FirstOrDefault(m => m.MoodLevel <= LowMoodLevel && IsLocalToday(m.RecordedAt, now));

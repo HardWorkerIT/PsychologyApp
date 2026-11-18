@@ -25,18 +25,25 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
         with:
-          dotnet-version: 10.0.x
-      - uses: actions/setup-java@v4
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 11.0.x
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 17
       - run: dotnet workload install maui-android
       - name: Build Release APK (x86_64 for emulator coverage)
         run: >
-          dotnet publish PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android -c Release
+          dotnet publish PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-android37.0 -c Release
           -p:AndroidReleaseRid=android-x64 -p:AndroidPackageFormats=apk
           -p:AndroidKeyStore=false -p:PerfTrace=true -o out
       - name: Verify 16 KB APK alignment
@@ -47,7 +54,7 @@ jobs:
           test -n "$apk" || { echo "No signed APK was produced"; exit 1; }
           test -n "$apk"
           "$tools/zipalign" -c -P 16 -v 4 "$apk"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-smoke-apk
           path: out/*-Signed.apk
@@ -93,8 +100,8 @@ jobs:
             name: api36-large-screen
             profile: pixel_tablet
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: android-smoke-apk
           path: out
@@ -110,7 +117,7 @@ jobs:
           arch: x86_64
           profile: ${{ matrix.profile }}
           script: bash tools/android-smoke.sh out
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: smoke-logs-${{ matrix.name }}

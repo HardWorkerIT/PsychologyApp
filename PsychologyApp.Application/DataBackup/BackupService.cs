@@ -1,11 +1,15 @@
 using System.Buffers;
 using System.Text;
 using PsychologyApp.Application.Abstractions.Persistence;
+using PsychologyApp.Application.Articles;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Application.Chat;
+using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Conversation.Companion;
+using PsychologyApp.Application.Exposure;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Domain.Exposure;
 using System.Text.Json;
 
 namespace PsychologyApp.Application.DataBackup;
@@ -187,7 +191,10 @@ public sealed class BackupService(
         return await ImportAsync(plain, cancellationToken).ConfigureAwait(false);
     }
 
-    public bool IsEncrypted(string file) => BackupEncryption.IsEncrypted(file);
+    public bool IsEncrypted(string file) =>
+        !string.IsNullOrEmpty(file)
+        && file.Length <= MaxImportCharacters
+        && BackupEncryption.IsEncrypted(file);
 
     private sealed class BoundedBackupBufferWriter(int maximumBytes) : IBufferWriter<byte>
     {
@@ -258,13 +265,14 @@ public sealed class BackupService(
     public async Task<BackupImportResult> ImportAsync(string json, CancellationToken cancellationToken = default)
     {
         AppBackupDTO backup = await Task.Run(() => ParseImport(json), cancellationToken).ConfigureAwait(false);
-        int sourceRows = backup.MoodEntries.Count + backup.TestResults.Count + backup.Completions.Count
-            + backup.SessionResults.Count + backup.ChatSessions.Count + backup.Techniques.Count;
-
         AppBackupDTO clean = Sanitize(backup);
+        int sourceRows = clean.MoodEntries.Count + clean.TestResults.Count + clean.Completions.Count
+            + clean.SessionResults.Count + clean.Techniques.Count
+            + clean.ChatSessions.Sum(chat => chat.Messages.Count + 1);
         BackupImportResult result = await backupRepository.ImportAsync(clean, cancellationToken).ConfigureAwait(false);
 
-        int added = result.MoodEntries + result.TestResults + result.Completions + result.SessionResults + result.ChatSessions + result.Techniques;
+        int added = result.MoodEntries + result.TestResults + result.Completions + result.SessionResults
+            + result.ChatSessions + result.Techniques + result.ChatMessages;
         return result with
         {
             SkippedDuplicates = Math.Max(0, sourceRows - added)
@@ -273,6 +281,12 @@ public sealed class BackupService(
 
     private static AppBackupDTO ParseImport(string json)
     {
+        // Check before probing the JSON envelope, so direct callers cannot make detection parse an oversized payload.
+        if (json.Length > MaxImportCharacters)
+        {
+            throw new BackupFormatException("The file is too large to be a backup.");
+        }
+
         if (BackupEncryption.IsEncrypted(json))
         {
             throw new BackupPassphraseException("A passphrase is needed to open this backup.");
@@ -409,38 +423,367 @@ public sealed class BackupService(
     }
 
     /// <summary>Drops rows a hand-edited or damaged file could not have come from the app with (no key, no date, impossible role).</summary>
-    private static AppBackupDTO Sanitize(AppBackupDTO backup) => new()
+    private static AppBackupDTO Sanitize(AppBackupDTO backup)
     {
-        FormatVersion = backup.FormatVersion,
-        ExportedAtUtc = backup.ExportedAtUtc,
-        MoodEntries = backup.MoodEntries.Where(m => m.RecordedAt != default).ToList(),
-        TestResults = backup.TestResults.Where(t => !string.IsNullOrWhiteSpace(t.TestId) && t.CompletedAt != default).ToList(),
-        Completions = backup.Completions.Where(c => !string.IsNullOrWhiteSpace(c.ItemKey) && c.CompletedAt != default).ToList(),
-        SessionResults = backup.SessionResults.Where(s => !string.IsNullOrWhiteSpace(s.ItemKey) && s.CompletedAt != default).ToList(),
-        ChatSessions = backup.ChatSessions
-            .Select(chat => new BackupChatSessionDTO
+        DateTime nowUtc = DateTime.UtcNow;
+        return new AppBackupDTO
+        {
+            FormatVersion = backup.FormatVersion,
+            ExportedAtUtc = backup.ExportedAtUtc,
+            MoodEntries = backup.MoodEntries.Where(m => m.RecordedAt != default).ToList(),
+            TestResults = backup.TestResults.Where(t => !string.IsNullOrWhiteSpace(t.TestId) && t.CompletedAt != default).ToList(),
+            Completions = backup.Completions.Where(c => !string.IsNullOrWhiteSpace(c.ItemKey) && c.CompletedAt != default).ToList(),
+            SessionResults = backup.SessionResults.Where(s => !string.IsNullOrWhiteSpace(s.ItemKey) && s.CompletedAt != default).ToList(),
+            ChatSessions = backup.ChatSessions
+                .Select(chat => new BackupChatSessionDTO
+                {
+                    Session = SanitizeChatSession(chat.Session),
+                    Messages = chat.Messages.Where(m => Enum.IsDefined(m.Role) && m.CreatedAt != default).ToList()
+                })
+                .Where(chat => chat.Session.CreatedAt != default)
+                .ToList(),
+            SafetyPlan = SanitizeSafetyPlan(backup.SafetyPlan, nowUtc),
+            ChatMemory = backup.ChatMemory
+                .Where(pair => !string.IsNullOrWhiteSpace(pair.Key) && pair.Value is not null)
+                .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
+            FavoriteQuoteTexts = backup.FavoriteQuoteTexts.Where(text => !string.IsNullOrWhiteSpace(text)).ToList(),
+            Techniques = backup.Techniques
+                .Where(t => !string.IsNullOrWhiteSpace(t.Header) && !string.IsNullOrWhiteSpace(t.Algorithm))
+                .ToList(),
+            LatestRiskAssessment = SanitizeRiskAssessment(backup.LatestRiskAssessment, nowUtc),
+            TherapyProgram = SanitizeTherapyProgram(backup.TherapyProgram, nowUtc),
+            Escalations = SanitizeEscalations(backup.Escalations, nowUtc),
+            ExposurePlan = SanitizeExposurePlan(backup.ExposurePlan),
+            Reading = SanitizeReading(backup.Reading),
+            Body = BodyService.Sanitize(backup.Body),
+            SavedNextStep = SavedNextStepCollection.Serialize(SavedNextStepCollection.Parse(backup.SavedNextStep))
+        };
+    }
+
+    private static SafetyPlanDTO? SanitizeSafetyPlan(SafetyPlanDTO? plan, DateTime nowUtc)
+    {
+        if (plan is null)
+        {
+            return null;
+        }
+
+        DateTime? updatedAtUtc = plan.UpdatedAt is { } updatedAt && updatedAt != default
+            ? NormalizeUtc(updatedAt)
+            : null;
+        if (updatedAtUtc > nowUtc)
+        {
+            // An untrusted future timestamp must not make this backup replace a newer local safety plan.
+            updatedAtUtc = null;
+        }
+
+        return new SafetyPlanDTO
+        {
+            WarningSigns = plan.WarningSigns,
+            CopingStrategies = plan.CopingStrategies,
+            Contacts = plan.Contacts,
+            Reasons = plan.Reasons,
+            UpdatedAt = updatedAtUtc
+        };
+    }
+
+    private static RiskAssessmentDTO? SanitizeRiskAssessment(RiskAssessmentDTO? assessment, DateTime nowUtc)
+    {
+        if (assessment is null
+            || assessment.AssessedAt == default
+            || !Enum.IsDefined(assessment.RiskLevel))
+        {
+            return null;
+        }
+
+        DateTime assessedAtUtc = NormalizeUtc(assessment.AssessedAt);
+        if (assessedAtUtc > nowUtc)
+        {
+            return null;
+        }
+
+        return new RiskAssessmentDTO
+        {
+            AssessedAt = assessedAtUtc,
+            Source = assessment.Source ?? string.Empty,
+            Notes = assessment.Notes ?? string.Empty,
+            HasSelfHarmThoughts = assessment.HasSelfHarmThoughts,
+            HasSevereDisorientation = assessment.HasSevereDisorientation,
+            HasSubstanceRisk = assessment.HasSubstanceRisk,
+            HasSevereInsomnia = assessment.HasSevereInsomnia,
+            RiskLevel = assessment.RiskLevel
+        };
+    }
+
+    private static IReadOnlyList<EscalationEventDTO> SanitizeEscalations(
+        IReadOnlyList<EscalationEventDTO> events,
+        DateTime nowUtc)
+    {
+        List<EscalationEventDTO> sanitized = [];
+        foreach (EscalationEventDTO item in events)
+        {
+            if (item.CreatedAt == default || !Enum.IsDefined(item.RiskLevel))
             {
-                Session = SanitizeChatSession(chat.Session),
-                Messages = chat.Messages.Where(m => Enum.IsDefined(m.Role) && m.CreatedAt != default).ToList()
+                continue;
+            }
+
+            DateTime createdAtUtc = NormalizeUtc(item.CreatedAt);
+            if (createdAtUtc > nowUtc)
+            {
+                continue;
+            }
+
+            sanitized.Add(new EscalationEventDTO
+            {
+                CreatedAt = createdAtUtc,
+                RiskLevel = item.RiskLevel,
+                TriggerSource = item.TriggerSource ?? string.Empty,
+                Action = item.Action ?? string.Empty,
+                Notes = item.Notes ?? string.Empty
+            });
+        }
+
+        return sanitized;
+    }
+
+    private static DateTime NormalizeUtc(DateTime value) => value.Kind == DateTimeKind.Unspecified
+        ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+        : value.ToUniversalTime();
+
+    private static TherapyProgramStateDTO? SanitizeTherapyProgram(TherapyProgramStateDTO? program, DateTime nowUtc)
+    {
+        if (program is null
+            || !Enum.IsDefined(program.ProgramType)
+            || program.StartedAt == default
+            || program.CurrentWeek is < 1 or > TherapyProgramCatalog.TotalWeeks)
+        {
+            return null;
+        }
+
+        DateTime startedAtUtc = NormalizeUtc(program.StartedAt);
+        if (startedAtUtc > nowUtc)
+        {
+            return null;
+        }
+
+        return new TherapyProgramStateDTO
+        {
+            ProgramType = program.ProgramType,
+            StartedAt = startedAtUtc,
+            CurrentWeek = program.CurrentWeek,
+            IsActive = program.IsActive
+        };
+    }
+
+    private static ReadingState? SanitizeReading(ReadingState? reading)
+    {
+        if (reading is null)
+        {
+            return null;
+        }
+
+        DateTime nowUtc = DateTime.UtcNow;
+
+        HashSet<string> articleIds = ArticleContent.All("en")
+            .Select(article => article.Id)
+            .ToHashSet(StringComparer.Ordinal);
+        IReadOnlyList<string> KeepKnownArticles(IEnumerable<string>? values) =>
+            (values ?? [])
+                .Where(value => !string.IsNullOrWhiteSpace(value) && articleIds.Contains(value))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+        string? lastArticleId = reading.LastArticleId is { } articleId && articleIds.Contains(articleId)
+            ? articleId
+            : null;
+        DateTime? lastOpenedUtc = reading.LastOpenedUtc is { } opened
+            ? NormalizeUtc(opened)
+            : null;
+        if (lastArticleId is null || lastOpenedUtc is not { } validOpened || validOpened == default || validOpened > nowUtc)
+        {
+            lastOpenedUtc = null;
+        }
+
+        Dictionary<string, Course> coursesById = ArticleContent.Courses("en")
+            .ToDictionary(course => course.Id, StringComparer.Ordinal);
+        List<CourseProgress> sanitizedCourses = [];
+        foreach (IGrouping<string, CourseProgress> courseGroup in (reading.Courses ?? [])
+                     .OfType<CourseProgress>()
+                     .Where(progress => !string.IsNullOrWhiteSpace(progress.CourseId)
+                         && coursesById.ContainsKey(progress.CourseId))
+                     .GroupBy(progress => progress.CourseId, StringComparer.Ordinal))
+        {
+            Course course = coursesById[courseGroup.Key];
+            List<CourseDayRecord> candidates = courseGroup
+                .SelectMany(progress => progress.Days ?? [])
+                .OfType<CourseDayRecord>()
+                .Select(record => record with { CompletedUtc = NormalizeUtc(record.CompletedUtc) })
+                .Where(record => record.Day >= 1
+                    && record.Day <= course.Days.Count
+                    && record.CompletedUtc != default
+                    && record.CompletedUtc <= nowUtc)
+                .GroupBy(record => record.Day)
+                .Select(day => day.OrderByDescending(record => record.CompletedUtc).First())
+                .OrderBy(record => record.Day)
+                .ToList();
+
+            List<CourseDayRecord> days = [];
+            foreach (CourseDayRecord candidate in candidates)
+            {
+                // Course days are sequential; a damaged gap must not unlock a later day or mark the course complete.
+                if (candidate.Day != days.Count + 1)
+                {
+                    break;
+                }
+
+                string? reflection = string.IsNullOrWhiteSpace(candidate.Reflection)
+                    ? null
+                    : candidate.Reflection.Trim();
+                if (reflection is { Length: > ReadingService.MaxReflection })
+                {
+                    reflection = reflection[..ReadingService.MaxReflection];
+                }
+
+                days.Add(candidate with { Reflection = reflection });
+            }
+
+            DateTime startedUtc = courseGroup
+                .Select(progress => progress.StartedUtc)
+                .Where(started => started != default)
+                .Select(NormalizeUtc)
+                .Where(started => started <= nowUtc)
+                .DefaultIfEmpty(days.Count > 0 ? days[0].CompletedUtc : default)
+                .Min();
+            if (startedUtc == default)
+            {
+                continue;
+            }
+
+            DateTime? finishedUtc = null;
+            if (days.Count > 0 && days.Count == course.Days.Count)
+            {
+                DateTime lastDayCompletedUtc = days[^1].CompletedUtc;
+                finishedUtc = courseGroup
+                    .Select(progress => progress.FinishedUtc.GetValueOrDefault())
+                    .Where(finished => finished != default)
+                    .Select(NormalizeUtc)
+                    .Where(finished => finished >= lastDayCompletedUtc && finished <= nowUtc)
+                    .DefaultIfEmpty(lastDayCompletedUtc)
+                    .Max();
+            }
+
+            sanitizedCourses.Add(new CourseProgress(courseGroup.Key, startedUtc, days, finishedUtc));
+        }
+
+        return new ReadingState
+        {
+            Read = KeepKnownArticles(reading.Read),
+            Saved = KeepKnownArticles(reading.Saved),
+            LastArticleId = lastArticleId,
+            LastOpenedUtc = lastOpenedUtc,
+            Courses = sanitizedCourses
+        };
+    }
+
+    private static ExposurePlan? SanitizeExposurePlan(ExposurePlan? plan)
+    {
+        if (plan is null)
+        {
+            return null;
+        }
+
+        DateTime nowUtc = DateTime.UtcNow;
+        static DateTime NormalizeUtc(DateTime value) => value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            : value.ToUniversalTime();
+        static string CleanText(string? value, int maxLength)
+        {
+            string trimmed = (value ?? string.Empty).Trim();
+            return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength].TrimEnd();
+        }
+        static string CleanId(string? value) => (value ?? string.Empty).Trim();
+        static List<string> CleanList(IReadOnlyList<string>? values) => (values ?? [])
+            .OfType<string>()
+            .Select(value => CleanText(value, ExposureService.MaxStepText))
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        List<ExposureStep> steps = (plan.Steps ?? [])
+            .OfType<ExposureStep>()
+            .Select(step => step with
+            {
+                Id = CleanId(step.Id),
+                Text = CleanText(step.Text, ExposureService.MaxStepText),
+                ExpectedDistress = Math.Clamp(step.ExpectedDistress, 0, 100)
             })
-            .Where(chat => chat.Session.CreatedAt != default)
-            .ToList(),
-        SafetyPlan = backup.SafetyPlan,
-        ChatMemory = backup.ChatMemory
-            .Where(pair => !string.IsNullOrWhiteSpace(pair.Key) && pair.Value is not null)
-            .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
-        FavoriteQuoteTexts = backup.FavoriteQuoteTexts.Where(text => !string.IsNullOrWhiteSpace(text)).ToList(),
-        Techniques = backup.Techniques
-            .Where(t => !string.IsNullOrWhiteSpace(t.Header) && !string.IsNullOrWhiteSpace(t.Algorithm))
-            .ToList(),
-        LatestRiskAssessment = backup.LatestRiskAssessment,
-        TherapyProgram = backup.TherapyProgram,
-        Escalations = backup.Escalations.Where(e => e.CreatedAt != default).ToList(),
-        ExposurePlan = backup.ExposurePlan,
-        Reading = backup.Reading,
-        Body = BodyService.Sanitize(backup.Body),
-        SavedNextStep = SavedNextStepCollection.Serialize(SavedNextStepCollection.Parse(backup.SavedNextStep))
-    };
+            .Where(step => step.Id.Length is > 0 and <= 128 && step.Text.Length > 0)
+            .GroupBy(step => step.Id, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .ToList();
+        HashSet<string> stepIds = steps.Select(step => step.Id).ToHashSet(StringComparer.Ordinal);
+
+        List<ExposureSession> sessions = (plan.Sessions ?? [])
+            .OfType<ExposureSession>()
+            .Select(session =>
+            {
+                DateTime createdAt = session.CreatedAt == default ? default : NormalizeUtc(session.CreatedAt);
+                DateTime? reportedAt = session.ReportedAt is { } reported && reported != default
+                    ? NormalizeUtc(reported)
+                    : null;
+                PredictionOutcome? outcome = session.Outcome is { } value && Enum.IsDefined(value) ? value : null;
+                return session with
+                {
+                    Id = CleanId(session.Id),
+                    StepId = CleanId(session.StepId),
+                    CreatedAt = createdAt,
+                    Prediction = CleanText(session.Prediction, ExposureService.MaxFreeText),
+                    BeliefBefore = Math.Clamp(session.BeliefBefore, 0, 100),
+                    DroppedSafetyBehaviours = CleanList(session.DroppedSafetyBehaviours),
+                    ReportedAt = reportedAt is { } valueAt && valueAt >= createdAt && valueAt <= nowUtc ? valueAt : null,
+                    WhatHappened = CleanText(session.WhatHappened, ExposureService.MaxFreeText),
+                    Outcome = outcome,
+                    BeliefAfter = session.BeliefAfter is { } belief ? Math.Clamp(belief, 0, 100) : null,
+                    PeakDistress = session.PeakDistress is { } distress ? Math.Clamp(distress, 0, 100) : null,
+                    Learned = CleanText(session.Learned, ExposureService.MaxFreeText),
+                    Interrupted = session.Interrupted && outcome is null
+                };
+            })
+            .Where(session => session.Id.Length > 0
+                && session.Id.Length <= 128
+                && session.StepId.Length > 0
+                && session.StepId.Length <= 128
+                && stepIds.Contains(session.StepId)
+                && session.CreatedAt != default
+                && session.CreatedAt <= nowUtc)
+            .GroupBy(session => session.Id, StringComparer.Ordinal)
+            .Select(group => group.First())
+            .ToList();
+
+        ExposureScreeningResult screening = Enum.IsDefined(plan.Screening)
+            ? plan.Screening
+            : ExposureScreeningResult.NotScreened;
+        DateTime? screenedAt = plan.ScreenedAt is { } screened && screened != default
+            ? NormalizeUtc(screened)
+            : null;
+        if (screenedAt is { } screeningTime && screeningTime > nowUtc)
+        {
+            screening = ExposureScreeningResult.NotScreened;
+            screenedAt = null;
+        }
+
+        return plan with
+        {
+            Kind = Enum.IsDefined(plan.Kind) ? plan.Kind : FearKind.Other,
+            FearedOutcome = CleanText(plan.FearedOutcome, ExposureService.MaxFreeText),
+            FearedOutcomeBelief = Math.Clamp(plan.FearedOutcomeBelief, 0, 100),
+            AvoidedSituations = CleanList(plan.AvoidedSituations),
+            SafetyBehaviours = CleanList(plan.SafetyBehaviours),
+            Steps = steps,
+            Sessions = sessions,
+            Screening = screening,
+            ScreenedAt = screenedAt
+        };
+    }
 
     private static BackupChatSessionInfoDTO SanitizeChatSession(BackupChatSessionInfoDTO session) => new()
     {

@@ -298,6 +298,7 @@ public sealed class ClinicalCareServiceTests
         public Task<TestResultDTO?> GetLatestTestResultAsync(string testId, CancellationToken cancellationToken = default) => Task.FromResult<TestResultDTO?>(null);
         public Task<TestResultDTO?> GetMostRecentTestResultAsync(TimeSpan within, CancellationToken cancellationToken = default) => Task.FromResult<TestResultDTO?>(null);
         public Task<IReadOnlyList<TestResultDTO>> GetTestResultHistoryAsync(string testId, int limit = 20, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
+        public Task<IReadOnlyList<TestResultDTO>> GetTestResultsBetweenAsync(DateTime sinceUtc, DateTime beforeUtc, int limit = 1000, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
         public Task<IReadOnlyList<TestResultDTO>> GetAllTestResultsAsync(int limit = 10000, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<TestResultDTO>>([]);
         public Task<IReadOnlyDictionary<string, TestResultDTO>> GetLatestTestResultsAsync(IReadOnlyList<string> testIds, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyDictionary<string, TestResultDTO>>(new Dictionary<string, TestResultDTO>());
         public Task<IReadOnlyDictionary<string, int>> GetTestResultCountsAsync(IReadOnlyList<string> testIds, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyDictionary<string, int>>(new Dictionary<string, int>());
@@ -306,6 +307,7 @@ public sealed class ClinicalCareServiceTests
         public Task RecordTechniqueCompletionAsync(string itemKey, string moduleName, string pageName, int durationSeconds = 0, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<long> RecordSessionOutcomeAsync(SessionOutcomeRequest request, CancellationToken cancellationToken = default) => Task.FromResult(1L);
         public Task<long> CountTechniqueCompletionsAsync(CancellationToken cancellationToken = default) => Task.FromResult(0L);
+        public Task<int> CountTechniqueCompletionsBetweenAsync(DateTime sinceUtc, DateTime beforeUtc, CancellationToken cancellationToken = default) => Task.FromResult(0);
         public Task<IReadOnlyList<CompletionDTO>> GetRecentTechniqueCompletionsAsync(int limit = 20, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<CompletionDTO>>([]);
         public Task<int> GetStreakDaysAsync(CancellationToken cancellationToken = default) => Task.FromResult(0);
         public Task<DateOnly?> GetLastActiveDayAsync(CancellationToken cancellationToken = default) => Task.FromResult<DateOnly?>(null);
@@ -323,7 +325,12 @@ public sealed class ClinicalCareServiceTests
         public Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public IReadOnlyList<MoodEntryDTO> Moods { get; init; } = [];
         public Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit = 7, CancellationToken cancellationToken = default) => Task.FromResult(Moods);
-        public Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(DateTime? fromUtc = null, DateTime? toUtc = null, int limit = 60, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);
+        public Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(DateTime? fromUtc = null, DateTime? toUtc = null, int limit = 60, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<MoodEntryDTO>>(Moods
+                .Where(entry => (fromUtc is null || entry.RecordedAt >= fromUtc)
+                    && (toUtc is null || entry.RecordedAt < toUtc))
+                .Take(limit)
+                .ToList());
         public Task UpdateSessionResultPostIntensityAsync(long sessionResultId, int postIntensity, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task UpdateSessionResultNoteAsync(long sessionResultId, string note, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<string?> GetLastSessionNoteAsync(string itemKey, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);

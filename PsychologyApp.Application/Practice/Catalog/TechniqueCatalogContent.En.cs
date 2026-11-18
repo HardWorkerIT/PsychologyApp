@@ -254,7 +254,7 @@ internal static class TechniqueCatalogContentEn
             "4. Tension may ease, stay the same, or increase. If you feel worse, stop and choose other support."
         ],
         "A brief self-distancing prompt: address yourself by name or as “you” rather than only “I.” It may create room to reflect, but does not promise immediate relief.",
-        TechniqueUiKind.Entry, "Technique #12", "12.06.2026", "Distanced Self-Talk", "Address yourself by name or as “you,” then choose a safe next step", "Difficult moment", "Self-help skill", 1, "Visibility",
+        TechniqueUiKind.Entry, "Technique #12", "12.06.2026", "Distanced Self-Talk", "Use your name or “you” to choose a safe next step", "Difficult moment", "Self-help skill", 1, "Visibility",
         [
             new TechniqueEntrySeed("Situation", "Briefly: what is happening now? Details of a painful event are not needed.", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("Feelings from first person", "What are you feeling? One short sentence is enough.", Role: EntryFieldRole.Emotion),
@@ -277,7 +277,7 @@ internal static class TechniqueCatalogContentEn
             "4. Rate how helpful the memory feels now (0 = not at all, 10 = very); 0 is okay"
         ],
         "A memory may remind you of familiar sources of support. Responses vary; a gesture is only an optional reminder, not a reliable way to change your state.",
-        TechniqueUiKind.Entry, "Technique #13", "12.06.2026", "Supportive memory", "Recall an experience of support and notice usable resources", "A hard moment", "Memory recall", 4, "SelfImprovement",
+        TechniqueUiKind.Entry, "Technique #13", "12.06.2026", "Supportive memory", "Recall support and notice your resources", "A hard moment", "Memory recall", 4, "SelfImprovement",
         [
             new TechniqueEntrySeed("Resource memory", "Choose a memory that feels safe to recall; skip this exercise if none comes to mind.", Suggestions: ["A talk that went well", "A holiday by the sea", "A hug from someone close", "Finishing something hard", "A walk in nature", "Passing an exam", "The birth of a child", "Winning a competition", "An evening with friends", "Praise from my manager", "First day at a new job", "A morning without rush"]),
             new TechniqueEntrySeed("Body sensations", "Where do you feel it? Warmth, lightness, grounding…", Suggestions: ["Warmth in the chest", "Lightness", "Open shoulders", "Even breathing", "Steady legs", "A smile", "A calm heart", "A straight back", "Energy in my hands", "A relaxed belly"]),
@@ -301,7 +301,7 @@ internal static class TechniqueCatalogContentEn
             "5. Name 1 taste or pleasant sensation"
         ],
         "Sensory grounding shifts attention from anxious thoughts to the present moment.",
-        TechniqueUiKind.Entry, "Technique #14", "12.06.2026", "5-4-3-2-1 grounding", "Return to the present through your senses", "Hard moment", "Psyche", 3, "Nature",
+        TechniqueUiKind.Entry, "Technique #14", "12.06.2026", "5-4-3-2-1 grounding", "Ground with your five senses", "Hard moment", "Psyche", 3, "Nature",
         [
             new TechniqueEntrySeed("5 things I see", "E.g. window, cup, book, lamp, hand", Suggestions: ["Window", "Table", "Phone", "Computer", "Laptop", "Monitor", "Keyboard", "Cup", "Lamp", "Hand", "Door", "Book", "Chair", "Wall", "Picture", "Plant", "Clock", "Wardrobe", "Sky", "Car"]),
             new TechniqueEntrySeed("4 things I feel with my body", "E.g. chair, floor, clothes, air temperature", Suggestions: ["Chair", "Floor under my feet", "Clothes", "Coolness", "Warmth", "Phone in my hand", "Back of the chair", "Fabric on my skin", "Breath in my chest", "Wind", "Computer mouse", "Keys", "Pillow", "Watch on my wrist"]),
@@ -326,7 +326,7 @@ internal static class TechniqueCatalogContentEn
             "5. Rate your tension again. If it has not changed, that is useful to know."
         ],
         "A brief, gentle rhythm without breath holds can be tried when tense. It does not suit everyone: counting or focusing on the breath may increase discomfort.",
-        TechniqueUiKind.Entry, "Technique #15", "04.07.2026", "Gentle paced breathing", "A comfortable rhythm with a slightly longer exhale", "Hard moment", "Psyche", 3, "Air",
+        TechniqueUiKind.Entry, "Technique #15", "04.07.2026", "Gentle paced breathing", "Gently lengthen your exhale", "Hard moment", "Psyche", 3, "Air",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Notes", "What did you notice? Any response is okay.", Suggestions: ["The pace felt comfortable", "Counting felt distracting", "The pace felt too slow", "I felt dizzy", "Breathing felt uncomfortable", "I felt a little calmer", "No change in tension", "I felt more tense", "I stopped and noticed things around me"]),
@@ -349,7 +349,7 @@ internal static class TechniqueCatalogContentEn
             "4. Rate your confidence from 0 to 10. If unsure, make the step smaller."
         ],
         "A brief activity plan informed by behavioral activation. A small step can help with getting started, but it does not guarantee a better mood or more energy.",
-        TechniqueUiKind.Entry, "Technique #16", "04.07.2026", "One small step", "Choose an activity and make the start manageable", "Hard moment", "CBT", 5, "DirectionsWalk",
+        TechniqueUiKind.Entry, "Technique #16", "04.07.2026", "One small step", "Choose one activity and start small", "Hard moment", "CBT", 5, "DirectionsWalk",
         [
             new TechniqueEntrySeed("What makes starting hard?", "Tiredness, anxiety, loneliness, too much to do?", Suggestions: ["Tiredness", "Anxiety", "Loneliness", "Too much to do", "Boredom", "I don't know where to start", "I need rest", "The conditions aren't right"], Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("A small activity for me", "Self-care, interest, connection, or a small task", Suggestions: ["Drink water or have a snack", "Wash or get dressed", "Get fresh air for 2 minutes", "Play a favorite song", "Send someone close one message", "Spend 2 minutes on something important", "Put one thing away", "Ask someone to stay with me"]),
@@ -373,7 +373,7 @@ internal static class TechniqueCatalogContentEn
             "5. Rate the emotion again"
         ],
         "A structured CBT record helps you see the link between situation, thought, and emotion.",
-        TechniqueUiKind.Entry, "Technique #17", "04.07.2026", "Thought record", "Unpack a thought and reduce emotional charge", "Hard moment", "CBT", 7, "EditNote",
+        TechniqueUiKind.Entry, "Technique #17", "04.07.2026", "Thought record", "Unpack the thought; ease its impact", "Hard moment", "CBT", 7, "EditNote",
         [
             new TechniqueEntrySeed("Situation", "What happened? Where and when?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("Automatic thought", "What did you think in that moment?", Suggestions: HarshThoughts),
@@ -397,7 +397,7 @@ internal static class TechniqueCatalogContentEn
             "4. Rate any warmth or relief."
         ],
         "Self-compassion reduces harsh self-criticism and helps recover after a mistake.",
-        TechniqueUiKind.Entry, "Technique #18", "04.07.2026", "Kind words to yourself", "Soften self-criticism through support", "Hard moment", "CBT", 5, "Favorite",
+        TechniqueUiKind.Entry, "Technique #18", "04.07.2026", "Kind words to yourself", "Replace self-criticism with support", "Hard moment", "CBT", 5, "Favorite",
         [
             new TechniqueEntrySeed("What you criticize yourself for", "What do you tell yourself or blame yourself for?", Suggestions: ["A mistake at work", "Didn't get it done", "Snapped at someone close", "Comparing myself to others", "Putting things off again", "My appearance", "My weight", "Said the wrong thing", "Not a good enough parent", "Earning too little", "Broke a promise", "Too sensitive"]),
             new TechniqueEntrySeed("What you would tell a friend", "How would you support someone close in this situation?", Role: EntryFieldRole.Kindness),
@@ -422,7 +422,7 @@ internal static class TechniqueCatalogContentEn
             "6. Take 5 slow out-breaths, imagining them passing through that place. Rate your tension again."
         ],
         "Body scan: notice where a feeling lives, name it, and let the body soften without fighting the sensation.",
-        TechniqueUiKind.Entry, "Technique #19", "16.10.2026", "Where is it in the body?", "Notice a feeling in your body and ease tension", "Hard moment", "Mindfulness", 4, "Accessibility",
+        TechniqueUiKind.Entry, "Technique #19", "16.10.2026", "Where is it in the body?", "Notice a feeling in your body", "Hard moment", "Mindfulness", 4, "Accessibility",
         [
             new TechniqueEntrySeed("Tension now", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Where in the body do you feel it?", "For example: chest, throat, shoulders", Suggestions: ["Head", "Forehead", "Eyes", "Jaw", "Throat", "Neck", "Shoulders", "Chest", "Heart", "Stomach", "Back", "Lower back", "Arms", "Hands", "Legs", "The whole body"]),
@@ -448,7 +448,7 @@ internal static class TechniqueCatalogContentEn
             "6. Take 5 slow out-breaths and touch cool water. Rate your tension again."
         ],
         "Help with a flashback: come back from the memory to the present through time, place, the body and the senses.",
-        TechniqueUiKind.Entry, "Technique #20", "16.10.2026", "A memory took over", "Return to the present when it takes over", "Hard moment", "Trauma", 3, "MyLocation",
+        TechniqueUiKind.Entry, "Technique #20", "16.10.2026", "A memory took over", "Return to the present", "Hard moment", "Trauma", 3, "MyLocation",
         [
             new TechniqueEntrySeed("How strong it is", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Where you are and the time of day", "For example: at home, evening", Suggestions: ["At home", "At work", "Outside", "On transport", "Visiting someone", "Morning", "Afternoon", "Evening", "Night"]),
@@ -473,7 +473,7 @@ internal static class TechniqueCatalogContentEn
             "6. After 1–2 weeks, check whether the nightmares have changed."
         ],
         "Imagery rehearsal: a recurring nightmare is rewritten while awake, and the brain starts dreaming the new version.",
-        TechniqueUiKind.Entry, "Technique #21", "16.10.2026", "Rewrite a nightmare", "Make a recurring nightmare rarer and weaker", "Sleep", "Trauma", 15, "NightsStay",
+        TechniqueUiKind.Entry, "Technique #21", "16.10.2026", "Rewrite a nightmare", "Reduce nightmare frequency and intensity", "Sleep", "Trauma", 15, "NightsStay",
         [
             new TechniqueEntrySeed("How hard this nightmare is", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("What the nightmare is about, briefly", "One or two sentences, without hard details", Suggestions: ["Someone is chasing me", "I can't get away", "I'm back where it was frightening", "I'm losing someone close", "I can't scream", "I'm falling", "I'm being attacked", "I'm late and can't make it"]),
@@ -522,7 +522,7 @@ internal static class TechniqueCatalogContentEn
             "5. Rate your tension again."
         ],
         "A double breath in and a long breath out calm the body quickly, with no breath holding.",
-        TechniqueUiKind.Entry, "Technique #23", "26.10.2026", "Cyclic sigh", "Double inhale, then a long exhale", "Hard moment", "Psyche", 3, "Air",
+        TechniqueUiKind.Entry, "Technique #23", "26.10.2026", "Cyclic sigh", "Double inhale, long exhale", "Hard moment", "Psyche", 3, "Air",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Notes", "What changed after the breathing?", Suggestions: ["My body is calmer", "My shoulders dropped", "My heart slowed down", "My thoughts slowed down", "I felt a little dizzy", "Nothing changed", "I want to do it again"]),
@@ -545,7 +545,7 @@ internal static class TechniqueCatalogContentEn
             "5. Rate your tension again."
         ],
         "Tensing muscles first and then letting go makes it easier for the body to feel what relaxing is.",
-        TechniqueUiKind.Entry, "Technique #24", "26.10.2026", "Tense and let go", "A short muscle relaxation for a tight body", "Hard moment", "Psyche", 4, "SelfImprovement",
+        TechniqueUiKind.Entry, "Technique #24", "26.10.2026", "Tense and let go", "Tense muscles, then let go", "Hard moment", "Psyche", 4, "SelfImprovement",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Notes", "Where in your body does it feel lighter?", Suggestions: ["My shoulders relaxed", "My jaw unclenched", "My hands got warmer", "Breathing got easier", "I feel sleepy", "Some tension is still there", "Nothing changed"]),
@@ -567,7 +567,7 @@ internal static class TechniqueCatalogContentEn
             "4. Stop and decide whether a practical step or support is needed."
         ],
         "A brief neutral task may shift attention for a moment when thoughts feel stuck in a loop. It does not remove thoughts or solve the problem.",
-        TechniqueUiKind.Entry, "Technique #25", "26.10.2026", "Brief Attention Shift", "A temporary pause when thoughts repeat", "Hard moment", "Psyche", 1, "Extension",
+        TechniqueUiKind.Entry, "Technique #25", "26.10.2026", "Brief Attention Shift", "Pause repetitive thoughts", "Hard moment", "Psyche", 1, "Extension",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Notes", "How was that brief pause?", Suggestions: ["My attention shifted for a moment", "Nothing changed", "I felt more frustrated or tense", "I can see a next step now", "I need support", "I stopped the exercise"]),
@@ -589,7 +589,7 @@ internal static class TechniqueCatalogContentEn
             "4. Choose one small next step, or stop here."
         ],
         "A brief acceptance and commitment therapy (ACT) skill: notice a thought as something the mind is doing, not necessarily a fact or a command.",
-        TechniqueUiKind.Entry, "Technique #26", "03.11.2026", "Unhook from a thought", "Create some space around a worrying thought", "Thoughts", "Psyche", 1, "FormatQuote",
+        TechniqueUiKind.Entry, "Technique #26", "03.11.2026", "Unhook from a thought", "Unhook from a worrying thought", "Thoughts", "Psyche", 1, "FormatQuote",
         [
             new TechniqueEntrySeed("Thought", "Optional: you can do the practice silently", Suggestions: HarshThoughts)
         ],

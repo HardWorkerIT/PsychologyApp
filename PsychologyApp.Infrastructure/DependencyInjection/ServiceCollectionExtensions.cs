@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IExposureRepository, ExposureRepository>();
         services.AddSingleton<IBodyRepository, BodyRepository>();
         services.AddSingleton<IReadingRepository, ReadingRepository>();
+        services.AddSingleton<IOnboardingConcernRepository, OnboardingConcernRepository>();
         services.AddSingleton<IChatRepository, ChatRepository>();
         services.AddSingleton<IBackupRepository, BackupRepository>();
 

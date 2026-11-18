@@ -1,6 +1,10 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PsychologyApp.Infrastructure.Data.Repositories.Quots;
+
+[JsonSerializable(typeof(string[]))]
+internal sealed partial class FavoriteQuoteTextsJsonContext : JsonSerializerContext;
 
 internal static class FavoriteQuoteTextsCodec
 {
@@ -18,7 +22,9 @@ internal static class FavoriteQuoteTextsCodec
         {
             try
             {
-                string[]? savedTexts = JsonSerializer.Deserialize<string[]>(value[SerializedTextsPrefix.Length..]);
+                string[]? savedTexts = JsonSerializer.Deserialize(
+                    value[SerializedTextsPrefix.Length..],
+                    FavoriteQuoteTextsJsonContext.Default.StringArray);
                 if (savedTexts is not null)
                 {
                     return savedTexts
@@ -45,5 +51,5 @@ internal static class FavoriteQuoteTextsCodec
             .Where(text => !string.IsNullOrWhiteSpace(text))
             .Distinct(StringComparer.Ordinal)
             .OrderBy(text => text, StringComparer.Ordinal)
-            .ToArray());
+            .ToArray(), FavoriteQuoteTextsJsonContext.Default.StringArray);
 }

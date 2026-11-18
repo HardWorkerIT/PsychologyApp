@@ -9,7 +9,7 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
     private sealed record Copy(
         string ModuleName, string Author, string WhatHeading, string WhenHeading, string HowHeading, string ExampleHeading,
         string Title, string Subtitle, string Theme, string Summary, string When, string How, string Example, string Icon,
-        string WorryTitle, string WorryHint, string FactsTitle, string FactsHint, string StepTitle, string StepHint,
+        string WorryTitle, string WorryHint, string[] WorrySuggestions, string FactsTitle, string FactsHint, string[] FactsSuggestions, string StepTitle, string StepHint, string[] StepSuggestions,
         string[] Steps);
 
     private static readonly IReadOnlyDictionary<string, Copy> Languages =
@@ -23,9 +23,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Опишите ситуацию общими словами. Не указывайте суммы, реквизиты, пароли, коды подтверждения или данные других людей. Разделите известные факты, то, что нужно уточнить, и опасения. Выберите один небольшой обратимый шаг или просьбу о поддержке. Не принимайте срочных финансовых решений под давлением.",
                 "Вы ждёте ответа по счёту и думаете: «Я не справлюсь». Факт: ответа пока нет. Неизвестно: когда он придёт. Опасение: будет трудно успеть. Шаг: проверить срок в известном официальном канале или попросить человека помочь найти практическую поддержку.",
                 "AccountBalanceWallet",
-                "О чём тревожитесь — в общих словах", "Не пишите суммы, реквизиты, пароли или коды.",
-                "Что известно и что нужно уточнить", "Отделите проверяемый факт от неизвестного.",
-                "Один безопасный следующий шаг", "Выберите небольшой обратимый шаг или человека, у которого можно попросить помощь.",
+                "О чём тревожитесь — в общих словах", "Не пишите суммы, реквизиты, пароли или коды.", ["Срочная потребность", "Неясный срок", "Нужна практическая поддержка"],
+                "Что известно и что нужно уточнить", "Отделите проверяемый факт от неизвестного.", ["Известный факт", "Нужно уточнить", "Пока неизвестно"],
+                "Один безопасный следующий шаг", "Выберите небольшой обратимый шаг или человека, у которого можно попросить помощь.", ["Проверить срок", "Попросить поддержки", "Сделать паузу"],
                 [
                     "1. Проверьте срочность: если сейчас под угрозой еда, жильё, необходимые лекарства или безопасность, остановитесь и обратитесь за живой практической помощью.",
                     "2. Назовите тревогу в общих словах. Не записывайте суммы, номера счетов и карт, пароли, коды подтверждения или чужие личные данные.",
@@ -41,9 +41,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Describe the situation in general terms. Do not enter amounts, account or card details, passwords, verification codes, or another person’s information. Separate known facts, what needs checking, and feared outcomes. Choose one small, reversible step or ask for support. Do not make urgent financial decisions under pressure.",
                 "You are waiting for a reply about a bill and think, I will not cope. Fact: there is no reply yet. Unknown: when it will arrive. Fear: it may be hard to meet the deadline. Step: check the date through a known official channel or ask someone to help find practical support.",
                 "AccountBalanceWallet",
-                "What is worrying you, in general terms", "Do not enter amounts, account details, passwords, or codes.",
-                "What is known and what needs checking", "Separate a checkable fact from an unknown.",
-                "One safe next step", "Choose a small reversible step or someone you can ask for help.",
+                "What is worrying you, in general terms", "Do not enter amounts, account details, passwords, or codes.", ["An urgent need", "An unclear deadline", "Practical support"],
+                "What is known and what needs checking", "Separate a checkable fact from an unknown.", ["A known fact", "Something to check", "Not known yet"],
+                "One safe next step", "Choose a small reversible step or someone you can ask for help.", ["Check a date", "Ask for support", "Pause for now"],
                 [
                     "1. Check urgency: if food, housing, essential medicine, or safety is at risk now, stop and seek real-world practical help.",
                     "2. Name the worry in general terms. Do not record amounts, account or card numbers, passwords, verification codes, or another person’s private details.",
@@ -59,9 +59,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Beschreiben Sie die Lage allgemein. Geben Sie keine Beträge, Konto- oder Kartendaten, Passwörter, Bestätigungscodes oder Informationen über andere Personen ein. Trennen Sie bekannte Fakten, offene Fragen und befürchtete Folgen. Wählen Sie einen kleinen, umkehrbaren Schritt oder bitten Sie um Unterstützung. Treffen Sie unter Druck keine dringenden Finanzentscheidungen.",
                 "Sie warten auf eine Antwort zu einer Rechnung und denken: Ich schaffe das nicht. Fakt: Es gibt noch keine Antwort. Unklar: Wann sie kommt. Befürchtung: Die Frist könnte knapp werden. Schritt: Prüfen Sie den Termin über einen bekannten offiziellen Kanal oder bitten Sie jemanden, mit Ihnen praktische Hilfe zu finden.",
                 "AccountBalanceWallet",
-                "Was Sie belastet, allgemein beschrieben", "Keine Beträge, Kontodaten, Passwörter oder Codes notieren.",
-                "Was bekannt ist und was noch zu klären ist", "Trennen Sie prüfbare Fakten von offenen Fragen.",
-                "Ein sicherer nächster Schritt", "Wählen Sie einen kleinen umkehrbaren Schritt oder eine Person, um Hilfe zu bitten.",
+                "Was Sie belastet, allgemein beschrieben", "Keine Beträge, Kontodaten, Passwörter oder Codes notieren.", ["Ein dringender Bedarf", "Eine unklare Frist", "Praktische Unterstützung"],
+                "Was bekannt ist und was noch zu klären ist", "Trennen Sie prüfbare Fakten von offenen Fragen.", ["Eine bekannte Tatsache", "Noch zu prüfen", "Noch unklar"],
+                "Ein sicherer nächster Schritt", "Wählen Sie einen kleinen umkehrbaren Schritt oder eine Person, um Hilfe zu bitten.", ["Frist prüfen", "Um Unterstützung bitten", "Erst einmal pausieren"],
                 [
                     "1. Prüfen Sie die Dringlichkeit: Sind Nahrung, Unterkunft, notwendige Medikamente oder Sicherheit jetzt gefährdet, unterbrechen Sie die Übung und suchen Sie konkrete Hilfe.",
                     "2. Benennen Sie die Sorge allgemein. Notieren Sie keine Beträge, Konto- oder Kartennummern, Passwörter, Bestätigungscodes oder privaten Daten anderer.",
@@ -77,9 +77,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Describe la situación en términos generales. No escribas cantidades, datos de cuentas o tarjetas, contraseñas, códigos de verificación ni información de otras personas. Separa los hechos conocidos, lo que falta por comprobar y los resultados que temes. Elige un paso pequeño y reversible o pide apoyo. No tomes decisiones financieras urgentes bajo presión.",
                 "Esperas una respuesta sobre una factura y piensas: no podré con esto. Hecho: aún no hay respuesta. Duda: cuándo llegará. Temor: quizá no haya tiempo suficiente. Paso: comprueba la fecha en un canal oficial conocido o pide ayuda para encontrar apoyo práctico.",
                 "AccountBalanceWallet",
-                "Qué te preocupa, en términos generales", "No incluyas cantidades, datos bancarios, contraseñas ni códigos.",
-                "Qué sabes y qué falta por comprobar", "Separa un hecho verificable de una duda.",
-                "Un siguiente paso seguro", "Elige un paso pequeño y reversible o a quién pedir ayuda.",
+                "Qué te preocupa, en términos generales", "No incluyas cantidades, datos bancarios, contraseñas ni códigos.", ["Una necesidad urgente", "Un plazo poco claro", "Apoyo práctico"],
+                "Qué sabes y qué falta por comprobar", "Separa un hecho verificable de una duda.", ["Un hecho conocido", "Algo que comprobar", "Aún no se sabe"],
+                "Un siguiente paso seguro", "Elige un paso pequeño y reversible o a quién pedir ayuda.", ["Comprobar una fecha", "Pedir apoyo", "Hacer una pausa"],
                 [
                     "1. Comprueba la urgencia: si ahora están en riesgo la comida, la vivienda, los medicamentos esenciales o tu seguridad, detén el ejercicio y busca ayuda práctica en persona.",
                     "2. Nombra la preocupación en términos generales. No anotes cantidades, números de cuenta o tarjeta, contraseñas, códigos de verificación ni datos privados de otras personas.",
@@ -95,9 +95,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Décrivez la situation en termes généraux. N’indiquez aucun montant, identifiant de compte ou de carte, mot de passe, code de vérification ni donnée concernant autrui. Séparez les faits connus, ce qui reste à vérifier et les issues redoutées. Choisissez une petite étape réversible ou demandez du soutien. Ne prenez pas de décision financière urgente sous pression.",
                 "Vous attendez une réponse au sujet d’une facture et pensez : je n’y arriverai pas. Fait : aucune réponse pour l’instant. Inconnue : la date de réponse. Crainte : le délai pourrait être court. Étape : vérifiez la date par un canal officiel connu ou demandez de l’aide pour trouver un soutien pratique.",
                 "AccountBalanceWallet",
-                "Ce qui vous inquiète, en termes généraux", "N’indiquez ni montants, ni coordonnées, ni mots de passe, ni codes.",
-                "Ce qui est connu et ce qui reste à vérifier", "Séparez un fait vérifiable d’une inconnue.",
-                "Une prochaine étape sûre", "Choisissez une petite étape réversible ou une personne à qui demander de l’aide.",
+                "Ce qui vous inquiète, en termes généraux", "N’indiquez ni montants, ni coordonnées, ni mots de passe, ni codes.", ["Un besoin urgent", "Une échéance incertaine", "Un soutien concret"],
+                "Ce qui est connu et ce qui reste à vérifier", "Séparez un fait vérifiable d’une inconnue.", ["Un fait connu", "Un point à vérifier", "Encore inconnu"],
+                "Une prochaine étape sûre", "Choisissez une petite étape réversible ou une personne à qui demander de l’aide.", ["Vérifier une date", "Demander du soutien", "Faire une pause"],
                 [
                     "1. Vérifiez l’urgence : si la nourriture, le logement, des médicaments indispensables ou la sécurité sont menacés maintenant, arrêtez l’exercice et cherchez une aide concrète.",
                     "2. Nommez l’inquiétude en termes généraux. Ne notez aucun montant, numéro de compte ou de carte, mot de passe, code de vérification ni donnée privée d’une autre personne.",
@@ -113,9 +113,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "Descreva a situação em termos gerais. Não informe valores, dados de contas ou cartões, senhas, códigos de verificação nem informações de outras pessoas. Separe fatos conhecidos, o que falta verificar e os resultados que teme. Escolha um passo pequeno e reversível ou peça apoio. Não tome decisões financeiras urgentes sob pressão.",
                 "Você espera uma resposta sobre uma conta e pensa: não vou dar conta. Fato: ainda não houve resposta. Dúvida: quando ela chegará. Receio: talvez falte tempo. Passo: confira a data por um canal oficial conhecido ou peça ajuda para encontrar apoio prático.",
                 "AccountBalanceWallet",
-                "O que preocupa você, em termos gerais", "Não inclua valores, dados bancários, senhas ou códigos.",
-                "O que é conhecido e o que falta verificar", "Separe um fato verificável de uma dúvida.",
-                "Um próximo passo seguro", "Escolha um passo pequeno e reversível ou alguém a quem pedir ajuda.",
+                "O que preocupa você, em termos gerais", "Não inclua valores, dados bancários, senhas ou códigos.", ["Uma necessidade urgente", "Um prazo incerto", "Apoio prático"],
+                "O que é conhecido e o que falta verificar", "Separe um fato verificável de uma dúvida.", ["Um fato conhecido", "Algo a verificar", "Ainda não se sabe"],
+                "Um próximo passo seguro", "Escolha um passo pequeno e reversível ou alguém a quem pedir ajuda.", ["Conferir uma data", "Pedir apoio", "Fazer uma pausa"],
                 [
                     "1. Verifique a urgência: se alimentos, moradia, medicamentos essenciais ou segurança estão em risco agora, pare o exercício e procure ajuda prática presencial.",
                     "2. Nomeie a preocupação em termos gerais. Não anote valores, números de contas ou cartões, senhas, códigos de verificação ou dados privados de outra pessoa.",
@@ -131,9 +131,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
                 "用概括的方式描述情况。不要填写金额、账户或银行卡信息、密码、验证码或他人的个人信息。区分已知事实、需要核实的事情和担心的结果。选择一个小而可调整的步骤，或向他人求助。不要在压力下匆忙作出财务决定。",
                 "你在等待一笔账单的答复，心里想：我应付不了。事实：目前还没有答复。未知：答复何时到达。担心：可能赶不上期限。步骤：通过熟悉的官方渠道核实日期，或请可信的人帮忙寻找实际支持。",
                 "AccountBalanceWallet",
-                "你在担心什么，请用概括的方式描述", "不要填写金额、账户信息、密码或验证码。",
-                "哪些已经知道，哪些还要核实", "把可核实的事实与未知分开。",
-                "一个安全的下一步", "选择一个小而可调整的步骤，或一位可以求助的人。",
+                "你在担心什么，请用概括的方式描述", "不要填写金额、账户信息、密码或验证码。", ["紧急需求", "不确定的期限", "实际支持"],
+                "哪些已经知道，哪些还要核实", "把可核实的事实与未知分开。", ["已知事实", "需要核实", "目前未知"],
+                "一个安全的下一步", "选择一个小而可调整的步骤，或一位可以求助的人。", ["核实一个日期", "寻求支持", "先暂停一下"],
                 [
                     "1. 先判断是否紧急：如果食物、住处、必需药物或人身安全现在受到威胁，请停止练习并寻求现实中的实际帮助。",
                     "2. 用概括的方式说出担忧。不要记录金额、账户或银行卡号、密码、验证码或他人的隐私信息。",
@@ -168,9 +168,9 @@ internal static class TechniqueCatalogContentMoneyWorryPlan
         4,
         copy.Icon,
         [
-            new TechniqueEntrySeed(copy.WorryTitle, copy.WorryHint, Kind: EntryFieldKind.Text),
-            new TechniqueEntrySeed(copy.FactsTitle, copy.FactsHint, Kind: EntryFieldKind.Text),
-            new TechniqueEntrySeed(copy.StepTitle, copy.StepHint, Kind: EntryFieldKind.Text)
+            new TechniqueEntrySeed(copy.WorryTitle, copy.WorryHint, Suggestions: copy.WorrySuggestions, Kind: EntryFieldKind.Text),
+            new TechniqueEntrySeed(copy.FactsTitle, copy.FactsHint, Suggestions: copy.FactsSuggestions, Kind: EntryFieldKind.Text),
+            new TechniqueEntrySeed(copy.StepTitle, copy.StepHint, Suggestions: copy.StepSuggestions, Kind: EntryFieldKind.Text)
         ],
         [
             new TheorySection(copy.WhatHeading, copy.Summary),

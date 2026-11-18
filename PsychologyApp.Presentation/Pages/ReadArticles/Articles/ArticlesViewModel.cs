@@ -34,6 +34,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     public ICommand BackCommand { get; }
 
     private const string AllKey = "all";
+    private const string SavedKey = "saved";
     private const int ArticlesBeforeAdCount = 6;
 
     private readonly INavigationService _navigation;
@@ -165,6 +166,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     {
         Filters.Clear();
         Filters.Add(new FilterChipTabItem { Key = AllKey, Title = AppStrings.ArticlesFilterAll, IsSelected = _selectedKey == AllKey });
+        Filters.Add(new FilterChipTabItem { Key = SavedKey, Title = AppStrings.ArticlesFilterSaved, IsSelected = _selectedKey == SavedKey });
         foreach (ArticleSection section in ArticleContent.Sections(Language))
         {
             Filters.Add(new FilterChipTabItem { Key = section.Key, Title = section.Title, IsSelected = _selectedKey == section.Key });
@@ -174,16 +176,53 @@ public sealed class ArticlesViewModel : BaseViewModel
     private void Load()
     {
         _lastCanPlaceArticleAd = CanPlaceArticleAd;
+        HashSet<string>? savedArticleIds = _selectedKey == SavedKey
+            ? _state.Saved.ToHashSet(StringComparer.Ordinal)
+            : null;
 
         if (IsSearching)
         {
-            IReadOnlyList<Article> found = ArticleSearch.Find(_query, Language);
+            IEnumerable<Article> searchResults = ArticleSearch.Find(_query, Language);
+            if (savedArticleIds is not null)
+            {
+                searchResults = searchResults.Where(article => savedArticleIds.Contains(article.Id));
+            }
+            else if (_selectedKey != AllKey)
+            {
+                HashSet<string> selectedArticleIds = ArticleContent.Sections(Language)
+                    .Where(section => section.Key == _selectedKey)
+                    .SelectMany(section => section.Articles)
+                    .Select(article => article.Id)
+                    .ToHashSet(StringComparer.Ordinal);
+                searchResults = searchResults.Where(article => selectedArticleIds.Contains(article.Id));
+            }
+
+            IReadOnlyList<Article> found = searchResults.ToList();
             Sections = found.Count == 0 ? [] : [new ArticleSectionItem(string.Empty, found.Select(Card))];
             EmptyText = found.Count == 0 ? AppStrings.ArticlesNothingFound : string.Empty;
             return;
         }
 
-        EmptyText = string.Empty;
+        if (savedArticleIds is not null)
+        {
+            List<Article> savedArticles = _state.Saved
+                .Select(id => ArticleContent.Find(id, Language))
+                .OfType<Article>()
+                .ToList();
+            Sections = savedArticles.Count == 0 ? [] : [new ArticleSectionItem(string.Empty, savedArticles.Select(Card))];
+            if (_query.Trim().Length > 0)
+            {
+                EmptyText = AppStrings.ArticlesSearchMinLength;
+            }
+            else
+            {
+                EmptyText = savedArticles.Count == 0 ? AppStrings.ArticlesNothingSaved : string.Empty;
+            }
+
+            return;
+        }
+
+        EmptyText = _query.Trim().Length > 0 ? AppStrings.ArticlesSearchMinLength : string.Empty;
         IReadOnlyList<ArticleSection> sourceSections = ArticleContent.Sections(Language)
             .Where(section => _selectedKey == AllKey || section.Key == _selectedKey)
             .ToList();

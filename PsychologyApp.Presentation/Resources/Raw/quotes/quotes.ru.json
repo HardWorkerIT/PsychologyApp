@@ -2928,5 +2928,150 @@
     "author": "Команда PsychologyApp",
     "text": "Вариант, который не подошёл, тоже даёт информацию.",
     "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Сначала можно понять, что действительно срочно. Остальному найдётся очередь.",
+    "theme": "wisdom"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Один маленький шаг не решит всё, но может вернуть выбор.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Хороший план оставляет место для перемен.",
+    "theme": "resilience"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Просить о конкретной помощи — тоже действие.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Список показывает задачи, а не ценность человека.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Пауза от ленты помогает выбрать момент, когда новости действительно нужны.",
+    "theme": "wisdom"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Важные оповещения можно оставить, а привычку читать каждое обновление — изменить.",
+    "theme": "resilience"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Завершить проверку — тоже решение: после ответа можно вернуться к своему дню.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Пауза в споре может сохранить разговор, но не обязывает к примирению.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Извинение за поступок не отменяет право на границы.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Ясная просьба говорит о следующем шаге, а не о ценности человека.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Привычка держится не на идеальной серии, а на возможности вернуться.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Пусть начало будет настолько небольшим, чтобы ему нашлось место в обычном дне.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Подходящий сигнал напоминает о шаге, но не превращает его в обязанность.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Пропуск показывает, где плану нужна гибкость.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Если жизнь изменилась, план тоже может измениться.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Сравнивайте шаг с собственными обстоятельствами, а не с чужим темпом.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Одно конкретное замечание может подсказать шаг, но не измеряет ценность человека.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Пауза превращает автоматический ответ в выбранный.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Уточняющий вопрос возвращает разговор от догадок к фактам.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Полезную часть можно взять, не принимая навязанный ярлык.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Справедливая обратная связь оставляет место для уважения.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Иногда лучший следующий шаг — попросить времени и поддержки.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Небольшой контакт не обязан превращаться в большое обещание.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Можно предложить время вместе, оставив другому свободу выбора.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Общее занятие иногда делает тишину менее неловкой.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Чужой отказ говорит о его выборе сейчас, а не о вашей ценности.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Безопасность и удобный формат важнее красивого плана.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Связь можно строить шагами, которые выдерживает ваша жизнь.",
+    "theme": "relationships"
   }
 ]

@@ -56,23 +56,28 @@ public partial class TechniquesViewModel
 
             await _databaseReadySignal.WaitAsync(cancellationToken);
 
-            TechniquesInitSnapshot snapshot = await _listInitializer.LoadAsync(
+            Task<TechniquesInitSnapshot> snapshotTask = _listInitializer.LoadAsync(
                 _techniqueService,
                 _techniqueListBuilder,
                 _dashboardLoader,
                 _navigationService,
                 MyTechniquesLabel,
                 cancellationToken);
-
-            TodayRecommendationResult recommendation = await _dashboardLoader.ResolveTodayRecommendationAsync(
+            Task<TodayRecommendationResult> recommendationTask = _dashboardLoader.ResolveTodayRecommendationAsync(
                 _navigationService,
                 cancellationToken);
+
+            await Task.WhenAll(snapshotTask, recommendationTask);
+
+            TechniquesInitSnapshot snapshot = await snapshotTask;
+            TodayRecommendationResult recommendation = await recommendationTask;
+            Task<bool> hasDraftTask = _dashboardLoader.HasSessionDraftAsync(recommendation.TechniqueId, cancellationToken);
             await _todayRecommendationResolver.ApplyCatalogDateAsync(
                 recommendation.Item,
                 recommendation.TechniqueId,
                 snapshot.StaticItems,
                 cancellationToken);
-            bool hasDraft = await _dashboardLoader.HasSessionDraftAsync(recommendation.TechniqueId, cancellationToken);
+            bool hasDraft = await hasDraftTask;
 
             await UiThread.RunAsync(() =>
             {

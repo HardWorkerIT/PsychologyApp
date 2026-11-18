@@ -8,6 +8,7 @@ public interface IPracticeProgressRepository
     Task RecordCompletionAsync(CompletionDTO completion, CancellationToken cancellationToken = default);
     Task<long> RecordSessionOutcomeAsync(SessionOutcomeRequest request, CancellationToken cancellationToken = default);
     Task<long> CountTechniqueCompletionsAsync(CancellationToken cancellationToken = default);
+    Task<int> CountTechniqueCompletionsBetweenAsync(DateTime sinceUtc, DateTime beforeUtc, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<CompletionDTO>> GetRecentTechniqueCompletionsAsync(int limit, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<DateOnly>> GetCompletionDatesAsync(CancellationToken cancellationToken = default);
     Task<DateTime?> GetLastCompletionForItemAsync(string itemKey, CancellationToken cancellationToken = default);

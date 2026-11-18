@@ -45,7 +45,7 @@
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
                     LineBreakMode="TailTruncation"
-                    MaxLines="1" />
+                    MaxLines="2" />
             </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>

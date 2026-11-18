@@ -577,8 +577,8 @@ public static partial class ArticleContent
                 List(
                     "Kleine regelmäßige Kontakte: einen Nachbarn grüßen, einem alten Bekannten schreiben, mit einer Verkäuferin plaudern",
                     "Gemeinsames Tun zählt mehr als Reden: Vereine, Sport, Ehrenamt, Kurse, wo sich Menschen regelmäßig treffen",
-                    "Selbst den ersten Schritt machen, ohne auf eine Einladung zu warten",
-                    "Anderen helfen: eines der sichersten Mittel gegen Einsamkeit",
+                    "Wenn du die Kraft hast und es sich sicher anfühlt, kannst du einen kleinen Kontakt vorschlagen; du musst nicht auf eine Einladung warten.",
+                    "Gemeinsame Aktivitäten oder überschaubare Hilfe können einen Anlass für Kontakt bieten, wenn es für dich passt; beides ist keine Pflicht.",
                     "Qualität statt Menge: Ein Mensch, bei dem du du selbst sein kannst, zählt mehr als viele Bekannte"),
                 H("Gedanken, die im Weg stehen"),
                 List(
@@ -1479,7 +1479,79 @@ public static partial class ArticleContent
                 Practice(TechniqueId.MoneyWorryPlan, "Geldsorgen ordnen")
             ]),
 
+        new(ArticleIds.WorryTime, "Sorgenzeit statt Sorgen den ganzen Tag", "Ein kurzer Weg, nicht dringende Sorgen aufzuschieben und einen machbaren Schritt zu wählen.", "Schedule", 5,
+            [
+                P("Wenn Gedanken über die Zukunft immer wieder Aufmerksamkeit fordern, können Sie später 10–15 Minuten dafür einplanen. Das verbietet keine Gedanken: Notieren Sie kurz das Thema und machen Sie mit Ihrer Tätigkeit weiter."),
+                H("Zuerst die Dringlichkeit prüfen"),
+                Warning("Muss etwas jetzt getan werden oder betrifft es Sicherheit, Gesundheit oder Grundbedürfnisse, schieben Sie es nicht auf. Wenden Sie sich an eine vertraute Person oder suchen Sie konkrete Hilfe."),
+                List("Legen Sie für heute eine kurze Sorgenzeit fest, zum Beispiel 10–15 Minuten.", "Kommt die Sorge vorher auf, notieren Sie nur das Thema in wenigen Worten, ohne persönliche Angaben, und kehren Sie zu Ihrer Tätigkeit zurück.", "Fragen Sie sich zur vereinbarten Zeit: Gibt es einen konkreten und sicheren Schritt? Wenn ja, planen Sie ihn. Wenn nicht, halten Sie fest, was gerade außerhalb Ihres Einflusses liegt, und richten Sie die Aufmerksamkeit sanft auf die Gegenwart."),
+                Crisis("Wenn Sie unmittelbar in Gefahr sind"),
+                H("Was ist hängen geblieben?"),
+                Quiz("Beweist ein Gedanke, der mit „Was wäre, wenn …“ beginnt, dass es so kommen wird?", 1, "Nein. Eine beunruhigende Vorhersage lässt sich wahrnehmen und prüfen; Wiederholung macht sie nicht zur Tatsache.", "Ja, wenn er immer wiederkommt", "Nein: Es ist eine Vorhersage, keine bestätigte Tatsache", "Das bedeutet, dass ich nicht zurechtkomme"),
+                Quiz("Was können Sie bei einem Problem tun, das heute geklärt werden muss?", 1, "Ein dringendes, machbares Problem muss nicht warten: Wählen Sie einen sicheren Schritt oder bitten Sie um konkrete Hilfe.", "Es bis zur Sorgenzeit aufschieben", "Einen sicheren Schritt wählen oder um Hilfe bitten", "Versuchen, die Sorge abzustellen"),
+                Quiz("Was, wenn sich gerade nichts ändern lässt?", 0, "Sie können das Thema notieren, einen Zeitpunkt zum erneuten Prüfen festlegen und Ihre Aufmerksamkeit sanft auf das Hier und Jetzt richten.", "Es notieren, einen Zeitpunkt dafür festlegen und zur Gegenwart zurückkehren", "Den ganzen Tag im Kopf weiter nach einer Lösung suchen", "Sich zu positiven Gedanken zwingen"),
+                P("Diese Fragen prüfen nur, ob Sie den Artikel verstanden haben. Sie sind weder ein psychologischer Test noch eine Diagnose und versprechen nicht, dass Sorgen verschwinden."),
+                Practice(TechniqueId.WorryTime, "Sorgenzeit einplanen")
+            ]),
+
+
         new(ArticleIds.ProblemPlanning, "Ein Plan für machbare Aufgaben", "Ein Problem in Schritte teilen und den Plan überprüfen", "Checklist", 3,
-            [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen.")])
+            [P("Benennen Sie zuerst ein konkretes Problem. Nicht alles liegt in Ihrer Hand; wählen Sie, was Sie beeinflussen können."), P("Schreiben Sie mehrere Möglichkeiten auf, auch wenn keine perfekt erscheint. Wählen Sie einen kleinen, sicheren Schritt."), P("Achten Sie danach darauf, was geholfen hat und was zu schwierig war. Sie können den Plan anpassen oder Unterstützung suchen.")]),
+        new(
+            ArticleIds.Overwhelm,
+            "Wenn alles zu viel wird: den nächsten Schritt wählen",
+            "Dringendes vom Rest trennen und mit einer kleinen Handlung beginnen.",
+            "Checklist",
+            4,
+            [
+                P("Wenn viele Aufgaben gleichzeitig Aufmerksamkeit verlangen, kann der Kopf sie zu einem einzigen schweren Problem bündeln. Sortieren löst nicht alles, macht aber den nächsten Schritt sichtbarer."),
+                H("Sicherheit und Grundbedürfnisse zuerst"),
+                Warning("Bei unmittelbarer Gefahr oder wenn Essen, Wohnen, notwendige Medikamente oder die Gesundheit bedroht sind, suchen Sie zuerst praktische Hilfe. Diese Übung kann warten."),
+                List("Was kann nicht sicher warten?", "Welchen einen Schritt können Sie heute tun?", "Was lässt sich auf später legen oder mit jemandem teilen?"),
+                H("Machen Sie die Aufgabe kleiner"),
+                P("Beschreiben Sie eine Handlung statt eines großen Ergebnisses: Öffnen Sie eine Nachricht und notieren Sie die Frist, statt die ganze Arbeit lösen zu wollen. Wenn das zu viel ist, verkleinern Sie den Schritt."),
+                Quiz("Was ist ein konkreter nächster Schritt?", 1, "Ein machbarer Schritt lässt sich beginnen und klar beschreiben. Ein großes Ergebnis braucht oft mehrere Handlungen.", "Heute alles lösen", "Ein Dokument öffnen und den ersten Punkt lesen", "Aufhören, sich Sorgen zu machen"),
+                Quiz("Was ist wichtiger, wenn ein Grundbedürfnis bedroht ist?", 1, "Wenn Essen, Wohnen, notwendige Medikamente oder Sicherheit gefährdet sind, zählt praktische Hilfe jetzt.", "Zuerst die Übung beenden", "Eine vertraute Person oder eine örtliche Hilfsstelle kontaktieren", "Warten, bis die Sorge vergeht"),
+                P("Eine Liste zeigt Aufgaben, nicht Ihren Wert. Sie darf sich ändern, wenn neue Fakten oder Kräfte dazukommen."),
+                P("Diese Fragen prüfen nur das Verständnis des Textes. Sie sind kein psychologischer Test und stellen keine Diagnose."),
+                Practice(TechniqueId.ExternalOrientation, "Mit drei Details orientieren")
+            ]),
+
+        new(
+            ArticleIds.ConversationRepair,
+            "Nach einem Streit wieder ins Gespräch finden",
+            "Eine Pause, der eigene Anteil und ein klarer nächster Schritt – wenn es sicher ist",
+            "Forum",
+            4,
+            [
+                P("Nicht alles muss in einem Gespräch geklärt werden. Entscheiden Sie zuerst, ob Sie weitersprechen möchten und ob das sicher ist. Eine Pause schafft Wahlmöglichkeiten, verpflichtet aber nicht zur Versöhnung."),
+                Warning("Wenn Sie Angst haben, kontrolliert, gedemütigt oder körperlich verletzt werden, müssen Sie kein Gespräch zur Versöhnung führen. Sicherheit und Unterstützung von außen gehen vor."),
+                H("Ein einfacher Neustart"),
+                List("Nennen Sie einen konkreten Moment statt die ganze Person zu bewerten", "Sagen Sie, was Sie empfunden oder gebraucht haben, ohne der anderen Person Absichten zuzuschreiben", "Übernehmen Sie nur Ihren eigenen Anteil", "Formulieren Sie eine konkrete Bitte und lassen Sie Zeit für eine Antwort"),
+                Quiz("Welcher Einstieg macht das Problem klarer, ohne die Person abzuwerten?", 1, "Ein konkretes Ereignis und seine Wirkung lassen sich leichter besprechen als ein Urteil über den Charakter.", "Du machst immer alles kaputt", "Als sich der Plan ohne Nachricht geändert hat, war ich verunsichert. Können wir absprechen, wie wir uns nächstes Mal Bescheid geben?", "Tun wir einfach so, als wäre nichts gewesen"),
+                P("Sie können pausieren, ein späteres Gespräch vereinbaren oder das Gespräch beenden. Eine Entschuldigung verlangt nicht, eine Grenze aufzugeben. Ein Versöhnungsversuch garantiert keine Antwort."),
+                Practice(TechniqueId.PauseBeforeReaction, "Vor der Antwort innehalten"),
+                Quiz("Wann hat Sicherheit Vorrang vor einem Versöhnungsgespräch?", 1, "Bei Angst, Zwang oder Gewalt stehen Sicherheit und konkrete Unterstützung an erster Stelle.", "Erst wenn jeder Versöhnungsversuch gescheitert ist", "Wenn Angst, Kontrolle, Demütigung oder Gewalt vorkommen", "Nie; jeder Streit muss gelöst werden"),
+                new(ArticleBlockKind.Article, "Lesen Sie auch: Grenzen setzen", ArticleId: ArticleIds.Boundaries)
+            ]),
+        new(
+            ArticleIds.Feedback,
+            "Rückmeldung ohne Etiketten",
+            "Trennen Sie einen konkreten Hinweis von einem Urteil über sich, fragen Sie nach einem Beispiel und wählen Sie den nächsten Schritt.",
+            "Forum",
+            4,
+            [
+                P("Rückmeldung kann zutreffen, unvollständig oder unfair sein. Sie betrifft eine Situation oder Handlung und beschreibt nicht Ihren ganzen Wert."),
+                H("Erst innehalten"),
+                P("Wenn möglich, antworten Sie nicht sofort. Sie können sagen: „Ich habe es gehört. Ich möchte darüber nachdenken und komme darauf zurück.“"),
+                H("Konkretes von Etiketten trennen"),
+                List("Was ist genau passiert oder gesagt worden?", "Welches Beispiel, welche Frist oder welcher Maßstab wurde genannt?", "Welche Schlussfolgerung über mich habe ich ergänzt?"),
+                Quiz("Welche Aussage enthält konkrete, umsetzbare Informationen?", 1, "Sie nennt eine beobachtbare Handlung und eine Frist; Einzelheiten können geklärt werden.", "Sie schieben immer alles auf.", "Im Bericht fehlt bis Freitag der Abschnitt zu den Ausgaben.", "Ihnen kann man nie vertrauen."),
+                H("Den nächsten Schritt wählen"),
+                List("Einen konkreten, hilfreichen Punkt übernehmen.", "Nach einem Beispiel oder klaren Maßstab fragen.", "Eine Grenze setzen, wenn der Ton respektlos ist."),
+                Practice(TechniqueId.FeedbackReview, "Rückmeldung sortieren"),
+                Warning("Drohungen, Demütigung, Diskriminierung und Druck sind keine gewöhnliche Rückmeldung. Bleiben Sie nicht in einem unsicheren Gespräch, um sich selbst zu verbessern; suchen Sie Unterstützung."),
+                See(ArticleIds.SelfCriticism, "Lesen Sie auch: ohne Selbstkritik mit sich sprechen")
+            ]),
     ];
 }

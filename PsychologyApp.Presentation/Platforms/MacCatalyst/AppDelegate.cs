@@ -1,4 +1,6 @@
 using Foundation;
+using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
 
 using PsychologyApp.Presentation.App;
 

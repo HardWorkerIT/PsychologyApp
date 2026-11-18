@@ -8,34 +8,32 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <!-- Windows/VS and the Linux CI (-p:Net10Only=true, no MAUI workloads there): net10.0 only. Elsewhere net10.0-android is added. -->
+  <!-- Windows/VS and Linux CI (-p:Net11Only=true, no MAUI workloads there) use net11.0 only. Set IncludeAndroidTestTarget=true to build Android tests there too. -->
   <Choose>
-    <When Condition="'$(OS)' == 'Windows_NT' Or '$(Net10Only)' == 'true'">
+    <When Condition="'$(IncludeAndroidTestTarget)' != 'true' And ($([MSBuild]::IsOSPlatform('windows')) Or '$(Net11Only)' == 'true')">
       <PropertyGroup>
-        <TargetFrameworks>net10.0</TargetFrameworks>
+        <TargetFrameworks>net11.0</TargetFrameworks>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <TargetFrameworks>net10.0;net10.0-android</TargetFrameworks>
+        <TargetFrameworks>net11.0;net11.0-android37.0</TargetFrameworks>
       </PropertyGroup>
     </Otherwise>
   </Choose>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0-android37.0'">
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
-    <RunAOTCompilation>false</RunAOTCompilation>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <IsAndroidApplication>false</IsAndroidApplication>
     <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net11.0'">
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
     <Compile Include="Architecture\**\*.cs" />
     <Compile Include="Charts\**\*.cs" />
     <Compile Include="Body\**\*.cs" />
@@ -362,37 +360,35 @@
     <Compile Include="PreferenceLabelConverterTests.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0'">
     <ProjectReference Include="..\PsychologyApp.Presentation.Core\PsychologyApp.Presentation.Core.csproj" />
     <ProjectReference Include="..\PsychologyApp.Application\PsychologyApp.Application.csproj" />
     <ProjectReference Include="..\PsychologyApp.Domain\PsychologyApp.Domain.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
     <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-    <!-- The stand-ins and linked files of the net10.0 build would clash with the real MAUI types here. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android37.0'">
+    <!-- The stand-ins and linked files of the net11.0 build would clash with the real MAUI types here. -->
     <Compile Remove="ViewModels\**" />
+    <!-- These tests use the net11.0 test shims for static MAUI storage and language state. -->
+    <Compile Remove="JournalCsvExporterTests.cs;LocalizationTestCollection.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android37.0'">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="11.0.10" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net11.0-android37.0'">
     <ProjectReference Include="..\PsychologyApp.Application\PsychologyApp.Application.csproj" />
     <ProjectReference Include="..\PsychologyApp.Domain\PsychologyApp.Domain.csproj" />
     <ProjectReference Include="..\PsychologyApp.Presentation.Core\PsychologyApp.Presentation.Core.csproj" />

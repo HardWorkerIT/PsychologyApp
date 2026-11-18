@@ -35,9 +35,7 @@
                     IsVisible="{Binding HasTechniqueSubtitle}"
                     Text="{Binding TechniqueSubtitle}"
                     Style="{StaticResource CaptionStyle}"
-                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                    MaxLines="2"
-                    LineBreakMode="TailTruncation" />
+                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
 
                 <VerticalStackLayout
                     IsVisible="{Binding HasSections}"

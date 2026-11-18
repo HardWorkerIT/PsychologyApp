@@ -273,7 +273,7 @@
                         </Border>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                             <Label Text="{Binding SlotMorningLabel}" Style="{StaticResource ListRowTitleStyle}" />
-                            <Label Text="{Binding MorningSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="1" LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding MorningSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                     </Grid>
 
@@ -343,7 +343,7 @@
                         </Border>
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                             <Label Text="{Binding SlotEveningLabel}" Style="{StaticResource ListRowTitleStyle}" />
-                            <Label Text="{Binding EveningSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="1" LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding EveningSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                     </Grid>
 

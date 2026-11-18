@@ -8,13 +8,15 @@ public interface IUserPreferencesStore
     event Action? Changed;
 
     UserPreferencesState Load();
-    void Save(UserPreferencesState state);
+    Task SaveAsync(UserPreferencesState state, CancellationToken cancellationToken = default);
     void ApplyAll();
     void ApplyPreview(UserPreferencesState state);
-    void CompleteOnboarding(
+    Task RestoreOnboardingConcernAsync(CancellationToken cancellationToken = default);
+    Task CompleteOnboardingAsync(
         string concern,
         bool? practiceRemindersEnabled = null,
-        int? practiceReminderHour = null);
+        int? practiceReminderHour = null,
+        CancellationToken cancellationToken = default);
     void ResetOnboardingCompletion();
     void SetPendingTechnique(TechniqueId techniqueId);
     TechniqueId? ConsumePendingTechnique();

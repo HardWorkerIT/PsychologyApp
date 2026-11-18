@@ -14,9 +14,17 @@ public static class CourseIds
     public const string Sleep = "sleep";
     public const string Anxiety = "anxiety";
     public const string ProblemPlanning = "problem-planning";
+    public const string Overwhelm = "overwhelm";
     public const string Mood = "mood";
     public const string Trauma = "trauma";
     public const string MoneyStress = "money-stress";
+    /// <summary>Build small actions around what matters, with room to adjust when life gets hard.</summary>
+    public const string ValuesAction = "values-action";
+    public const string NewsBoundaries = "news-boundaries";
+    public const string HabitMaintenance = "habit-maintenance";
+    public const string FeedbackResponse = "feedback-response";
+    public const string ConnectionWithoutPressure = "connection-without-pressure";
+
 }
 
 public static partial class ArticleContent

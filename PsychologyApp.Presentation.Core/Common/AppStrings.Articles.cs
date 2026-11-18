@@ -5,6 +5,7 @@ public static partial class AppStrings
 {
     public static string ArticlesLead => R(nameof(ArticlesLead));
     public static string ArticlesFilterAll => R(nameof(ArticlesFilterAll));
+    public static string ArticlesSearchMinLength => R(nameof(ArticlesSearchMinLength));
     public static string ArticleMinutes(object arg0) => F(nameof(ArticleMinutes), arg0);
     public static string ArticlePracticeCaption => R(nameof(ArticlePracticeCaption));
     public static string ArticleProgrammeCaption => R(nameof(ArticleProgrammeCaption));

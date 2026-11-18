@@ -108,8 +108,8 @@
                             Text="{Binding ActiveTrackTitle}"
                             Style="{StaticResource ListRowTitleStyle}"
                             VerticalOptions="Center"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
 
                         <audioUi:MusicTransportControlsView
                             Grid.Column="1"

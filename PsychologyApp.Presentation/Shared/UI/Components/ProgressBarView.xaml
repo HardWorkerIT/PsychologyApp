@@ -23,6 +23,10 @@
                     IsVisible="{TemplateBinding HasCancel}"
                     Text="{TemplateBinding CancelText}"
                     HorizontalOptions="Center"
+                    MinimumWidthRequest="44"
+                    MinimumHeightRequest="44"
+                    Padding="12,0"
+                    VerticalTextAlignment="Center"
                     Style="{StaticResource NavActionLabelStyle}">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{TemplateBinding CancelCommand}" />

@@ -1,5 +1,6 @@
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
+using PsychologyApp.Presentation.Common;
 using System.Windows.Input;
 
 namespace PsychologyApp.Presentation.Shared.UI.Components;
@@ -83,7 +84,6 @@ public partial class FilterChipView : ContentView
 
     private void UpdateSemantics()
     {
-        SemanticProperties.SetDescription(this, IsSelected ? $"{TitleText}, selected" : TitleText);
-        SemanticProperties.SetHint(this, TitleText);
+        SemanticProperties.SetDescription(this, IsSelected ? AppStrings.FilterChipSelected(TitleText) : TitleText);
     }
 }

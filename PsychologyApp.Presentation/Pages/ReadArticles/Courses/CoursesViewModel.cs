@@ -8,6 +8,12 @@ using PsychologyApp.Presentation.Widgets.LibraryCard;
 
 namespace PsychologyApp.Presentation.Pages.ReadArticles.Courses;
 
+/// <summary>One virtualized course section, with an optional ad slot after it.</summary>
+public sealed class CourseSectionItem(IEnumerable<LibraryCardItem> courses, bool hasAdPlacement = false) : List<LibraryCardItem>(courses)
+{
+    public bool HasAdPlacement { get; } = hasAdPlacement;
+}
+
 /// <summary>The "Courses" top tab of the Library: what guided self-help is, and the courses with their progress.</summary>
 public sealed class CoursesViewModel : BaseViewModel
 {
@@ -38,19 +44,14 @@ public sealed class CoursesViewModel : BaseViewModel
         && Courses.Count >= CoursesBeforeAdCount + 2
         && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
 
-    public IReadOnlyList<LibraryCardItem> CoursesBeforeAd => IsCourseAdEligible
-        ? Courses.Take(CoursesBeforeAdCount).ToArray()
-        : Courses;
-
-    public IReadOnlyList<LibraryCardItem> CoursesAfterAd => IsCourseAdEligible
-        ? Courses.Skip(CoursesBeforeAdCount).ToArray()
-        : [];
+    public IReadOnlyList<CourseSectionItem> Sections => IsCourseAdEligible
+        ? [new(Courses.Take(CoursesBeforeAdCount), hasAdPlacement: true), new(Courses.Skip(CoursesBeforeAdCount))]
+        : [new(Courses)];
 
     public void RefreshAdEligibility()
     {
         OnPropertyChanged(nameof(IsCourseAdEligible));
-        OnPropertyChanged(nameof(CoursesBeforeAd));
-        OnPropertyChanged(nameof(CoursesAfterAd));
+        OnPropertyChanged(nameof(Sections));
     }
 
     public IReadOnlyList<LibraryCardItem> Courses
@@ -64,12 +65,11 @@ public sealed class CoursesViewModel : BaseViewModel
             }
 
             OnPropertyChanged(nameof(IsCourseAdEligible));
-            OnPropertyChanged(nameof(CoursesBeforeAd));
-            OnPropertyChanged(nameof(CoursesAfterAd));
+            OnPropertyChanged(nameof(Sections));
         }
     }
 
-    /// <summary>Called whenever the page appears: a day closed meanwhile changes a course's progress.</summary>
+    /// <summary>Called whenever a day closed meanwhile changes a course's progress.</summary>
     public async Task RefreshAsync()
     {
         try

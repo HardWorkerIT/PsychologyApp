@@ -23,11 +23,13 @@ public sealed class SettingsViewModelTests
     private SettingsViewModel Create(bool remindersSupported = true)
     {
         _store.Setup(s => s.Load()).Returns(() => _state);
-        _store.Setup(s => s.Save(It.IsAny<UserPreferencesState>())).Callback<UserPreferencesState>(s =>
-        {
-            _saved.Add(s);
-            _state = s;
-        });
+        _store.Setup(s => s.SaveAsync(It.IsAny<UserPreferencesState>(), It.IsAny<CancellationToken>()))
+            .Callback<UserPreferencesState, CancellationToken>((s, _) =>
+            {
+                _saved.Add(s);
+                _state = s;
+            })
+            .Returns(Task.CompletedTask);
         _reloader.Setup(r => r.EnsureReloadedAsync()).Returns(Task.CompletedTask);
         _practice.Setup(c => c.SyncAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _quotes.Setup(c => c.SyncAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);

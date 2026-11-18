@@ -11,6 +11,7 @@ public static class TodayRecommendationReasonFormatter
             TodayRecommendationSource.SessionDraft => AppStrings.TodayRecommendationReasonContinueDraft(),
             TodayRecommendationSource.RecentTest => FormatTestReason(decision, context),
             TodayRecommendationSource.LowMood => AppStrings.TodayRecommendationReasonLowMood(),
+            TodayRecommendationSource.Explore => string.Empty,
             _ => AppStrings.TodayRecommendationReason(context.Concern)
         };
 

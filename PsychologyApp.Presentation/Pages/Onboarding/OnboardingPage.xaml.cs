@@ -30,7 +30,10 @@ public partial class OnboardingPage : ContentPage
         HideAllSteps();
     }
 
-    private async void OnSettingSelectionRequested(object? sender, EventArgs e)
+    private void OnSettingSelectionRequested(object? sender, EventArgs e) =>
+        SafeAsync.Run(() => PickSettingAsync(sender));
+
+    private async Task PickSettingAsync(object? sender)
     {
         if (sender is not SettingPickerRowView row)
         {

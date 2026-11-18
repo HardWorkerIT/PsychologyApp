@@ -16,7 +16,7 @@
             <Border
                 Style="{StaticResource TechniqueListCardStyle}"
                 IsVisible="{TemplateBinding Active}"
-                SemanticProperties.Description="{TemplateBinding Title}">
+                SemanticProperties.Description="{TemplateBinding AccessibilityDescription}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{TemplateBinding TapCommand}" />
                 </Border.GestureRecognizers>
@@ -50,8 +50,8 @@
                         <Label
                             Text="{TemplateBinding Subtitle}"
                             Style="{StaticResource CaptionStyle}"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
                         <Label
                             Margin="0,2,0,0"
                             Text="{TemplateBinding MetaText}"

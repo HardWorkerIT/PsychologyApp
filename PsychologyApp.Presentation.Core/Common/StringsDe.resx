@@ -585,6 +585,10 @@
   <data name="QuoteAddFavoriteHint" xml:space="preserve">
     <value>Zu Favoriten hinzufügen</value>
   </data>
+  <data name="QuoteRemoveFavoriteHint" xml:space="preserve">
+    <value>Aus Favoriten entfernen</value>
+  </data>
+
   <data name="QuoteCopyHint" xml:space="preserve">
     <value>Zitat kopieren</value>
   </data>
@@ -3319,11 +3323,17 @@
   <data name="ArticlesSearchPlaceholder" xml:space="preserve">
     <value>Artikel suchen</value>
   </data>
+  <data name="ArticlesSearchMinLength" xml:space="preserve">
+    <value>Gib mindestens zwei Zeichen ein, um zu suchen.</value>
+  </data>
   <data name="ArticlesNothingFound" xml:space="preserve">
     <value>Nichts gefunden. Versuch ein anderes Wort.</value>
   </data>
   <data name="ArticlesFilterSaved" xml:space="preserve">
     <value>Gespeichert</value>
+  </data>
+  <data name="FilterChipSelected" xml:space="preserve">
+    <value>Ausgewählter Filter: {0}</value>
   </data>
   <data name="ArticlesNothingSaved" xml:space="preserve">
     <value>Artikel, die du speicherst, erscheinen hier.</value>
@@ -3428,7 +3438,7 @@
     <value>Tagebuch</value>
   </data>
   <data name="ForYouEmpty" xml:space="preserve">
-    <value>Begonnene Kurse, nicht zu Ende gelesene Artikel und Vorschläge aus deinen Tests und deinem Tagebuch erscheinen hier. Mach einen kurzen Test, dann werden die Vorschläge genauer.</value>
+    <value>Beginne mit den Materialien unten. Hier erscheinen deine Kurse, offene Artikel und persönliche Empfehlungen. Ein kurzer Test macht sie genauer.</value>
   </data>
   <data name="ForYouTakeTest" xml:space="preserve">
     <value>Einen Test machen</value>
@@ -4186,8 +4196,17 @@
   <data name="NextStepTitle" xml:space="preserve">
     <value>Schnellaktionen</value>
   </data>
+  <data name="NextStepSetup" xml:space="preserve">
+    <value>Schnellaktionen auswählen</value>
+  </data>
+  <data name="NextStepPractices" xml:space="preserve">
+    <value>Übungen</value>
+  </data>
+  <data name="NextStepSaveFailed" xml:space="preserve">
+    <value>Schnellaktionen konnten nicht gespeichert werden. Bitte versuche es erneut.</value>
+  </data>
   <data name="NextStepPrompt" xml:space="preserve">
-    <value>Wähle bis zu drei Aktionen für den Schnellzugriff.</value>
+    <value>Wähle bis zu sechs Aktionen. Sie erscheinen zuerst in der Auswahl.</value>
   </data>
   <data name="NextStepGrounding" xml:space="preserve">
     <value>Erdung ausprobieren</value>
@@ -4207,9 +4226,6 @@
   <data name="NextStepStart" xml:space="preserve">
     <value>Öffnen</value>
   </data>
-  <data name="NextStepSave" xml:space="preserve">
-    <value>Zu Schnellaktionen hinzufügen</value>
-  </data>
   <data name="NextStepRemove" xml:space="preserve">
     <value>Aus Schnellaktionen entfernen</value>
   </data>
@@ -4226,10 +4242,10 @@
     <value>Verfügbare Optionen anzeigen oder ausblenden.</value>
   </data>
   <data name="NextStepSaveHint" xml:space="preserve">
-    <value>Fügt die ausgewählte Aktion zu den Schnellaktionen hinzu.</value>
+    <value>Aktion auswählen und anschließend speichern.</value>
   </data>
   <data name="NextStepRemoveHint" xml:space="preserve">
-    <value>Entfernt die ausgewählte Aktion aus den Schnellaktionen.</value>
+    <value>Auswahl aufheben und anschließend speichern.</value>
   </data>
   <data name="NextStepOpenHint" xml:space="preserve">
     <value>Gespeicherte Aktion öffnen.</value>
@@ -4241,13 +4257,19 @@
     <value>Ausgewählt: {0}</value>
   </data>
   <data name="NextStepSavedSummary" xml:space="preserve">
-    <value>Schnellaktionen: {0} von 3</value>
+    <value>Gespeichert: {0} von 3</value>
+  </data>
+  <data name="NextStepShowQuickActions" xml:space="preserve">
+    <value>Schnellaktionen anzeigen</value>
+  </data>
+  <data name="NextStepHideQuickActions" xml:space="preserve">
+    <value>Schnellaktionen ausblenden</value>
   </data>
   <data name="NextStepCapacity" xml:space="preserve">
-    <value>Ausgewählt: {0} von 3</value>
+    <value>Ausgewählt: {0} von {1}</value>
   </data>
   <data name="NextStepLimitReached" xml:space="preserve">
-    <value>Du kannst bis zu drei Aktionen speichern. Entferne eine, um eine weitere hinzuzufügen.</value>
+    <value>Du kannst bis zu {0} Aktionen speichern. Entferne eine, um eine weitere hinzuzufügen.</value>
   </data>
   <data name="PracticeFinderShortAction" xml:space="preserve">
     <value>Finden</value>
@@ -4260,6 +4282,48 @@
   </data>
   <data name="PracticeFinderTitle" xml:space="preserve">
     <value>Was passt gerade?</value>
+  </data>
+  <data name="PracticeFinderContextHeader" xml:space="preserve">
+    <value>Nach Situation oder Bedarf</value>
+  </data>
+  <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
+    <value>Eine gespeicherte Aktion starten oder die Liste bearbeiten</value>
+  </data>
+  <data name="PracticeFinderSituationDescription" xml:space="preserve">
+    <value>Wähle eine Situation oder einen Bedarf für passende Übungen</value>
+  </data>
+  <data name="PracticeFinderConditionsSection" xml:space="preserve">
+    <value>Was für mich passt</value>
+  </data>
+  <data name="PracticeFinderSituationsSection" xml:space="preserve">
+    <value>Situationen</value>
+  </data>
+  <data name="PracticeFinderQuickMatchReason" xml:space="preserve">
+    <value>Kurzes Format</value>
+  </data>
+  <data name="PracticeFinderEyesOpenMatchReason" xml:space="preserve">
+    <value>Die Augen müssen nicht geschlossen werden</value>
+  </data>
+  <data name="PracticeFinderNoBreathMatchReason" xml:space="preserve">
+    <value>Ohne Atemfokus</value>
+  </data>
+  <data name="PracticeFinderNoTypingMatchReason" xml:space="preserve">
+    <value>Schriftliche Antworten können übersprungen werden</value>
+  </data>
+  <data name="PracticeFinderPublicMatchReason" xml:space="preserve">
+    <value>Für öffentliche Orte geeignet</value>
+  </data>
+  <data name="PracticeFinderBeforeConversationMatchReason" xml:space="preserve">
+    <value>Zur Vorbereitung auf ein schwieriges Gespräch</value>
+  </data>
+  <data name="PracticeFinderPassengerCommuteMatchReason" xml:space="preserve">
+    <value>Für Mitfahrende oder bei sicherem Halt</value>
+  </data>
+  <data name="PracticeFinderBeforeSleepMatchReason" xml:space="preserve">
+    <value>Eine ruhige Übung vor dem Schlafen</value>
+  </data>
+  <data name="PracticeFinderAfterConflictMatchReason" xml:space="preserve">
+    <value>Eine Pause nach einem Konflikt</value>
   </data>
   <data name="PracticeFinderQuick" xml:space="preserve">
     <value>Ich habe höchstens 2 Minuten</value>
@@ -4276,9 +4340,6 @@
   <data name="PracticeFinderPublic" xml:space="preserve">
     <value>Ich bin an einem öffentlichen Ort</value>
   </data>
-  <data name="PracticeFinderSituations" xml:space="preserve">
-    <value>Situation auswählen</value>
-  </data>
   <data name="PracticeFinderBeforeConversation" xml:space="preserve">
     <value>Vor einem schwierigen Gespräch</value>
   </data>
@@ -4292,13 +4353,7 @@
     <value>Nach einem Konflikt</value>
   </data>
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
-    <value>Passende Übungen: {0}</value>
-  </data>
-  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
-    <value>Auswahl für „{0}“. Du kannst eine Übung wählen.</value>
-  </data>
-  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
-    <value>Antworten können übersprungen werden</value>
+    <value>Passende Übungen</value>
   </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>Keine passende Übung gefunden</value>

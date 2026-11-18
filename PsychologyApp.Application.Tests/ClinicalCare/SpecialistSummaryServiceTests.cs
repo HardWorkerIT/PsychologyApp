@@ -16,8 +16,9 @@ public sealed class SpecialistSummaryServiceTests
         Mock<IUserProgressService> progress = new();
         progress.Setup(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([new MoodEntryDTO { MoodLevel = 2, RecordedAt = recent }, new MoodEntryDTO { MoodLevel = 4, RecordedAt = recent }]);
-        progress.Setup(p => p.GetRecentTechniqueCompletionsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
-        progress.Setup(p => p.GetAllTestResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        progress.Setup(p => p.CountTechniqueCompletionsBetweenAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+        progress.Setup(p => p.GetTestResultsBetweenAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([new TestResultDTO { TestId = "phq9", Score = 14, Summary = "moderate", CompletedAt = recent }]);
 
         Mock<IClinicalCareService> care = new();

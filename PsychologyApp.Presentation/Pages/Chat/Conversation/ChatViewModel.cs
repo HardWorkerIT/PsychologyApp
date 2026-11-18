@@ -471,7 +471,7 @@ public sealed class ChatViewModel : BaseViewModel
         }
 
         _busy = true;
-        _ = RunGuardedAsync(action);
+        RunGuardedAsync(action).FireAndForget();
     }
 
     private async Task RunGuardedAsync(Func<Task> action)

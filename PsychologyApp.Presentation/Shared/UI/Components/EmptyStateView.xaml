@@ -43,8 +43,7 @@
                     <ui:ButtonView
                         IsCompact="True"
                         BodyText="{TemplateBinding ActionText}"
-                        TapCommand="{TemplateBinding ActionCommand}"
-                        AccessibilityHint="{TemplateBinding ActionText}" />
+                        TapCommand="{TemplateBinding ActionCommand}" />
                 </Border>
             </VerticalStackLayout>
         </ControlTemplate>

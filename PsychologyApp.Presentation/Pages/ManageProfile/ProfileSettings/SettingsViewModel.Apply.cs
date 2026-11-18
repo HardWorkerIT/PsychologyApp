@@ -33,7 +33,7 @@ public partial class SettingsViewModel
         CancelPendingAutoSave();
         CancellationTokenSource debounce = new();
         _autoSaveDebounceCts = debounce;
-        _ = AutoSaveAsync(debounce.Token);
+        AutoSaveAsync(debounce.Token).FireAndForget();
     }
 
     private void CancelPendingAutoSave()
@@ -61,7 +61,7 @@ public partial class SettingsViewModel
         await _saveLock.WaitAsync(cancellationToken);
         try
         {
-            _userPreferencesStore.Save(BuildCurrentState());
+            await _userPreferencesStore.SaveAsync(BuildCurrentState(), cancellationToken);
             _savedState = _userPreferencesStore.Load();
             _userPreferencesStore.ApplyAll();
             await _languageContentReloader.EnsureReloadedAsync();

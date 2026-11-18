@@ -12,7 +12,11 @@
         <behaviors:PressFeedbackBehavior AttachToAllTapTargets="True" />
     </ContentView.Behaviors>
 
-    <Border x:Name="CardBorder" Style="{StaticResource MusicListRowStyle}">
+    <Border
+        x:Name="CardBorder"
+        Style="{StaticResource MusicListRowStyle}"
+        SemanticProperties.Description="{Binding Title, Source={x:Reference Root}}"
+        SemanticProperties.Hint="{Binding PlaybackAccessibilityHint, Source={x:Reference Root}}">
         <Border.Triggers>
             <DataTrigger
                 Binding="{Binding IsActive, Source={x:Reference Root}}"
@@ -100,8 +104,8 @@
                 <Label
                     Text="{Binding Subtitle, Source={x:Reference Root}}"
                     Style="{StaticResource CaptionStyle}"
-                    MaxLines="1"
-                    LineBreakMode="TailTruncation" />
+                    MaxLines="2"
+                    LineBreakMode="WordWrap" />
             </VerticalStackLayout>
             <!-- Only a prayer not on the phone yet is marked, in words: a grey tick on every row ("saved for offline") said nothing
                  without a label, and the exception is the one worth knowing before going offline. -->

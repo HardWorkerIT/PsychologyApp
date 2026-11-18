@@ -15,7 +15,7 @@ public static class TestCatalogParser
             "lower" => ScoreDirection.LowerIsBetter,
             "none" => ScoreDirection.None,
             null or "" => ScoreDirection.LowerIsBetter,
-            _ => ScoreDirection.LowerIsBetter
+            _ => ScoreDirection.None
         };
 
     public static Task<ParseResult<JsonGroupedQuestionnaireDefinition>> DeserializeGroupedQuestionnaireAsync(
@@ -58,6 +58,10 @@ public static class TestCatalogParser
             }
 
             return ParseResult<T>.Success(value);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception ex)
         {

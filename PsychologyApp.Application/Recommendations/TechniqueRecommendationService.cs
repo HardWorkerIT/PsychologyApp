@@ -99,8 +99,10 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
             return new TodayRecommendationDecision(draftId, TodayRecommendationSource.SessionDraft);
         }
 
-        if (context.RecentTestResult is { Score: not null } test &&
-            test.CompletedAt >= DateTime.UtcNow.AddDays(-7))
+        DateTime nowUtc = DateTime.UtcNow;
+        if (context.RecentTestResult is { Score: not null } test
+            && test.CompletedAt >= nowUtc.AddDays(-7)
+            && test.CompletedAt <= nowUtc)
         {
             TechniqueId fromTest = test.TestId == TestIds.LuscherStandard
                 ? LuscherScoreRecommendation.RecommendTechnique(test.Score.Value)

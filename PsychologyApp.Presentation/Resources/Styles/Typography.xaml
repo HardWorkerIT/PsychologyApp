@@ -52,7 +52,7 @@
     <Thickness x:Key="CompactButtonMargin">5,5,5,0</Thickness>
     <system:Double x:Key="MetaIconFontSize">14</system:Double>
     <system:Double x:Key="PolarityIconFontSize">24</system:Double>
-    <system:Double x:Key="DisabledOpacity">0.45</system:Double>
+    <system:Double x:Key="DisabledOpacity">0.8</system:Double>
     <!-- A disabled button keeps its words readable: it turns grey and quiet instead of fading to nothing. -->
     <system:Double x:Key="DisabledButtonOpacity">0.8</system:Double>
     <system:Double x:Key="HeroAccentBarWidth">4</system:Double>
@@ -112,7 +112,7 @@
     </Style>
 
     <Style x:Key="HeroCaptionStyle" TargetType="Label" BasedOn="{StaticResource CaptionStyle}">
-        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
     </Style>
 
     <Style x:Key="MetaIconStyle" TargetType="Label">
@@ -145,7 +145,7 @@
 
     <Style x:Key="NavActionLabelStyle" TargetType="Label" BasedOn="{StaticResource BodyStyle}">
         <Setter Property="FontFamily" Value="{StaticResource MediumFontFamily}" />
-        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="End" />

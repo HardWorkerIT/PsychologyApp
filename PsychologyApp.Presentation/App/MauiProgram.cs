@@ -48,6 +48,9 @@ public static class MauiProgram
 #if ANDROID
             .ConfigureMauiHandlers(handlers =>
             {
+                // The MAUI 11 handler-based Shell crashes while attaching this app's custom FlyoutContent.
+                // Use the compatibility renderer until the handler supports that template.
+                handlers.AddHandler<Shell, Microsoft.Maui.Controls.Handlers.Compatibility.ShellRenderer>();
                 handlers.AddHandler<PsychologyApp.Presentation.Widgets.TechniqueListCard.TechniqueCardNativeView,
                     PsychologyApp.Presentation.Platforms.Android.TechniqueCardHandler>();
                 handlers.AddHandler<VkBannerView, VkBannerHandler>();

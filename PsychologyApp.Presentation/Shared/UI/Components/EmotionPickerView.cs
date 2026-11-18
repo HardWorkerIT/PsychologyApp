@@ -106,6 +106,8 @@ public sealed class EmotionPickerView : ContentView
         {
             Margin = new Thickness(0, 0, 6, 6),
             Padding = isFamily ? new Thickness(14, 7) : new Thickness(11, 5),
+            MinimumHeightRequest = 44,
+            MinimumWidthRequest = 44,
             StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = 18 },
             BackgroundColor = isFamily ? Color.FromArgb(fill) : Colors.Transparent,
             Stroke = new SolidColorBrush(Color.FromArgb(isFamily ? fill : text)),
@@ -124,6 +126,7 @@ public sealed class EmotionPickerView : ContentView
         foreach ((string word, Border chip, Label label, EmotionFamily family) in _chips)
         {
             bool selected = AnswerText.Contains(Text, word);
+            SemanticProperties.SetHint(chip, selected ? AppStrings.TestsAnswerSelected : AppStrings.TestsAnswerNotSelected);
             (string fill, string text) = EmotionColors.For(family, IsDark);
             bool isFamily = _families.Children.Contains(chip);
             chip.StrokeThickness = selected ? 2.4 : 1.2;

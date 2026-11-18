@@ -65,6 +65,15 @@ public partial class TodayPracticeRowView : ContentView
         set => SetValue(SubtitleProperty, value);
     }
 
+    public static readonly BindableProperty AccessibilityDescriptionProperty =
+        BindableProperty.Create(nameof(AccessibilityDescription), typeof(string), typeof(TodayPracticeRowView), string.Empty);
+
+    public string AccessibilityDescription
+    {
+        get => (string)GetValue(AccessibilityDescriptionProperty);
+        set => SetValue(AccessibilityDescriptionProperty, value);
+    }
+
     /// <summary>The safety banner above takes the place of the hint: one message at a time, and the one about safety first.</summary>
     public static readonly BindableProperty HideHintProperty =
         BindableProperty.Create(nameof(HideHint), typeof(bool), typeof(TodayPracticeRowView), false, propertyChanged: OnHintRelevantChanged);

@@ -585,6 +585,10 @@
   <data name="QuoteAddFavoriteHint" xml:space="preserve">
     <value>加入收藏</value>
   </data>
+  <data name="QuoteRemoveFavoriteHint" xml:space="preserve">
+    <value>从收藏中移除</value>
+  </data>
+
   <data name="QuoteCopyHint" xml:space="preserve">
     <value>复制名言</value>
   </data>
@@ -3319,11 +3323,17 @@
   <data name="ArticlesSearchPlaceholder" xml:space="preserve">
     <value>搜索文章</value>
   </data>
+  <data name="ArticlesSearchMinLength" xml:space="preserve">
+    <value>请输入至少两个字符进行搜索。</value>
+  </data>
   <data name="ArticlesNothingFound" xml:space="preserve">
     <value>没有找到结果。换个词试试。</value>
   </data>
   <data name="ArticlesFilterSaved" xml:space="preserve">
     <value>已收藏</value>
+  </data>
+  <data name="FilterChipSelected" xml:space="preserve">
+    <value>已选筛选条件：{0}</value>
   </data>
   <data name="ArticlesNothingSaved" xml:space="preserve">
     <value>你收藏的文章会显示在这里。</value>
@@ -3428,7 +3438,7 @@
     <value>日记</value>
   </data>
   <data name="ForYouEmpty" xml:space="preserve">
-    <value>你开始的课程、没读完的文章，以及根据测试和日记给出的建议会显示在这里。做一个简短的测试，推荐会更准确。</value>
+    <value>从下方内容开始。你的课程、未读完的文章和个性化推荐会显示在这里。完成简短测试后，推荐会更贴合你的需要。</value>
   </data>
   <data name="ForYouTakeTest" xml:space="preserve">
     <value>做个测试</value>
@@ -4186,8 +4196,17 @@
   <data name="NextStepTitle" xml:space="preserve">
     <value>快捷操作</value>
   </data>
+  <data name="NextStepSetup" xml:space="preserve">
+    <value>选择快捷操作</value>
+  </data>
+  <data name="NextStepPractices" xml:space="preserve">
+    <value>练习</value>
+  </data>
+  <data name="NextStepSaveFailed" xml:space="preserve">
+    <value>无法保存快捷操作，请重试。</value>
+  </data>
   <data name="NextStepPrompt" xml:space="preserve">
-    <value>保存最多三个操作，方便快速打开。</value>
+    <value>最多选择六项，它们会优先显示在列表中。</value>
   </data>
   <data name="NextStepGrounding" xml:space="preserve">
     <value>尝试落地练习</value>
@@ -4207,9 +4226,6 @@
   <data name="NextStepStart" xml:space="preserve">
     <value>打开</value>
   </data>
-  <data name="NextStepSave" xml:space="preserve">
-    <value>添加到快捷操作</value>
-  </data>
   <data name="NextStepRemove" xml:space="preserve">
     <value>从快捷操作中移除</value>
   </data>
@@ -4226,10 +4242,10 @@
     <value>显示或隐藏可用选项。</value>
   </data>
   <data name="NextStepSaveHint" xml:space="preserve">
-    <value>将所选操作添加到快捷操作。</value>
+    <value>勾选此操作，然后保存。</value>
   </data>
   <data name="NextStepRemoveHint" xml:space="preserve">
-    <value>从快捷操作中移除所选操作。</value>
+    <value>取消勾选此操作，然后保存。</value>
   </data>
   <data name="NextStepOpenHint" xml:space="preserve">
     <value>打开此已保存操作。</value>
@@ -4241,13 +4257,19 @@
     <value>已选择：{0}</value>
   </data>
   <data name="NextStepSavedSummary" xml:space="preserve">
-    <value>快捷操作：{0}/3</value>
-  </data>
-  <data name="NextStepCapacity" xml:space="preserve">
     <value>已保存：{0}/3</value>
   </data>
+  <data name="NextStepShowQuickActions" xml:space="preserve">
+    <value>显示快捷操作</value>
+  </data>
+  <data name="NextStepHideQuickActions" xml:space="preserve">
+    <value>隐藏快捷操作</value>
+  </data>
+  <data name="NextStepCapacity" xml:space="preserve">
+    <value>已选择：{0}/{1}</value>
+  </data>
   <data name="NextStepLimitReached" xml:space="preserve">
-    <value>最多可保存三个操作。移除一个后才能添加另一个。</value>
+    <value>最多可保存{0}个操作。移除一个后才能添加另一个。</value>
   </data>
   <data name="PracticeFinderShortAction" xml:space="preserve">
     <value>筛选</value>
@@ -4260,6 +4282,48 @@
   </data>
   <data name="PracticeFinderTitle" xml:space="preserve">
     <value>现在什么更适合？</value>
+  </data>
+  <data name="PracticeFinderContextHeader" xml:space="preserve">
+    <value>按情境或需求</value>
+  </data>
+  <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
+    <value>开始一项已保存的操作，或编辑列表</value>
+  </data>
+  <data name="PracticeFinderSituationDescription" xml:space="preserve">
+    <value>选择情境或需求，查看适合的练习</value>
+  </data>
+  <data name="PracticeFinderConditionsSection" xml:space="preserve">
+    <value>适合我的条件</value>
+  </data>
+  <data name="PracticeFinderSituationsSection" xml:space="preserve">
+    <value>情境</value>
+  </data>
+  <data name="PracticeFinderQuickMatchReason" xml:space="preserve">
+    <value>短时练习</value>
+  </data>
+  <data name="PracticeFinderEyesOpenMatchReason" xml:space="preserve">
+    <value>可以睁着眼睛练习</value>
+  </data>
+  <data name="PracticeFinderNoBreathMatchReason" xml:space="preserve">
+    <value>无需专注于呼吸</value>
+  </data>
+  <data name="PracticeFinderNoTypingMatchReason" xml:space="preserve">
+    <value>可以跳过文字回答</value>
+  </data>
+  <data name="PracticeFinderPublicMatchReason" xml:space="preserve">
+    <value>适合在公共场所进行</value>
+  </data>
+  <data name="PracticeFinderBeforeConversationMatchReason" xml:space="preserve">
+    <value>为困难对话做准备</value>
+  </data>
+  <data name="PracticeFinderPassengerCommuteMatchReason" xml:space="preserve">
+    <value>适合乘客或停车时</value>
+  </data>
+  <data name="PracticeFinderBeforeSleepMatchReason" xml:space="preserve">
+    <value>睡前的平和练习</value>
+  </data>
+  <data name="PracticeFinderAfterConflictMatchReason" xml:space="preserve">
+    <value>冲突后暂停一下</value>
   </data>
   <data name="PracticeFinderQuick" xml:space="preserve">
     <value>我有两分钟以内</value>
@@ -4276,9 +4340,6 @@
   <data name="PracticeFinderPublic" xml:space="preserve">
     <value>我在公共场所</value>
   </data>
-  <data name="PracticeFinderSituations" xml:space="preserve">
-    <value>选择当前情境</value>
-  </data>
   <data name="PracticeFinderBeforeConversation" xml:space="preserve">
     <value>重要谈话前</value>
   </data>
@@ -4292,13 +4353,7 @@
     <value>发生冲突后</value>
   </data>
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
-    <value>适合“{0}”的练习</value>
-  </data>
-  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
-    <value>“{0}”情境练习。可任选一项开始。</value>
-  </data>
-  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
-    <value>可以跳过回答</value>
+    <value>适合的练习</value>
   </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>未找到合适的练习</value>

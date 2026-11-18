@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PsychologyApp.Application.Abstractions.Analytics;
 using PsychologyApp.Presentation.Shared.ViewModels;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueSession;
 
 namespace PsychologyApp.Presentation.Widgets.TechniqueSessionShell;
@@ -31,7 +32,7 @@ public class TechniqueSessionBehavior : Behavior<ContentPage>
         _sessionStartedAt = DateTime.Now;
 
     private void OnPageDisappearing(object? sender, EventArgs e) =>
-        _ = TrackSessionAsync();
+        SafeAsync.Run(TrackSessionAsync);
 
     private async Task TrackSessionAsync()
     {
@@ -54,7 +55,7 @@ public class TechniqueSessionBehavior : Behavior<ContentPage>
             if (Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services.GetService<ILogger<TechniqueSessionBehavior>>()
                 is ILogger<TechniqueSessionBehavior> logger)
             {
-                logger.LogWarning(ex, "Failed to track technique session analytics.");
+                logger.LogWarning("Failed to track technique session analytics ({ExceptionType}).", ex.GetType().Name);
             }
         }
     }

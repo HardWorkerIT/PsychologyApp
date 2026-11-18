@@ -30,7 +30,7 @@ public sealed class AsyncCommand<T> : ICommand
             return;
         }
 
-        _ = ExecuteCoreAsync(Convert(parameter));
+        ExecuteCoreAsync(Convert(parameter)).FireAndForget();
     }
 
     private async Task ExecuteCoreAsync(T? parameter)

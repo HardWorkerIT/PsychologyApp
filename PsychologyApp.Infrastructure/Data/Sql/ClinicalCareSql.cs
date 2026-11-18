@@ -35,7 +35,8 @@ internal static class ClinicalCareSql
             HasSevereInsomnia,
             RiskLevel
         FROM RiskAssessments
-        ORDER BY RiskAssessmentId DESC
+        WHERE AssessedAt < @beforeUtc
+        ORDER BY AssessedAt DESC, RiskAssessmentId DESC
         LIMIT 1;
         """;
 
@@ -68,7 +69,8 @@ internal static class ClinicalCareSql
     internal const string SelectRecentEscalations = """
         SELECT EscalationEventId, CreatedAt, RiskLevel, TriggerSource, Action, Notes
         FROM EscalationEvents
-        ORDER BY EscalationEventId DESC
+        WHERE CreatedAt < @beforeUtc
+        ORDER BY CreatedAt DESC, EscalationEventId DESC
         LIMIT @limit;
         """;
 }

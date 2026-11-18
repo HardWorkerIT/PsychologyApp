@@ -2928,5 +2928,150 @@
     "author": "PsychologyApp Team",
     "text": "An option that did not fit can still offer information.",
     "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "First see what is truly urgent. The rest can take its turn.",
+    "theme": "wisdom"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "One small step will not solve everything, but it can give you a choice.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A helpful plan leaves room for change.",
+    "theme": "resilience"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Asking for specific help is an action too.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A list shows tasks, not a person's worth.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A pause from the feed can help you choose when the news is useful.",
+    "theme": "wisdom"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "You can keep essential alerts and change the habit of reading every update.",
+    "theme": "resilience"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Ending a check is a choice too: once you have an answer, you can return to your day.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A pause in an argument may protect the conversation without requiring reconciliation.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Apologizing for an action does not cancel the right to a boundary.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A clear request is about the next step, not a person's worth.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A habit does not depend on a perfect streak; it depends on being able to return.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Make the beginning small enough to fit into an ordinary day.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A helpful cue can remind you without turning the step into an obligation.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A missed day can show where the plan needs more flexibility.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "When life changes, the plan can change too.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Measure a step against your circumstances, not someone else's pace.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "One specific comment may suggest a step; it cannot measure a person's worth.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A pause can turn an automatic reply into a chosen one.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A clarifying question brings a conversation from guesses back to facts.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "You can keep what is useful without accepting a label.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Fair feedback leaves room for respect.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Sometimes the best next step is to ask for time and support.",
+    "theme": "self-awareness"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A small connection does not have to become a big commitment.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "You can offer time together and leave the other person free to choose.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "A shared activity can make quiet company feel easier.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Someone's no reflects a choice now, not your worth.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Safety and a comfortable format matter more than a perfect plan.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp",
+    "text": "Connection can grow through steps that fit your life.",
+    "theme": "relationships"
   }
 ]

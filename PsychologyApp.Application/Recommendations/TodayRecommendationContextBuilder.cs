@@ -38,7 +38,9 @@ public static class TodayRecommendationContextBuilder
             progress.GetSessionDraftKeysAsync(CatalogTechniqueKeys, cancellationToken);
         Task<IReadOnlyList<SessionResultDTO>> sessionResultsTask =
             progress.GetRecentSessionResultsAsync(SessionHistoryLimit, cancellationToken);
-        Task<TherapyProgramStateDTO?>? programTask = clinicalCare?.GetActiveProgramAsync(cancellationToken);
+        Task<TherapyProgramStateDTO?>? programTask = clinicalCare is null
+            ? null
+            : LoadProgramForRecommendationAsync(clinicalCare, cancellationToken);
 
         if (programTask is null)
         {
@@ -78,6 +80,27 @@ public static class TodayRecommendationContextBuilder
             program?.IsActive == true ? program.ProgramType : null,
             program?.IsActive == true ? program.CurrentWeek : 0,
             effectiveness);
+    }
+
+    private static async Task<TherapyProgramStateDTO?> LoadProgramForRecommendationAsync(
+        IClinicalCareService clinicalCare,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await clinicalCare.GetActiveProgramAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception error)
+        {
+            System.Diagnostics.Trace.TraceWarning(
+                "Optional therapy program lookup failed ({0}); using the onboarding concern instead.",
+                error.GetType().Name);
+            return null;
+        }
     }
 
     /// <summary>Average drop in tension (pre minus post SUDS) per technique key, for techniques practiced

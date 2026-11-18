@@ -20,9 +20,15 @@ public sealed class PracticeClinicalDashboardEnricher(
         try
         {
             await clinicalCareService.AdjustProgramFromScorecardAsync(cancellationToken);
-            TherapyProgramStateDTO? program = await clinicalCareService.GetActiveProgramAsync(cancellationToken);
-            RiskAssessmentDTO? latestRisk = await clinicalCareService.GetLatestRiskAssessmentAsync(cancellationToken);
-            TherapyProgramAdherence? adherence = await clinicalCareService.GetActiveWeekAdherenceAsync(cancellationToken);
+            Task<TherapyProgramStateDTO?> programTask = clinicalCareService.GetActiveProgramAsync(cancellationToken);
+            Task<RiskAssessmentDTO?> latestRiskTask = clinicalCareService.GetLatestRiskAssessmentAsync(cancellationToken);
+            Task<TherapyProgramAdherence?> adherenceTask = clinicalCareService.GetActiveWeekAdherenceAsync(cancellationToken);
+
+            await Task.WhenAll(programTask, latestRiskTask, adherenceTask).ConfigureAwait(false);
+
+            TherapyProgramStateDTO? program = await programTask.ConfigureAwait(false);
+            RiskAssessmentDTO? latestRisk = await latestRiskTask.ConfigureAwait(false);
+            TherapyProgramAdherence? adherence = await adherenceTask.ConfigureAwait(false);
 
             string therapyBanner = adherence is not null
                 ? FormatProgramBanner(

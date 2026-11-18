@@ -39,12 +39,11 @@ public sealed class ChatListItem
     public required ICommand DeleteCommand { get; init; }
     public required ICommand MenuCommand { get; init; }
     public string MenuText => AppStrings.ChatMore;
-
-    public string RenameText => AppStrings.ChatRename;
-    public string DeleteText => AppStrings.ChatDelete;
+    public string AccessibilityDescription => string.Join(". ", new[] { Title, Preview, TimeText, MoodText }
+        .Where(static text => !string.IsNullOrWhiteSpace(text)));
 
     /// <summary>Everything the row shows. Equal signatures mean the row does not need rebuilding.</summary>
-    public string Signature => $"{Id}|{Title}|{Preview}|{TimeText}|{MoodText}|{IconName}";
+    public string Signature => $"{Id}|{Title}|{Preview}|{TimeText}|{MoodText}|{IconName}|{Flavor}|{IsImproving}|{IsWorsening}";
 }
 
 /// <summary>The messenger's chat list: every conversation with its last message, time and how the tension moved.</summary>
@@ -319,8 +318,8 @@ public sealed class ChatListViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// The row's actions behind a visible "more" button: a swipe alone hid renaming and deleting from anyone who did not
-    /// know to swipe. Each choice runs the same flow as the swipe, with its own question.
+    /// The visible "more" button exposes rename and delete without relying on a hidden gesture. Each choice opens its own
+    /// confirmation or editing flow.
     /// </summary>
     private async Task ShowMenuAsync(long id, string title)
     {

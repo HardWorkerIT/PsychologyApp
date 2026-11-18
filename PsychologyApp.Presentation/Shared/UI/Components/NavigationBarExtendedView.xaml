@@ -45,7 +45,7 @@
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
                     LineBreakMode="TailTruncation"
-                    MaxLines="1" />
+                    MaxLines="2" />
                 <Label
                     Grid.Column="2"
                     IsVisible="{TemplateBinding ExtensionEnabled}"
@@ -53,6 +53,9 @@
                     Style="{StaticResource NavActionLabelStyle}"
                     HorizontalOptions="End"
                     LineBreakMode="TailTruncation"
+                    MinimumWidthRequest="44"
+                    MinimumHeightRequest="44"
+                    VerticalTextAlignment="Center"
                     MaxLines="1">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Command="{TemplateBinding ExtensionCommand}" />

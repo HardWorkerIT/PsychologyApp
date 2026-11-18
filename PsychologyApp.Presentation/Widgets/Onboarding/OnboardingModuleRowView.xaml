@@ -40,8 +40,8 @@
                         <Label
                             Text="{TemplateBinding Title}"
                             Style="{StaticResource ListRowTitleStyle}"
-                            MaxLines="1"
-                            LineBreakMode="TailTruncation" />
+                            MaxLines="2"
+                            LineBreakMode="WordWrap" />
                         <Label
                             Text="{TemplateBinding Subtitle}"
                             Style="{StaticResource CaptionStyle}"

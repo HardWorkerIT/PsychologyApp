@@ -19,7 +19,9 @@
     -->
     <ContentView.ControlTemplate>
         <ControlTemplate x:DataType="self:TodayPracticeRowView">
-            <Border Style="{StaticResource TechniqueListCardStyle}" Padding="16,12">
+            <Border Style="{StaticResource TechniqueListCardStyle}"
+                    Padding="16,12"
+                    SemanticProperties.Description="{TemplateBinding AccessibilityDescription}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{TemplateBinding TapCommand}" />
                 </Border.GestureRecognizers>
@@ -59,23 +61,21 @@
                             <Label
                                 Text="{TemplateBinding Title}"
                                 Style="{StaticResource ListRowTitleStyle}"
-                                MaxLines="1"
-                                LineBreakMode="TailTruncation" />
+                                MaxLines="2"
+                                LineBreakMode="WordWrap" />
                             <Label
                                 Text="{TemplateBinding Subtitle}"
                                 Style="{StaticResource CaptionStyle}"
-                                MaxLines="1"
-                                LineBreakMode="TailTruncation" />
-                            <!-- Under the subtitle, on the same left edge as the title: alone under the tile it read as a loose line. One line each: four
-                                 lines made this row heavier than the catalog under it. -->
+                                MaxLines="2"
+                                LineBreakMode="WordWrap" />
+                            <!-- The resume instruction is meaningful content, so keep it readable on narrow screens. -->
                             <Label
                                 IsVisible="{TemplateBinding HasHint}"
                                 Margin="0,4,0,0"
                                 Text="{TemplateBinding HintText}"
                                 Style="{StaticResource CaptionStyle}"
-                                TextColor="{AppThemeBinding Light={StaticResource TextTertiaryLight}, Dark={StaticResource TextSecondaryDark}}"
-                                MaxLines="1"
-                                LineBreakMode="TailTruncation" />
+                                MaxLines="2"
+                                LineBreakMode="WordWrap" />
                         </VerticalStackLayout>
                         <Label
                             Grid.Column="2"

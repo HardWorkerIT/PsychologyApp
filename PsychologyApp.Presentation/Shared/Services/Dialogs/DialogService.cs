@@ -132,6 +132,46 @@ public class DialogService(IPageHost pageHost) : IDialogService
         }
     }
 
+    public async Task<IReadOnlyList<string>?> PickMultipleOptionsAsync(
+        string title,
+        IReadOnlyList<DialogOptionItem> options,
+        IReadOnlyCollection<string> selectedValues,
+        int maximumSelectionCount,
+        Func<int, string> selectionSummaryFactory,
+        string selectionHint,
+        string selectedItemHint,
+        string selectionLimitMessage,
+        string accept,
+        string cancel)
+    {
+        if (!TryEnter())
+        {
+            return null;
+        }
+
+        try
+        {
+            Page page = RequireActivePage();
+            var popup = new AppOptionsSheetPopup(
+                title,
+                options,
+                selectedValues,
+                maximumSelectionCount,
+                selectionSummaryFactory,
+                selectionHint,
+                selectedItemHint,
+                selectionLimitMessage,
+                accept,
+                cancel);
+            await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
+            return popup.SelectedValues;
+        }
+        finally
+        {
+            Leave();
+        }
+    }
+
     private bool TryEnter() => Interlocked.CompareExchange(ref _isShowing, 1, 0) == 0;
 
     private void Leave() => Volatile.Write(ref _isShowing, 0);

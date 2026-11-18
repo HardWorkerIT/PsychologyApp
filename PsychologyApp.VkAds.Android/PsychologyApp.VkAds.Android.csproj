@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0-android</TargetFramework>
+    <TargetFramework>net11.0-android37.0</TargetFramework>
     <IsBindingProject>true</IsBindingProject>
     <Nullable>enable</Nullable>
     <!-- The private Java listener uses an SDK interface and is intentionally not exposed to C#. -->

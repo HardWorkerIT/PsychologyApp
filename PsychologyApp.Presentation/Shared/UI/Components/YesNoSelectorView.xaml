@@ -14,6 +14,7 @@
 
         <Grid ColumnDefinitions="*,*" ColumnSpacing="{StaticResource CompactSpacing}">
             <Border
+                x:Name="YesOption"
                 Grid.Column="0"
                 Style="{StaticResource ChoiceOptionBorderStyle}"
                 SemanticProperties.Description="{Binding YesText, Source={x:Reference Root}}">
@@ -46,6 +47,7 @@
             </Border>
 
             <Border
+                x:Name="NoOption"
                 Grid.Column="1"
                 Style="{StaticResource ChoiceOptionBorderStyle}"
                 SemanticProperties.Description="{Binding NoText, Source={x:Reference Root}}">

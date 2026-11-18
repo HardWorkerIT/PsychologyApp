@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using PsychologyApp.Presentation.Common;
 
 namespace PsychologyApp.Presentation.Widgets.MusicListCard;
 
@@ -38,7 +39,7 @@ public partial class MusicListCardView : ContentView
     }
 
     public static readonly BindableProperty IsActiveProperty =
-        BindableProperty.Create(nameof(IsActive), typeof(bool), typeof(MusicListCardView), false);
+        BindableProperty.Create(nameof(IsActive), typeof(bool), typeof(MusicListCardView), false, propertyChanged: OnPlaybackStateChanged);
 
     public bool IsActive
     {
@@ -47,12 +48,21 @@ public partial class MusicListCardView : ContentView
     }
 
     public static readonly BindableProperty IsPlayingThisProperty =
-        BindableProperty.Create(nameof(IsPlayingThis), typeof(bool), typeof(MusicListCardView), false);
+        BindableProperty.Create(nameof(IsPlayingThis), typeof(bool), typeof(MusicListCardView), false, propertyChanged: OnPlaybackStateChanged);
 
     public bool IsPlayingThis
     {
         get => (bool)GetValue(IsPlayingThisProperty);
         set => SetValue(IsPlayingThisProperty, value);
+    }
+
+    public string PlaybackAccessibilityHint =>
+        IsActive && IsPlayingThis ? AppStrings.MusicPause : AppStrings.MusicPlay;
+
+    private static void OnPlaybackStateChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is MusicListCardView view)
+            view.OnPropertyChanged(nameof(PlaybackAccessibilityHint));
     }
 
     public static readonly BindableProperty NeedsInternetProperty =

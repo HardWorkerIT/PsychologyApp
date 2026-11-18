@@ -57,13 +57,19 @@ public static class ReadingRecommender
             Add(new ReadingPick(course.CourseId, true, ReadingPickReason.ContinueCourse));
         }
 
-        if (state.LastArticleId is { } last && !state.Read.Contains(last) && state.LastOpenedUtc is { } opened && nowUtc - opened <= ContinueReadingFor)
+        if (state.LastArticleId is { } last
+            && !state.Read.Contains(last)
+            && state.LastOpenedUtc is { } opened
+            && opened <= nowUtc
+            && nowUtc - opened <= ContinueReadingFor)
         {
             Add(new ReadingPick(last, false, ReadingPickReason.ContinueReading));
         }
 
         Dictionary<string, int> scores = latestResults
-            .Where(result => result.Score is not null && nowUtc - result.CompletedAt <= ResultFreshFor)
+            .Where(result => result.Score is not null
+                && result.CompletedAt <= nowUtc
+                && nowUtc - result.CompletedAt <= ResultFreshFor)
             .GroupBy(result => result.TestId)
             .ToDictionary(group => group.Key, group => group.OrderByDescending(result => result.CompletedAt).First().Score!.Value);
 
@@ -114,7 +120,9 @@ public static class ReadingRecommender
         }
 
         int lowDays = moods
-            .Where(mood => mood.MoodLevel <= LowMoodLevel && nowUtc - mood.RecordedAt <= MoodWindow)
+            .Where(mood => mood.MoodLevel <= LowMoodLevel
+                && mood.RecordedAt <= nowUtc
+                && nowUtc - mood.RecordedAt <= MoodWindow)
             .Select(mood => mood.RecordedAt.Date)
             .Distinct()
             .Count();

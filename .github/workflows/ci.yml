@@ -9,11 +9,21 @@ on:
 jobs:
   build-test:
     runs-on: windows-latest
+    env:
+      CI: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
         with:
-          dotnet-version: '10.0.x'
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+      - run: dotnet workload install maui-android
       - name: Check for blocking async calls in production code
         shell: pwsh
         run: ./scripts/check-no-blocking-async.ps1
@@ -59,21 +69,47 @@ jobs:
           if ($overall -lt 80) { Write-Error "Overall coverage $overall% is below 80%"; $failed = $true }
           if ($failed) { exit 1 }
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: CoverageReport
-      - run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-ios
-      - run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android
-      - run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android -c Release
+      - run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-android37.0 -c Release
+
+  build-apple:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
+      - run: dotnet workload install maui
+      - name: Build iOS Release
+        run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-ios27.2 -c Release -p:EnableCodeSigning=false
+      - name: Build Mac Catalyst Release
+        run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-maccatalyst27.2 -c Release -p:EnableCodeSigning=false
 
   build-test-linux:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
         with:
-          dotnet-version: '10.0.x'
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '11.0.x'
       - name: Build core and test projects
         run: |
           for proj in \
@@ -89,7 +125,7 @@ jobs:
             PsychologyApp.Integration.Tests/PsychologyApp.Integration.Tests.csproj \
             PsychologyApp.Presentation.Tests/PsychologyApp.Presentation.Tests.csproj
           do
-            dotnet build "$proj" -c Debug -p:Net10Only=true
+            dotnet build "$proj" -c Debug -p:Net11Only=true
           done
       - name: Run tests
         run: |
@@ -100,5 +136,5 @@ jobs:
             PsychologyApp.Integration.Tests/PsychologyApp.Integration.Tests.csproj \
             PsychologyApp.Presentation.Tests/PsychologyApp.Presentation.Tests.csproj
           do
-            dotnet test "$proj" -c Debug --no-build -p:Net10Only=true --verbosity minimal
+            dotnet test "$proj" -c Debug --no-build -p:Net11Only=true --verbosity minimal
           done

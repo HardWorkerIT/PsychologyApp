@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-maccatalyst;net10.0-ios;net10.0-android</TargetFrameworks>
+		<TargetFrameworks>net11.0-maccatalyst27.2;net11.0-ios27.2;net11.0-android37.0</TargetFrameworks>
 		<!-- Linux (the android-smoke runner) has no iOS or Mac Catalyst workloads, and a restore of those target frameworks fails there. -->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux'))">net10.0-android</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux'))">net11.0-android37.0</TargetFrameworks>
+		<!-- CI cannot build Apple targets on Windows; those targets are built on macOS in a separate job. -->
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) And '$(CI)' == 'true'">net11.0-android37.0</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
@@ -24,7 +24,7 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<!-- Compile bindings that set Source ({x:Reference Root}, TemplatedParent) too; they're most of the app's bindings. -->
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
-		<!-- Generate C# for XAML in every configuration. The .NET 10 default inflates XAML by reflection at runtime in
+		<!-- Generate C# for XAML in every configuration. The default inflates XAML by reflection at runtime in
 		     Debug, which made every first page/tab open stall the UI thread for seconds (skipped frames on device). -->
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 		<!-- ViewModels are DI-only; nullable init warnings are false positives in partial MAUI types. -->
@@ -37,28 +37,24 @@
 		<ApplicationId>com.subconscious.psychologyapp</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>2.012</ApplicationDisplayVersion>
-		<ApplicationVersion>2012</ApplicationVersion>
+		<ApplicationDisplayVersion>2.013</ApplicationDisplayVersion>
+		<ApplicationVersion>2013</ApplicationVersion>
+		<!-- Keep NuGet's project metadata stable across MAUI target frameworks in Visual Studio. -->
+		<PackageVersion>2.012</PackageVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">17.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<PublishTrimmed>False</PublishTrimmed>
-	
 		<RuntimeIdentifiers Condition="$(TargetFramework.Contains('-android'))">android-arm;android-arm64;android-x64</RuntimeIdentifiers>
 	
 	</PropertyGroup>
 
-	<!-- A 16 MB nursery (SGen default 4 MB) means ~4x fewer minor collections, each of which also forces a Java GC
-	     through the GC bridge: the log showed one about every second while moving between tabs. -->
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-	  <AndroidEnvironment Include="Platforms/Android/environment.txt" />
-	</ItemGroup>
-
 	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android' And '$(Configuration)' == 'Debug'">
+	  <!-- Visual Studio F5 must never target the installed production app or its private data. -->
+	  <ApplicationId Condition="'$(ApplicationId)' == 'com.subconscious.psychologyapp'">com.subconscious.psychologyapp.dev</ApplicationId>
+	  <ApplicationTitle Condition="'$(ApplicationTitle)' == 'Psychology App'">Psychology DEV</ApplicationTitle>
 	  <AndroidUseAapt2>True</AndroidUseAapt2>
 	  <IsPublishable>False</IsPublishable>
 	  <Debugger>Xamarin</Debugger>
@@ -67,18 +63,13 @@
 	  <AndroidIncludeDebugSymbols>true</AndroidIncludeDebugSymbols>
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	  <PublishTrimmed>False</PublishTrimmed>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
-	  <RunAOTCompilation>False</RunAOTCompilation>
 	  <!-- Disable fast deployment: avoids XA0129 push failures to .__override__ on device. -->
 	  <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	  <!-- Debug: arm64 for physical devices + x64 for Windows emulator; avoids all 4 ABIs (XAWAS7024). scripts/android-run.sh
 	       passes -p:AndroidDevRid with the connected device's ABI, so a run builds one ABI instead of two. -->
 	  <RuntimeIdentifiers Condition="'$(AndroidDevRid)' == ''">android-arm64;android-x64</RuntimeIdentifiers>
 	  <RuntimeIdentifiers Condition="'$(AndroidDevRid)' != ''">$(AndroidDevRid)</RuntimeIdentifiers>
-	  <!-- The SDK interprets all managed code in Debug (for C# Hot Reload), several times slower than JIT and a
-	       large share of the skipped frames seen in Debug runs. JIT keeps breakpoints and stepping. -->
-	  <UseInterpreter>false</UseInterpreter>
 	</PropertyGroup>
 
 	<!-- Release Android: single source of truth for build, run, and publish (no duplicate TFM|Platform overrides). -->
@@ -89,22 +80,13 @@
 	  <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	  <!-- Play Console: aab. Sideload on phone: -p:AndroidPackageFormat=apk -p:RuntimeIdentifier=android-arm64 -->
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
-	  <!-- Partial trimming: only framework assemblies that declare themselves trimmable are cut (Mono.Android alone is
-	       ~40 MB untrimmed); the app, Dapper and the libraries rooted below are kept whole. -->
+	  <!-- Keep partial trimming: the app, Dapper and the explicitly rooted libraries below stay whole. -->
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
-	  <!-- AOT: code ships precompiled instead of being JIT-compiled on the phone (the first-open cost of each tab was 0.4-0.9 s).
-	       NOT profiled AOT: with AndroidEnableProfiledAot the Release build aborted at random on the .NET Timer / .NET TP Gate threads
-	       ("aot-runtime.c: condition `plt_entry' not met", SIGABRT) a few seconds to a minute after opening Prayers or Quotes, on a
-	       Samsung A25 (Android 14). The same build without the profile ran for minutes under load without a crash. The price is a
-	       larger package (about 9 MB). Re-test on a device for several minutes before turning the profile back on. -->
-	  <RunAOTCompilation>True</RunAOTCompilation>
-	  <AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
-	  <!-- LLVM can cause native startup crashes on some devices; re-enable after device QA. -->
-	  <EnableLLVM>False</EnableLLVM>
+	  <!-- .NET 11 Release uses composite partial ReadyToRun by default; keep that balance until device measurements justify full R2R. -->
 	  <DebugSymbols>False</DebugSymbols>
 	  <AndroidIncludeDebugSymbols>False</AndroidIncludeDebugSymbols>
-	  <!-- SdkOnly: Mono linker trims SDK assemblies; R8 + ProguardConfiguration shrink dex. Full breaks AndroidX (PickVisualMedia). -->
+	  <!-- Link framework assemblies only; R8 and ProguardConfiguration shrink Java code. -->
 	  <AndroidLinkTool>r8</AndroidLinkTool>
 	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
 	  <!-- Phones only. An emulator package (to measure Release on an x86_64 emulator, where arm64 runs translated and slow):
@@ -119,37 +101,28 @@
 	  <AndroidSigningKeyPass Condition="'$(AndroidSigningKeyPass)' != ''">$(AndroidSigningKeyPass)</AndroidSigningKeyPass>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-maccatalyst|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net11.0-maccatalyst27.2|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net11.0-ios27.2|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net11.0-windows10.0.19041.0|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-maccatalyst|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net11.0-maccatalyst27.2|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net11.0-ios27.2|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net11.0-windows10.0.19041.0|AnyCPU'">
 	  <IsPublishable>False</IsPublishable>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
-	  <EnableLLVM>True</EnableLLVM>
-	  <TrimMode>link</TrimMode>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
-	  <TrimMode>link</TrimMode>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Release' And $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
@@ -159,7 +132,7 @@
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\logo.jpeg"
-		          ForegroundFile="Resources\AppIcon\logo-foreground.png"
+		          ForegroundFile="Resources\AppIcon\logo_foreground.png"
 		          Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
@@ -192,12 +165,12 @@
 	<ItemGroup>
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material" Version="5.0.0" />
 		<PackageReference Include="AathifMahir.Maui.MauiIcons.Material.Outlined" Version="5.0.0" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="14.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="17.0.0" />
 		<!-- Android plays music with the platform MediaPlayer (Platforms/Android/AndroidAudioPlaybackService.cs);
 		     MediaElement and its ExoPlayer are only shipped to iOS and Mac. -->
-		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="9.0.0" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'android'" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.41" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
+		<PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="12.0.0" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'android'" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="11.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="11.0.0" />
 		<PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
 
 		<TrimmerRootAssembly Include="Microsoft.Maui" RootMode="All" />

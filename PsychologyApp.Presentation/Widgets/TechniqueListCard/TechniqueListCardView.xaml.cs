@@ -141,6 +141,15 @@ public partial class TechniqueListCardView : ContentView
         set => SetValue(TitleProperty, value);
     }
 
+    public static readonly BindableProperty AccessibilityDescriptionProperty =
+        BindableProperty.Create(nameof(AccessibilityDescription), typeof(string), typeof(TechniqueListCardView), string.Empty);
+
+    public string AccessibilityDescription
+    {
+        get => (string)GetValue(AccessibilityDescriptionProperty);
+        set => SetValue(AccessibilityDescriptionProperty, value);
+    }
+
     public static readonly BindableProperty SubtitleProperty =
         BindableProperty.Create(nameof(Subtitle), typeof(string), typeof(TechniqueListCardView), string.Empty);
 

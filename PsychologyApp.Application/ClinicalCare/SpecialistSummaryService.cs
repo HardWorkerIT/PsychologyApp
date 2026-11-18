@@ -19,14 +19,19 @@ public sealed class SpecialistSummaryService(
         DateTime nowUtc = DateTime.UtcNow;
         DateTime sinceUtc = nowUtc.AddDays(-PeriodDays);
 
-        IReadOnlyList<MoodEntryDTO> moods = await userProgressService.GetMoodsAsync(sinceUtc, nowUtc, 1000, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<CompletionDTO> completions = await userProgressService.GetRecentTechniqueCompletionsAsync(1000, cancellationToken).ConfigureAwait(false);
-        int practiceCount = completions.Count(entry => entry.CompletedAt >= sinceUtc);
+        IReadOnlyList<MoodEntryDTO> moods = await userProgressService.GetMoodsAsync(sinceUtc, nowUtc.AddTicks(1), 1000, cancellationToken).ConfigureAwait(false);
+        int practiceCount = await userProgressService.CountTechniqueCompletionsBetweenAsync(
+            sinceUtc,
+            nowUtc.AddTicks(1),
+            cancellationToken).ConfigureAwait(false);
         int streakDays = await userProgressService.GetStreakDaysAsync(cancellationToken).ConfigureAwait(false);
 
-        IReadOnlyList<TestResultDTO> allTests = await userProgressService.GetAllTestResultsAsync(1000, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<TestResultDTO> allTests = await userProgressService.GetTestResultsBetweenAsync(
+            sinceUtc,
+            nowUtc.AddTicks(1),
+            1000,
+            cancellationToken).ConfigureAwait(false);
         List<TestResultDTO> latestPerTest = allTests
-            .Where(result => result.CompletedAt >= sinceUtc)
             .GroupBy(result => result.TestId)
             .Select(group => group.OrderByDescending(result => result.CompletedAt).First())
             .OrderByDescending(result => result.CompletedAt)

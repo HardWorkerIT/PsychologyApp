@@ -19,6 +19,9 @@ public class TechniqueItem
     public string? Theme { get; set; }
     public string? Author { get; set; }
 
+    public string AccessibilityDescription => string.Join(". ", new[] { Title, Subtitle, MetaText }
+        .Where(static text => !string.IsNullOrWhiteSpace(text)));
+
     /// <summary>A <c>TechniqueFlavor</c> name: the group of the practice, which colours its card.</summary>
     public string? Flavor { get; set; }
     public bool Active { get; set; }

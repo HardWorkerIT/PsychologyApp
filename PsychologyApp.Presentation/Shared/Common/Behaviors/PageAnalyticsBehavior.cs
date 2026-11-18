@@ -69,7 +69,7 @@ public sealed class PageAnalyticsBehavior : Behavior<ContentPage>
             IServiceProvider? services = Microsoft.Maui.Controls.Application.Current?.Handler?.MauiContext?.Services;
             if (services?.GetService<ILogger<PageAnalyticsBehavior>>() is ILogger<PageAnalyticsBehavior> logger)
             {
-                logger.LogWarning(ex, "Failed to track page analytics.");
+                logger.LogWarning("Failed to track page analytics ({ExceptionType}).", ex.GetType().Name);
             }
         }
     }

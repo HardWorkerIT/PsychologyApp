@@ -29,7 +29,7 @@ public static class TechniqueFlavors
             or TechniqueId.Balloons or TechniqueId.CyclicSigh or TechniqueId.MuscleRelax or TechniqueId.PauseBeforeReaction or TechniqueId.SensoryComfort => TechniqueFlavor.Body,
         TechniqueId.ThoughtRecord or TechniqueId.ThoughtDefusion or TechniqueId.Comparison or TechniqueId.Polarity or TechniqueId.Check
             or TechniqueId.CheckTheFacts or TechniqueId.WorryTime
-            or TechniqueId.Spin or TechniqueId.Paper or TechniqueId.Experience or TechniqueId.BusyMind or TechniqueId.UrgeSurfing => TechniqueFlavor.Mind,
+            or TechniqueId.Spin or TechniqueId.Paper or TechniqueId.Experience or TechniqueId.BusyMind or TechniqueId.UrgeSurfing or TechniqueId.MoneyWorryPlan => TechniqueFlavor.Mind,
         TechniqueId.SelfCompassion or TechniqueId.Observer or TechniqueId.Nightmare => TechniqueFlavor.Heart,
         TechniqueId.SmallStep or TechniqueId.Future or TechniqueId.Hack or TechniqueId.Extend or TechniqueId.OppositeAction or TechniqueId.ProblemSolving
             or TechniqueId.Resize or TechniqueId.Copied or TechniqueId.ImplementationIntention => TechniqueFlavor.Action,

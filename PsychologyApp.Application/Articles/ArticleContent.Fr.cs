@@ -577,8 +577,8 @@ public static partial class ArticleContent
                 List(
                     "De petits contacts réguliers : saluer un voisin, écrire à une vieille connaissance, parler à un vendeur",
                     "Une activité commune compte plus que la conversation : clubs, sport, bénévolat, cours, où les gens se retrouvent régulièrement",
-                    "Faire le premier pas soi-même, sans attendre d'invitation",
-                    "Aider les autres : l'un des remèdes les plus sûrs contre la solitude",
+                    "Si vous en avez l’énergie et que cela vous semble sûr, vous pouvez proposer un petit contact ; inutile d’attendre une invitation.",
+                    "Une activité partagée ou une aide à votre mesure peut créer une occasion de lien si cela vous convient ; ce n’est pas une obligation.",
                     "La qualité plutôt que la quantité : une personne avec qui l'on peut être soi-même compte plus que beaucoup de connaissances"),
                 H("Les pensées qui gênent"),
                 List(
@@ -1479,7 +1479,79 @@ public static partial class ArticleContent
                 Practice(TechniqueId.MoneyWorryPlan, "Faire le tri dans une inquiétude d’argent")
             ]),
 
+        new(ArticleIds.WorryTime, "Un temps pour les inquiétudes, pas toute la journée", "Un moyen simple de mettre de côté les inquiétudes non urgentes et de choisir une étape faisable.", "Schedule", 5,
+            [
+                P("Quand les pensées sur l’avenir réclament sans cesse votre attention, vous pouvez leur réserver plus tard 10 à 15 minutes. Il ne s’agit pas d’interdire les pensées : notez brièvement le sujet, puis reprenez ce que vous faisiez."),
+                H("Vérifier d’abord l’urgence"),
+                Warning("Si une situation demande d’agir maintenant ou touche à la sécurité, à la santé ou aux besoins essentiels, ne la remettez pas à plus tard. Contactez une personne de confiance ou cherchez une aide concrète."),
+                List("Choisissez aujourd’hui un court moment pour vos inquiétudes, par exemple 10 à 15 minutes.", "Si une inquiétude arrive avant, notez seulement son sujet en quelques mots, sans détail personnel, puis reprenez votre activité.", "Au moment choisi, demandez-vous : puis-je faire une étape précise et sûre ? Si oui, prévoyez-la. Sinon, notez ce qui ne dépend pas de vous pour le moment et ramenez doucement votre attention au présent."),
+                Crisis("Si vous êtes en danger immédiat"),
+                H("Vérifier ce que vous retenez"),
+                Quiz("Une pensée qui commence par « et si… » prouve-t-elle que cela va arriver ?", 1, "Non. Une prédiction inquiète peut être remarquée et vérifiée ; la répétition ne la transforme pas en fait.", "Oui, si elle revient souvent", "Non : c’est une prédiction, pas un fait établi", "Cela signifie que je n’y arrive pas"),
+                Quiz("Que faire si un problème doit être traité aujourd’hui ?", 1, "Une difficulté urgente et abordable n’a pas à attendre : choisissez une étape sûre ou demandez une aide concrète.", "Le garder pour le moment prévu", "Choisir une étape sûre ou demander de l’aide", "Essayer de ne plus s’inquiéter"),
+                Quiz("Et si rien ne peut changer la situation maintenant ?", 0, "Vous pouvez noter le sujet, choisir un moment pour y revenir et ramener doucement votre attention à ce qui se passe maintenant.", "Le noter, prévoir un moment pour y revenir et revenir au présent", "Continuer à chercher une solution dans votre tête toute la journée", "Vous forcer à penser positivement"),
+                P("Ces questions vérifient uniquement la compréhension de l’article. Ce n’est ni un test psychologique ni un diagnostic, et elles ne promettent pas la disparition des inquiétudes."),
+                Practice(TechniqueId.WorryTime, "Prévoir un temps pour les inquiétudes")
+            ]),
+
+
         new(ArticleIds.ProblemPlanning, "Un plan pour les tâches à votre portée", "Découper un problème et revoir son plan", "Checklist", 3,
-            [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien.")])
+            [P("Nommez d’abord un problème précis. Tout ne dépend pas de vous ; choisissez ce sur quoi vous pouvez agir."), P("Notez plusieurs options, même imparfaites. Choisissez une petite étape sûre."), P("Après l’essai, notez ce qui a aidé et ce qui était trop difficile. Vous pouvez adapter le plan ou demander du soutien.")]),
+        new(
+            ArticleIds.Overwhelm,
+            "Quand tout s’accumule : choisir la prochaine étape",
+            "Distinguer l’urgent du reste et commencer par une petite action.",
+            "Checklist",
+            4,
+            [
+                P("Quand beaucoup de tâches réclament votre attention, l’esprit peut les réunir en un seul problème écrasant. Les trier ne règle pas tout, mais aide à voir la prochaine étape."),
+                H("La sécurité et les besoins essentiels d’abord"),
+                Warning("En cas de danger immédiat ou si l’alimentation, le logement, les médicaments essentiels ou la santé sont menacés, cherchez d’abord une aide pratique. Cet exercice peut attendre."),
+                List("Qu’est-ce qui ne peut pas attendre sans risque ?", "Quelle étape pouvez-vous faire aujourd’hui ?", "Que pouvez-vous reporter ou partager avec quelqu’un ?"),
+                H("Réduisez la tâche"),
+                P("Décrivez une action, pas un résultat immense : ouvrez un message et notez son échéance au lieu de vouloir régler tout le travail. Si c’est encore trop, réduisez l’étape."),
+                Quiz("Quelle proposition est une prochaine étape concrète ?", 1, "Une étape à votre portée peut être commencée et décrite clairement. Un grand résultat demande souvent plusieurs actions.", "Tout régler aujourd’hui", "Ouvrir un document et lire le premier point", "Cesser de s’inquiéter"),
+                Quiz("Que faire en priorité si un besoin essentiel est menacé ?", 1, "Si l’alimentation, le logement, des médicaments essentiels ou la sécurité sont menacés, une aide pratique est prioritaire.", "Terminer l’exercice d’abord", "Contacter un proche ou un service local d’aide", "Attendre que l’inquiétude passe"),
+                P("Une liste montre des tâches, pas votre valeur. Vous pouvez la modifier quand de nouveaux faits ou de l’énergie apparaissent."),
+                P("Ces questions vérifient seulement la compréhension du texte. Ce n’est ni un test psychologique ni un diagnostic."),
+                Practice(TechniqueId.ExternalOrientation, "S’orienter avec trois détails")
+            ]),
+
+        new(
+            ArticleIds.ConversationRepair,
+            "Après un désaccord : reprendre la conversation",
+            "Faire une pause, reconnaître sa part et choisir une suite claire, si c’est sûr",
+            "Forum",
+            4,
+            [
+                P("Il n’est pas nécessaire de tout régler en une fois. Demandez-vous d’abord si vous souhaitez poursuivre et si cela vous semble sûr. Une pause laisse le choix ; elle n’oblige pas à se réconcilier."),
+                Warning("S’il y a de la peur, du contrôle, de l’humiliation ou de la violence, ne reprenez pas la conversation pour prouver votre bonne volonté. La sécurité et un soutien extérieur passent d’abord."),
+                H("Une façon simple de reprendre"),
+                List("Décrivez un moment précis plutôt que de juger toute la personne", "Dites ce que vous avez ressenti ou ce dont vous aviez besoin sans attribuer d’intention à l’autre", "Reconnaissez uniquement votre part", "Formulez une demande précise, puis laissez du temps pour répondre"),
+                Quiz("Quelle phrase aide à parler du problème sans coller d’étiquette à la personne ?", 1, "Un événement précis et son effet sont plus faciles à discuter qu’un jugement sur le caractère.", "Tu gâches toujours tout", "Quand le plan a changé sans prévenir, je me suis senti perdu. Pourrions-nous convenir de nous prévenir la prochaine fois ?", "Faisons comme si rien ne s’était passé"),
+                P("Vous pouvez faire une pause, proposer de reprendre plus tard ou mettre fin à l’échange. S’excuser ne signifie pas renoncer à une limite, et une tentative de rapprochement ne garantit pas de réponse."),
+                Practice(TechniqueId.PauseBeforeReaction, "Faire une pause avant de répondre"),
+                Quiz("Quand la sécurité doit-elle passer avant une tentative de rapprochement ?", 1, "En cas de peur, de contrainte ou de violence, la sécurité et l’aide concrète sont prioritaires.", "Seulement après l’échec de toutes les tentatives", "S’il y a peur, contrôle, humiliation ou violence", "Jamais : chaque conflit doit être résolu"),
+                new(ArticleBlockKind.Article, "Lire aussi : poser une limite", ArticleId: ArticleIds.Boundaries)
+            ]),
+        new(
+            ArticleIds.Feedback,
+            "Un retour sans étiquette",
+            "Distinguez un commentaire précis d’un jugement sur vous, demandez un exemple et choisissez la suite.",
+            "Forum",
+            4,
+            [
+                P("Un retour peut être juste, incomplet ou injuste. Il concerne une situation ou une action ; il ne définit pas toute votre valeur."),
+                H("Faire une pause d’abord"),
+                P("Si vous le pouvez, ne répondez pas tout de suite. Vous pouvez dire : « J’ai entendu. Je veux y réfléchir et je vous répondrai plus tard. »"),
+                H("Distinguer les faits des étiquettes"),
+                List("Que s’est-il passé ou qu’a-t-on dit précisément ?", "Quel exemple, délai ou critère a été donné ?", "Quelle conclusion sur moi ai-je ajoutée ?"),
+                Quiz("Quelle phrase donne une information précise sur laquelle agir ?", 1, "Elle nomme une action observable et une échéance ; les détails peuvent être clarifiés.", "Vous remettez toujours tout à plus tard.", "Il manque la partie sur les dépenses dans le rapport pour vendredi.", "On ne peut jamais vous faire confiance."),
+                H("Choisir la suite"),
+                List("Garder un point précis et utile.", "Demander un exemple ou un critère clair.", "Poser une limite si le ton est irrespectueux."),
+                Practice(TechniqueId.FeedbackReview, "Trier un retour"),
+                Warning("Menaces, humiliation, discrimination ou pression ne sont pas des retours ordinaires. Ne restez pas dans un échange dangereux pour vous corriger ; cherchez du soutien."),
+                See(ArticleIds.SelfCriticism, "À lire aussi : se parler sans autocritique")
+            ]),
     ];
 }

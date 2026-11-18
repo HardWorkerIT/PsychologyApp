@@ -207,6 +207,7 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
+        int chatMessages = 0;
         try
         {
             foreach (var chatBatchItems in chatImports.Chunk(ChatMessageCountBatchSize))
@@ -295,7 +296,7 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
                     }
                 }
 
-                await run(BackupSql.InsertChatMessage, GetMissingMessages()).ConfigureAwait(false);
+                chatMessages += await run(BackupSql.InsertChatMessage, GetMissingMessages()).ConfigureAwait(false);
                 await connection.ExecuteAsync(DapperCommandFactory.Create(
                     BackupSql.ClearChatMessageImportKeys,
                     transaction: transaction,
@@ -346,7 +347,7 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
             technique.IsCompleted
         })).ConfigureAwait(false);
 
-        // "Latest" is decided by row id, so an older assessment must never be inserted after a newer local one.
+        // Assessment timestamps determine whether an imported record is newer than the local record.
         if (backup.LatestRiskAssessment is { } risk)
         {
             await run(BackupSql.InsertRiskAssessmentIfNewest, new
@@ -437,7 +438,15 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
         }
 
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-        return new BackupImportResult(moods, tests, completions, sessionResults, chats, safetyPlanImported, techniques);
+        return new BackupImportResult(
+            moods,
+            tests,
+            completions,
+            sessionResults,
+            chats,
+            safetyPlanImported,
+            techniques,
+            ChatMessages: chatMessages);
     }
 
     private static string GetBackupKey(BackupChatSessionInfoDTO session)

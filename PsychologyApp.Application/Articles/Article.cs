@@ -132,4 +132,10 @@ public static class ArticleIds
     public const string JealousyAndEnvy = "jealousy-envy";
     public const string Breakup = "breakup";
     public const string MoneyStress = "money-stress";
+
+    /// <summary>Make a small plan for recurring worries without postponing urgent needs.</summary>
+    public const string WorryTime = "worry-time";
+    public const string Overwhelm = "overwhelm";
+    public const string ConversationRepair = "conversation-repair";
+    public const string Feedback = "feedback";
 }

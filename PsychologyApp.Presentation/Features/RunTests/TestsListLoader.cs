@@ -50,10 +50,14 @@ public sealed class TestsListLoader(
             .Distinct(StringComparer.Ordinal)
             .ToList();
 
-        IReadOnlyDictionary<string, TestResultDTO> latestByTestId =
-            await userProgressService.GetLatestTestResultsAsync(testIds, cancellationToken);
-        IReadOnlyDictionary<string, int> countsByTestId =
-            await userProgressService.GetTestResultCountsAsync(testIds, cancellationToken);
+        Task<IReadOnlyDictionary<string, TestResultDTO>> latestTask =
+            userProgressService.GetLatestTestResultsAsync(testIds, cancellationToken);
+        Task<IReadOnlyDictionary<string, int>> countsTask =
+            userProgressService.GetTestResultCountsAsync(testIds, cancellationToken);
+        await Task.WhenAll(latestTask, countsTask);
+
+        IReadOnlyDictionary<string, TestResultDTO> latestByTestId = await latestTask;
+        IReadOnlyDictionary<string, int> countsByTestId = await countsTask;
 
         foreach (TestItem item in items)
         {

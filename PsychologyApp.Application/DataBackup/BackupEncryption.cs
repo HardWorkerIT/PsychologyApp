@@ -150,6 +150,11 @@ public static class BackupEncryption
             throw new BackupFormatException("The backup was made by a newer version of the app.");
         }
 
+        if (envelope.Version != CurrentVersion)
+        {
+            throw new BackupFormatException("The encrypted backup has an unsupported version.");
+        }
+
         // A hostile file could ask for billions of iterations; only a sane range is honoured.
         if (envelope.Iterations is < 100_000 or > 5_000_000)
         {

@@ -10,7 +10,6 @@ public enum PracticeFinderNeed
     NoBreathFocus,
     NoTyping,
     Public,
-    Situations,
     BeforeConversation,
     PassengerCommute,
     BeforeSleep,
@@ -32,8 +31,9 @@ public static class PracticeFinderRecommendation
                 TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
                 TechniqueId.CheckTheFacts, TechniqueId.Observer
             ],
+            // Put the practice that explicitly works silently first; longer answer flows stay later.
             [PracticeFinderNeed.NoTyping] =
-            [TechniqueId.BusyMind, TechniqueId.ThoughtDefusion, TechniqueId.Balloons, TechniqueId.Grounding],
+            [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Balloons, TechniqueId.Grounding],
             [PracticeFinderNeed.Public] =
             [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Grounding],
             [PracticeFinderNeed.BeforeConversation] =

@@ -10,61 +10,73 @@ internal static class UserProgressSql
     internal const string SelectLatestTestResult = """
         SELECT TestResultId, TestId, Score, Summary, DetailJson, CompletedAt
         FROM TestResults
-        WHERE TestId = @testId
-        ORDER BY TestResultId DESC
+        WHERE TestId = @testId AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, TestResultId DESC
         LIMIT 1;
         """;
 
     internal const string SelectMostRecentTestResultSince = """
         SELECT TestResultId, TestId, Score, Summary, DetailJson, CompletedAt
         FROM TestResults
-        WHERE CompletedAt >= @sinceUtc
-        ORDER BY TestResultId DESC
+        WHERE CompletedAt >= @sinceUtc AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, TestResultId DESC
         LIMIT 1;
         """;
 
     internal const string SelectTestResultHistory = """
         SELECT TestResultId, TestId, Score, Summary, DetailJson, CompletedAt
         FROM TestResults
-        WHERE TestId = @testId
-        ORDER BY TestResultId DESC
+        WHERE TestId = @testId AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, TestResultId DESC
+        LIMIT @limit;
+        """;
+
+    internal const string SelectTestResultsInRange = """
+        SELECT TestResultId, TestId, Score, Summary, DetailJson, CompletedAt
+        FROM TestResults
+        WHERE CompletedAt >= @sinceUtc AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, TestResultId DESC
         LIMIT @limit;
         """;
 
     internal const string SelectAllTestResults = """
         SELECT TestResultId, TestId, Score, Summary, DetailJson, CompletedAt
         FROM TestResults
-        ORDER BY TestResultId DESC
+        ORDER BY CompletedAt DESC, TestResultId DESC
         LIMIT @limit;
         """;
 
     internal const string SelectLatestTestResults = """
         SELECT tr.TestResultId, tr.TestId, tr.Score, tr.Summary, tr.DetailJson, tr.CompletedAt
         FROM TestResults tr
-        INNER JOIN (
-            SELECT TestId, MAX(TestResultId) AS MaxTestResultId
-            FROM TestResults
-            WHERE TestId IN @testIds
-            GROUP BY TestId
-        ) latest ON tr.TestResultId = latest.MaxTestResultId;
+        WHERE tr.TestId IN @testIds
+          AND tr.CompletedAt < @beforeUtc
+          AND NOT EXISTS (
+              SELECT 1
+              FROM TestResults newer
+              WHERE newer.TestId = tr.TestId
+                AND newer.CompletedAt < @beforeUtc
+                AND (newer.CompletedAt > tr.CompletedAt
+                    OR (newer.CompletedAt = tr.CompletedAt AND newer.TestResultId > tr.TestResultId))
+          );
         """;
 
     internal const string SelectTestResultCounts = """
         SELECT TestId, COUNT(*) AS Count
         FROM TestResults
-        WHERE TestId IN @testIds
+        WHERE TestId IN @testIds AND CompletedAt < @beforeUtc
         GROUP BY TestId;
         """;
 
     internal const string SelectLastTechniqueCompletionDate = """
         SELECT CompletedAt
         FROM Completions
-        WHERE CompletionKind = 'technique'
-        ORDER BY CompletionId DESC
+        WHERE CompletionKind = 'technique' AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, CompletionId DESC
         LIMIT 1;
         """;
 
-    internal const string CountTestResults = "SELECT COUNT(*) FROM TestResults;";
+    internal const string CountTestResults = "SELECT COUNT(*) FROM TestResults WHERE CompletedAt < @beforeUtc;";
 
     internal const string InsertCompletion = """
         INSERT INTO Completions (CompletionKind, ItemKey, ModuleName, PageName, CompletedAt, DurationSeconds)
@@ -72,39 +84,54 @@ internal static class UserProgressSql
         """;
 
     internal const string CountTechniqueCompletions =
-        "SELECT COUNT(*) FROM Completions WHERE CompletionKind = 'technique';";
+        "SELECT COUNT(*) FROM Completions WHERE CompletionKind = 'technique' AND CompletedAt < @beforeUtc;";
+
+    internal const string CountTechniqueCompletionsBetween = """
+        SELECT COUNT(*)
+        FROM Completions
+        WHERE CompletionKind = 'technique'
+          AND CompletedAt >= @sinceUtc
+          AND CompletedAt < @beforeUtc;
+        """;
 
     internal const string SelectRecentTechniqueCompletions = """
         SELECT CompletionId, CompletionKind, ItemKey, ModuleName, PageName, CompletedAt, DurationSeconds
         FROM Completions
-        WHERE CompletionKind = 'technique'
-        ORDER BY CompletionId DESC
+        WHERE CompletionKind = 'technique' AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, CompletionId DESC
         LIMIT @limit;
         """;
 
     internal const string SelectCompletionDates = """
         SELECT DISTINCT substr(CompletedAt, 1, 16) AS Day
         FROM Completions
+        WHERE CompletedAt < @beforeUtc
         ORDER BY Day DESC;
         """;
 
     internal const string SelectLastCompletionForItem = """
         SELECT CompletedAt
         FROM Completions
-        WHERE ItemKey = @itemKey
-        ORDER BY CompletionId DESC
+        WHERE CompletionKind = 'technique' AND ItemKey = @itemKey AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, CompletionId DESC
         LIMIT 1;
         """;
 
     internal const string SelectLastPracticeDates = """
         SELECT c.ItemKey, c.CompletedAt
         FROM Completions c
-        INNER JOIN (
-            SELECT ItemKey, MAX(CompletionId) AS MaxCompletionId
-            FROM Completions
-            WHERE ItemKey IN @itemKeys
-            GROUP BY ItemKey
-        ) latest ON c.CompletionId = latest.MaxCompletionId;
+        WHERE c.CompletionKind = 'technique'
+          AND c.ItemKey IN @itemKeys
+          AND c.CompletedAt < @beforeUtc
+          AND NOT EXISTS (
+              SELECT 1
+              FROM Completions newer
+              WHERE newer.CompletionKind = 'technique'
+                AND newer.ItemKey = c.ItemKey
+                AND newer.CompletedAt < @beforeUtc
+                AND (newer.CompletedAt > c.CompletedAt
+                    OR (newer.CompletedAt = c.CompletedAt AND newer.CompletionId > c.CompletionId))
+          );
         """;
 
     internal const string UpsertSessionDraft = """
@@ -152,7 +179,8 @@ internal static class UserProgressSql
     internal const string SelectRecentMoods = """
         SELECT MoodEntryId, MoodLevel, Note, RecordedAt
         FROM MoodEntries
-        ORDER BY MoodEntryId DESC
+        WHERE RecordedAt < @beforeUtc
+        ORDER BY RecordedAt DESC, MoodEntryId DESC
         LIMIT @limit;
         """;
 
@@ -240,15 +268,16 @@ internal static class UserProgressSql
             ProgramWeek,
             Note
         FROM SessionResults
-        ORDER BY SessionResultId DESC
+        WHERE CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, SessionResultId DESC
         LIMIT @limit;
         """;
 
     internal const string SelectLastSessionNoteForItem = """
         SELECT Note
         FROM SessionResults
-        WHERE ItemKey = @itemKey AND Note IS NOT NULL AND Note != ''
-        ORDER BY SessionResultId DESC
+        WHERE ItemKey = @itemKey AND Note IS NOT NULL AND Note != '' AND CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, SessionResultId DESC
         LIMIT 1;
         """;
 

@@ -54,7 +54,7 @@ public static class HelpInsights
     /// </summary>
     public static IReadOnlyList<TestProgress> TestProgress(IEnumerable<TestResultDTO> results, Func<string, ScoreDirection> direction, DateTime nowUtc) =>
         results
-            .Where(result => result.Score is not null && !string.IsNullOrWhiteSpace(result.TestId))
+            .Where(result => result.CompletedAt <= nowUtc && result.Score is not null && !string.IsNullOrWhiteSpace(result.TestId))
             .GroupBy(result => result.TestId)
             .Select(group => (Direction: direction(group.Key), Ordered: group.OrderBy(result => result.CompletedAt).ToList()))
             .Where(test => test.Direction != ScoreDirection.None)

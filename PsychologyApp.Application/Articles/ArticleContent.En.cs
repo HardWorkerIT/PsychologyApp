@@ -577,8 +577,8 @@ public static partial class ArticleContent
                 List(
                     "Small regular contacts: greet a neighbour, write to an old acquaintance, talk to a shop assistant",
                     "A shared activity matters more than conversation: clubs, sport, volunteering, courses, where people meet regularly",
-                    "Taking the first step yourself, without waiting for an invitation",
-                    "Helping others: one of the most reliable remedies for loneliness",
+                    "If you have the energy and it feels safe, you can suggest a small contact; you do not have to wait for an invitation.",
+                    "A shared activity or manageable help can create a reason to connect if it suits you; neither is an obligation.",
                     "Quality over quantity: one person you can be yourself with means more than many acquaintances"),
                 H("Thoughts that get in the way"),
                 List(
@@ -1479,7 +1479,79 @@ public static partial class ArticleContent
                 Practice(TechniqueId.MoneyWorryPlan, "Sort a Money Worry")
             ]),
 
+        new(ArticleIds.WorryTime, "A worry window, not a worry-filled day", "A short way to set aside non-urgent worries and choose one manageable step.", "Schedule", 5,
+            [
+                P("When thoughts about the future keep asking for attention, you can set aside 10–15 minutes for them later. This is not a ban on thoughts: note the topic briefly and return to what you are doing."),
+                H("Check urgency first"),
+                Warning("If something needs action now or affects safety, health, or basic needs, do not postpone it. Contact someone you trust or seek practical help."),
+                List("Choose a short time for worries today, such as 10–15 minutes.", "If a worry comes up sooner, write only a brief topic, without personal details, then return to what you were doing.", "At the chosen time, ask: is there one specific, safe step I can take? If so, plan it. If not, note what is outside your control for now and bring your attention back to the present."),
+                Crisis("If you are in immediate danger"),
+                H("Check what you remember"),
+                Quiz("Does a thought that starts with “what if…” prove that something will happen?", 1, "No. A worried prediction can be noticed and checked; repeating it does not make it a fact.", "Yes, if it keeps returning", "No: it is a prediction, not an established fact", "It means I am not coping"),
+                Quiz("What can you do about a problem that needs attention today?", 1, "An urgent, manageable problem does not need to wait: choose a safe step or ask for practical help.", "Save it for the chosen worry time", "Choose a safe step or ask for help", "Try to stop feeling worried"),
+                Quiz("What if nothing can be changed right now?", 0, "You can note the topic, choose a time to review it, and gently bring attention back to what is happening now.", "Note it, schedule a time to revisit it, and return to the present", "Keep trying to solve it in your head all day", "Force yourself to think positively"),
+                P("These questions check only whether you understood the article. They are not a psychological test or diagnosis, and they do not promise that worry will disappear."),
+                Practice(TechniqueId.WorryTime, "Schedule Worry Time")
+            ]),
+
+
         new(ArticleIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", 3,
-            [P("First name one specific problem. Not everything is in your control; choose what you can influence."), P("Write down several options, even if none seems perfect. Choose one small, safe step."), P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support.")])
+            [P("First name one specific problem. Not everything is in your control; choose what you can influence."), P("Write down several options, even if none seems perfect. Choose one small, safe step."), P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support.")]),
+        new(
+            ArticleIds.Overwhelm,
+            "When everything piles up: choose one next step",
+            "Separate what is urgent from the rest, then start with a small action.",
+            "Checklist",
+            4,
+            [
+                P("When many tasks compete for attention, the mind can bundle them into one heavy problem. Sorting them will not solve everything, but it can reveal a next step."),
+                H("Start with safety and basic needs"),
+                Warning("If you are in immediate danger, or food, housing, essential medicine, or health is at risk, seek practical help first. This exercise can wait."),
+                List("What cannot safely wait?", "What is one step you can take today?", "What can be scheduled for later or shared with someone?"),
+                H("Make the task smaller"),
+                P("Name an action, not a whole outcome: instead of sorting out all of work, open one message and note its deadline. If that is still too much, shrink the step."),
+                Quiz("Which is a concrete next step?", 1, "A manageable step is something you can begin and see yourself doing. A large outcome often takes several actions.", "Solve everything today", "Open a document and read the first item", "Stop feeling worried"),
+                Quiz("What comes first if a basic need is at risk?", 1, "If food, housing, essential medicine, or safety is at risk, practical help matters now.", "Finish the exercise first", "Contact someone you trust or a local support service", "Wait until the worry passes"),
+                P("A list helps you see tasks; it does not measure your worth. You can change it as facts or energy change."),
+                P("These questions check understanding of the article only. They are not a psychological test or diagnosis."),
+                Practice(TechniqueId.ExternalOrientation, "Orient with three details")
+            ]),
+
+        new(
+            ArticleIds.ConversationRepair,
+            "After a disagreement: returning to the conversation",
+            "A pause, one honest part, and a clear next step—only when it is safe",
+            "Forum",
+            4,
+            [
+                P("You do not have to settle everything at once. First decide whether you want to continue the conversation and whether doing so feels safe. A pause can create room to choose; it is not a promise to reconcile."),
+                Warning("If there is fear, control, humiliation, or violence, do not return to a conversation to prove goodwill. Prioritize safety and outside support."),
+                H("A simple way to restart"),
+                List("Name one concrete moment, not a verdict about the person", "Say what you felt or needed without claiming to know the other person's intent", "Own only the part that is yours", "Make one specific request, then allow time for an answer"),
+                Quiz("Which opening is more likely to clarify the issue without labelling a person?", 1, "A concrete event and its effect are easier to discuss than a label about someone's character.", "You always ruin everything", "When the plan changed without warning, I felt lost. Could we agree how to tell each other next time?", "Let's pretend it never happened"),
+                P("You can pause, ask to continue later, or end the discussion. An apology does not require giving up a boundary, and a repair attempt cannot guarantee the other person will respond."),
+                Practice(TechniqueId.PauseBeforeReaction, "Pause before replying"),
+                Quiz("When should safety come before a repair conversation?", 1, "Fear, coercion, or violence changes the priority: practical safety and support come first.", "Only after every repair attempt fails", "When there is fear, control, humiliation, or violence", "Never; every conflict must be resolved"),
+                new(ArticleBlockKind.Article, "Read also: setting a boundary", ArticleId: ArticleIds.Boundaries)
+            ]),
+        new(
+            ArticleIds.Feedback,
+            "Feedback without labels",
+            "Separate a specific comment from a judgment about yourself, ask for an example, and choose a next step.",
+            "Forum",
+            4,
+            [
+                P("Feedback can be accurate, incomplete, or unfair. It concerns a situation or action; it does not describe your whole worth."),
+                H("Pause first"),
+                P("If you can, do not reply immediately. You might say, “I hear you. I’d like to think about it and get back to you.”"),
+                H("Separate specifics from labels"),
+                List("What exactly happened or was said?", "What example, deadline, or standard was named?", "What conclusion about myself did I add?"),
+                Quiz("Which statement gives specific information you can act on?", 1, "It names an observable action and a deadline; you can clarify the details.", "You always put everything off.", "The report is missing the expenses section for Friday.", "You can never be trusted."),
+                H("Choose what to do next"),
+                List("Keep one specific, useful point.", "Ask for an example or a clear standard.", "Set a boundary if the delivery is disrespectful."),
+                Practice(TechniqueId.FeedbackReview, "Sort through feedback"),
+                Warning("Threats, humiliation, discrimination, or pressure are not ordinary feedback. Do not stay in an unsafe conversation to fix yourself; seek support."),
+                See(ArticleIds.SelfCriticism, "Read also: speaking to yourself without self-criticism")
+            ]),
     ];
 }

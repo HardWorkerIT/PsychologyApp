@@ -26,43 +26,51 @@ public partial class TechniquesViewModel
                 _dashboardLoader.LoadEngagementStateAsync(cancellationToken);
             Task<IReadOnlyList<TechniqueItem>> staticItemsTask =
                 _techniqueListBuilder.BuildStaticItemsAsync(_navigationService, cancellationToken);
+            Task<TodayRecommendationResult> recommendationTask =
+                _dashboardLoader.ResolveTodayRecommendationAsync(_navigationService, cancellationToken);
 
             await Task.WhenAll(
                 streakTask,
                 engagementTask,
-                staticItemsTask);
+                staticItemsTask,
+                recommendationTask);
 
             int streakDays = await streakTask;
-            (bool hasAnyActivity, bool isReturning) = await engagementTask;
+            (bool _, bool isReturning) = await engagementTask;
             IReadOnlyList<TechniqueItem> staticItems = await staticItemsTask;
-
-            TodayRecommendationResult recommendation = await _dashboardLoader.ResolveTodayRecommendationAsync(
-                _navigationService,
-                cancellationToken);
+            TodayRecommendationResult recommendation = await recommendationTask;
             await _todayRecommendationResolver.ApplyCatalogDateAsync(
                 recommendation.Item,
                 recommendation.TechniqueId,
                 staticItems,
                 cancellationToken);
 
-            bool hasDraft = await _dashboardLoader.HasSessionDraftAsync(recommendation.TechniqueId, cancellationToken);
-            IReadOnlyList<SavedNextStep> savedNextSteps = await _dashboardLoader.GetSavedNextStepsAsync(cancellationToken);
+            Task<bool> hasDraftTask =
+                _dashboardLoader.HasSessionDraftAsync(recommendation.TechniqueId, cancellationToken);
+            int savedNextStepsLoadVersion = Interlocked.Increment(ref _savedNextStepsLoadVersion);
+            Task<IReadOnlyList<SavedNextStep>> savedNextStepsTask =
+                _dashboardLoader.GetSavedNextStepsAsync(cancellationToken);
+            Task<PracticeClinicalDashboardSnapshot> clinicalTask =
+                _clinicalDashboardEnricher.LoadAsync(cancellationToken);
 
-            PracticeClinicalDashboardSnapshot clinical =
-                await _clinicalDashboardEnricher.LoadAsync(cancellationToken);
+            await Task.WhenAll(hasDraftTask, savedNextStepsTask, clinicalTask);
+
+            bool hasDraft = await hasDraftTask;
+            IReadOnlyList<SavedNextStep> savedNextSteps = await savedNextStepsTask;
+            PracticeClinicalDashboardSnapshot clinical = await clinicalTask;
 
             await UiThread.RunAsync(() =>
             {
                 StreakDays = streakDays;
                 IsReturning = isReturning;
                 HasTodayDraft = hasDraft;
-                _hasAnyActivity = hasAnyActivity;
                 TherapyProgramBanner = clinical.TherapyProgramBanner;
                 ClinicalRiskBanner = clinical.ClinicalRiskBanner;
                 _clinicalDashboardLoaded = true;
                 OnPropertyChanged(nameof(IsPracticeFinderVisible));
                 NotifyPracticeAdProperties();
-                ApplySavedNextSteps(savedNextSteps);
+                ApplyLoadedSavedNextSteps(savedNextSteps, savedNextStepsLoadVersion);
+                bool recommendationChanged = _todayTechniqueId != recommendation.TechniqueId;
                 _todayTechniqueId = recommendation.TechniqueId;
                 TodayReasonText = recommendation.ReasonText;
                 // Returning to the tab usually yields the same recommendation: keep the bound card instead of rebuilding it.
@@ -74,6 +82,10 @@ public partial class TechniquesViewModel
 
                 OnPropertyChanged(nameof(TodayReasonText));
                 OnPropertyChanged(nameof(TodayActionText));
+                if (recommendationChanged)
+                {
+                    RebuildSections();
+                }
             });
         }
         catch (OperationCanceledException)
@@ -234,6 +246,7 @@ public partial class TechniquesViewModel
                 staticItems);
         }
 
+        bool recommendationChanged = _todayTechniqueId != recommendation.TechniqueId;
         _todayTechniqueId = recommendation.TechniqueId;
         TodayReasonText = recommendation.ReasonText;
         TodayTechniqueItem = recommendation.Item;
@@ -241,6 +254,10 @@ public partial class TechniquesViewModel
         OnPropertyChanged(nameof(TodayReasonText));
         OnPropertyChanged(nameof(TodayActionText));
         NotifyEngagementNudge();
+        if (recommendationChanged)
+        {
+            RebuildSections();
+        }
     }
 
     private IReadOnlyList<TechniqueItem> ExtractCurrentStaticItems()

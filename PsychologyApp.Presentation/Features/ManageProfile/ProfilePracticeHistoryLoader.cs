@@ -62,14 +62,16 @@ public sealed class ProfilePracticeHistoryLoader(
     private async Task<PracticeHistoryItem> ToItemAsync(SessionResultDTO result, CancellationToken cancellationToken, int runs = 1)
     {
         string date = result.CompletedAt.ToLocalTime().ToString("g");
-        string name = await practiceHistoryFormatter.ResolveNameAsync(result.ItemKey, cancellationToken: cancellationToken);
+        (string name, string icon) = await practiceHistoryFormatter.ResolveNameAndIconAsync(
+            result.ItemKey,
+            cancellationToken: cancellationToken);
         (string durationText, bool hasDuration) = practiceHistoryFormatter.ResolveDuration(result);
         (string sudsDeltaText, bool hasSudsDelta) = practiceHistoryFormatter.ResolveSudsDelta(result);
         return new PracticeHistoryItem
         {
             DateText = runs > 1 ? date + " · ×" + runs.ToString(System.Globalization.CultureInfo.InvariantCulture) : date,
             TechniqueName = name,
-            IconName = await practiceHistoryFormatter.ResolveIconAsync(result.ItemKey, cancellationToken),
+            IconName = icon,
             DurationText = durationText,
             HasDuration = hasDuration,
             ItemKey = result.ItemKey,

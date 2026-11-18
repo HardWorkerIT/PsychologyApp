@@ -20,7 +20,10 @@ public partial class SettingsPage : ContentPage
         this.ActivateViewModel(pageViewModelActivator, page => settingsViewModelFactory.Create(page));
     }
 
-    private async void OnSettingSelectionRequested(object? sender, EventArgs e)
+    private void OnSettingSelectionRequested(object? sender, EventArgs e) =>
+        SafeAsync.Run(() => PickSettingAsync(sender));
+
+    private async Task PickSettingAsync(object? sender)
     {
         if (sender is not SettingPickerRowView row)
         {

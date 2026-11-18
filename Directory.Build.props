@@ -9,4 +9,11 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <!-- Visual Studio does not inherit the AndroidSdkDirectory argument used by scripts/android-run.sh. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('windows'))">
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)' == '' and '$(ANDROID_HOME)' != '' and Exists('$(ANDROID_HOME)\platform-tools\adb.exe')">$(ANDROID_HOME)</AndroidSdkDirectory>
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)' == '' and Exists('$(LOCALAPPDATA)\Android\Sdk\platform-tools\adb.exe')">$(LOCALAPPDATA)\Android\Sdk</AndroidSdkDirectory>
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)' == '' and Exists('$(USERPROFILE)\AppData\Local\Android\Sdk\platform-tools\adb.exe')">$(USERPROFILE)\AppData\Local\Android\Sdk</AndroidSdkDirectory>
+  </PropertyGroup>
+
 </Project>

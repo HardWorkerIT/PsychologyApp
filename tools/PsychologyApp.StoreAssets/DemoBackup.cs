@@ -237,8 +237,9 @@ public static class DemoBackup
 
         return new BackupChatSessionDTO
         {
-            Session = new ChatSessionDTO
+            Session = new BackupChatSessionInfoDTO
             {
+                BackupKey = $"store-demo:{(english ? "en" : "ru")}:{title}",
                 Title = title,
                 CreatedAt = startUtc,
                 UpdatedAt = at,

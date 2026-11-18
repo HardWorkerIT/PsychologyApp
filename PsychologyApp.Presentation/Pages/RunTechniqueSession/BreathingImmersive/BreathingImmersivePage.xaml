@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.RunTechniqueSession.BreathingImmersive.BreathingImmersivePage"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:common="clr-namespace:PsychologyApp.Presentation.Common;assembly=PsychologyApp.Presentation.Core"
              xmlns:breath="clr-namespace:PsychologyApp.Presentation.Widgets.BreathingPacer"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              Shell.NavBarIsVisible="False"
@@ -33,7 +34,7 @@
             VerticalOptions="Start"
             Margin="0,48,20,0"
             Padding="12"
-            SemanticProperties.Description="Close">
+            SemanticProperties.Description="{x:Static common:AppStrings.DialogueClose}">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnCloseTapped" />
             </Label.GestureRecognizers>

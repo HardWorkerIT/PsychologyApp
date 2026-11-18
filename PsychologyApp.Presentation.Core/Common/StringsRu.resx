@@ -585,6 +585,10 @@
   <data name="QuoteAddFavoriteHint" xml:space="preserve">
     <value>Добавить в избранное</value>
   </data>
+  <data name="QuoteRemoveFavoriteHint" xml:space="preserve">
+    <value>Убрать из избранного</value>
+  </data>
+
   <data name="QuoteCopyHint" xml:space="preserve">
     <value>Копировать цитату</value>
   </data>
@@ -3325,11 +3329,17 @@
   <data name="ArticlesSearchPlaceholder" xml:space="preserve">
     <value>Поиск по статьям</value>
   </data>
+  <data name="ArticlesSearchMinLength" xml:space="preserve">
+    <value>Введите не меньше двух символов для поиска.</value>
+  </data>
   <data name="ArticlesNothingFound" xml:space="preserve">
     <value>Ничего не нашлось. Попробуйте другое слово.</value>
   </data>
   <data name="ArticlesFilterSaved" xml:space="preserve">
     <value>Сохранённые</value>
+  </data>
+  <data name="FilterChipSelected" xml:space="preserve">
+    <value>Выбран фильтр: {0}</value>
   </data>
   <data name="ArticlesNothingSaved" xml:space="preserve">
     <value>Здесь появятся статьи, которые вы сохраните.</value>
@@ -3434,7 +3444,7 @@
     <value>Дневник</value>
   </data>
   <data name="ForYouEmpty" xml:space="preserve">
-    <value>Здесь появятся начатые курсы, недочитанные статьи и подсказки по вашим тестам и дневнику. Пройдите короткий тест, и подборка станет точнее.</value>
+    <value>Начните с материалов ниже. Здесь появятся ваши курсы, недочитанные статьи и персональные рекомендации. Короткий тест поможет точнее их подобрать.</value>
   </data>
   <data name="ForYouTakeTest" xml:space="preserve">
     <value>Пройти тест</value>
@@ -4192,8 +4202,17 @@
   <data name="NextStepTitle" xml:space="preserve">
     <value>Быстрые действия</value>
   </data>
+  <data name="NextStepSetup" xml:space="preserve">
+    <value>Настроить быстрые действия</value>
+  </data>
+  <data name="NextStepPractices" xml:space="preserve">
+    <value>Практики</value>
+  </data>
+  <data name="NextStepSaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить быстрые действия. Попробуйте ещё раз.</value>
+  </data>
   <data name="NextStepPrompt" xml:space="preserve">
-    <value>Выберите до трёх действий для быстрого доступа.</value>
+    <value>Выберите до шести действий — они будут первыми в подборе.</value>
   </data>
   <data name="NextStepGrounding" xml:space="preserve">
     <value>Сделать заземление</value>
@@ -4213,9 +4232,6 @@
   <data name="NextStepStart" xml:space="preserve">
     <value>Открыть</value>
   </data>
-  <data name="NextStepSave" xml:space="preserve">
-    <value>Добавить в быстрые действия</value>
-  </data>
   <data name="NextStepRemove" xml:space="preserve">
     <value>Убрать из быстрых действий</value>
   </data>
@@ -4232,10 +4248,10 @@
     <value>Показать или скрыть доступные варианты.</value>
   </data>
   <data name="NextStepSaveHint" xml:space="preserve">
-    <value>Добавит выбранное действие в быстрые действия.</value>
+    <value>Отметьте действие, затем сохраните.</value>
   </data>
   <data name="NextStepRemoveHint" xml:space="preserve">
-    <value>Уберёт выбранное действие из быстрых действий.</value>
+    <value>Снимите отметку, затем сохраните.</value>
   </data>
   <data name="NextStepOpenHint" xml:space="preserve">
     <value>Открыть сохранённое действие.</value>
@@ -4247,13 +4263,19 @@
     <value>Выбрано: {0}</value>
   </data>
   <data name="NextStepSavedSummary" xml:space="preserve">
-    <value>Быстрых действий: {0} из 3</value>
+    <value>Сохранено: {0} из 3</value>
+  </data>
+  <data name="NextStepShowQuickActions" xml:space="preserve">
+    <value>Показать быстрые действия</value>
+  </data>
+  <data name="NextStepHideQuickActions" xml:space="preserve">
+    <value>Скрыть быстрые действия</value>
   </data>
   <data name="NextStepCapacity" xml:space="preserve">
-    <value>Выбрано действий: {0} из 3</value>
+    <value>Выбрано: {0} из {1}</value>
   </data>
   <data name="NextStepLimitReached" xml:space="preserve">
-    <value>Можно сохранить не больше трёх действий. Уберите одно, чтобы добавить другое.</value>
+    <value>Можно сохранить не больше {0} действий. Уберите одно, чтобы добавить другое.</value>
   </data>
   <data name="PracticeFinderShortAction" xml:space="preserve">
     <value>Подобрать</value>
@@ -4266,6 +4288,48 @@
   </data>
   <data name="PracticeFinderTitle" xml:space="preserve">
     <value>Что подходит сейчас?</value>
+  </data>
+  <data name="PracticeFinderContextHeader" xml:space="preserve">
+    <value>По ситуации и условиям</value>
+  </data>
+  <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
+    <value>Запустить сохранённое действие или настроить список</value>
+  </data>
+  <data name="PracticeFinderSituationDescription" xml:space="preserve">
+    <value>Выберите ситуацию или условие — покажу подходящие практики</value>
+  </data>
+  <data name="PracticeFinderConditionsSection" xml:space="preserve">
+    <value>Условия</value>
+  </data>
+  <data name="PracticeFinderSituationsSection" xml:space="preserve">
+    <value>Ситуации</value>
+  </data>
+  <data name="PracticeFinderQuickMatchReason" xml:space="preserve">
+    <value>Короткий формат</value>
+  </data>
+  <data name="PracticeFinderEyesOpenMatchReason" xml:space="preserve">
+    <value>Можно не закрывать глаза</value>
+  </data>
+  <data name="PracticeFinderNoBreathMatchReason" xml:space="preserve">
+    <value>Без фокуса на дыхании</value>
+  </data>
+  <data name="PracticeFinderNoTypingMatchReason" xml:space="preserve">
+    <value>Текстовые ответы можно пропустить</value>
+  </data>
+  <data name="PracticeFinderPublicMatchReason" xml:space="preserve">
+    <value>Подходит для общественного места</value>
+  </data>
+  <data name="PracticeFinderBeforeConversationMatchReason" xml:space="preserve">
+    <value>Для подготовки к трудному разговору</value>
+  </data>
+  <data name="PracticeFinderPassengerCommuteMatchReason" xml:space="preserve">
+    <value>Для пассажира или на остановке</value>
+  </data>
+  <data name="PracticeFinderBeforeSleepMatchReason" xml:space="preserve">
+    <value>Спокойный вариант перед сном</value>
+  </data>
+  <data name="PracticeFinderAfterConflictMatchReason" xml:space="preserve">
+    <value>Пауза после конфликта</value>
   </data>
   <data name="PracticeFinderQuick" xml:space="preserve">
     <value>У меня есть до 2 минут</value>
@@ -4282,9 +4346,6 @@
   <data name="PracticeFinderPublic" xml:space="preserve">
     <value>Я в общественном месте</value>
   </data>
-  <data name="PracticeFinderSituations" xml:space="preserve">
-    <value>Подборка под ситуацию</value>
-  </data>
   <data name="PracticeFinderBeforeConversation" xml:space="preserve">
     <value>Перед трудным разговором</value>
   </data>
@@ -4298,13 +4359,7 @@
     <value>После конфликта</value>
   </data>
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
-    <value>Подходящие практики: {0}</value>
-  </data>
-  <data name="PracticeFinderBundleResultsTitle" xml:space="preserve">
-    <value>Подборка «{0}». Можно выбрать любую практику.</value>
-  </data>
-  <data name="PracticeFinderNoTypingResultsTitle" xml:space="preserve">
-    <value>Ответы можно пропустить</value>
+    <value>Подходящие практики</value>
   </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>Подходящие практики не найдены</value>

@@ -31,10 +31,10 @@ export PATH="${JAVA_HOME:+$JAVA_HOME/bin:}$ANDROID_HOME/platform-tools:$ANDROID_
 
 export AVD_NAME="${AVD:-Pixel_API35}"
 export SYSTEM_IMAGE="system-images;android-35;google_apis;x86_64"
-export SDK_PACKAGES=("platform-tools" "emulator" "platforms;android-36" "build-tools;36.0.0" "cmdline-tools;latest" "$SYSTEM_IMAGE")
+export SDK_PACKAGES=("platform-tools" "emulator" "platforms;android-37" "build-tools;36.0.0" "cmdline-tools;latest" "$SYSTEM_IMAGE")
 
 export PROJECT="PsychologyApp.Presentation/PsychologyApp.Presentation.csproj"
-export FRAMEWORK="net10.0-android"
+export FRAMEWORK="net11.0-android37.0"
 export APP_ID="com.subconscious.psychologyapp"
 # Отладочная копия ставится рядом с настоящим приложением и никогда не трогает его данные.
 export DEV_APP_ID="$APP_ID.dev"
@@ -89,7 +89,7 @@ target_device() { echo "${ANDROID_SERIAL:-$(adb devices | awk 'NR > 1 && $2 == "
 # Значение свойства из csproj, например csproj_property ApplicationVersion.
 csproj_property() { sed -n "s:.*<$1>\(.*\)</$1>.*:\1:p" "$PROJECT" | head -1; }
 
-# Промежуточные файлы сборки под один ABI (obj/<конфигурация>/net10.0-android/android-arm64 и т. п.) .NET Android не
+# Промежуточные файлы сборки под один ABI (obj/<конфигурация>/net11.0-android37.0/android-arm64 и т. п.) .NET Android не
 # обновляет, когда меняются ресурсы приложения: там остаётся старый _Microsoft.Android.Resource.Designer.dll со старыми
 # номерами ресурсов. После добавления layout номера сдвигаются, и MAUI загружает чужой layout — приложение падает при
 # первой модальной странице (InflateException в mtrl_search_view, 2.008). Такие каталоги удаляются, если ресурсы новее их.

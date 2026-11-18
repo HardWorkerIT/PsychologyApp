@@ -62,7 +62,20 @@ public enum TechniqueId
     ImplementationIntention,
     SensoryComfort,
     UrgeSurfing,
-    MoneyWorryPlan
+    MoneyWorryPlan,
+
+    /// <summary>Orient to neutral details in the surroundings without forcing breath or body focus.</summary>
+    ExternalOrientation,
+
+    /// <summary>Plan bounded news checks while keeping alerts needed for safety, work, or family.</summary>
+    NewsCheckPlan,
+
+    /// <summary>Plan a kind, concrete way to resume a useful routine after a missed opportunity.</summary>
+    HabitRestartPlan,
+    /// <summary>Review feedback as specific information and choose a respectful next response.</summary>
+    FeedbackReview,
+    /// <summary>Plan one safe, low-pressure way to connect with another person or group.</summary>
+    ConnectionStepPlan
 }
 
 public enum TechniqueUiKind

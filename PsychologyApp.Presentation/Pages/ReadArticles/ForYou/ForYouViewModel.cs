@@ -109,9 +109,15 @@ public sealed class ForYouViewModel : BaseViewModel
         try
         {
             await _databaseReady.WaitAsync();
-            ReadingState state = await _reading.GetAsync();
-            IReadOnlyDictionary<string, TestResultDTO> results = await _progress.GetLatestTestResultsAsync(ReadingRecommender.TestIds);
-            IReadOnlyList<MoodEntryDTO> moods = await _progress.GetRecentMoodsAsync(MoodDays);
+            Task<ReadingState> stateTask = _reading.GetAsync();
+            Task<IReadOnlyDictionary<string, TestResultDTO>> resultsTask =
+                _progress.GetLatestTestResultsAsync(ReadingRecommender.TestIds);
+            Task<IReadOnlyList<MoodEntryDTO>> moodsTask = _progress.GetRecentMoodsAsync(MoodDays);
+            await Task.WhenAll(stateTask, resultsTask, moodsTask);
+
+            ReadingState state = await stateTask;
+            IReadOnlyDictionary<string, TestResultDTO> results = await resultsTask;
+            IReadOnlyList<MoodEntryDTO> moods = await moodsTask;
             IReadOnlyList<ReadingPick> picks = ReadingRecommender.Pick([.. results.Values], moods, state, DateTime.UtcNow);
             string language = AppStrings.Language;
             await UiThread.RunAsync(() =>
@@ -173,17 +179,17 @@ public sealed class ForYouViewModel : BaseViewModel
         List<LibraryCardItem> cards = [];
         if (ArticleContent.Find(ArticleIds.Anxiety, language) is { } anxiety)
         {
-            cards.Add(LibraryCards.Article(anxiety, state, _navigation, AppStrings.PickStarter));
+            cards.Add(LibraryCards.Article(anxiety, state, _navigation));
         }
 
         if (ArticleContent.FindCourse(CourseIds.Anxiety, language) is { } course)
         {
-            cards.Add(LibraryCards.Course(course, state, _navigation, AppStrings.PickStarter));
+            cards.Add(LibraryCards.Course(course, state, _navigation));
         }
 
         if (ArticleContent.Find(ArticleIds.Sleep, language) is { } sleep)
         {
-            cards.Add(LibraryCards.Article(sleep, state, _navigation, AppStrings.PickStarter));
+            cards.Add(LibraryCards.Article(sleep, state, _navigation));
         }
 
         return cards;

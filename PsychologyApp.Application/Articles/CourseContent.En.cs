@@ -519,11 +519,83 @@ public static partial class ArticleContent
                     "What would you keep or discuss with a professional?")
             ]),
 
+        new(CourseIds.ValuesAction, "Small steps toward what matters", "Five days to choose a meaningful direction and try manageable actions.", "TrackChanges", "who5", "WHO-5",
+            [
+                new("Find a direction", 3, [P("A value is the kind of person you want to be in an area of life, not an outcome you have to complete once and for all."), See(ArticleIds.ValuesAction, "Values as a guide: choose one manageable step")], "Name one area that matters to you right now.", "What makes it matter to you?"),
+                new("Make the step smaller", 3, [P("Choose an action that takes a few minutes. It should be small enough to try and meaningful enough to feel like your choice.")], "Write down an action that takes no more than 5–10 minutes.", "How could you make it easier or shorter?"),
+                new("Plan for an obstacle", 3, [P("Think of what might get in the way and choose a backup option. A plan can change; that is not failure.")], "Complete: “If … gets in the way, I can try …”.", "What would be a kinder option if you have less energy?"),
+                new("Try without waiting for the right mood", 3, [P("You do not have to feel confident or motivated first. You can try a small step, notice what comes up, and stop or simplify it if that feels safer.")], "If it is safe, try your step or an easier version.", "What did you notice before and after?"),
+                new("Review the plan", 3, [P("Review how well the action fit rather than judging yourself. Repeat it, adjust it, or choose another direction.")], "Write what you want to repeat or change this week.", "What action can support what matters without adding pressure?")
+            ]),
+
+
         new(CourseIds.ProblemPlanning, "A plan for manageable tasks", "Break a problem into steps and review the plan", "Checklist", "gad7", "GAD-7",
             [
                 new("Choose a problem", 3, [P("First name one specific problem. Not everything is in your control; choose what you can influence."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Write down one problem and what is within your control.", "Which part of the situation can you influence?"),
                 new("Choose a step", 3, [P("Write down several options, even if none seems perfect. Choose one small, safe step."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Write down two options and choose one manageable step.", "What might get in the way, and what is a backup option?"),
                 new("Review the plan", 3, [P("After trying, notice what helped and what was too difficult. You can adjust the plan or ask for support."), See(ArticleIds.ProblemPlanning, "A plan for manageable tasks")], "Try the step if it is safe, and note what happened.", "What would you keep, change or discuss with someone?")
-            ])
+            ]),
+        new(
+            CourseIds.Overwhelm,
+            "Less overwhelm, one clearer next step",
+            "Five short days to sort urgency, shrink a task, and find support. Move at your own pace.",
+            "Checklist",
+            "pss10",
+            "PSS-10",
+            [
+                new("Get tasks out of your head", 4, [P("A short list can show the size of what is asking for attention. Use a few words; private details are not needed."), H("Check urgency first"), Warning("If safety, health, food, housing, or essential medicine is at risk, seek practical help first."), See(ArticleIds.Overwhelm, "When everything piles up: choose one next step")], "List what is asking for attention and mark only what cannot safely wait.", "What became clearer after making the list?"),
+                new("Separate urgency from worry", 4, [P("Strong worry deserves care, but it does not set the order by itself. Check deadlines, consequences, and what you can influence."), Quiz("What can help you choose the first task?", 1, "Deadlines and consequences help assess urgency; how loud worry feels does not make a task first by itself.", "Choose the loudest worry", "Check the deadline and consequences", "Try to solve everything at once")], "Choose one task for today and one that can wait.", "What truly cannot be postponed?"),
+                new("Shrink the next step", 4, [P("Describe an action that takes a few minutes. If it still feels too big, break it down again."), See(ArticleIds.Overwhelm, "When everything piles up: choose one next step"), Practice(TechniqueId.ExternalOrientation, "Orient with three details")], "Name the start of the task: open, call, check, or gather one item.", "How could you make this step easier?"),
+                new("Ask for manageable help", 4, [P("A request for one specific action is clearer than asking someone to solve everything. They may agree, suggest another option, or say no; you can then look for other support."), List("Ask someone to stay with you", "Ask for help checking one fact", "Ask to share one task")], "Write a short request and choose someone you could ask.", "What response or backup option would work?"),
+                new("Review the plan", 4, [P("Review whether the plan fits your circumstances now, not whether you have been strict enough with yourself. You can continue, simplify, or ask for support."), TestsTab("If you wish, repeat PSS-10. It screens perceived stress; it is not a diagnosis, and a score change does not show the course caused it.", "pss10")], "Choose one step you want to keep for the next few days.", "How can you keep the plan from becoming another source of pressure?")
+            ]),
+
+        new(
+            CourseIds.NewsBoundaries,
+            "News on your schedule",
+            "Five days to check feeds less out of habit while keeping important alerts.",
+            "TipsAndUpdates", "pss10", "PSS-10",
+            [
+                new("Notice the habit", 4, [P("When you reach for the feed, ask: what do I want to know, and do I need to act now?"), See(ArticleIds.NewsLoop, "When the news will not let go"), TestsTab("The PSS-10 measures perceived stress over the past month. It is a screening measure, not a diagnosis.", "pss10")], "Notice once what prompted you to check the news.", "What were you hoping to find out?"),
+                new("One question, one source", 4, [P("State one question and choose a reliable source that can answer it. Once you have the answer, more updates may not add useful information."), Quiz("You found the answer you needed. What can you do if no urgent action is required?", 1, "Choosing when to check again can interrupt automatic refreshing.", "Keep refreshing until you feel calm", "Choose a time to check again and return to your task", "Ban yourself from reading the news")], "Choose one question and one source for your next check.", "How will you know you have the information you need?"),
+                new("Keep important alerts", 4, [P("You can turn off optional notifications while keeping alerts needed for safety, family, or work."), List("Keep alerts from essential services", "Turn off optional notifications", "Ask close contacts to call about urgent matters")], "Review notification settings only if it feels useful.", "Which alerts do you need to keep?"),
+                new("Make a check-in plan", 4, [P("Choose a suitable time and source. You do not need a strict limit: adjust the plan if urgent news or new circumstances arise."), Practice(TechniqueId.NewsCheckPlan, "Plan a news check")], "Fill in the short plan or simply think it through.", "What will you do after checking?"),
+                new("Review without judging yourself", 4, [P("Notice whether this routine feels more workable. Keep it, change it, or leave it. A change in PSS-10 scores does not prove that the course caused it."), Quiz("What if information that affects safety appears?", 1, "A plan should not stop you from checking urgent information or following official guidance.", "Wait for the planned check-in", "Check a reliable source and act as needed", "Turn off every alert"), TestsTab("You may repeat the PSS-10 if you wish. Comparing scores does not establish why they changed.", "pss10")], "Keep one setting that works for you.", "What routine felt manageable?")
+            ]),
+        new(
+            CourseIds.HabitMaintenance,
+            "A habit you can return to",
+            "Five days to choose a cue, make starting easier, and plan a gentle restart after a missed day.",
+            "TrackChanges", "who5", "WHO-5",
+            [
+                new("Choose one action", 4, [P("Start with one small action within your control that supports everyday well-being. Do not choose several goals at once."), See(ArticleIds.HabitFormation, "A new habit: a small action and a cue"), TestsTab("WHO-5 is a brief well-being screen for the past two weeks, not a diagnosis or a measure of willpower.", "who5")], "Name one action you would like to repeat.", "Why does this step fit your life right now?"),
+                new("Attach it to a cue", 4, [P("Choose a regular event that can remind you to begin, such as after breakfast or when you get home."), Practice(TechniqueId.ImplementationIntention, "Link an action to a familiar cue"), Quiz("Which plan is easier to remember at the right moment?", 1, "A specific cue and a small action make it easier to begin without waiting for a certain mood.", "I will do more of this sometime", "After breakfast, I will write one sentence", "I will start when I feel motivated")], "Complete: After …, I will …", "What regular cue already exists in your day?"),
+                new("Make starting easier", 4, [P("Remove one small obstacle: set out what you need, open the file, or choose a place. The first step can take only a couple of minutes."), List("Prepare what you will need", "Reduce the time or amount", "Choose an easier place or time")], "Make the beginning one step easier.", "What got in the way, and what did you change?"),
+                new("Plan how to restart", 4, [P("A missed day is information about what happened, not proof of failure. You do not need to double the effort or criticize yourself; you can return at the next suitable opportunity."), Practice(TechniqueId.HabitRestartPlan, "Plan a restart after a missed day"), Quiz("You missed your usual action. What may help you return without extra pressure?", 1, "The next suitable cue and a smaller step let you continue without punishment or catch-up.", "Do twice as much tomorrow", "Return at the next cue and start small", "Abandon the plan forever")], "Choose a cue for restarting and the easiest version of the action.", "How can you continue without trying to catch up?"),
+                new("Keep what works", 4, [P("Treat the plan as an experiment: repeat it, make the action smaller, change the cue, or pause. You may repeat WHO-5 if you wish; a score change alone does not prove the course caused an effect."), TestsTab("WHO-5 is a well-being screen, not a diagnosis. Comparing scores does not establish why they changed.", "who5")], "Keep one adjustment you want to try next.", "What felt workable, and what might you change?")
+            ]),
+        new(
+            CourseIds.FeedbackResponse,
+            "Responding to feedback without self-criticism",
+            "Four short lessons: separate facts from labels, clarify expectations, and choose a response that respects your boundaries.",
+            "Forum", "who5", "WHO-5",
+            [
+                new("Notice your first reaction", 4, [P("Someone’s words may sting. You do not have to agree, argue, or defend yourself immediately. First notice what you heard and how it landed."), See(ArticleIds.Feedback, "Feedback without labels"), TestsTab("WHO-5 is a general screen of well-being over the past two weeks, not a diagnosis or a measure of how well you accepted feedback.", "who5")], "Choose a phrase that gives you time to think.", "What could you say to avoid replying in the heat of the moment?"),
+                new("Ask for specifics", 4, [P("Asking for one example can make it clearer what could change. Clarify the deadline, standard, or situation without promising to accept everything said."), Practice(TechniqueId.FeedbackReview, "Sort through feedback")], "Write one question that would clarify the expectation.", "What is still too vague here?"),
+                new("Choose the useful part", 4, [P("You can consider a specific comment, clarify what is disputed, and reject a label. The aim is to choose your next step, not prove your worth."), Warning("Threats, humiliation, discrimination, or pressure call for boundaries and support, not self-criticism.")], "Choose one point you are willing to check or discuss.", "What can I influence, and what do I not have to accept?"),
+                new("Close with a calm next step", 4, [P("Agree on one action or a time to review it. If you cannot reach agreement, you can record the facts and consult a trusted person or relevant workplace or school policy."), Quiz("Which reply best helps clarify what to do next?", 1, "A specific question clarifies expectations; a pause leaves room to choose your response.", "Agree with everything to end the conversation.", "Ask for an example or standard and reply later.", "Decide that one mistake describes your whole self."), TestsTab("A strong reaction to words does not prove they are true. WHO-5 is a general well-being screen, not a feedback test; score changes do not prove the course caused an effect.", "who5")], "Try one question or reply that respects your boundaries.", "What small next step will you choose?")
+            ]),
+        new(
+            CourseIds.ConnectionWithoutPressure,
+            "Connection at your own pace",
+            "Five small steps to identify the kind of connection you want, choose a safe format, and make a low-pressure invitation.",
+            "Group", "who5", "WHO-5",
+            [
+                new("Name the kind of connection you want", 4, [P("Sometimes you want a conversation; sometimes a shared activity, quiet company, or practical help. You do not need to aim for a certain number of contacts."), See(ArticleIds.Loneliness, "Loneliness"), TestsTab("WHO-5 is a general well-being screen for the past two weeks, not a loneliness measure or diagnosis. A score change alone does not prove the course caused an effect.", "who5")], "Choose one kind of connection that would feel useful now.", "What does comfortable connection mean to me?"),
+                new("Choose a safe format", 4, [P("Think about who and how feels safer: one to one, in a group, online, or by a short message. A pause is an option; do not contact someone you feel unsafe around.")], "Name a person, group, or format that feels safe enough.", "What format would make it easier to start?"),
+                new("Invite without pressure", 4, [P("A brief, specific invitation is easier to accept or decline. Leave the other person room to choose a time or say no."), See(ArticleIds.SupportRequest, "Asking for support"), Practice(TechniqueId.ConnectionStepPlan, "Plan a small connection")], "Draft an invitation for a short walk, conversation, or shared activity.", "How can I leave the other person free to choose?"),
+                new("Leave room to adjust", 4, [P("Start with a convenient time and an easy way to end. If energy is low, make the plan smaller or move it. A reply or no reply does not define your worth."), Practice(TechniqueId.ConnectionStepPlan, "Plan a small connection")], "Choose a simple format and decide when you could end or reschedule.", "How can I support myself if plans change?"),
+                new("Reflect without judging yourself", 4, [P("Notice whether it felt safe and worthwhile and whether you would repeat or change the format. Do not rate yourself by message counts or someone else's response."), Quiz("What is useful to notice after a small connection?", 0, "It is useful to review the format and your own experience. Someone else's response does not measure your worth.", "Did it feel safe and comfortable, and what could I adjust?", "How many messages did I get in an hour?", "Does no reply prove people do not want to see me?"), TestsTab("WHO-5 is a general well-being screen for the past two weeks, not a loneliness measure or diagnosis. A score change alone does not prove the course caused an effect.", "who5")], "Choose one format you want to try or adjust.", "What small step fits me now?")
+            ]),
     ];
 }

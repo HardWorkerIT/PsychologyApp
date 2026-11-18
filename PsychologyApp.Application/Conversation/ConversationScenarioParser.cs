@@ -53,6 +53,11 @@ public static class ConversationScenarioParser
 {
     public static ParseResult<ConversationScenario> Parse(string json)
     {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return ParseResult<ConversationScenario>.Failure("Scenario is empty.");
+        }
+
         JsonConversationScenario? dto;
         try
         {
@@ -84,8 +89,13 @@ public static class ConversationScenarioParser
         }
 
         Dictionary<string, ConversationNode> nodes = new(StringComparer.Ordinal);
-        foreach (JsonConversationNode raw in dto.Nodes ?? [])
+        foreach (JsonConversationNode? raw in dto.Nodes ?? [])
         {
+            if (raw is null)
+            {
+                return Fail("Scenario contains a missing node.");
+            }
+
             ParseResult<ConversationNode> node = BuildNode(raw);
             if (!node.IsSuccess)
             {
@@ -149,15 +159,20 @@ public static class ConversationScenarioParser
             }
 
             choices = [];
-            foreach (JsonConversationChoice choice in raw.Choices)
+            foreach (JsonConversationChoice? choice in raw.Choices)
             {
-                if (string.IsNullOrWhiteSpace(choice.Label) || string.IsNullOrWhiteSpace(choice.Next))
+                if (choice is null || string.IsNullOrWhiteSpace(choice.Label) || string.IsNullOrWhiteSpace(choice.Next))
                 {
                     return ParseResult<ConversationNode>.Failure($"Node '{id}' has a choice without label or next.");
                 }
 
                 choices.Add(new ConversationChoice(choice.Label, choice.Next, choice.Value));
             }
+        }
+
+        if (raw.Routes?.Any(route => route is null) == true)
+        {
+            return ParseResult<ConversationNode>.Failure($"Node '{id}' has a missing route.");
         }
 
         List<ConversationRoute>? routes = raw.Routes?

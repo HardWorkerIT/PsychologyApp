@@ -8,10 +8,10 @@ public partial class TestListCardView : ContentView
     public TestListCardView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
         ApplyLook();
         Loaded += (_, _) =>
         {
+            UserPreferences.Changed += OnPreferencesChanged;
             ApplyLook();
             if (Microsoft.Maui.Controls.Application.Current is { } app)
             {
@@ -20,6 +20,7 @@ public partial class TestListCardView : ContentView
         };
         Unloaded += (_, _) =>
         {
+            UserPreferences.Changed -= OnPreferencesChanged;
             if (Microsoft.Maui.Controls.Application.Current is { } app)
             {
                 app.RequestedThemeChanged -= OnThemeChanged;

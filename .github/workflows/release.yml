@@ -35,7 +35,7 @@ jobs:
       code: ${{ steps.decide.outputs.code }}
       sha: ${{ steps.decide.outputs.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
@@ -67,13 +67,20 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.check.outputs.sha }}
-      - uses: actions/setup-dotnet@v4
+      - name: Cache NuGet packages
+        uses: actions/cache@v5
         with:
-          dotnet-version: 10.0.x
-      - uses: actions/setup-java@v4
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'global.json') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 11.0.x
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 17
@@ -81,7 +88,7 @@ jobs:
         run: |
           for tests in PsychologyApp.Domain.Tests PsychologyApp.Application.Tests PsychologyApp.Infrastructure.Tests \
                        PsychologyApp.Integration.Tests PsychologyApp.Presentation.Tests; do
-            dotnet test "$tests" -c Debug -p:Net10Only=true --verbosity minimal
+            dotnet test "$tests" -c Debug -p:Net11Only=true --verbosity minimal
           done
       - run: dotnet workload install maui-android
       - name: Release key
@@ -95,7 +102,7 @@ jobs:
           AndroidSigningStorePass: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           AndroidSigningKeyPass: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: >
-          dotnet publish PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net10.0-android -c Release
+          dotnet publish PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-android37.0 -c Release
           "-p:AndroidPackageFormats=aab%3Bapk" -o out
       - name: Check the packages
         env:

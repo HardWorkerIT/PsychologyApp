@@ -1,5 +1,5 @@
 // The view models are plain C# apart from a handful of MAUI types. These stand-ins let the real view-model files be compiled into
-// the net10.0 test project, so their commands and state are tested without a device or the MAUI runtime.
+// the net11.0 test project, so their commands and state are tested without a device or the MAUI runtime.
 using System.Windows.Input;
 
 namespace Microsoft.Maui.Controls
@@ -162,6 +162,12 @@ namespace PsychologyApp.Presentation.Shared.Services.Preferences
             Changed?.Invoke();
         }
 
+        public Task SaveAsync(UserPreferencesState state, CancellationToken cancellationToken = default)
+        {
+            Save(state);
+            return Task.CompletedTask;
+        }
+
         public void ApplyAll()
         {
         }
@@ -170,8 +176,15 @@ namespace PsychologyApp.Presentation.Shared.Services.Preferences
         {
         }
 
-        public void CompleteOnboarding(string concern, bool? practiceRemindersEnabled = null, int? practiceReminderHour = null)
+        public Task RestoreOnboardingConcernAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task CompleteOnboardingAsync(
+            string concern,
+            bool? practiceRemindersEnabled = null,
+            int? practiceReminderHour = null,
+            CancellationToken cancellationToken = default)
         {
+            return Task.CompletedTask;
         }
 
         public void ResetOnboardingCompletion()

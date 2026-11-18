@@ -9,6 +9,7 @@ global using PsychologyApp.Presentation.App.Routes;
 global using PsychologyApp.Presentation.Common;
 global using PsychologyApp.Presentation.UI.Components;
 global using PsychologyApp.Presentation.Shared.Common;
+global using PsychologyApp.Presentation.Shared.Common.Localization;
 global using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 global using PsychologyApp.Presentation.Shared.Navigation;
 global using BaseViewModel = PsychologyApp.Presentation.Shared.ViewModels.BaseViewModel;

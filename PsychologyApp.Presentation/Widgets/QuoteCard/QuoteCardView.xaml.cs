@@ -41,11 +41,14 @@ public partial class QuoteCardView : ContentView
     private void ApplyLocalization()
     {
         DefaultAuthorText = AppStrings.ProverbLabel;
-        FavoriteHint = AppStrings.QuoteAddFavoriteHint;
+        UpdateFavoriteHint();
         CopyHint = AppStrings.QuoteCopyHint;
         ShareHint = AppStrings.QuoteShareHint;
         UpdateAuthorLine();
     }
+
+    private void UpdateFavoriteHint() =>
+        FavoriteHint = IsFavourite ? AppStrings.QuoteRemoveFavoriteHint : AppStrings.QuoteAddFavoriteHint;
 
     private void UpdateAuthorLine()
     {
@@ -218,6 +221,7 @@ public partial class QuoteCardView : ContentView
     {
         if (bindable is QuoteCardView view)
         {
+            view.UpdateFavoriteHint();
             FavoriteIconAnimator.PulseIfFavoriteChanged(
                 oldValue is true,
                 newValue is true,

@@ -135,10 +135,10 @@ Clean Architecture на уровне решения и Feature-Sliced Design в�
 - Компоненты Android (receiver, service, activity) объявляются атрибутами в C#. Не вписывайте их в `AndroidManifest.xml`
   под .NET-именами: Java-класс называется `crc64…`, и такая запись указывает на несуществующий класс (после
   перезагрузки приложение падает в фоне).
-- В Release работают AOT, обрезка и R8: падения, которых нет в Debug, ловит `tools/android-smoke.sh` (CI `android-smoke`). CI с тестами и smoke запускается на каждый push и pull request рабочих веток (`main`, `features/re-design`, `release/**`).
-- Производительность меряйте в Release, а не в Debug (там нет AOT, цифры завышены в разы). Release по умолчанию собирается только под
+- В Release работают CoreCLR ReadyToRun, обрезка и R8: падения, которых нет в Debug, ловит `tools/android-smoke.sh` (CI `android-smoke`). CI с тестами и smoke запускается на каждый push и pull request рабочих веток (`main`, `features/re-design`, `release/**`).
+- Производительность меряйте в Release, а не в Debug (там нет ReadyToRun). Release по умолчанию собирается только под
   arm64, и на x86_64-эмуляторе он идёт через трансляцию ARM, так что цифры бессмысленны. Для эмулятора соберите отладочную копию под x64:
-  `dotnet build PsychologyApp.Presentation -f net10.0-android -c Release -p:ApplicationId=com.subconscious.psychologyapp.dev
+  `dotnet build PsychologyApp.Presentation -f net11.0-android37.0 -c Release -p:ApplicationId=com.subconscious.psychologyapp.dev
   -p:AndroidKeyStore=false -p:AndroidPackageFormats=apk -p:AndroidReleaseRid=android-x64`. Холодный старт — `am start -W`
   (TotalTime), плавность — `dumpsys gfxinfo <пакет> reset`, потом действие, потом `dumpsys gfxinfo <пакет>`.
   Чтобы понять, на что ушло время, добавьте к сборке `-p:PerfTrace=true`: замеры `PerfTrace` (создание вкладок и страниц,
@@ -178,7 +178,7 @@ dotnet test PsychologyApp.Presentation.Tests
 bash scripts/android-run.sh   # для изменений интерфейса — и посмотреть на устройстве
 ```
 
-`PsychologyApp.Presentation.Tests` собирается под net10.0 по явному списку файлов в csproj: новый файл теста и
+`PsychologyApp.Presentation.Tests` собирается под net11.0 по явному списку файлов в csproj: новый файл теста и
 проверяемые им файлы Presentation (как `Link`) вписываются туда, иначе тест не компилируется и не запускается нигде,
 в том числе в CI. Типы MAUI заменены заглушками в `ViewModels/MauiShims.cs`.
 

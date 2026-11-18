@@ -39,14 +39,15 @@
                     WidthRequest="44"
                     HeightRequest="44"
                     StrokeThickness="0"
-                    BackgroundColor="Transparent">
+                    BackgroundColor="Transparent"
+                    SemanticProperties.Description="{Binding FavoriteHint, Source={x:Reference Root}}">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding LikeCommand, Source={x:Reference Root}}" />
                     </Border.GestureRecognizers>
                     <ui:MaterialIconView
                         IconName="FavoriteBorder"
                         IconSize="24"
-                        SemanticProperties.Description="{Binding FavoriteHint, Source={x:Reference Root}}"
+                        AutomationProperties.IsInAccessibleTree="False"
                         IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}">
                         <ui:MaterialIconView.Triggers>
                             <DataTrigger
@@ -65,14 +66,15 @@
                     WidthRequest="44"
                     HeightRequest="44"
                     StrokeThickness="0"
-                    BackgroundColor="Transparent">
+                    BackgroundColor="Transparent"
+                    SemanticProperties.Description="{Binding CopyHint, Source={x:Reference Root}}">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding CopyCommand, Source={x:Reference Root}}" />
                     </Border.GestureRecognizers>
                     <ui:MaterialIconView
                         IconName="ContentCopy"
                         IconSize="22"
-                        SemanticProperties.Description="{Binding CopyHint, Source={x:Reference Root}}"
+                        AutomationProperties.IsInAccessibleTree="False"
                         IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                 </Border>
                 <Border
@@ -81,14 +83,15 @@
                     WidthRequest="44"
                     HeightRequest="44"
                     StrokeThickness="0"
-                    BackgroundColor="Transparent">
+                    BackgroundColor="Transparent"
+                    SemanticProperties.Description="{Binding ShareHint, Source={x:Reference Root}}">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ShareCommand, Source={x:Reference Root}}" />
                     </Border.GestureRecognizers>
                     <ui:MaterialIconView
                         IconName="Share"
                         IconSize="22"
-                        SemanticProperties.Description="{Binding ShareHint, Source={x:Reference Root}}"
+                        AutomationProperties.IsInAccessibleTree="False"
                         IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                 </Border>
             </Grid>

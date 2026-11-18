@@ -32,12 +32,12 @@ accelerated() {
 avd_exists() { emulator -list-avds 2>/dev/null | tr -d '\r' | grep -qx "$AVD_NAME"; }
 
 echo "Окружение Android (ANDROID_HOME=$ANDROID_HOME, JAVA_HOME=${JAVA_HOME:-не задан})"
-check ".NET SDK >= 10" "установите .NET 10 SDK" dotnet_at_least 10
+check ".NET SDK >= 11" "установите .NET 11 SDK" dotnet_at_least 11
 check "Рабочая нагрузка android" "dotnet workload install maui-android" android_workload
 check "JDK >= 17" "установите Microsoft OpenJDK 17+ или задайте PSYCHOLOGY_JAVA_HOME" java_at_least 17
 check "platform-tools (adb)" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/platform-tools"
 check "emulator" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/emulator"
-check "platforms;android-36" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/platforms/android-36"
+check "platforms;android-37" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/platforms/android-37"
 check "build-tools;36.0.0" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/build-tools/36.0.0"
 check "cmdline-tools" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/cmdline-tools/latest"
 check "$SYSTEM_IMAGE" "bash scripts/android-setup.sh" test -d "$ANDROID_HOME/system-images/android-35/google_apis/x86_64"

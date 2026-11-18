@@ -96,7 +96,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         Navigated += OnShellNavigated;
         // While the app lock is due, nothing of the app is drawn: the lock screen is a modal page above this, unaffected.
         _appLock.CoveringChanged += (_, _) => Opacity = _appLock.IsCovering ? 0 : 1;
-        _ = InitializeAppAsync();
+        InitializeAppAsync().FireAndForget();
         PerfTrace.Measure("AppShell constructor", constructorStarted);
     }
 
@@ -565,6 +565,8 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
 
     public async Task CompleteEraseAsync()
     {
+        await _preferences.RestoreOnboardingConcernAsync();
+
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
             _preferences.ApplyAll();
@@ -593,7 +595,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Shell startup completed with errors.");
+            _logger.LogError("Shell startup completed with errors ({ExceptionType}).", ex.GetType().Name);
         }
         finally
         {

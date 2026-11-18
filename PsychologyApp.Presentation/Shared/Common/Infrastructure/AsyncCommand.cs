@@ -26,7 +26,7 @@ public sealed class AsyncCommand : ICommand
             return;
         }
 
-        _ = ExecuteCoreAsync();
+        ExecuteCoreAsync().FireAndForget();
     }
 
     private async Task ExecuteCoreAsync()

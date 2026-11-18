@@ -25,6 +25,13 @@ public sealed class OnboardingViewModelTests
 
     private OnboardingViewModel Create()
     {
+        _preferences
+            .Setup(p => p.CompleteOnboardingAsync(
+                It.IsAny<string>(),
+                It.IsAny<bool?>(),
+                It.IsAny<int?>(),
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
         _recommendation.Setup(r => r.ResolveFromOnboardingConcern(OnboardingConcernKeys.Anxiety)).Returns(TechniqueId.Grounding);
         _recommendation.Setup(r => r.ResolveFromOnboardingConcern(It.Is<string>(c => c != OnboardingConcernKeys.Anxiety))).Returns(TechniqueId.Spin);
         _catalog.Setup(c => c.GetAsync(TechniqueId.Grounding, It.IsAny<CancellationToken>())).ReturnsAsync(Definition("Grounding 5-4-3-2-1"));
@@ -107,7 +114,7 @@ public sealed class OnboardingViewModelTests
 
         await VmTestHelpers.RunAsync(viewModel.StartPracticeCommand);
 
-        _preferences.Verify(p => p.CompleteOnboarding(OnboardingConcernKeys.Anxiety, true, 8), Times.Once);
+        _preferences.Verify(p => p.CompleteOnboardingAsync(OnboardingConcernKeys.Anxiety, true, 8, It.IsAny<CancellationToken>()), Times.Once);
         _care.Verify(c => c.EnsureProgramAsync(OnboardingConcernKeys.Anxiety, It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal([TechniqueId.Grounding], _completed);
     }
@@ -120,7 +127,7 @@ public sealed class OnboardingViewModelTests
 
         await VmTestHelpers.RunAsync(viewModel.SkipCommand);
 
-        _preferences.Verify(p => p.CompleteOnboarding(OnboardingConcernKeys.Explore, false, It.IsAny<int>()), Times.Once);
+        _preferences.Verify(p => p.CompleteOnboardingAsync(OnboardingConcernKeys.Explore, false, It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal([null], _completed);
     }
 
@@ -145,7 +152,7 @@ public sealed class OnboardingViewModelTests
 
         await VmTestHelpers.RunAsync(viewModel.SkipCommand);
 
-        _preferences.Verify(p => p.CompleteOnboarding(It.IsAny<string>(), It.IsAny<bool?>(), It.IsAny<int?>()), Times.Once);
+        _preferences.Verify(p => p.CompleteOnboardingAsync(It.IsAny<string>(), It.IsAny<bool?>(), It.IsAny<int?>(), It.IsAny<CancellationToken>()), Times.Once);
         Assert.Single(_completed);
     }
 

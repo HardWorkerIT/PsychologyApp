@@ -86,6 +86,7 @@ public static class ArticleSpeech
 public static class ArticleSearch
 {
     public const int MinQueryLength = 2;
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, SearchEntry[]> SearchIndex = new(StringComparer.Ordinal);
 
     public static IReadOnlyList<Article> Find(string? query, string? language)
     {
@@ -95,14 +96,34 @@ public static class ArticleSearch
             return [];
         }
 
-        return ArticleContent.All(language)
-            .Select(article => (Article: article, Head: Normalize($"{article.Title} {article.Summary}"), Body: Normalize(BodyText(article))))
+        string languageKey = NormalizeLanguage(language);
+        return SearchIndex.GetOrAdd(languageKey, BuildSearchIndex)
             .Where(entry => words.All(word => entry.Head.Contains(word, StringComparison.Ordinal) || entry.Body.Contains(word, StringComparison.Ordinal)))
-            .OrderByDescending(entry => words.Count(word => Normalize(entry.Article.Title).Contains(word, StringComparison.Ordinal)))
+            .OrderByDescending(entry => words.Count(word => entry.Title.Contains(word, StringComparison.Ordinal)))
             .ThenByDescending(entry => words.Count(word => entry.Head.Contains(word, StringComparison.Ordinal)))
             .Select(entry => entry.Article)
             .ToList();
     }
+
+    private static SearchEntry[] BuildSearchIndex(string language) =>
+        ArticleContent.All(language)
+            .Select(article => new SearchEntry(
+                article,
+                Normalize(article.Title),
+                Normalize($"{article.Title} {article.Summary}"),
+                Normalize(BodyText(article))))
+            .ToArray();
+
+    private static string NormalizeLanguage(string? language) => language?.ToLowerInvariant() switch
+    {
+        "ru" => "ru",
+        "fr" => "fr",
+        "de" => "de",
+        "es" => "es",
+        "pt" => "pt",
+        "zh" => "zh",
+        _ => "en"
+    };
 
     private static string BodyText(Article article) =>
         string.Join(' ', article.Blocks.SelectMany(block => (block.Items ?? []).Prepend(block.Text)));
@@ -111,4 +132,6 @@ public static class ArticleSearch
         string.Join(' ', new string((text ?? string.Empty).ToLowerInvariant().Replace('ё', 'е')
             .Select(c => char.IsLetterOrDigit(c) ? c : ' ').ToArray())
             .Split(' ', StringSplitOptions.RemoveEmptyEntries));
+
+    private sealed record SearchEntry(Article Article, string Title, string Head, string Body);
 }

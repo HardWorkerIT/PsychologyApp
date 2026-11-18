@@ -19,41 +19,55 @@
             TitleText="{Binding PageTitle}" />
 
         <Grid Grid.Row="1">
-            <ScrollView IsVisible="{Binding HasLoaded}">
-                <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource ListItemSpacing}">
-            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" IsVisible="{Binding HasPicks}" BindableLayout.ItemsSource="{Binding Picks}">
-                <BindableLayout.ItemTemplate>
+            <CollectionView
+                IsVisible="{Binding HasLoaded}"
+                ItemsSource="{Binding Saved}"
+                Margin="{StaticResource LayoutTabPageMarginThickness}"
+                SelectionMode="None"
+                VerticalScrollBarVisibility="Never">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="{StaticResource ListItemSpacing}" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.Header>
+                    <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" Padding="0,20,0,0">
+                        <VerticalStackLayout IsVisible="{Binding HasPicks}" BindableLayout.ItemsSource="{Binding Picks}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="card:LibraryCardItem">
+                                    <card:LibraryCardView />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Label Text="{Binding SavedTitle}"
+                               IsVisible="{Binding HasSaved}"
+                               Style="{StaticResource SectionTitleStyle}"
+                               Margin="4,12,4,0" />
+                    </VerticalStackLayout>
+                </CollectionView.Header>
+
+                <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="card:LibraryCardItem">
                         <card:LibraryCardView />
                     </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </VerticalStackLayout>
+                </CollectionView.ItemTemplate>
 
-            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" IsVisible="{Binding HasSaved}">
-                <Label Text="{Binding SavedTitle}" Style="{StaticResource SectionTitleStyle}" Margin="4,12,4,0" />
-                <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding Saved}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="card:LibraryCardItem">
-                            <card:LibraryCardView />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-
-            <!-- Nothing yet: one quiet line on how the page fills up, then a way in right away rather than an empty page. -->
-            <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" IsVisible="{Binding IsEmpty}">
-                <Label Text="{Binding EmptyText}" Style="{StaticResource CaptionStyle}" Margin="4,0" />
-                <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding Starters}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="card:LibraryCardItem">
-                            <card:LibraryCardView />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-                <ui:ButtonView BodyText="{Binding TakeTestText}" TapCommand="{Binding TakeTestCommand}" Variant="Secondary" />
-            </VerticalStackLayout>
-                </VerticalStackLayout>
-            </ScrollView>
+                <CollectionView.Footer>
+                    <!-- Nothing yet: a short explanation and a few ways in, without making the empty state a separate screen. -->
+                    <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}"
+                                         IsVisible="{Binding IsEmpty}"
+                                         Padding="0,8,0,0">
+                        <Label Text="{Binding EmptyText}" Style="{StaticResource CaptionStyle}" Margin="4,0" />
+                        <VerticalStackLayout Spacing="{StaticResource ListItemSpacing}" BindableLayout.ItemsSource="{Binding Starters}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="card:LibraryCardItem">
+                                    <card:LibraryCardView />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <ui:ButtonView BodyText="{Binding TakeTestText}" TapCommand="{Binding TakeTestCommand}" Variant="Secondary" />
+                    </VerticalStackLayout>
+                </CollectionView.Footer>
+            </CollectionView>
             <ui:SkeletonView
                 Kind="Cards"
                 Count="3"

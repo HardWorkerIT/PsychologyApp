@@ -56,7 +56,7 @@ public partial class OnboardingViewModel
 
     private async Task PersistOnboardingCompletionAsync(string concern)
     {
-        _userPreferencesStore.CompleteOnboarding(
+        await _userPreferencesStore.CompleteOnboardingAsync(
             concern,
             PracticeRemindersEnabled,
             _practiceReminderHour);

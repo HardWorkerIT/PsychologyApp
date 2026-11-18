@@ -92,4 +92,5 @@ public sealed record BackupImportResult(
     int ChatSessions,
     bool SafetyPlanImported,
     int Techniques = 0,
-    int SkippedDuplicates = 0);
+    int SkippedDuplicates = 0,
+    int ChatMessages = 0);

@@ -3,14 +3,27 @@ namespace PsychologyApp.Application.Models;
 public enum SavedNextStep
 {
     Grounding,
-    ThoughtRecord,
+    Breathing,
     SmallStep,
+    ThoughtRecord,
+    ThoughtDefusion,
+    SelfCompassion,
+    BodyScan,
+    MuscleRelax,
+    BusyMind,
+    PauseBeforeReaction,
+    ProblemSolving,
+    CheckTheFacts,
+    WorryTime,
+    ImplementationIntention,
+    SensoryComfort,
+    Balloons,
     MoodCheckIn
 }
 
 public static class SavedNextStepCollection
 {
-    public const int MaximumCount = 3;
+    public const int MaximumCount = 6;
 
     public static IReadOnlyList<SavedNextStep> Parse(string? value)
     {

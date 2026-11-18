@@ -13,6 +13,16 @@ public sealed class AppMetadataDocumentRepositoryTests
     private readonly SharedMemoryConnectionFactory _factory = new();
 
     [Fact]
+    public async Task The_selected_onboarding_concern_is_stored_in_app_metadata()
+    {
+        OnboardingConcernRepository repository = new(_factory, RepositoryTestContext.Settings);
+
+        await repository.SaveAsync("anxiety");
+
+        Assert.Equal("anxiety", await repository.GetAsync());
+    }
+
+    [Fact]
     public async Task A_saved_document_reads_back()
     {
         BodyRepository repository = new(_factory, RepositoryTestContext.Settings);

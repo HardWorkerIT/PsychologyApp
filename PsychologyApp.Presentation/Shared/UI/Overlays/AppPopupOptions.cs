@@ -4,7 +4,7 @@ namespace PsychologyApp.Presentation.Shared.UI.Overlays;
 
 internal static class AppPopupOptions
 {
-    private static readonly Color DialogOverlay = Color.FromArgb("#66000000");
+    private static readonly Color DialogOverlay = Color.FromArgb("#52000000");
 
     public static PopupOptions Dialog { get; } = new()
     {
