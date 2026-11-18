@@ -3,6 +3,11 @@ using Xunit;
 
 namespace PsychologyApp.Presentation.Tests;
 
+[CollectionDefinition("AsyncErrorHooks", DisableParallelization = true)]
+public sealed class AsyncErrorHooksCollection
+{
+}
+
 [Collection("AsyncErrorHooks")]
 public sealed class TapGuardTests
 {

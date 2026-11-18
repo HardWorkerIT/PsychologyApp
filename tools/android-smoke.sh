@@ -29,7 +29,7 @@ echo "app process IDs before interaction: ${APP_PIDS:-unknown}"
 STATUS=0
 CRASH=0
 MONKEY_FAILED=0
-if ! adb shell monkey -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
+if ! adb shell monkey --ignore-crashes --ignore-security-exceptions -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
   echo "FAIL: monkey could not complete the interaction run"; STATUS=1; MONKEY_FAILED=1
 fi
 if ! grep -q "Events injected: 2000" monkey.txt; then
