@@ -91,6 +91,8 @@ jobs:
         with:
           dotnet-version: '11.0.x'
       - run: dotnet workload install maui
+      - name: Select Xcode 27.2
+        run: sudo xcode-select --switch /Applications/Xcode_27.2.app
       - name: Build iOS Release
         run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-ios27.2 -c Release -p:EnableCodeSigning=false
       - name: Build Mac Catalyst Release
