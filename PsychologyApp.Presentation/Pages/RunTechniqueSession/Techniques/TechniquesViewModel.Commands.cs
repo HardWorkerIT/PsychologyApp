@@ -50,13 +50,13 @@ public partial class TechniquesViewModel
 
     private async Task FindPracticeAsync()
     {
-        if (await RouteToCrisisHubIfNeededAsync())
-        {
-            return;
-        }
-
         while (true)
         {
+            if (await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+
             DialogOptionItem[] featureOptions =
             [
                 new DialogOptionItem(
@@ -72,7 +72,11 @@ public partial class TechniquesViewModel
                 AppStrings.PracticeFinderTitle,
                 featureOptions,
                 AppStrings.Cancel);
-            if (selectedFeatureId is null || await RouteToCrisisHubIfNeededAsync())
+            if (await RouteToCrisisHubIfNeededAsync())
+            {
+                return;
+            }
+            if (selectedFeatureId is null)
             {
                 return;
             }
@@ -84,7 +88,10 @@ public partial class TechniquesViewModel
                     await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
                     return;
                 }
-                if (!await OpenQuickActionsAsync(AllQuickActionSteps, AppStrings.NextStepTitle))
+                if (!await OpenQuickActionsAsync(
+                    AllQuickActionSteps,
+                    AppStrings.NextStepSetup,
+                    AppStrings.PracticeFinderQuickActionsPrompt))
                 {
                     continue;
                 }
@@ -128,7 +135,7 @@ public partial class TechniquesViewModel
                 }
 
                 string? selectedNeedId = await _dialogService.PickOptionAsync(
-                    AppStrings.PracticeFinderContextHeader,
+                    AppStrings.PracticeFinderNeedPrompt,
                     situationOptions,
                     AppStrings.Back);
                 if (selectedNeedId is null)
@@ -171,6 +178,11 @@ public partial class TechniquesViewModel
                 ];
                 while (true)
                 {
+                    if (await RouteToCrisisHubIfNeededAsync())
+                    {
+                        return;
+                    }
+
                     string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Back);
                     if (selectedPracticeId == PracticeFinderMoreOptionsOptionId)
                     {
@@ -255,7 +267,8 @@ public partial class TechniquesViewModel
 
     private async Task<bool> OpenQuickActionsAsync(
         IReadOnlyList<SavedNextStep> categorySteps,
-        string categoryTitle)
+        string setupTitle,
+        string quickActionsTitle)
     {
         while (true)
         {
@@ -267,7 +280,7 @@ public partial class TechniquesViewModel
             SavedNextStep[] savedInCategory = _savedNextSteps.Where(categorySteps.Contains).ToArray();
             if (savedInCategory.Length == 0)
             {
-                await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
+                await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle);
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
                     return false;
@@ -281,7 +294,7 @@ public partial class TechniquesViewModel
                 .. savedInCategory.Select(step => new DialogOptionItem(GetSavedQuickActionOptionId(step), GetNextStepLabel(step))),
                 new DialogOptionItem(ManageQuickActionsOptionId, AppStrings.NextStepChange)
             ];
-            string? selectedOptionId = await _dialogService.PickOptionAsync(categoryTitle, options, AppStrings.Back);
+            string? selectedOptionId = await _dialogService.PickOptionAsync(quickActionsTitle, options, AppStrings.Back);
             if (selectedOptionId is null)
             {
                 return false;
@@ -294,7 +307,7 @@ public partial class TechniquesViewModel
                     return true;
                 }
 
-                await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
+                await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle);
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
                     return false;

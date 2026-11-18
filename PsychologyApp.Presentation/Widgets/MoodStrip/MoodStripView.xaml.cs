@@ -94,15 +94,6 @@ public partial class MoodStripView : ContentView
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        for (int level = 1; level <= 5; level++)
-        {
-            // The faces are drawn, so the reader needs the level in words.
-            if ((GetTemplateChild($"MoodChip{level}") ?? FindByName($"MoodChip{level}")) is Border chip)
-            {
-                SemanticProperties.SetDescription(chip, AppStrings.MoodLevelName(level));
-            }
-        }
-
         ApplySelection(SelectedMoodLevel);
     }
 
@@ -117,10 +108,14 @@ public partial class MoodStripView : ContentView
         {
             Border? chip = (GetTemplateChild($"MoodChip{level}") ?? FindByName($"MoodChip{level}")) as Border;
             string key = level == selected ? "MoodChipSelectedStyle" : "MoodChipStyle";
-            if (chip is not null
-                && AppResources.Find<Style>(key) is Style found)
+            if (chip is not null)
             {
-                chip.Style = found;
+                // Colour and the ring show selection visually; include that state in the accessible label too.
+                SemanticProperties.SetDescription(chip, AppStrings.MoodLevelAccessibility(level, level == selected));
+                if (AppResources.Find<Style>(key) is Style found)
+                {
+                    chip.Style = found;
+                }
             }
 
             if ((GetTemplateChild($"MoodTile{level}") ?? FindByName($"MoodTile{level}")) is Border tile)

@@ -47,6 +47,7 @@ public static class PracticeFinderRecommendation
             [PracticeFinderNeed.Connection] = [TechniqueId.ConnectionStepPlan]
         };
 
+    // Start with an optional-writing prompt so the short-time path has minimal interaction.
     private static readonly TechniqueId[] QuickPracticeIds =
         [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Observer];
 

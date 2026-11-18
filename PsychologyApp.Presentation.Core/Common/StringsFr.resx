@@ -4286,6 +4286,12 @@
   <data name="PracticeFinderContextHeader" xml:space="preserve">
     <value>Selon la situation ou le besoin</value>
   </data>
+  <data name="PracticeFinderQuickActionsPrompt" xml:space="preserve">
+    <value>Choisissez une action</value>
+  </data>
+  <data name="PracticeFinderNeedPrompt" xml:space="preserve">
+    <value>Choisissez une situation ou un besoin</value>
+  </data>
   <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
     <value>Lancer une action enregistrée ou modifier la liste</value>
   </data>
@@ -4372,5 +4378,17 @@
   </data>
   <data name="PracticeFinderConnection" xml:space="preserve">
     <value>J’aimerais créer plus de liens</value>
+  </data>
+  <data name="TechniqueGroupExpandHint" xml:space="preserve">
+    <value>Développer le groupe de pratiques</value>
+  </data>
+  <data name="TechniqueGroupCollapseHint" xml:space="preserve">
+    <value>Réduire le groupe de pratiques</value>
+  </data>
+  <data name="MoodLevelSelectedAccessibility" xml:space="preserve">
+    <value>Sélectionné : {0}</value>
+  </data>
+  <data name="MoodLevelNotSelectedAccessibility" xml:space="preserve">
+    <value>Non sélectionné : {0}</value>
   </data>
 </root>

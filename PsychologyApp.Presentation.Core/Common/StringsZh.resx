@@ -4286,6 +4286,12 @@
   <data name="PracticeFinderContextHeader" xml:space="preserve">
     <value>按情境或需求</value>
   </data>
+  <data name="PracticeFinderQuickActionsPrompt" xml:space="preserve">
+    <value>选择一项操作</value>
+  </data>
+  <data name="PracticeFinderNeedPrompt" xml:space="preserve">
+    <value>选择情境或需求</value>
+  </data>
   <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
     <value>开始一项已保存的操作，或编辑列表</value>
   </data>
@@ -4372,5 +4378,17 @@
   </data>
   <data name="PracticeFinderConnection" xml:space="preserve">
     <value>我想多一些联系</value>
+  </data>
+  <data name="TechniqueGroupExpandHint" xml:space="preserve">
+    <value>展开练习分组</value>
+  </data>
+  <data name="TechniqueGroupCollapseHint" xml:space="preserve">
+    <value>收起练习分组</value>
+  </data>
+  <data name="MoodLevelSelectedAccessibility" xml:space="preserve">
+    <value>已选择：{0}</value>
+  </data>
+  <data name="MoodLevelNotSelectedAccessibility" xml:space="preserve">
+    <value>未选择：{0}</value>
   </data>
 </root>

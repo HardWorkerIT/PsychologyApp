@@ -51,6 +51,8 @@ public static partial class AppStrings
     public static string PracticeFinderAccessibilityHint => R(nameof(PracticeFinderAccessibilityHint));
     public static string PracticeFinderTitle => R(nameof(PracticeFinderTitle));
     public static string PracticeFinderContextHeader => R(nameof(PracticeFinderContextHeader));
+    public static string PracticeFinderQuickActionsPrompt => R(nameof(PracticeFinderQuickActionsPrompt));
+    public static string PracticeFinderNeedPrompt => R(nameof(PracticeFinderNeedPrompt));
     public static string PracticeFinderQuickActionsDescription => R(nameof(PracticeFinderQuickActionsDescription));
     public static string PracticeFinderSituationDescription => R(nameof(PracticeFinderSituationDescription));
     public static string PracticeFinderConditionsSection => R(nameof(PracticeFinderConditionsSection));

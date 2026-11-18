@@ -4292,6 +4292,12 @@
   <data name="PracticeFinderContextHeader" xml:space="preserve">
     <value>По ситуации и условиям</value>
   </data>
+  <data name="PracticeFinderQuickActionsPrompt" xml:space="preserve">
+    <value>Выберите действие</value>
+  </data>
+  <data name="PracticeFinderNeedPrompt" xml:space="preserve">
+    <value>Выберите ситуацию или условие</value>
+  </data>
   <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
     <value>Запустить сохранённое действие или настроить список</value>
   </data>
@@ -4378,5 +4384,17 @@
   </data>
   <data name="PracticeFinderConnection" xml:space="preserve">
     <value>Хочется больше общения</value>
+  </data>
+  <data name="TechniqueGroupExpandHint" xml:space="preserve">
+    <value>Развернуть группу практик</value>
+  </data>
+  <data name="TechniqueGroupCollapseHint" xml:space="preserve">
+    <value>Свернуть группу практик</value>
+  </data>
+  <data name="MoodLevelSelectedAccessibility" xml:space="preserve">
+    <value>Выбрано: {0}</value>
+  </data>
+  <data name="MoodLevelNotSelectedAccessibility" xml:space="preserve">
+    <value>Не выбрано: {0}</value>
   </data>
 </root>

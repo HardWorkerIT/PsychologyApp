@@ -4286,6 +4286,12 @@
   <data name="PracticeFinderContextHeader" xml:space="preserve">
     <value>By situation or need</value>
   </data>
+  <data name="PracticeFinderQuickActionsPrompt" xml:space="preserve">
+    <value>Choose an action</value>
+  </data>
+  <data name="PracticeFinderNeedPrompt" xml:space="preserve">
+    <value>Choose a situation or need</value>
+  </data>
   <data name="PracticeFinderQuickActionsDescription" xml:space="preserve">
     <value>Start a saved action or edit the list</value>
   </data>
@@ -4372,5 +4378,17 @@
   </data>
   <data name="PracticeFinderConnection" xml:space="preserve">
     <value>I would like more connection</value>
+  </data>
+  <data name="TechniqueGroupExpandHint" xml:space="preserve">
+    <value>Expand practice group</value>
+  </data>
+  <data name="TechniqueGroupCollapseHint" xml:space="preserve">
+    <value>Collapse practice group</value>
+  </data>
+  <data name="MoodLevelSelectedAccessibility" xml:space="preserve">
+    <value>Selected: {0}</value>
+  </data>
+  <data name="MoodLevelNotSelectedAccessibility" xml:space="preserve">
+    <value>Not selected: {0}</value>
   </data>
 </root>
