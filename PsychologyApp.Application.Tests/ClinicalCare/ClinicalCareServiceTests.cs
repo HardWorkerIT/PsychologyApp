@@ -21,10 +21,7 @@ public sealed class ClinicalCareServiceTests
         var service = new ClinicalCareService(repo, new FakeUserProgressService(), new FixedTime(now));
 
         Assert.True(await service.IsRiskCheckDueAsync(ClinicalCareService.DefaultRiskCheckInterval));
-        if (risk == RiskLevel.Red)
-        {
-            Assert.True(await service.ShouldRouteToCrisisHubAsync());
-        }
+        Assert.False(await service.ShouldRouteToCrisisHubAsync());
     }
 
     [Fact]

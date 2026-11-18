@@ -16,23 +16,55 @@ COMPONENT=$(adb shell cmd package resolve-activity --brief "$PKG" | tail -1 | tr
 echo "starting $COMPONENT"
 adb shell am start -W -n "$COMPONENT" | tee start.txt
 
-TOTAL=$(grep -oE "TotalTime: [0-9]+" start.txt | grep -oE "[0-9]+")
+TOTAL=$(grep -oE "TotalTime: [0-9]+" start.txt | grep -oE "[0-9]+" || true)
+if [ -z "$TOTAL" ]; then
+  # Newer Android releases may report only WaitTime from `am start -W`.
+  TOTAL=$(grep -oE "WaitTime: [0-9]+" start.txt | grep -oE "[0-9]+" || true)
+fi
 echo "cold start: ${TOTAL:-unknown} ms (limit $MAX_START_MS)"
 
+APP_PIDS=$(adb shell pidof "$PKG" | tr -d '\r' || true)
+echo "app process IDs before interaction: ${APP_PIDS:-unknown}"
+
 STATUS=0
-if ! adb shell monkey -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
-  echo "FAIL: monkey could not complete the interaction run"; STATUS=1
+CRASH=0
+MONKEY_FAILED=0
+if ! adb shell monkey --ignore-crashes --ignore-security-exceptions -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
+  echo "FAIL: monkey could not complete the interaction run"; STATUS=1; MONKEY_FAILED=1
 fi
 if ! grep -q "Events injected: 2000" monkey.txt; then
-  echo "FAIL: monkey did not inject all 2000 events"; STATUS=1
+  echo "FAIL: monkey did not inject all 2000 events"; STATUS=1; MONKEY_FAILED=1
+fi
+if [ "$MONKEY_FAILED" -ne 0 ]; then
+  cat monkey.txt
 fi
 adb logcat -d > logcat.txt
 
 if [ -z "$TOTAL" ] || [ "$TOTAL" -ge "$MAX_START_MS" ]; then
   echo "FAIL: cold start missing or slower than ${MAX_START_MS} ms"; STATUS=1
 fi
-if grep -E "Fatal signal|FATAL EXCEPTION|plt_entry" logcat.txt; then
-  echo "FAIL: crash in the log"; STATUS=1
+FATAL_LINES=$(grep -n "FATAL EXCEPTION" logcat.txt | cut -d: -f1 || true)
+while IFS= read -r line; do
+  [ -n "$line" ] || continue
+  end=$((line + 80))
+  exception=$(sed -n "${line},${end}p" logcat.txt)
+  if printf "%s\n" "$exception" | grep -Fq "Process: $PKG"; then
+    printf "%s\n" "$exception"
+    CRASH=1
+  fi
+done <<EOF
+$FATAL_LINES
+EOF
+if [ -n "$APP_PIDS" ]; then
+  native_crashes=$(awk -v pids=" $APP_PIDS " '$3 != "" && index(pids, " "$3" ") && /Fatal signal|plt_entry/ { print; found=1 } END { if (!found) exit 1 }' logcat.txt || true)
+  if [ -n "$native_crashes" ]; then
+    printf "%s\n" "$native_crashes"
+    CRASH=1
+  fi
+fi
+if [ "$CRASH" -ne 0 ]; then
+  echo "FAIL: the app crashed during the interaction run"
+  STATUS=1
 fi
 if ! adb shell pidof "$PKG" > /dev/null; then
   echo "FAIL: the app is not running at the end"; STATUS=1

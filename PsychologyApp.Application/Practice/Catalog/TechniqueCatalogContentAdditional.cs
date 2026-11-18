@@ -341,14 +341,44 @@ internal static class TechniqueCatalogContentAdditional
             };
 
         TechniqueCopy copy = localized.Copy;
+        string[] objectSuggestions = language switch
+        {
+            "ru" => ["Стена", "Чашка", "Окно"],
+            "en" => ["Wall", "Cup", "Window"],
+            "de" => ["Wand", "Tasse", "Fenster"],
+            "fr" => ["Mur", "Tasse", "Fenêtre"],
+            "es" => ["Pared", "Taza", "Ventana"],
+            "pt" => ["Parede", "Xícara", "Janela"],
+            _ => ["墙壁", "杯子", "窗户"]
+        };
+        string[] detailSuggestions = language switch
+        {
+            "ru" => ["Тихий звук", "Цвет", "Форма"],
+            "en" => ["A quiet sound", "A color", "A shape"],
+            "de" => ["Ein leises Geräusch", "Eine Farbe", "Eine Form"],
+            "fr" => ["Un son discret", "Une couleur", "Une forme"],
+            "es" => ["Un sonido suave", "Un color", "Una forma"],
+            "pt" => ["Um som suave", "Uma cor", "Uma forma"],
+            _ => ["轻微的声音", "一种颜色", "一种形状"]
+        };
+        string[] nextStepSuggestions = language switch
+        {
+            "ru" => ["Сделать звонок", "Открыть документ", "Попросить помощи"],
+            "en" => ["Make a call", "Open a document", "Ask for help"],
+            "de" => ["Anrufen", "Ein Dokument öffnen", "Um Hilfe bitten"],
+            "fr" => ["Passer un appel", "Ouvrir un document", "Demander de l’aide"],
+            "es" => ["Hacer una llamada", "Abrir un documento", "Pedir ayuda"],
+            "pt" => ["Fazer uma ligação", "Abrir um documento", "Pedir ajuda"],
+            _ => ["打一个电话", "打开一份文件", "寻求帮助"]
+        };
         return new BuiltInTechniqueDefinition(
             localized.ModuleName, copy.Title, copy.Steps, copy.Summary, TechniqueUiKind.Entry,
             localized.ModuleName, "17.11.2026", copy.Title, copy.Subtitle, copy.Theme, localized.Author,
             1, copy.Icon,
             [
-                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint),
-                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint),
-                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint)
+                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint, Suggestions: objectSuggestions),
+                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint, Suggestions: detailSuggestions),
+                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint, Suggestions: nextStepSuggestions)
             ],
             [
                 new TheorySection(localized.WhatHeading, copy.Summary),
@@ -455,14 +485,44 @@ internal static class TechniqueCatalogContentAdditional
             };
 
         TechniqueCopy copy = localized.Copy;
+        string[] questionSuggestions = language switch
+        {
+            "ru" => ["Проверить время отправления", "Уточнить дату приёма", "Найти официальное сообщение"],
+            "en" => ["Check a departure time", "Confirm an appointment date", "Find an official notice"],
+            "de" => ["Abfahrtszeit prüfen", "Termin bestätigen", "Offizielle Mitteilung suchen"],
+            "fr" => ["Vérifier un horaire", "Confirmer une date", "Chercher une annonce officielle"],
+            "es" => ["Comprobar un horario", "Confirmar una fecha", "Buscar un aviso oficial"],
+            "pt" => ["Conferir um horário", "Confirmar uma data", "Buscar um aviso oficial"],
+            _ => ["查询出发时间", "确认预约日期", "查找官方通知"]
+        };
+        string[] sourceSuggestions = language switch
+        {
+            "ru" => ["Официальный сайт", "Сайт перевозчика", "Надёжный источник"],
+            "en" => ["Official website", "Service provider website", "Reliable source"],
+            "de" => ["Offizielle Website", "Website des Anbieters", "Zuverlässige Quelle"],
+            "fr" => ["Site officiel", "Site du prestataire", "Source fiable"],
+            "es" => ["Sitio oficial", "Web del proveedor", "Fuente fiable"],
+            "pt" => ["Site oficial", "Site do serviço", "Fonte confiável"],
+            _ => ["官方网站", "服务提供方网站", "可靠来源"]
+        };
+        string[] nextStepSuggestions = language switch
+        {
+            "ru" => ["Вернуться к делу", "Связаться с близким", "Сделать паузу"],
+            "en" => ["Return to a task", "Contact someone", "Take a pause"],
+            "de" => ["Zur Aufgabe zurückkehren", "Jemanden kontaktieren", "Eine Pause machen"],
+            "fr" => ["Reprendre une tâche", "Contacter un proche", "Faire une pause"],
+            "es" => ["Volver a una tarea", "Contactar con alguien", "Hacer una pausa"],
+            "pt" => ["Retomar uma tarefa", "Falar com alguém", "Fazer uma pausa"],
+            _ => ["回到手头的事", "联系一位亲友", "暂停一下"]
+        };
         return new BuiltInTechniqueDefinition(
             localized.ModuleName, copy.Title, copy.Steps, copy.Summary, TechniqueUiKind.Entry,
             localized.ModuleName, "17.11.2026", copy.Title, copy.Subtitle, copy.Theme, localized.Author,
             2, copy.Icon,
             [
-                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint),
-                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint),
-                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint)
+                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint, Suggestions: questionSuggestions),
+                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint, Suggestions: sourceSuggestions),
+                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint, Suggestions: nextStepSuggestions)
             ],
             [
                 new TheorySection(localized.WhatHeading, copy.Summary),
@@ -576,14 +636,44 @@ internal static class TechniqueCatalogContentAdditional
             };
 
         TechniqueCopy copy = localized.Copy;
+        string[] habitSuggestions = language switch
+        {
+            "ru" => ["Прогуляться после обеда", "Записать одну строку", "Полить растение"],
+            "en" => ["Take a short walk", "Write one line", "Water a plant"],
+            "de" => ["Kurz spazieren gehen", "Eine Zeile schreiben", "Eine Pflanze gießen"],
+            "fr" => ["Faire une courte marche", "Écrire une phrase", "Arroser une plante"],
+            "es" => ["Dar un paseo corto", "Escribir una línea", "Regar una planta"],
+            "pt" => ["Fazer uma caminhada curta", "Escrever uma linha", "Regar uma planta"],
+            _ => ["短暂散步", "写下一句话", "给植物浇水"]
+        };
+        string[] cueSuggestions = language switch
+        {
+            "ru" => ["После завтрака", "Когда вернусь домой", "После обеда"],
+            "en" => ["After breakfast", "When I get home", "After lunch"],
+            "de" => ["Nach dem Frühstück", "Wenn ich nach Hause komme", "Nach dem Mittagessen"],
+            "fr" => ["Après le petit-déjeuner", "En rentrant", "Après le déjeuner"],
+            "es" => ["Después del desayuno", "Al llegar a casa", "Después de comer"],
+            "pt" => ["Depois do café da manhã", "Ao chegar em casa", "Depois do almoço"],
+            _ => ["早餐后", "回到家时", "午饭后"]
+        };
+        string[] easyStepSuggestions = language switch
+        {
+            "ru" => ["Пройтись 5 минут", "Открыть файл", "Записать один пункт"],
+            "en" => ["Walk for five minutes", "Open the file", "Write one item"],
+            "de" => ["Fünf Minuten gehen", "Die Datei öffnen", "Einen Punkt notieren"],
+            "fr" => ["Marcher cinq minutes", "Ouvrir le fichier", "Noter un élément"],
+            "es" => ["Caminar cinco minutos", "Abrir el archivo", "Anotar un punto"],
+            "pt" => ["Caminhar por cinco minutos", "Abrir o arquivo", "Anotar um item"],
+            _ => ["走五分钟", "打开文件", "记下一项"]
+        };
         return new BuiltInTechniqueDefinition(
             localized.ModuleName, copy.Title, copy.Steps, copy.Summary, TechniqueUiKind.Entry,
             localized.ModuleName, "18.11.2026", copy.Title, copy.Subtitle, copy.Theme, localized.Author,
             2, copy.Icon,
             [
-                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint),
-                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint),
-                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint)
+                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint, Suggestions: habitSuggestions),
+                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint, Suggestions: cueSuggestions),
+                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint, Suggestions: easyStepSuggestions)
             ],
             [
                 new TheorySection(localized.WhatHeading, copy.Summary),
@@ -697,14 +787,24 @@ internal static class TechniqueCatalogContentAdditional
             };
 
         TechniqueCopy copy = localized.Copy;
+        (string[] Quote, string[] Clarification, string[] NextStep) suggestions = language switch
+        {
+            "ru" => (["Конкретное действие", "Просьба", "Фраза, которая задела"], ["Пример", "Срок", "Ожидание"], ["Задать вопрос", "Обдумать ответ", "Обозначить границу"]),
+            "en" => (["A specific action", "A request", "A phrase that stung"], ["An example", "A deadline", "An expectation"], ["Ask a question", "Think before replying", "State a boundary"]),
+            "de" => (["Konkrete Handlung", "Bitte", "Verletzender Satz"], ["Ein Beispiel", "Eine Frist", "Eine Erwartung"], ["Nachfragen", "Antwort überdenken", "Grenze benennen"]),
+            "fr" => (["Une action précise", "Une demande", "Une phrase blessante"], ["Un exemple", "Un délai", "Une attente"], ["Poser une question", "Répondre plus tard", "Poser une limite"]),
+            "es" => (["Una acción concreta", "Una petición", "Una frase que dolió"], ["Un ejemplo", "Un plazo", "Una expectativa"], ["Hacer una pregunta", "Responder más tarde", "Marcar un límite"]),
+            "pt" => (["Uma ação específica", "Um pedido", "Uma frase que magoou"], ["Um exemplo", "Um prazo", "Uma expectativa"], ["Fazer uma pergunta", "Responder depois", "Definir um limite"]),
+            _ => (["具体行为", "请求", "让我难受的话"], ["一个例子", "截止时间", "具体期待"], ["提出问题", "稍后回复", "说明界限"])
+        };
         return new BuiltInTechniqueDefinition(
             localized.ModuleName, copy.Title, copy.Steps, copy.Summary, TechniqueUiKind.Entry,
             localized.ModuleName, "18.11.2026", copy.Title, copy.Subtitle, copy.Theme, localized.Author,
             2, copy.Icon,
             [
-                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint),
-                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint),
-                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint)
+                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint, Suggestions: suggestions.Quote),
+                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint, Suggestions: suggestions.Clarification),
+                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint, Suggestions: suggestions.NextStep)
             ],
             [
                 new TheorySection(localized.WhatHeading, copy.Summary),
@@ -818,14 +918,24 @@ internal static class TechniqueCatalogContentAdditional
             };
 
         TechniqueCopy copy = localized.Copy;
+        (string[] Need, string[] Format, string[] FirstStep) suggestions = language switch
+        {
+            "ru" => (["Разговор", "Общее дело", "Практическая помощь"], ["Один на один", "В небольшой группе", "Онлайн"], ["Короткое приглашение", "Выбрать удобное время", "Другой формат"]),
+            "en" => (["A conversation", "A shared activity", "Practical help"], ["One to one", "A small group", "Online"], ["Send a short invitation", "Choose a time", "Try another format"]),
+            "de" => (["Ein Gespräch", "Eine gemeinsame Aktivität", "Praktische Hilfe"], ["Zu zweit", "In einer kleinen Gruppe", "Online"], ["Kurz einladen", "Einen Zeitpunkt wählen", "Ein anderes Format versuchen"]),
+            "fr" => (["Une conversation", "Une activité partagée", "Une aide pratique"], ["À deux", "En petit groupe", "En ligne"], ["Envoyer une invitation brève", "Choisir un moment", "Essayer un autre format"]),
+            "es" => (["Una conversación", "Una actividad compartida", "Ayuda práctica"], ["A solas", "En un grupo pequeño", "En línea"], ["Enviar una invitación breve", "Elegir un momento", "Probar otro formato"]),
+            "pt" => (["Uma conversa", "Uma atividade em comum", "Ajuda prática"], ["A sós", "Em um grupo pequeno", "Online"], ["Enviar um convite breve", "Escolher um horário", "Tentar outro formato"]),
+            _ => (["交谈", "一起做一件事", "实际帮助"], ["一对一", "小组", "线上"], ["发出简短邀请", "选择时间", "尝试其他方式"])
+        };
         return new BuiltInTechniqueDefinition(
             localized.ModuleName, copy.Title, copy.Steps, copy.Summary, TechniqueUiKind.Entry,
             localized.ModuleName, "18.11.2026", copy.Title, copy.Subtitle, copy.Theme, localized.Author,
             2, copy.Icon,
             [
-                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint),
-                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint),
-                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint)
+                new TechniqueEntrySeed(copy.Fields[0].Title, copy.Fields[0].Hint, Suggestions: suggestions.Need),
+                new TechniqueEntrySeed(copy.Fields[1].Title, copy.Fields[1].Hint, Suggestions: suggestions.Format),
+                new TechniqueEntrySeed(copy.Fields[2].Title, copy.Fields[2].Hint, Suggestions: suggestions.FirstStep)
             ],
             [
                 new TheorySection(localized.WhatHeading, copy.Summary),

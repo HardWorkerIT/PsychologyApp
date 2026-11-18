@@ -1514,7 +1514,7 @@ public static partial class ArticleContent
                 Quiz("What comes first if a basic need is at risk?", 1, "If food, housing, essential medicine, or safety is at risk, practical help matters now.", "Finish the exercise first", "Contact someone you trust or a local support service", "Wait until the worry passes"),
                 P("A list helps you see tasks; it does not measure your worth. You can change it as facts or energy change."),
                 P("These questions check understanding of the article only. They are not a psychological test or diagnosis."),
-                Practice(TechniqueId.ExternalOrientation, "Orient with three details")
+                Practice(TechniqueId.ExternalOrientation, "Three neutral details")
             ]),
 
         new(
@@ -1530,9 +1530,9 @@ public static partial class ArticleContent
                 List("Name one concrete moment, not a verdict about the person", "Say what you felt or needed without claiming to know the other person's intent", "Own only the part that is yours", "Make one specific request, then allow time for an answer"),
                 Quiz("Which opening is more likely to clarify the issue without labelling a person?", 1, "A concrete event and its effect are easier to discuss than a label about someone's character.", "You always ruin everything", "When the plan changed without warning, I felt lost. Could we agree how to tell each other next time?", "Let's pretend it never happened"),
                 P("You can pause, ask to continue later, or end the discussion. An apology does not require giving up a boundary, and a repair attempt cannot guarantee the other person will respond."),
-                Practice(TechniqueId.PauseBeforeReaction, "Pause before replying"),
+                Practice(TechniqueId.PauseBeforeReaction, "Pause Before Reacting"),
                 Quiz("When should safety come before a repair conversation?", 1, "Fear, coercion, or violence changes the priority: practical safety and support come first.", "Only after every repair attempt fails", "When there is fear, control, humiliation, or violence", "Never; every conflict must be resolved"),
-                new(ArticleBlockKind.Article, "Read also: setting a boundary", ArticleId: ArticleIds.Boundaries)
+                new(ArticleBlockKind.Article, "Personal boundaries and how to say no", ArticleId: ArticleIds.Boundaries)
             ]),
         new(
             ArticleIds.Feedback,
@@ -1551,7 +1551,7 @@ public static partial class ArticleContent
                 List("Keep one specific, useful point.", "Ask for an example or a clear standard.", "Set a boundary if the delivery is disrespectful."),
                 Practice(TechniqueId.FeedbackReview, "Sort through feedback"),
                 Warning("Threats, humiliation, discrimination, or pressure are not ordinary feedback. Do not stay in an unsafe conversation to fix yourself; seek support."),
-                See(ArticleIds.SelfCriticism, "Read also: speaking to yourself without self-criticism")
+                See(ArticleIds.SelfCriticism, "Self-criticism and kindness to yourself")
             ]),
     ];
 }

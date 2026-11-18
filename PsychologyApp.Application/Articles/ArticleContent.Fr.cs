@@ -1491,7 +1491,7 @@ public static partial class ArticleContent
                 Quiz("Que faire si un problème doit être traité aujourd’hui ?", 1, "Une difficulté urgente et abordable n’a pas à attendre : choisissez une étape sûre ou demandez une aide concrète.", "Le garder pour le moment prévu", "Choisir une étape sûre ou demander de l’aide", "Essayer de ne plus s’inquiéter"),
                 Quiz("Et si rien ne peut changer la situation maintenant ?", 0, "Vous pouvez noter le sujet, choisir un moment pour y revenir et ramener doucement votre attention à ce qui se passe maintenant.", "Le noter, prévoir un moment pour y revenir et revenir au présent", "Continuer à chercher une solution dans votre tête toute la journée", "Vous forcer à penser positivement"),
                 P("Ces questions vérifient uniquement la compréhension de l’article. Ce n’est ni un test psychologique ni un diagnostic, et elles ne promettent pas la disparition des inquiétudes."),
-                Practice(TechniqueId.WorryTime, "Prévoir un temps pour les inquiétudes")
+                Practice(TechniqueId.WorryTime, "Planifier un temps pour les inquiétudes")
             ]),
 
 
@@ -1514,7 +1514,7 @@ public static partial class ArticleContent
                 Quiz("Que faire en priorité si un besoin essentiel est menacé ?", 1, "Si l’alimentation, le logement, des médicaments essentiels ou la sécurité sont menacés, une aide pratique est prioritaire.", "Terminer l’exercice d’abord", "Contacter un proche ou un service local d’aide", "Attendre que l’inquiétude passe"),
                 P("Une liste montre des tâches, pas votre valeur. Vous pouvez la modifier quand de nouveaux faits ou de l’énergie apparaissent."),
                 P("Ces questions vérifient seulement la compréhension du texte. Ce n’est ni un test psychologique ni un diagnostic."),
-                Practice(TechniqueId.ExternalOrientation, "S’orienter avec trois détails")
+                Practice(TechniqueId.ExternalOrientation, "Trois détails neutres")
             ]),
 
         new(
@@ -1530,9 +1530,9 @@ public static partial class ArticleContent
                 List("Décrivez un moment précis plutôt que de juger toute la personne", "Dites ce que vous avez ressenti ou ce dont vous aviez besoin sans attribuer d’intention à l’autre", "Reconnaissez uniquement votre part", "Formulez une demande précise, puis laissez du temps pour répondre"),
                 Quiz("Quelle phrase aide à parler du problème sans coller d’étiquette à la personne ?", 1, "Un événement précis et son effet sont plus faciles à discuter qu’un jugement sur le caractère.", "Tu gâches toujours tout", "Quand le plan a changé sans prévenir, je me suis senti perdu. Pourrions-nous convenir de nous prévenir la prochaine fois ?", "Faisons comme si rien ne s’était passé"),
                 P("Vous pouvez faire une pause, proposer de reprendre plus tard ou mettre fin à l’échange. S’excuser ne signifie pas renoncer à une limite, et une tentative de rapprochement ne garantit pas de réponse."),
-                Practice(TechniqueId.PauseBeforeReaction, "Faire une pause avant de répondre"),
+                Practice(TechniqueId.PauseBeforeReaction, "Faire une pause avant de réagir"),
                 Quiz("Quand la sécurité doit-elle passer avant une tentative de rapprochement ?", 1, "En cas de peur, de contrainte ou de violence, la sécurité et l’aide concrète sont prioritaires.", "Seulement après l’échec de toutes les tentatives", "S’il y a peur, contrôle, humiliation ou violence", "Jamais : chaque conflit doit être résolu"),
-                new(ArticleBlockKind.Article, "Lire aussi : poser une limite", ArticleId: ArticleIds.Boundaries)
+                new(ArticleBlockKind.Article, "Les limites personnelles et comment dire non", ArticleId: ArticleIds.Boundaries)
             ]),
         new(
             ArticleIds.Feedback,
@@ -1551,7 +1551,7 @@ public static partial class ArticleContent
                 List("Garder un point précis et utile.", "Demander un exemple ou un critère clair.", "Poser une limite si le ton est irrespectueux."),
                 Practice(TechniqueId.FeedbackReview, "Trier un retour"),
                 Warning("Menaces, humiliation, discrimination ou pression ne sont pas des retours ordinaires. Ne restez pas dans un échange dangereux pour vous corriger ; cherchez du soutien."),
-                See(ArticleIds.SelfCriticism, "À lire aussi : se parler sans autocritique")
+                See(ArticleIds.SelfCriticism, "L'autocritique et la bienveillance envers soi")
             ]),
     ];
 }

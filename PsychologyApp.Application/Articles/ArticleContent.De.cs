@@ -1514,7 +1514,7 @@ public static partial class ArticleContent
                 Quiz("Was ist wichtiger, wenn ein Grundbedürfnis bedroht ist?", 1, "Wenn Essen, Wohnen, notwendige Medikamente oder Sicherheit gefährdet sind, zählt praktische Hilfe jetzt.", "Zuerst die Übung beenden", "Eine vertraute Person oder eine örtliche Hilfsstelle kontaktieren", "Warten, bis die Sorge vergeht"),
                 P("Eine Liste zeigt Aufgaben, nicht Ihren Wert. Sie darf sich ändern, wenn neue Fakten oder Kräfte dazukommen."),
                 P("Diese Fragen prüfen nur das Verständnis des Textes. Sie sind kein psychologischer Test und stellen keine Diagnose."),
-                Practice(TechniqueId.ExternalOrientation, "Mit drei Details orientieren")
+                Practice(TechniqueId.ExternalOrientation, "Drei neutrale Details")
             ]),
 
         new(
@@ -1530,9 +1530,9 @@ public static partial class ArticleContent
                 List("Nennen Sie einen konkreten Moment statt die ganze Person zu bewerten", "Sagen Sie, was Sie empfunden oder gebraucht haben, ohne der anderen Person Absichten zuzuschreiben", "Übernehmen Sie nur Ihren eigenen Anteil", "Formulieren Sie eine konkrete Bitte und lassen Sie Zeit für eine Antwort"),
                 Quiz("Welcher Einstieg macht das Problem klarer, ohne die Person abzuwerten?", 1, "Ein konkretes Ereignis und seine Wirkung lassen sich leichter besprechen als ein Urteil über den Charakter.", "Du machst immer alles kaputt", "Als sich der Plan ohne Nachricht geändert hat, war ich verunsichert. Können wir absprechen, wie wir uns nächstes Mal Bescheid geben?", "Tun wir einfach so, als wäre nichts gewesen"),
                 P("Sie können pausieren, ein späteres Gespräch vereinbaren oder das Gespräch beenden. Eine Entschuldigung verlangt nicht, eine Grenze aufzugeben. Ein Versöhnungsversuch garantiert keine Antwort."),
-                Practice(TechniqueId.PauseBeforeReaction, "Vor der Antwort innehalten"),
+                Practice(TechniqueId.PauseBeforeReaction, "Pause vor der Reaktion"),
                 Quiz("Wann hat Sicherheit Vorrang vor einem Versöhnungsgespräch?", 1, "Bei Angst, Zwang oder Gewalt stehen Sicherheit und konkrete Unterstützung an erster Stelle.", "Erst wenn jeder Versöhnungsversuch gescheitert ist", "Wenn Angst, Kontrolle, Demütigung oder Gewalt vorkommen", "Nie; jeder Streit muss gelöst werden"),
-                new(ArticleBlockKind.Article, "Lesen Sie auch: Grenzen setzen", ArticleId: ArticleIds.Boundaries)
+                new(ArticleBlockKind.Article, "Persönliche Grenzen und wie man Nein sagt", ArticleId: ArticleIds.Boundaries)
             ]),
         new(
             ArticleIds.Feedback,
@@ -1551,7 +1551,7 @@ public static partial class ArticleContent
                 List("Einen konkreten, hilfreichen Punkt übernehmen.", "Nach einem Beispiel oder klaren Maßstab fragen.", "Eine Grenze setzen, wenn der Ton respektlos ist."),
                 Practice(TechniqueId.FeedbackReview, "Rückmeldung sortieren"),
                 Warning("Drohungen, Demütigung, Diskriminierung und Druck sind keine gewöhnliche Rückmeldung. Bleiben Sie nicht in einem unsicheren Gespräch, um sich selbst zu verbessern; suchen Sie Unterstützung."),
-                See(ArticleIds.SelfCriticism, "Lesen Sie auch: ohne Selbstkritik mit sich sprechen")
+                See(ArticleIds.SelfCriticism, "Selbstkritik und Selbstmitgefühl")
             ]),
     ];
 }
