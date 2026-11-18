@@ -224,6 +224,7 @@ public class ChatServiceTests
 
         _progress.Setup(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
         _progress.Setup(p => p.GetAllTestResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        _progress.Setup(p => p.GetTestResultsBetweenAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
         Mock<PsychologyApp.Application.ClinicalCare.IClinicalCareService> care = new();
         care.Setup(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new SafetyPlanDTO());
         string summary = await new PsychologyApp.Application.ClinicalCare.SpecialistSummaryService(_progress.Object, care.Object, _repository).BuildSummaryAsync("ru");

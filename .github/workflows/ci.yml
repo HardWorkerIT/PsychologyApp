@@ -76,7 +76,7 @@ jobs:
       - run: dotnet build PsychologyApp.Presentation/PsychologyApp.Presentation.csproj -f net11.0-android37.0 -c Release
 
   build-apple:
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7

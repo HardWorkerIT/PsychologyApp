@@ -26,13 +26,13 @@ public static class TechniqueFlavors
     public static TechniqueFlavor For(TechniqueId id) => id switch
     {
         TechniqueId.Breathing or TechniqueId.Grounding or TechniqueId.Anchor or TechniqueId.BodyScan or TechniqueId.Flashback
-            or TechniqueId.Balloons or TechniqueId.CyclicSigh or TechniqueId.MuscleRelax or TechniqueId.PauseBeforeReaction or TechniqueId.SensoryComfort => TechniqueFlavor.Body,
+            or TechniqueId.Balloons or TechniqueId.CyclicSigh or TechniqueId.MuscleRelax or TechniqueId.PauseBeforeReaction or TechniqueId.SensoryComfort or TechniqueId.ExternalOrientation => TechniqueFlavor.Body,
         TechniqueId.ThoughtRecord or TechniqueId.ThoughtDefusion or TechniqueId.Comparison or TechniqueId.Polarity or TechniqueId.Check
-            or TechniqueId.CheckTheFacts or TechniqueId.WorryTime
+            or TechniqueId.CheckTheFacts or TechniqueId.WorryTime or TechniqueId.FeedbackReview
             or TechniqueId.Spin or TechniqueId.Paper or TechniqueId.Experience or TechniqueId.BusyMind or TechniqueId.UrgeSurfing or TechniqueId.MoneyWorryPlan => TechniqueFlavor.Mind,
-        TechniqueId.SelfCompassion or TechniqueId.Observer or TechniqueId.Nightmare => TechniqueFlavor.Heart,
+        TechniqueId.SelfCompassion or TechniqueId.Observer or TechniqueId.Nightmare or TechniqueId.ConnectionStepPlan => TechniqueFlavor.Heart,
         TechniqueId.SmallStep or TechniqueId.Future or TechniqueId.Hack or TechniqueId.Extend or TechniqueId.OppositeAction or TechniqueId.ProblemSolving
-            or TechniqueId.Resize or TechniqueId.Copied or TechniqueId.ImplementationIntention => TechniqueFlavor.Action,
+            or TechniqueId.Resize or TechniqueId.Copied or TechniqueId.ImplementationIntention or TechniqueId.NewsCheckPlan or TechniqueId.HabitRestartPlan => TechniqueFlavor.Action,
         _ => TechniqueFlavor.None
     };
 

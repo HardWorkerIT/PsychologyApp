@@ -180,7 +180,7 @@ public sealed class UserProgressRepositoryTests : IAsyncLifetime
     public async Task GetCompletionDatesAsync_ReturnsDistinctDaysDescending()
     {
         // Local noon of two consecutive days, stored as UTC: whatever the machine's time zone, they are two different local days.
-        DateTime day1 = DateTime.Today.AddHours(12).ToUniversalTime();
+        DateTime day1 = DateTime.Today.AddDays(-2).AddHours(12).ToUniversalTime();
         DateTime day2 = day1.AddDays(-1);
 
         await _repository.RecordCompletionAsync(new CompletionDTO

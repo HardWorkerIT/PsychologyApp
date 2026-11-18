@@ -33,6 +33,11 @@ public class TechniqueFlavorTests
         Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.OppositeAction));
         Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.ProblemSolving));
         Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.ImplementationIntention));
+        Assert.Equal(TechniqueFlavor.Body, TechniqueFlavors.For(TechniqueId.ExternalOrientation));
+        Assert.Equal(TechniqueFlavor.Mind, TechniqueFlavors.For(TechniqueId.FeedbackReview));
+        Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.NewsCheckPlan));
+        Assert.Equal(TechniqueFlavor.Action, TechniqueFlavors.For(TechniqueId.HabitRestartPlan));
+        Assert.Equal(TechniqueFlavor.Heart, TechniqueFlavors.For(TechniqueId.ConnectionStepPlan));
     }
 
     [Theory]

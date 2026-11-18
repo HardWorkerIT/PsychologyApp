@@ -1491,7 +1491,7 @@ public static partial class ArticleContent
                 Quiz("¿Qué puedes hacer si un asunto necesita atención hoy?", 1, "Un problema urgente y manejable no tiene que esperar: elige un paso seguro o pide ayuda práctica.", "Dejarlo para el momento elegido", "Elegir un paso seguro o pedir ayuda", "Intentar dejar de preocuparte"),
                 Quiz("¿Y si ahora no puedes cambiar la situación?", 0, "Puedes anotar el tema, elegir cuándo revisarlo y volver con suavidad a lo que está ocurriendo ahora.", "Anotarlo, fijar un momento para revisarlo y volver al presente", "Seguir buscando una solución mental todo el día", "Obligarte a pensar en positivo"),
                 P("Estas preguntas solo comprueban si entendiste el artículo. No son un test psicológico ni un diagnóstico, y no prometen que la preocupación desaparezca."),
-                Practice(TechniqueId.WorryTime, "Reservar un tiempo para preocuparse")
+                Practice(TechniqueId.WorryTime, "Programar un tiempo para preocuparse")
             ]),
 
 
@@ -1514,7 +1514,7 @@ public static partial class ArticleContent
                 Quiz("¿Qué va primero si una necesidad básica está en riesgo?", 1, "Si están en riesgo la comida, la vivienda, los medicamentos necesarios o la seguridad, hace falta ayuda práctica ahora.", "Terminar primero el ejercicio", "Contactar con alguien de confianza o un servicio local de apoyo", "Esperar a que pase la preocupación"),
                 P("La lista ayuda a ver las tareas; no mide tu valor. Puedes cambiarla cuando aparezcan nuevos datos o tengas más energía."),
                 P("Estas preguntas solo comprueban la comprensión del texto. No son un test psicológico ni un diagnóstico."),
-                Practice(TechniqueId.ExternalOrientation, "Oriéntate con tres detalles")
+                Practice(TechniqueId.ExternalOrientation, "Tres detalles neutros")
             ]),
 
         new(
@@ -1530,9 +1530,9 @@ public static partial class ArticleContent
                 List("Nombra un momento concreto, sin juzgar a la persona entera", "Di qué sentiste o necesitabas sin atribuir intenciones a la otra persona", "Asume solo la parte que te corresponde", "Haz una petición concreta y deja tiempo para responder"),
                 Quiz("¿Qué frase ayuda a explicar el problema sin etiquetar a la persona?", 1, "Es más fácil hablar de un hecho concreto y su efecto que juzgar el carácter de alguien.", "Siempre lo estropeas todo", "Cuando cambió el plan sin avisar, me sentí perdido. ¿Podemos acordar cómo avisarnos la próxima vez?", "Hagamos como si no hubiera pasado"),
                 P("Puedes hacer una pausa, proponer continuar más tarde o terminar la conversación. Disculparte no exige renunciar a un límite, y un intento de acercamiento no garantiza una respuesta."),
-                Practice(TechniqueId.PauseBeforeReaction, "Haz una pausa antes de responder"),
+                Practice(TechniqueId.PauseBeforeReaction, "Pausa antes de reaccionar"),
                 Quiz("¿Cuándo debe ir primero la seguridad y no la reconciliación?", 1, "Ante miedo, coacción o violencia, lo primero es buscar seguridad y apoyo práctico.", "Solo después de que fallen todos los intentos", "Cuando hay miedo, control, humillación o violencia", "Nunca; hay que resolver todos los conflictos"),
-                new(ArticleBlockKind.Article, "Lee también: cómo poner límites", ArticleId: ArticleIds.Boundaries)
+                new(ArticleBlockKind.Article, "Los límites personales y cómo decir que no", ArticleId: ArticleIds.Boundaries)
             ]),
         new(
             ArticleIds.Feedback,
@@ -1551,7 +1551,7 @@ public static partial class ArticleContent
                 List("Quédate con un punto concreto y útil.", "Pide un ejemplo o un criterio claro.", "Pon un límite si el trato es irrespetuoso."),
                 Practice(TechniqueId.FeedbackReview, "Ordenar los comentarios"),
                 Warning("Las amenazas, la humillación, la discriminación y la presión no son comentarios corrientes. No permanezcas en una conversación insegura para corregirte; busca apoyo."),
-                See(ArticleIds.SelfCriticism, "Lee también: hablarte sin autocriticarte")
+                See(ArticleIds.SelfCriticism, "La autocrítica y la compasión hacia uno mismo")
             ]),
     ];
 }

@@ -1491,7 +1491,7 @@ public static partial class ArticleContent
                 Quiz("如果一个问题今天就需要处理，怎么办？", 1, "紧急且可以着手的问题不必等待：选一个安全步骤，或寻求实际帮助。", "留到担忧时间再处理", "选择一个安全步骤或寻求帮助", "努力让自己不再担心"),
                 Quiz("如果现在什么都改变不了呢？", 0, "可以记下主题，安排之后再看，并温和地把注意力带回当下。", "记下主题，安排回看的时间，然后回到当下", "一整天都在脑中继续寻找答案", "强迫自己往好处想"),
                 P("这些问题只检查你是否理解了文章，不是心理测试或诊断，也不保证担忧会消失。"),
-                Practice(TechniqueId.WorryTime, "安排一段担忧时间")
+                Practice(TechniqueId.WorryTime, "安排担忧时间")
             ]),
 
 
@@ -1514,7 +1514,7 @@ public static partial class ArticleContent
                 Quiz("如果基本需要受到威胁，应该先做什么？", 1, "如果食物、住房、必要药物或安全受到威胁，现在应优先寻求实际帮助。", "先完成练习", "联系信任的人或当地支持服务", "等担心自行消失"),
                 P("清单帮助你看见任务，不代表你的价值。出现新情况或精力变化时，可以修改清单。"),
                 P("这些问题只检查你是否理解了文章内容，不是心理测验，也不用于诊断。"),
-                Practice(TechniqueId.ExternalOrientation, "用三个细节帮助自己定位")
+                Practice(TechniqueId.ExternalOrientation, "三个中性细节")
             ]),
 
         new(
@@ -1530,9 +1530,9 @@ public static partial class ArticleContent
                 List("描述一个具体时刻，不要给整个人下结论", "说出自己的感受或需要，不替对方猜测动机", "只承担属于自己的那部分", "提出一个具体请求，然后留出回应的时间"),
                 Quiz("哪种开场更能说明问题，又不把对方贴上标签？", 1, "具体事件及其影响比评价一个人的性格更容易讨论。", "你总是把一切搞砸", "计划没有提前告知就改变时，我很不知所措。我们能否约定下次如何互相通知？", "就当什么都没发生过"),
                 P("你可以暂停，约好以后再谈，或结束这次对话。道歉不等于放弃界限，尝试修复关系也不能保证对方会回应。"),
-                Practice(TechniqueId.PauseBeforeReaction, "回复前先暂停"),
+                Practice(TechniqueId.PauseBeforeReaction, "反应前暂停"),
                 Quiz("什么时候安全应当优先于修复关系？", 1, "有恐惧、胁迫或暴力时，应先确保安全并寻求实际支持。", "只有所有和好尝试都失败后", "存在恐惧、控制、羞辱或暴力时", "从来不需要；每场争执都必须解决"),
-                new(ArticleBlockKind.Article, "另请阅读：如何表达界限", ArticleId: ArticleIds.Boundaries)
+                new(ArticleBlockKind.Article, "个人界限，以及如何说“不”", ArticleId: ArticleIds.Boundaries)
             ]),
         new(
             ArticleIds.Feedback,
@@ -1551,7 +1551,7 @@ public static partial class ArticleContent
                 List("保留一条具体且有用的信息。", "询问例子或明确标准。", "如果表达方式不尊重，可以设定界限。"),
                 Practice(TechniqueId.FeedbackReview, "梳理反馈"),
                 Warning("威胁、羞辱、歧视和胁迫不属于普通反馈。不要为了“改正自己”而留在不安全的谈话中；请寻求支持。"),
-                See(ArticleIds.SelfCriticism, "另请阅读：不再自我批评地与自己对话")
+                See(ArticleIds.SelfCriticism, "自我批评与自我关怀")
             ]),
     ];
 }
