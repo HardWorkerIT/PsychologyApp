@@ -9,8 +9,9 @@
   <ItemGroup>
     <!-- AndroidMavenLibrary does not include transitive artifacts; the SDK and its runtime dependencies must be listed explicitly. -->
     <!-- Re-enable POM verification once a clean build resolves myTarget's Media3 dependency graph without XA4237. -->
-    <AndroidMavenLibrary Include="com.my.target:mytarget-sdk" Version="5.52.5" Bind="false" VerifyDependencies="false" />
-    <AndroidMavenLibrary Include="com.my.tracker:mytracker-sdk" Version="3.6.0" Bind="false" />
+    <!-- Use Maven Central's alternate canonical endpoint; repo1 returned transient 404s from a hosted runner region. -->
+    <AndroidMavenLibrary Include="com.my.target:mytarget-sdk" Version="5.52.5" Repository="https://repo.maven.apache.org/maven2" Bind="false" VerifyDependencies="false" />
+    <AndroidMavenLibrary Include="com.my.tracker:mytracker-sdk" Version="3.6.0" Repository="https://repo.maven.apache.org/maven2" Bind="false" />
 
     <!-- Keep Media3 modules explicit; re-enable POM verification when a clean build resolves them without XA4237/404. -->
     <AndroidMavenLibrary Include="androidx.media3:media3-exoplayer" Version="1.8.0" Repository="Google" Bind="false" VerifyDependencies="false" />
@@ -41,7 +42,7 @@
     <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders" Version="17.0.0" Repository="Google" Bind="false" />
     <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders-json" Version="18.0.0" Repository="Google" Bind="false" />
     <AndroidMavenLibrary Include="com.google.firebase:firebase-encoders-proto" Version="16.0.0" Repository="Google" Bind="false" />
-    <AndroidMavenLibrary Include="javax.inject:javax.inject" Version="1" Bind="false" />
+    <AndroidMavenLibrary Include="javax.inject:javax.inject" Version="1" Repository="https://repo.maven.apache.org/maven2" Bind="false" />
   </ItemGroup>
   <ItemGroup>
     <!-- Use MAUI's existing AndroidX/Kotlin bindings so dependency verification passes without duplicate AARs. -->
