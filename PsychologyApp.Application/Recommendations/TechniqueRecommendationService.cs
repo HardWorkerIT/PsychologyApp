@@ -37,7 +37,12 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         TechniqueId.BusyMind,
         TechniqueId.SensoryComfort,
         TechniqueId.UrgeSurfing,
-        TechniqueId.Observer
+        TechniqueId.Observer,
+        TechniqueId.MoneyWorryPlan,
+        TechniqueId.NewsCheckPlan,
+        TechniqueId.HabitRestartPlan,
+        TechniqueId.FeedbackReview,
+        TechniqueId.ConnectionStepPlan
 
     ];
 

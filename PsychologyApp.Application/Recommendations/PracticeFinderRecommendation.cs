@@ -13,7 +13,8 @@ public enum PracticeFinderNeed
     BeforeConversation,
     PassengerCommute,
     BeforeSleep,
-    AfterConflict
+    AfterConflict,
+    Connection
 }
 
 public static class PracticeFinderRecommendation
@@ -23,30 +24,31 @@ public static class PracticeFinderRecommendation
         {
             [PracticeFinderNeed.EyesOpen] =
             [
-                TechniqueId.Grounding, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
+                TechniqueId.ExternalOrientation, TechniqueId.Grounding, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
                 TechniqueId.Balloons, TechniqueId.CheckTheFacts
             ],
             [PracticeFinderNeed.NoBreathFocus] =
             [
-                TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
+                TechniqueId.ExternalOrientation, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion,
                 TechniqueId.CheckTheFacts, TechniqueId.Observer
             ],
             // Put the practice that explicitly works silently first; longer answer flows stay later.
             [PracticeFinderNeed.NoTyping] =
             [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Balloons, TechniqueId.Grounding],
             [PracticeFinderNeed.Public] =
-            [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Grounding],
+            [TechniqueId.ExternalOrientation, TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Grounding],
             [PracticeFinderNeed.BeforeConversation] =
             [TechniqueId.PauseBeforeReaction, TechniqueId.ImplementationIntention, TechniqueId.CheckTheFacts],
             [PracticeFinderNeed.PassengerCommute] =
             [TechniqueId.Grounding, TechniqueId.BusyMind, TechniqueId.ThoughtDefusion],
             [PracticeFinderNeed.BeforeSleep] = [TechniqueId.MuscleRelax, TechniqueId.SelfCompassion],
             [PracticeFinderNeed.AfterConflict] =
-            [TechniqueId.PauseBeforeReaction, TechniqueId.Grounding, TechniqueId.CheckTheFacts]
+            [TechniqueId.PauseBeforeReaction, TechniqueId.Grounding, TechniqueId.CheckTheFacts],
+            [PracticeFinderNeed.Connection] = [TechniqueId.ConnectionStepPlan]
         };
 
     private static readonly TechniqueId[] QuickPracticeIds =
-        [TechniqueId.BusyMind, TechniqueId.Observer, TechniqueId.ThoughtDefusion];
+        [TechniqueId.ThoughtDefusion, TechniqueId.BusyMind, TechniqueId.Observer];
 
     public static IReadOnlyList<TechniqueListEntry> FindSuitablePractices(
         PracticeFinderNeed need,

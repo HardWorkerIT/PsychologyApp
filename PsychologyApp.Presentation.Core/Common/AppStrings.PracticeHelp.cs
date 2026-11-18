@@ -45,6 +45,8 @@ public static partial class AppStrings
     public static string NextStepLimitReached(int maximum) => F(nameof(NextStepLimitReached), maximum);
 
     public static string PracticeFinderButton => R(nameof(PracticeFinderButton));
+    public static string TechniqueGroupExpandHint => R(nameof(TechniqueGroupExpandHint));
+    public static string TechniqueGroupCollapseHint => R(nameof(TechniqueGroupCollapseHint));
     public static string PracticeFinderShortAction => R(nameof(PracticeFinderShortAction));
     public static string PracticeFinderAccessibilityHint => R(nameof(PracticeFinderAccessibilityHint));
     public static string PracticeFinderTitle => R(nameof(PracticeFinderTitle));
@@ -62,6 +64,7 @@ public static partial class AppStrings
     public static string PracticeFinderPassengerCommute => R(nameof(PracticeFinderPassengerCommute));
     public static string PracticeFinderBeforeSleep => R(nameof(PracticeFinderBeforeSleep));
     public static string PracticeFinderAfterConflict => R(nameof(PracticeFinderAfterConflict));
+    public static string PracticeFinderConnection => R(nameof(PracticeFinderConnection));
     public static string PracticeFinderQuickMatchReason => R(nameof(PracticeFinderQuickMatchReason));
     public static string PracticeFinderEyesOpenMatchReason => R(nameof(PracticeFinderEyesOpenMatchReason));
     public static string PracticeFinderNoBreathMatchReason => R(nameof(PracticeFinderNoBreathMatchReason));
@@ -71,7 +74,10 @@ public static partial class AppStrings
     public static string PracticeFinderPassengerCommuteMatchReason => R(nameof(PracticeFinderPassengerCommuteMatchReason));
     public static string PracticeFinderBeforeSleepMatchReason => R(nameof(PracticeFinderBeforeSleepMatchReason));
     public static string PracticeFinderAfterConflictMatchReason => R(nameof(PracticeFinderAfterConflictMatchReason));
+    public static string PracticeFinderConnectionMatchReason => R(nameof(PracticeFinderConnectionMatchReason));
     public static string PracticeFinderResultsTitle => R(nameof(PracticeFinderResultsTitle));
+    public static string PracticeFinderMoreOptions => R(nameof(PracticeFinderMoreOptions));
+    public static string PracticeFinderOtherOptionsTitle => R(nameof(PracticeFinderOtherOptionsTitle));
     public static string PracticeFinderNoResultsTitle => R(nameof(PracticeFinderNoResultsTitle));
     public static string PracticeFinderNoResultsBody => R(nameof(PracticeFinderNoResultsBody));
 

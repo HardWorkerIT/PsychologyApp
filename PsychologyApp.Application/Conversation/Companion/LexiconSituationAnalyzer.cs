@@ -167,7 +167,9 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         [CompanionTheme.Family] = ["мама", "мамы", "маму", "мамой", "=папа", "папой", "родител", "ребен", "=дети", "семь", "=брат", "сестр", "дочь", "дочк", "дочер", "=сын", "=сына", "=сыну", "=сыном", "внук", "внучк", "бабушк", "дедушк", "тёщ", "теща", "свекров", "mother", "father", "parents", "=child", "=kids", "family", "sister", "brother"],
         [CompanionTheme.Health] = ["здоров", "болезн", "врач", "диагноз", "болит", "=боль", "анализ", "обследовани", "health", "doctor", "illness", "diagnos", "=pain"],
         [CompanionTheme.Money] = ["=деньги", "денег", "=долг", "долги", "кредит", "ипотек", "=money", "=debt", "=loan", "=rent", "=bills"],
-        [CompanionTheme.Study] = ["экзамен", "учеб", "сесси", "универ", "школ", "диплом", "зачет", "=exam", "=study", "university", "=school", "thesis", "=grade"]
+        [CompanionTheme.Study] = ["экзамен", "учеб", "сесси", "универ", "школ", "диплом", "зачет", "=exam", "=study", "university", "=school", "thesis", "=grade"],
+        [CompanionTheme.News] = ["новост", "заголов", "=news", "headline", "newsfeed", "news feed"],
+        [CompanionTheme.Feedback] = ["обратн связ", "замечан", "критик", "отзыв", "=feedback", "criticism", "review", "comment"]
     };
 
     public SituationAnalysis Analyze(string text)

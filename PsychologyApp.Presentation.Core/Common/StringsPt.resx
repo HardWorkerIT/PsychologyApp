@@ -4355,10 +4355,22 @@
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
     <value>Práticas adequadas</value>
   </data>
+  <data name="PracticeFinderMoreOptions" xml:space="preserve">
+    <value>Ver mais práticas</value>
+  </data>
+  <data name="PracticeFinderOtherOptionsTitle" xml:space="preserve">
+    <value>Mais práticas adequadas</value>
+  </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>Nenhuma prática adequada encontrada</value>
   </data>
   <data name="PracticeFinderNoResultsBody" xml:space="preserve">
     <value>Tente outra opção ou abra o catálogo de práticas.</value>
+  </data>
+  <data name="PracticeFinderConnectionMatchReason" xml:space="preserve">
+    <value>Um pequeno passo sem pressão, considerando a segurança e a liberdade de escolha.</value>
+  </data>
+  <data name="PracticeFinderConnection" xml:space="preserve">
+    <value>Queria ter mais contato</value>
   </data>
 </root>

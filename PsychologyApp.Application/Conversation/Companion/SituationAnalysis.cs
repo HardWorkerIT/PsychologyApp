@@ -22,7 +22,9 @@ public enum CompanionTheme
     Family,
     Health,
     Money,
-    Study
+    Study,
+    News,
+    Feedback
 }
 
 /// <summary>What happened, as far as the words say: the situation behind the feeling.</summary>

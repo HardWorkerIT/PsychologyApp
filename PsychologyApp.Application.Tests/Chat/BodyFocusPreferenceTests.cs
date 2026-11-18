@@ -53,10 +53,10 @@ public sealed class BodyFocusPreferenceTests
     }
 
     [Theory]
-    [InlineData(CompanionEmotion.Panic, false, TechniqueSuggestionReasonCode.Panic, TechniqueId.Grounding, TechniqueId.SensoryComfort)]
+    [InlineData(CompanionEmotion.Panic, false, TechniqueSuggestionReasonCode.Panic, TechniqueId.Grounding, TechniqueId.ExternalOrientation)]
     [InlineData(CompanionEmotion.Anger, true, TechniqueSuggestionReasonCode.Anger, TechniqueId.Grounding, TechniqueId.SensoryComfort)]
     [InlineData(CompanionEmotion.Exhaustion, false, TechniqueSuggestionReasonCode.Exhaustion, TechniqueId.SmallStep, TechniqueId.SensoryComfort)]
-    [InlineData(CompanionEmotion.Unknown, false, TechniqueSuggestionReasonCode.General, TechniqueId.ThoughtDefusion, TechniqueId.SensoryComfort)]
+    [InlineData(CompanionEmotion.Unknown, false, TechniqueSuggestionReasonCode.General, TechniqueId.ThoughtDefusion, TechniqueId.ExternalOrientation)]
     public void Recommendations_respect_an_explicit_body_focus_refusal(
         CompanionEmotion emotion,
         bool hasBodySymptoms,
@@ -82,7 +82,7 @@ public sealed class BodyFocusPreferenceTests
         Assert.Equal(CompanionEmotion.Panic, analysis.Emotion);
         Assert.True(analysis.AvoidsBodyFocus);
         Assert.Equal(
-            [TechniqueId.Grounding, TechniqueId.SensoryComfort],
+            [TechniqueId.Grounding, TechniqueId.ExternalOrientation],
             TechniqueSuggester.Suggest(analysis));
     }
 

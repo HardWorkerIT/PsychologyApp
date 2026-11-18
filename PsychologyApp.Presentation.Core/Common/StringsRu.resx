@@ -4361,10 +4361,22 @@
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
     <value>Подходящие практики</value>
   </data>
+  <data name="PracticeFinderMoreOptions" xml:space="preserve">
+    <value>Показать ещё практики</value>
+  </data>
+  <data name="PracticeFinderOtherOptionsTitle" xml:space="preserve">
+    <value>Ещё подходящие практики</value>
+  </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>Подходящие практики не найдены</value>
   </data>
   <data name="PracticeFinderNoResultsBody" xml:space="preserve">
     <value>Попробуйте выбрать другой вариант или открыть каталог практик.</value>
+  </data>
+  <data name="PracticeFinderConnectionMatchReason" xml:space="preserve">
+    <value>Небольшой шаг без давления, с учётом безопасности и свободы выбора.</value>
+  </data>
+  <data name="PracticeFinderConnection" xml:space="preserve">
+    <value>Хочется больше общения</value>
   </data>
 </root>

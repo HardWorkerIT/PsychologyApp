@@ -55,125 +55,161 @@ public partial class TechniquesViewModel
             return;
         }
 
-        DialogOptionItem[] featureOptions =
-        [
-            new DialogOptionItem(
-                QuickActionsFeatureOptionId,
-                AppStrings.NextStepTitle,
-                AppStrings.PracticeFinderQuickActionsDescription),
-            new DialogOptionItem(
-                PracticeFinderFeatureOptionId,
-                AppStrings.PracticeFinderContextHeader,
-                AppStrings.PracticeFinderSituationDescription)
-        ];
-        string? selectedFeatureId = await _dialogService.PickOptionAsync(
-            AppStrings.PracticeFinderTitle,
-            featureOptions,
-            AppStrings.Cancel);
-        if (selectedFeatureId is null || await RouteToCrisisHubIfNeededAsync())
-        {
-            return;
-        }
-
-        if (selectedFeatureId == QuickActionsFeatureOptionId)
-        {
-            if (!await ReloadSavedNextStepsAsync())
-            {
-                await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
-                return;
-            }
-            await OpenQuickActionsAsync(AllQuickActionSteps, AppStrings.NextStepTitle);
-            return;
-        }
-
-        if (selectedFeatureId != PracticeFinderFeatureOptionId)
-        {
-            return;
-        }
-
-        PracticeFinderChoice[] choices =
-        [
-            new(PracticeFinderNeed.Quick, AppStrings.PracticeFinderQuick),
-            new(PracticeFinderNeed.EyesOpen, AppStrings.PracticeFinderEyesOpen),
-            new(PracticeFinderNeed.NoBreathFocus, AppStrings.PracticeFinderNoBreath),
-            new(PracticeFinderNeed.NoTyping, AppStrings.PracticeFinderNoTyping),
-            new(PracticeFinderNeed.Public, AppStrings.PracticeFinderPublic),
-            new(PracticeFinderNeed.BeforeConversation, AppStrings.PracticeFinderBeforeConversation, IsSituationBundle: true),
-            new(PracticeFinderNeed.PassengerCommute, AppStrings.PracticeFinderPassengerCommute, IsSituationBundle: true),
-            new(PracticeFinderNeed.BeforeSleep, AppStrings.PracticeFinderBeforeSleep, IsSituationBundle: true),
-            new(PracticeFinderNeed.AfterConflict, AppStrings.PracticeFinderAfterConflict, IsSituationBundle: true)
-        ];
-        DialogOptionItem[] situationOptions =
-        [
-            DialogOptionItem.SectionHeader(AppStrings.PracticeFinderConditionsSection),
-            .. choices
-                .Where(item => !item.IsSituationBundle)
-                .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label)),
-            DialogOptionItem.SectionHeader(AppStrings.PracticeFinderSituationsSection),
-            .. choices
-                .Where(item => item.IsSituationBundle)
-                .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label))
-        ];
         while (true)
         {
-            if (await RouteToCrisisHubIfNeededAsync())
-            {
-                return;
-            }
-
-            string? selectedNeedId = await _dialogService.PickOptionAsync(
-                AppStrings.PracticeFinderContextHeader,
-                situationOptions,
-                AppStrings.Cancel);
-            if (selectedNeedId is null || await RouteToCrisisHubIfNeededAsync())
-            {
-                return;
-            }
-
-            PracticeFinderChoice? choice = choices.FirstOrDefault(item =>
-                string.Equals(GetPracticeFinderNeedOptionId(item.Need), selectedNeedId, StringComparison.Ordinal));
-            if (choice is null)
-            {
-                return;
-            }
-
-            IReadOnlyList<TechniqueListEntry> suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
-            if (await RouteToCrisisHubIfNeededAsync())
-            {
-                return;
-            }
-
-            if (suggestions.Count == 0)
-            {
-                await _dialogService.ShowAsync(AppStrings.PracticeFinderNoResultsTitle, AppStrings.PracticeFinderNoResultsBody);
-                continue;
-            }
-
-            string resultTitle = AppStrings.PracticeFinderResultsTitle;
-            DialogOptionItem[] practiceOptions =
+            DialogOptionItem[] featureOptions =
             [
-                DialogOptionItem.SectionHeader(GetPracticeFinderMatchReason(choice.Need)),
-                .. suggestions.Select(entry => new DialogOptionItem(
-                    entry.TechniqueId.ToString(),
-                    entry.Title,
-                    entry.Subtitle,
-                    AppStrings.TechniqueDuration(entry.DurationMinutes)))
+                new DialogOptionItem(
+                    QuickActionsFeatureOptionId,
+                    AppStrings.NextStepTitle,
+                    AppStrings.PracticeFinderQuickActionsDescription),
+                new DialogOptionItem(
+                    PracticeFinderFeatureOptionId,
+                    AppStrings.PracticeFinderContextHeader,
+                    AppStrings.PracticeFinderSituationDescription)
             ];
-            string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Back);
-            if (selectedPracticeId is null)
-            {
-                continue;
-            }
-
-            TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
-                string.Equals(entry.TechniqueId.ToString(), selectedPracticeId, StringComparison.Ordinal));
-            if (selectedPractice is null || await RouteToCrisisHubIfNeededAsync())
+            string? selectedFeatureId = await _dialogService.PickOptionAsync(
+                AppStrings.PracticeFinderTitle,
+                featureOptions,
+                AppStrings.Cancel);
+            if (selectedFeatureId is null || await RouteToCrisisHubIfNeededAsync())
             {
                 return;
             }
 
-            await _navigationService.GoToTechniqueAsync(selectedPractice.TechniqueId);
-            return;
+            if (selectedFeatureId == QuickActionsFeatureOptionId)
+            {
+                if (!await ReloadSavedNextStepsAsync())
+                {
+                    await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
+                    return;
+                }
+                if (!await OpenQuickActionsAsync(AllQuickActionSteps, AppStrings.NextStepTitle))
+                {
+                    continue;
+                }
+                return;
+            }
+
+            if (selectedFeatureId != PracticeFinderFeatureOptionId)
+            {
+                return;
+            }
+
+            PracticeFinderChoice[] choices =
+            [
+                new(PracticeFinderNeed.Quick, AppStrings.PracticeFinderQuick),
+                new(PracticeFinderNeed.EyesOpen, AppStrings.PracticeFinderEyesOpen),
+                new(PracticeFinderNeed.NoBreathFocus, AppStrings.PracticeFinderNoBreath),
+                new(PracticeFinderNeed.NoTyping, AppStrings.PracticeFinderNoTyping),
+                new(PracticeFinderNeed.Public, AppStrings.PracticeFinderPublic),
+                new(PracticeFinderNeed.BeforeConversation, AppStrings.PracticeFinderBeforeConversation, IsSituationBundle: true),
+                new(PracticeFinderNeed.PassengerCommute, AppStrings.PracticeFinderPassengerCommute, IsSituationBundle: true),
+                new(PracticeFinderNeed.BeforeSleep, AppStrings.PracticeFinderBeforeSleep, IsSituationBundle: true),
+                new(PracticeFinderNeed.AfterConflict, AppStrings.PracticeFinderAfterConflict, IsSituationBundle: true),
+                new(PracticeFinderNeed.Connection, AppStrings.PracticeFinderConnection, IsSituationBundle: true)
+            ];
+            DialogOptionItem[] situationOptions =
+            [
+                DialogOptionItem.SectionHeader(AppStrings.PracticeFinderConditionsSection),
+                .. choices
+                    .Where(item => !item.IsSituationBundle)
+                    .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label)),
+                DialogOptionItem.SectionHeader(AppStrings.PracticeFinderSituationsSection),
+                .. choices
+                    .Where(item => item.IsSituationBundle)
+                    .Select(item => new DialogOptionItem(GetPracticeFinderNeedOptionId(item.Need), item.Label))
+            ];
+            while (true)
+            {
+                if (await RouteToCrisisHubIfNeededAsync())
+                {
+                    return;
+                }
+
+                string? selectedNeedId = await _dialogService.PickOptionAsync(
+                    AppStrings.PracticeFinderContextHeader,
+                    situationOptions,
+                    AppStrings.Back);
+                if (selectedNeedId is null)
+                {
+                    break;
+                }
+
+                if (await RouteToCrisisHubIfNeededAsync())
+                {
+                    return;
+                }
+
+                PracticeFinderChoice? choice = choices.FirstOrDefault(item =>
+                    string.Equals(GetPracticeFinderNeedOptionId(item.Need), selectedNeedId, StringComparison.Ordinal));
+                if (choice is null)
+                {
+                    return;
+                }
+
+                IReadOnlyList<TechniqueListEntry> suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
+                if (await RouteToCrisisHubIfNeededAsync())
+                {
+                    return;
+                }
+
+                if (suggestions.Count == 0)
+                {
+                    await _dialogService.ShowAsync(AppStrings.PracticeFinderNoResultsTitle, AppStrings.PracticeFinderNoResultsBody);
+                    continue;
+                }
+
+                string resultTitle = AppStrings.PracticeFinderResultsTitle;
+                DialogOptionItem[] practiceOptions =
+                [
+                    DialogOptionItem.SectionHeader(GetPracticeFinderMatchReason(choice.Need)),
+                    CreatePracticeFinderOption(suggestions[0]),
+                    .. suggestions.Count > 1
+                        ? new[] { new DialogOptionItem(PracticeFinderMoreOptionsOptionId, AppStrings.PracticeFinderMoreOptions) }
+                        : Array.Empty<DialogOptionItem>()
+                ];
+                while (true)
+                {
+                    string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Back);
+                    if (selectedPracticeId == PracticeFinderMoreOptionsOptionId)
+                    {
+                        if (await RouteToCrisisHubIfNeededAsync())
+                        {
+                            return;
+                        }
+
+                        DialogOptionItem[] otherPracticeOptions =
+                        [
+                            DialogOptionItem.SectionHeader(GetPracticeFinderMatchReason(choice.Need)),
+                            .. suggestions.Skip(1).Select(CreatePracticeFinderOption)
+                        ];
+                        selectedPracticeId = await _dialogService.PickOptionAsync(
+                            AppStrings.PracticeFinderOtherOptionsTitle,
+                            otherPracticeOptions,
+                            AppStrings.Back);
+                        if (selectedPracticeId is null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (selectedPracticeId is null)
+                    {
+                        break;
+                    }
+
+                    TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
+                        string.Equals(entry.TechniqueId.ToString(), selectedPracticeId, StringComparison.Ordinal));
+                    if (selectedPractice is null || await RouteToCrisisHubIfNeededAsync())
+                    {
+                        return;
+                    }
+
+                    await _navigationService.GoToTechniqueAsync(selectedPractice.TechniqueId);
+                    return;
+                }
+            }
         }
     }
 
@@ -181,6 +217,7 @@ public partial class TechniquesViewModel
 
     private const string QuickActionsFeatureOptionId = "feature:quick-actions";
     private const string PracticeFinderFeatureOptionId = "feature:practice-finder";
+    private const string PracticeFinderMoreOptionsOptionId = "practice-finder:more-options";
     private const string SavedQuickActionOptionPrefix = "saved-quick-action:";
     private const string ManageQuickActionsOptionId = "manage-quick-actions";
 
@@ -192,6 +229,13 @@ public partial class TechniquesViewModel
 
     private static string GetPracticeFinderNeedOptionId(PracticeFinderNeed need) =>
         $"practice-need:{need}";
+
+    private static DialogOptionItem CreatePracticeFinderOption(TechniqueListEntry entry) =>
+        new(
+            entry.TechniqueId.ToString(),
+            entry.Title,
+            entry.Subtitle,
+            AppStrings.TechniqueDuration(entry.DurationMinutes));
 
     private static string GetPracticeFinderMatchReason(PracticeFinderNeed need) =>
         need switch
@@ -205,10 +249,11 @@ public partial class TechniquesViewModel
             PracticeFinderNeed.PassengerCommute => AppStrings.PracticeFinderPassengerCommuteMatchReason,
             PracticeFinderNeed.BeforeSleep => AppStrings.PracticeFinderBeforeSleepMatchReason,
             PracticeFinderNeed.AfterConflict => AppStrings.PracticeFinderAfterConflictMatchReason,
+            PracticeFinderNeed.Connection => AppStrings.PracticeFinderConnectionMatchReason,
             _ => string.Empty
         };
 
-    private async Task OpenQuickActionsAsync(
+    private async Task<bool> OpenQuickActionsAsync(
         IReadOnlyList<SavedNextStep> categorySteps,
         string categoryTitle)
     {
@@ -216,7 +261,7 @@ public partial class TechniquesViewModel
         {
             if (await RouteToCrisisHubIfNeededAsync())
             {
-                return;
+                return true;
             }
 
             SavedNextStep[] savedInCategory = _savedNextSteps.Where(categorySteps.Contains).ToArray();
@@ -225,7 +270,7 @@ public partial class TechniquesViewModel
                 await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
-                    return;
+                    return false;
                 }
 
                 continue;
@@ -236,23 +281,23 @@ public partial class TechniquesViewModel
                 .. savedInCategory.Select(step => new DialogOptionItem(GetSavedQuickActionOptionId(step), GetNextStepLabel(step))),
                 new DialogOptionItem(ManageQuickActionsOptionId, AppStrings.NextStepChange)
             ];
-            string? selectedOptionId = await _dialogService.PickOptionAsync(categoryTitle, options, AppStrings.Cancel);
+            string? selectedOptionId = await _dialogService.PickOptionAsync(categoryTitle, options, AppStrings.Back);
             if (selectedOptionId is null)
             {
-                return;
+                return false;
             }
 
             if (selectedOptionId == ManageQuickActionsOptionId)
             {
                 if (await RouteToCrisisHubIfNeededAsync())
                 {
-                    return;
+                    return true;
                 }
 
                 await ManageQuickActionsForCategoryAsync(categorySteps, categoryTitle);
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
-                    return;
+                    return false;
                 }
 
                 continue;
@@ -267,10 +312,11 @@ public partial class TechniquesViewModel
                     && savedInCategory.Contains(selectedStep))
                 {
                     await OpenNextStepAsync(selectedStep);
+                    return true;
                 }
             }
 
-            return;
+            return false;
         }
     }
 

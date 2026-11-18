@@ -83,6 +83,8 @@ public static class CompanionContent
         CompanionTheme.Family => english ? "family" : "семья",
         CompanionTheme.Health => english ? "health" : "здоровье",
         CompanionTheme.Money => english ? "money" : "деньги",
+        CompanionTheme.News => english ? "news" : "новости",
+        CompanionTheme.Feedback => english ? "feedback" : "обратная связь",
         _ => english ? "study" : "учёба"
     };
 
@@ -113,6 +115,9 @@ public static class CompanionContent
         TechniqueId.BodyScan => english ? "Where is it in the body?" : "Где это в теле?",
         TechniqueId.Flashback => english ? "A memory took over" : "Накрыло воспоминание",
         TechniqueId.Nightmare => english ? "Rewrite a nightmare" : "Переписать кошмар",
+        TechniqueId.ExternalOrientation or TechniqueId.MoneyWorryPlan or TechniqueId.NewsCheckPlan
+            or TechniqueId.HabitRestartPlan or TechniqueId.FeedbackReview or TechniqueId.ConnectionStepPlan =>
+                TechniqueTitle(id, english ? "en" : "ru"),
         _ => id.ToString()
     };
 
@@ -147,6 +152,24 @@ public static class CompanionContent
         TechniqueId.BodyScan => english ? "it helps you notice where the feeling sits in the body and let the tension ease." : "она помогает заметить, где в теле живёт чувство, и дать напряжению смягчиться.",
         TechniqueId.Flashback => english ? "it brings you back from a hard memory to the present, about 3 minutes." : "она возвращает из тяжёлого воспоминания в настоящее, около 3 минут.",
         TechniqueId.Nightmare => english ? "it makes a recurring nightmare rarer and weaker." : "она делает повторяющийся кошмар реже и слабее.",
+        TechniqueId.ExternalOrientation => english
+            ? "it invites you to notice neutral details around you without focusing on breathing or body sensations; you can stop at any time."
+            : "она предлагает замечать нейтральные детали вокруг, не сосредотачиваясь на дыхании или ощущениях в теле; можно остановиться в любой момент.",
+        TechniqueId.MoneyWorryPlan => english
+            ? "it helps separate known money facts from open questions and fears, then choose one safe step within your control."
+            : "она помогает отделить известные факты о деньгах от вопросов и опасений, а затем выбрать безопасный шаг в пределах вашего контроля.",
+        TechniqueId.NewsCheckPlan => english
+            ? "it helps choose a useful time and source for checking news while leaving room for urgent updates and changing circumstances."
+            : "она помогает выбрать подходящее время и источник для проверки новостей, оставляя место для срочных сообщений и новых обстоятельств.",
+        TechniqueId.HabitRestartPlan => english
+            ? "it helps you return to a routine after a missed opportunity with a smaller step, without punishment or trying to catch up."
+            : "она помогает вернуться к привычному делу после пропуска с меньшего шага — без наказания и попыток наверстать всё.",
+        TechniqueId.FeedbackReview => english
+            ? "it helps separate specific, useful details from assumptions and tone, then choose whether and how to respond."
+            : "она помогает отделить конкретные полезные детали от предположений и тона, а затем решить, отвечать ли и как.",
+        TechniqueId.ConnectionStepPlan => english
+            ? "it helps plan one safe, low-pressure way to connect while leaving both people free to choose or decline."
+            : "она помогает спланировать безопасный контакт без давления и оставить обоим право выбрать или отказаться.",
         _ => string.Empty
     };
 
@@ -157,6 +180,8 @@ public static class CompanionContent
         CompanionTheme.Family => english ? "family" : "семьёй",
         CompanionTheme.Health => english ? "health" : "здоровьем",
         CompanionTheme.Money => english ? "money" : "деньгами",
+        CompanionTheme.News => english ? "the news" : "новостями",
+        CompanionTheme.Feedback => english ? "feedback" : "обратной связью",
         _ => english ? "study" : "учёбой"
     };
 

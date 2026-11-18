@@ -423,6 +423,33 @@ public sealed class TechniqueRecommendationServiceTests
     }
 
     [Fact]
+    public void Explore_rotation_reaches_recently_added_practices_after_previous_options_were_used()
+    {
+        TechniqueId[] recentlyAdded =
+        [
+            TechniqueId.MoneyWorryPlan,
+            TechniqueId.NewsCheckPlan,
+            TechniqueId.HabitRestartPlan,
+            TechniqueId.FeedbackReview,
+            TechniqueId.ConnectionStepPlan
+        ];
+        DateTime lastPractice = DateTime.UtcNow.AddDays(-3);
+
+        foreach (TechniqueId techniqueId in recentlyAdded)
+        {
+            Dictionary<string, DateTime> dates = ExploreRotationExcept(techniqueId).ToDictionary(
+                id => id.ToString(),
+                _ => lastPractice,
+                StringComparer.Ordinal);
+            TechniqueId next = _service.ResolveNextAfterCompletion(
+                new TodayRecommendationContext(OnboardingConcernKeys.Explore, LastPracticeDatesUtc: dates),
+                TechniqueId.Grounding);
+
+            Assert.Equal(techniqueId, next);
+        }
+    }
+
+    [Fact]
     public void Mood_program_week_three_offers_the_if_then_plan_after_earlier_skills()
     {
         Dictionary<string, DateTime> dates = new(StringComparer.Ordinal)
@@ -460,6 +487,11 @@ public sealed class TechniqueRecommendationServiceTests
             TechniqueId.BusyMind,
             TechniqueId.SensoryComfort,
             TechniqueId.UrgeSurfing,
-            TechniqueId.Observer
+            TechniqueId.Observer,
+            TechniqueId.MoneyWorryPlan,
+            TechniqueId.NewsCheckPlan,
+            TechniqueId.HabitRestartPlan,
+            TechniqueId.FeedbackReview,
+            TechniqueId.ConnectionStepPlan
         }.Where(id => id != exclude);
 }

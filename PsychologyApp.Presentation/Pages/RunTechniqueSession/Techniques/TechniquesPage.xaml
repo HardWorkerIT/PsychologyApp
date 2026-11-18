@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques.TechniquesPage"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques"
+             xmlns:common="clr-namespace:PsychologyApp.Presentation.Common;assembly=PsychologyApp.Presentation.Core"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
              xmlns:practiceUi="clr-namespace:PsychologyApp.Presentation.Widgets.TechniqueListCard"
@@ -50,6 +51,14 @@
                             MinimumHeightRequest="44"
                             Padding="4,8,4,2"
                             SemanticProperties.Description="{Binding HeaderText}">
+                            <Grid.Triggers>
+                                <DataTrigger Binding="{Binding IsCollapsed}" TargetType="Grid" Value="True">
+                                    <Setter Property="SemanticProperties.Hint" Value="{x:Static common:AppStrings.TechniqueGroupExpandHint}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsCollapsed}" TargetType="Grid" Value="False">
+                                    <Setter Property="SemanticProperties.Hint" Value="{x:Static common:AppStrings.TechniqueGroupCollapseHint}" />
+                                </DataTrigger>
+                            </Grid.Triggers>
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ToggleCommand}" />
                             </Grid.GestureRecognizers>

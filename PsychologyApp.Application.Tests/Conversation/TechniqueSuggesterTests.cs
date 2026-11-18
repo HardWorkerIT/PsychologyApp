@@ -31,8 +31,8 @@ public sealed class TechniqueSuggesterTests
     [InlineData(CompanionEmotion.Anger, true, TechniqueSuggestionReasonCode.Anger, TechniqueId.Grounding, TechniqueId.MuscleRelax)]
     [InlineData(CompanionEmotion.Anger, false, TechniqueSuggestionReasonCode.Anger, TechniqueId.PauseBeforeReaction, TechniqueId.CheckTheFacts)]
     [InlineData(CompanionEmotion.Resentment, false, TechniqueSuggestionReasonCode.Resentment, TechniqueId.ThoughtDefusion, TechniqueId.CheckTheFacts)]
-    [InlineData(CompanionEmotion.Loneliness, false, TechniqueSuggestionReasonCode.Loneliness, TechniqueId.SelfCompassion, TechniqueId.SmallStep)]
-    [InlineData(CompanionEmotion.Procrastination, false, TechniqueSuggestionReasonCode.Procrastination, TechniqueId.ImplementationIntention, TechniqueId.SmallStep)]
+    [InlineData(CompanionEmotion.Loneliness, false, TechniqueSuggestionReasonCode.Loneliness, TechniqueId.SelfCompassion, TechniqueId.ConnectionStepPlan)]
+    [InlineData(CompanionEmotion.Procrastination, false, TechniqueSuggestionReasonCode.Procrastination, TechniqueId.ImplementationIntention, TechniqueId.HabitRestartPlan)]
     public void Each_recommendation_has_a_reason_matching_the_rules_that_selected_it(
         CompanionEmotion emotion,
         bool hasBodySymptoms,

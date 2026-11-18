@@ -4355,10 +4355,22 @@
   <data name="PracticeFinderResultsTitle" xml:space="preserve">
     <value>适合的练习</value>
   </data>
+  <data name="PracticeFinderMoreOptions" xml:space="preserve">
+    <value>查看更多练习</value>
+  </data>
+  <data name="PracticeFinderOtherOptionsTitle" xml:space="preserve">
+    <value>其他合适的练习</value>
+  </data>
   <data name="PracticeFinderNoResultsTitle" xml:space="preserve">
     <value>未找到合适的练习</value>
   </data>
   <data name="PracticeFinderNoResultsBody" xml:space="preserve">
     <value>请尝试其他选项，或打开练习目录。</value>
+  </data>
+  <data name="PracticeFinderConnectionMatchReason" xml:space="preserve">
+    <value>一个兼顾安全与选择权、没有压力的小步骤。</value>
+  </data>
+  <data name="PracticeFinderConnection" xml:space="preserve">
+    <value>我想多一些联系</value>
   </data>
 </root>
