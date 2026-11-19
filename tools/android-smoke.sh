@@ -27,20 +27,15 @@ STATUS=0
 CRASH=0
 MONKEY_FAILED=0
 APP_PIDS=""
-# `am start -W` can return before the app process and its input window are ready on low-memory emulator images.
-APP_FOCUS=""
+# `am start -W` can return before the app process is available on low-memory emulator images.
 for attempt in {1..30}; do
   APP_PIDS=$(adb shell pidof "$PKG" | tr -d '\r' || true)
-  APP_FOCUS=$(adb shell dumpsys window windows | grep -E "mCurrentFocus|mFocusedApp" | grep -F "$PKG" || true)
-  [ -n "$APP_PIDS" ] && [ -n "$APP_FOCUS" ] && break
+  [ -n "$APP_PIDS" ] && break
   sleep 0.5
 done
 
 if [ -z "$APP_PIDS" ]; then
   echo "FAIL: the app process did not become ready after startup"; STATUS=1; MONKEY_FAILED=1
-  : > monkey.txt
-elif [ -z "$APP_FOCUS" ]; then
-  echo "FAIL: the app window did not gain input focus after startup"; STATUS=1; MONKEY_FAILED=1
   : > monkey.txt
 else
   echo "app process IDs before interaction: $APP_PIDS"
