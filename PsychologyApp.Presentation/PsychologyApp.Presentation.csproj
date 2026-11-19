@@ -37,8 +37,8 @@
 		<ApplicationId>com.subconscious.psychologyapp</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>2.013</ApplicationDisplayVersion>
-		<ApplicationVersion>2013</ApplicationVersion>
+		<ApplicationDisplayVersion>2.014</ApplicationDisplayVersion>
+		<ApplicationVersion>2014</ApplicationVersion>
 		<!-- Keep NuGet's project metadata stable across MAUI target frameworks in Visual Studio. -->
 		<PackageVersion>2.012</PackageVersion>
 
@@ -90,9 +90,10 @@
 	  <!-- Link framework assemblies only; R8 and ProguardConfiguration shrink Java code. -->
 	  <AndroidLinkTool>r8</AndroidLinkTool>
 	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-	  <!-- Phones only. An emulator package (to measure Release on an x86_64 emulator, where arm64 runs translated and slow):
-	       -p:AndroidReleaseRid=android-x64. Not -p:RuntimeIdentifiers: a global RID flows into the class libraries and breaks their build. -->
-	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' == ''">android-arm64</RuntimeIdentifiers>
+	  <!-- Include every .NET 11 Android CoreCLR ABI so stores can serve older 32-bit devices and x86_64 devices too.
+	       For a single-ABI local build (for example, emulator performance checks), use AndroidReleaseRid; not RuntimeIdentifiers,
+	       because a global RID flows into class libraries and breaks their build. -->
+	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' == ''">android-arm;android-arm64;android-x64</RuntimeIdentifiers>
 	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' != ''">$(AndroidReleaseRid)</RuntimeIdentifiers>
 	  <!-- Release signing: paths/passwords in AndroidSigning.local.props (gitignored) or env vars. -->
 	  <AndroidKeyStore Condition="'$(AndroidSigningKeyStore)' != ''">true</AndroidKeyStore>
