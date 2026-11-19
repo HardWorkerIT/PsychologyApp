@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:testUi="clr-namespace:PsychologyApp.Presentation.Widgets.Test"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
+             xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
              xmlns:self="clr-namespace:PsychologyApp.Presentation.Widgets.Test"
              x:DataType="self:TestHistoryEntryView"
              x:Class="PsychologyApp.Presentation.Widgets.Test.TestHistoryEntryView"
@@ -62,16 +63,49 @@
                 TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
 
             <VerticalStackLayout IsVisible="{Binding HasDetail, Source={x:Reference Root}}" Spacing="4">
-                <Label
-                    Text="{Binding DurationText, Source={x:Reference Root}}"
-                    Style="{StaticResource CaptionStyle}"
+                <Grid
+                    ColumnDefinitions="*,Auto"
                     MinimumHeightRequest="44"
-                    VerticalTextAlignment="Center"
-                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}">
-                    <Label.GestureRecognizers>
+                    Padding="4,0"
+                    SemanticProperties.Description="{Binding DurationText, Source={x:Reference Root}}"
+                    SemanticProperties.Hint="{Binding DetailToggleHint, Source={x:Reference Root}}">
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ToggleDetailCommand, Source={x:Reference Root}}" />
-                    </Label.GestureRecognizers>
-                </Label>
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Text="{Binding DurationText, Source={x:Reference Root}}"
+                        Style="{StaticResource CaptionStyle}"
+                        VerticalTextAlignment="Center"
+                        TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                    <Grid Grid.Column="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="0">
+                        <ui:MaterialIconView
+                            IconName="ExpandMore"
+                            IconSize="20"
+                            IconColor="{AppThemeBinding Light={DynamicResource TextSecondaryLight}, Dark={DynamicResource TextSecondaryDark}}"
+                            AutomationProperties.IsInAccessibleTree="False"
+                            VerticalOptions="Center">
+                            <ui:MaterialIconView.Triggers>
+                                <DataTrigger Binding="{Binding IsDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </ui:MaterialIconView.Triggers>
+                        </ui:MaterialIconView>
+                        <ui:MaterialIconView
+                            Grid.Column="1"
+                            IconName="ExpandLess"
+                            IconSize="20"
+                            IconColor="{AppThemeBinding Light={DynamicResource TextSecondaryLight}, Dark={DynamicResource TextSecondaryDark}}"
+                            AutomationProperties.IsInAccessibleTree="False"
+                            IsVisible="False"
+                            VerticalOptions="Center">
+                            <ui:MaterialIconView.Triggers>
+                                <DataTrigger Binding="{Binding IsDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </DataTrigger>
+                            </ui:MaterialIconView.Triggers>
+                        </ui:MaterialIconView>
+                    </Grid>
+                </Grid>
                 <testUi:QuestionnaireResultDetailView
                     IsVisible="{Binding IsDetailExpanded, Source={x:Reference Root}}"
                     Questions="{Binding DetailQuestions, Source={x:Reference Root}}"
@@ -81,16 +115,50 @@
 
             <VerticalStackLayout IsVisible="{Binding HasLuscherDetail, Source={x:Reference Root}}" Spacing="4">
                 <!-- "More", not the summary again: the colours stood twice under each other, once black and once blue. -->
-                <Label
-                    Text="{Binding MoreInfoText, Source={x:Reference Root}}"
-                    Style="{StaticResource CaptionStyle}"
+                <Grid
+                    ColumnDefinitions="*,Auto"
                     MinimumHeightRequest="44"
-                    VerticalTextAlignment="Center"
-                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}">
-                    <Label.GestureRecognizers>
+                    Padding="4,0"
+                    SemanticProperties.Description="{Binding LuscherToggleText, Source={x:Reference Root}}"
+                    SemanticProperties.Hint="{Binding LuscherToggleHint, Source={x:Reference Root}}">
+                    <Grid.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ToggleLuscherDetailCommand, Source={x:Reference Root}}" />
-                    </Label.GestureRecognizers>
-                </Label>
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Text="{Binding LuscherToggleText, Source={x:Reference Root}}"
+                        Style="{StaticResource CaptionStyle}"
+                        FontFamily="{StaticResource MediumFontFamily}"
+                        VerticalTextAlignment="Center"
+                        TextColor="{DynamicResource Primary}" />
+                    <Grid Grid.Column="1" ColumnDefinitions="Auto,Auto" ColumnSpacing="0">
+                        <ui:MaterialIconView
+                            IconName="ExpandMore"
+                            IconSize="20"
+                            IconColor="{DynamicResource Primary}"
+                            AutomationProperties.IsInAccessibleTree="False"
+                            VerticalOptions="Center">
+                            <ui:MaterialIconView.Triggers>
+                                <DataTrigger Binding="{Binding IsLuscherDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </ui:MaterialIconView.Triggers>
+                        </ui:MaterialIconView>
+                        <ui:MaterialIconView
+                            Grid.Column="1"
+                            IconName="ExpandLess"
+                            IconSize="20"
+                            IconColor="{DynamicResource Primary}"
+                            AutomationProperties.IsInAccessibleTree="False"
+                            IsVisible="False"
+                            VerticalOptions="Center">
+                            <ui:MaterialIconView.Triggers>
+                                <DataTrigger Binding="{Binding IsLuscherDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
+                                    <Setter Property="IsVisible" Value="True" />
+                                </DataTrigger>
+                            </ui:MaterialIconView.Triggers>
+                        </ui:MaterialIconView>
+                    </Grid>
+                </Grid>
                 <testUi:LuscherHistoryDetailView
                     IsVisible="{Binding IsLuscherDetailExpanded, Source={x:Reference Root}}"
                     HasStandardDetail="{Binding HasStandardLuscherDetail, Source={x:Reference Root}}"

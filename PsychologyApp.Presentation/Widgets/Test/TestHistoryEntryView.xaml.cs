@@ -16,7 +16,34 @@ public partial class TestHistoryEntryView : ContentView
 
     public ICommand ToggleLuscherDetailCommand { get; }
 
-    public string MoreInfoText => AppStrings.TestsMoreInfo;
+    public string DetailToggleHint => IsDetailExpanded
+        ? AppStrings.TestsCollapseAnswersHint
+        : AppStrings.TestsExpandAnswersHint;
+
+    public string LuscherToggleText => IsLuscherDetailExpanded
+        ? AppStrings.TestsHideDetails
+        : AppStrings.TestsMoreInfo;
+
+    public string LuscherToggleHint => IsLuscherDetailExpanded
+        ? AppStrings.TestsCollapseDetailsHint
+        : AppStrings.TestsExpandDetailsHint;
+
+    private static void OnIsDetailExpandedChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is TestHistoryEntryView view)
+        {
+            view.OnPropertyChanged(nameof(DetailToggleHint));
+        }
+    }
+
+    private static void OnIsLuscherDetailExpandedChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if (bindable is TestHistoryEntryView view)
+        {
+            view.OnPropertyChanged(nameof(LuscherToggleText));
+            view.OnPropertyChanged(nameof(LuscherToggleHint));
+        }
+    }
 
     public static readonly BindableProperty DateTextProperty =
         BindableProperty.Create(nameof(DateText), typeof(string), typeof(TestHistoryEntryView), string.Empty);
@@ -43,10 +70,20 @@ public partial class TestHistoryEntryView : ContentView
         BindableProperty.Create(nameof(HasDetail), typeof(bool), typeof(TestHistoryEntryView), false);
 
     public static readonly BindableProperty IsDetailExpandedProperty =
-        BindableProperty.Create(nameof(IsDetailExpanded), typeof(bool), typeof(TestHistoryEntryView), false);
+        BindableProperty.Create(
+            nameof(IsDetailExpanded),
+            typeof(bool),
+            typeof(TestHistoryEntryView),
+            false,
+            propertyChanged: OnIsDetailExpandedChanged);
 
     public static readonly BindableProperty IsLuscherDetailExpandedProperty =
-        BindableProperty.Create(nameof(IsLuscherDetailExpanded), typeof(bool), typeof(TestHistoryEntryView), false);
+        BindableProperty.Create(
+            nameof(IsLuscherDetailExpanded),
+            typeof(bool),
+            typeof(TestHistoryEntryView),
+            false,
+            propertyChanged: OnIsLuscherDetailExpandedChanged);
 
     public static readonly BindableProperty IsWorseProperty =
         BindableProperty.Create(nameof(IsWorse), typeof(bool), typeof(TestHistoryEntryView), false);

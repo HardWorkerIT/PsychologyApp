@@ -4391,4 +4391,19 @@
   <data name="MoodLevelNotSelectedAccessibility" xml:space="preserve">
     <value>Not selected: {0}</value>
   </data>
+  <data name="TestsHideDetails" xml:space="preserve">
+    <value>Hide details</value>
+  </data>
+  <data name="TestsExpandAnswersHint" xml:space="preserve">
+    <value>Show test answers</value>
+  </data>
+  <data name="TestsCollapseAnswersHint" xml:space="preserve">
+    <value>Hide test answers</value>
+  </data>
+  <data name="TestsExpandDetailsHint" xml:space="preserve">
+    <value>Show detailed results</value>
+  </data>
+  <data name="TestsCollapseDetailsHint" xml:space="preserve">
+    <value>Hide detailed results</value>
+  </data>
 </root>

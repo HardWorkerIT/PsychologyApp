@@ -15,6 +15,11 @@ public static partial class AppStrings
     public static string TestsBriefTitle => R(nameof(TestsBriefTitle));
     public static string TestsColorInstruction => R(nameof(TestsColorInstruction));
     public static string TestsMoreInfo => R(nameof(TestsMoreInfo));
+    public static string TestsHideDetails => R(nameof(TestsHideDetails));
+    public static string TestsExpandAnswersHint => R(nameof(TestsExpandAnswersHint));
+    public static string TestsCollapseAnswersHint => R(nameof(TestsCollapseAnswersHint));
+    public static string TestsExpandDetailsHint => R(nameof(TestsExpandDetailsHint));
+    public static string TestsCollapseDetailsHint => R(nameof(TestsCollapseDetailsHint));
     public static string TestsRestart => R(nameof(TestsRestart));
     public static string TestRetakeButton => R(nameof(TestRetakeButton));
     public static string TestsFirstColor => R(nameof(TestsFirstColor));
