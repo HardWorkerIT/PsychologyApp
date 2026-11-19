@@ -23,17 +23,35 @@ if [ -z "$TOTAL" ]; then
 fi
 echo "cold start: ${TOTAL:-unknown} ms (limit $MAX_START_MS)"
 
-APP_PIDS=$(adb shell pidof "$PKG" | tr -d '\r' || true)
-echo "app process IDs before interaction: ${APP_PIDS:-unknown}"
-
 STATUS=0
 CRASH=0
 MONKEY_FAILED=0
-if ! adb shell monkey --ignore-crashes --ignore-security-exceptions -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
-  echo "FAIL: monkey could not complete the interaction run"; STATUS=1; MONKEY_FAILED=1
-fi
-if ! grep -q "Events injected: 2000" monkey.txt; then
-  echo "FAIL: monkey did not inject all 2000 events"; STATUS=1; MONKEY_FAILED=1
+APP_PIDS=""
+# `am start -W` can return before the app process and its input window are ready on low-memory emulator images.
+APP_FOCUS=""
+for attempt in {1..30}; do
+  APP_PIDS=$(adb shell pidof "$PKG" | tr -d '\r' || true)
+  APP_FOCUS=$(adb shell dumpsys window windows | grep -E "mCurrentFocus|mFocusedApp" | grep -F "$PKG" || true)
+  [ -n "$APP_PIDS" ] && [ -n "$APP_FOCUS" ] && break
+  sleep 0.5
+done
+
+if [ -z "$APP_PIDS" ]; then
+  echo "FAIL: the app process did not become ready after startup"; STATUS=1; MONKEY_FAILED=1
+  : > monkey.txt
+elif [ -z "$APP_FOCUS" ]; then
+  echo "FAIL: the app window did not gain input focus after startup"; STATUS=1; MONKEY_FAILED=1
+  : > monkey.txt
+else
+  echo "app process IDs before interaction: $APP_PIDS"
+  # Let the first frame acquire focus before injecting random input.
+  sleep 2
+  if ! adb shell monkey --ignore-crashes --ignore-security-exceptions -p "$PKG" --throttle 300 --pct-syskeys 0 -s 7 2000 > monkey.txt 2>&1; then
+    echo "FAIL: monkey could not complete the interaction run"; STATUS=1; MONKEY_FAILED=1
+  fi
+  if ! grep -q "Events injected: 2000" monkey.txt; then
+    echo "FAIL: monkey did not inject all 2000 events"; STATUS=1; MONKEY_FAILED=1
+  fi
 fi
 if [ "$MONKEY_FAILED" -ne 0 ]; then
   cat monkey.txt
