@@ -85,6 +85,11 @@ public partial class TechniquesViewModel
             {
                 if (!await ReloadSavedNextStepsAsync())
                 {
+                    if (await RouteToCrisisHubIfNeededAsync())
+                    {
+                        return;
+                    }
+
                     await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
                     return;
                 }
@@ -155,7 +160,23 @@ public partial class TechniquesViewModel
                     return;
                 }
 
-                IReadOnlyList<TechniqueListEntry> suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
+                IReadOnlyList<TechniqueListEntry> suggestions;
+                try
+                {
+                    suggestions = await _techniqueListBuilder.FindSuitablePracticesAsync(choice.Need);
+                }
+                catch (Exception exception) when (exception is not OperationCanceledException)
+                {
+                    if (await RouteToCrisisHubIfNeededAsync())
+                    {
+                        return;
+                    }
+
+                    _logger.LogWarning("Failed to find suitable practices ({ExceptionType}).", exception.GetType().Name);
+                    await _dialogService.ShowAsync(AppStrings.ErrorTitle, AppStrings.UnexpectedErrorMessage);
+                    return;
+                }
+
                 if (await RouteToCrisisHubIfNeededAsync())
                 {
                     return;
