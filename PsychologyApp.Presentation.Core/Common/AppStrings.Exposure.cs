@@ -42,6 +42,9 @@ public static partial class AppStrings
     public static string ExposureEasier => R(nameof(ExposureEasier));
     public static string ExposureHarder => R(nameof(ExposureHarder));
     public static string ExposureRemoveStep => R(nameof(ExposureRemoveStep));
+    public static string ExposureStepEasierAccessibility(object arg0) => F(nameof(ExposureStepEasierAccessibility), arg0);
+    public static string ExposureStepHarderAccessibility(object arg0) => F(nameof(ExposureStepHarderAccessibility), arg0);
+    public static string ExposureStepRemoveAccessibility(object arg0) => F(nameof(ExposureStepRemoveAccessibility), arg0);
     public static string ExposureProgressPredictions(object arg0, object arg1) => F(nameof(ExposureProgressPredictions), arg0, arg1);
     public static string ExposureProgressSteps(object arg0, object arg1) => F(nameof(ExposureProgressSteps), arg0, arg1);
     public static string ExposureProgressBeliefDrop(object arg0) => F(nameof(ExposureProgressBeliefDrop), arg0);

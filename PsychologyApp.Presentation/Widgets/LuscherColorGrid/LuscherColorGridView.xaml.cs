@@ -124,14 +124,18 @@ public partial class LuscherColorGridView : ContentView
             ICommand original = tap.Command;
             tap.Command = new Command(async () =>
             {
-                if (!pickDebouncer.TryEnter())
+                if (!original.CanExecute(null) || !pickDebouncer.TryEnter())
                 {
                     return;
                 }
 
-                await UiAnimations.SafePulseAsync(tile);
-                await tile.ScaleTo(0.85, 100, Easing.CubicOut);
-                await tile.FadeTo(0, 150, Easing.CubicOut);
+                if (UiAnimations.ShouldAnimate(tile))
+                {
+                    await UiAnimations.SafePulseAsync(tile);
+                    await tile.ScaleTo(0.85, 100, Easing.CubicOut);
+                    await tile.FadeTo(0, 150, Easing.CubicOut);
+                }
+
                 if (original.CanExecute(null))
                 {
                     original.Execute(null);

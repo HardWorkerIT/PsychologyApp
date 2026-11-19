@@ -3029,6 +3029,15 @@
   <data name="ExposureRemoveStep" xml:space="preserve">
     <value>删除这个台阶</value>
   </data>
+  <data name="ExposureStepEasierAccessibility" xml:space="preserve">
+    <value>降低此步骤难度：{0}</value>
+  </data>
+  <data name="ExposureStepHarderAccessibility" xml:space="preserve">
+    <value>提高此步骤难度：{0}</value>
+  </data>
+  <data name="ExposureStepRemoveAccessibility" xml:space="preserve">
+    <value>移除此步骤：{0}</value>
+  </data>
   <data name="ExposureProgressPredictions" xml:space="preserve">
     <value>已检验的预测：{0}。成真的：{1}。</value>
   </data>

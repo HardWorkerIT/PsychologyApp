@@ -3029,6 +3029,15 @@
   <data name="ExposureRemoveStep" xml:space="preserve">
     <value>Stufe entfernen</value>
   </data>
+  <data name="ExposureStepEasierAccessibility" xml:space="preserve">
+    <value>Stufe leichter machen: {0}</value>
+  </data>
+  <data name="ExposureStepHarderAccessibility" xml:space="preserve">
+    <value>Stufe schwieriger machen: {0}</value>
+  </data>
+  <data name="ExposureStepRemoveAccessibility" xml:space="preserve">
+    <value>Stufe entfernen: {0}</value>
+  </data>
   <data name="ExposureProgressPredictions" xml:space="preserve">
     <value>Geprüfte Vorhersagen: {0}. Eingetreten: {1}.</value>
   </data>

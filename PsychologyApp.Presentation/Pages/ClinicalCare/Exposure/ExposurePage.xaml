@@ -141,7 +141,7 @@
                             <Border Style="{StaticResource BrandCardStyle}" Margin="0" Padding="14,8">
                                 <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto" ColumnSpacing="4">
                                     <Label Text="{Binding Text}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
-                                    <Border Grid.Column="1" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{x:Static common:AppStrings.ExposureEasier}">
+                                    <Border Grid.Column="1" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{Binding EasierAccessibilityDescription}">
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding EasierCommand}" />
                                         </Border.GestureRecognizers>
@@ -149,13 +149,13 @@
                                     </Border>
                                     <Label Grid.Column="2" Text="{Binding DistressText}" Style="{StaticResource BodyStyle}" FontFamily="{StaticResource SemiBoldFontFamily}"
                                            WidthRequest="34" HorizontalTextAlignment="Center" VerticalOptions="Center" />
-                                    <Border Grid.Column="3" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{x:Static common:AppStrings.ExposureHarder}">
+                                    <Border Grid.Column="3" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{Binding HarderAccessibilityDescription}">
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding HarderCommand}" />
                                         </Border.GestureRecognizers>
                                         <Label Text="+" Style="{StaticResource ExposureStepButtonLabelStyle}" />
                                     </Border>
-                                    <Border Grid.Column="4" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{x:Static common:AppStrings.ExposureRemoveStep}">
+                                    <Border Grid.Column="4" Style="{StaticResource ExposureStepButtonStyle}" SemanticProperties.Description="{Binding RemoveAccessibilityDescription}">
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding ToggleCommand}" />
                                         </Border.GestureRecognizers>

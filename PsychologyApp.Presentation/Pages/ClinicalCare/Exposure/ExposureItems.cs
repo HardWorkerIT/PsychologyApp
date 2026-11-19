@@ -102,6 +102,9 @@ public sealed class ExposureStepRow : ExposureItem
     }
 
     public string DistressText => _distress.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    public string EasierAccessibilityDescription => AppStrings.ExposureStepEasierAccessibility(Text);
+    public string HarderAccessibilityDescription => AppStrings.ExposureStepHarderAccessibility(Text);
+    public string RemoveAccessibilityDescription => AppStrings.ExposureStepRemoveAccessibility(Text);
 
     /// <summary>For examples in the builder: on the ladder or not.</summary>
     public bool IsChosen
