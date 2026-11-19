@@ -83,7 +83,8 @@
 	  <!-- Keep partial trimming: the app, Dapper and the explicitly rooted libraries below stay whole. -->
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
-	  <!-- .NET 11 Release uses composite partial ReadyToRun by default; keep that balance until device measurements justify full R2R. -->
+	  <!-- Compile every Android app assembly ahead of time for Release; CoreCLR remains available for dynamic code. -->
+	  <MauiEnableFullReadyToRun>true</MauiEnableFullReadyToRun>
 	  <DebugSymbols>False</DebugSymbols>
 	  <AndroidIncludeDebugSymbols>False</AndroidIncludeDebugSymbols>
 	  <!-- Link framework assemblies only; R8 and ProguardConfiguration shrink Java code. -->
