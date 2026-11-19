@@ -37,8 +37,8 @@
 		<ApplicationId>com.subconscious.psychologyapp</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>2.014</ApplicationDisplayVersion>
-		<ApplicationVersion>2014</ApplicationVersion>
+		<ApplicationDisplayVersion>2.015</ApplicationDisplayVersion>
+		<ApplicationVersion>2015</ApplicationVersion>
 		<!-- Keep NuGet's project metadata stable across MAUI target frameworks in Visual Studio. -->
 		<PackageVersion>2.012</PackageVersion>
 
@@ -78,8 +78,8 @@
 	  <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	  <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
-	  <!-- Play Console: aab. Sideload on phone: -p:AndroidPackageFormat=apk -p:RuntimeIdentifier=android-arm64 -->
-	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <!-- Stores receive a bundle that can be split per device; keep an APK for direct installation. -->
+	  <AndroidPackageFormats>aab;apk</AndroidPackageFormats>
 	  <!-- Keep partial trimming: the app, Dapper and the explicitly rooted libraries below stay whole. -->
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
@@ -90,10 +90,9 @@
 	  <!-- Link framework assemblies only; R8 and ProguardConfiguration shrink Java code. -->
 	  <AndroidLinkTool>r8</AndroidLinkTool>
 	  <AndroidLinkMode>SdkOnly</AndroidLinkMode>
-	  <!-- Include every .NET 11 Android CoreCLR ABI so stores can serve older 32-bit devices and x86_64 devices too.
-	       For a single-ABI local build (for example, emulator performance checks), use AndroidReleaseRid; not RuntimeIdentifiers,
-	       because a global RID flows into class libraries and breaks their build. -->
-	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' == ''">android-arm;android-arm64;android-x64</RuntimeIdentifiers>
+	  <!-- Keep the user-facing Release package ARM64-only; Debug still includes x64 for the emulator.
+	       AndroidReleaseRid remains available for one-off single-ABI builds without passing a global RuntimeIdentifier. -->
+	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' == ''">android-arm64</RuntimeIdentifiers>
 	  <RuntimeIdentifiers Condition="'$(AndroidReleaseRid)' != ''">$(AndroidReleaseRid)</RuntimeIdentifiers>
 	  <!-- Release signing: paths/passwords in AndroidSigning.local.props (gitignored) or env vars. -->
 	  <AndroidKeyStore Condition="'$(AndroidSigningKeyStore)' != ''">true</AndroidKeyStore>
@@ -133,15 +132,13 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\logo.jpeg"
-		          ForegroundFile="Resources\AppIcon\logo_foreground.png"
-		          Color="#FFFFFF" />
+		<MauiIcon Include="Resources\AppIcon\logo.jpeg" ForegroundFile="Resources\AppIcon\logo_foreground.png" Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\AppIcon\logo.jpeg" Color="#FFFFFF" BaseSize="512,512" />
+		<MauiSplashScreen Include="Resources\AppIcon\logo.jpeg" Color="#FFFFFF" BaseSize="288,288" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\AppIcon\logo.jpeg" Link="Resources\Images\onboarding_app_logo.jpeg" BaseSize="128,128" />
+		<MauiImage Include="Resources\AppIcon\logo.jpeg" Link="Resources\Images\onboarding_app_logo.jpeg" BaseSize="80,80" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 

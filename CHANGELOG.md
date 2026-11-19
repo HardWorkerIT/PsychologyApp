@@ -6,6 +6,12 @@ This project follows a Keep a Changelog style and Semantic Versioning principles
 
 ## [Unreleased]
 
+## [2.015] - 2026-11-19
+
+- Android Release targets ARM64 only, excluding ARMv7 and x86_64 libraries from the direct APK.
+- Android Release now produces a store-ready AAB alongside the direct-install APK.
+- Reduced Android splash and onboarding logo raster variants to their target display sizes.
+
 ## [2.014] - 2026-11-19
 
 - Android-релиз включает 32-битные ARM, 64-битные ARM и x86_64, чтобы приложение устанавливалось на большее число устройств.

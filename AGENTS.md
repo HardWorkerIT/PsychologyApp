@@ -136,8 +136,9 @@ Clean Architecture на уровне решения и Feature-Sliced Design в�
   под .NET-именами: Java-класс называется `crc64…`, и такая запись указывает на несуществующий класс (после
   перезагрузки приложение падает в фоне).
 - В Release работают CoreCLR ReadyToRun, обрезка и R8: падения, которых нет в Debug, ловит `tools/android-smoke.sh` (CI `android-smoke`). CI с тестами и smoke запускается на каждый push и pull request рабочих веток (`main`, `features/re-design`, `release/**`).
-- Производительность меряйте в Release, а не в Debug (там нет ReadyToRun). Release по умолчанию собирается под
-  android-arm, android-arm64 и android-x64. Для точных замеров на x86_64-эмуляторе соберите пакет только под x64:
+- Производительность меряйте в Release, а не в Debug (там нет ReadyToRun). Релиз по умолчанию собирается только под
+  `android-arm64`, чтобы APK не включал библиотеки для эмуляторов и старых ABI. На x86_64-эмуляторе Release-пакет
+  под ARM идёт через трансляцию, поэтому его цифры бессмысленны. Для эмулятора соберите пакет только под x64:
   `dotnet build PsychologyApp.Presentation -f net11.0-android37.0 -c Release -p:ApplicationId=com.subconscious.psychologyapp.dev
   -p:AndroidKeyStore=false -p:AndroidPackageFormats=apk -p:AndroidReleaseRid=android-x64`. Холодный старт — `am start -W`
   (TotalTime), плавность — `dumpsys gfxinfo <пакет> reset`, потом действие, потом `dumpsys gfxinfo <пакет>`.
