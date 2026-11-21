@@ -16,11 +16,21 @@ public partial class AppDialogPopup : Popup
         _input = input;
         if (input is not null)
         {
-            InputEntry.IsVisible = true;
+            Microsoft.Maui.Devices.DisplayInfo display = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
+            double screenWidthDp = display.Width / Math.Max(1d, display.Density);
+            DialogCardHost.Margin = new Thickness(16, 24);
+            DialogCardHost.HorizontalOptions = LayoutOptions.Fill;
+            DialogCard.MaximumWidthRequest = 320;
+            DialogCard.WidthRequest = Math.Min(320d, Math.Max(280d, screenWidthDp - 32d));
+            DialogCard.HorizontalOptions = LayoutOptions.Fill;
+            InputBorder.IsVisible = true;
             InputEntry.IsPassword = input.IsPassword;
             InputEntry.Placeholder = input.Placeholder;
             InputEntry.Text = input.InitialText;
             InputEntry.MaxLength = input.MaxLength;
+            SemanticProperties.SetDescription(InputEntry, input.Placeholder);
+            AcceptLabel.LineBreakMode = LineBreakMode.NoWrap;
+            CancelLabel.LineBreakMode = LineBreakMode.NoWrap;
         }
 
         if (string.IsNullOrWhiteSpace(title))
@@ -33,6 +43,7 @@ public partial class AppDialogPopup : Popup
         }
 
         MessageLabel.Text = message;
+        MessageLabel.IsVisible = !string.IsNullOrWhiteSpace(message);
         AcceptLabel.Text = accept;
 
         if (cancel is null)

@@ -20,9 +20,8 @@ public partial class SettingPickerRowView : ContentView
     private void OnLoaded(object? sender, EventArgs e)
     {
         VisualElementPressFeedback.Attach(SettingLabel);
-        VisualElementPressFeedback.Attach(SelectionButton);
+        VisualElementPressFeedback.Attach(SelectionTapArea);
         RefreshSelectedValue();
-        RefreshPresentation();
     }
 
     protected override void OnBindingContextChanged()
@@ -41,36 +40,29 @@ public partial class SettingPickerRowView : ContentView
             return;
         }
 
-        if (propertyName is nameof(SelectedItem) or nameof(PickerTitle) or nameof(LabelText))
+        if (propertyName is nameof(SelectedItem) or nameof(PickerTitle) or nameof(LabelText) or nameof(IsRowEnabled))
         {
             RefreshSelectedValue();
             return;
         }
 
-        if (propertyName is nameof(IsRowEnabled))
-        {
-            RefreshPresentation();
-        }
-    }
-
-    private void RefreshPresentation()
-    {
-        RowOpacity = IsRowEnabled ? 1d : (double)Microsoft.Maui.Controls.Application.Current!.Resources["DisabledOpacity"];
     }
 
     private void RefreshSelectedValue()
     {
-        if (SelectionButton is null)
+        if (SelectionTapArea is null)
         {
             return;
         }
 
         string value = GetDisplayLabel(SelectedItem);
         SelectedValueLabel.Text = string.IsNullOrEmpty(value) ? PickerTitle : value;
-        SemanticProperties.SetDescription(SelectionButton, $"{LabelText}: {SelectedValueLabel.Text}");
+        OnPropertyChanged(nameof(PickerAccessibilityDescription));
     }
 
-    private void OnSelectionButtonClicked(object? sender, EventArgs e)
+    public string PickerAccessibilityDescription => $"{LabelText}: {SelectedValueLabel?.Text}";
+
+    private void OnSelectionAreaTapped(object? sender, TappedEventArgs e)
     {
         if (!IsRowEnabled || ItemsSource is not { Count: > 0 })
         {
@@ -168,18 +160,10 @@ public partial class SettingPickerRowView : ContentView
     public static readonly BindableProperty IsRowEnabledProperty =
         BindableProperty.Create(nameof(IsRowEnabled), typeof(bool), typeof(SettingPickerRowView), true);
 
-    public static readonly BindableProperty RowOpacityProperty =
-        BindableProperty.Create(nameof(RowOpacity), typeof(double), typeof(SettingPickerRowView), 1d);
-
     public bool IsRowEnabled
     {
         get => (bool)GetValue(IsRowEnabledProperty);
         set => SetValue(IsRowEnabledProperty, value);
     }
 
-    public double RowOpacity
-    {
-        get => (double)GetValue(RowOpacityProperty);
-        private set => SetValue(RowOpacityProperty, value);
-    }
 }

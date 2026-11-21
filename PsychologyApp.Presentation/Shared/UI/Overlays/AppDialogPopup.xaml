@@ -27,12 +27,17 @@
                     <Label
                         x:Name="MessageLabel"
                         Style="{StaticResource AppDialogMessageStyle}" />
-                    <Entry
-                        x:Name="InputEntry"
+                    <Border
+                        x:Name="InputBorder"
                         IsVisible="False"
-                        ReturnType="Done"
-                        Completed="OnEntryCompleted"
-                        Style="{StaticResource InputTextStyle}" />
+                        Style="{StaticResource InputBorderStyle}"
+                        Padding="10,2">
+                        <Entry
+                            x:Name="InputEntry"
+                            ReturnType="Done"
+                            Completed="OnEntryCompleted"
+                            Style="{StaticResource InputTextStyle}" />
+                    </Border>
                 </VerticalStackLayout>
 
                 <BoxView Style="{StaticResource AppDialogDividerStyle}" />

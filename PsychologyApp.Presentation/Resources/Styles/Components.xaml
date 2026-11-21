@@ -234,7 +234,7 @@
 
     <Style x:Key="ProfileTechniqueCardStyle" TargetType="Border" BasedOn="{StaticResource ListCardItemStyle}">
         <Setter Property="Padding" Value="12" />
-        <Setter Property="WidthRequest" Value="228" />
+        <Setter Property="WidthRequest" Value="280" />
         <Setter Property="MinimumHeightRequest" Value="112" />
         <Setter Property="Margin" Value="4,4,8,12" />
         <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusCompactShape}" />
@@ -428,13 +428,8 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
-        <Setter Property="LineBreakMode" Value="WordWrap" />
-        <Setter Property="MaxLines" Value="2" />
-    </Style>
-
-    <Style x:Key="FilterChipSelectedLabelStyle" TargetType="Label" BasedOn="{StaticResource FilterChipLabelStyle}">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-        <Setter Property="FontFamily" Value="{StaticResource SemiBoldFontFamily}" />
+        <Setter Property="LineBreakMode" Value="NoWrap" />
+        <Setter Property="MaxLines" Value="1" />
     </Style>
 
     <Style x:Key="FilterChipStyle" TargetType="Border">
@@ -445,25 +440,6 @@
         <Setter Property="StrokeThickness" Value="1" />
         <Setter Property="StrokeShape" Value="RoundRectangle 16" />
         <Setter Property="VerticalOptions" Value="Center" />
-    </Style>
-
-    <Style x:Key="FilterChipSelectedStyle" TargetType="Border" BasedOn="{StaticResource FilterChipStyle}">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-        <Setter Property="StrokeThickness" Value="1.5" />
-        <Setter Property="VisualStateManager.VisualStateGroups">
-            <VisualStateGroupList>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
-                    <VisualState x:Name="Pressed">
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
-                            <Setter Property="Opacity" Value="0.92" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateGroupList>
-        </Setter>
     </Style>
 
     <Style x:Key="MoodChipStyle" TargetType="Border">

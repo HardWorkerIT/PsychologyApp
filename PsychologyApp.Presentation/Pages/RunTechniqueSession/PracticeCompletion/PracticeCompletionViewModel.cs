@@ -1,3 +1,4 @@
+using Microsoft.Maui.ApplicationModel;
 using PsychologyApp.Application.Conversation;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Practice;
@@ -22,6 +23,9 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private long? _sessionResultId;
     private int? _preIntensity;
     private long? _lifetimeCount;
+    private bool _sessionOutcomeReviewed;
+    private bool _showSupportPrompt;
+    private const long SupportPromptAfterCompletions = 5;
     private readonly PracticeMoodCheckIn _moodCheckIn;
     private readonly ITechniqueCatalogService? _techniqueCatalog;
 
@@ -58,6 +62,8 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         NextPracticeCommand = new AsyncCommand(StartNextPracticeAsync);
         ChooseAnotherPracticeCommand = new AsyncCommand(() => _navigationService.GoBackAsync());
         GoHomeCommand = new AsyncCommand(() => _navigationService.GoToRootAsync());
+        SupportProjectCommand = new AsyncCommand(OpenDonationAsync);
+        DismissSupportPromptCommand = new Command(() => ShowSupportPrompt = false);
         CrisisCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
         ToggleAnswersCommand = new Command(() => IsAnswersExpanded = !IsAnswersExpanded);
         ToggleCheckInCommand = new Command(() => IsCheckInExpanded = !IsCheckInExpanded);
@@ -99,6 +105,15 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public string MorePracticeText => AppStrings.PracticeMoreButton;
     public string ChooseAnotherPracticeText => AppStrings.PracticeChooseAnother;
     public string GoHomeText => AppStrings.PracticeGoHomeButton;
+    public string DonationPromptTitle => AppStrings.DonatePromptTitle;
+    public string DonationPromptBody => AppStrings.DonateBody;
+    public string DonationButtonText => AppStrings.DonateButton;
+    public string DonationNotNowText => AppStrings.DonateNotNow;
+    public bool ShowSupportPrompt
+    {
+        get => _showSupportPrompt;
+        private set => SetProperty(ref _showSupportPrompt, value);
+    }
     public string ReflectionQuestion => AppStrings.PracticeReflectionQuestion;
     public string ReflectionNotePlaceholder => AppStrings.PracticeReflectionNotePlaceholder;
     public string PostSudsLabel => AppStrings.PracticePostSudsLabel;
@@ -194,6 +209,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(HasNextPractice));
                 OnPropertyChanged(nameof(ShowMorePracticeAction));
+                ShowSupportPrompt = false;
             }
         }
     }
@@ -273,7 +289,15 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public string ReflectionNote
     {
         get => _reflectionNote;
-        set => SetProperty(ref _reflectionNote, value);
+        set
+        {
+            if (SetProperty(ref _reflectionNote, value)
+                && _showSupportPrompt
+                && _crisisDetector.IsCrisis(value))
+            {
+                ShowSupportPrompt = false;
+            }
+        }
     }
 
     public ICommand RecordMoodCommand { get; }
@@ -284,6 +308,8 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public ICommand CrisisCommand { get; }
     public ICommand ToggleAnswersCommand { get; }
     public ICommand ToggleCheckInCommand { get; }
+    public ICommand SupportProjectCommand { get; }
+    public ICommand DismissSupportPromptCommand { get; }
 
     protected override void RefreshLocalizedProperties()
     {
@@ -299,6 +325,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             nameof(MorePracticeText),
             nameof(ChooseAnotherPracticeText),
             nameof(GoHomeText),
+            nameof(DonationPromptTitle),
+            nameof(DonationPromptBody),
+            nameof(DonationButtonText),
+            nameof(DonationNotNowText),
             nameof(ReflectionQuestion),
             nameof(ReflectionNotePlaceholder),
             nameof(PostSudsLabel),
@@ -335,11 +365,11 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
 
     public string AnswersTitle => AppStrings.PracticeAnswersTitle;
 
-    private async Task ShowAnswersAsync(SessionResultDTO? result)
+    private async Task<bool> ShowAnswersAsync(SessionResultDTO? result)
     {
         if (result is null || _techniqueCatalog is null || !Enum.TryParse(result.ItemKey, out TechniqueId techniqueId))
         {
-            return;
+            return false;
         }
 
         PsychologyApp.Application.Models.Practice.BuiltInTechniqueDefinition definition = await _techniqueCatalog.GetAsync(techniqueId);
@@ -355,6 +385,8 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             OnPropertyChanged(nameof(HasAnswers));
             IsCrisis |= crisis;
         });
+
+        return true;
     }
 
     private async Task LoadSessionOutcomeAsync()
@@ -367,7 +399,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         try
         {
             SessionResultDTO? result = await _userProgressService.GetSessionResultAsync(_sessionResultId.Value);
-            await ShowAnswersAsync(result);
+            bool outcomeReviewed = await ShowAnswersAsync(result);
             if (result?.PreIntensity is >= 0 and <= 10)
             {
                 _preIntensity = result.PreIntensity.Value;
@@ -380,10 +412,19 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
                 OnPropertyChanged(nameof(PostIntensityText));
                 NotifySudsDelta();
             }
+
+            if (outcomeReviewed)
+            {
+                await UiThread.RunAsync(() =>
+                {
+                    _sessionOutcomeReviewed = true;
+                    TryShowSupportPrompt();
+                });
+            }
         }
         catch (Exception bestEffortError)
         {
-            // Pre-SUDS is optional on the completion screen.
+            // The session outcome is optional; without a completed local safety review, no support prompt is shown.
             BestEffort.Report(bestEffortError);
         }
     }
@@ -428,12 +469,17 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     {
         try
         {
-            _lifetimeCount = await _userProgressService.CountTechniqueCompletionsAsync();
-            OnPropertyChanged(nameof(IsLifetimeMilestone));
-            OnPropertyChanged(nameof(IsMilestone));
-            OnPropertyChanged(nameof(CelebrationIconName));
-            OnPropertyChanged(nameof(TitleText));
-            OnPropertyChanged(nameof(BodyText));
+            long lifetimeCount = await _userProgressService.CountTechniqueCompletionsAsync();
+            await UiThread.RunAsync(() =>
+            {
+                _lifetimeCount = lifetimeCount;
+                OnPropertyChanged(nameof(IsLifetimeMilestone));
+                OnPropertyChanged(nameof(IsMilestone));
+                OnPropertyChanged(nameof(CelebrationIconName));
+                OnPropertyChanged(nameof(TitleText));
+                OnPropertyChanged(nameof(BodyText));
+                TryShowSupportPrompt();
+            });
         }
         catch (Exception bestEffortError)
         {
@@ -472,6 +518,34 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             // Next practice is optional; completion still works without it.
             BestEffort.Report(bestEffortError);
         }
+    }
+
+    private static async Task OpenDonationAsync()
+    {
+        if (DonationConfiguration.SberPaymentUri is not Uri uri)
+        {
+            return;
+        }
+
+        await Browser.Default.OpenAsync(uri.AbsoluteUri, BrowserLaunchMode.SystemPreferred);
+    }
+
+    private void TryShowSupportPrompt()
+    {
+        if (_showSupportPrompt
+            || DonationConfiguration.HasShownSupportPrompt
+            || DonationConfiguration.SberPaymentUri is null
+            || !_sessionOutcomeReviewed
+            || _lifetimeCount is null
+            || _lifetimeCount.Value < SupportPromptAfterCompletions
+            || IsCrisis
+            || (!string.IsNullOrWhiteSpace(_reflectionNote) && _crisisDetector.IsCrisis(_reflectionNote)))
+        {
+            return;
+        }
+
+        DonationConfiguration.MarkSupportPromptShown();
+        ShowSupportPrompt = true;
     }
 
     private async Task RecordMoodAsync(int moodLevel)

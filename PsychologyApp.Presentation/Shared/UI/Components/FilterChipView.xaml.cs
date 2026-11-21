@@ -1,5 +1,4 @@
 using PsychologyApp.Presentation.Shared.Common;
-using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Common;
 using System.Windows.Input;
 
@@ -76,10 +75,6 @@ public partial class FilterChipView : ContentView
 
         chip.UpdateSemantics();
 
-        if (newValue is true && oldValue is not true)
-        {
-            UiAnimations.SafePulseAsync(chip).FireAndForget();
-        }
     }
 
     private void UpdateSemantics()

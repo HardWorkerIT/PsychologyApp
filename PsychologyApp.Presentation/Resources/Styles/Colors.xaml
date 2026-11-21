@@ -8,6 +8,10 @@
     <Color x:Key="PrimaryHover">#006ACC</Color>
     <Color x:Key="PrimaryActive">#005BB5</Color>
     <Color x:Key="PrimaryTint">#D6EBFF</Color>
+    <Color x:Key="TestAnswerShadeLight">#EFF7FE</Color>
+    <Color x:Key="TestAnswerShadeLightDark">#223143</Color>
+    <Color x:Key="TestAnswerShadeDark">#C7E1FA</Color>
+    <Color x:Key="TestAnswerShadeDarkDark">#304860</Color>
     <Color x:Key="PrimaryTextLight">#0062BD</Color>
     <Color x:Key="PrimaryFill">#0071D9</Color>
     <Color x:Key="OnPrimary">#FFFFFF</Color>

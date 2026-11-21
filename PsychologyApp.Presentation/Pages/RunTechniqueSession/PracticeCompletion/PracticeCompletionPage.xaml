@@ -176,6 +176,30 @@
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
+                <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding ShowSupportPrompt}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label
+                            Text="{Binding DonationPromptTitle}"
+                            Style="{StaticResource SectionTitleStyle}" />
+                        <Label
+                            Text="{Binding DonationPromptBody}"
+                            Style="{StaticResource BodyStyle}" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <ui:ButtonView
+                                IsCompact="True"
+                                Variant="Secondary"
+                                BodyText="{Binding DonationButtonText}"
+                                TapCommand="{Binding SupportProjectCommand}" />
+                            <ui:ButtonView
+                                Grid.Column="1"
+                                IsCompact="True"
+                                Variant="Secondary"
+                                BodyText="{Binding DonationNotNowText}"
+                                TapCommand="{Binding DismissSupportPromptCommand}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
                 <ui:ButtonView
                     Variant="Secondary"
                     BodyText="{Binding GoHomeText}"

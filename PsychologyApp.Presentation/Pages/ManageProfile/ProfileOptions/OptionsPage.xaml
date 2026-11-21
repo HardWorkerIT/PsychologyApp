@@ -89,6 +89,24 @@
                     <Label Text="{Binding SupportSectionTitle}" Style="{StaticResource CaptionStyle}" Margin="4,0" />
                     <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                         <VerticalStackLayout Spacing="0">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="60"
+                                  IsVisible="{Binding CanSupportProject}"
+                                  SemanticProperties.Description="{Binding DonationTitle}">
+                                <Grid.Behaviors>
+                                    <behaviors:PressFeedbackBehavior />
+                                </Grid.Behaviors>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenDonationCommand}" />
+                                </Grid.GestureRecognizers>
+                                <ui:MaterialIconView IconName="Favorite" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding DonationTitle}" Style="{StaticResource BodyStyle}" />
+                                    <Label Text="{Binding DonationSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
+                                </VerticalStackLayout>
+                                <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            </Grid>
+                            <BoxView Style="{StaticResource SettingRowDividerStyle}" IsVisible="{Binding CanSupportProject}" />
+
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="52"
                               SemanticProperties.Description="{Binding FeedbackTitle}">
                             <Grid.Behaviors>

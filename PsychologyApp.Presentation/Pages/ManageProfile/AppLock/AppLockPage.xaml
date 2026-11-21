@@ -4,25 +4,126 @@
              x:Class="PsychologyApp.Presentation.Pages.ManageProfile.AppLock.AppLockPage"
              SafeAreaEdges="All"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ManageProfile.AppLock"
              x:DataType="vm:AppLockViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
-    <!-- Nothing personal here: the app's name, the way in, and the public help numbers. -->
+    <!-- Personal content stays hidden. The decorative conversation is the same visual language as the chat empty state. -->
     <ScrollView>
         <VerticalStackLayout
             Margin="{StaticResource LayoutPageMarginThickness}"
-            Spacing="{StaticResource LayoutSpacing}"
+            Spacing="20"
+            Padding="0,24,0,28"
             VerticalOptions="Center">
-            <Border Style="{StaticResource BrandCardStyle}" Padding="20,24">
-                <VerticalStackLayout Spacing="16">
-                    <ui:MaterialIconView IconName="Lock" IconSize="40" HorizontalOptions="Center" />
+            <Grid
+                WidthRequest="280"
+                HeightRequest="176"
+                HorizontalOptions="Center"
+                RowDefinitions="*,*,*"
+                ColumnDefinitions="*,*"
+                AutomationProperties.IsInAccessibleTree="False">
+                <Grid.Behaviors>
+                    <behaviors:EmptyStateRevealBehavior />
+                </Grid.Behaviors>
+
+                <Ellipse
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="2"
+                    WidthRequest="144"
+                    HeightRequest="144"
+                    Fill="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    WidthRequest="156"
+                    HeightRequest="48"
+                    Padding="14,12"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18,18,4,18" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="104" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="68" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    WidthRequest="144"
+                    HeightRequest="48"
+                    Padding="14,12"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"
+                    StrokeThickness="0"
+                    BackgroundColor="{DynamicResource PrimaryFill}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18,18,18,4" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="94" HeightRequest="6" CornerRadius="3" Color="White" Opacity="0.78" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="62" HeightRequest="6" CornerRadius="3" Color="White" Opacity="0.58" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    WidthRequest="158"
+                    HeightRequest="48"
+                    Padding="14,12"
+                    Margin="12,0,0,0"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"
+                    StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18,18,4,18" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="110" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="76" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border
+                    Grid.Row="1"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    WidthRequest="68"
+                    HeightRequest="68"
+                    Padding="15"
+                    Margin="0,0,4,0"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Stroke="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}"
+                    StrokeThickness="5"
+                    StrokeShape="RoundRectangle 34"
+                    BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}">
+                    <ui:MaterialIconView IconName="Lock" IconSize="34" IconColor="{DynamicResource PrimaryFill}" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <VerticalStackLayout Spacing="20" Padding="4,4">
+                <VerticalStackLayout Spacing="8">
                     <Label Text="{Binding TitleText}" Style="{StaticResource SectionTitleStyle}" HorizontalTextAlignment="Center" />
-                    <Label Text="{Binding LeadText}" Style="{StaticResource BodyStyle}" HorizontalTextAlignment="Center" />
-                    <ui:ButtonView BodyText="{Binding UnlockText}" TapCommand="{Binding UnlockCommand}" />
+                    <Label
+                        Text="{Binding LeadText}"
+                        Style="{StaticResource BodyStyle}"
+                        TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                        HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
-            </Border>
+                <ui:ButtonView BodyText="{Binding UnlockText}" TapCommand="{Binding UnlockCommand}" />
+            </VerticalStackLayout>
 
             <Border Style="{StaticResource BrandCardStyle}" Padding="20,16">
                 <VerticalStackLayout Spacing="12">

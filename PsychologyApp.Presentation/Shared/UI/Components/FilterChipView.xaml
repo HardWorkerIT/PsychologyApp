@@ -5,20 +5,23 @@
              xmlns:self="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
              x:DataType="self:FilterChipView"
              x:Class="PsychologyApp.Presentation.Shared.UI.Components.FilterChipView"
-             x:Name="Root">
+             x:Name="Root"
+             HorizontalOptions="Start">
 
     <ContentView.Behaviors>
-        <behaviors:PressFeedbackBehavior AttachToAllTapTargets="True" />
+        <behaviors:PressFeedbackBehavior AttachToAllTapTargets="True" ScaleOnly="True" />
     </ContentView.Behaviors>
 
     <Border
+        HorizontalOptions="Start"
         Style="{StaticResource FilterChipStyle}">
         <Border.Triggers>
             <DataTrigger
                 Binding="{Binding IsSelected, Source={x:Reference Root}}"
                 TargetType="Border"
                 Value="True">
-                <Setter Property="Style" Value="{StaticResource FilterChipSelectedStyle}" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
+                <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
             </DataTrigger>
         </Border.Triggers>
         <Border.GestureRecognizers>
@@ -34,7 +37,7 @@
                     Binding="{Binding IsSelected, Source={x:Reference Root}}"
                     TargetType="Label"
                     Value="True">
-                    <Setter Property="Style" Value="{StaticResource FilterChipSelectedLabelStyle}" />
+                    <Setter Property="TextColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
                 </DataTrigger>
             </Label.Triggers>
         </Label>

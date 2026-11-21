@@ -1,3 +1,4 @@
+using Microsoft.Maui.ApplicationModel;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
 using System.Windows.Input;
@@ -11,6 +12,8 @@ public class OptionsViewModel : BaseViewModel
     public ICommand OpenSettingsPageCommand { get; private set; } = default!;
     public ICommand OpenCrisisHubCommand { get; private set; } = default!;
     public ICommand OpenDataBackupCommand { get; private set; } = default!;
+    public ICommand OpenDonationCommand { get; private set; } = default!;
+
     public ICommand BackCommand { get; private set; } = default!;
 
     public string PageTitle => AppStrings.OptionsTitle;
@@ -21,8 +24,12 @@ public class OptionsViewModel : BaseViewModel
     public string SettingsSubtitle => AppStrings.ProfileSettingsCardSubtitle;
     public string CrisisTitle => AppStrings.OptionsCrisisTitle;
     public string CrisisSubtitle => AppStrings.OptionsCrisisSubtitle;
+    public string DonationTitle => AppStrings.OptionsDonateTitle;
+    public string DonationSubtitle => AppStrings.DonateBody;
+    public bool CanSupportProject => DonationConfiguration.SberPaymentUri is not null;
     public string AboutTitle => AppStrings.OptionsAboutTitle;
     public string FeedbackTitle => AppStrings.OptionsFeedbackTitle;
+
     public string DataBackupTitle => AppStrings.DataBackupTitle;
 
     public OptionsViewModel(INavigationService navigationService)
@@ -35,6 +42,17 @@ public class OptionsViewModel : BaseViewModel
         OpenCrisisHubCommand = new AsyncCommand(() => navigationService.GoToCrisisHubAsync());
         OpenDataBackupCommand = new AsyncCommand(() => navigationService.GoToDataBackupAsync());
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
+        OpenDonationCommand = new AsyncCommand(OpenDonationAsync);
+    }
+
+    private static async Task OpenDonationAsync()
+    {
+        if (DonationConfiguration.SberPaymentUri is not Uri uri)
+        {
+            return;
+        }
+
+        await Browser.Default.OpenAsync(uri.AbsoluteUri, BrowserLaunchMode.SystemPreferred);
     }
 
     protected override void RefreshLocalizedProperties()
@@ -50,6 +68,8 @@ public class OptionsViewModel : BaseViewModel
             nameof(CrisisSubtitle),
             nameof(AboutTitle),
             nameof(FeedbackTitle),
+            nameof(DonationTitle),
+            nameof(DonationSubtitle),
             nameof(DataBackupTitle));
     }
 }

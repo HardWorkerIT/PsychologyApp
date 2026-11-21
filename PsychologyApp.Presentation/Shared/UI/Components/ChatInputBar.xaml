@@ -57,6 +57,7 @@
                 WidthRequest="44"
                 HeightRequest="44"
                 VerticalOptions="End"
+                IsEnabled="{Binding CanSend, Source={x:Reference Root}}"
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 22"
                 SemanticProperties.Description="{Binding SendDescription, Source={x:Reference Root}}"

@@ -6,7 +6,7 @@
              x:Class="PsychologyApp.Presentation.Shared.UI.Components.SettingPickerRowView"
              x:Name="Root">
 
-    <Grid MinimumHeightRequest="52" ColumnSpacing="12" Opacity="{Binding RowOpacity, Source={x:Reference Root}}">
+    <Grid MinimumHeightRequest="52" ColumnSpacing="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -34,25 +34,46 @@
                 LineBreakMode="TailTruncation"
                 MaxLines="1"
                 InputTransparent="True"
-                AutomationProperties.IsInAccessibleTree="False" />
+                AutomationProperties.IsInAccessibleTree="False">
+                <Label.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsRowEnabled, Source={x:Reference Root}}"
+                        TargetType="Label"
+                        Value="False">
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
             <self:MaterialIconView
                 Grid.Column="1"
                 IconName="ExpandMore"
                 IconSize="18"
                 IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                 InputTransparent="True"
-                AutomationProperties.IsInAccessibleTree="False" />
-            <Button
-                x:Name="SelectionButton"
+                AutomationProperties.IsInAccessibleTree="False">
+                <self:MaterialIconView.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsRowEnabled, Source={x:Reference Root}}"
+                        TargetType="self:MaterialIconView"
+                        Value="False">
+                        <Setter Property="IconColor" Value="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    </DataTrigger>
+                </self:MaterialIconView.Triggers>
+            </self:MaterialIconView>
+            <Border
+                x:Name="SelectionTapArea"
                 Grid.ColumnSpan="2"
                 BackgroundColor="Transparent"
-                Padding="0"
-                CornerRadius="0"
-                BorderWidth="0"
+                Stroke="Transparent"
+                MinimumHeightRequest="44"
                 HorizontalOptions="Fill"
                 VerticalOptions="Center"
                 IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
-                Clicked="OnSelectionButtonClicked" />
+                SemanticProperties.Description="{Binding PickerAccessibilityDescription, Source={x:Reference Root}}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSelectionAreaTapped" />
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
     </Grid>
 

@@ -30,6 +30,13 @@ public sealed class PressFeedbackBehavior : Behavior<View>
             typeof(PressFeedbackBehavior),
             false);
 
+    public static readonly BindableProperty ScaleOnlyProperty =
+        BindableProperty.Create(
+            nameof(ScaleOnly),
+            typeof(bool),
+            typeof(PressFeedbackBehavior),
+            false);
+
     public string TargetName
     {
         get => (string)GetValue(TargetNameProperty);
@@ -52,6 +59,12 @@ public sealed class PressFeedbackBehavior : Behavior<View>
     {
         get => (bool)GetValue(HapticOnReleaseProperty);
         set => SetValue(HapticOnReleaseProperty, value);
+    }
+
+    public bool ScaleOnly
+    {
+        get => (bool)GetValue(ScaleOnlyProperty);
+        set => SetValue(ScaleOnlyProperty, value);
     }
 
     private View? _attachedView;
@@ -144,7 +157,8 @@ public sealed class PressFeedbackBehavior : Behavior<View>
 
     private PressFeedbackOptions CreateOptions() => new()
     {
-        HapticOnRelease = HapticOnRelease
+        HapticOnRelease = HapticOnRelease,
+        ScaleOnly = ScaleOnly
     };
 
     private VisualElement? ResolveTarget(View bindable)

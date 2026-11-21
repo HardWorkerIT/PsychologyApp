@@ -25,7 +25,8 @@
             <Switch
                 Grid.Column="1"
                 IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
-                IsToggled="{Binding IsToggled, Source={x:Reference Root}, Mode=TwoWay}" />
+                IsToggled="{Binding IsToggled, Source={x:Reference Root}, Mode=TwoWay}"
+                SemanticProperties.Description="{Binding LabelText, Source={x:Reference Root}}" />
         </Grid>
         <BoxView
             Style="{StaticResource SettingRowDividerStyle}"

@@ -79,7 +79,7 @@
 	  <AndroidEnableMultiDex>True</AndroidEnableMultiDex>
 	  <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	  <!-- Stores receive a bundle that can be split per device; keep an APK for direct installation. -->
-	  <AndroidPackageFormats>aab;apk</AndroidPackageFormats>
+	  <AndroidPackageFormats>apk</AndroidPackageFormats>
 	  <!-- Keep partial trimming: the app, Dapper and the explicitly rooted libraries below stay whole. -->
 	  <PublishTrimmed>True</PublishTrimmed>
 	  <TrimMode>partial</TrimMode>
