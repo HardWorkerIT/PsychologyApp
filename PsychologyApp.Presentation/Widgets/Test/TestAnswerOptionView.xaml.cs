@@ -36,6 +36,14 @@ public partial class TestAnswerOptionView : ContentView
             true,
             propertyChanged: OnSemanticsPropertyChanged);
 
+    public static readonly BindableProperty ShadeLevelProperty =
+        BindableProperty.Create(
+            nameof(ShadeLevel),
+            typeof(int),
+            typeof(TestAnswerOptionView),
+            0,
+            propertyChanged: OnSemanticsPropertyChanged);
+
     public static readonly BindableProperty TapCommandProperty =
         BindableProperty.Create(nameof(TapCommand), typeof(ICommand), typeof(TestAnswerOptionView), default);
 
@@ -55,6 +63,12 @@ public partial class TestAnswerOptionView : ContentView
     {
         get => (bool)GetValue(IsSingleChoiceProperty);
         set => SetValue(IsSingleChoiceProperty, value);
+    }
+
+    public int ShadeLevel
+    {
+        get => (int)GetValue(ShadeLevelProperty);
+        set => SetValue(ShadeLevelProperty, value);
     }
 
     public ICommand TapCommand
@@ -93,7 +107,16 @@ public partial class TestAnswerOptionView : ContentView
         string modeHint = view.IsSingleChoice
             ? AppStrings.TestsSingleChoiceHint
             : AppStrings.TestsMultiChoiceHint;
-        SemanticProperties.SetHint(view, $"{selectionState}. {modeHint}");
+        string shadeHint = view.ShadeLevel switch
+        {
+            (int)Asrs6AnswerShade.Light => AppStrings.Asrs6ShadeLightHint,
+            (int)Asrs6AnswerShade.Dark => AppStrings.Asrs6ShadeDarkHint,
+            _ => string.Empty
+        };
+        string hint = string.IsNullOrEmpty(shadeHint)
+            ? $"{selectionState}. {modeHint}"
+            : $"{selectionState}. {modeHint}. {shadeHint}";
+        SemanticProperties.SetHint(view, hint);
     }
 
     private readonly TapDebouncer _tapDebouncer = new();

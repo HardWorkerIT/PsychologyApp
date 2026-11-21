@@ -28,7 +28,9 @@ public sealed class QuestionnaireScoringService : IQuestionnaireScoringService
     {
         questions = questions.ToList();
         IReadOnlyList<QuestionnaireQuestionAnswers> answerModels = ToAnswerModels(questions);
-        int score = QuestionnaireScoreCalculator.CalculateScore(answerModels);
+        int score = analyzerId == BigFiveProfile.AnalyzerId
+            ? BigFiveProfile.CalculateScore(questions.Select(GetSelectedScore).ToArray())
+            : QuestionnaireScoreCalculator.CalculateScore(answerModels);
         int bandIndex = TestScoreInterpreter.GetBandIndex(analyzerId, score);
         TechniqueId? recommended = analyzerId is not null
             ? TestScoreRecommendation.RecommendTechnique(analyzerId, score)
@@ -43,4 +45,12 @@ public sealed class QuestionnaireScoringService : IQuestionnaireScoringService
             .Select(question => new QuestionnaireQuestionAnswers(
                 question.Answers.Where(answer => answer.Selected).Select(answer => answer.Ball).ToList()))
             .ToList();
+
+    private static int GetSelectedScore(Question question)
+    {
+        Answer[] selected = question.Answers.Where(answer => answer.Selected).ToArray();
+        return selected.Length == 1
+            ? selected[0].Ball
+            : throw new InvalidOperationException("Every Big Five question must have exactly one selected answer.");
+    }
 }

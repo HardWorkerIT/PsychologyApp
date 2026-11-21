@@ -1,0 +1,278 @@
+{
+  "title": "16 personality profiles",
+  "subtitle": "Your everyday preferences",
+  "estimatedMinutes": 4,
+  "questionCount": 20,
+  "construct": "Self-reflection",
+  "betterWhen": "none",
+  "description": "Twenty short situations can help you notice which ways of connecting, deciding, and planning tend to feel more natural.",
+  "algorithm": [
+    "There are no right answers. Choose the option that usually feels closer to you.",
+    "Answer from habit, not from what you think you should do. Preferences may shift with context."
+  ],
+  "comment": "This is an informal, unvalidated reflection quiz, not the official MBTI assessment or a diagnosis. Treat the result as a prompt, not a label.",
+  "analyzerId": "preferences16",
+  "singleAnswer": true,
+  "questions": [
+    {
+      "text": "After a busy week, what helps you recover?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Quiet time on your own"
+        },
+        {
+          "ball": 0,
+          "text": "Time with people"
+        }
+      ]
+    },
+    {
+      "text": "In instructions, you value…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "The general principle and new possibilities"
+        },
+        {
+          "ball": 6,
+          "text": "Specific details and proven steps"
+        }
+      ]
+    },
+    {
+      "text": "When reviewing a plan, you first notice…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "How fair and considerate it is"
+        },
+        {
+          "ball": 36,
+          "text": "How logical and efficient it is"
+        }
+      ]
+    },
+    {
+      "text": "Before a deadline, you prefer to…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Finish with time to spare"
+        },
+        {
+          "ball": 0,
+          "text": "Work in flexible bursts closer to the deadline"
+        }
+      ]
+    },
+    {
+      "text": "When learning something new, what helps more?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "A step-by-step example"
+        },
+        {
+          "ball": 0,
+          "text": "The big idea and possible connections"
+        }
+      ]
+    },
+    {
+      "text": "In a disagreement, you are more likely to…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Consider the situation and find common ground"
+        },
+        {
+          "ball": 6,
+          "text": "Look for a consistent solution"
+        }
+      ]
+    },
+    {
+      "text": "When working on a task, you prefer to…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Know the expected outcome early"
+        },
+        {
+          "ball": 0,
+          "text": "Explore options along the way"
+        }
+      ]
+    },
+    {
+      "text": "In a new group, you usually…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Join the conversation quickly"
+        },
+        {
+          "ball": 216,
+          "text": "Open up gradually"
+        }
+      ]
+    },
+    {
+      "text": "For a difficult decision, you tend to weigh…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Values and the impact on people"
+        },
+        {
+          "ball": 1,
+          "text": "Consistent criteria and logic"
+        }
+      ]
+    },
+    {
+      "text": "When plans change, you tend to…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Make a new plan quickly"
+        },
+        {
+          "ball": 0,
+          "text": "Work it out as you go"
+        }
+      ]
+    },
+    {
+      "text": "At a gathering, you tend to…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Move between conversations"
+        },
+        {
+          "ball": 36,
+          "text": "Talk with a few familiar people"
+        }
+      ]
+    },
+    {
+      "text": "For a practical task, you are more likely to choose…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "A method that has worked before"
+        },
+        {
+          "ball": 0,
+          "text": "A new approach you want to try"
+        }
+      ]
+    },
+    {
+      "text": "A free day feels better when you…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Keep a few options open"
+        },
+        {
+          "ball": 1,
+          "text": "Have a plan in mind"
+        }
+      ]
+    },
+    {
+      "text": "Around people you have just met, you usually…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Take time to observe first"
+        },
+        {
+          "ball": 0,
+          "text": "Find it easy to start a conversation"
+        }
+      ]
+    },
+    {
+      "text": "When choosing what to do, you trust…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "What you can observe and verify"
+        },
+        {
+          "ball": 0,
+          "text": "Patterns, hunches, and possible connections"
+        }
+      ]
+    },
+    {
+      "text": "When someone close asks for advice, you first…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Try to understand how they feel"
+        },
+        {
+          "ball": 216,
+          "text": "Help sort through options and consequences"
+        }
+      ]
+    },
+    {
+      "text": "When sorting through a problem, you usually…",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Think it through on your own first"
+        },
+        {
+          "ball": 0,
+          "text": "Talk it out to clarify your thoughts"
+        }
+      ]
+    },
+    {
+      "text": "In a conversation, you enjoy…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Ideas and what might be possible"
+        },
+        {
+          "ball": 6,
+          "text": "Specific events and real experiences"
+        }
+      ]
+    },
+    {
+      "text": "When giving feedback, you tend to…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Be direct and specific"
+        },
+        {
+          "ball": 0,
+          "text": "Choose words with the other person's feelings in mind"
+        }
+      ]
+    },
+    {
+      "text": "A schedule usually feels like…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "A framework that should leave room to change"
+        },
+        {
+          "ball": 216,
+          "text": "A helpful structure that keeps you focused"
+        }
+      ]
+    }
+  ]
+}

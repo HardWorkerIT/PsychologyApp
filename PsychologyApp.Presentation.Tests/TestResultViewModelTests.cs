@@ -150,6 +150,33 @@ public sealed class TestResultViewModelTests
         Assert.Equal(TechniqueId.Polarity, tracking.LastTechniqueId);
     }
 
+    [Fact]
+    public void PreferenceProfileResult_ShowsProfileInsteadOfNumericScoreOrTrend()
+    {
+        Mock<INavigation> navigation = new();
+        Mock<IUserProgressService> progress = new();
+        TestResultViewModel viewModel = new(
+            new TestNavigationService(navigation.Object),
+            new Mock<ITestCatalogService>().Object,
+            TechniqueCatalogTestHelper.CreateGateway(),
+            TestRunTestHelpers.CreateRetakeOperations(),
+            progress.Object,
+            new TestTrendResolver(new TestTrendService(new Mock<ITestCatalogService>().Object)),
+            new TestResultInfo
+            {
+                Score = 3,
+                AnalyzerId = "preferences16",
+                TestId = "preferences16",
+                Interpretation = "ignored"
+            });
+
+        Assert.Equal("ISTJ", viewModel.ScoreTitle);
+        Assert.Equal(AppStrings.Personality16TypeName("ISTJ"), viewModel.Interpretation);
+        Assert.False(viewModel.HasTrendBadge);
+        Assert.False(viewModel.HasTrendChart);
+        progress.Verify(p => p.GetTestResultHistoryAsync("preferences16", It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
     private sealed class TechniqueTrackingNavigationService(INavigation navigation) : TestNavigationService(navigation)
     {
         public TechniqueId? LastTechniqueId { get; private set; }

@@ -8,6 +8,7 @@ using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Features.RunTests;
+using PsychologyApp.Domain.Tests;
 using System.Text.Json;
 using Xunit;
 
@@ -128,6 +129,47 @@ public sealed class TestModuleOperationsTests
         Assert.Equal("Beck Inventory", result.Title);
         Assert.Single(result.Entries);
         Assert.Equal("Mild", result.Entries[0].SummaryText);
+    }
+
+    [Fact]
+    public async Task TestHistoryLoader_DoesNotShowPackedProfileScoreAsTrendOrChart()
+    {
+        Mock<IUserProgressService> progress = new();
+        DateTime completedAt = new(2026, 1, 15, 10, 0, 0, DateTimeKind.Utc);
+        progress
+            .Setup(p => p.GetTestResultHistoryAsync("preferences16", 50, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<TestResultDTO>
+            {
+                new() { TestId = "preferences16", Score = 3, CompletedAt = completedAt },
+                new() { TestId = "preferences16", Score = 1295, CompletedAt = completedAt.AddDays(-7) }
+            });
+        FakeTestCatalogService catalog = new FakeTestCatalogService().WithCatalog(new TestDefinition
+        {
+            TestId = "preferences16",
+            AnalyzerId = "preferences16",
+            Title = "16 personality profiles",
+            Subtitle = "Preferences",
+            Description = "Description",
+            Comment = "Informal reflection quiz",
+            Algorithm = ["Choose the option that feels closer"],
+            Kind = TestKind.Questionnaire,
+            ScoreDirection = ScoreDirection.None
+        });
+        TestHistoryLoader loader = TestRunTestHelpers.CreateHistoryLoader(catalog);
+
+        TestHistoryLoadResult result = await loader.LoadEntriesAsync(
+            "preferences16",
+            "Fallback",
+            progress.Object,
+            catalog);
+
+        Assert.Equal(2, result.Entries.Count);
+        Assert.All(result.Entries, entry =>
+        {
+            Assert.False(entry.HasScore);
+            Assert.False(entry.HasTrend);
+        });
+        Assert.Empty(result.ChartPoints);
     }
 
     [Fact]

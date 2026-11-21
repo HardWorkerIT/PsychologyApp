@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -403,11 +403,18 @@
     <value>Подробнее</value>
   </data>
   <data name="DonateBody" xml:space="preserve">
-    <value>Наш проект существует исключительно на пожертвования. Мы не размещаем рекламу и не оказываем платных услуг. Пожертвования используются на работу программистов и дизайнеров.</value>
+    <value>Добровольно: приложение остаётся бесплатным, функции не меняются.</value>
   </data>
   <data name="DonateButton" xml:space="preserve">
     <value>Пожертвовать</value>
   </data>
+  <data name="DonatePromptTitle" xml:space="preserve">
+    <value>Приложение оказалось полезным?</value>
+  </data>
+  <data name="DonateNotNow" xml:space="preserve">
+    <value>Не сейчас</value>
+  </data>
+
   <data name="DonateOpenFailed" xml:space="preserve">
     <value>Не удалось открыть страницу пожертвования</value>
   </data>
@@ -4196,6 +4203,12 @@
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>Политика конфиденциальности</value>
   </data>
+  <data name="AdsPersonalizationLabel" xml:space="preserve">
+    <value>Персонализированная реклама</value>
+  </data>
+  <data name="AdsPersonalizationHelp" xml:space="preserve">
+    <value>При включённой настройке SDK VK может передавать рекламный ID для подбора баннеров. Чаты и дневник не передаются.</value>
+  </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Получили код приглашения для отключения рекламы? Введите его здесь.</value>
   </data>
@@ -4206,7 +4219,7 @@
     <value>Опишите проблему или идею. Приложение откроет почту или SMS, где вы сможете проверить сообщение и решить, отправлять ли его.</value>
   </data>
   <data name="AdsDisclosure" xml:space="preserve">
-    <value>При открытии подходящих каталогов приложение автоматически загружает рекламный баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, доступный рекламный идентификатор и события запроса, показа и нажатия. Состав данных зависит от версии SDK и настроек устройства. Приложение не передаёт VK Ads тексты разговоров и дневника, ответы практик, результаты тестов и сведения о здоровье. Подробнее — в политике конфиденциальности.</value>
+    <value>При открытии подходящих каталогов приложение автоматически загружает рекламный баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, а также события запроса, показа и нажатия. При включённой персонализации SDK может дополнительно передать доступный рекламный идентификатор. Состав данных зависит от версии SDK и настроек устройства. Приложение не передаёт VK Ads тексты разговоров и дневника, ответы практик, результаты тестов и сведения о здоровье. Подробнее — в политике конфиденциальности.</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Быстрые действия</value>
@@ -4421,4 +4434,112 @@
   <data name="TestsCollapseDetailsHint" xml:space="preserve">
     <value>Скрыть подробные результаты</value>
   </data>
+  <data name="Personality16ISTJ" xml:space="preserve">
+    <value>Инспектор</value>
+  </data>
+  <data name="Personality16ISFJ" xml:space="preserve">
+    <value>Хранитель</value>
+  </data>
+  <data name="Personality16INFJ" xml:space="preserve">
+    <value>Проводник</value>
+  </data>
+  <data name="Personality16INTJ" xml:space="preserve">
+    <value>Стратег</value>
+  </data>
+  <data name="Personality16ISTP" xml:space="preserve">
+    <value>Практик</value>
+  </data>
+  <data name="Personality16ISFP" xml:space="preserve">
+    <value>Создатель</value>
+  </data>
+  <data name="Personality16INFP" xml:space="preserve">
+    <value>Идеалист</value>
+  </data>
+  <data name="Personality16INTP" xml:space="preserve">
+    <value>Аналитик</value>
+  </data>
+  <data name="Personality16ESTP" xml:space="preserve">
+    <value>Деятель</value>
+  </data>
+  <data name="Personality16ESFP" xml:space="preserve">
+    <value>Импровизатор</value>
+  </data>
+  <data name="Personality16ENFP" xml:space="preserve">
+    <value>Исследователь</value>
+  </data>
+  <data name="Personality16ENTP" xml:space="preserve">
+    <value>Изобретатель</value>
+  </data>
+  <data name="Personality16ESTJ" xml:space="preserve">
+    <value>Организатор</value>
+  </data>
+  <data name="Personality16ESFJ" xml:space="preserve">
+    <value>Объединитель</value>
+  </data>
+  <data name="Personality16ENFJ" xml:space="preserve">
+    <value>Наставник</value>
+  </data>
+  <data name="Personality16ENTJ" xml:space="preserve">
+    <value>Руководитель</value>
+  </data>
+  <data name="Personality16Unknown" xml:space="preserve">
+    <value>Профиль</value>
+  </data>
+  <data name="Personality16TypeResult" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Personality16ResultDetail" xml:space="preserve">
+    <value>В ответах чаще проявились такие предпочтения: {0}. Это повод для саморефлексии, а не диагноз или неизменный ярлык.</value>
+  </data>
+  <data name="Personality16Introversion" xml:space="preserve">
+    <value>спокойное время наедине</value>
+  </data>
+  <data name="Personality16Extraversion" xml:space="preserve">
+    <value>общение и обмен идеями</value>
+  </data>
+  <data name="Personality16Intuition" xml:space="preserve">
+    <value>идеи и возможные связи</value>
+  </data>
+  <data name="Personality16Sensing" xml:space="preserve">
+    <value>факты и конкретные детали</value>
+  </data>
+  <data name="Personality16Feeling" xml:space="preserve">
+    <value>ценности и влияние на людей</value>
+  </data>
+  <data name="Personality16Thinking" xml:space="preserve">
+    <value>логика и последовательность</value>
+  </data>
+  <data name="Personality16Perceiving" xml:space="preserve">
+    <value>гибкость и открытые варианты</value>
+  </data>
+  <data name="Personality16Judging" xml:space="preserve">
+    <value>план и определённость</value>
+  </data>
+  <data name="BigFiveProfileShort" xml:space="preserve"><value>Большая пятёрка</value></data>
+  <data name="BigFiveSummary" xml:space="preserve"><value>Пять шкал описывают ваши привычные ответы в этом опроснике. Это профиль для саморефлексии, а не оценка или диагноз.</value></data>
+  <data name="BigFivePracticeHint" xml:space="preserve"><value>Попробуйте практику как небольшой эксперимент; баллы не указывают на недостатки.</value></data>
+  <data name="BigFiveTrait.Extraversion" xml:space="preserve"><value>Экстраверсия</value></data>
+  <data name="BigFiveTrait.Agreeableness" xml:space="preserve"><value>Доброжелательность</value></data>
+  <data name="BigFiveTrait.Conscientiousness" xml:space="preserve"><value>Добросовестность</value></data>
+  <data name="BigFiveTrait.EmotionalStability" xml:space="preserve"><value>Эмоциональная устойчивость</value></data>
+  <data name="BigFiveTrait.IntellectImagination" xml:space="preserve"><value>Открытость новому</value></data>
+  <data name="BigFiveTraitScore" xml:space="preserve"><value>{0}: {1} из 40</value></data>
+  <data name="SelfReflectionResultTitle.Explore" xml:space="preserve"><value>Можно начать с малого</value></data>
+  <data name="SelfReflectionResultTitle.Building" xml:space="preserve"><value>Эта опора формируется</value></data>
+  <data name="SelfReflectionResultTitle.Available" xml:space="preserve"><value>Эта опора уже доступна</value></data>
+  <data name="SelfReflectionSummary.Explore" xml:space="preserve"><value>Ответы подсказывают, что здесь есть место для бережного эксперимента.</value></data>
+  <data name="SelfReflectionSummary.Building" xml:space="preserve"><value>В этой области уже есть работающие способы, и их можно укрепить.</value></data>
+  <data name="SelfReflectionSummary.Available" xml:space="preserve"><value>Судя по ответам, эта опора часто присутствует в вашей повседневности.</value></data>
+  <data name="SelfReflectionDetail.Explore" xml:space="preserve"><value>Это не недостаток и не диагноз. Выберите один маленький шаг и попробуйте подходящую практику.</value></data>
+  <data name="SelfReflectionDetail.Building" xml:space="preserve"><value>Заметьте, когда это даётся легче, и повторите одно из этих условий на неделе.</value></data>
+  <data name="SelfReflectionDetail.Available" xml:space="preserve"><value>Отметьте, что помогает этой опоре сохраняться, и оставьте для этого немного места.</value></data>
+  <data name="SelfReflectionPracticeHint" xml:space="preserve"><value>Практика предлагает небольшой способ исследовать тему, а не исправлять вас.</value></data>
+  <data name="Asrs6Summary.BelowScreeningThreshold" xml:space="preserve"><value>Порог скрининга не достигнут.</value></data>
+  <data name="Asrs6Summary.ScreeningThresholdReached" xml:space="preserve"><value>Достигнут порог скрининга. Некоторые ответы могут быть связаны с трудностями внимания или активности.</value></data>
+  <data name="Asrs6Detail.BelowScreeningThreshold" xml:space="preserve"><value>Это не исключает СДВГ и не ставит диагноз. Если трудности беспокоят, обсудите их со специалистом.</value></data>
+  <data name="Asrs6Detail.ScreeningThresholdReached" xml:space="preserve"><value>Скрининг не является диагнозом. Обсудите результаты с врачом или квалифицированным специалистом.</value></data>
+  <data name="Asrs6Score" xml:space="preserve"><value>Баллы: {0} из 6</value></data>
+  <data name="Asrs6ShadingLegend" xml:space="preserve"><value>Светлая подсветка — ответ ниже порога; более тёмная учитывается в результате.</value></data>
+  <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Светлая подсветка: ответ не учитывается в пороге скрининга.</value></data>
+  <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Тёмная подсветка: ответ учитывается в пороге скрининга.</value></data>
 </root>

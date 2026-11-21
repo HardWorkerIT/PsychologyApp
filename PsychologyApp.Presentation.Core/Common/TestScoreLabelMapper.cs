@@ -1,3 +1,4 @@
+using System.Linq;
 using PsychologyApp.Domain.Tests;
 using PsychologyApp.Presentation.Common;
 
@@ -11,6 +12,10 @@ public static class TestScoreLabelMapper
 {
     public static string? GetSummary(string? analyzerId, int score) => analyzerId switch
     {
+        PreferenceProfile16.AnalyzerId => Personality16Summary(score),
+        BigFiveProfile.AnalyzerId => AppStrings.BigFiveSummary,
+        Asrs6Screening.AnalyzerId => Asrs6Summary(score),
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => SelfReflectionSummary(score),
         "heck_hess" => AppStrings.HeckHessScore(TestScoreBandClassifier.ClassifyHeckHess(score)),
         "haer" => AppStrings.HaerScore(TestScoreBandClassifier.ClassifyHaer(score)),
         "pochebut" => AppStrings.PochebutScore(TestScoreBandClassifier.ClassifyPochebut(score)),
@@ -37,6 +42,10 @@ public static class TestScoreLabelMapper
 
     public static string? GetDetail(string? analyzerId, int score) => analyzerId switch
     {
+        PreferenceProfile16.AnalyzerId => Personality16Detail(score),
+        BigFiveProfile.AnalyzerId => BigFiveDetail(score),
+        Asrs6Screening.AnalyzerId => Asrs6Detail(score),
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => SelfReflectionDetail(score),
         "heck_hess" => AppStrings.HeckHessScoreDetail(TestScoreBandClassifier.ClassifyHeckHess(score)),
         "haer" => AppStrings.HaerScoreDetail(TestScoreBandClassifier.ClassifyHaer(score)),
         "pochebut" => AppStrings.PochebutScoreDetail(TestScoreBandClassifier.ClassifyPochebut(score)),
@@ -63,6 +72,8 @@ public static class TestScoreLabelMapper
 
     public static string? GetRecommendationReason(string? analyzerId, int score) => analyzerId switch
     {
+        BigFiveProfile.AnalyzerId => AppStrings.BigFivePracticeHint,
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => AppStrings.SelfReflectionPracticeHint,
         "beck" => AppStrings.TestRecommendationReasonBeck(TestScoreBandClassifier.RecommendBeck(score)),
         "heck_hess" => AppStrings.TestRecommendationReasonHeckHess(TestScoreBandClassifier.RecommendHeckHess(score)),
         "haer" => AppStrings.TestRecommendationReasonHaer(TestScoreBandClassifier.RecommendHaer(score)),
@@ -86,4 +97,64 @@ public static class TestScoreLabelMapper
         "pcl5" => AppStrings.TestRecommendationReasonPcl5(TestScoreBandClassifier.RecommendPcl5(score)),
         _ => null
     };
+
+    public static string? GetProfileCode(string? analyzerId, int score) => analyzerId switch
+    {
+        PreferenceProfile16.AnalyzerId => PreferenceProfile16.DecodeTypeCode(score),
+        BigFiveProfile.AnalyzerId => AppStrings.BigFiveProfileShort,
+        Asrs6Screening.AnalyzerId => AppStrings.Asrs6Score(score),
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) =>
+            AppStrings.SelfReflectionResultTitle(TestScoreBandClassifier.ClassifySelfReflection(score)),
+        _ => null
+    };
+
+    public static string? GetProfileName(string? analyzerId, int score) =>
+        analyzerId == PreferenceProfile16.AnalyzerId
+            ? AppStrings.Personality16TypeName(PreferenceProfile16.DecodeTypeCode(score))
+            : null;
+
+    public static bool ShouldLoadTrend(string? analyzerId) =>
+        analyzerId != PreferenceProfile16.AnalyzerId
+        && analyzerId != BigFiveProfile.AnalyzerId
+        && analyzerId != Asrs6Screening.AnalyzerId
+        && !SelfReflectionProfile.IsAnalyzer(analyzerId);
+
+    public static string? GetHistoryScore(string? analyzerId, int score) => analyzerId switch
+    {
+        PreferenceProfile16.AnalyzerId or BigFiveProfile.AnalyzerId => null,
+        Asrs6Screening.AnalyzerId => AppStrings.Asrs6Score(score),
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => null,
+        _ => AppStrings.TestHistoryScore(score)
+    };
+
+    private static string SelfReflectionSummary(int score) =>
+        AppStrings.SelfReflectionSummary(TestScoreBandClassifier.ClassifySelfReflection(score));
+
+    private static string SelfReflectionDetail(int score) =>
+        AppStrings.SelfReflectionDetail(TestScoreBandClassifier.ClassifySelfReflection(score));
+
+    private static string Asrs6Summary(int score) =>
+        AppStrings.Asrs6Summary(TestScoreBandClassifier.ClassifyAsrs6(score));
+
+    private static string Asrs6Detail(int score) =>
+        AppStrings.Asrs6Detail(TestScoreBandClassifier.ClassifyAsrs6(score));
+
+    private static string BigFiveDetail(int score) => string.Join(
+        Environment.NewLine,
+        BigFiveProfile.Decode(score).Select(item => AppStrings.BigFiveTraitScore(
+            AppStrings.BigFiveTraitName(item.Trait), item.Score)));
+
+    private static string Personality16Summary(int score)
+    {
+        string code = PreferenceProfile16.DecodeTypeCode(score);
+        return AppStrings.Personality16TypeResult(AppStrings.Personality16TypeName(code), code);
+    }
+
+    private static string Personality16Detail(int score)
+    {
+        string code = PreferenceProfile16.DecodeTypeCode(score);
+        string preferences = string.Join(" · ", PreferenceProfile16.DecodePreferences(code)
+            .Select(AppStrings.Personality16PreferenceLabel));
+        return AppStrings.Personality16ResultDetail(preferences);
+    }
 }

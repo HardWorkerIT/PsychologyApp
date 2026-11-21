@@ -1,0 +1,306 @@
+[
+  {
+    "title": "How I cope with stress",
+    "subtitle": "Resources in difficult moments",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_coping",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I notice early signs of stress.",
+      "After a difficult moment, I can pause before reacting.",
+      "I choose a next step that I can influence.",
+      "I know at least one way to settle my body.",
+      "When needed, I can ask for support.",
+      "I can break a problem into a smaller step."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · stress"
+  },
+  {
+    "title": "My personal boundaries",
+    "subtitle": "Noticing your limits",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_boundaries",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I notice when a request does not fit my limits.",
+      "I can ask for time before I answer.",
+      "I can say no briefly and respectfully.",
+      "I can name what I need without blaming.",
+      "I respect my own boundaries and other people's.",
+      "When circumstances change, I can revisit an agreement."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · boundaries"
+  },
+  {
+    "title": "Values and small steps",
+    "subtitle": "What matters to you",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_values",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I can name what matters most to me.",
+      "I notice when a choice reflects my values.",
+      "I make time for what I consider important.",
+      "I can tell my own wishes from others' expectations.",
+      "I choose small actions that fit my values.",
+      "I can revise my plans without judging myself."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · values"
+  },
+  {
+    "title": "How I handle difficult conversations",
+    "subtitle": "Pause, clarity, connection",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_conflict",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "When a conversation gets heated, I can pause briefly.",
+      "Before guessing someone's intent, I ask what happened.",
+      "I can describe my feelings without blaming.",
+      "I can state one concrete request.",
+      "I try to understand the other person's point of view.",
+      "After a pause, I can return to the conversation."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · communication"
+  },
+  {
+    "title": "What helps me recover",
+    "subtitle": "Notice fatigue and find a pause",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_recovery",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I notice what drains my energy.",
+      "I know what helps me recover.",
+      "I take short breaks before I feel exhausted.",
+      "I choose the kind of rest that fits me today.",
+      "I allow myself to rest without needing to earn it.",
+      "After a demanding day, I can adjust my plans."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · recovery"
+  },
+  {
+    "title": "My support map",
+    "subtitle": "Who can help, and with what",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_support",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I know who or what might help in different situations.",
+      "I can say what kind of support I need.",
+      "I can ask for a specific, small kind of help.",
+      "I can accept support without apologizing.",
+      "I know where to seek professional help if I need it.",
+      "I have a next step if my first source of support is unavailable."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · support"
+  },
+  {
+    "title": "My strengths in everyday life",
+    "subtitle": "Notice what is already working",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_strengths",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I can recall a recent example of one of my strengths.",
+      "I notice tasks that come naturally to me.",
+      "I can accept a kind word without dismissing it.",
+      "I can see my contribution to shared work.",
+      "I use my strengths to make a difficult task easier.",
+      "I can name a result I am proud of, even if it is small."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · strengths"
+  },
+  {
+    "title": "What helps me focus",
+    "subtitle": "A clear next step and fewer distractions",
+    "description": "A brief self-check: choose how often this has been true for you lately.",
+    "algorithm": [
+      "Answer for your recent everyday life, not an ideal version of yourself.",
+      "The result is a reflection prompt, not a diagnosis. You can try a related practice afterward."
+    ],
+    "comment": "An original self-reflection check-in. It is not a standardized or clinical test.",
+    "analyzerId": "reflection_focus",
+    "answers": [
+      "Almost never",
+      "Rarely",
+      "Sometimes",
+      "Often",
+      "Almost always"
+    ],
+    "balls": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "questions": [
+      "I turn a task into a clear next action.",
+      "I write down important reminders instead of keeping them in my head.",
+      "I set up my workspace to make focusing easier.",
+      "I can reduce distractions for a short period.",
+      "When my attention fades, I take a short pause.",
+      "After an interruption, I can return to the task."
+    ],
+    "singleAnswer": true,
+    "betterWhen": "none",
+    "estimatedMinutes": 2,
+    "questionCount": 6,
+    "construct": "Self-reflection · attention"
+  }
+]

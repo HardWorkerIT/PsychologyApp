@@ -26,6 +26,8 @@ public static partial class AppStrings
     public static string OptionsDonateTitle => R(nameof(OptionsDonateTitle));
 
     public static string AdsTitle => R(nameof(AdsTitle));
+    public static string AdsPersonalizationLabel => R(nameof(AdsPersonalizationLabel));
+    public static string AdsPersonalizationHelp => R(nameof(AdsPersonalizationHelp));
     public static string AdsHelp => R(nameof(AdsHelp));
     public static string AdsHelpActive => R(nameof(AdsHelpActive));
     public static string AdsDisclosure => R(nameof(AdsDisclosure));
@@ -122,6 +124,8 @@ public static partial class AppStrings
     public static string DonateMoreInfo => R(nameof(DonateMoreInfo));
     public static string DonateBody => R(nameof(DonateBody));
     public static string DonateButton => R(nameof(DonateButton));
+    public static string DonatePromptTitle => R(nameof(DonatePromptTitle));
+    public static string DonateNotNow => R(nameof(DonateNotNow));
     public static string DonateOpenFailed => R(nameof(DonateOpenFailed));
 
     public static string InfoAboutBody => R(nameof(InfoAboutBody));

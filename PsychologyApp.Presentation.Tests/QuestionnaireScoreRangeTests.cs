@@ -72,7 +72,7 @@ public sealed class QuestionnaireScoreRangeTests
         }
     }
 
-    private static readonly string[] Scored = ["questionnaires", "beck", "pss10", "rses"];
+    private static readonly string[] Scored = ["questionnaires", "beck", "pss10", "rses", "preferences16"];
 
     // Russian is the original (no suffix); the other languages are compared with the English file they were translated from.
     private static readonly string[] Translations = ["", ".fr", ".de", ".es", ".pt", ".zh"];

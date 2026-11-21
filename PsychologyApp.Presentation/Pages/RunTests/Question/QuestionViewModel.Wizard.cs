@@ -26,6 +26,10 @@ public partial class QuestionViewModel
 
     public string MultiChoiceHintText => AppStrings.TestsMultiChoiceHint;
 
+    public bool IsAsrs6 => _session?.AnalyzerId == Asrs6Screening.AnalyzerId;
+
+    public string Asrs6ShadingHint => IsAsrs6 ? AppStrings.Asrs6ShadingLegend : string.Empty;
+
     public string TestFlowId => _session?.TestId ?? string.Empty;
 
     public string QuestionLeadText => AppStrings.TestsQuestionLead;
@@ -147,9 +151,14 @@ public partial class QuestionViewModel
             return;
         }
 
+        int answerIndex = 0;
         foreach (Answer answer in CurrentQuestion.Answers)
         {
-            CurrentAnswers.Add(new AnswerOptionItem(answer, IsSingleAnswer, SelectAnswer));
+            int shadeLevel = IsAsrs6
+                ? (int)Asrs6Screening.GetAnswerShade(_wizard.CurrentIndex, answerIndex)
+                : (int)Asrs6AnswerShade.None;
+            CurrentAnswers.Add(new AnswerOptionItem(answer, IsSingleAnswer, shadeLevel, SelectAnswer));
+            answerIndex++;
         }
     }
 
@@ -246,10 +255,11 @@ public sealed class AnswerOptionItem : INotifyPropertyChanged
 {
     private bool _isSelected;
 
-    public AnswerOptionItem(Answer answer, bool isSingleChoice, Action<Answer> onSelect)
+    public AnswerOptionItem(Answer answer, bool isSingleChoice, int shadeLevel, Action<Answer> onSelect)
     {
         Answer = answer;
         IsSingleChoice = isSingleChoice;
+        ShadeLevel = shadeLevel;
         _isSelected = answer.Selected;
         SelectCommand = new DebouncedCommand(() => onSelect(answer));
     }
@@ -257,6 +267,8 @@ public sealed class AnswerOptionItem : INotifyPropertyChanged
     public Answer Answer { get; }
 
     public bool IsSingleChoice { get; }
+
+    public int ShadeLevel { get; }
 
     public string Text => Answer.Text ?? string.Empty;
 

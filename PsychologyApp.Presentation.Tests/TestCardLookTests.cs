@@ -14,7 +14,7 @@ public sealed class TestCardLookTests
 {
     private static IEnumerable<string> CatalogueTestIds()
     {
-        foreach (string file in new[] { "beck.json", "pss10.json", "rses.json", "questionnaires.json" })
+        foreach (string file in new[] { "beck.json", "pss10.json", "rses.json", "preferences16.json", "questionnaires.json" })
         {
             using JsonDocument doc = JsonDocument.Parse(File.ReadAllText(Path.Combine(QuestionnaireScoreRangeTests.RawRoot(), file)));
             JsonElement root = doc.RootElement;

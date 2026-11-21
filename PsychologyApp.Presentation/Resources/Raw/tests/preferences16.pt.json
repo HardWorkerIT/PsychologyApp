@@ -1,0 +1,278 @@
+{
+  "title": "16 perfis de personalidade",
+  "subtitle": "Suas preferências no dia a dia",
+  "estimatedMinutes": 4,
+  "questionCount": 20,
+  "construct": "Autoconhecimento",
+  "betterWhen": "none",
+  "description": "Vinte situações breves podem ajudar você a perceber quais formas de se relacionar, decidir e planejar parecem mais naturais.",
+  "algorithm": [
+    "Não há respostas certas. Escolha a opção que costuma combinar mais com você.",
+    "Responda com base no seu jeito habitual, não no que acha que deveria fazer. As preferências podem mudar conforme o contexto."
+  ],
+  "comment": "Este é um questionário informal não validado; não é o instrumento oficial MBTI nem um diagnóstico. Use o resultado para refletir, não como rótulo.",
+  "analyzerId": "preferences16",
+  "singleAnswer": true,
+  "questions": [
+    {
+      "text": "Depois de uma semana agitada, o que ajuda você a recuperar as energias?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Um tempo tranquilo sozinho"
+        },
+        {
+          "ball": 0,
+          "text": "Tempo com outras pessoas"
+        }
+      ]
+    },
+    {
+      "text": "Em uma instrução, você valoriza…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "O princípio geral e novas possibilidades"
+        },
+        {
+          "ball": 6,
+          "text": "Detalhes concretos e etapas comprovadas"
+        }
+      ]
+    },
+    {
+      "text": "Ao avaliar um plano, você percebe primeiro…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Se é justo e atencioso"
+        },
+        {
+          "ball": 36,
+          "text": "Se é lógico e eficiente"
+        }
+      ]
+    },
+    {
+      "text": "Antes de um prazo, você prefere…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Terminar com antecedência"
+        },
+        {
+          "ball": 0,
+          "text": "Trabalhar em etapas flexíveis perto do prazo"
+        }
+      ]
+    },
+    {
+      "text": "Ao aprender algo novo, o que ajuda mais?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Um exemplo passo a passo"
+        },
+        {
+          "ball": 0,
+          "text": "A ideia geral e suas possíveis conexões"
+        }
+      ]
+    },
+    {
+      "text": "Em um desacordo, você tende a…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Considerar o contexto e encontrar pontos em comum"
+        },
+        {
+          "ball": 6,
+          "text": "Buscar uma solução coerente"
+        }
+      ]
+    },
+    {
+      "text": "Ao trabalhar em uma tarefa, você prefere…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Saber logo qual é o resultado esperado"
+        },
+        {
+          "ball": 0,
+          "text": "Explorar opções durante o processo"
+        }
+      ]
+    },
+    {
+      "text": "Em um grupo novo, você geralmente…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Entra logo na conversa"
+        },
+        {
+          "ball": 216,
+          "text": "Se abre aos poucos"
+        }
+      ]
+    },
+    {
+      "text": "Diante de uma decisão difícil, você costuma considerar…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Valores e impacto nas pessoas"
+        },
+        {
+          "ball": 1,
+          "text": "Critérios coerentes e lógica"
+        }
+      ]
+    },
+    {
+      "text": "Quando os planos mudam, você costuma…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Fazer rapidamente um novo plano"
+        },
+        {
+          "ball": 0,
+          "text": "Resolver conforme as coisas acontecem"
+        }
+      ]
+    },
+    {
+      "text": "Em um encontro, você costuma…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Circular entre diferentes conversas"
+        },
+        {
+          "ball": 36,
+          "text": "Conversar com algumas pessoas conhecidas"
+        }
+      ]
+    },
+    {
+      "text": "Para uma tarefa prática, você escolheria…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Um método que já funcionou"
+        },
+        {
+          "ball": 0,
+          "text": "Uma abordagem nova para experimentar"
+        }
+      ]
+    },
+    {
+      "text": "Um dia livre é mais agradável quando você…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Mantém algumas opções em aberto"
+        },
+        {
+          "ball": 1,
+          "text": "Já tem um plano em mente"
+        }
+      ]
+    },
+    {
+      "text": "Com pessoas que acabou de conhecer, você geralmente…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Observa um pouco antes de se abrir"
+        },
+        {
+          "ball": 0,
+          "text": "Acha fácil iniciar uma conversa"
+        }
+      ]
+    },
+    {
+      "text": "Ao escolher como agir, você confia mais em…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Observações e fatos que pode verificar"
+        },
+        {
+          "ball": 0,
+          "text": "Padrões, intuições e possíveis conexões"
+        }
+      ]
+    },
+    {
+      "text": "Quando alguém próximo pede conselho, você primeiro…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Tenta entender como a pessoa está se sentindo"
+        },
+        {
+          "ball": 216,
+          "text": "Ajuda a avaliar opções e consequências"
+        }
+      ]
+    },
+    {
+      "text": "Ao pensar em um problema, você geralmente…",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Reflete sozinho primeiro"
+        },
+        {
+          "ball": 0,
+          "text": "Conversa para organizar as ideias"
+        }
+      ]
+    },
+    {
+      "text": "Em uma conversa, você gosta de…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Falar de ideias e possibilidades"
+        },
+        {
+          "ball": 6,
+          "text": "Falar de acontecimentos concretos e experiências reais"
+        }
+      ]
+    },
+    {
+      "text": "Ao dar feedback, você tende a…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Ser direto e específico"
+        },
+        {
+          "ball": 0,
+          "text": "Escolher as palavras considerando os sentimentos da outra pessoa"
+        }
+      ]
+    },
+    {
+      "text": "Uma agenda costuma ser para você…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Um quadro que deve permitir mudanças"
+        },
+        {
+          "ball": 216,
+          "text": "Uma estrutura útil para manter o foco"
+        }
+      ]
+    }
+  ]
+}

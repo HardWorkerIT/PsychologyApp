@@ -33,6 +33,10 @@ public enum Pcl5Band { Low, Elevated, Probable }
 
 public static class TestScoreBandClassifier
 {
+    public static SelfReflectionBand ClassifySelfReflection(int score) => SelfReflectionProfile.Classify(score);
+
+    public static Asrs6Band ClassifyAsrs6(int score) => Asrs6Screening.Classify(score);
+
     public static BeckBand ClassifyBeck(int score) => score switch
     {
         <= 9 => BeckBand.None,

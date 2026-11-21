@@ -30,6 +30,18 @@
                         <Setter Property="Stroke" Value="{DynamicResource Primary}" />
                         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
                     </DataTrigger>
+                    <DataTrigger
+                        Binding="{TemplateBinding ShadeLevel}"
+                        TargetType="Border"
+                        Value="1">
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TestAnswerShadeLight}, Dark={DynamicResource TestAnswerShadeLightDark}}" />
+                    </DataTrigger>
+                    <DataTrigger
+                        Binding="{TemplateBinding ShadeLevel}"
+                        TargetType="Border"
+                        Value="2">
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource TestAnswerShadeDark}, Dark={DynamicResource TestAnswerShadeDarkDark}}" />
+                    </DataTrigger>
                 </Border.Triggers>
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" MinimumHeightRequest="{StaticResource TestAnswerOptionMinHeight}">
                     <!-- Single choice: radio ring + inner dot -->

@@ -1,3 +1,5 @@
+using PsychologyApp.Domain.Tests;
+
 namespace PsychologyApp.Presentation.Common;
 
 public static partial class AppStrings
@@ -54,6 +56,7 @@ public static partial class AppStrings
     public static string TestsListSectionTitle => R(nameof(TestsListSectionTitle));
     public static string TestsListSectionSubtitle => R(nameof(TestsListSectionSubtitle));
     public static string TestHistoryScore(int score) => F(nameof(TestHistoryScore), score);
+    public static string Asrs6Score(int score) => F(nameof(Asrs6Score), score);
     public static string TestHistoryTrendTitle => R(nameof(TestHistoryTrendTitle));
     public static string TestResultDuration(int seconds) =>
         seconds < 60
@@ -68,6 +71,84 @@ public static partial class AppStrings
     public static string TestsAnswerSelected => R(nameof(TestsAnswerSelected));
     public static string TestsAnswerNotSelected => R(nameof(TestsAnswerNotSelected));
     public static string TestsAnswerOption => R(nameof(TestsAnswerOption));
+    public static string Personality16TypeName(string code) => R(code switch
+    {
+        "ISTJ" => "Personality16ISTJ",
+        "ISFJ" => "Personality16ISFJ",
+        "INFJ" => "Personality16INFJ",
+        "INTJ" => "Personality16INTJ",
+        "ISTP" => "Personality16ISTP",
+        "ISFP" => "Personality16ISFP",
+        "INFP" => "Personality16INFP",
+        "INTP" => "Personality16INTP",
+        "ESTP" => "Personality16ESTP",
+        "ESFP" => "Personality16ESFP",
+        "ENFP" => "Personality16ENFP",
+        "ENTP" => "Personality16ENTP",
+        "ESTJ" => "Personality16ESTJ",
+        "ESFJ" => "Personality16ESFJ",
+        "ENFJ" => "Personality16ENFJ",
+        "ENTJ" => "Personality16ENTJ",
+        _ => "Personality16Unknown"
+    });
+    public static string Personality16TypeResult(string name, string code) => F(nameof(Personality16TypeResult), name, code);
+    public static string Personality16ResultDetail(string preferences) => F(nameof(Personality16ResultDetail), preferences);
+    public static string Personality16PreferenceLabel(char preference) => R(preference switch
+    {
+        'I' => "Personality16Introversion",
+        'E' => "Personality16Extraversion",
+        'N' => "Personality16Intuition",
+        'S' => "Personality16Sensing",
+        'F' => "Personality16Feeling",
+        'T' => "Personality16Thinking",
+        'P' => "Personality16Perceiving",
+        'J' => "Personality16Judging",
+        _ => "Personality16Unknown"
+    });
+    public static string SelfReflectionResultTitle(SelfReflectionBand band) => R(band switch
+    {
+        SelfReflectionBand.Explore => "SelfReflectionResultTitle.Explore",
+        SelfReflectionBand.Building => "SelfReflectionResultTitle.Building",
+        _ => "SelfReflectionResultTitle.Available"
+    });
+    public static string SelfReflectionSummary(SelfReflectionBand band) => R(band switch
+    {
+        SelfReflectionBand.Explore => "SelfReflectionSummary.Explore",
+        SelfReflectionBand.Building => "SelfReflectionSummary.Building",
+        _ => "SelfReflectionSummary.Available"
+    });
+    public static string SelfReflectionDetail(SelfReflectionBand band) => R(band switch
+    {
+        SelfReflectionBand.Explore => "SelfReflectionDetail.Explore",
+        SelfReflectionBand.Building => "SelfReflectionDetail.Building",
+        _ => "SelfReflectionDetail.Available"
+    });
+    public static string SelfReflectionPracticeHint => R(nameof(SelfReflectionPracticeHint));
+    public static string BigFiveProfileShort => R(nameof(BigFiveProfileShort));
+    public static string BigFiveSummary => R(nameof(BigFiveSummary));
+    public static string BigFivePracticeHint => R(nameof(BigFivePracticeHint));
+    public static string BigFiveTraitName(BigFiveTrait trait) => R(trait switch
+    {
+        BigFiveTrait.Extraversion => "BigFiveTrait.Extraversion",
+        BigFiveTrait.Agreeableness => "BigFiveTrait.Agreeableness",
+        BigFiveTrait.Conscientiousness => "BigFiveTrait.Conscientiousness",
+        BigFiveTrait.EmotionalStability => "BigFiveTrait.EmotionalStability",
+        _ => "BigFiveTrait.IntellectImagination"
+    });
+    public static string BigFiveTraitScore(string trait, int score) => F(nameof(BigFiveTraitScore), trait, score);
+    public static string Asrs6Summary(Asrs6Band band) => R(band switch
+    {
+        Asrs6Band.BelowScreeningThreshold => "Asrs6Summary.BelowScreeningThreshold",
+        _ => "Asrs6Summary.ScreeningThresholdReached"
+    });
+    public static string Asrs6Detail(Asrs6Band band) => R(band switch
+    {
+        Asrs6Band.BelowScreeningThreshold => "Asrs6Detail.BelowScreeningThreshold",
+        _ => "Asrs6Detail.ScreeningThresholdReached"
+    });
+    public static string Asrs6ShadingLegend => R(nameof(Asrs6ShadingLegend));
+    public static string Asrs6ShadeLightHint => R(nameof(Asrs6ShadeLightHint));
+    public static string Asrs6ShadeDarkHint => R(nameof(Asrs6ShadeDarkHint));
     public static string TestsRemainingDuration(int minutes) => F(nameof(TestsRemainingDuration), minutes);
     public static string TestsCoLabel => R(nameof(TestsCoLabel));
     public static string TestsBkLabel => R(nameof(TestsBkLabel));

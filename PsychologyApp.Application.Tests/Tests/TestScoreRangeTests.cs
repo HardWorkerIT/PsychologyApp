@@ -11,6 +11,7 @@ public sealed class TestScoreRangeTests
     [InlineData("who5", 0, 25)]
     [InlineData("swls", 5, 35)]
     [InlineData("rses", 0, 30)]
+    [InlineData("preferences16", 0, 1295)]
     public void GetScoreRange_ReturnsKnownDomain(string analyzerId, int expectedMin, int expectedMax)
     {
         ScoreRange? range = TestScoreInterpreter.GetScoreRange(analyzerId);

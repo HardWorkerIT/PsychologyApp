@@ -1,0 +1,278 @@
+{
+  "title": "16 perfiles de personalidad",
+  "subtitle": "Tus preferencias cotidianas",
+  "estimatedMinutes": 4,
+  "questionCount": 20,
+  "construct": "Autoconocimiento",
+  "betterWhen": "none",
+  "description": "Veinte situaciones breves pueden ayudarte a notar qué formas de relacionarte, decidir y planificar te resultan más naturales.",
+  "algorithm": [
+    "No hay respuestas correctas. Elige la opción que suele parecerte más cercana.",
+    "Responde según tu costumbre, no según lo que crees que deberías hacer. Las preferencias pueden cambiar según la situación."
+  ],
+  "comment": "Es un cuestionario informal no validado; no es la evaluación oficial MBTI ni un diagnóstico. Toma el resultado como una invitación a reflexionar, no como una etiqueta.",
+  "analyzerId": "preferences16",
+  "singleAnswer": true,
+  "questions": [
+    {
+      "text": "Después de una semana intensa, ¿qué te ayuda a recuperar energía?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Tener un rato de tranquilidad a solas"
+        },
+        {
+          "ball": 0,
+          "text": "Pasar tiempo con otras personas"
+        }
+      ]
+    },
+    {
+      "text": "En unas instrucciones valoras…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "El principio general y las nuevas posibilidades"
+        },
+        {
+          "ball": 6,
+          "text": "Los detalles concretos y los pasos probados"
+        }
+      ]
+    },
+    {
+      "text": "Al evaluar un plan, te fijas primero en…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Si es justo y considerado"
+        },
+        {
+          "ball": 36,
+          "text": "Si es lógico y eficaz"
+        }
+      ]
+    },
+    {
+      "text": "Antes de una fecha límite prefieres…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Terminar con antelación"
+        },
+        {
+          "ball": 0,
+          "text": "Trabajar con flexibilidad cuando se acerca"
+        }
+      ]
+    },
+    {
+      "text": "Al aprender algo nuevo, ¿qué te ayuda más?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Un ejemplo paso a paso"
+        },
+        {
+          "ball": 0,
+          "text": "La idea general y sus posibles conexiones"
+        }
+      ]
+    },
+    {
+      "text": "En un desacuerdo, tiendes a…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Tener en cuenta la situación y encontrar puntos en común"
+        },
+        {
+          "ball": 6,
+          "text": "Buscar una solución coherente"
+        }
+      ]
+    },
+    {
+      "text": "Al trabajar en una tarea prefieres…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Conocer pronto el resultado esperado"
+        },
+        {
+          "ball": 0,
+          "text": "Explorar opciones mientras avanzas"
+        }
+      ]
+    },
+    {
+      "text": "En un grupo nuevo normalmente…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Te incorporas pronto a la conversación"
+        },
+        {
+          "ball": 216,
+          "text": "Te abres poco a poco"
+        }
+      ]
+    },
+    {
+      "text": "Ante una decisión difícil, sueles valorar…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Los valores y el efecto en las personas"
+        },
+        {
+          "ball": 1,
+          "text": "Criterios coherentes y la lógica"
+        }
+      ]
+    },
+    {
+      "text": "Si cambian los planes, sueles…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Preparar rápidamente un plan nuevo"
+        },
+        {
+          "ball": 0,
+          "text": "Resolverlo sobre la marcha"
+        }
+      ]
+    },
+    {
+      "text": "En una reunión sueles…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Pasar de una conversación a otra"
+        },
+        {
+          "ball": 36,
+          "text": "Hablar con algunas personas conocidas"
+        }
+      ]
+    },
+    {
+      "text": "Para una tarea práctica eliges más a menudo…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Un método que ya funciona"
+        },
+        {
+          "ball": 0,
+          "text": "Un enfoque nuevo que quieres probar"
+        }
+      ]
+    },
+    {
+      "text": "Disfrutas más un día libre cuando…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Dejas abiertas varias opciones"
+        },
+        {
+          "ball": 1,
+          "text": "Tienes un plan en mente"
+        }
+      ]
+    },
+    {
+      "text": "Con personas que acabas de conocer, normalmente…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Observas un poco antes de abrirte"
+        },
+        {
+          "ball": 0,
+          "text": "Te resulta fácil iniciar una conversación"
+        }
+      ]
+    },
+    {
+      "text": "Al elegir cómo actuar confías más en…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Lo que puedes observar y comprobar"
+        },
+        {
+          "ball": 0,
+          "text": "Los patrones, intuiciones y posibles conexiones"
+        }
+      ]
+    },
+    {
+      "text": "Si alguien cercano te pide consejo, primero…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Intentas entender cómo se siente"
+        },
+        {
+          "ball": 216,
+          "text": "Le ayudas a valorar opciones y consecuencias"
+        }
+      ]
+    },
+    {
+      "text": "Al pensar en un problema, normalmente…",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Primero lo analizas por tu cuenta"
+        },
+        {
+          "ball": 0,
+          "text": "Lo conversas para aclarar tus ideas"
+        }
+      ]
+    },
+    {
+      "text": "En una conversación disfrutas…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Hablar de ideas y posibilidades"
+        },
+        {
+          "ball": 6,
+          "text": "Hablar de hechos y experiencias reales"
+        }
+      ]
+    },
+    {
+      "text": "Al dar comentarios, sueles…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Ser directo y concreto"
+        },
+        {
+          "ball": 0,
+          "text": "Cuidar cómo pueden sentirse los demás"
+        }
+      ]
+    },
+    {
+      "text": "Un horario suele parecerte…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Un marco que debe permitir cambios"
+        },
+        {
+          "ball": 216,
+          "text": "Una estructura útil para concentrarte"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "title": "16 profils de personnalité",
+  "subtitle": "Vos préférences au quotidien",
+  "estimatedMinutes": 4,
+  "questionCount": 20,
+  "construct": "Mieux se connaître",
+  "betterWhen": "none",
+  "description": "Vingt situations courtes peuvent vous aider à repérer les façons d’échanger, de décider et de vous organiser qui vous semblent les plus naturelles.",
+  "algorithm": [
+    "Il n’y a pas de bonne réponse. Choisissez ce qui vous correspond le plus souvent.",
+    "Répondez selon vos habitudes, pas selon ce que vous pensez devoir faire. Les préférences peuvent varier selon le contexte."
+  ],
+  "comment": "Ce questionnaire informel n’est pas validé : ce n’est ni l’évaluation officielle MBTI ni un diagnostic. Le résultat invite à réfléchir, il ne définit pas votre identité.",
+  "analyzerId": "preferences16",
+  "singleAnswer": true,
+  "questions": [
+    {
+      "text": "Après une semaine chargée, qu’est-ce qui vous aide à récupérer ?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Un moment calme en solo"
+        },
+        {
+          "ball": 0,
+          "text": "Du temps avec d’autres personnes"
+        }
+      ]
+    },
+    {
+      "text": "Dans une consigne, vous appréciez…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Le principe général et les nouvelles possibilités"
+        },
+        {
+          "ball": 6,
+          "text": "Les détails précis et les étapes éprouvées"
+        }
+      ]
+    },
+    {
+      "text": "En évaluant un plan, vous remarquez d’abord…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Son équité et son attention aux personnes"
+        },
+        {
+          "ball": 36,
+          "text": "Sa logique et son efficacité"
+        }
+      ]
+    },
+    {
+      "text": "Avant une échéance, vous préférez…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Finir en avance"
+        },
+        {
+          "ball": 0,
+          "text": "Avancer par périodes flexibles à l’approche de l’échéance"
+        }
+      ]
+    },
+    {
+      "text": "Pour apprendre quelque chose de nouveau, qu’est-ce qui vous aide le plus ?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Un exemple étape par étape"
+        },
+        {
+          "ball": 0,
+          "text": "L’idée générale et les liens possibles"
+        }
+      ]
+    },
+    {
+      "text": "En cas de désaccord, vous cherchez plutôt à…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Tenir compte du contexte et trouver un terrain d’entente"
+        },
+        {
+          "ball": 6,
+          "text": "Trouver une solution cohérente"
+        }
+      ]
+    },
+    {
+      "text": "Pour une tâche, vous préférez…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Connaître rapidement le résultat attendu"
+        },
+        {
+          "ball": 0,
+          "text": "Explorer les options en avançant"
+        }
+      ]
+    },
+    {
+      "text": "Dans un nouveau groupe, vous…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Rejoignez rapidement la conversation"
+        },
+        {
+          "ball": 216,
+          "text": "Vous ouvrez progressivement"
+        }
+      ]
+    },
+    {
+      "text": "Pour une décision difficile, vous pesez plutôt…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Les valeurs et l’impact sur les personnes"
+        },
+        {
+          "ball": 1,
+          "text": "La logique et des critères cohérents"
+        }
+      ]
+    },
+    {
+      "text": "Quand les plans changent, vous avez tendance à…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Préparer rapidement un nouveau plan"
+        },
+        {
+          "ball": 0,
+          "text": "Vous adapter au fur et à mesure"
+        }
+      ]
+    },
+    {
+      "text": "Lors d’une rencontre, vous avez tendance à…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Passer d’une conversation à l’autre"
+        },
+        {
+          "ball": 36,
+          "text": "Rester avec quelques personnes familières"
+        }
+      ]
+    },
+    {
+      "text": "Pour une tâche pratique, vous choisissez plus volontiers…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "Une méthode qui a déjà fait ses preuves"
+        },
+        {
+          "ball": 0,
+          "text": "Une nouvelle approche à essayer"
+        }
+      ]
+    },
+    {
+      "text": "Une journée libre vous plaît davantage si vous…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Gardez plusieurs possibilités ouvertes"
+        },
+        {
+          "ball": 1,
+          "text": "Avez déjà une idée de programme"
+        }
+      ]
+    },
+    {
+      "text": "Avec des personnes que vous venez de rencontrer, vous…",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "Prenez le temps d’observer"
+        },
+        {
+          "ball": 0,
+          "text": "Engagez facilement la conversation"
+        }
+      ]
+    },
+    {
+      "text": "Pour choisir comment agir, vous faites davantage confiance…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "À ce que vous pouvez observer et vérifier"
+        },
+        {
+          "ball": 0,
+          "text": "Aux tendances, intuitions et liens possibles"
+        }
+      ]
+    },
+    {
+      "text": "Quand un proche demande conseil, vous commencez par…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Essayer de comprendre ce qu’il ressent"
+        },
+        {
+          "ball": 216,
+          "text": "L’aider à examiner les options et leurs conséquences"
+        }
+      ]
+    },
+    {
+      "text": "Face à un problème, vous avez tendance à…",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Y réfléchir d’abord seul"
+        },
+        {
+          "ball": 0,
+          "text": "En parler pour clarifier vos idées"
+        }
+      ]
+    },
+    {
+      "text": "Dans une conversation, vous aimez…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Parler d’idées et de possibilités"
+        },
+        {
+          "ball": 6,
+          "text": "Parler d’événements concrets et d’expériences vécues"
+        }
+      ]
+    },
+    {
+      "text": "Quand vous donnez un retour, vous avez tendance à…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Être direct et précis"
+        },
+        {
+          "ball": 0,
+          "text": "Choisir vos mots en pensant aux sentiments de l’autre"
+        }
+      ]
+    },
+    {
+      "text": "Un emploi du temps vous semble généralement…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Un cadre qui doit rester souple"
+        },
+        {
+          "ball": 216,
+          "text": "Une structure utile pour rester concentré"
+        }
+      ]
+    }
+  ]
+}

@@ -60,6 +60,13 @@
                         LineBreakMode="WordWrap" />
                 </Border>
 
+                <Label
+                    IsVisible="{Binding IsAsrs6}"
+                    Text="{Binding Asrs6ShadingHint}"
+                    Style="{StaticResource CaptionStyle}"
+                    LineBreakMode="WordWrap"
+                    Margin="4,0" />
+
                 <VerticalStackLayout
                     x:Name="AnswersPanel"
                     BindableLayout.ItemsSource="{Binding CurrentAnswers}"
@@ -72,6 +79,7 @@
                             <testUi:TestAnswerOptionView
                                 Text="{Binding Text}"
                                 IsSelected="{Binding IsSelected}"
+                                ShadeLevel="{Binding ShadeLevel}"
                                 IsSingleChoice="{Binding IsSingleChoice}"
                                 TapCommand="{Binding SelectCommand}">
                                 <testUi:TestAnswerOptionView.Behaviors>

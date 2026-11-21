@@ -55,7 +55,10 @@ public partial class TestResultViewModel : BaseViewModel
         BackToListCommand = new AsyncCommand(GoToRootAsync);
 
         ApplyResult();
-        LoadTrendAsync().FireAndForget();
+        if (TestScoreLabelMapper.ShouldLoadTrend(_result.AnalyzerId))
+        {
+            LoadTrendAsync().FireAndForget();
+        }
     }
 
     public string ScoreTitle { get; private set; } = string.Empty;
@@ -76,8 +79,10 @@ public partial class TestResultViewModel : BaseViewModel
 
     private void ApplyResult()
     {
-        ScoreTitle = AppStrings.TestsResultTitle(_result.Score);
-        Interpretation = TestScoreLabelMapper.GetSummary(_result.AnalyzerId, _result.Score)
+        ScoreTitle = TestScoreLabelMapper.GetProfileCode(_result.AnalyzerId, _result.Score)
+            ?? AppStrings.TestsResultTitle(_result.Score);
+        Interpretation = TestScoreLabelMapper.GetProfileName(_result.AnalyzerId, _result.Score)
+            ?? TestScoreLabelMapper.GetSummary(_result.AnalyzerId, _result.Score)
             ?? _result.Interpretation;
         InterpretationDetail = TestScoreLabelMapper.GetDetail(_result.AnalyzerId, _result.Score)
             ?? _result.InterpretationDetail

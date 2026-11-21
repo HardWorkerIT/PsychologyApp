@@ -28,6 +28,14 @@ public static class TestCardLook
         "scoff" => ("Restaurant", TechniqueFlavor.Body),
         "swls" => ("WbSunny", TechniqueFlavor.Action),
         "pochebut" or "haer" => ("Whatshot", TechniqueFlavor.Action),
+        "preferences16" => ("SelfImprovement", TechniqueFlavor.Mind),
+        "bigfive" => ("SelfImprovement", TechniqueFlavor.Mind),
+        "asrs6" or "reflection_focus" => ("Psychology", TechniqueFlavor.Mind),
+        "reflection_coping" => ("Bolt", TechniqueFlavor.Mind),
+        "reflection_boundaries" or "reflection_conflict" => ("SelfImprovement", TechniqueFlavor.Action),
+        "reflection_values" or "reflection_strengths" => ("SelfImprovement", TechniqueFlavor.Heart),
+        "reflection_recovery" => ("Spa", TechniqueFlavor.Body),
+        "reflection_support" => ("SelfImprovement", TechniqueFlavor.Heart),
         "luscher_brief" or "luscher_standard" => ("Palette", TechniqueFlavor.Action),
         _ => (DefaultIcon, TechniqueFlavor.None)
     };

@@ -266,6 +266,16 @@ public sealed class InsightsViewModel : BaseViewModel
         // A bare "Result: 0" says nothing: the scale it is on and what it means, in the words the test list and history use.
         string analyzerId = definition.AnalyzerId ?? definition.TestId;
         string? meaning = TestScoreLabelMapper.GetSummary(analyzerId, test.Latest);
+        if (analyzerId == PreferenceProfile16.AnalyzerId)
+        {
+            return new InsightItem(
+                definition.Title,
+                meaning ?? string.Empty,
+                test.RetestDue ? AppStrings.InsightsRetestHint : null,
+                test.RetestDue ? new AsyncCommand(() => _navigation.GoToTestAsync(test.TestId)) : null,
+                test.RetestDue ? AppStrings.InsightsRetest : null);
+        }
+
         string score = TestScoreInterpreter.GetScoreRange(analyzerId) is { } range
             ? AppStrings.InsightsTestScoreOf(test.Latest, range.Max)
             : AppStrings.InsightsTestSingle(test.Latest);

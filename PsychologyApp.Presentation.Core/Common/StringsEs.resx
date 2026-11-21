@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -403,11 +403,18 @@
     <value>Más información</value>
   </data>
   <data name="DonateBody" xml:space="preserve">
-    <value>Este proyecto se mantiene solo con donaciones. No mostramos anuncios ni vendemos servicios de pago. Las donaciones apoyan a desarrolladores y diseñadores.</value>
+    <value>Apoyo voluntario; la aplicación sigue siendo gratuita y sus funciones no cambian.</value>
   </data>
   <data name="DonateButton" xml:space="preserve">
     <value>Donar</value>
   </data>
+  <data name="DonatePromptTitle" xml:space="preserve">
+    <value>¿Te ha resultado útil la aplicación?</value>
+  </data>
+  <data name="DonateNotNow" xml:space="preserve">
+    <value>Ahora no</value>
+  </data>
+
   <data name="DonateOpenFailed" xml:space="preserve">
     <value>No se pudo abrir la página de donaciones</value>
   </data>
@@ -4190,6 +4197,12 @@
   <data name="AdsPrivacyPolicy" xml:space="preserve">
     <value>Política de privacidad</value>
   </data>
+  <data name="AdsPersonalizationLabel" xml:space="preserve">
+    <value>Anuncios personalizados</value>
+  </data>
+  <data name="AdsPersonalizationHelp" xml:space="preserve">
+    <value>Si está activado, el SDK de VK puede enviar tu ID publicitario para elegir banners. No se envían chats ni entradas del diario.</value>
+  </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>¿Has recibido un código de invitación para quitar la publicidad? Introdúcelo aquí.</value>
   </data>
@@ -4200,7 +4213,7 @@
     <value>Describe un problema o una idea. La aplicación abrirá tu correo o SMS para que revises el mensaje y decidas si quieres enviarlo.</value>
   </data>
   <data name="AdsDisclosure" xml:space="preserve">
-    <value>La aplicación carga automáticamente un banner al abrir un catálogo compatible. VK puede recibir la dirección IP, información técnica del dispositivo y de la aplicación, un identificador publicitario disponible y eventos de solicitud, impresión y clic. Los datos exactos dependen de la versión del SDK y de los ajustes del dispositivo. La aplicación no envía a VK textos del chat o del diario, respuestas de las prácticas, resultados de pruebas ni información de salud. Consulta la política de privacidad.</value>
+    <value>La aplicación carga automáticamente un banner al abrir un catálogo compatible. VK puede recibir la dirección IP, información técnica del dispositivo y de la aplicación, y eventos de solicitud, impresión y clic. Si los anuncios personalizados están activados, el SDK también puede enviar un identificador publicitario disponible. Los datos exactos dependen de la versión del SDK y de los ajustes del dispositivo. La aplicación no envía a VK textos del chat o del diario, respuestas de las prácticas, resultados de pruebas ni información de salud. Consulta la política de privacidad.</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Acciones rápidas</value>
@@ -4415,4 +4428,112 @@
   <data name="TestsCollapseDetailsHint" xml:space="preserve">
     <value>Ocultar resultados detallados</value>
   </data>
+  <data name="Personality16ISTJ" xml:space="preserve">
+    <value>Inspector</value>
+  </data>
+  <data name="Personality16ISFJ" xml:space="preserve">
+    <value>Protector</value>
+  </data>
+  <data name="Personality16INFJ" xml:space="preserve">
+    <value>Guía</value>
+  </data>
+  <data name="Personality16INTJ" xml:space="preserve">
+    <value>Estratega</value>
+  </data>
+  <data name="Personality16ISTP" xml:space="preserve">
+    <value>Práctico</value>
+  </data>
+  <data name="Personality16ISFP" xml:space="preserve">
+    <value>Creador</value>
+  </data>
+  <data name="Personality16INFP" xml:space="preserve">
+    <value>Idealista</value>
+  </data>
+  <data name="Personality16INTP" xml:space="preserve">
+    <value>Analista</value>
+  </data>
+  <data name="Personality16ESTP" xml:space="preserve">
+    <value>Ejecutor</value>
+  </data>
+  <data name="Personality16ESFP" xml:space="preserve">
+    <value>Improvisador</value>
+  </data>
+  <data name="Personality16ENFP" xml:space="preserve">
+    <value>Explorador</value>
+  </data>
+  <data name="Personality16ENTP" xml:space="preserve">
+    <value>Inventor</value>
+  </data>
+  <data name="Personality16ESTJ" xml:space="preserve">
+    <value>Organizador</value>
+  </data>
+  <data name="Personality16ESFJ" xml:space="preserve">
+    <value>Conector</value>
+  </data>
+  <data name="Personality16ENFJ" xml:space="preserve">
+    <value>Mentor</value>
+  </data>
+  <data name="Personality16ENTJ" xml:space="preserve">
+    <value>Líder</value>
+  </data>
+  <data name="Personality16Unknown" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Personality16TypeResult" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Personality16ResultDetail" xml:space="preserve">
+    <value>Tus respuestas se inclinaron hacia estas preferencias: {0}. Tómalo como una invitación a reflexionar, no como diagnóstico ni etiqueta fija.</value>
+  </data>
+  <data name="Personality16Introversion" xml:space="preserve">
+    <value>tranquilidad y tiempo a solas</value>
+  </data>
+  <data name="Personality16Extraversion" xml:space="preserve">
+    <value>interacción e intercambio</value>
+  </data>
+  <data name="Personality16Intuition" xml:space="preserve">
+    <value>ideas y posibles conexiones</value>
+  </data>
+  <data name="Personality16Sensing" xml:space="preserve">
+    <value>hechos y detalles concretos</value>
+  </data>
+  <data name="Personality16Feeling" xml:space="preserve">
+    <value>valores e impacto en las personas</value>
+  </data>
+  <data name="Personality16Thinking" xml:space="preserve">
+    <value>lógica y coherencia</value>
+  </data>
+  <data name="Personality16Perceiving" xml:space="preserve">
+    <value>flexibilidad y opciones abiertas</value>
+  </data>
+  <data name="Personality16Judging" xml:space="preserve">
+    <value>planificación y estructura clara</value>
+  </data>
+  <data name="BigFiveProfileShort" xml:space="preserve"><value>Cinco grandes</value></data>
+  <data name="BigFiveSummary" xml:space="preserve"><value>Cinco escalas describen tus respuestas habituales en este cuestionario. Es un perfil de reflexión, no una evaluación ni un diagnóstico.</value></data>
+  <data name="BigFivePracticeHint" xml:space="preserve"><value>Prueba la práctica como un pequeño experimento; las puntuaciones no indican carencias.</value></data>
+  <data name="BigFiveTrait.Extraversion" xml:space="preserve"><value>Extraversión</value></data>
+  <data name="BigFiveTrait.Agreeableness" xml:space="preserve"><value>Amabilidad</value></data>
+  <data name="BigFiveTrait.Conscientiousness" xml:space="preserve"><value>Responsabilidad</value></data>
+  <data name="BigFiveTrait.EmotionalStability" xml:space="preserve"><value>Estabilidad emocional</value></data>
+  <data name="BigFiveTrait.IntellectImagination" xml:space="preserve"><value>Apertura a ideas</value></data>
+  <data name="BigFiveTraitScore" xml:space="preserve"><value>{0}: {1} de 40</value></data>
+  <data name="SelfReflectionResultTitle.Explore" xml:space="preserve"><value>Un pequeño comienzo</value></data>
+  <data name="SelfReflectionResultTitle.Building" xml:space="preserve"><value>Este recurso se está formando</value></data>
+  <data name="SelfReflectionResultTitle.Available" xml:space="preserve"><value>Este recurso está disponible</value></data>
+  <data name="SelfReflectionSummary.Explore" xml:space="preserve"><value>Tus respuestas indican que aquí cabe probar algo con cuidado.</value></data>
+  <data name="SelfReflectionSummary.Building" xml:space="preserve"><value>Algunas formas ya te funcionan y puedes reforzarlas.</value></data>
+  <data name="SelfReflectionSummary.Available" xml:space="preserve"><value>Según tus respuestas, este recurso aparece a menudo en tu día a día.</value></data>
+  <data name="SelfReflectionDetail.Explore" xml:space="preserve"><value>No es un defecto ni un diagnóstico. Elige un paso pequeño y prueba la práctica sugerida.</value></data>
+  <data name="SelfReflectionDetail.Building" xml:space="preserve"><value>Fíjate en cuándo te resulta más fácil y repite una de esas condiciones esta semana.</value></data>
+  <data name="SelfReflectionDetail.Available" xml:space="preserve"><value>Observa qué ayuda a mantener este recurso y reserva un poco de espacio para ello.</value></data>
+  <data name="SelfReflectionPracticeHint" xml:space="preserve"><value>La práctica ofrece una forma sencilla de explorar el tema, no de corregirte.</value></data>
+  <data name="Asrs6Summary.BelowScreeningThreshold" xml:space="preserve"><value>No se alcanzó el umbral del cribado.</value></data>
+  <data name="Asrs6Summary.ScreeningThresholdReached" xml:space="preserve"><value>Se alcanzó el umbral del cribado. Algunas respuestas pueden relacionarse con dificultades de atención o actividad.</value></data>
+  <data name="Asrs6Detail.BelowScreeningThreshold" xml:space="preserve"><value>Esto no descarta el TDAH ni es un diagnóstico. Si te preocupa, consúltalo con un profesional.</value></data>
+  <data name="Asrs6Detail.ScreeningThresholdReached" xml:space="preserve"><value>Este cribado no es un diagnóstico. Consulta el resultado con un médico o profesional cualificado.</value></data>
+  <data name="Asrs6Score" xml:space="preserve"><value>Puntuación: {0} de 6</value></data>
+  <data name="Asrs6ShadingLegend" xml:space="preserve"><value>El tono claro está por debajo del umbral; el más oscuro cuenta para el resultado.</value></data>
+  <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Tono claro: esta respuesta no cuenta para el umbral del cribado.</value></data>
+  <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Tono oscuro: esta respuesta cuenta para el umbral del cribado.</value></data>
 </root>

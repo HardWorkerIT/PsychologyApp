@@ -1,4 +1,5 @@
 using PsychologyApp.Domain.Practice;
+using PsychologyApp.Domain.Tests;
 
 namespace PsychologyApp.Application.Tests;
 
@@ -6,6 +7,16 @@ public static class TestScoreRecommendation
 {
     public static TechniqueId? RecommendTechnique(string? analyzerId, int score) => analyzerId switch
     {
+        BigFiveProfile.AnalyzerId => TechniqueId.SmallStep,
+        Asrs6Screening.AnalyzerId => null,
+        SelfReflectionProfile.Coping => TechniqueId.Grounding,
+        SelfReflectionProfile.Boundaries => TechniqueId.FeedbackReview,
+        SelfReflectionProfile.Values => TechniqueId.SmallStep,
+        SelfReflectionProfile.Conflict => TechniqueId.CheckTheFacts,
+        SelfReflectionProfile.Recovery => TechniqueId.Breathing,
+        SelfReflectionProfile.Support => TechniqueId.ConnectionStepPlan,
+        SelfReflectionProfile.Strengths => TechniqueId.SelfCompassion,
+        SelfReflectionProfile.Focus => TechniqueId.ImplementationIntention,
         "beck" when score >= 10 => TechniqueId.ThoughtDefusion,
         "beck" => TechniqueId.ThoughtRecord,
         "heck_hess" when score >= 25 => TechniqueId.CheckTheFacts,

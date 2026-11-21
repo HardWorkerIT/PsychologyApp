@@ -1,0 +1,278 @@
+{
+  "title": "16 Persönlichkeitsprofile",
+  "subtitle": "Ihre alltäglichen Vorlieben",
+  "estimatedMinutes": 4,
+  "questionCount": 20,
+  "construct": "Selbstreflexion",
+  "betterWhen": "none",
+  "description": "Zwanzig kurze Situationen helfen Ihnen zu erkennen, welche Art der Kommunikation, Entscheidung und Planung sich meist natürlicher anfühlt.",
+  "algorithm": [
+    "Es gibt keine richtigen Antworten. Wählen Sie, was Ihnen gewöhnlich näherliegt.",
+    "Antworten Sie nach Ihrer Gewohnheit, nicht danach, was man Ihrer Meinung nach tun sollte. Vorlieben können sich je nach Situation ändern."
+  ],
+  "comment": "Dies ist ein informeller, nicht validierter Reflexionsfragebogen, weder der offizielle MBTI-Test noch eine Diagnose. Das Ergebnis ist ein Denkanstoß, kein Etikett.",
+  "analyzerId": "preferences16",
+  "singleAnswer": true,
+  "questions": [
+    {
+      "text": "Was hilft Ihnen nach einer anstrengenden Woche am besten, neue Kraft zu sammeln?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Ruhe und Zeit für mich"
+        },
+        {
+          "ball": 0,
+          "text": "Zeit mit anderen Menschen"
+        }
+      ]
+    },
+    {
+      "text": "Bei einer Anleitung sind Ihnen wichtiger…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Das allgemeine Prinzip und neue Möglichkeiten"
+        },
+        {
+          "ball": 6,
+          "text": "Konkrete Einzelheiten und bewährte Schritte"
+        }
+      ]
+    },
+    {
+      "text": "Bei der Bewertung eines Plans fällt Ihnen zuerst auf…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Wie fair und rücksichtsvoll er ist"
+        },
+        {
+          "ball": 36,
+          "text": "Wie logisch und effizient er ist"
+        }
+      ]
+    },
+    {
+      "text": "Vor einer Frist möchten Sie lieber…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "frühzeitig fertig sein"
+        },
+        {
+          "ball": 0,
+          "text": "in flexiblen Etappen kurz vor der Frist arbeiten"
+        }
+      ]
+    },
+    {
+      "text": "Was hilft Ihnen beim Lernen von etwas Neuem mehr?",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "Ein Beispiel Schritt für Schritt"
+        },
+        {
+          "ball": 0,
+          "text": "Die Grundidee und mögliche Zusammenhänge"
+        }
+      ]
+    },
+    {
+      "text": "Bei einem Streit versuchen Sie eher…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Die Umstände einzubeziehen und Gemeinsamkeiten zu finden"
+        },
+        {
+          "ball": 6,
+          "text": "Eine widerspruchsfreie Lösung zu finden"
+        }
+      ]
+    },
+    {
+      "text": "Bei einer Aufgabe möchten Sie lieber…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "das erwartete Ergebnis früh kennen"
+        },
+        {
+          "ball": 0,
+          "text": "Möglichkeiten unterwegs erkunden"
+        }
+      ]
+    },
+    {
+      "text": "In einer neuen Gruppe …",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "kommen Sie schnell ins Gespräch"
+        },
+        {
+          "ball": 216,
+          "text": "öffnen Sie sich nach und nach"
+        }
+      ]
+    },
+    {
+      "text": "Bei einer schwierigen Entscheidung achten Sie eher auf…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Werte und die Auswirkungen auf Menschen"
+        },
+        {
+          "ball": 1,
+          "text": "Einheitliche Kriterien und Logik"
+        }
+      ]
+    },
+    {
+      "text": "Wenn sich Pläne ändern, …",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "machen Sie schnell einen neuen Plan"
+        },
+        {
+          "ball": 0,
+          "text": "entscheiden Sie spontan"
+        }
+      ]
+    },
+    {
+      "text": "In einer Gruppe …",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "wechseln Sie zwischen verschiedenen Gesprächen"
+        },
+        {
+          "ball": 36,
+          "text": "sprechen Sie mit einigen vertrauten Personen"
+        }
+      ]
+    },
+    {
+      "text": "Für eine praktische Aufgabe wählen Sie eher…",
+      "answers": [
+        {
+          "ball": 216,
+          "text": "eine bewährte Methode"
+        },
+        {
+          "ball": 0,
+          "text": "einen neuen Ansatz zum Ausprobieren"
+        }
+      ]
+    },
+    {
+      "text": "Ein freier Tag ist angenehmer, wenn Sie…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Mehrere Möglichkeiten offenlassen"
+        },
+        {
+          "ball": 1,
+          "text": "Einen Plan haben"
+        }
+      ]
+    },
+    {
+      "text": "Bei einem Treffen mit unbekannten Menschen …",
+      "answers": [
+        {
+          "ball": 6,
+          "text": "beobachten Sie erst einmal"
+        },
+        {
+          "ball": 0,
+          "text": "kommen Sie leicht ins Gespräch"
+        }
+      ]
+    },
+    {
+      "text": "Bei der Wahl eines Vorgehens vertrauen Sie eher…",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "Beobachtungen und überprüfbaren Fakten"
+        },
+        {
+          "ball": 0,
+          "text": "Mustern, Ahnungen und möglichen Zusammenhängen"
+        }
+      ]
+    },
+    {
+      "text": "Wenn eine nahestehende Person um Rat bittet, …",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "versuchen Sie zuerst zu verstehen, wie sie sich fühlt"
+        },
+        {
+          "ball": 216,
+          "text": "helfen Sie, Möglichkeiten und Folgen abzuwägen"
+        }
+      ]
+    },
+    {
+      "text": "Wenn Sie ein Problem durchdenken, …",
+      "answers": [
+        {
+          "ball": 1,
+          "text": "denken Sie zuerst allein darüber nach"
+        },
+        {
+          "ball": 0,
+          "text": "sprechen Sie darüber, um Klarheit zu gewinnen"
+        }
+      ]
+    },
+    {
+      "text": "In einem Gespräch sprechen Sie lieber über…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "Ideen und mögliche Entwicklungen"
+        },
+        {
+          "ball": 6,
+          "text": "Konkrete Ereignisse und echte Erfahrungen"
+        }
+      ]
+    },
+    {
+      "text": "Wenn Sie Rückmeldung geben, …",
+      "answers": [
+        {
+          "ball": 36,
+          "text": "sind Sie direkt und konkret"
+        },
+        {
+          "ball": 0,
+          "text": "achten Sie auf die Gefühle Ihres Gegenübers"
+        }
+      ]
+    },
+    {
+      "text": "Ein Zeitplan ist für Sie meist…",
+      "answers": [
+        {
+          "ball": 0,
+          "text": "ein Rahmen, der flexibel bleiben sollte"
+        },
+        {
+          "ball": 216,
+          "text": "eine hilfreiche Struktur"
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,10 @@ public sealed class MauiTestCatalogProvider(ITestAssetReader assetReader, ILogge
     private const string BeckPath = "tests/beck.json";
     private const string Pss10Path = "tests/pss10.json";
     private const string RsesPath = "tests/rses.json";
+    private const string PreferenceProfile16Path = "tests/preferences16.json";
+    private const string BigFivePath = "tests/bigfive.json";
+    private const string Asrs6Path = "tests/asrs6.json";
+    private const string SelfReflectionPath = "tests/selfreflection.json";
     private const string LuscherPath = "tests/luscher.json";
     private const string QuestionnairesPath = "tests/questionnaires.json";
 
@@ -22,7 +26,11 @@ public sealed class MauiTestCatalogProvider(ITestAssetReader assetReader, ILogge
         await LoadGroupedQuestionnaireAsync(BeckPath, items, cancellationToken).ConfigureAwait(false);
         await LoadGroupedQuestionnaireAsync(Pss10Path, items, cancellationToken).ConfigureAwait(false);
         await LoadGroupedQuestionnaireAsync(RsesPath, items, cancellationToken).ConfigureAwait(false);
+        await LoadGroupedQuestionnaireAsync(PreferenceProfile16Path, items, cancellationToken).ConfigureAwait(false);
+        await LoadSimpleQuestionnairesAsync(BigFivePath, items, cancellationToken).ConfigureAwait(false);
+        await LoadGroupedQuestionnaireAsync(Asrs6Path, items, cancellationToken).ConfigureAwait(false);
         await LoadLuscherAsync(items, cancellationToken).ConfigureAwait(false);
+        await LoadSimpleQuestionnairesAsync(SelfReflectionPath, items, cancellationToken).ConfigureAwait(false);
         await LoadQuestionnairesAsync(items, cancellationToken).ConfigureAwait(false);
 
         if (items.Count == 0)
@@ -73,10 +81,16 @@ public sealed class MauiTestCatalogProvider(ITestAssetReader assetReader, ILogge
         items.AddRange(TestCatalogParser.ParseLuscherDefinitions(parseResult.Value));
     }
 
-    private async Task LoadQuestionnairesAsync(List<TestDefinition> items, CancellationToken cancellationToken)
+    private Task LoadQuestionnairesAsync(List<TestDefinition> items, CancellationToken cancellationToken) =>
+        LoadSimpleQuestionnairesAsync(QuestionnairesPath, items, cancellationToken);
+
+    private async Task LoadSimpleQuestionnairesAsync(
+        string assetPath,
+        List<TestDefinition> items,
+        CancellationToken cancellationToken)
     {
         ParseResult<List<JsonSimpleQuestionnaireDefinition>>? parseResult =
-            await DeserializeSimpleQuestionnairesAsync(QuestionnairesPath, cancellationToken)
+            await DeserializeSimpleQuestionnairesAsync(assetPath, cancellationToken)
                 .ConfigureAwait(false);
 
         if (parseResult is null || !parseResult.IsSuccess || parseResult.Value is null)

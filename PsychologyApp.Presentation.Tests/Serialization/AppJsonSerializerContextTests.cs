@@ -2,6 +2,7 @@ using System.Text.Json;
 using PsychologyApp.Application.Models.Quot;
 using PsychologyApp.Application.Models.Tests;
 using PsychologyApp.Application.Tests;
+using PsychologyApp.Domain.Tests;
 using PsychologyApp.Presentation.Serialization;
 using Xunit;
 
@@ -37,6 +38,26 @@ public sealed class AppJsonSerializerContextTests
     }
 
     [Fact]
+    public async Task PreferenceProfile16Asset_ParsesTwentySingleChoiceQuestions()
+    {
+        await using FileStream stream = OpenAsset("tests/preferences16.json");
+        ParseResult<JsonGroupedQuestionnaireDefinition> json =
+            await TestCatalogParser.DeserializeGroupedQuestionnaireAsync(stream);
+
+        Assert.True(json.IsSuccess);
+        Assert.Equal("preferences16", json.Value!.AnalyzerId);
+        Assert.True(json.Value.SingleAnswer);
+        Assert.Equal(20, json.Value.Questions.Count);
+        Assert.All(json.Value.Questions, question => Assert.Equal(2, question.Answers.Count));
+        Assert.Contains(json.Value.Questions, question => question.Answers[0].Ball > 0);
+        Assert.Contains(json.Value.Questions, question => question.Answers[1].Ball > 0);
+
+        ParseResult<TestDefinition> parsed = TestCatalogParser.ParseGroupedQuestionnaire(json.Value);
+        Assert.True(parsed.IsSuccess);
+        Assert.Equal(ScoreDirection.None, parsed.Value!.ScoreDirection);
+    }
+
+    [Fact]
     public async Task QuestionnairesAsset_DeserializesSimpleQuestionnaires()
     {
         await using FileStream stream = OpenAsset("tests/questionnaires.json");
@@ -63,7 +84,7 @@ public sealed class AppJsonSerializerContextTests
     }
 
     [Fact]
-    public async Task EmbeddedCatalog_ContainsAtLeastTwentyOneParsedTests()
+    public async Task EmbeddedCatalog_ContainsAtLeastTwentyTwoParsedTests()
     {
         int count = 0;
 
@@ -75,7 +96,7 @@ public sealed class AppJsonSerializerContextTests
             count += TestCatalogParser.ParseSimpleQuestionnaires(questionnaires.Value!).Count;
         }
 
-        foreach (string groupedAsset in new[] { "tests/beck.json", "tests/pss10.json", "tests/rses.json" })
+        foreach (string groupedAsset in new[] { "tests/beck.json", "tests/pss10.json", "tests/rses.json", "tests/preferences16.json" })
         {
             await using FileStream stream = OpenAsset(groupedAsset);
             ParseResult<JsonGroupedQuestionnaireDefinition> grouped =
@@ -96,7 +117,7 @@ public sealed class AppJsonSerializerContextTests
             count += TestCatalogParser.ParseLuscherDefinitions(luscher.Value!).Count;
         }
 
-        Assert.True(count >= 21, $"Expected at least 21 tests, got {count}.");
+        Assert.True(count >= 22, $"Expected at least 22 tests, got {count}.");
     }
 
     private static FileStream OpenAsset(string relativePath)

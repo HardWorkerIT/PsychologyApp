@@ -15,6 +15,13 @@ public sealed class ContentAssetsTests
         WithLanguage(language, () => Assert.Equal(expected, ContentAssets.Candidates("tests/beck.json")));
 
     [Theory]
+    [InlineData("ru", new[] { "tests/preferences16.json" })]
+    [InlineData("en", new[] { "tests/preferences16.en.json", "tests/preferences16.json" })]
+    [InlineData("de", new[] { "tests/preferences16.de.json", "tests/preferences16.en.json", "tests/preferences16.json" })]
+    public void Preference_profiles_use_the_current_language_asset_then_the_fallback(string language, string[] expected) =>
+        WithLanguage(language, () => Assert.Equal(expected, ContentAssets.Candidates("tests/preferences16.json")));
+
+    [Theory]
     [InlineData("ru", new[] { "quotes/quotes.ru.json" })]
     [InlineData("en", new[] { "quotes/quotes.en.json" })]
     [InlineData("zh", new[] { "quotes/quotes.zh.json", "quotes/quotes.en.json" })]

@@ -29,13 +29,19 @@ public static class TestScoreInterpreter
         "rses" => new ScoreRange(0, 30),
         "pcptsd5" => new ScoreRange(0, 5),
         "pcl5" => new ScoreRange(0, 80),
+        PreferenceProfile16.AnalyzerId => new ScoreRange(0, PreferenceProfile16.MaximumScore),
+        BigFiveProfile.AnalyzerId => new ScoreRange(0, BigFiveProfile.MaximumScore),
+        Asrs6Screening.AnalyzerId => new ScoreRange(0, Asrs6Screening.MaximumScore),
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => new ScoreRange(0, SelfReflectionProfile.MaximumScore),
         _ => null
     };
     public static bool IsKnownAnalyzer(string analyzerId) => analyzerId switch
     {
         "heck_hess" or "haer" or "pochebut" or "beck" or "gad7" or "k10" or "who5"
             or "phq9" or "isi" or "ess" or "phq15" or "scoff" or "swls"
-            or "pss10" or "phq2" or "gad2" or "hads_a" or "hads_d" or "rses" or "pcptsd5" or "pcl5" => true,
+            or "pss10" or "phq2" or "gad2" or "hads_a" or "hads_d" or "rses" or "pcptsd5" or "pcl5"
+            or PreferenceProfile16.AnalyzerId or BigFiveProfile.AnalyzerId or Asrs6Screening.AnalyzerId => true,
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => true,
         _ => false
     };
 
@@ -43,8 +49,10 @@ public static class TestScoreInterpreter
     /// The band stored with a result. The cut-offs are the ones the result text is chosen by (TestScoreBandClassifier), so the
     /// stored band and the words the person reads can never disagree on a border score.
     /// </summary>
-    public static int GetBandIndex(string? analyzerId, int score) => analyzerId switch
-    {
+    public static int GetBandIndex(string? analyzerId, int score) => SelfReflectionProfile.IsAnalyzer(analyzerId)
+        ? (int)TestScoreBandClassifier.ClassifySelfReflection(score)
+        : analyzerId switch
+        {
         "beck" => (int)TestScoreBandClassifier.ClassifyBeck(score),
         "heck_hess" => (int)TestScoreBandClassifier.ClassifyHeckHess(score),
         "haer" => (int)TestScoreBandClassifier.ClassifyHaer(score),
@@ -71,6 +79,7 @@ public static class TestScoreInterpreter
         "pcl5" => (int)TestScoreBandClassifier.ClassifyPcl5(score),
         "hads_a" or "hads_d" => (int)TestScoreBandClassifier.ClassifyHads(score),
         "rses" => (int)TestScoreBandClassifier.ClassifyRses(score),
+        "asrs6" => (int)TestScoreBandClassifier.ClassifyAsrs6(score),
         _ => -1
-    };
+        };
 }

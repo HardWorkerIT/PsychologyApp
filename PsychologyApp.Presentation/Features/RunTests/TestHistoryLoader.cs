@@ -3,6 +3,7 @@ using PsychologyApp.Domain.Colour.Enums;
 using PsychologyApp.Application.Models.Tests;
 using PsychologyApp.Application.Tests;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Domain.Tests;
 using PsychologyApp.Presentation.Common;
 using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Shared.Common;
@@ -48,6 +49,8 @@ public sealed class TestHistoryLoader(
         string title = definition?.Title ?? fallbackTitle;
         ScoreDirection direction = definition?.ScoreDirection ?? ScoreDirection.None;
         TestKind kind = definition?.Kind ?? TestKind.Questionnaire;
+        string? analyzerId = definition?.AnalyzerId;
+        bool shouldLoadTrend = TestScoreLabelMapper.ShouldLoadTrend(analyzerId);
         IReadOnlyList<TestResultDTO> history = await historyTask.ConfigureAwait(false);
 
         List<TestHistoryEntryItem> entries = [];
@@ -55,7 +58,7 @@ public sealed class TestHistoryLoader(
         {
             TestResultDTO item = history[i];
             TestResultDTO? older = i + 1 < history.Count ? history[i + 1] : null;
-            TestTrendKind trend = older is null
+            TestTrendKind trend = !shouldLoadTrend || older is null
                 ? TestTrendKind.None
                 : trendResolver.Compare(item.Score, older.Score, direction);
 
@@ -73,7 +76,9 @@ public sealed class TestHistoryLoader(
             {
                 DateText = item.CompletedAt.ToLocalTime().ToString("g"),
                 SummaryText = ColourStrings.BriefSummary(briefDetail?.First?.Code, briefDetail?.Second?.Code) ?? ResolveHistorySummary(definition?.AnalyzerId, item),
-                ScoreText = item.Score is int score ? AppStrings.TestHistoryScore(score) : string.Empty,
+                ScoreText = item.Score is int score
+                    ? TestScoreLabelMapper.GetHistoryScore(analyzerId, score) ?? string.Empty
+                    : string.Empty,
                 TrendText = TestTrendComparer.ToLabel(trend),
                 TrendKind = trend,
                 Detail = detail,
@@ -92,7 +97,7 @@ public sealed class TestHistoryLoader(
             });
         }
 
-        IReadOnlyList<TestScoreChartPoint> chartPoints = trendResolver.BuildChartPoints(history);
+        IReadOnlyList<TestScoreChartPoint> chartPoints = shouldLoadTrend ? trendResolver.BuildChartPoints(history) : [];
         IReadOnlyList<int> chartValues = chartPoints.Select(point => point.Score).ToList();
         (int chartDomainMin, int chartDomainMax) =
             TestScoreChartRangeResolver.ResolveDomain(definition?.AnalyzerId ?? testId, chartValues);
