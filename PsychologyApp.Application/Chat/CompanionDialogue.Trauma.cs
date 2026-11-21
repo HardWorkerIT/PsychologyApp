@@ -38,6 +38,7 @@ public sealed partial class CompanionDialogue
     private CompanionReply AskTrauma(CompanionState state, CompanionEmotion emotion, CompanionTheme? theme)
     {
         IReadOnlyList<ChatQuickReply> stop = [CompanionProtocolContent.StopChip(english)];
+        IReadOnlyList<ChatQuickReply> ratingAndStop = [.. RatingReplies(), .. stop];
         if (state.Protocol == CompanionTraumaContent.Triggers)
         {
             return Reply([CompanionTraumaContent.TriggerQuestion(state.ProtocolStep, english)], stop, state, emotion, theme);
@@ -46,14 +47,14 @@ public sealed partial class CompanionDialogue
         string themeKey = state.ProtocolNotes.ElementAtOrDefault(0) ?? string.Empty;
         (string question, IReadOnlyList<ChatQuickReply> chips) = state.ProtocolStep switch
         {
-            CompanionTraumaContent.ImpactDistress => (CompanionTraumaContent.DistressQuestion(english), RatingReplies()),
+            CompanionTraumaContent.ImpactDistress => (CompanionTraumaContent.DistressQuestion(english), ratingAndStop),
             CompanionTraumaContent.ImpactTheme => (CompanionTraumaContent.ThemeQuestion(english), CompanionTraumaContent.ThemeChips(english)),
             CompanionTraumaContent.ImpactPhrase => (CompanionTraumaContent.PhraseQuestion(themeKey, english), [.. CompanionTraumaContent.PhraseChips(themeKey, english), .. stop]),
-            CompanionTraumaContent.ImpactBeliefBefore => (CompanionTraumaContent.BeliefQuestion(english), RatingReplies()),
+            CompanionTraumaContent.ImpactBeliefBefore => (CompanionTraumaContent.BeliefQuestion(english), ratingAndStop),
             4 => (CompanionTraumaContent.ThemeQuestion(themeKey, 0, english), stop),
             5 => (CompanionTraumaContent.ThemeQuestion(themeKey, 1, english), stop),
             CompanionTraumaContent.ImpactBalanced => (CompanionTraumaContent.BalancedQuestion(english), stop),
-            _ => (CompanionTraumaContent.BeliefAgain(english), RatingReplies())
+            _ => (CompanionTraumaContent.BeliefAgain(english), ratingAndStop)
         };
         return Reply([question], chips, state, emotion, theme);
     }

@@ -215,6 +215,40 @@ public sealed class ChatViewModelTests
     }
 
     [Fact]
+    public async Task SendAvailabilityReturnsAfterAReplyAndDoesNotIgnoreTheNextDraft()
+    {
+        History();
+        TaskCompletionSource<ChatTurnResult> response = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        _chat.Setup(c => c.SendTextAsync(5, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns((long _, string _, CancellationToken _) => response.Task);
+        ChatViewModel viewModel = Create();
+        List<bool> sendAvailability = [];
+        viewModel.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(viewModel.CanSend))
+            {
+                sendAvailability.Add(viewModel.CanSend);
+            }
+        };
+        await viewModel.LoadAsync();
+
+        viewModel.DraftText = "first";
+        viewModel.SendCommand.Execute(null);
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.IsTyping, 5000);
+        viewModel.DraftText = "second";
+
+        Assert.False(viewModel.CanSend);
+
+        response.SetResult(Turn(null, "I'm listening"));
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.Messages.Any(message => message.Text == "I'm listening") && !viewModel.IsTyping, 5000);
+
+        Assert.Equal("second", viewModel.DraftText);
+        Assert.True(viewModel.CanSend);
+        Assert.Contains(false, sendAvailability);
+        Assert.True(sendAvailability[^1]);
+    }
+
+    [Fact]
     public async Task ClosingThePageDoesNotCancelAnAlreadySentMessage()
     {
         History();

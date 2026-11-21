@@ -38,6 +38,28 @@ public static class CompanionDialogueContent
     }
 
     public static string Question(string id, bool english) => CompanionCaseContent.EventQuestion(id, english) ?? CompanionActContent.TargetedQuestion(id, english) ?? BankQuestion(id, english);
+    public static string? RephraseQuestion(string? id, bool english) => id switch
+    {
+        "trigger" => english ? "What happened just before this began?" : "Что произошло перед тем, как это началось?",
+        "worst_case" => english ? "What outcome are you most worried about?" : "Какого исхода вы больше всего опасаетесь?",
+        "body" => english ? "Where in your body do you notice it most?" : "Где в теле вы замечаете это сильнее всего?",
+        "thought" => english ? "What thought comes back most often?" : "Какая мысль чаще всего возвращается?",
+        "need" => english ? "What do you need most right now?" : "Что вам сейчас нужнее всего?",
+        "what_happened" => english ? "What happened, and what have you been telling yourself about it?" : "Что произошло и что вы думаете об этом?",
+        "kind" => english ? "What would you say to a close friend in your place?" : "Что бы вы сказали близкому другу на вашем месте?",
+        "onset" => english ? "How long has this been going on? Has anything changed lately?" : "Как давно это продолжается? Что-нибудь изменилось в последнее время?",
+        "support" => english ? "Who might you feel comfortable sharing this with?" : "С кем вам было бы спокойно этим поделиться?",
+        "rest" => english ? "When did you last get a proper rest?" : "Когда в последний раз вам удалось как следует отдохнуть?",
+        "obstacle" => english ? "What is making it hardest to get started?" : "Что именно сильнее всего мешает начать?",
+        "smallest_step" => english ? "What small thing could you do in the next five minutes?" : "Какое небольшое действие вы могли бы сделать за пять минут?",
+        "meaning" => english ? "What feels hardest about all this?" : "Что во всём этом для вас труднее всего?",
+        "more" => english ? "Is there anything else you want me to know?" : "Что ещё мне важно знать?",
+        "open1" => english ? "Which part of the situation is weighing on you most?" : "Какая часть ситуации давит на вас сильнее всего?",
+        "open2" => english ? "What comes up for you when you think about it?" : "Что возникает у вас, когда вы об этом думаете?",
+        "open3" => english ? "How is this affecting your day and how you feel?" : "Как это влияет на ваш день и самочувствие?",
+        _ => null
+    };
+
 
     private static string BankQuestion(string id, bool english) => id switch
     {

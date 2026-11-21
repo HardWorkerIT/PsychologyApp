@@ -101,7 +101,7 @@ public sealed record SituationAnalysis(
     public static SituationAnalysis Empty { get; } = new(CompanionEmotion.Unknown, 0, false, false, []);
 }
 
-/// <summary>Turns free text into a structured guess about the person's state. Swap the implementation (e.g. an on-device embedding model) without touching callers.</summary>
+/// <summary>Local contract for analysing free text into a structured state; the companion uses its bundled rules and lexicons.</summary>
 public interface ISituationAnalyzer
 {
     SituationAnalysis Analyze(string text);

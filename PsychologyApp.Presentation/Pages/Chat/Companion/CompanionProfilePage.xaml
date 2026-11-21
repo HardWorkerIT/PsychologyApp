@@ -262,5 +262,15 @@
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>
+
+        <ui:RetryView
+            Grid.Row="1"
+            IsVisible="{Binding ShowLoadFailed}"
+            FailedText="{Binding LoadFailedText}"
+            RetryText="{Binding RetryText}"
+            RetryCommand="{Binding ReloadCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Margin="20" />
     </Grid>
 </ContentPage>

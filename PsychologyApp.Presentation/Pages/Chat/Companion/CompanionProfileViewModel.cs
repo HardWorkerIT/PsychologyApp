@@ -18,6 +18,9 @@ public sealed class CompanionProfileViewModel : BaseViewModel
 
     private CompanionProfile _profile = CompanionProfile.Empty;
     private bool _isLoading = true;
+    private bool _isLoadFailed;
+    private bool _hasLoaded;
+    private int _refreshRequestId;
 
     public CompanionProfileViewModel(
         IChatService chat,
@@ -31,6 +34,7 @@ public sealed class CompanionProfileViewModel : BaseViewModel
 
         BindNavigation(navigationService);
         BackCommand = new AsyncCommand(GoBackAsync);
+        ReloadCommand = new AsyncCommand(RefreshAsync);
         NewChatCommand = new AsyncCommand(() => NavigationService!.GoToChatAsync(null));
         CrisisCommand = new AsyncCommand(() => NavigationService!.GoToCrisisHubAsync());
         EditNameCommand = new AsyncCommand(EditNameAsync);
@@ -39,6 +43,7 @@ public sealed class CompanionProfileViewModel : BaseViewModel
     }
 
     public ICommand BackCommand { get; }
+    public ICommand ReloadCommand { get; }
     public ICommand NewChatCommand { get; }
     public ICommand CrisisCommand { get; }
     public ICommand EditNameCommand { get; }
@@ -60,7 +65,21 @@ public sealed class CompanionProfileViewModel : BaseViewModel
         }
     }
 
-    public bool HasLoaded => !IsLoading;
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set
+        {
+            if (SetProperty(ref _isLoadFailed, value))
+            {
+                OnPropertyChanged(nameof(ShowLoadFailed));
+                OnPropertyChanged(nameof(HasLoaded));
+            }
+        }
+    }
+
+    public bool HasLoaded => _hasLoaded && !IsLoading && !IsLoadFailed;
+    public bool ShowLoadFailed => IsLoadFailed;
 
     public string Title => AppStrings.ChatProfileTitle;
     public string Disclaimer => AppStrings.ChatProfileDisclaimerShort;
@@ -70,6 +89,8 @@ public sealed class CompanionProfileViewModel : BaseViewModel
     public string NameTitle => AppStrings.ChatProfileNameTitle;
     public string ForgetText => AppStrings.ChatProfileForget;
     public string DeleteAllText => AppStrings.ChatProfileDeleteAll;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     /// <summary>The name it uses, under its row, so the row says what is set without opening it.</summary>
     public string UserName => _profile.UserName ?? string.Empty;
@@ -78,9 +99,47 @@ public sealed class CompanionProfileViewModel : BaseViewModel
     /// <summary>Loads the profile. Safe to call on every appearing.</summary>
     public async Task RefreshAsync()
     {
-        _profile = await _chat.GetProfileAsync();
-        NotifyAll();
-        IsLoading = false;
+        int requestId = Interlocked.Increment(ref _refreshRequestId);
+        IsLoadFailed = false;
+        if (!_hasLoaded)
+        {
+            IsLoading = true;
+        }
+
+        try
+        {
+            CompanionProfile profile = await _chat.GetProfileAsync();
+            if (requestId != Volatile.Read(ref _refreshRequestId))
+            {
+                return;
+            }
+
+            _profile = profile;
+            if (!_hasLoaded)
+            {
+                _hasLoaded = true;
+                OnPropertyChanged(nameof(HasLoaded));
+            }
+
+            NotifyAll();
+        }
+        catch (Exception loadError)
+        {
+            if (requestId != Volatile.Read(ref _refreshRequestId))
+            {
+                return;
+            }
+
+            BestEffort.Report(loadError);
+            IsLoadFailed = true;
+        }
+        finally
+        {
+            if (requestId == Volatile.Read(ref _refreshRequestId))
+            {
+                IsLoading = false;
+            }
+        }
     }
 
     protected override void RefreshLocalizedProperties() => NotifyAll();
@@ -129,5 +188,6 @@ public sealed class CompanionProfileViewModel : BaseViewModel
 
     private void NotifyAll() => Notify(
         nameof(HasHistory), nameof(Title), nameof(Disclaimer), nameof(PrivacyText), nameof(CrisisText), nameof(NewChatText),
-        nameof(NameTitle), nameof(ForgetText), nameof(DeleteAllText), nameof(UserName), nameof(HasUserName));
+        nameof(NameTitle), nameof(ForgetText), nameof(DeleteAllText), nameof(UserName), nameof(HasUserName),
+        nameof(LoadFailedText), nameof(RetryText), nameof(ShowLoadFailed));
 }

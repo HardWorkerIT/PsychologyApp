@@ -13,7 +13,33 @@ namespace PsychologyApp.Application.Chat;
 public sealed partial class CompanionDialogue
 {
     private const int MaxProtocolNote = 300;
-    private static readonly string[] StopWords = ["стоп", "хватит", "не хочу", "давай не будем", "stop", "enough", "not now", "dont want"];
+    private static readonly string[] StopCommands =
+    [
+        "стоп", "хватит", "не хочу", "не хочу продолжать", "давай не будем", "остановиться", "давай остановимся", "давай закончим", "отмена", "отменить",
+        "stop", "enough", "not now", "dont want", "dont want to continue", "lets stop", "cancel", "end"
+    ];
+
+    private static readonly string[] StopCommandPhrases =
+    [
+        "не хочу продолжать упражнение", "не хочу проходить упражнение", "не хочу отвечать на этот вопрос", "не хочу отвечать на вопросы", "не хочу это упражнение",
+        "стоп пожалуйста", "хватит пожалуйста", "давай не будем продолжать упражнение", "давай остановимся здесь", "давай закончим упражнение", "останови упражнение", "остановите упражнение", "остановить упражнение", "останови это", "отмени это", "прерви упражнение", "прервать упражнение", "прекрати упражнение", "прекрати это", "прекратить упражнение", "пропустить упражнение",
+        "пропустить вопрос", "пропустить этот вопрос", "этот вопрос пропущу",
+        "stop please", "cancel please", "lets stop here", "lets stop the exercise", "not now", "stop this exercise", "stop the exercise", "end this exercise", "end the exercise", "skip this exercise", "skip this question", "cancel this exercise", "cancel the exercise",
+        "skip this question", "skip the question", "i dont want to continue this exercise", "i dont want to continue the exercise", "i dont want to answer this question",
+        "i want to stop this exercise", "i need to stop this exercise", "lets stop this exercise"
+    ];
+
+    private static bool IsProtocolStopRequest(string text)
+    {
+        string lowered = text.Trim().ToLowerInvariant().Replace('ё', 'е')
+            .Replace("'", string.Empty, StringComparison.Ordinal)
+            .Replace("’", string.Empty, StringComparison.Ordinal);
+        string words = string.Concat(lowered.Select(character => char.IsLetterOrDigit(character) || char.IsWhiteSpace(character) ? character : ' '));
+        string normalized = string.Join(" ", words.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+
+        return StopCommands.Any(command => normalized == command)
+            || StopCommandPhrases.Any(command => normalized == command || normalized.StartsWith(command + " ", StringComparison.Ordinal));
+    }
 
     /// <summary>Checking a thought fits feelings driven by a thought; problem solving fits a situation that can be acted on.</summary>
     private string? FittingProtocol(CompanionState state, SituationAnalysis analysis, CompanionEmotion emotion)
@@ -90,7 +116,20 @@ public sealed partial class CompanionDialogue
             return CompanionReply.Empty(state);
         }
 
-        return AskProtocol(state with { Protocol = protocol, ProtocolStep = 0, ProtocolNotes = [], ProtocolBelief = null, ProtocolOffered = true, TurnsSinceOffer = 0 }, emotion, theme);
+        return AskProtocol(state with
+        {
+            Protocol = protocol,
+            ProtocolStep = 0,
+            ProtocolNotes = [],
+            ProtocolBelief = null,
+            ProtocolOffered = true,
+            TurnsSinceOffer = 0,
+            LastQuestion = null,
+            LastQuestionId = null,
+            QuestionPending = false,
+            OfferedPrimary = null,
+            OfferedAlternative = null
+        }, emotion, theme);
     }
 
     private CompanionReply AskProtocol(CompanionState state, CompanionEmotion emotion, CompanionTheme? theme)
@@ -107,7 +146,9 @@ public sealed partial class CompanionDialogue
             CompanionProtocolContent.Deeper => CompanionProtocolContent.DeeperQuestion(state.ProtocolStep, english),
             _ => CompanionProtocolContent.SolveQuestion(state.ProtocolStep, english)
         };
-        IReadOnlyList<ChatQuickReply> chips = think && IsBeliefStep(state.ProtocolStep) ? RatingReplies() : [CompanionProtocolContent.StopChip(english)];
+        IReadOnlyList<ChatQuickReply> chips = think && IsBeliefStep(state.ProtocolStep)
+            ? [.. RatingReplies(), CompanionProtocolContent.StopChip(english)]
+            : [CompanionProtocolContent.StopChip(english)];
         return Reply([question], chips, state, emotion, theme);
     }
 
@@ -117,7 +158,19 @@ public sealed partial class CompanionDialogue
         Reply([CompanionProtocolContent.Stopped(english)], [], EndProtocol(state), emotion, theme);
 
     private static CompanionState EndProtocol(CompanionState state) =>
-        state with { Protocol = null, ProtocolStep = 0, ProtocolNotes = [], ProtocolBelief = null, TurnsSinceOffer = 0 };
+        state with
+        {
+            Protocol = null,
+            ProtocolStep = 0,
+            ProtocolNotes = [],
+            ProtocolBelief = null,
+            TurnsSinceOffer = 0,
+            LastQuestion = null,
+            LastQuestionId = null,
+            QuestionPending = false,
+            OfferedPrimary = null,
+            OfferedAlternative = null
+        };
 
     /// <summary>The next answer of an exercise: typed words, or a 0..10 rating (typed or tapped) on a belief step.</summary>
     private CompanionReply ContinueProtocol(CompanionState state, string? text, int? rating)
@@ -125,7 +178,7 @@ public sealed partial class CompanionDialogue
         CompanionEmotion emotion = ParseEmotion(state.Emotion);
         CompanionTheme? theme = ParseTheme(state.Theme);
         string? words = text?.Trim();
-        if (words is { Length: > 0 } && StopWords.Any(stop => words.Equals(stop, StringComparison.OrdinalIgnoreCase)))
+        if (words is { Length: > 0 } && IsProtocolStopRequest(words))
         {
             return StopProtocol(state, emotion, theme);
         }

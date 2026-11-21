@@ -24,6 +24,24 @@ public class LexiconSituationAnalyzerTests
     [InlineData("I'm furious at my brother, I hate this", CompanionEmotion.Anger)]
     [InlineData("I feel exhausted and burned out, no energy", CompanionEmotion.Exhaustion)]
     [InlineData("I keep overthinking what I said, can't stop thinking about it", CompanionEmotion.Overthinking)]
+    [InlineData("В груди всё сжалось, кажется, сейчас отключусь", CompanionEmotion.Panic)]
+    [InlineData("Не могу избавиться от ощущения, что жду какого-то подвоха", CompanionEmotion.Anxiety)]
+    [InlineData("Заело на одной мысли, снова пережёвываю этот разговор", CompanionEmotion.Overthinking)]
+    [InlineData("Меня распирает от злости, уже вскипаю с пол-оборота", CompanionEmotion.Anger)]
+    [InlineData("Чувствую себя использованной, со мной не считаются", CompanionEmotion.Resentment)]
+    [InlineData("Занимаюсь самоедством из-за того, как поступила", CompanionEmotion.Guilt)]
+    [InlineData("Внутри будто всё погасло, ничто не радует", CompanionEmotion.Sadness)]
+    [InlineData("Я уже не вывожу даже простые дела, просыпаюсь уставшей", CompanionEmotion.Exhaustion)]
+    [InlineData("Среди людей всё равно одиноко, будто меня никто не замечает", CompanionEmotion.Loneliness)]
+    [InlineData("Смотрю на задачу и замираю, не могу выбрать с чего начать", CompanionEmotion.Procrastination)]
+    [InlineData("I keep waiting for something to go wrong and cannot settle", CompanionEmotion.Anxiety)]
+    [InlineData("I keep chewing on the same thought after that conversation", CompanionEmotion.Overthinking)]
+    [InlineData("I feel taken advantage of and dismissed", CompanionEmotion.Resentment)]
+    [InlineData("I keep beating myself up over one mistake", CompanionEmotion.Guilt)]
+    [InlineData("Everything feels muted and nothing seems to reach me", CompanionEmotion.Sadness)]
+    [InlineData("I cannot manage even simple tasks anymore", CompanionEmotion.Exhaustion)]
+    [InlineData("I feel invisible even around people", CompanionEmotion.Loneliness)]
+    [InlineData("I freeze when I look at the task and cannot pick a first step", CompanionEmotion.Procrastination)]
     public void Recognises_dominant_state(string text, CompanionEmotion expected)
     {
         Assert.Equal(expected, _analyzer.Analyze(text).Emotion);
@@ -143,6 +161,28 @@ public class LexiconSituationAnalyzerTests
         SituationAnalysis result = _analyzer.Analyze("уже не крутятся мысли, стало гораздо спокойнее");
 
         Assert.NotEqual(CompanionEmotion.Overthinking, result.Emotion);
+    }
+
+    [Theory]
+    [InlineData("Меня больше не распирает от злости")]
+    [InlineData("Я больше не чувствую себя невидимкой")]
+    public void New_colloquial_phrases_respect_negation(string text)
+    {
+        SituationAnalysis result = _analyzer.Analyze(text);
+
+        Assert.NotEqual(CompanionEmotion.Anger, result.Emotion);
+        Assert.NotEqual(CompanionEmotion.Loneliness, result.Emotion);
+    }
+
+    [Theory]
+    [InlineData("Моя подруга чувствует себя невидимкой среди людей")]
+    [InlineData("My friend says they feel lonely even around people")]
+    public void A_new_loneliness_phrase_is_not_attributed_to_the_user_when_it_describes_a_friend(string text)
+    {
+        SituationAnalysis result = _analyzer.Analyze(text);
+
+        Assert.Equal(CompanionEmotion.Unknown, result.Emotion);
+        Assert.True(result.EmotionAttributedToOther);
     }
 }
 

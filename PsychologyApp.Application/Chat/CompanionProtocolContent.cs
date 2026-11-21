@@ -33,8 +33,46 @@ public static class CompanionProtocolContent
         new(ChatQuickReplyKinds.Act, english ? "Stop here" : "Остановиться", "protocol:stop");
 
     public static string Stopped(bool english) => english
-        ? "Okay, let's stop here. What you've already written is not lost: we can come back to it whenever you like."
-        : "Хорошо, остановимся. То, что вы уже написали, не пропало: к этому можно вернуться в любой момент.";
+        ? "Okay, we'll end this exercise here. We can keep talking about something else."
+        : "Хорошо, закончим это упражнение. Можем продолжить разговор о чём-то другом.";
+
+    /// <summary>Shorter, prewritten alternatives for standard guided prompts. Unmapped prompts are repeated exactly.</summary>
+    public static string? RephraseQuestion(string? protocol, int step, bool english) => (protocol, step, english) switch
+    {
+        (Think, 0, false) => "Какая мысль сейчас давит сильнее всего? Запишите её одной фразой, как она звучит в голове.",
+        (Think, 0, true) => "Which thought is weighing on you most right now? Write it in one sentence, just as it sounds in your head.",
+        (Think, 1, false) => "От 0 до 10: насколько правдивой кажется эта мысль сейчас?",
+        (Think, 1, true) => "From 0 to 10, how true does this thought feel right now?",
+        (Think, 2, false) => "Какие конкретные факты подтверждают эту мысль?",
+        (Think, 2, true) => "What concrete facts support this thought?",
+        (Think, 3, false) => "Что не подходит к этой мысли? Даже небольшое исключение.",
+        (Think, 3, true) => "What does not fit this thought, even a small exception?",
+        (Think, 4, false) => "Что бы вы сказали близкому, если бы он думал так о себе?",
+        (Think, 4, true) => "What would you say to someone close to you who thought this about themselves?",
+        (Think, 5, false) => "Как сказать то же самое точнее и справедливее?",
+        (Think, 5, true) => "How could you say the same thing more accurately and fairly?",
+        (Think, 6, false) => "А сейчас насколько вы верите первой мысли — от 0 до 10?",
+        (Think, 6, true) => "After looking at it, how much do you believe the original thought now, from 0 to 10?",
+        (Deeper, 0, false) => "Какая мысль об этом тяжелее всего? Запишите её коротко, как она звучит у вас в голове.",
+        (Deeper, 0, true) => "Which thought about this weighs on you most? Write it briefly, just as it sounds in your head.",
+        (Deeper, 1, false) => "Если это правда, что в этом для вас самое тяжёлое?",
+        (Deeper, 1, true) => "If this were true, what would be the hardest part for you?",
+        (Deeper, 2, false) => "Какой вывод о себе стоит за этой мыслью? Можно начать с «я…».",
+        (Deeper, 2, true) => "What does this thought imply about you? You could start with “I…”.",
+        (Deeper, 3, false) => "Что бы вы сказали близкому, который думает о себе так же?",
+        (Deeper, 3, true) => "What would you say to someone close to you who thought the same about themselves?",
+        (Deeper, 4, false) => "Как сказать о себе добрее, не искажая правду?",
+        (Deeper, 4, true) => "How could you be kinder to yourself without changing the facts?",
+        (Solve, 0, false) => "Что именно нужно решить? Достаточно одного предложения.",
+        (Solve, 0, true) => "What exactly needs solving? One sentence is enough.",
+        (Solve, 1, false) => "Назовите два-три возможных пути, даже если они неидеальны.",
+        (Solve, 1, true) => "Name two or three possible options, even if they are not ideal.",
+        (Solve, 2, false) => "Какой вариант сейчас проще всего попробовать?",
+        (Solve, 2, true) => "Which option feels easiest to try right now?",
+        (Solve, 3, false) => "Какой небольшой шаг займёт 10–15 минут и когда вы его сделаете?",
+        (Solve, 3, true) => "What small step could take 10–15 minutes, and when will you try it?",
+        _ => null
+    };
 
     // ----- checking a thought (cognitive restructuring) -----
 

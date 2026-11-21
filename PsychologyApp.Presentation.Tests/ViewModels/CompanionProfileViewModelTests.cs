@@ -55,6 +55,27 @@ public sealed class CompanionProfileViewModelTests
     }
 
     [Fact]
+    public async Task AFailedProfileLoadOffersRetryAndCanRecover()
+    {
+        _chat.SetupSequence(c => c.GetProfileAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("local database"))
+            .ReturnsAsync(_profile);
+        CompanionProfileViewModel viewModel = new(_chat.Object, _navigation.Object, _dialogs.Object);
+
+        await viewModel.RefreshAsync();
+
+        Assert.True(viewModel.ShowLoadFailed);
+        Assert.False(viewModel.IsLoading);
+        Assert.False(viewModel.HasLoaded);
+
+        await VmTestHelpers.RunAsync(viewModel.ReloadCommand);
+
+        Assert.False(viewModel.ShowLoadFailed);
+        Assert.True(viewModel.HasLoaded);
+        Assert.Equal("Sam", viewModel.UserName);
+    }
+
+    [Fact]
     public async Task ForgettingNeedsAConfirmation()
     {
         CompanionProfileViewModel viewModel = await CreateAsync();

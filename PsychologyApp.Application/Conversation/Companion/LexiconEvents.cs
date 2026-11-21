@@ -45,7 +45,9 @@ public sealed partial class LexiconSituationAnalyzer
                 !c.Contains("прежде чем", StringComparison.Ordinal) &&
                 !c.Contains("не могу", StringComparison.Ordinal) &&
                 !c.Contains("cant", StringComparison.Ordinal) &&
-                !c.Contains("can't", StringComparison.Ordinal);
+                !c.Contains("can't", StringComparison.Ordinal) &&
+                !c.Contains("cannot", StringComparison.Ordinal) &&
+                !c.Contains("can not", StringComparison.Ordinal);
             if (!ended)
             {
                 kept.Add(clause);

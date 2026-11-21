@@ -9,6 +9,17 @@ A weighted **lexicon** (`LexiconSituationAnalyzer`, RU + EN, with simple negatio
 It is instant, offline and predictable. If it finds no match, a local Russian classifier can suggest a feeling for a sufficiently long message;
 the person can confirm or reject it. When confidence is low, the dialogue reflects the person's words and asks an open question.
 
+## Conversational intent and repair
+
+Support preferences are handled separately from emotion recognition. An explicit request to listen can occur inside a longer disclosure;
+the disclosure still updates the conversation context. Listening has no turn-count expiry: ordinary conversation does not automatically
+re-enable practice offers. An explicit request for advice can change the goal, and crisis and acute-distress routes retain priority.
+
+An explicit correction such as "you misunderstood me" clears the previous inferred feeling, recent inference text and unaccepted practice
+offer before processing the correction. A replacement feeling is retained; otherwise the companion asks for clarification rather than
+repeating the previous question. Asking the companion to repeat a question keeps the context. These are deterministic dialogue rules,
+covered by Russian and English multi-turn tests, not new ML training or evidence of clinical effectiveness.
+
 ## Measurements (`AnalyzerDatasetTests`, `tools/PsychologyApp.NluEval`)
 
 All current Russian expansion sets are synthetic examples authored for development; they are not real-user observations or clinical validation.

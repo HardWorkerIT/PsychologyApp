@@ -131,6 +131,28 @@ public static class CompanionSmallTalk
     public static string RepeatLead(bool english, Random random) => Pick(random, english
         ? ["Sorry, I'll repeat the question. You can answer briefly or skip it:", "Let me ask that again. A short answer is fine, or you can skip it:"]
         : ["Простите, повторю вопрос. Можно ответить коротко или пропустить:", "Спрошу ещё раз. Можно ответить коротко или пропустить:"]);
+    public static string RephraseLead(bool english, Random random) => Pick(random, english
+        ? ["Let me ask that another way. You can answer briefly or skip it:", "I'll put it differently. A short answer is fine, or you can skip it:"]
+        : ["Сформулирую иначе. Можно ответить коротко или пропустить:", "Спрошу по-другому. Можно ответить коротко или пропустить:"]);
+    public static string ProtocolRepeatLead(bool english) => english
+        ? "I'll repeat the question. You can answer briefly or stop the exercise here:"
+        : "Повторю вопрос. Можно ответить коротко или остановить упражнение:";
+    public static string ProtocolRephraseLead(bool english) => english
+        ? "I'll put it more simply. You can answer briefly or stop the exercise here:"
+        : "Скажу проще. Можно ответить коротко или остановить упражнение:";
+    public static string RephraseUnavailableLead(bool english) => english
+        ? "I don't have another wording ready for this question. I'll repeat it; you can answer briefly or skip it:"
+        : "У меня пока нет другой формулировки этого вопроса. Повторю его; можно ответить коротко или пропустить:";
+    public static string ProtocolRephraseUnavailableLead(bool english) => english
+        ? "I don't have another wording prepared for this step. I'll repeat it; you can stop the exercise at any time:"
+        : "Для этого шага у меня нет другой формулировки. Повторю вопрос; упражнение можно остановить в любой момент:";
+    public static string ProtocolNeedAnswer(bool english) => english
+        ? "You don't need a perfect answer. Try a few words, or stop the exercise here."
+        : "Необязательно отвечать идеально. Можно сказать пару слов или остановить упражнение.";
+    public static string NoQuestionToRephrase(bool english) => english
+        ? "I don't see a question to rephrase. Tell me what you'd like me to explain more simply."
+        : "Не вижу вопроса, который нужно переформулировать. Напишите, что объяснить проще.";
+
 
     public static string Repeat(string? lastQuestion, bool english, Random random)
     {

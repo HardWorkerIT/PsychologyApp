@@ -110,7 +110,7 @@ memory (`ChatStatistics.Compute`), nothing is stored twice:
 
 - The engine understands what its lexicon and rules cover. On held-out sentences the analyzer's accuracy is far below its accuracy on the
   tuned set (see companion-understanding.md). Expect misses on unusual wording; the companion then asks which feeling is closest.
-- It cannot rephrase a question, only repeat it. "Say that again" repeats the last question with a lead-in.
+- A person can ask for another wording of a standard prompt or the three non-trauma guided exercises; those alternatives are prewritten. A trauma-specific prompt without a reviewed alternative is repeated transparently. Repeat, rephrase, skip, stop, and crisis interrupts do not become exercise answers or advance a step.
 - Time of day comes from the phone's clock.
 - All Russian and English wording, the psychoeducation texts and the advice ("what usually helps") must be reviewed by a psychologist
   before release. They are general and non-diagnostic by design.

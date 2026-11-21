@@ -269,14 +269,17 @@ public static class CompanionCaseContent
     [
         "просто послушай", "просто выслушай", "послушай меня", "выслушай меня",
         "не надо советов", "не нужно советов", "не давай советов", "не хочу советов",
+        "советы не нужны", "советы мне не нужны", "мне не нужны советы",
         "без советов", "не предлагай решений", "не предлагай практику", "не говори мне что делать", "не говорите мне что делать",
         "just listen", "listen to me", "hear me out", "no advice", "dont give advice",
-        "dont give me advice", "dont tell me what to do", "do not tell me what to do", "no solutions", "just be here"
+        "dont give me advice", "dont tell me what to do", "do not tell me what to do", "no solutions", "just be here",
+        "i dont want advice", "i do not want advice"
     ];
 
     private static string NormalizeGoalText(string text)
     {
-        string clauses = GoalClauseSeparators.Replace(text.ToLowerInvariant().Replace('ё', 'е'), " | ");
+        string clauses = GoalClauseSeparators.Replace(text.ToLowerInvariant().Replace('ё', 'е')
+            .Replace("'", string.Empty, StringComparison.Ordinal).Replace("’", string.Empty, StringComparison.Ordinal), " | ");
         return GoalTextDelimiters.Replace(clauses, " ").Trim();
     }
 

@@ -140,12 +140,18 @@ public sealed partial class CompanionDialogue(
             reply = Compute(clean, state.NamePending, input);
         }
 
-        // The id belongs to the question asked in this very reply; one carried over from earlier turns would misread the next "yes".
+        // A rephrased prompt is still the same pending question, so keep its id for the person's answer.
         bool repeatedQuestion = state.LastQuestion is { } lastQuestion && reply.Messages.LastOrDefault() == lastQuestion;
         bool retryingAfterUnclearInput = state.QuestionPending && reply.State.UnclearStreak > state.UnclearStreak;
-        string? lastQuestionId = reply.State.LastQuestionId == state.LastQuestionId && !repeatedQuestion && !retryingAfterUnclearInput
-            ? null
-            : reply.State.LastQuestionId;
+        bool rephrasedPrompt = !repeatedQuestion
+            && state.LastQuestion is not null
+            && input is CompanionInput.FreeText freeText
+            && UtteranceClassifier.IsRephraseRequest(freeText.Value);
+        string? lastQuestionId = rephrasedPrompt
+            ? reply.State.Protocol is null ? reply.State.LastQuestionId : null
+            : reply.State.LastQuestionId == state.LastQuestionId && !repeatedQuestion && !retryingAfterUnclearInput
+                ? null
+                : reply.State.LastQuestionId;
         return reply with { State = reply.State with { RecentReplies = Remember(state.RecentReplies, reply.Messages), LastQuestionId = lastQuestionId } };
     }
 
@@ -215,9 +221,51 @@ public sealed partial class CompanionDialogue(
             return CrisisReply(previous);
         }
 
-        // Inside a guided exercise every answer belongs to it, until it ends or the person stops it.
+        // An explicit interrupt or question about the current prompt must not be recorded as an exercise answer.
         if (previous.Protocol is not null)
         {
+            previous = previous with { LastQuestionId = null };
+
+            if (UtteranceClassifier.IsUnderstandingCorrection(text))
+            {
+                return RespondToTextCore(EndProtocol(previous), text, namePending: false);
+            }
+
+            CompanionEmotion protocolEmotion = ParseEmotion(previous.Emotion);
+            CompanionTheme? protocolTheme = ParseTheme(previous.Theme);
+            if (IsProtocolStopRequest(text))
+            {
+                return StopProtocol(previous, protocolEmotion, protocolTheme);
+            }
+
+            Utterance protocolRequest = UtteranceClassifier.Classify(text, hasFeeling: false);
+            if (protocolRequest is Utterance.AsksToRepeat or Utterance.AsksToRephrase)
+            {
+                return RespondToQuestionRequest(
+                    previous,
+                    previous,
+                    english,
+                    protocolEmotion,
+                    protocolTheme,
+                    rephrase: protocolRequest == Utterance.AsksToRephrase);
+            }
+
+            if (protocolRequest is Utterance.Goodbye or Utterance.RefusesToTalk or Utterance.DeclinesPractice or Utterance.SkipsQuestion)
+            {
+                return StopProtocol(previous, protocolEmotion, protocolTheme);
+            }
+
+            if (protocolRequest is Utterance.DontKnow or Utterance.Acknowledge or Utterance.Yes or Utterance.No or Utterance.Noise or Utterance.Reaction or Utterance.Exclaims)
+            {
+                CompanionReply prompt = AskProtocol(previous, protocolEmotion, protocolTheme);
+                return prompt with { Messages = [CompanionSmallTalk.ProtocolNeedAnswer(english), .. prompt.Messages] };
+            }
+
+            if (protocolRequest != Utterance.Statement)
+            {
+                return RespondToTextCore(EndProtocol(previous), text, namePending: false);
+            }
+
             return ContinueProtocol(previous, text, null);
         }
 
@@ -240,9 +288,17 @@ public sealed partial class CompanionDialogue(
 
         single = single with { AvoidsBodyFocus = previous.AvoidsBodyFocus };
 
-        // "Just talk" typed after "get it off your chest, sort it out or calm down?" is that choice, not a new story.
-        if (WordCount(text) <= 12 && CompanionCaseContent.ParseGoal(text, asked: previous.LastQuestionId == CompanionCaseContent.GoalQuestionId) is { } typedGoal)
+        // A support preference can be part of a story: retain both instead of discarding the disclosure.
+        if (CompanionCaseContent.ParseGoal(text, asked: previous.LastQuestionId == CompanionCaseContent.GoalQuestionId) is { } typedGoal
+            && (WordCount(text) <= 12 || typedGoal == CompanionCaseContent.GoalVent)
+            && !UtteranceClassifier.IsUnderstandingCorrection(text))
         {
+            if (typedGoal == CompanionCaseContent.GoalVent && (HasUserContext(single) || WordCount(text) > 12))
+            {
+                CompanionState withGoal = previous with { Goal = typedGoal, GoalAsked = true };
+                return RespondToStatement(withGoal, text, single);
+            }
+
             return RespondToGoal(UpdateCurrentContext(previous, single) with { Turns = previous.Turns + 1 }, typedGoal);
         }
 
@@ -402,6 +458,47 @@ public sealed partial class CompanionDialogue(
     }
 
     /// <summary>The person is not describing a feeling: greeting, thanks, "I don't know", "who are you?", "what should I do?".</summary>
+    private CompanionReply RespondToQuestionRequest(
+        CompanionState state,
+        CompanionState previous,
+        bool english,
+        CompanionEmotion emotion,
+        CompanionTheme? theme,
+        bool rephrase)
+    {
+        if (previous.LastQuestion is not { } question)
+        {
+            string message = rephrase
+                ? CompanionSmallTalk.NoQuestionToRephrase(english)
+                : CompanionSmallTalk.Repeat(null, english, _random);
+            return Reply([message], [], state, emotion, theme);
+        }
+
+        string? alternate = rephrase
+            ? previous.Protocol is { } protocol
+                ? CompanionProtocolContent.RephraseQuestion(protocol, previous.ProtocolStep, english)
+                : CompanionDialogueContent.RephraseQuestion(previous.LastQuestionId, english)
+            : null;
+
+        CompanionState responseState = previous.Protocol is null ? state : state with { LastQuestionId = null };
+        if (alternate is not null)
+        {
+            string rephraseLead = previous.Protocol is null
+                ? CompanionSmallTalk.RephraseLead(english, _random)
+                : CompanionSmallTalk.ProtocolRephraseLead(english);
+            return Reply([rephraseLead, alternate], [], responseState, emotion, theme);
+        }
+
+        string lead = previous.Protocol is null
+            ? rephrase
+                ? CompanionSmallTalk.RephraseUnavailableLead(english)
+                : CompanionSmallTalk.RepeatLead(english, _random)
+            : rephrase
+                ? CompanionSmallTalk.ProtocolRephraseUnavailableLead(english)
+                : CompanionSmallTalk.ProtocolRepeatLead(english);
+        return Reply([lead, question], [], responseState, emotion, theme);
+    }
+
     private CompanionReply RespondToConversationalMove(CompanionState previous, Utterance act, string text, SituationAnalysis single)
     {
         // "What is this, I'm so scared" is a feeling, not a request for a lesson: explain only topics we know.
@@ -465,9 +562,8 @@ public sealed partial class CompanionDialogue(
             Utterance.AsksHowAreYou => Reply([CompanionSmallTalk.HowAreYou(english, _random)], [], state, emotion, theme),
             Utterance.AsksName => Reply([CompanionSmallTalk.Name(english)], [], state with { NamePending = true }, emotion, theme),
             Utterance.AsksCapabilities => Reply([CompanionSmallTalk.Capabilities(english)], CompanionSmallTalk.CapabilityReplies(english), state, emotion, theme),
-            Utterance.AsksToRepeat => previous.LastQuestion is { } lastQuestion
-                ? Reply([CompanionSmallTalk.RepeatLead(english, _random), lastQuestion], [], state, emotion, theme)
-                : Reply([CompanionSmallTalk.Repeat(null, english, _random)], [], state, emotion, theme),
+            Utterance.AsksToRepeat => RespondToQuestionRequest(state, previous, english, emotion, theme, rephrase: false),
+            Utterance.AsksToRephrase => RespondToQuestionRequest(state, previous, english, emotion, theme, rephrase: true),
             Utterance.SkipsQuestion => AskNextQuestion(state, [CompanionSmallTalk.Skipped(english, _random)], emotion, theme),
             Utterance.Greeting => Reply([CompanionSmallTalk.GreetingReply(Hour(), english, _random, state.UserName)], [], state, emotion, theme),
             Utterance.Thanks => Reply(
@@ -548,18 +644,45 @@ public sealed partial class CompanionDialogue(
 
     private CompanionReply RespondToComplaint(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion, CompanionTheme? theme)
     {
+        bool correcting = UtteranceClassifier.IsUnderstandingCorrection(text);
+        if (correcting)
+        {
+            // Do not infer a rejected feeling again from recent text or leave the old offer ready to accept.
+            previous = previous with
+            {
+                Emotion = nameof(CompanionEmotion.Unknown),
+                EmotionExplicitlyCleared = true,
+                Secondary = nameof(CompanionEmotion.Unknown),
+                RecentTexts = [],
+                FirstQuote = null,
+                OfferedPrimary = null,
+                OfferedAlternative = null,
+                AwaitingPostPracticeRating = false,
+                QuestionPending = false,
+                LastQuestionId = null,
+                LastQuestion = null
+            };
+            if (CompanionCaseContent.ParseGoal(text, asked: false) is { } correctedGoal)
+            {
+                previous = previous with { Goal = correctedGoal, GoalAsked = true };
+            }
+
+            state = UpdateCurrentContext(previous, analysis) with { Turns = state.Turns };
+            emotion = ParseEmotion(state.Emotion);
+        }
+
         if (!HasUserContext(analysis))
         {
             return Reply(
-                [CompanionActContent.Complaint(english)],
-                [CompanionActContent.Vent(english), CompanionActContent.Understand(english), CompanionActContent.BodyPractice(english)],
+                [correcting ? CompanionActContent.NoProbe(english, _random) : CompanionActContent.Complaint(english)],
+                correcting ? [] : [CompanionActContent.Vent(english), CompanionActContent.Understand(english), CompanionActContent.BodyPractice(english)],
                 state,
                 emotion,
                 theme);
         }
 
         // When a complaint also contains a personal disclosure, answer the disclosure and keep the correction for the repair.
-        CompanionReply contextual = RespondToStatement(previous, text, analysis);
+        CompanionReply contextual = RespondToStatement(previous, text, analysis, repairing: correcting);
         if (contextual.Messages.Count == 0)
         {
             return contextual;
@@ -619,7 +742,7 @@ public sealed partial class CompanionDialogue(
 
     private static int WordCount(string text) => text.Split([' ', '-'], StringSplitOptions.RemoveEmptyEntries).Length;
 
-    private CompanionReply RespondToStatement(CompanionState previous, string text, SituationAnalysis analysis)
+    private CompanionReply RespondToStatement(CompanionState previous, string text, SituationAnalysis analysis, bool repairing = false)
     {
         bool firstStatement = previous.RecentTexts.Count == 0;
         CompanionState state = previous.WithText(text) with
@@ -746,6 +869,12 @@ public sealed partial class CompanionDialogue(
             return RespondToGrief(state with { GriefShared = true, Emotion = CompanionEmotion.Sadness.ToString() }, theme, newLoss: analysis.HasLoss && !previous.GriefShared);
         }
 
+        if (repairing)
+        {
+            messages.Add(CompanionActContent.NoProbe(english, _random));
+            return Reply(messages, [], state, emotion, theme);
+        }
+
         // A topic that keeps coming back is counted once per chat, and the third chat on it in a month is named as a repeat: an observation and
         // a question, with the way to look under it. Not in panic, a flashback or grief (those have returned above).
         if (state.TopicCounted is null && RecurringTopics.Key(theme, person) is { } topic)
@@ -796,8 +925,8 @@ public sealed partial class CompanionDialogue(
             return Reply(messages, CompanionCaseContent.GoalChips(english), state with { GoalAsked = true, LastQuestionId = CompanionCaseContent.GoalQuestionId }, emotion, theme);
         }
 
-        // Someone who came to talk is not interrupted by summaries and offers; those wait until they ask or the talk has gone on for long.
-        if (venting && state.ContentTurns < 8)
+        // Listening remains the chosen goal until the person asks for another kind of support.
+        if (venting)
         {
             return state.Turns % 2 == 0 ? Reply(messages, [], state, emotion, theme) : AskOpen(state, messages, emotion, theme);
         }
@@ -1196,6 +1325,15 @@ public sealed partial class CompanionDialogue(
             ? [TechniqueId.Breathing, TechniqueId.Grounding]
             : [.. TechniqueSuggester.Recommend(analysis with { Emotion = emotion }).Select(item => item.Technique)];
 
+        if (analysis.AvoidsBodyFocus)
+        {
+            suggestions = [.. suggestions.Where(suggestion => !IsBodyFocusedPractice(suggestion))];
+            if (suggestions.Count == 0)
+            {
+                suggestions = [TechniqueId.ExternalOrientation];
+            }
+        }
+
         // What has helped this person before comes first, mentioned once per chat. A panic attack gets the standard help, not an experiment.
         if (!state.PreferredMentioned && emotion != CompanionEmotion.Panic
             && Enum.TryParse(state.PreferredPractice, out TechniqueId preferred) && Enum.IsDefined(preferred)
@@ -1231,7 +1369,7 @@ public sealed partial class CompanionDialogue(
                     state = state with { OfferedResource = "quote" };
                     break;
 
-                case CompanionResourceKind.Somatic:
+                case CompanionResourceKind.Somatic when !analysis.AvoidsBodyFocus:
                     messages.Add(CompanionResourceContent.SomaticOffer(english));
                     quick.Add(CompanionResourceContent.SomaticChip(english));
                     state = state with { OfferedResource = "somatic" };
@@ -1286,13 +1424,29 @@ public sealed partial class CompanionDialogue(
         CompanionTheme? theme) =>
         new(messages, quick, null, state, emotion, theme);
 
-    private CompanionReply CrisisReply(CompanionState state) => new(
-        [CompanionContent.Crisis(english)],
-        [],
-        new DialogueAction(DialogueActionKind.OpenCrisisHub),
-        state,
-        ParseEmotion(state.Emotion),
-        null);
+    private CompanionReply CrisisReply(CompanionState state)
+    {
+        CompanionState interrupted = EndProtocol(state) with
+        {
+            AwaitingPostPracticeRating = false,
+            PendingPractice = null,
+            PendingPracticeStartedUtc = null,
+            OfferedPrimary = null,
+            OfferedAlternative = null,
+            QuestionPending = false,
+            LastQuestion = null,
+            LastQuestionId = null,
+            TurnsSinceOffer = 0
+        };
+
+        return new CompanionReply(
+            [CompanionContent.Crisis(english)],
+            [],
+            new DialogueAction(DialogueActionKind.OpenCrisisHub),
+            interrupted,
+            ParseEmotion(interrupted.Emotion),
+            null);
+    }
 
     private static ChatQuickReply PracticeReply(string techniqueId, string label) =>
         new(ChatQuickReplyKinds.Practice, label, techniqueId);

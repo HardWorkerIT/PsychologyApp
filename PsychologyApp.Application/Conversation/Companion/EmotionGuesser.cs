@@ -55,7 +55,7 @@ public sealed class EmotionGuesser : IEmotionGuesser
         {
             string label = item.GetProperty("label").GetString() ?? string.Empty;
             string text = item.GetProperty("text").GetString() ?? string.Empty;
-            if (Enum.TryParse(label, out CompanionEmotion emotion) && text.Length > 0)
+            if (Enum.TryParse(label, out CompanionEmotion emotion) && Enum.IsDefined(emotion) && !string.IsNullOrWhiteSpace(text))
             {
                 examples.Add((emotion, text));
             }
@@ -70,6 +70,11 @@ public sealed class EmotionGuesser : IEmotionGuesser
     {
         foreach ((CompanionEmotion emotion, string text) in examples)
         {
+            if (!Enum.IsDefined(emotion) || string.IsNullOrWhiteSpace(text))
+            {
+                continue;
+            }
+
             _documents[emotion] = _documents.GetValueOrDefault(emotion) + 1;
             _documentTotal++;
             if (!_counts.TryGetValue(emotion, out Dictionary<string, int>? counts))

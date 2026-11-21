@@ -350,7 +350,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
     [GeneratedRegex(@"\b(?:мама|мам[ыуеой]|папа|пап[уы]|мать|отец|родител\w*|он|она|они|брат|сестр\w*|друг|подруг\w*|муж|жена|сын|дочь|mother|mom|father|dad|parent|he|she|they|brother|sister|friend|husband|wife|son|daughter)\b", RegexOptions.CultureInvariant)]
     private static partial Regex OtherEmotionSubject();
 
-    [GeneratedRegex(@"\b(?:тревож\w*|пережива\w*|бою\w*|боится|груст\w*|злится|злятся|злюсь|сердится|устал\w*|виноват\w*|стыдится|одинок\w*|worr\w*|anxious|afraid|scared|sad|angry|furious|tired|guilty|lonely|feels? (?:sad|angry|anxious|tired))\b", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"\b(?:тревож\w*|пережива\w*|бою\w*|боится|груст\w*|злится|злятся|злюсь|сердится|устал\w*|виноват\w*|стыдится|одинок\w*|невидим\w*|worr\w*|anxious|afraid|scared|sad|angry|furious|tired|guilty|lonely|invisible|feels? (?:sad|angry|anxious|tired))\b", RegexOptions.CultureInvariant)]
     private static partial Regex OtherEmotionPredicate();
 
     [GeneratedRegex(@"\b(?:он|она|они)\s+(?:меня|мне)\s+(?:разозлил\w*|обидел\w*|напугал\w*|расстроил\w*)\b|\b(?:he|she|they)\s+made\s+me\s+(?:angry|sad|afraid|anxious)\b", RegexOptions.CultureInvariant)]

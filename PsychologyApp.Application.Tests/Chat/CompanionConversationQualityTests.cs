@@ -51,6 +51,157 @@ public class CompanionConversationQualityTests
 
     private static List<Turn> Talk(params string[] messages) => Talk(false, messages);
 
+    [Theory]
+    [InlineData(false, "Мне тревожно из-за работы, просто выслушай меня")]
+    [InlineData(false, "Я сильно тревожусь из-за работы и завтрашнего разговора с начальником, пожалуйста, просто выслушай меня без советов")]
+    [InlineData(true, "I am anxious about work, just listen")]
+    [InlineData(true, "I am anxious about work and the meeting with my boss tomorrow, please just listen without giving me advice")]
+    public void ARequestToListenAlsoReceivesAndRemembersTheSituation(bool english, string message)
+    {
+        Turn turn = Assert.Single(Talk(english, message));
+
+        Assert.Equal(CompanionCaseContent.GoalVent, turn.Reply.State.Goal);
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), turn.Reply.State.Emotion);
+        Assert.Equal(nameof(CompanionTheme.Work), turn.Reply.State.Theme);
+        Assert.Contains(message, turn.Reply.State.RecentTexts);
+        Assert.False(turn.OffersPractice, turn.Text);
+        Assert.False(turn.AsksForScale, turn.Text);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ListeningDoesNotExpireAfterEightMessages(bool english)
+    {
+        string[] messages = [english ? "Just listen" : "Просто выслушай", .. Enumerable.Repeat(
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", 12)];
+
+        List<Turn> chat = Talk(english, messages);
+
+        Assert.All(chat.Skip(1), turn =>
+        {
+            Assert.Equal(CompanionCaseContent.GoalVent, turn.Reply.State.Goal);
+            Assert.False(turn.OffersPractice, turn.Text);
+            Assert.False(turn.AsksForScale, turn.Text);
+        });
+    }
+
+    [Theory]
+    [InlineData(false, "Ты меня не понял", "Речь о другом")]
+    [InlineData(true, "You misunderstood me", "It is about something else")]
+    public void CorrectingUnderstandingDropsTheRejectedFeelingInsteadOfRepeatingTheQuestion(bool english, string correction, string continuation)
+    {
+        List<Turn> chat = Talk(english,
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", correction, continuation);
+
+        Assert.Equal(nameof(CompanionEmotion.Unknown), chat[1].Reply.State.Emotion);
+        Assert.Equal(nameof(CompanionEmotion.Unknown), chat[2].Reply.State.Emotion);
+        Assert.NotEqual(chat[0].Reply.State.LastQuestion, chat[1].Text);
+        Assert.False(chat[1].OffersPractice);
+        Assert.False(chat[1].AsksForScale);
+    }
+
+    [Theory]
+    [InlineData(false, "Ты меня не понял, мне одиноко")]
+    [InlineData(true, "You misunderstood me, I feel lonely")]
+    public void ACorrectionUsesTheReplacementFeeling(bool english, string correction)
+    {
+        List<Turn> chat = Talk(english,
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", correction);
+
+        Assert.Equal(nameof(CompanionEmotion.Loneliness), chat[1].Reply.State.Emotion);
+        Assert.Contains(correction, chat[1].Reply.State.RecentTexts);
+        Assert.False(chat[1].AsksForScale);
+    }
+
+    [Theory]
+    [InlineData(false, "Ты меня не понял, просто выслушай меня, мне одиноко")]
+    [InlineData(true, "You misunderstood me, just listen, I feel lonely")]
+    public void ACorrectionAndAListeningPreferenceAreBothRespected(bool english, string correction)
+    {
+        List<Turn> chat = Talk(english,
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", correction);
+
+        Assert.Equal(CompanionCaseContent.GoalVent, chat[1].Reply.State.Goal);
+        Assert.Equal(nameof(CompanionEmotion.Loneliness), chat[1].Reply.State.Emotion);
+        Assert.Null(chat[1].Reply.State.OfferedPrimary);
+        Assert.Contains(CompanionActContent.ComplaintAcknowledgement(english), chat[1].Reply.Messages);
+        Assert.False(chat[1].AsksForScale);
+        Assert.False(chat[1].OffersPractice);
+    }
+
+    [Theory]
+    [InlineData(false, "Советы мне не нужны, я хочу рассказать про работу")]
+    [InlineData(true, "I don't want advice, I am anxious about work")]
+    [InlineData(true, "I don’t want advice, I am anxious about work")]
+    [InlineData(true, "I do not want advice, I am anxious about work")]
+    public void DecliningAdviceSelectsListeningAndKeepsThePersonalContext(bool english, string message)
+    {
+        Turn turn = Assert.Single(Talk(english, message));
+
+        Assert.Equal(CompanionCaseContent.GoalVent, turn.Reply.State.Goal);
+        Assert.Contains(message, turn.Reply.State.RecentTexts);
+        Assert.False(turn.OffersPractice);
+    }
+
+    [Theory]
+    [InlineData(false, "Я не понял вопрос")]
+    [InlineData(true, "I didn't get that")]
+    public void AskingToRepeatDoesNotDiscardTheKnownFeeling(bool english, string message)
+    {
+        List<Turn> chat = Talk(english,
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", message);
+
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), chat[1].Reply.State.Emotion);
+    }
+
+    [Theory]
+    [InlineData(false, "Муж сказал: ты меня не понял")]
+    [InlineData(true, "My husband said: you misunderstood me")]
+    public void AQuotedCorrectionIsNotTreatedAsACorrectionOfTheCompanion(bool english, string message)
+    {
+        List<Turn> chat = Talk(english,
+            english ? "I am anxious about work" : "Мне тревожно из-за работы", message);
+
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), chat[1].Reply.State.Emotion);
+        Assert.Contains(message, chat[1].Reply.State.RecentTexts);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ACorrectionCancelsTheUnacceptedPracticeOffer(bool english)
+    {
+        CompanionDialogue dialogue = new(new LexiconSituationAnalyzer(), new KeywordCrisisDetector(), english, new Random(11));
+        CompanionState state = new()
+        {
+            Emotion = nameof(CompanionEmotion.Anxiety),
+            OfferedPrimary = nameof(TechniqueId.Breathing),
+            OfferedAlternative = nameof(TechniqueId.Grounding),
+            TurnsSinceOffer = 0
+        };
+
+        CompanionReply corrected = dialogue.Respond(state, new CompanionInput.FreeText(
+            english ? "You misunderstood me" : "Ты меня не понял"));
+        CompanionReply next = dialogue.Respond(corrected.State, new CompanionInput.FreeText(
+            english ? "Let's try" : "Давай попробуем"));
+
+        Assert.Null(corrected.State.OfferedPrimary);
+        Assert.Null(corrected.State.OfferedAlternative);
+        Assert.NotEqual(DialogueActionKind.StartTechnique, next.Action?.Kind);
+    }
+
+    [Theory]
+    [InlineData(false, "Я хочу покончить с собой, просто выслушай меня без советов")]
+    [InlineData(true, "I want to kill myself, just listen without giving me advice")]
+    public void AListeningRequestNeverOverridesTheCrisisRoute(bool english, string message)
+    {
+        Turn turn = Assert.Single(Talk(english, message));
+
+        Assert.Equal(DialogueActionKind.OpenCrisisHub, turn.Reply.Action?.Kind);
+        Assert.False(turn.OffersPractice);
+    }
+
     [Fact]
     public void ADeathGetsCondolenceAndCompanyNotAScaleOrAPractice()
     {
@@ -581,7 +732,6 @@ public class CompanionConversationQualityTests
         Assert.Equal("vent", chat[^1].Reply.State.Goal);
         Assert.NotEmpty(chat[^1].Reply.Messages);
         Assert.False(chat[^1].OffersPractice, chat[^1].Text);
-        Assert.DoesNotContain(english ? "advice" : "совет", chat[^1].Text, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

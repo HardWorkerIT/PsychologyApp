@@ -39,8 +39,8 @@ public sealed record QuickReplyItem(ChatQuickReply Reply, ICommand Command)
 /// <summary>One conversation in the messenger. Every message is persisted by <see cref="IChatService"/> before it is shown, so leaving the page never loses anything.</summary>
 public sealed class ChatViewModel : BaseViewModel
 {
-    private const int MinTypingDelayMs = 500;
-    private const int MaxTypingDelayMs = 1500;
+    private const int MinTypingDelayMs = 250;
+    private const int MaxTypingDelayMs = 1100;
     private const int PerCharacterDelayMs = 8;
     private const int HandOverDelayMs = 500;
     private const int HistoryPageSize = 100;
@@ -228,8 +228,8 @@ public sealed class ChatViewModel : BaseViewModel
     public bool HasLoaded => !IsLoading && !IsInitialLoadFailed;
     public string LoadingText => AppStrings.ChatLoadingText;
 
-    /// <summary>The send button is lit only when there is something to send.</summary>
-    public bool CanSend => !string.IsNullOrWhiteSpace(_draftText);
+    /// <summary>The send button is available only when there is a draft and the companion is ready for another turn.</summary>
+    public bool CanSend => !_busy && !string.IsNullOrWhiteSpace(_draftText);
 
     /// <summary>Subtitle under the chat name: "typing..." while the companion answers, otherwise a privacy reminder.</summary>
     /// <summary>Under the companion's own name the status is only "offline"; under a chat's name it says whose chat it is.</summary>
@@ -414,7 +414,7 @@ public sealed class ChatViewModel : BaseViewModel
             return;
         }
 
-        _busy = true;
+        SetBusy(true);
         try
         {
             try
@@ -451,7 +451,7 @@ public sealed class ChatViewModel : BaseViewModel
         }
         finally
         {
-            _busy = false;
+            SetBusy(false);
         }
     }
 
@@ -470,8 +470,19 @@ public sealed class ChatViewModel : BaseViewModel
             return;
         }
 
-        _busy = true;
+        SetBusy(true);
         RunGuardedAsync(action).FireAndForget();
+    }
+
+    private void SetBusy(bool isBusy)
+    {
+        if (_busy == isBusy)
+        {
+            return;
+        }
+
+        _busy = isBusy;
+        OnPropertyChanged(nameof(CanSend));
     }
 
     private async Task RunGuardedAsync(Func<Task> action)
@@ -491,7 +502,7 @@ public sealed class ChatViewModel : BaseViewModel
         }
         finally
         {
-            _busy = false;
+            SetBusy(false);
         }
     }
 
@@ -577,10 +588,21 @@ public sealed class ChatViewModel : BaseViewModel
 
     private async Task RevealAsync(IReadOnlyList<ChatMessageDTO> companionMessages)
     {
+        if (companionMessages.Count == 0)
+        {
+            IsTyping = false;
+            SetQuickReplies([]);
+            return;
+        }
+
+        long totalCharacters = companionMessages.Sum(message => (long)message.Text.Length);
+        int totalTypingDelayMs = (int)Math.Clamp(totalCharacters * PerCharacterDelayMs, MinTypingDelayMs, MaxTypingDelayMs);
+        int delayPerMessageMs = (totalTypingDelayMs + companionMessages.Count - 1) / companionMessages.Count;
+
         foreach (ChatMessageDTO message in companionMessages)
         {
             IsTyping = true;
-            await Task.Delay(Math.Clamp(message.Text.Length * PerCharacterDelayMs, MinTypingDelayMs, MaxTypingDelayMs), _lifetime.Token);
+            await Task.Delay(delayPerMessageMs, _lifetime.Token);
             IsTyping = false;
             Messages.Add(CreateBubble(message.Text, message.Role == ChatRole.User, message.CreatedAt, animate: true, message.Id));
         }

@@ -49,6 +49,8 @@ public enum Utterance
     AsksCapabilities,
     /// <summary>"What?", "repeat", "I didn't get it".</summary>
     AsksToRepeat,
+    /// <summary>"Say that in another way."</summary>
+    AsksToRephrase,
     /// <summary>"Skip this", "ask something else".</summary>
     SkipsQuestion,
     /// <summary>Not a message: only digits ("1111"), keyboard mashing ("asdfgh", "йцукен"), one letter repeated ("аааа"), a repeated unit
@@ -130,6 +132,29 @@ public static class UtteranceClassifier
         "you dont understand", "you do not understand", "you dont help", "you are not helping", "youre not helping"
     ];
 
+    private static readonly string[] UnderstandingCorrectionTerms =
+    [
+        "ты меня не понял", "ты меня не поняла", "вы меня не поняли", "ты неправильно понял", "ты неверно понял",
+        "ты не так понял", "ты не так меня понял", "вы неправильно поняли", "вы неверно поняли",
+        "you misunderstood me", "you got me wrong", "thats not what i meant", "that is not what i meant"
+    ];
+
+    internal static bool IsUnderstandingCorrection(string text)
+    {
+        string normalized = Normalize(text);
+        if (normalized.StartsWith("нет ", StringComparison.Ordinal))
+        {
+            normalized = normalized[4..];
+        }
+        else if (normalized.StartsWith("no ", StringComparison.Ordinal))
+        {
+            normalized = normalized[3..];
+        }
+
+        // A quoted correction inside a story belongs to that story, not to this conversation.
+        return UnderstandingCorrectionTerms.Any(term => normalized == term || normalized.StartsWith(term + " ", StringComparison.Ordinal));
+    }
+
     // Aimed at the companion specifically, not at a third party or at themselves: "ты дебил" counts, "какой я дебил" does not.
     private static readonly string[] InsultPhraseTerms =
     [
@@ -207,12 +232,19 @@ public static class UtteranceClassifier
         "what can you do", "how can you help", "how do you work", "what do you do", "what are you for"
     ];
 
-    private static readonly string[] RepeatTerms =
+    private static readonly string[] RephraseTerms =
     [
-        "повтори", "повторите", "не понял", "не поняла", "не поняли", "в смысле", "что ты имеешь в виду", "что вы имеете в виду", "не расслышал", "что что", "переформулируй", "спроси иначе",
-        "what do you mean", "say that again", "repeat that", "i didnt get that", "i dont get it", "rephrase", "come again"
+        "переформулируй", "переформулируйте", "перефразируй", "перефразируйте", "сформулируй иначе", "спроси иначе", "скажи иначе", "объясни проще", "объясни попроще", "можно попроще", "скажи по другому",
+        "rephrase", "put it another way", "say it differently", "ask in a different way", "ask that differently", "explain more simply", "say that more simply"
     ];
 
+    private static readonly string[] RepeatTerms =
+    [
+        "повтори", "повторите", "не расслышал", "что что",
+        "say that again", "repeat that", "come again"
+    ];
+
+    private static readonly string[] RephraseWholeMessage = ["я не понял", "я не поняла", "ничего не понял", "ничего не поняла", "не понял", "не поняла", "не поняли", "в смысле", "что ты имеешь в виду", "что вы имеете в виду", "what do you mean", "i didnt get that", "i didnt get it", "i dont get it", "i dont understand", "i didnt understand", "i do not understand", "i did not understand"];
     private static readonly string[] RepeatWholeMessage = ["что", "чего", "а что", "а", "ась", "what", "huh", "sorry"];
 
     private static readonly string[] SkipTerms =
@@ -248,6 +280,15 @@ public static class UtteranceClassifier
 
     /// <param name="text">Raw message.</param>
     /// <param name="hasFeeling">The message already carries a recognised feeling; social phrases are then ignored.</param>
+    internal static bool IsRephraseRequest(string text)
+    {
+        string normalized = Normalize(text);
+        return normalized.Length > 0 && IsRephraseRequest(normalized, CountWords(normalized), normalized + " ");
+    }
+
+    private static bool IsRephraseRequest(string normalized, int words, string padded) =>
+        (words <= 6 && ContainsAny(padded, RephraseTerms)) || RephraseWholeMessage.Contains(normalized);
+
     public static Utterance Classify(string text, bool hasFeeling)
     {
         string normalized = Normalize(text);
@@ -320,7 +361,7 @@ public static class UtteranceClassifier
             return Utterance.SkipsQuestion;
         }
 
-        if ((words <= 16 && ContainsAny(padded, DirectComplaintTerms)) || (words <= 10 && ContainsAny(padded, ComplaintTerms)))
+        if (IsUnderstandingCorrection(text) || (words <= 16 && ContainsAny(padded, DirectComplaintTerms)) || (words <= 10 && ContainsAny(padded, ComplaintTerms)))
         {
             return Utterance.ComplainsAboutCompanion;
         }
@@ -328,6 +369,11 @@ public static class UtteranceClassifier
         if (ContainsAny(padded, RefuseTerms))
         {
             return Utterance.RefusesToTalk;
+        }
+
+        if (IsRephraseRequest(normalized, words, padded))
+        {
+            return Utterance.AsksToRephrase;
         }
 
         if (words <= 12 && (ContainsAny(padded, ExplainTerms) || normalized.EndsWith(" это что", StringComparison.Ordinal) || normalized.EndsWith(" что это", StringComparison.Ordinal)))
@@ -378,6 +424,7 @@ public static class UtteranceClassifier
         {
             return Utterance.DontKnow;
         }
+
 
         if ((words <= 6 && ContainsAny(padded, RepeatTerms)) || RepeatWholeMessage.Contains(normalized))
         {
