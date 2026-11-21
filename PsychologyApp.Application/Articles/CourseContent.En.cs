@@ -597,5 +597,249 @@ public static partial class ArticleContent
                 new("Leave room to adjust", 4, [P("Start with a convenient time and an easy way to end. If energy is low, make the plan smaller or move it. A reply or no reply does not define your worth."), Practice(TechniqueId.ConnectionStepPlan, "Plan a small connection")], "Choose a simple format and decide when you could end or reschedule.", "How can I support myself if plans change?"),
                 new("Reflect without judging yourself", 4, [P("Notice whether it felt safe and worthwhile and whether you would repeat or change the format. Do not rate yourself by message counts or someone else's response."), Quiz("What is useful to notice after a small connection?", 0, "It is useful to review the format and your own experience. Someone else's response does not measure your worth.", "Did it feel safe and comfortable, and what could I adjust?", "How many messages did I get in an hour?", "Does no reply prove people do not want to see me?"), TestsTab("WHO-5 is a general well-being screen for the past two weeks, not a loneliness measure or diagnosis. A score change alone does not prove the course caused an effect.", "who5")], "Choose one format you want to try or adjust.", "What small step fits me now?")
             ]),
+        new(
+            CourseIds.Boundaries,
+            "Communicating boundaries",
+            "Four short steps to identify your limits, state them clearly, and choose a safe response.",
+            "Forum", "who5", "WHO-5",
+            [
+                new("What matters to me", 4, [P("Assertive communication means stating what you need while respecting the other person's right to respond. It does not guarantee agreement and is never an obligation."), H("Three ways to respond"), List("Stay silent when you disagree", "Pressure or insult in return", "Calmly state your position and request"), Quiz("Which response is assertive?", 2, "A clear, calm message expresses your position while leaving the other person free to respond.", "Agree when you do not want to", "Raise your voice until they agree", "Say: “I can’t today. Could we discuss another day?”"), TestsTab("WHO-5 is a general well-being screen for the past two weeks, not an assertiveness measure or diagnosis.", "who5"), Crisis("I need help now")], "Notice one safe situation where you would like to state a limit. You do not need to act yet.", "What matters to you in this situation?"),
+                new("Say no clearly and briefly", 4, [P("A refusal can be brief and polite. You do not have to explain it in detail; if it suits you, you may offer another option, but you do not have to."), List("“I can’t right now”", "“I’m not able to take this on”", "“I need to think. I’ll reply tomorrow”"), P("If someone keeps pressing, calmly repeat your main sentence. You do not have to prove that your reason is good enough.")], "Prepare one refusal for a low-risk everyday situation.", "Which words sound natural for you?"),
+                new("Make a specific request", 4, [P("A specific request is easier to understand than a hint or accusation. Name the situation, what matters to you, and one manageable option."), Quiz("Which request is clearer?", 1, "A specific request describes an action and time without guessing the other person's motives.", "“You never listen to me”", "“When you have a moment, could you listen for ten minutes?”", "Say nothing and hope they guess"), P("The other person may agree, suggest a compromise, or decline. You still have the right to ask and choose your next step.")], "Write or simply think through one brief request.", "What could you make more specific?"),
+                new("Choose a safe next step", 4, [P("Start with a lower-risk situation and decide in advance what you might do after different responses. You can postpone or end a conversation, or have support with you."), P("If being direct could lead to threats, violence, punishment, or more control, do not practise alone. Put safety first and contact a trusted person or service."), TestsTab("WHO-5 measures general well-being, not boundary skills. A score change alone does not prove the course had an effect.", "who5")], "Choose one safe step: say the phrase, seek support, or make no change for now.", "What would be a kind next step for you?")
+            ]),
+        new(
+            CourseIds.WorkRecovery,
+            "Recovering after work",
+            "Four days to notice what helps you switch off, choose manageable rest, and protect time away from work.",
+            "TipsAndUpdates", "pss10", "PSS-10",
+            [
+                new("What helps me recover", 4, [P("Different ways of resting suit different people. Research looks at switching attention from work, relaxing, doing something engaging, and choosing your own pace or timing. These are options, not a checklist."), H("Ideas to try"), List("A quiet pause or calm rest", "An activity that absorbs you or teaches something new", "Time with others or on your own", "Gentle movement, if it suits you"), TestsTab("PSS-10 measures perceived stress over the past month. It does not diagnose burnout or measure recovery from work.", "pss10"), Crisis("I need help now")], "Notice one way of resting that sometimes helps or feels manageable.", "What helps you shift your attention, even a little?"),
+                new("End the workday gently", 4, [P("Unfinished tasks can keep occupying your attention. If you can, choose a small end-of-work cue: close work tabs, note the first step for tomorrow, or change clothes."), P("Adapt this to shifts, on-call duties, and urgent responsibilities. Keep alerts that you need for safety or work.")], "Choose a brief end-of-work cue that fits your schedule.", "What could help you notice the shift to personal time?"),
+                new("Choose rest without a perfect plan", 4, [P("Rest does not need to become another task. Ask whether quiet, company, an engaging activity, or doing nothing fits best right now."), List("Make an activity shorter", "Choose something that needs little preparation", "Let yourself change your mind"), P("Research finds associations between some recovery experiences and well-being, but it does not promise the same effect for everyone. Notice your own experience.")], "Try a small version of rest, or choose when you could return to it.", "What felt pleasant, neutral, or not right for you?"),
+                new("Protect workable personal time", 4, [P("You may not control every demand. If work keeps intruding on rest, consider discussing priorities, deadlines, or support with a manager, colleague, or someone you trust."), P("If the conditions cannot change yet, that is not a personal failure. Choose only what is within reach, such as a pause, a short activity, or when to next check work."), TestsTab("A repeat PSS-10 is only a general stress screen. A score difference does not show why things changed or measure this course's effect.", "pss10")], "Keep one small adjustment you would like to try this week.", "What would you like to keep or change next?")
+            ]),
+        new(
+            CourseIds.SelfCompassion,
+            "Be kinder to yourself after a mistake",
+            "Four short steps to notice self-criticism, separate facts from labels, and choose a helpful response.",
+            "TrackChanges", "who5", "WHO-5",
+            [
+                new("Notice the inner critic", 4, [P("After a mistake, self-criticism can turn one action into a label for your whole self. You do not have to argue with it or force positive thinking; first separate what happened from your judgment of yourself."), H("Fact and label"), List("I forgot to reply — a fact", "I am a terrible friend — a label", "What could help repair this? — a question"), TestsTab("WHO-5 is a general well-being screen for the past two weeks. It does not measure self-compassion or prove a course effect.", "who5"), Crisis("I need help now")], "Notice a self-critical label and try to describe the event without judging yourself. You do not need to write it down.", "What happened when you remove the label?"),
+                new("Speak to yourself as you would to a friend", 4, [P("Imagine someone close to you made the same mistake. Being supportive does not mean excusing everything; it can help you see the whole situation and choose a next step."), Quiz("Which response is both kind and honest?", 2, "It acknowledges the mistake without attacking the person and points to a practical next step.", "You always ruin things", "It does not matter at all", "You made one mistake; let's see what can be repaired")], "Say one truthful sentence to yourself without putting yourself down.", "How does that sentence sound?"),
+                new("Repair what you can, without punishing yourself", 4, [P("Kindness to yourself can go together with responsibility. You can acknowledge an impact and repair what is possible without turning one mistake into a verdict on your whole self."), List("What exactly happened?", "Who or what was affected?", "What small step could help now?"), P("Not everything can be repaired right away. You can still learn from it and ask someone you trust for advice.")], "Choose one manageable action to repair or support.", "What is within your control now?"),
+                new("Plan a kind next step", 4, [P("Make a short plan for next time: notice self-criticism, pause, and choose one helpful action. Change the plan if it does not fit."), TestsTab("A repeat WHO-5 is only a general well-being screen. A score difference does not measure self-compassion or prove a course effect.", "who5")], "Keep one sentence or action you can return to.", "What would you like to try next time?")
+            ]),
+        new(
+            CourseIds.SupportSomeone,
+            "Support someone with care",
+            "Four steps to ask, listen, offer manageable help, and involve more support when needed.",
+            "Group", "pss10", "PSS-10",
+            [
+                new("Start with a simple question", 4, [P("Choose a calm time and place if it is safe. Ask whether the person wants to talk; you do not have to guess or insist."), List("How are you right now?", "Would you like to talk, or just have some company?", "Is there anything I can do to help?"), TestsTab("PSS-10 measures perceived stress over the past month. It does not measure support skills or assess another person's condition.", "pss10"), Crisis("I need help now")], "Think of one open, low-pressure question. You do not have to ask it right away.", "How can you show that it is okay to decline the conversation?"),
+                new("Listen without rushing to fix things", 4, [P("Let the person finish and allow pauses. Check that you understood instead of immediately advising, comparing, or diagnosing."), Quiz("Which response leaves more room for the person?", 1, "An open question lets them choose what they want to share.", "You just need to take your mind off it", "What feels hardest right now?", "I have been through that, so I know what you should do")], "Reflect back what you heard in your own words, then ask if you got it right.", "What changes when you do not rush to give advice?"),
+                new("Offer a choice of help", 4, [P("Support can be simple and specific. Ask what would help most right now: listening, help with one task, or looking for information together. Offer only what you can genuinely do."), List("Would you like me to listen?", "Can I help with one specific thing?", "Would you like to think together about whom to contact?"), P("If they say no, respect that. You can leave the door open to talk later.")], "With their permission, offer one concrete option, or think of one you could offer in the future.", "What kind of help is manageable for both of you?"),
+                new("Involve more support and keep your limits", 4, [P("You can be present without handling everything alone or being the only support. Be honest about when you are available and suggest involving someone trusted or a professional."), P("If they describe immediate danger or cannot stay safe, do not carry it alone: involve local emergency or crisis support if possible. Do not promise to keep a threat to life secret."), TestsTab("A repeat PSS-10 is only a general indicator of perceived stress, not a rating of your support or evidence of course effect.", "pss10")], "Choose one boundary or extra source of support so you are not carrying the strain alone.", "Who could support you?")
+            ]),
+        new(
+            CourseIds.TaskStart,
+            "Start what you keep putting off",
+            "Three steps: make the start smaller, choose a time, and continue without blame.",
+            "Checklist", "who5", "WHO-5",
+            [
+                new("Choose one task", 3, [P("Putting something off can come from an unclear first step or an uncomfortable feeling, not laziness. Name the task and the first visible action."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Choose one task and a first step that takes up to five minutes.", "What would make the start clearer?"),
+                new("Make starting easier", 3, [P("Prepare what you need and pick a time. You can begin for five minutes, then decide whether to continue.")], "Write when, where, and how you will start.", "What might get in the way, and how could you simplify it?"),
+                new("Support the next step", 3, [P("Review without blame: what helped you start, what got in the way, and what is realistic now? Sometimes the task itself needs revising.")], "Keep one approach that helped you get moving.", "What did you learn about how you get started?")
+            ]),
+        new(
+            CourseIds.FlexibleStandards,
+            "Let good enough be enough",
+            "Notice when high standards help and when they make it harder to finish.",
+            "TrackChanges", "who5", "WHO-5",
+            [
+                new("Notice the cost of perfect", 3, [P("High standards can help, until they take too much time, rest, or the chance to finish. Notice one rule you set for yourself."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Choose one example where a standard is getting in the way.", "What does that rule give you, and what does it cost?"),
+                new("Define enough", 3, [P("Ask who needs the result and what it actually needs to do. Choose two or three quality checks instead of polishing without end.")], "Set a realistic finish line for one task.", "What could you stop improving?"),
+                new("Try a small experiment", 3, [P("If it feels safe, leave a small imperfection or finish when a timer ends. This is an experiment, not a demand to stop caring about quality.")], "Choose a gentle experiment, or simply notice the rule.", "What did you expect, and what happened?")
+            ]),
+        new(
+            CourseIds.ThoughtLoops,
+            "When thoughts keep looping",
+            "Notice a repeating thought and bring attention back to what you choose to do.",
+            "Psychology", "gad7", "GAD-7",
+            [
+                new("Notice the loop", 3, [P("A repeating thought can feel like problem-solving, but may not bring a new answer. Notice when it returns and what tends to trigger it."), TestsTab("GAD-7 measures general anxiety over the past two weeks; it is not a diagnosis or a test of this course skill.", "gad7"), Crisis("I need help now")], "Notice one moment when a thought starts looping.", "What often starts the loop?"),
+                new("Separate a thought from a fact", 3, [P("Try naming it as a thought: “I notice the thought that…” This does not dismiss the problem; it keeps a prediction from becoming a fact.")], "Name one thought neutrally, without arguing with it.", "What changes when you call it a thought?"),
+                new("Return to what you chose", 3, [P("You do not need to push the thought away. Notice it, then gently return to what you are doing; if action is needed, choose a time and one step.")], "Choose a small action for the next ten minutes.", "Where would you like to place your attention?")
+            ]),
+        new(
+            CourseIds.UncertainDecisions,
+            "Decide without full certainty",
+            "Compare facts, what matters to you, and one manageable next step.",
+            "Checklist", "gad7", "GAD-7",
+            [
+                new("Separate facts from guesses", 3, [P("Some information may be unavailable in a difficult choice. Note what you know, what you assume, and what cannot be known yet."), TestsTab("GAD-7 measures general anxiety over the past two weeks; it is not a diagnosis or a test of this course skill.", "gad7"), Crisis("I need help now")], "Sort one question into facts and assumptions.", "Which fact would be most useful to clarify?"),
+                new("Name your priorities", 3, [P("Compare options using what matters to you: safety, time, relationships, resources, or other values. There may be no perfect option.")], "Choose two priorities and compare the options.", "What matters most for you to protect?"),
+                new("Choose a next step", 3, [P("If possible, choose a small, reversible step and a date to review it. This leaves room for new information without promising to know the outcome.")], "Set one step and a time to review it.", "How could you check the decision later?")
+            ]),
+        new(
+            CourseIds.PauseBeforeReply,
+            "Pause before replying",
+            "Notice rising tension, take a pause, and decide whether to answer now.",
+            "TipsAndUpdates", "pss10", "PSS-10",
+            [
+                new("Notice tension early", 3, [P("Irritation or worry can show up in the body or the speed of your speech before you have thought through a reply. Notice your early sign."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Recall one body signal or change in behaviour.", "How do you notice it is time to slow down?"),
+                new("Take a short pause", 3, [P("If it is safe, delay your reply, feel your feet on the floor, and name what is happening. You do not have to make yourself calm immediately.")], "Prepare a phrase: “I need a little time. I’ll reply later.”", "What kind of pause is realistic for you?"),
+                new("Reply with intention", 3, [P("When ready, choose your aim: clarify, ask, set a limit, or end the conversation. If it is unsafe, focus on leaving and getting support.")], "Prepare one sentence that expresses your aim.", "What would you like the other person to understand?")
+            ]),
+        new(
+            CourseIds.IrritationSignals,
+            "Notice irritation early",
+            "Spot early signals, lower the intensity, and choose a safe response.",
+            "Forum", "pss10", "PSS-10",
+            [
+                new("Find an early signal", 3, [P("Irritation can signal tension or a need, but it is not an instruction. Notice what changes in your body, thoughts, or behaviour."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Name one early signal.", "What often happens before irritation rises?"),
+                new("Lower the intensity safely", 3, [P("If possible, step away to a safe place and slow your breathing or notice your surroundings. You do not have to stay in an argument.")], "Choose one safe way to pause.", "How will you know a pause is needed?"),
+                new("Choose what comes next", 3, [P("When the intensity eases, name what you need: time, clarity, help, or a limit. You can return later, or not return if it is unsafe.")], "Prepare a request or action for next time.", "What could help you avoid reaching your limit?")
+            ]),
+        new(
+            CourseIds.ConflictRepair,
+            "Reconnect after an argument",
+            "Own your part, apologise without pressure, and discuss a next step.",
+            "Forum", "who5", "WHO-5",
+            [
+                new("Describe the action, not the person", 3, [P("After an argument, name a specific action rather than labelling yourself or the other person as bad. Reconnecting is only an option when it is safe."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Describe your part in one factual sentence.", "What would you like to clarify?"),
+                new("Apologise specifically", 3, [P("An apology names the action and its possible impact without an excuse or demand for forgiveness. You can say what you will try to do differently.")], "Draft a short apology without adding “but”.", "What are you willing to take responsibility for?"),
+                new("Leave room for a response", 3, [P("Give the other person room to reply and set their own limits. Reconciliation is not guaranteed; sometimes it is enough to agree on a practical next step.")], "Choose one request or limit to discuss.", "What outcome would be acceptable and safe?")
+            ]),
+        new(
+            CourseIds.LifeTransitions,
+            "Adjust to change at your pace",
+            "Keep familiar supports, name what changed, and choose one manageable step.",
+            "TrackChanges", "pss10", "PSS-10",
+            [
+                new("Name what changed", 3, [P("A new job, move, study, or family change can affect several routines at once. You do not have to adjust quickly."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Name one change and how it affects your day.", "What feels harder or different now?"),
+                new("Keep one familiar support", 3, [P("Keep one simple anchor that helps your rhythm: a meal time, short walk, conversation, or evening routine. Adapt it to new conditions.")], "Choose one familiar anchor for this week.", "What can stay, even while things change?"),
+                new("Take the next step", 3, [P("Break adjustment into small questions: what to learn, whom to ask, and what can wait. Your pace may change.")], "Choose one question or action for the next few days.", "What support could make this change easier?")
+            ]),
+        new(
+            CourseIds.GriefAtYourPace,
+            "Grieve at your own pace",
+            "No deadlines or required stages: care for basic needs and find support.",
+            "Healing", "who5", "WHO-5",
+            [
+                new("Make room for what you feel", 3, [P("After a loss, people feel different things in different ways. There is no required timeline for grief and no need to do it “right”."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Name what feels hardest or what you do not feel ready to do.", "What would you like to allow yourself today?"),
+                new("Make the day manageable", 3, [P("On a hard day, choose one basic need or small task. You can ask someone close to stay with you or help with something practical.")], "Reduce one task to a manageable step.", "What kind of care do you need today?"),
+                new("Do not carry it alone", 3, [P("If you want, find a way to remember the person or talk about the loss. If grief keeps making daily life hard over time, professional support is an option.")], "Choose a person or service you could contact.", "What kind of support would feel gentle now?")
+            ]),
+        new(
+            CourseIds.ReturnToFocus,
+            "Return to focus after an interruption",
+            "Capture the interruption, choose the next action, and restart gently.",
+            "TipsAndUpdates", "who5", "WHO-5",
+            [
+                new("Notice the interruption", 3, [P("Getting distracted is a normal part of working. Notice what drew you away: a notification, new thought, tiredness, or unclear step."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Name one common source of interruption.", "What most often breaks your focus?"),
+                new("Capture it and return", 3, [P("Write down the distracting task briefly so you do not have to hold it in mind. Then name one next action for your current task.")], "Make a note and choose a five-minute action.", "What first step would bring you back?"),
+                new("Make the setting easier", 3, [P("Remove one optional interruption and decide what to do next time you are pulled away. If you are very tired, a break may help more than pushing.")], "Change one setting in your workspace or notifications.", "What helps you restart without blame?")
+            ]),
+        new(
+            CourseIds.StudyBlocks,
+            "Study in short blocks",
+            "Choose one learning goal, a short focus block, and a recovery break.",
+            "Checklist", "pss10", "PSS-10",
+            [
+                new("Set one study goal", 3, [P("Choose one clear result for a study block: solve a problem, read a short section, or explain a topic. The larger goal can wait."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Write one result for a short study session.", "How will you know this block is done?"),
+                new("Find your own rhythm", 3, [P("Choose a focus and break length that suits you. A standard timer is optional; adjust it to your attention and health.")], "Try one short block followed by a break.", "What rhythm felt manageable?"),
+                new("Check what you remember", 3, [P("After a break, try recalling the main points without looking, then check the material. A gap shows what to revisit; it does not rate your worth.")], "Name three things you remember.", "What could you review next?")
+            ]),
+        new(
+            CourseIds.BodyNeutrality,
+            "Look at appearance more neutrally",
+            "Reduce comparisons, use neutral attention, and return to activities that matter.",
+            "Healing", "who5", "WHO-5",
+            [
+                new("Notice attention on appearance", 3, [P("Many people feel unhappy with their appearance at times, but frequent checking and comparison can take energy. You do not have to force yourself to love every feature."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Notice when appearance thoughts take your attention.", "What do you put off because of these thoughts?"),
+                new("Try a neutral view", 3, [P("Instead of judging, describe what you notice neutrally or what your body helps you do today. You do not have to feel grateful or satisfied.")], "Replace one judgment with a neutral observation.", "What words feel less harsh and more accurate?"),
+                new("Return to what matters", 3, [P("Choose an activity that matters for reasons beyond appearance: connection, study, rest, or a hobby. If body concerns disrupt eating, health, or daily life, professional support may help.")], "Return to one small activity you have delayed.", "What matters to you beyond appearance?")
+            ]),
+        new(
+            CourseIds.SelfWorth,
+            "Worth more than achievements",
+            "Notice your roles and qualities beyond results, then choose a meaningful action.",
+            "TrackChanges", "who5", "WHO-5",
+            [
+                new("See beyond results", 3, [P("Work and success are part of life, not the measure of your whole worth. Recall roles, relationships, and qualities that matter regardless of productivity."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Name one role or quality that matters to you.", "What is valuable about you without a result?"),
+                new("Find a specific example", 3, [P("Recall a small example of kindness, courage, curiosity, or reliability. You do not have to prove you are always that way; one moment is enough.")], "Find one recent example.", "What do you usually overlook about yourself?"),
+                new("Act on what matters", 3, [P("Choose an action that expresses a quality you value but does not depend on achievement or praise. It can be very small.")], "Do or plan one such action.", "What does this step say about what matters to you?")
+            ]),
+        new(
+            CourseIds.SocialSteps,
+            "Take small steps in social situations",
+            "Choose a safe interaction, check your expectations, and move at your own pace.",
+            "Group", "gad7", "GAD-7",
+            [
+                new("Choose a manageable situation", 3, [P("If social situations feel worrying, start with one that feels mildly challenging and safe. You can decline a step that does not feel right."), TestsTab("GAD-7 measures general anxiety over the past two weeks; it is not a diagnosis or a test of this course skill.", "gad7"), Crisis("I need help now")], "Choose one brief interaction that matters to you.", "What feels manageable, rather than perfect?"),
+                new("Check your expectation", 3, [P("Before the interaction, note what you fear and what else could happen. You do not have to prove the worry wrong; leave room for other outcomes.")], "Write one prediction and one alternative.", "What did you notice during the interaction?"),
+                new("Learn from your experience", 3, [P("Afterwards, note what helped, what was hard, and what next step suits you. You choose the pace, repetitions, and pauses.")], "Choose whether to repeat, reduce, or pause the step.", "What helped you feel safer?")
+            ]),
+        new(
+            CourseIds.AppointmentPreparation,
+            "Prepare for an important appointment",
+            "Gather questions, name your priority, and clarify next steps with a professional.",
+            "Forum", "pss10", "PSS-10",
+            [
+                new("Name what matters most", 3, [P("Before an appointment, decide which question matters most and what you hope to discuss. You do not need to diagnose yourself in advance."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Write your main topic in one sentence.", "What is important to remember to ask?"),
+                new("Prepare short notes", 3, [P("If useful, note when the concern began, what has changed, and any medicines or questions that matter. You may bring someone with you if you choose.")], "Prepare up to three questions or observations.", "What notes could make it easier to speak?"),
+                new("Clarify the plan", 3, [P("Ask the professional to explain unfamiliar words and the next step. You can ask again or say you are not ready to decide yet.")], "Prepare a phrase to ask for clarity or time.", "What would help you understand the plan?")
+            ]),
+        new(
+            CourseIds.WaitingForAnswer,
+            "Get through waiting for an answer",
+            "Limit checking, keep a routine, and choose what is within your control.",
+            "Psychology", "gad7", "GAD-7",
+            [
+                new("Separate waiting from control", 3, [P("Waiting for a reply can take over your attention, even when you cannot make it arrive sooner. Separate what you can do from what is outside your control."), TestsTab("GAD-7 measures general anxiety over the past two weeks; it is not a diagnosis or a test of this course skill.", "gad7"), Crisis("I need help now")], "Write one thing in each group.", "What can you do, and what must wait?"),
+                new("Set a time to check", 3, [P("Choose a reasonable time to check messages or status again. Between checks, return to an ordinary task or rest.")], "Set the next time you will check.", "What could help you avoid automatic checking?"),
+                new("Prepare for either outcome", 3, [P("Choose a small next step for a reply and for a delay. This is not a prediction; it gives you a choice while you wait.")], "Set a date to follow up if needed.", "What would you like to lean on while waiting?")
+            ]),
+        new(
+            CourseIds.AskForHelp,
+            "Ask for specific help",
+            "Name what you need, whom you could ask, and what feels manageable.",
+            "Group", "who5", "WHO-5",
+            [
+                new("Identify what you need", 3, [P("A request is easier to hear when it is specific: time, a conversation, information, or help with one task. You do not have to manage everything alone."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Name one need without explaining why.", "What help could change things a little?"),
+                new("Choose a person and words", 3, [P("Think who could help with this need. A brief request with a clear action and time makes it easier to answer.")], "Draft one sentence asking for help.", "Who could you ask, and when?"),
+                new("Allow different answers", 3, [P("Someone may agree, offer another option, or decline. Your need still matters; you can ask someone else or contact a service.")], "Choose a backup source of support.", "How will you care for yourself after asking?")
+            ]),
+        new(
+            CourseIds.CaregiverLimits,
+            "Care for someone without losing yourself",
+            "Share responsibilities, name your limits, and find additional support.",
+            "Group", "pss10", "PSS-10",
+            [
+                new("Notice the amount of care", 3, [P("Supporting someone can involve many invisible tasks. List the main responsibilities and notice what truly needs your involvement."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Name one task that could be discussed or shared.", "What is draining you most right now?"),
+                new("Name a limit", 3, [P("A limit does not mean abandoning someone. It is an honest description of the time, energy, or actions you can offer safely.")], "Phrase one limit on your support.", "How could you say it clearly and calmly?"),
+                new("Find more support", 3, [P("Think of people, services, or practical changes that could share the load. If care cannot be provided safely, seek professional or emergency help.")], "Choose one source of additional support.", "Who could you contact this week?")
+            ]),
+        new(
+            CourseIds.LowEnergyRoutine,
+            "A gentler plan for low-energy days",
+            "Keep the necessary minimum, make the first step smaller, and include rest.",
+            "TipsAndUpdates", "who5", "WHO-5",
+            [
+                new("Choose the minimum", 3, [P("On a low-energy day, you do not have to complete your usual plan. Choose one necessary task and what can wait."), TestsTab("WHO-5 is a general well-being screen for the past two weeks; it does not measure this course skill or prove a course effect.", "who5"), Crisis("I need help now")], "Reduce your list to one important item.", "What truly cannot wait today?"),
+                new("Make the first step smaller", 3, [P("Break the task into a two-minute action and prepare what you need. If even that is too much, ask someone for help.")], "Choose the smallest safe next step.", "What would make it easier?"),
+                new("Include recovery", 3, [P("Plan a short rest without needing to earn it. If low energy or low mood keeps interfering with life, professional support is an option.")], "Choose a simple pause or someone to contact.", "What could help you not carry this alone?")
+            ]),
+        new(
+            CourseIds.AfterDifficultTalk,
+            "Recover after a difficult conversation",
+            "Return to the present, separate facts from guesses, and choose a safe next step.",
+            "Psychology", "pss10", "PSS-10",
+            [
+                new("Lower the tension", 3, [P("After a difficult conversation, your body may need time. Find a point of support, look around, and name where you are. You do not have to decide who was right yet."), TestsTab("PSS-10 measures perceived stress over the past month; it does not measure this course skill or prove a course effect.", "pss10"), Crisis("I need help now")], "Take a short pause and notice your surroundings.", "What helps you feel here and now?"),
+                new("Separate words from conclusions", 3, [P("Note what was said or done separately from what you assume it meant. This does not dismiss your feelings; it helps you choose what to do next.")], "Separate one fact from one interpretation.", "What do you know, and what are you assuming?"),
+                new("Choose whether to continue", 3, [P("You can clarify, ask for time, or not continue contact. If the conversation involves threats or control, do not return to it alone.")], "Choose one safe option for next time.", "What boundary or support do you need?")
+            ]),
     ];
 }

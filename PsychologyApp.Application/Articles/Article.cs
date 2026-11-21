@@ -72,7 +72,7 @@ public sealed record ArticleBlock(
 /// <param name="Minutes">About how long it takes to read.</param>
 public sealed record Article(string Id, string Title, string Summary, string Icon, int Minutes, IReadOnlyList<ArticleBlock> Blocks);
 
-public static class ArticleIds
+public static partial class ArticleIds
 {
     /// <summary>How stress is felt in the body, what helps, and when a doctor is needed instead.</summary>
     public const string BodyAndStress = "body-stress";

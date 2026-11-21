@@ -64,6 +64,7 @@ public partial class ArticlesPage : ContentPage
         }
 
         _articleAdFooter = footer;
+        footer.IsVisible = true;
         ReconnectArticleAdFooter();
 #else
         if (sender is VisualElement footer)
@@ -81,6 +82,8 @@ public partial class ArticlesPage : ContentPage
             return;
         }
 
+        _articleAdFooter.IsVisible = true;
+
         ContentView? host = _articleAdFooter.Children.OfType<ContentView>().FirstOrDefault();
         if (host is null)
         {
@@ -96,9 +99,6 @@ public partial class ArticlesPage : ContentPage
             host.Content = adView;
         }
 
-        _articleAdFooter.SetBinding(
-            VisualElement.IsVisibleProperty,
-            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
     }
 
     private void DisconnectArticleAdFooter() => DisconnectArticleAdFooter(_articleAdFooter);

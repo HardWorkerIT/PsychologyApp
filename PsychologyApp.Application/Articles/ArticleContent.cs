@@ -7,7 +7,15 @@ namespace PsychologyApp.Application.Articles;
 public static partial class ArticleContent
 {
     /// <summary>The articles in a language by its key ("ru", "en", "fr"…); a language without its own gets the English ones.</summary>
-    public static IReadOnlyList<Article> All(string? language) => InLanguage(language, ArticlesRu, ArticlesEn, ArticlesFr, ArticlesDe, ArticlesEs, ArticlesPt, ArticlesZh);
+    public static IReadOnlyList<Article> All(string? language) => InLanguage(
+        language,
+        ExpandedCatalogs.Russian,
+        ExpandedCatalogs.English,
+        ExpandedCatalogs.French,
+        ExpandedCatalogs.German,
+        ExpandedCatalogs.Spanish,
+        ExpandedCatalogs.Portuguese,
+        ExpandedCatalogs.Chinese);
 
     public static Article? Find(string id, string? language) => All(language).FirstOrDefault(article => article.Id == id);
 
@@ -22,6 +30,21 @@ public static partial class ArticleContent
             "zh" => chinese,
             _ => english
         };
+
+    // Keep a stable catalog instance per language: search indexes and unknown-language fallback both rely on it.
+    private static class ExpandedCatalogs
+    {
+        internal static readonly IReadOnlyList<Article> Russian = [.. ArticlesRu, .. AdditionalArticlesRu];
+        internal static readonly IReadOnlyList<Article> English = [.. ArticlesEn, .. AdditionalArticlesEn];
+        internal static readonly IReadOnlyList<Article> French = [.. ArticlesFr, .. AdditionalArticlesFr];
+        internal static readonly IReadOnlyList<Article> German = [.. ArticlesDe, .. AdditionalArticlesDe];
+        internal static readonly IReadOnlyList<Article> Spanish = [.. ArticlesEs, .. AdditionalArticlesEs];
+        internal static readonly IReadOnlyList<Article> Portuguese = [.. ArticlesPt, .. AdditionalArticlesPt];
+        internal static readonly IReadOnlyList<Article> Chinese = [.. ArticlesZh, .. AdditionalArticlesZh];
+    }
+
+    private static Article MiniArticle(string id, string title, string summary, string text) =>
+        new(id, title, summary, "TipsAndUpdates", 2, [P(text)]);
 
     private static ArticleBlock P(string text) => new(ArticleBlockKind.Paragraph, text);
 

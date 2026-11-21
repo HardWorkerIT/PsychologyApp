@@ -147,6 +147,7 @@ public partial class QuotePage : ContentPage
         }
 
         _quoteAdRow = row;
+        row.IsVisible = true;
         ReconnectQuoteAdRow();
 #else
         if (sender is VisualElement footer)
@@ -164,6 +165,8 @@ public partial class QuotePage : ContentPage
             return;
         }
 
+        _quoteAdRow.IsVisible = true;
+
         ContentView? host = _quoteAdRow.Children.OfType<ContentView>().FirstOrDefault();
         if (host is null)
         {
@@ -179,9 +182,6 @@ public partial class QuotePage : ContentPage
             host.Content = adView;
         }
 
-        _quoteAdRow.SetBinding(
-            VisualElement.IsVisibleProperty,
-            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
     }
 
     private void DisconnectQuoteAdRow() => DisconnectQuoteAdRow(_quoteAdRow);
