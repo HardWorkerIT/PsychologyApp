@@ -2,12 +2,12 @@
 
 The Android app loads VK Ads banners automatically in eligible practice, course, article, and general quotes catalogs. The quote banner is limited to the non-personal All feed. The official [myTarget Android SDK repository](https://github.com/myTargetSDK/mytarget-android) identifies the SDK as `com.my.target:mytarget-sdk`; the project currently pins version 5.52.5.
 
-The public [privacy policy](https://hardworkerit.github.io/PsychologyApp/privacy-policy/) and an HTTPS policy URL are required before an ad view can be created. Banners load automatically in eligible catalogs; no in-app consent prompt is shown. The local ad-free preference disables ad views and requests.
+The public [privacy policy](https://hardworkerit.github.io/PsychologyApp/privacy-policy/) and an HTTPS policy URL are required before an ad view can be created. Banner requests load automatically in eligible catalogs; no in-app permission to show ads is requested. The local ad-free preference disables ad views and requests. A separate, default-off setting controls only the SDK's personalized-advertising consent signal and can be changed at any time.
 
 - `AdvertisingConfiguration.PrivacyPolicyUrl` points to the public HTTPS policy.
 - `AdvertisingConfiguration.VkReadingCatalogBannerSlotId` is set to the registered banner block `2107995`.
 - Ad requests are gated by the valid policy URL, positive slot ID, Android placement eligibility, and the ad-free preference.
-- The SDK receives `false` through myTarget's user-consent API. The app does not obtain or signal affirmative user consent; do not treat this flag as proof of a legally valid consent flow.
+- The SDK receives `true` through myTarget's user-consent API only while the person has enabled personalized ads; otherwise it receives `false`. The setting is stored locally, is immediately applied to active banners, and does not gate ad requests. With consent enabled, the SDK may collect and send the device advertising ID; request metadata can still be sent when the setting is off. This in-app choice is not a substitute for reviewing applicable legal and store disclosure requirements.
 
 The earlier Yandex block ID R-M-20382360-1 belongs to Yandex and cannot be used with VK Ads.
 

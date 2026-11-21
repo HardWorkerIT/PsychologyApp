@@ -4,7 +4,7 @@ namespace PsychologyApp.Presentation.Shared.Common;
 internal static class AdvertisingConfiguration
 {
     // VK assigns a numeric slot ID to each registered banner block.
-    internal const int VkReadingCatalogBannerSlotId = 2107995;
+    internal const int VkReadingCatalogBannerSlotId = 2115025;
 
     // A secure public policy is required before the SDK can send a request.
     internal const string PrivacyPolicyUrl = "https://hardworkerit.github.io/PsychologyApp/privacy-policy/";

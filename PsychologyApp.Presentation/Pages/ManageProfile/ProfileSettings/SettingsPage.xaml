@@ -191,21 +191,54 @@
             </Border>
 
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" IsVisible="{Binding CanOfferAds}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="{Binding AdsTitle}" Style="{StaticResource SectionTitleStyle}" />
-                    <Label Text="{Binding AdsHelp}" Style="{StaticResource CaptionStyle}" />
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="{Binding AdsDisclosure}" Style="{StaticResource CaptionStyle}" />
-                        <ui:ButtonView Variant="Secondary" BodyText="{Binding AdsPrivacyPolicyText}"
-                                       TapCommand="{Binding OpenAdsPrivacyPolicyCommand}" />
-                    </VerticalStackLayout>
-                    <Entry Text="{Binding AdCode, Mode=TwoWay}" Placeholder="{Binding AdCodePlaceholder}"
-                           IsVisible="{Binding CanEnterAdCode}" MaxLength="40"
-                           Keyboard="Plain" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"
-                           SemanticProperties.Description="{Binding AdCodePlaceholder}" />
-                    <ui:ButtonView Variant="Secondary" BodyText="{Binding ApplyAdCodeText}"
-                                   TapCommand="{Binding ApplyAdCodeCommand}" IsVisible="{Binding CanEnterAdCode}" />
-                    <Label Text="{Binding AdCodeStatus}" Style="{StaticResource BodyStyle}" />
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Label Text="{Binding AdsTitle}" Style="{StaticResource SectionTitleStyle}" VerticalOptions="Center" />
+                        <Button
+                            Grid.Column="1"
+                            Text="ⓘ"
+                            FontSize="20"
+                            TextColor="{DynamicResource PrimaryFill}"
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Padding="0"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            Command="{Binding ShowAdsDisclosureCommand}"
+                            SemanticProperties.Description="{Binding AdsTitle}" />
+                    </Grid>
+                    <ui:SettingSwitchRowView
+                        LabelText="{Binding AdsPersonalizationLabel}"
+                        IsToggled="{Binding PersonalizedAdsConsent}"
+                        ShowDivider="False" />
+                    <Label
+                        Text="{Binding AdsPersonalizationHelp}"
+                        Style="{StaticResource CaptionStyle}"
+                        Margin="0,0,0,2" />
+                    <BoxView Style="{StaticResource SettingRowDividerStyle}" Margin="0,2" />
+                    <ui:ButtonView
+                        Variant="Secondary"
+                        IsCompact="True"
+                        BodyText="{Binding ApplyAdCodeText}"
+                        TapCommand="{Binding ApplyAdCodeCommand}"
+                        IsVisible="{Binding CanEnterAdCode}"
+                        HorizontalOptions="Start" />
+                    <Label
+                        Text="{Binding AdCodeStatus}"
+                        Style="{StaticResource CaptionStyle}"
+                        IsVisible="{Binding HasAdCodeStatus}" />
+                    <Button
+                        Text="{Binding AdsPrivacyPolicyText}"
+                        Command="{Binding OpenAdsPrivacyPolicyCommand}"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0"
+                        Padding="8,4"
+                        MinimumHeightRequest="44"
+                        HorizontalOptions="Start"
+                        TextColor="{DynamicResource Primary}"
+                        FontSize="{DynamicResource BodyFontSize}"
+                        FontFamily="{StaticResource MediumFontFamily}"
+                        SemanticProperties.Description="{Binding AdsPrivacyPolicyText}" />
                 </VerticalStackLayout>
             </Border>
 

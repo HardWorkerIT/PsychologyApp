@@ -1,5 +1,6 @@
 #if ANDROID
 using Android.Content;
+using Android.Util;
 using App.Psychology.Ads;
 using Microsoft.Maui.Handlers;
 using PsychologyApp.Presentation.Shared.Common;
@@ -42,13 +43,18 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
 
     public VkBannerHandler() : base(Mapper) { }
 
-    private static void MapEligibility(VkBannerHandler handler, VkBannerView view) => handler.Refresh();
+    private static void MapEligibility(VkBannerHandler handler, VkBannerView view)
+    {
+        Log.Info("VkBanner", $"Eligibility changed: {view.IsEligible}");
+        handler.Refresh();
+    }
 
     protected override VkBannerHost CreatePlatformView() => new(Context);
 
     protected override void ConnectHandler(VkBannerHost platformView)
     {
         base.ConnectHandler(platformView);
+        Log.Info("VkBanner", "Android banner handler connected.");
         _connected = true;
         _loaded = new Java.Lang.Runnable(() => MainThread.BeginInvokeOnMainThread(() =>
         {
@@ -56,6 +62,7 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
             if (AdvertisingConfiguration.CanRequestAds(UserPreferences.Load()))
             {
                 VirtualView.HeightRequest = platformView.MeasureContentHeightDp();
+                VirtualView.InvalidateMeasure();
                 VirtualView.SetAdLoaded(true);
             }
             else
@@ -95,16 +102,20 @@ public sealed class VkBannerHandler : ViewHandler<VkBannerView, VkBannerHost>
     {
         if (!_connected) return;
 
-        if (!VirtualView.IsEligible || !AdvertisingConfiguration.CanRequestAds(UserPreferences.Load()))
+        UserPreferencesState preferences = UserPreferences.Load();
+        bool canRequestAds = AdvertisingConfiguration.CanRequestAds(preferences);
+        if (!VirtualView.IsEligible || !canRequestAds)
         {
+            Log.Info("VkBanner", $"Request skipped: eligible={VirtualView.IsEligible}, adsAllowed={canRequestAds}.");
             PlatformView.Stop();
             VirtualView.HeightRequest = 0;
             VirtualView.SetAdLoaded(false);
             return;
         }
         const int slotId = AdvertisingConfiguration.VkReadingCatalogBannerSlotId;
+        Log.Info("VkBanner", $"Request starting: slot={slotId}.");
         bool dark = Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
-        PlatformView.Start(slotId, AppStrings.AdsTitle, dark);
+        PlatformView.Start(slotId, AppStrings.AdsTitle, dark, preferences.PersonalizedAdsConsent);
     }
 }
 #endif

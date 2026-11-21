@@ -17,6 +17,7 @@ public sealed class SettingsViewModelTests
     private readonly Mock<IQuoteReminderCoordinator> _quotes = new();
     private readonly Mock<IMoodReminderCoordinator> _mood = new();
     private readonly Mock<IChatReminderCoordinator> _chat = new();
+    private readonly Mock<IDialogService> _dialogs = new();
     private readonly List<UserPreferencesState> _saved = [];
     private UserPreferencesState _state = new();
 
@@ -53,7 +54,8 @@ public sealed class SettingsViewModelTests
             _quotes.Object,
             _mood.Object,
             _chat.Object,
-            scheduler.Object);
+            scheduler.Object,
+            _dialogs.Object);
     }
 
     [Fact]
@@ -69,6 +71,31 @@ public sealed class SettingsViewModelTests
         Assert.True(_state.AdsDisabled);
         Assert.Equal("dark", _state.Theme);
         Assert.True(Create().AdsDisabled);
+    }
+
+    [Fact]
+    public async Task CancelingAdCodePromptLeavesAdvertisingEnabled()
+    {
+        _dialogs.Setup(d => d.PromptPasswordAsync(
+                It.IsAny<string?>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .ReturnsAsync((string?)null);
+
+        SettingsViewModel viewModel = Create();
+        await VmTestHelpers.RunAsync(viewModel.ApplyAdCodeCommand);
+
+        Assert.False(viewModel.AdsDisabled);
+        Assert.False(_state.AdsDisabled);
+        Assert.Empty(_saved);
+        _dialogs.Verify(d => d.PromptPasswordAsync(
+            It.IsAny<string?>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>()), Times.Once);
     }
 
     [Theory]

@@ -40,6 +40,8 @@ public partial class SettingsViewModel
                 value => chatReminderHour = value,
                 value => onboardingConcern = value);
 
+            _personalizedAdsConsent = _savedState.PersonalizedAdsConsent;
+            OnPropertyChanged(nameof(PersonalizedAdsConsent));
             NotifyPickerValuesChanged();
             OnPropertyChanged(nameof(IsThick));
             OnPropertyChanged(nameof(QuestionnaireAutoAdvance));
@@ -94,6 +96,8 @@ public partial class SettingsViewModel
     private void NotifyLocalizedLabelsChanged()
     {
         OnPropertyChanged(nameof(AdsTitle));
+        OnPropertyChanged(nameof(AdsPersonalizationLabel));
+        OnPropertyChanged(nameof(AdsPersonalizationHelp));
         OnPropertyChanged(nameof(AdsHelp));
         OnPropertyChanged(nameof(AdsDisclosure));
         OnPropertyChanged(nameof(AdsPrivacyPolicyText));
@@ -101,6 +105,7 @@ public partial class SettingsViewModel
         OnPropertyChanged(nameof(AdCodePlaceholder));
         OnPropertyChanged(nameof(ApplyAdCodeText));
         OnPropertyChanged(nameof(AdCodeStatus));
+        OnPropertyChanged(nameof(HasAdCodeStatus));
         OnPropertyChanged(nameof(PageTitle));
         OnPropertyChanged(nameof(DesignSectionTitle));
         OnPropertyChanged(nameof(FontSectionTitle));

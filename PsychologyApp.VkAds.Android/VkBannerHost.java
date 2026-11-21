@@ -19,6 +19,7 @@ public final class VkBannerHost extends FrameLayout {
     private Runnable loaded;
     private Runnable failed;
     private boolean active;
+    private boolean activePersonalizedAdsConsent;
     private boolean privacyStateSet;
     private int generation;
 
@@ -29,15 +30,19 @@ public final class VkBannerHost extends FrameLayout {
         failed = onFailed;
     }
 
-    public void start(int slotId, String disclosure, boolean dark) {
-        if (active || slotId <= 0) return;
+    public void start(int slotId, String disclosure, boolean dark, boolean personalizedAdsConsent) {
+        if (slotId <= 0) return;
+        if (active) {
+            if (activePersonalizedAdsConsent == personalizedAdsConsent) return;
+            stop();
+        }
         active = true;
+        activePersonalizedAdsConsent = personalizedAdsConsent;
         final int requestGeneration = ++generation;
         try {
-            // Do not signal affirmative user consent when banners load automatically.
-            MyTargetPrivacy.setUserConsent(false);
+            MyTargetPrivacy.setUserConsent(personalizedAdsConsent);
             privacyStateSet = true;
-            LinearLayout layout = new LinearLayout(getContext());
+            final LinearLayout layout = new LinearLayout(getContext());
             layout.setOrientation(LinearLayout.VERTICAL);
             TextView label = new TextView(getContext());
             label.setText(disclosure);
@@ -54,17 +59,30 @@ public final class VkBannerHost extends FrameLayout {
             LinearLayout.LayoutParams adLayoutParams = new LinearLayout.LayoutParams(
                     adSize.getWidthPixels(), ViewGroup.LayoutParams.WRAP_CONTENT);
             adLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-            layout.addView(ad, adLayoutParams);
-            addView(layout);
             ad.setListener(new MyTargetView.MyTargetViewListener() {
                 @Override public void onLoad(MyTargetView view) {
                     if (!active || requestGeneration != generation) { view.destroy(); return; }
+                    // VK's integration contract attaches the banner only after a successful load.
+                    // Until then, the zero-height MAUI host is not a visible ad placement.
+                    layout.addView(view, adLayoutParams);
+                    addView(layout);
+                    Log.i("VkBanner", "Banner loaded: slot=" + slotId);
                     if (loaded != null) loaded.run();
                 }
-                @Override public void onNoAd(IAdLoadingError error, MyTargetView view) { fail(requestGeneration); }
+                @Override public void onNoAd(IAdLoadingError error, MyTargetView view) {
+                    if (!active || requestGeneration != generation) return;
+                    // The SDK's technical error distinguishes no-fill from a configuration or transport failure.
+                    // No app content or custom targeting parameters are included in this diagnostic.
+                    Log.w("VkBanner", "Banner request failed: slot=" + slotId
+                            + ", code=" + error.getCode() + ", reason=" + error.getMessage());
+                    fail(requestGeneration);
+                }
                 @Override public void onClick(MyTargetView view) { }
-                @Override public void onShow(MyTargetView view) { }
+                @Override public void onShow(MyTargetView view) {
+                    if (active && requestGeneration == generation) Log.i("VkBanner", "Banner shown: slot=" + slotId);
+                }
             });
+            Log.i("VkBanner", "Requesting banner: slot=" + slotId + ", package=" + getContext().getPackageName() + ", size=320x50");
             ad.load();
         } catch (RuntimeException | LinkageError error) {
             logFailure(error);

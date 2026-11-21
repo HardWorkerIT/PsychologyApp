@@ -2,6 +2,7 @@ using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Features.ManageProfile;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ public partial class SettingsViewModel : BaseViewModel
 {
     private static readonly TimeSpan AutoSaveDebounceDelay = TimeSpan.FromMilliseconds(700);
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly IUserPreferencesStore _userPreferencesStore;
     private readonly SettingsPreferencesPresenter _presenter;
     private readonly ILanguageContentReloader _languageContentReloader;
@@ -40,10 +42,12 @@ public partial class SettingsViewModel : BaseViewModel
         IQuoteReminderCoordinator quoteReminderCoordinator,
         IMoodReminderCoordinator moodReminderCoordinator,
         IChatReminderCoordinator chatReminderCoordinator,
-        IPracticeReminderScheduler practiceReminderScheduler)
+        IPracticeReminderScheduler practiceReminderScheduler,
+        IDialogService dialogService)
     {
         BindPreferences(userPreferencesStore);
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _userPreferencesStore = userPreferencesStore;
         _presenter = presenter;
         _languageContentReloader = languageContentReloader;
@@ -65,11 +69,13 @@ public partial class SettingsViewModel : BaseViewModel
 
         Finish = new AsyncCommand(SaveAndGoBackAsync);
         ReplayOnboardingCommand = new AsyncCommand(ReplayOnboardingAsync);
-        ApplyAdCodeCommand = new Command(ApplyAdCode);
+        ApplyAdCodeCommand = new AsyncCommand(ApplyAdCodeAsync);
+        ShowAdsDisclosureCommand = new AsyncCommand(ShowAdsDisclosureAsync);
         OpenAdsPrivacyPolicyCommand = new AsyncCommand(OpenAdsPrivacyPolicyAsync);
     }
 
     public ICommand ReplayOnboardingCommand { get; }
     public ICommand ApplyAdCodeCommand { get; }
+    public ICommand ShowAdsDisclosureCommand { get; }
     public ICommand OpenAdsPrivacyPolicyCommand { get; }
 }

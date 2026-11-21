@@ -13,6 +13,7 @@ public static partial class UserPreferences
     public const string ThemeKey = "Theme";
     private const string LegacyAccentColorKey = "Color";
     public const string AdsDisabledKey = "AdsDisabled";
+    public const string PersonalizedAdsConsentKey = "PersonalizedAdsConsent";
     public const string FormKey = "Form";
     public const string SizeKey = "Size";
     public const string IsBoldKey = "IsBold";
@@ -82,6 +83,7 @@ public static partial class UserPreferences
             Size = NormalizeSizeKey(Preferences.Get(SizeKey, DefaultSize)),
             IsBold = Preferences.Get(IsBoldKey, false),
             AdsDisabled = Preferences.Get(AdsDisabledKey, false),
+            PersonalizedAdsConsent = Preferences.Get(PersonalizedAdsConsentKey, false),
             QuestionnaireAutoAdvance = Preferences.Get(QuestionnaireAutoAdvanceKey, true),
             HasCompletedOnboarding = Preferences.ContainsKey(HasCompletedOnboardingKey)
                 ? Preferences.Get(HasCompletedOnboardingKey, false)
@@ -114,6 +116,7 @@ public static partial class UserPreferences
         Preferences.Set(SizeKey, NormalizeSizeKey(state.Size));
         Preferences.Set(IsBoldKey, state.IsBold);
         Preferences.Set(AdsDisabledKey, state.AdsDisabled);
+        Preferences.Set(PersonalizedAdsConsentKey, state.PersonalizedAdsConsent);
         Preferences.Set(QuestionnaireAutoAdvanceKey, state.QuestionnaireAutoAdvance);
         Preferences.Set(HasCompletedOnboardingKey, state.HasCompletedOnboarding);
         Preferences.Set(PracticeRemindersEnabledKey, state.PracticeRemindersEnabled);
@@ -130,6 +133,22 @@ public static partial class UserPreferences
         {
             OnboardingConcern = NormalizeOnboardingConcernKey(state.OnboardingConcern)
         };
+    }
+
+    public static void SetPersonalizedAdsConsent(bool consent)
+    {
+        UserPreferencesState updated = Current with { PersonalizedAdsConsent = consent };
+        if (_inMemoryState is not null)
+        {
+            _inMemoryState = updated;
+        }
+        else
+        {
+            Preferences.Set(PersonalizedAdsConsentKey, consent);
+            _persistedCache = updated;
+        }
+
+        RaiseChanged();
     }
 
     internal static string? GetLegacyOnboardingConcern() =>

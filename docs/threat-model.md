@@ -8,7 +8,7 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | Asset | Where it lives |
 | --- | --- |
 | Chats, mood notes, test results, risk assessments, safety plan, journal, onboarding topic | Encrypted SQLite database in the app's private folder |
-| Preferences (language, reminders, onboarding completion) | Android SharedPreferences |
+| Preferences (language, reminders, onboarding completion, ad personalization choice) | Android SharedPreferences |
 | Exported backup / specialist summary | A file the person chooses to share; removed from the cache right after the share sheet closes |
 | Error log | `logs/app-errors.log`, warnings and errors only, no message text; shared only by the person |
 | Downloaded prayer audio | Cache folder, HTTPS only, validated as audio |
@@ -24,11 +24,13 @@ assessments, a safety plan with contacts. Everything is stored **on the device o
 | Forged intent to MainActivity | Reminder taps need a per-install secret carried only by our own PendingIntents | Navigation only, no data access |
 | Malicious content over the network | Prayer audio is downloaded over HTTPS with size, content-type and magic-byte checks. | Third-party host compromise |
 | Crash / error log reveals data | Logs carry exception types and technical messages, never chat or journal text | Exception messages may include SQL fragments |
-| Network eavesdropping | No chat, journal, practice text, test result or health data leaves the device. Network traffic includes prayer audio and, on Android, VK ad requests from eligible catalogs. | Prayer-audio request metadata is visible to the hosting provider; VK may receive the IP address, device/app details, an available advertising identifier and ad request/impression/click events |
+| Network eavesdropping | No chat, journal, practice text, test result or health data leaves the device. Network traffic includes prayer audio and, on Android, VK ad requests from eligible catalogs. | Prayer-audio request metadata is visible to the hosting provider; VK may receive the IP address, device/app details and ad request/impression/click events. The SDK may also receive the advertising ID only when the person explicitly enables personalized ads in settings |
 
-The Android package includes the VK Ads (myTarget) SDK for banners in eligible practice, course, article, and general quotes catalog views. The quote banner is limited to the non-personal All feed; ads stay out of personalized recommendations, tests, and crisis/help screens. Banners load automatically when the HTTPS policy URL and slot are configured; an issued invitation code disables requests. The SDK receives a false value for its personalized-advertising consent setting. VK may receive the IP address, device/app details, an available advertising identifier and ad request/impression/click events. No chat, journal, practice answer, test result or health data is supplied to the SDK for targeting. Review the SDK's actual network activity and current disclosures before production rollout.
+The Android package includes the VK Ads (myTarget) SDK for banners in eligible practice, course, article, and general quotes catalog views. The quote banner is limited to the non-personal All feed; ads stay out of personalized recommendations, tests, and crisis/help screens. Banners load automatically when the HTTPS policy URL and slot are configured; an issued invitation code disables requests. A separate setting is off by default and controls whether the SDK receives `true` or `false` for personalized-advertising consent; changing it is applied immediately to active banners. With consent enabled, the SDK may receive the advertising ID; technical request data may be sent either way. No chat, journal, practice answer, test result or health data is supplied to the SDK for targeting. Review the SDK's actual network activity and current disclosures before production rollout.
 
 The feedback form passes prepared text to the email, SMS, or system share UI only after the person taps a channel. The app does not send this text to its own server and cannot verify whether it is sent; an external app, service, and recipient handle any message the person chooses to send.
+
+If configured, a voluntary support link opens in the system browser only after the person taps it. Sber handles payment details entered on its page; the app receives no payment confirmation and grants no paid features.
 
 ## Safety (not security) risks the app handles
 

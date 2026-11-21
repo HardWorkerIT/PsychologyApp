@@ -105,7 +105,8 @@ public sealed class SettingsViewModelFactory(
     IMoodReminderCoordinator moodReminderCoordinator,
     IChatReminderCoordinator chatReminderCoordinator,
     IPracticeReminderScheduler practiceReminderScheduler,
-    Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, ISettingsViewModelFactory
+    Func<NavigationContext, INavigationService> navigationServiceFactory,
+    IDialogService dialogService) : ViewModelFactoryBase, ISettingsViewModelFactory
 {
     public SettingsViewModel Create(ContentPage page) =>
         new(
@@ -117,7 +118,8 @@ public sealed class SettingsViewModelFactory(
             quoteReminderCoordinator,
             moodReminderCoordinator,
             chatReminderCoordinator,
-            practiceReminderScheduler);
+            practiceReminderScheduler,
+            dialogService);
 }
 
 public interface IInfoViewModelFactory
