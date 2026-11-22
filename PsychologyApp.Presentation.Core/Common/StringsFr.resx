@@ -422,7 +422,7 @@
     <value>Copier le numéro</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>Numéro de virement copié</value>
+    <value>Numéro copié. Ouvrez votre application bancaire et choisissez un virement par téléphone.</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>Les exercices, le journal d&apos;humeur, les tests et le psychologue IA vous aident à observer votre état et à choisir la suite.</value>
@@ -1433,31 +1433,31 @@
     <value>Sauvegarde et protection par code PIN</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Vos notes restent sur cet appareil. Vous pouvez enregistrer une sauvegarde séparément.</value>
+    <value>Vos notes restent sur cet appareil. Enregistrez une copie pour les transférer.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>Exporter une sauvegarde</value>
+    <value>Enregistrer une copie</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Enregistrer les discussions, notes, résultats de tests et exercices</value>
+    <value>Discussions, notes, tests et exercices</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restaurer une sauvegarde</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Ajouter les données d&apos;une sauvegarde sélectionnée</value>
+    <value>Ajouter les données d’un fichier</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Résumé pour un professionnel</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>Un fichier texte sur les 30 derniers jours — à partager avec un psychologue ou un médecin.</value>
+    <value>Résumé texte des 30 derniers jours</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>Supprimer toutes mes données</value>
+    <value>Supprimer toutes les données</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>Le journal, les pratiques, les tests, les discussions et les réglages sont effacés de ce téléphone</value>
+    <value>Les notes et réglages seront supprimés de ce téléphone.</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>Supprimer toutes les données ?</value>
@@ -1481,16 +1481,16 @@
     <value>Verrouillage par code PIN de l’application</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Choisissez un code PIN à six chiffres. En cas d’oubli, réinitialisez-le après vérification avec le code ou la biométrie du téléphone.</value>
+    <value>Code oublié ? Réinitialisez-le avec le code ou la biométrie du téléphone.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Activez d’abord le verrouillage de l’écran du téléphone ; il sera nécessaire pour récupérer le code de l’application.</value>
+    <value>Activez d’abord le verrouillage du téléphone ; il est nécessaire pour réinitialiser le code.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>Saisissez le code de l’application</value>
+    <value>Bon retour</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Saisissez votre code à six chiffres pour ouvrir l’application.</value>
+    <value>Saisissez votre code pour continuer.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>Envoyer le journal des erreurs</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Un e-mail à {0} s’ouvrira avec le journal technique en pièce jointe. Vos notes ne sont pas incluses.</value>
+    <value>E-mail à {0}. Erreurs techniques uniquement, sans notes personnelles.</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>Bonjour, vous trouverez le journal technique des erreurs en pièce jointe.</value>
@@ -4647,7 +4647,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Teinte claire : cette réponse ne compte pas dans le seuil du dépistage.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Teinte foncée : cette réponse compte dans le seuil du dépistage.</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>Action irréversible</value>
+    <value>Suppression</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>Vos notes personnelles restent sur cet appareil.</value>
@@ -4659,7 +4659,7 @@
     <value>Exercices, tests et journal</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>Sécurité de l&apos;application</value>
+    <value>Protection</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>Bénéficiaire : +7 ••• •••-••-••</value>

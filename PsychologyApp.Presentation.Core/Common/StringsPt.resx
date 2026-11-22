@@ -422,7 +422,7 @@
     <value>Copiar número</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>Número para transferência copiado</value>
+    <value>Número copiado. Abra o app do banco e escolha uma transferência por telefone.</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>As práticas, o diário de humor, os testes e o psicólogo com IA ajudam a perceber como se sente e a escolher o próximo passo.</value>
@@ -1433,31 +1433,31 @@
     <value>Cópia de segurança e proteção por PIN</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>As suas anotações ficam neste dispositivo. Pode guardar uma cópia separadamente.</value>
+    <value>As anotações ficam neste dispositivo. Guarde uma cópia para transferi-las.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>Exportar um backup</value>
+    <value>Guardar uma cópia</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Guardar conversas, anotações, resultados de testes e práticas</value>
+    <value>Conversas, anotações, testes e práticas</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restaurar um backup</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Adicionar dados de uma cópia selecionada</value>
+    <value>Adicionar dados de um arquivo</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Resumo para um profissional</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>Um arquivo de texto dos últimos 30 dias para compartilhar com um psicólogo ou um médico.</value>
+    <value>Resumo em texto dos últimos 30 dias</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>Excluir todos os meus dados</value>
+    <value>Excluir todos os dados</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>O diário, as práticas, os testes, as conversas e as configurações são apagados deste celular</value>
+    <value>As anotações e configurações serão excluídas deste celular.</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>Excluir todos os dados?</value>
@@ -1481,16 +1481,16 @@
     <value>Bloqueio por PIN do aplicativo</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Escolha um PIN de seis dígitos. Se esquecer, redefina-o após confirmar sua identidade com o PIN ou a biometria do celular.</value>
+    <value>Esqueceu o PIN? Redefina-o com o código ou a biometria do celular.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Configure primeiro o bloqueio de tela do celular; ele será necessário para recuperar o PIN do aplicativo.</value>
+    <value>Configure primeiro o bloqueio do celular; ele é necessário para redefinir o PIN.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>Digite o PIN do aplicativo</value>
+    <value>Que bom ter você de volta</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Digite seu PIN de seis dígitos para abrir o aplicativo.</value>
+    <value>Digite seu PIN para continuar.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>Enviar registro de erros</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Um e-mail para {0} será aberto com o registro técnico anexado. Suas anotações não serão incluídas.</value>
+    <value>E-mail para {0}. Apenas erros técnicos, sem anotações pessoais.</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>Olá, estou enviando em anexo o registro técnico de erros.</value>
@@ -4647,7 +4647,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Tom claro: esta resposta não conta para o limite da triagem.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Tom escuro: esta resposta conta para o limite da triagem.</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>Ação irreversível</value>
+    <value>Exclusão</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>As suas notas pessoais ficam neste dispositivo.</value>
@@ -4659,7 +4659,7 @@
     <value>Práticas, testes e diário</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>Proteção da aplicação</value>
+    <value>Proteção</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>Destinatário: +7 ••• •••-••-••</value>

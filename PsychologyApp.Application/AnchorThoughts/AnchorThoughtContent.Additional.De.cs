@@ -73,7 +73,7 @@ public static partial class AnchorThoughtContent
         ["exp-apology-names-action"] = ("Eine Entschuldigung kann eine konkrete Handlung benennen", "Einzugestehen, was geschah, ist klarer als Selbstabwertung."),
         ["exp-feedback-not-worth"] = ("Eine Rückmeldung misst nicht meinen Wert", "Es hilft, Handlung und Etikett zu trennen."),
         ["exp-their-no-not-my-worth"] = ("Ein Nein anderer bestimmt nicht meinen Wert", "Die Gründe können mit mir nichts zu tun haben."),
-        ["exp-check-assumption"] = ("Ich kann nachfragen, bevor ich Schlüsse ziehe", "Eine Frage klärt manchmal mehr als eine Vermutung."),
+        ["exp-check-assumption"] = ("Ich kann nachfragen, statt zu raten", "Eine Frage klärt manchmal mehr als eine Vermutung."),
         ["exp-asking-not-demand"] = ("Um Unterstützung zu bitten ist kein Anspruch", "Die andere Person darf zustimmen, ablehnen oder anders helfen."),
         ["exp-support-not-fixing"] = ("Unterstützung heißt nicht immer, alles zu reparieren", "Manchmal ist Gehörtwerden wichtiger."),
         ["exp-disagreement-not-failure"] = ("Ein Streitpunkt muss eine Beziehung nicht beenden", "Man kann verschieden sein und Grenzen achten."),

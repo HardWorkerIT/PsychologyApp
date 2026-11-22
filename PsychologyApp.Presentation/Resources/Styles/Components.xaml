@@ -630,6 +630,10 @@
         <Setter Property="FontFamily" Value="{StaticResource SemiBoldFontFamily}" />
     </Style>
 
+    <Style x:Key="AppDialogDestructiveActionLabelStyle" TargetType="Label" BasedOn="{StaticResource AppDialogPrimaryActionLabelStyle}">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
+    </Style>
+
     <Style x:Key="SettingsSectionCardStyle" TargetType="Border" BasedOn="{StaticResource BrandCardStyle}">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="16,14" />

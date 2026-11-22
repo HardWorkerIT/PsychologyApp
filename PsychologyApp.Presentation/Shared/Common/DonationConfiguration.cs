@@ -7,9 +7,7 @@ internal static class DonationConfiguration
 {
     private const string SupportPromptShownKey = "DonationSupportPromptShown";
 
-    // The owner-supplied bank page can open Sber or continue in the browser; the app never verifies or unlocks content after a transfer.
     internal const string SberTransferPhoneNumber = "79963904980";
-    internal const string SberTransferUrl = "https://www.sberbank.ru/ru/choise_bank?requisiteNumber=79963904980&bankCode=100000000111";
 
     internal static bool HasSberTransferPhoneNumber =>
         SberTransferPhoneNumber.Length == 11

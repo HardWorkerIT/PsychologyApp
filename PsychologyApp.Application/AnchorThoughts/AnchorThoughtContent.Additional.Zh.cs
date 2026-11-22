@@ -73,7 +73,7 @@ public static partial class AnchorThoughtContent
         ["exp-apology-names-action"] = ("道歉可以具体说出自己的行为", "承认发生了什么，比攻击自己更清楚。"),
         ["exp-feedback-not-worth"] = ("别人的意见不能衡量我的价值", "把具体行为和给人贴的标签分开会有帮助。"),
         ["exp-their-no-not-my-worth"] = ("别人说不，并不能定义我的价值", "对方的原因可能与我无关。"),
-        ["exp-check-assumption"] = ("下结论前，我可以先问清楚", "有时提问比猜测更能澄清意思。"),
+        ["exp-check-assumption"] = ("我可以直接询问，不必靠猜测", "有时提问比猜测更能澄清意思。"),
         ["exp-asking-not-demand"] = ("请求支持不等于强迫别人", "对方可以答应、拒绝，或提出别的办法。"),
         ["exp-support-not-fixing"] = ("支持别人不总是要解决问题", "有时被听见更重要。"),
         ["exp-disagreement-not-failure"] = ("意见不同不一定会结束一段关系", "彼此不同，也可以尊重界限。"),

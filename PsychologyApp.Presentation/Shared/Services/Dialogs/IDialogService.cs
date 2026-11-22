@@ -25,7 +25,7 @@ public interface IDialogService
     /// another dialog is on screen. An accepted empty field is an empty string.</summary>
     Task<string?> PromptTextAsync(string? title, string message, string accept, string cancel, string initialText, int maxLength);
 
-    /// <summary>Asks for a secret (masked); null when cancelled or when another dialog is on screen.</summary>
+    /// <summary>Asks for a secret (masked) in the app's existing options sheet; null when cancelled or when another dialog is on screen.</summary>
     Task<string?> PromptPasswordAsync(string? title, string message, string placeholder, string accept, string cancel);
     Task<string?> PromptPasswordSheetAsync(string? title, string message, string placeholder, string accept, string cancel);
 }

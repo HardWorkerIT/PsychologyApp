@@ -50,7 +50,7 @@ public static partial class AnchorThoughtContent
         ["exp-completion-is-enough"] = ("Terminer suffisamment bien, c'est terminer", "Tout ne demande pas une nouvelle finition."),
 
         ["exp-name-not-identity"] = ("Le nom d'une émotion n'est pas mon identité", "Un état décrit un moment, pas toute une personne."),
-        ["exp-mixed-feelings-are-real"] = ("Je peux ressentir plusieurs choses à la fois", "Les émotions n'ont pas à former une réponse unique."),
+        ["exp-mixed-feelings-are-real"] = ("Des émotions contraires peuvent coexister", "Les émotions n'ont pas à former une réponse unique."),
         ["exp-pause-makes-choice"] = ("Une pause me laisse le choix", "Je n'ai pas à répondre au sommet de la colère."),
         ["exp-shame-needs-kindness"] = ("Je peux accueillir la honte avec douceur", "M'attaquer ne m'aide pas à réparer un geste."),
         ["exp-guilt-can-guide-repair"] = ("La culpabilité peut indiquer une réparation précise", "La responsabilité concerne un geste, pas toute mon identité."),

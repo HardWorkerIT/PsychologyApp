@@ -244,8 +244,8 @@ public static class UtteranceClassifier
         "say that again", "repeat that", "come again"
     ];
 
-    private static readonly string[] RephraseWholeMessage = ["я не понял", "я не поняла", "ничего не понял", "ничего не поняла", "не понял", "не поняла", "не поняли", "в смысле", "что ты имеешь в виду", "что вы имеете в виду", "what do you mean", "i didnt get that", "i didnt get it", "i dont get it", "i dont understand", "i didnt understand", "i do not understand", "i did not understand"];
-    private static readonly string[] RepeatWholeMessage = ["что", "чего", "а что", "а", "ась", "what", "huh", "sorry"];
+    private static readonly string[] RephraseWholeMessage = ["в смысле", "что ты имеешь в виду", "что вы имеете в виду", "what do you mean", "i didnt get that", "i didnt get it", "i dont get it", "i dont understand", "i didnt understand", "i do not understand", "i did not understand"];
+    private static readonly string[] RepeatWholeMessage = ["я не понял", "я не поняла", "ничего не понял", "ничего не поняла", "не понял", "не поняла", "не поняли", "что", "чего", "а что", "а", "ась", "what", "huh", "sorry"];
 
     private static readonly string[] SkipTerms =
     [

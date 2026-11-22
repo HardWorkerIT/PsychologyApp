@@ -422,7 +422,7 @@
     <value>Скопировать номер</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>Номер для перевода скопирован</value>
+    <value>Номер скопирован. Откройте приложение банка и выберите перевод по телефону.</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>Практики, дневник настроения, тесты и ИИ-психолог помогают замечать своё состояние и выбирать следующий шаг.</value>
@@ -1433,31 +1433,31 @@
     <value>Резервная копия и защита PIN-кодом</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Записи хранятся на устройстве. Резервную копию можно сохранить отдельно.</value>
+    <value>Записи хранятся на устройстве. Сохраните копию для переноса.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>Экспортировать резервную копию</value>
+    <value>Сохранить копию</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Сохранить чаты, записи, результаты тестов и практик</value>
+    <value>Чаты, записи, тесты и практики</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Восстановить из копии</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Добавит данные из выбранной резервной копии</value>
+    <value>Добавить данные из файла</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Сводка для специалиста</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>Текстовый файл за последние 30 дней — можно отправить психологу или врачу.</value>
+    <value>Текстовая сводка за последние 30 дней</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>Удалить все мои данные</value>
+    <value>Удалить все данные</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>Дневник, практики, тесты, чаты и настройки будут стёрты с телефона</value>
+    <value>Записи и настройки будут удалены с телефона.</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>Удалить все данные?</value>
@@ -1481,16 +1481,16 @@
     <value>Блокировка PIN-кодом приложения</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Выберите PIN из шести цифр. Если забудете, сбросьте его после проверки через PIN-код телефона или биометрию.</value>
+    <value>Забытый PIN можно сбросить с помощью блокировки телефона.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Сначала включите блокировку телефона (PIN, пароль или биометрию) — она понадобится для восстановления PIN приложения.</value>
+    <value>Включите блокировку телефона — она нужна для сброса PIN.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>Введите PIN приложения</value>
+    <value>С возвращением</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Введите шестизначный PIN, чтобы открыть приложение.</value>
+    <value>Введите PIN, чтобы продолжить.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>Отправить журнал ошибок</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Откроется письмо на {0}. В журнале только технические ошибки, личные записи не добавляются.</value>
+    <value>Письмо на {0}. Только ошибки, без личных записей.</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>Здравствуйте! Прикрепляю журнал технических ошибок.</value>
@@ -4653,7 +4653,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Светлая подсветка: ответ не учитывается в пороге скрининга.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Тёмная подсветка: ответ учитывается в пороге скрининга.</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>Необратимое действие</value>
+    <value>Удаление</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>Личные записи остаются на устройстве.</value>
@@ -4665,7 +4665,7 @@
     <value>Практики, тесты и дневник</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>Защита приложения</value>
+    <value>Защита</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>Получатель: +7 ••• •••-••-••</value>

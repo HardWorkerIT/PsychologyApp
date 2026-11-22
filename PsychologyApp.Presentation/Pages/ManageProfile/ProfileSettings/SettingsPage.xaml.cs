@@ -46,8 +46,7 @@ public partial class SettingsPage : ContentPage
         var popup = new AppOptionsSheetPopup(
             row.PickerTitle,
             options,
-            row.SelectedOptionLabel,
-            AppStrings.SettingsPickerDone);
+            AppStrings.Cancel);
         await this.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
         string? selected = popup.SelectedValue;
         if (selected is not null)

@@ -49,12 +49,14 @@ public sealed class DataBackupViewModelTests : IDisposable
     }
 
     private void Choose(string? option) =>
-        _dialogs.Setup(d => d.PickOptionAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string>())).ReturnsAsync(option);
+        _dialogs.Setup(d => d.PickOptionWithConfirmationAsync(
+                It.IsAny<string>(), It.IsAny<IReadOnlyList<string>>(), It.IsAny<string>(), It.IsAny<string?>()))
+            .ReturnsAsync(option);
 
     private void Passphrases(params string?[] answers)
     {
         Queue<string?> queue = new(answers);
-        _dialogs.Setup(d => d.PromptPasswordAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        _dialogs.Setup(d => d.PromptPasswordSheetAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync(() => queue.Count > 0 ? queue.Dequeue() : null);
     }
 
@@ -87,7 +89,7 @@ public sealed class DataBackupViewModelTests : IDisposable
 
         await VmTestHelpers.RunAsync(Create().ExportBackupCommand);
 
-        _dialogs.Verify(d => d.PromptPasswordAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _dialogs.Verify(d => d.PromptPasswordSheetAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         (string _, string fileName, string content) = Assert.Single(Share.Shared);
         Assert.DoesNotContain("protected", fileName);
         Assert.Equal("PLAIN-BACKUP", content);
@@ -182,7 +184,7 @@ public sealed class DataBackupViewModelTests : IDisposable
         await VmTestHelpers.RunAsync(Create().ImportBackupCommand);
 
         _backup.Verify(b => b.ImportAsync("{}", It.IsAny<CancellationToken>()), Times.Once);
-        _dialogs.Verify(d => d.PromptPasswordAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _dialogs.Verify(d => d.PromptPasswordSheetAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         _toasts.Verify(t => t.LongToast(It.IsAny<string>(), AppToastKind.Info), Times.Once);
     }
 
@@ -258,7 +260,7 @@ public sealed class DataBackupViewModelTests : IDisposable
     private void Answers(params bool[] answers)
     {
         Queue<bool> queue = new(answers);
-        _dialogs.Setup(d => d.AskAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+        _dialogs.Setup(d => d.AskSheetAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>()))
             .ReturnsAsync(() => queue.Count > 0 && queue.Dequeue());
     }
 

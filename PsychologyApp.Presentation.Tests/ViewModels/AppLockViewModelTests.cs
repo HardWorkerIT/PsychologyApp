@@ -37,9 +37,9 @@ public sealed class AppLockViewModelTests
     [Fact]
     public async Task An_incorrect_app_pin_keeps_personal_content_closed()
     {
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
         _pinStore.Setup(s => s.VerifyPinAsync(It.IsAny<string>()))
             .ReturnsAsync(new AppPinVerificationResult(false, TimeSpan.Zero));
-        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
         await viewModel.InitializeAsync();
         viewModel.PinInput = "123456";
 

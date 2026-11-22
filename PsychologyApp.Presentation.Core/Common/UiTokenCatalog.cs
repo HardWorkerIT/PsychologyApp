@@ -38,7 +38,6 @@ public static class UiTokenCatalog
         "EmptyStateActionPillStyle",
         "SubtleDividerStyle",
         "PrimaryActionBorderStyle",
-        "FilterChipSelectedStyle",
         "IconTileStyle",
         "NavBackButtonStyle",
         "ChoiceOptionBorderStyle",

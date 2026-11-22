@@ -24,6 +24,82 @@ public partial class AppOptionsSheetPopup : Popup
     private string _selectionLimitMessage = string.Empty;
     private Func<int, string> _selectionSummaryFactory = _ => string.Empty;
     private string? _pendingValue;
+    private Entry? _dialogInputEntry;
+    private bool _isDecisionSheet;
+    private bool? _dialogResult;
+
+    public AppOptionsSheetPopup(
+        string? title,
+        string message,
+        string acceptLabel,
+        string? cancelLabel,
+        AppDialogInput? input = null,
+        bool isDestructive = false)
+    {
+        _isDecisionSheet = true;
+        InitializeComponent();
+        Configure(title ?? string.Empty, Array.Empty<DialogOptionItem>(), cancelLabel ?? string.Empty);
+
+        TitleLabel.IsVisible = !string.IsNullOrWhiteSpace(title);
+        AcceptLabel.Text = acceptLabel;
+        AcceptHost.IsVisible = true;
+        CancelHost.IsVisible = !string.IsNullOrWhiteSpace(cancelLabel);
+        SemanticProperties.SetDescription(AcceptHost, acceptLabel);
+        if (isDestructive)
+        {
+            AcceptLabel.Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["AppDialogDestructiveActionLabelStyle"];
+        }
+
+        FooterActions.ColumnDefinitions.Clear();
+        FooterActions.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+        if (CancelHost.IsVisible)
+        {
+            FooterActions.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+            Grid.SetColumn(AcceptHost, 0);
+            Grid.SetColumn(CancelHost, 1);
+            Grid.SetColumnSpan(AcceptHost, 1);
+            Grid.SetColumnSpan(CancelHost, 1);
+        }
+        else
+        {
+            Grid.SetColumn(AcceptHost, 0);
+            Grid.SetColumnSpan(AcceptHost, 1);
+        }
+
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            OptionsStack.Add(new Label
+            {
+                Text = message,
+                Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["AppDialogMessageStyle"],
+                Margin = new Thickness(12, 8),
+                LineBreakMode = LineBreakMode.WordWrap
+            });
+        }
+
+        if (input is not null)
+        {
+            var entry = new Entry
+            {
+                IsPassword = input.IsPassword,
+                Placeholder = input.Placeholder,
+                Text = input.InitialText,
+                MaxLength = input.MaxLength,
+                ReturnType = ReturnType.Done,
+                Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["InputTextStyle"]
+            };
+            entry.Completed += OnInputCompleted;
+            SemanticProperties.SetDescription(entry, input.Placeholder);
+            _dialogInputEntry = entry;
+            OptionsStack.Add(new Border
+            {
+                Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["InputBorderStyle"],
+                Padding = new Thickness(10, 2),
+                Margin = new Thickness(12, 8),
+                Content = entry
+            });
+        }
+    }
 
     public AppOptionsSheetPopup(string title, IReadOnlyList<string> options, string cancelLabel)
         : this(title, options.Select(option => new DialogOptionItem(option, option)).ToArray(), cancelLabel)
@@ -190,11 +266,18 @@ public partial class AppOptionsSheetPopup : Popup
 
     public string? SelectedValue { get; private set; }
     public IReadOnlyList<string>? SelectedValues { get; private set; }
+    public bool? DialogResult => _dialogResult;
+    public string InputText => _dialogInputEntry?.Text ?? string.Empty;
 
     private void OnLoaded(object? sender, EventArgs e)
     {
         ApplyHostSize();
         UiAnimations.AnimateToastPopInAsync(SheetCardHost, slideOffset: 12).FireAndForget();
+        if (_dialogInputEntry is { IsPassword: false } entry)
+        {
+            entry.Focus();
+            entry.CursorPosition = entry.Text?.Length ?? 0;
+        }
     }
 
     private void ApplyHostSize()
@@ -600,6 +683,13 @@ public partial class AppOptionsSheetPopup : Popup
             return;
         }
 
+        if (_isDecisionSheet)
+        {
+            _dialogResult = true;
+            ClosePopup();
+            return;
+        }
+
         if (_isMultiSelect)
         {
             SelectedValues = _selectionOrder.ToArray();
@@ -614,9 +704,31 @@ public partial class AppOptionsSheetPopup : Popup
         }
     }
 
-    private void OnCancelTapped(object? sender, TappedEventArgs e) => ClosePopup();
+    private void OnInputCompleted(object? sender, EventArgs e)
+    {
+        _dialogResult = true;
+        ClosePopup();
+    }
 
-    private void OnDismissTapped(object? sender, TappedEventArgs e) => ClosePopup();
+    private void OnCancelTapped(object? sender, TappedEventArgs e)
+    {
+        if (_isDecisionSheet)
+        {
+            _dialogResult = false;
+        }
+
+        ClosePopup();
+    }
+
+    private void OnDismissTapped(object? sender, TappedEventArgs e)
+    {
+        if (_isDecisionSheet)
+        {
+            _dialogResult = false;
+        }
+
+        ClosePopup();
+    }
 
     private void ClosePopup()
     {

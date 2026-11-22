@@ -76,7 +76,7 @@ public sealed class SettingsViewModelTests
     [Fact]
     public async Task CancelingAdCodePromptLeavesAdvertisingEnabled()
     {
-        _dialogs.Setup(d => d.PromptPasswordAsync(
+        _dialogs.Setup(d => d.PromptPasswordSheetAsync(
                 It.IsAny<string?>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -90,7 +90,7 @@ public sealed class SettingsViewModelTests
         Assert.False(viewModel.AdsDisabled);
         Assert.False(_state.AdsDisabled);
         Assert.Empty(_saved);
-        _dialogs.Verify(d => d.PromptPasswordAsync(
+        _dialogs.Verify(d => d.PromptPasswordSheetAsync(
             It.IsAny<string?>(),
             It.IsAny<string>(),
             It.IsAny<string>(),

@@ -92,9 +92,9 @@ jobs:
           - api_level: 35
             target: google_apis_ps16k
             name: api35-16kb
-            # This image showed high startup variance and lost PackageManager during APK installation.
+            # Observed on this image: high startup variance, PackageManager unavailable at install, system_server death during Monkey.
             max_start_ms: 10000
-            ram_size: 3072M
+            ram_size: 4096M
           - api_level: 36
             target: default
             name: api36-target

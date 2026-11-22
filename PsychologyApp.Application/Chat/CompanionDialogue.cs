@@ -226,6 +226,14 @@ public sealed partial class CompanionDialogue(
         {
             previous = previous with { LastQuestionId = null };
 
+            // Belief ratings can be typed just like they can be tapped; keep numeric answers out of the "unclear" path.
+            if (TryParseRating(text, out int protocolRating)
+                && ((previous.Protocol == CompanionProtocolContent.Think && IsBeliefStep(previous.ProtocolStep))
+                    || IsTraumaRatingStep(previous)))
+            {
+                return ContinueProtocol(previous, null, protocolRating);
+            }
+
             if (UtteranceClassifier.IsUnderstandingCorrection(text))
             {
                 return RespondToTextCore(EndProtocol(previous), text, namePending: false);

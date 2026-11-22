@@ -66,7 +66,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
         try
         {
             Page page = RequireActivePage();
-            var popup = new AppDialogPopup(title, message, accept, cancel, useBottomSheet: true, isDestructive: isDestructive);
+            var popup = new AppOptionsSheetPopup(title, message, accept, cancel, isDestructive: isDestructive);
             IPopupResult popupResult = await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
             return !popupResult.WasDismissedByTappingOutsideOfPopup && popup.DialogResult == true;
         }
@@ -136,13 +136,12 @@ public class DialogService(IPageHost pageHost) : IDialogService
         try
         {
             Page page = RequireActivePage();
-            var popup = new AppDialogPopup(
+            var popup = new AppOptionsSheetPopup(
                 title,
                 message,
                 accept,
                 cancel,
-                new AppDialogInput(placeholder, IsPassword: true),
-                useBottomSheet: true);
+                new AppDialogInput(placeholder, IsPassword: true));
             IPopupResult popupResult = await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
             if (popupResult.WasDismissedByTappingOutsideOfPopup || popup.DialogResult != true)
             {

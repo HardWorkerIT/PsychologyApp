@@ -73,7 +73,7 @@ public static partial class AnchorThoughtContent
         ["exp-apology-names-action"] = ("Um pedido de desculpas pode nomear uma atitude concreta", "Reconhecer o que ocorreu é mais claro do que me atacar."),
         ["exp-feedback-not-worth"] = ("Uma crítica não mede meu valor", "É útil separar uma atitude de um rótulo."),
         ["exp-their-no-not-my-worth"] = ("O não de alguém não define meu valor", "Os motivos podem não ter relação comigo."),
-        ["exp-check-assumption"] = ("Posso perguntar antes de tirar conclusões", "Uma pergunta às vezes esclarece mais do que uma suposição."),
+        ["exp-check-assumption"] = ("Posso perguntar em vez de adivinhar", "Uma pergunta às vezes esclarece mais do que uma suposição."),
         ["exp-asking-not-demand"] = ("Pedir apoio não é exigir", "A outra pessoa pode aceitar, recusar ou sugerir outra forma."),
         ["exp-support-not-fixing"] = ("Apoiar nem sempre significa resolver tudo", "Às vezes, ser ouvido importa mais."),
         ["exp-disagreement-not-failure"] = ("Discordar não precisa acabar com uma relação", "Podemos pensar diferente e respeitar limites."),

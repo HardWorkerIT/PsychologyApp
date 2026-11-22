@@ -422,7 +422,7 @@
     <value>复制号码</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>转账号码已复制</value>
+    <value>号码已复制。请打开银行应用并选择按手机号转账。</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>练习、情绪日记、测验和 AI 心理咨询助手帮助你觉察状态并选择下一步。</value>
@@ -1433,31 +1433,31 @@
     <value>备份与 PIN 码保护</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>你的记录保存在此设备上，也可以单独保存备份。</value>
+    <value>记录保存在此设备上，可通过备份转移。</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>导出备份</value>
+    <value>保存备份</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>保存聊天、记录、测验结果和练习</value>
+    <value>聊天、记录、测试和练习</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>从备份恢复</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>从所选备份添加数据</value>
+    <value>从备份文件添加数据</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>给专业人士的摘要</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>最近 30 天的文本文件，可分享给心理咨询师或医生。</value>
+    <value>最近 30 天的文字摘要</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>删除我的所有数据</value>
+    <value>删除所有数据</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>日记、练习、测试、对话和设置都会从这部手机上清除</value>
+    <value>记录和设置将从此手机中删除。</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>删除所有数据？</value>
@@ -1481,16 +1481,16 @@
     <value>应用 PIN 码锁</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>请设置一个六位 PIN 码。忘记后，可通过手机密码或生物识别验证身份并重置。</value>
+    <value>忘记 PIN？可通过手机密码或生物识别重置。</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>请先在手机上设置屏幕锁定；恢复应用 PIN 码时需要验证身份。</value>
+    <value>请先设置手机锁屏；重置 PIN 时需要验证身份。</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>输入应用 PIN 码</value>
+    <value>欢迎回来</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>输入六位 PIN 码以打开应用。</value>
+    <value>输入 PIN 码以继续。</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>发送错误日志</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>将打开一封发往 {0} 并附有技术错误日志的邮件，不包含你的个人记录。</value>
+    <value>发送至 {0} 的邮件。仅含技术错误，不含个人记录。</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>你好，附件是技术错误日志。</value>
@@ -4647,7 +4647,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>浅色标记：此答案不计入筛查阈值。</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>深色标记：此答案计入筛查阈值。</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>不可撤销的操作</value>
+    <value>删除</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>个人记录仅保存在此设备上。</value>
@@ -4659,7 +4659,7 @@
     <value>练习、测验和日记</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>应用保护</value>
+    <value>保护</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>收款人：+7 ••• •••-••-••</value>

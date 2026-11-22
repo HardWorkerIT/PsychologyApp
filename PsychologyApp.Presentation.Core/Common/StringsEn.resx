@@ -422,7 +422,7 @@
     <value>Copy number</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>Transfer number copied</value>
+    <value>Number copied. Open your banking app and choose a phone transfer.</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>Practices, mood journal, tests and the AI psychologist help you notice how you feel and choose a next step.</value>
@@ -1433,31 +1433,31 @@
     <value>Backup and PIN protection</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Your entries stay on this device. You can save a separate backup.</value>
+    <value>Your entries stay on this device. Save a copy to move them.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>Export a backup</value>
+    <value>Save a backup</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Save chats, entries, test results and practices</value>
+    <value>Chats, entries, tests and practices</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restore from a backup</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Add data from a selected backup</value>
+    <value>Add data from a backup file</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Summary for a specialist</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>A text file covering the last 30 days — share it with a psychologist or doctor.</value>
+    <value>Text summary for the last 30 days</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>Delete all my data</value>
+    <value>Delete all data</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>The journal, practices, tests, chats and settings are wiped from this phone</value>
+    <value>Entries and settings will be deleted from this phone.</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>Delete all data?</value>
@@ -1481,16 +1481,16 @@
     <value>App PIN lock</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Choose a six-digit PIN. If you forget it, reset it after confirming with your phone's passcode or biometrics.</value>
+    <value>Forgot your PIN? Reset it with your phone’s passcode or biometrics.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>First set a phone screen lock (passcode or biometrics); it is needed to recover your app PIN.</value>
+    <value>Set a phone screen lock first; it is needed to reset your PIN.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>Enter your app PIN</value>
+    <value>Welcome back</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Enter your six-digit PIN to open the app.</value>
+    <value>Enter your PIN to continue.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>Email error log</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>An email to {0} will open with a technical error log attached. Your notes are not included.</value>
+    <value>Email to {0}. Technical errors only; no personal entries.</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>Hello, I have attached the technical error log.</value>
@@ -4647,7 +4647,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Lightly shaded: this answer does not count toward the screening threshold.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Darkly shaded: this answer counts toward the screening threshold.</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>Cannot be undone</value>
+    <value>Delete</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>Personal notes stay on this device.</value>
@@ -4659,7 +4659,7 @@
     <value>Practices, tests and journal</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>App protection</value>
+    <value>Protection</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>Recipient: +7 ••• •••-••-••</value>

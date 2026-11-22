@@ -22,8 +22,17 @@ public sealed class AnchorThoughtContentTests
             Assert.False(string.IsNullOrWhiteSpace(thought.Text));
             Assert.False(string.IsNullOrWhiteSpace(thought.Why));
         });
-        Assert.Equal(thoughts.Count, thoughts.Select(thought => thought.Text).Distinct().Count());
-        Assert.Equal(thoughts.Count, thoughts.Select(thought => thought.Why).Distinct().Count());
+        string[] duplicateTexts = thoughts.GroupBy(thought => thought.Text)
+            .Where(group => group.Count() > 1)
+            .Select(group => $"{string.Join(", ", group.Select(thought => thought.Id))}: {group.Key}")
+            .ToArray();
+        Assert.True(duplicateTexts.Length == 0, $"Duplicate thought text: {string.Join("; ", duplicateTexts)}");
+
+        string[] duplicateReasons = thoughts.GroupBy(thought => thought.Why)
+            .Where(group => group.Count() > 1)
+            .Select(group => $"{string.Join(", ", group.Select(thought => thought.Id))}: {group.Key}")
+            .ToArray();
+        Assert.True(duplicateReasons.Length == 0, $"Duplicate thought reason: {string.Join("; ", duplicateReasons)}");
     }
 
     [Theory]

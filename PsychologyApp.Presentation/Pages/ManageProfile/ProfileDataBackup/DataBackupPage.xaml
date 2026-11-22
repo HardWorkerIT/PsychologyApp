@@ -51,19 +51,14 @@
                             IsToggled="{Binding AppLockEnabled}"
                             ShowDivider="False" />
                         <Label Text="{Binding AppLockHint}" Style="{StaticResource CaptionStyle}" />
-                        <Button
-                            Text="{Binding ChangeAppPinText}"
-                            Command="{Binding ChangeAppPinCommand}"
+                        <ui:ButtonView
+                            Variant="Secondary"
+                            IsCompact="True"
+                            BodyText="{Binding ChangeAppPinText}"
+                            TapCommand="{Binding ChangeAppPinCommand}"
                             IsVisible="{Binding IsAppPinManagementVisible}"
-                            BackgroundColor="Transparent"
-                            BorderWidth="0"
-                            Padding="0,4"
-                            MinimumHeightRequest="44"
                             HorizontalOptions="Start"
-                            TextColor="{DynamicResource Primary}"
-                            FontSize="{DynamicResource BodyFontSize}"
-                            FontFamily="{StaticResource MediumFontFamily}"
-                            SemanticProperties.Description="{Binding ChangeAppPinText}" />
+                            AccessibilityLabel="{Binding ChangeAppPinText}" />
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>

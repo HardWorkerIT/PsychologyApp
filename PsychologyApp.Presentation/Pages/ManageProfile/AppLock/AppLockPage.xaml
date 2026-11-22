@@ -4,6 +4,7 @@
              x:Class="PsychologyApp.Presentation.Pages.ManageProfile.AppLock.AppLockPage"
              SafeAreaEdges="All"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ManageProfile.AppLock"
              x:DataType="vm:AppLockViewModel"
              Shell.NavBarIsVisible="False"
@@ -11,16 +12,12 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key="AppLockPinKeyStyle" TargetType="Button">
+            <Style x:Key="AppLockPinKeyStyle" TargetType="ui:ButtonView">
                 <Setter Property="WidthRequest" Value="56" />
                 <Setter Property="HeightRequest" Value="52" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}" />
-                <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource NeutralBorder}, Dark={StaticResource Gray600}}" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="15" />
-                <Setter Property="FontSize" Value="22" />
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                <Setter Property="Variant" Value="Secondary" />
+                <Setter Property="IsCompact" Value="True" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -30,21 +27,69 @@
     <ScrollView VerticalScrollBarVisibility="Never">
         <VerticalStackLayout
             Margin="{StaticResource LayoutPageMarginThickness}"
-            Spacing="18"
-            Padding="0,20,0,20"
+            Spacing="16"
+            Padding="0,24,0,28"
             VerticalOptions="Center">
-            <VerticalStackLayout Spacing="8" HorizontalOptions="Fill">
-                <Border
-                    WidthRequest="48"
-                    HeightRequest="48"
-                    Padding="10"
+            <!-- Keep the calm chat illustration from the previous lock screen; PIN entry remains the actual unlock path. -->
+            <Grid
+                WidthRequest="280"
+                HeightRequest="176"
+                HorizontalOptions="Center"
+                RowDefinitions="*,*,*"
+                ColumnDefinitions="*,*"
+                AutomationProperties.IsInAccessibleTree="False">
+                <Grid.Behaviors>
+                    <behaviors:EmptyStateRevealBehavior />
+                </Grid.Behaviors>
+
+                <Ellipse
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="2"
+                    WidthRequest="144"
+                    HeightRequest="144"
+                    Fill="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
                     HorizontalOptions="Center"
-                    BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
-                    StrokeThickness="0"
-                    StrokeShape="RoundRectangle 15"
-                    SemanticProperties.Description="{Binding TitleText}">
-                    <ui:MaterialIconView IconName="Lock" IconSize="28" IconColor="{DynamicResource PrimaryFill}" />
+                    VerticalOptions="Center" />
+
+                <Border Grid.Row="0" Grid.Column="0" WidthRequest="156" HeightRequest="48" Padding="14,12"
+                        HorizontalOptions="Start" VerticalOptions="Center" StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="18,18,4,18" /></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="104" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="68" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
                 </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" WidthRequest="144" HeightRequest="48" Padding="14,12"
+                        HorizontalOptions="End" VerticalOptions="Center" StrokeThickness="0" BackgroundColor="{DynamicResource PrimaryFill}">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="18,18,18,4" /></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="94" HeightRequest="6" CornerRadius="3" Color="White" Opacity="0.78" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="62" HeightRequest="6" CornerRadius="3" Color="White" Opacity="0.58" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" WidthRequest="158" HeightRequest="48" Padding="14,12" Margin="12,0,0,0"
+                        HorizontalOptions="Start" VerticalOptions="Center" StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="18,18,4,18" /></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="6" VerticalOptions="Center">
+                        <BoxView WidthRequest="110" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                        <BoxView WidthRequest="76" HeightRequest="6" CornerRadius="3" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" HorizontalOptions="Start" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" WidthRequest="68" HeightRequest="68" Padding="15" Margin="0,0,4,0"
+                        HorizontalOptions="End" VerticalOptions="End"
+                        Stroke="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}"
+                        StrokeThickness="5" StrokeShape="RoundRectangle 34"
+                        BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}">
+                    <ui:MaterialIconView IconName="Lock" IconSize="34" IconColor="{DynamicResource PrimaryFill}" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+
+            <VerticalStackLayout Spacing="8" HorizontalOptions="Fill">
                 <Label
                     Text="{Binding TitleText}"
                     Style="{StaticResource SectionTitleStyle}"
@@ -56,12 +101,9 @@
                     HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
 
-            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsPinEntryVisible}">
-                <Label
-                    Text="{Binding PinPromptText}"
-                    Style="{StaticResource CaptionStyle}"
-                    HorizontalTextAlignment="Center" />
+            <VerticalStackLayout x:Name="PinEntryPanel" Spacing="8" IsVisible="{Binding IsPinEntryVisible}">
                 <HorizontalStackLayout
+                    x:Name="PinCellsLayout"
                     BindableLayout.ItemsSource="{Binding PinCells}"
                     Spacing="8"
                     HorizontalOptions="Center"
@@ -103,17 +145,17 @@
                     RowSpacing="5"
                     ColumnSpacing="5"
                     SemanticProperties.Description="{Binding PinPromptText}">
-                    <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" Text="1" Command="{Binding AddPinDigitCommand}" CommandParameter="1" />
-                    <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" Text="2" Command="{Binding AddPinDigitCommand}" CommandParameter="2" />
-                    <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" Text="3" Command="{Binding AddPinDigitCommand}" CommandParameter="3" />
-                    <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" Text="4" Command="{Binding AddPinDigitCommand}" CommandParameter="4" />
-                    <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" Text="5" Command="{Binding AddPinDigitCommand}" CommandParameter="5" />
-                    <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" Text="6" Command="{Binding AddPinDigitCommand}" CommandParameter="6" />
-                    <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" Text="7" Command="{Binding AddPinDigitCommand}" CommandParameter="7" />
-                    <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" Text="8" Command="{Binding AddPinDigitCommand}" CommandParameter="8" />
-                    <Button Grid.Row="2" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" Text="9" Command="{Binding AddPinDigitCommand}" CommandParameter="9" />
-                    <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" Text="0" Command="{Binding AddPinDigitCommand}" CommandParameter="0" />
-                    <Button Grid.Row="3" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" Text="⌫" FontSize="22" IsEnabled="{Binding CanDeletePin}" Command="{Binding DeletePinDigitCommand}" SemanticProperties.Description="{Binding DeletePinDigitText}" />
+                    <ui:ButtonView Grid.Row="0" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" BodyText="1" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="1" />
+                    <ui:ButtonView Grid.Row="0" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="2" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="2" />
+                    <ui:ButtonView Grid.Row="0" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="3" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="3" />
+                    <ui:ButtonView Grid.Row="1" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" BodyText="4" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="4" />
+                    <ui:ButtonView Grid.Row="1" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="5" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="5" />
+                    <ui:ButtonView Grid.Row="1" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="6" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="6" />
+                    <ui:ButtonView Grid.Row="2" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" BodyText="7" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="7" />
+                    <ui:ButtonView Grid.Row="2" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="8" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="8" />
+                    <ui:ButtonView Grid.Row="2" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="9" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="9" />
+                    <ui:ButtonView Grid.Row="3" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="0" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="0" />
+                    <ui:ButtonView Grid.Row="3" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="⌫" IsEnabled="{Binding CanDeletePin}" TapCommand="{Binding DeletePinDigitCommand}" AccessibilityLabel="{Binding DeletePinDigitText}" />
                 </Grid>
 
                 <Label

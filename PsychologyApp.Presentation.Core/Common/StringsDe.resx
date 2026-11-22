@@ -422,7 +422,7 @@
     <value>Nummer kopieren</value>
   </data>
   <data name="DonateNumberCopied" xml:space="preserve">
-    <value>Überweisungsnummer kopiert</value>
+    <value>Nummer kopiert. Öffne deine Banking-App und wähle eine Überweisung per Telefonnummer.</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
     <value>Übungen, Stimmungstagebuch, Tests und der KI-Psychologe helfen dir, dein Befinden wahrzunehmen und den nächsten Schritt zu wählen.</value>
@@ -1433,31 +1433,31 @@
     <value>Sicherung und PIN-Schutz</value>
   </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Deine Einträge bleiben auf diesem Gerät. Du kannst separat eine Sicherung speichern.</value>
+    <value>Deine Einträge bleiben auf diesem Gerät. Sichere sie zur Übertragung.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
-    <value>Sicherung exportieren</value>
+    <value>Sicherung speichern</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Chats, Einträge, Testergebnisse und Übungen sichern</value>
+    <value>Chats, Einträge, Tests und Übungen</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Aus Sicherung wiederherstellen</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Daten aus einer ausgewählten Sicherung hinzufügen</value>
+    <value>Daten aus einer Sicherung hinzufügen</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Zusammenfassung für Fachleute</value>
   </data>
   <data name="DataBackupSummarySubtitle" xml:space="preserve">
-    <value>Eine Textdatei über die letzten 30 Tage — zum Teilen mit einer Psychologin oder einem Arzt.</value>
+    <value>Textübersicht der letzten 30 Tage</value>
   </data>
   <data name="DataEraseTitle" xml:space="preserve">
-    <value>Alle meine Daten löschen</value>
+    <value>Alle Daten löschen</value>
   </data>
   <data name="DataEraseSubtitle" xml:space="preserve">
-    <value>Tagebuch, Übungen, Tests, Chats und Einstellungen werden von diesem Handy gelöscht</value>
+    <value>Einträge und Einstellungen werden von diesem Handy gelöscht.</value>
   </data>
   <data name="DataEraseConfirmTitle" xml:space="preserve">
     <value>Alle Daten löschen?</value>
@@ -1481,16 +1481,16 @@
     <value>App-Sperre mit PIN</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Lege eine sechsstellige PIN fest. Falls du sie vergisst, kannst du sie nach einer Bestätigung mit Gerätecode oder Biometrie zurücksetzen.</value>
+    <value>PIN vergessen? Setze sie mit Gerätecode oder Biometrie zurück.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Richte zuerst eine Bildschirmsperre (PIN oder Biometrie) ein. Sie wird zum Zurücksetzen der App-PIN benötigt.</value>
+    <value>Richte zuerst eine Bildschirmsperre ein. Sie wird zum Zurücksetzen der PIN benötigt.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>App-PIN eingeben</value>
+    <value>Willkommen zurück</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Gib deine sechsstellige PIN ein, um die App zu öffnen.</value>
+    <value>Gib deine PIN ein, um fortzufahren.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1571,7 +1571,7 @@
     <value>Fehlerprotokoll per E-Mail senden</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Eine E-Mail an {0} mit dem technischen Fehlerprotokoll wird geöffnet. Deine Einträge sind nicht enthalten.</value>
+    <value>E-Mail an {0}. Nur technische Fehler, keine persönlichen Einträge.</value>
   </data>
   <data name="ErrorLogEmailBody" xml:space="preserve">
     <value>Hallo, ich habe das technische Fehlerprotokoll angehängt.</value>
@@ -4647,7 +4647,7 @@
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Hell markiert: Diese Antwort zählt nicht zum Screening-Schwellenwert.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Dunkel markiert: Diese Antwort zählt zum Screening-Schwellenwert.</value></data>
   <data name="DataBackupIrreversibleSection" xml:space="preserve">
-    <value>Nicht rückgängig zu machen</value>
+    <value>Löschen</value>
   </data>
   <data name="OptionsPrivacyNote" xml:space="preserve">
     <value>Persönliche Einträge bleiben auf diesem Gerät.</value>
@@ -4659,7 +4659,7 @@
     <value>Übungen, Tests und Tagebuch</value>
   </data>
   <data name="DataBackupProtectionSection" xml:space="preserve">
-    <value>App-Schutz</value>
+    <value>Schutz</value>
   </data>
   <data name="DonateMaskedRecipient" xml:space="preserve">
     <value>Empfänger: +7 ••• •••-••-••</value>
