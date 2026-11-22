@@ -154,6 +154,33 @@
         </Setter>
     </Style>
 
+    <Style x:Key="TonalActionBorderStyle" TargetType="Border" BasedOn="{StaticResource OutlinedActionBorderStyle}">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinimumHeightRequest" Value="0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 32" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+        <Setter Property="StrokeThickness" Value="1.25" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{DynamicResource Primary}" />
+                            <Setter Property="StrokeThickness" Value="2.25" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="{StaticResource DisabledButtonOpacity}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
     <Style x:Key="OutlinedActionLabelStyle" TargetType="Label">
         <Setter Property="Margin" Value="0" />
         <Setter Property="HorizontalOptions" Value="Center" />

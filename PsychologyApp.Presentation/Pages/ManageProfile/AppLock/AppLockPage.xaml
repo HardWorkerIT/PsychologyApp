@@ -13,11 +13,10 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="AppLockPinKeyStyle" TargetType="ui:ButtonView">
-                <Setter Property="WidthRequest" Value="56" />
-                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Variant" Value="Secondary" />
-                <Setter Property="IsCompact" Value="True" />
+                <Setter Property="Variant" Value="Tonal" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
             </Style>
@@ -138,12 +137,12 @@
 
                 <Grid
                     IsEnabled="{Binding CanEnterPin}"
-                    WidthRequest="240"
+                    WidthRequest="248"
                     HorizontalOptions="Center"
-                    RowDefinitions="56,56,56,56"
+                    RowDefinitions="64,64,64,64"
                     ColumnDefinitions="*,*,*"
-                    RowSpacing="5"
-                    ColumnSpacing="5"
+                    RowSpacing="8"
+                    ColumnSpacing="8"
                     SemanticProperties.Description="{Binding PinPromptText}">
                     <ui:ButtonView Grid.Row="0" Grid.Column="0" Style="{StaticResource AppLockPinKeyStyle}" BodyText="1" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="1" />
                     <ui:ButtonView Grid.Row="0" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="2" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="2" />

@@ -10,7 +10,7 @@ public partial class ButtonView : ContentView
         InitializeComponent();
         TemplatePressFeedback.Attach(this, new PressFeedbackOptions
         {
-            PressScale = () => Variant == "Secondary"
+            PressScale = () => Variant is "Secondary" or "Tonal"
                 ? UiAnimations.PressScaleSecondary
                 : UiAnimations.PressScalePrimary,
             HapticOnRelease = true

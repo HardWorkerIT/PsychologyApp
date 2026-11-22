@@ -23,6 +23,12 @@
                     <DataTrigger
                         Binding="{TemplateBinding Variant}"
                         TargetType="Border"
+                        Value="Tonal">
+                        <Setter Property="Style" Value="{StaticResource TonalActionBorderStyle}" />
+                    </DataTrigger>
+                    <DataTrigger
+                        Binding="{TemplateBinding Variant}"
+                        TargetType="Border"
                         Value="Secondary">
                         <Setter Property="Style" Value="{StaticResource OutlinedActionBorderStyle}" />
                     </DataTrigger>
@@ -64,6 +70,12 @@
                             TargetType="Label"
                             Value="False">
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        </DataTrigger>
+                        <DataTrigger
+                            Binding="{TemplateBinding Variant}"
+                            TargetType="Label"
+                            Value="Tonal">
+                            <Setter Property="Style" Value="{StaticResource OutlinedActionLabelStyle}" />
                         </DataTrigger>
                         <DataTrigger
                             Binding="{TemplateBinding Variant}"
