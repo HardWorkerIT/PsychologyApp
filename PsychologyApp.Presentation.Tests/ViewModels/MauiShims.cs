@@ -267,6 +267,13 @@ namespace Microsoft.Maui.ApplicationModel.Communication
         public string? Body { get; set; }
 
         public List<string>? To { get; set; }
+
+        public List<EmailAttachment>? Attachments { get; set; }
+    }
+
+    public sealed class EmailAttachment(string fileName)
+    {
+        public string FileName { get; } = fileName;
     }
 
     public sealed class Email
