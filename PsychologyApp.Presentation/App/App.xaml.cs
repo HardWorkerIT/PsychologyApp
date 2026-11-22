@@ -56,11 +56,18 @@ public partial class App : Microsoft.Maui.Controls.Application
     {
         base.OnResume();
         ReduceMotion.Refresh();
-        _services.GetRequiredService<Features.ManageProfile.AppLockCoordinator>().GuardAsync().FireAndForget();
+        GuardAfterStartupAsync().FireAndForget();
         _services.GetRequiredService<IPracticeReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IQuoteReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IMoodReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IChatReminderCoordinator>().SyncAsync().FireAndForget();
+    }
+
+    private async Task GuardAfterStartupAsync()
+    {
+        AppShell shell = _services.GetRequiredService<AppShell>();
+        await shell.StartupCompleted;
+        await _services.GetRequiredService<Features.ManageProfile.AppLockCoordinator>().GuardAsync();
     }
 
     // A check-in made in the app (journal, after a practice, from the widget) moves today's mood reminder to tomorrow.

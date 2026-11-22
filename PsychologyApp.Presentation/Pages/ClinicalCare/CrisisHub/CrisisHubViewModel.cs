@@ -33,6 +33,7 @@ public sealed class CrisisHubViewModel : BaseViewModel
 
     public string PageTitle => AppStrings.CrisisHubTitle;
     public string LeadText => AppStrings.CrisisHubLead;
+    public string EmergencySectionTitle => AppStrings.CrisisHubEmergencyTitle;
     public string SafetyPlanTitle => AppStrings.CrisisHubSafetyPlanTitle;
     public string SafetyPlanStep1 => AppStrings.CrisisHubSafetyPlanStep1;
     public string SafetyPlanStep2 => AppStrings.CrisisHubSafetyPlanStep2;
@@ -46,11 +47,14 @@ public sealed class CrisisHubViewModel : BaseViewModel
 
     public bool HasHotline => Lines.HasLine;
     public string CallHotlineText => Lines.HasLine ? AppStrings.CrisisHubCallHotline(Lines.LineName!, Lines.LineDisplay!) : string.Empty;
+    public string HotlineName => Lines.LineName ?? string.Empty;
+    public string HotlineNumber => Lines.LineDisplay ?? string.Empty;
     public string CallEmergencyText => AppStrings.CrisisHubCallEmergency(Lines.Emergency);
     public string OpenHelplineText => AppStrings.CrisisHubOpenHelpline;
+    public string OpenHelplineSubtitle => AppStrings.CrisisHubOpenHelplineSubtitle;
+    public string OtherActionsTitle => AppStrings.CrisisHubOtherActionsTitle;
     public string RecheckText => AppStrings.CrisisHubRecheck;
     public string ContinueSoftText => AppStrings.CrisisHubContinueSoft;
-    public string SpecialistHint => AppStrings.CrisisHubSpecialistHint;
     public string SafetyPlanLinkTitle => AppStrings.CrisisHubSafetyPlanLinkTitle;
     public string SafetyPlanLinkSubtitle => AppStrings.CrisisHubSafetyPlanLinkSubtitle;
     public string FlashbackTitle => AppStrings.CrisisHubFlashbackTitle;
@@ -87,6 +91,7 @@ public sealed class CrisisHubViewModel : BaseViewModel
         Notify(
             nameof(PageTitle),
             nameof(LeadText),
+            nameof(EmergencySectionTitle),
             nameof(SafetyPlanTitle),
             nameof(SafetyPlanStep1),
             nameof(SafetyPlanStep2),
@@ -95,11 +100,14 @@ public sealed class CrisisHubViewModel : BaseViewModel
             nameof(SafetyPlanStepNumber2),
             nameof(SafetyPlanStepNumber3),
             nameof(CallHotlineText),
+            nameof(HotlineName),
+            nameof(HotlineNumber),
             nameof(CallEmergencyText),
             nameof(OpenHelplineText),
+            nameof(OpenHelplineSubtitle),
+            nameof(OtherActionsTitle),
             nameof(RecheckText),
             nameof(ContinueSoftText),
-            nameof(SpecialistHint),
             nameof(SafetyPlanLinkTitle),
             nameof(SafetyPlanLinkSubtitle),
             nameof(FlashbackTitle),

@@ -27,8 +27,8 @@ public enum DeviceUnlockResult
 }
 
 /// <summary>
-/// The phone's own unlock (fingerprint, face, or the phone's PIN, pattern or password) shown by the system. The app keeps no
-/// PIN of its own: there is nothing to forget and nothing to store.
+/// The phone's own unlock (fingerprint, face, or the phone's PIN, pattern or password) shown by the system. The app uses this
+/// system check as a recovery path for its separate app PIN; this interface never reads or returns either PIN.
 /// </summary>
 public interface IDeviceAuthenticator
 {

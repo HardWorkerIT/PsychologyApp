@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Devices;
+using Microsoft.Maui.Controls.Shapes;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
@@ -12,6 +13,8 @@ public partial class AppOptionsSheetPopup : Popup
     // Preserve the saved order while the user edits the selection.
     private readonly List<string> _selectionOrder = [];
     private readonly Dictionary<string, CheckBox> _selectionCheckboxes = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, Border> _singleSelectionRows = new(StringComparer.Ordinal);
+    private bool _isSingleSelectionConfirmation;
     private bool _isMultiSelect;
     private bool _isRestoringCheckbox;
     private bool _isClosing;
@@ -20,6 +23,7 @@ public partial class AppOptionsSheetPopup : Popup
     private string _selectedItemHint = string.Empty;
     private string _selectionLimitMessage = string.Empty;
     private Func<int, string> _selectionSummaryFactory = _ => string.Empty;
+    private string? _pendingValue;
 
     public AppOptionsSheetPopup(string title, IReadOnlyList<string> options, string cancelLabel)
         : this(title, options.Select(option => new DialogOptionItem(option, option)).ToArray(), cancelLabel)
@@ -30,6 +34,20 @@ public partial class AppOptionsSheetPopup : Popup
     {
         InitializeComponent();
         Configure(title, options, cancelLabel);
+    }
+
+    public AppOptionsSheetPopup(string title, IReadOnlyList<string> options, string? selectedValue, string acceptLabel, string? cancelLabel = null)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        _isSingleSelectionConfirmation = true;
+        _pendingValue = !string.IsNullOrEmpty(selectedValue) && options.Contains(selectedValue, StringComparer.Ordinal)
+            ? selectedValue
+            : null;
+        InitializeComponent();
+        AcceptLabel.Text = acceptLabel;
+        AcceptHost.IsVisible = true;
+        Configure(title, options.Select(option => new DialogOptionItem(option, option)).ToArray(), cancelLabel ?? string.Empty);
+        ConfigureSingleSelectionSheet();
     }
 
     public AppOptionsSheetPopup(
@@ -89,7 +107,12 @@ public partial class AppOptionsSheetPopup : Popup
         SemanticProperties.SetDescription(CancelHost, cancelLabel);
         SelectionSummaryLabel.IsVisible = _isMultiSelect;
         UpdateSelectionSummary();
-        if (!_isMultiSelect)
+        if (_isSingleSelectionConfirmation)
+        {
+            CancelHost.IsVisible = !string.IsNullOrWhiteSpace(cancelLabel);
+            AcceptHost.IsVisible = true;
+        }
+        else if (!_isMultiSelect)
         {
             Grid.SetColumn(CancelHost, 0);
             Grid.SetColumnSpan(CancelHost, 2);
@@ -128,6 +151,41 @@ public partial class AppOptionsSheetPopup : Popup
         }
 
         Loaded += OnLoaded;
+    }
+
+    private void ConfigureSingleSelectionSheet()
+    {
+        SheetCardHost.Margin = new Thickness(16, 0, 16, 48);
+        SheetCardHost.VerticalOptions = LayoutOptions.End;
+        SheetCardHost.HorizontalOptions = LayoutOptions.Fill;
+        SheetCard.Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["AppOptionsSheetPopupCardStyle"];
+        TitleLabel.HorizontalTextAlignment = TextAlignment.Center;
+        TitleLabel.Margin = new Thickness(8, 0);
+        TitleLabel.VerticalTextAlignment = TextAlignment.Center;
+        FooterActions.ColumnDefinitions.Clear();
+        FooterActions.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+        if (!string.IsNullOrWhiteSpace(CancelLabel.Text))
+        {
+            FooterActions.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+        }
+        AcceptHost.IsVisible = true;
+        CancelHost.IsVisible = !string.IsNullOrWhiteSpace(CancelLabel.Text);
+        Grid.SetColumn(AcceptHost, 0);
+        Grid.SetColumnSpan(AcceptHost, 1);
+        Grid.SetColumn(CancelHost, 1);
+        Grid.SetColumnSpan(CancelHost, 1);
+        AcceptHost.SetDynamicResource(Border.BackgroundColorProperty, "PrimaryFill");
+        AcceptHost.StrokeThickness = 0;
+        AcceptHost.StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(12) };
+        AcceptHost.Padding = new Thickness(12, 8);
+        AcceptLabel.SetDynamicResource(Label.TextColorProperty, "OnPrimary");
+        AcceptLabel.FontFamily = (string)Microsoft.Maui.Controls.Application.Current!.Resources["MediumFontFamily"];
+        SemanticProperties.SetDescription(AcceptHost, AcceptLabel.Text);
+        if (CancelHost.IsVisible)
+        {
+            SemanticProperties.SetDescription(CancelHost, CancelLabel.Text);
+        }
+        OptionsScroll.VerticalOptions = LayoutOptions.Fill;
     }
 
     public string? SelectedValue { get; private set; }
@@ -182,7 +240,80 @@ public partial class AppOptionsSheetPopup : Popup
             Padding = _isMultiSelect || hasSupportingText ? new Thickness(12, 8) : new Thickness(0, 4),
         };
 
-        if (_isMultiSelect)
+        if (_isSingleSelectionConfirmation)
+        {
+            var content = new Grid
+            {
+                ColumnDefinitions =
+                [
+                    new ColumnDefinition(GridLength.Star),
+                    new ColumnDefinition(GridLength.Auto),
+                    new ColumnDefinition(GridLength.Auto)
+                ],
+                ColumnSpacing = 10,
+                VerticalOptions = LayoutOptions.Center
+            };
+            content.Add(new Label
+            {
+                Text = option.Title,
+                Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["AppDialogPrimaryActionLabelStyle"],
+                HorizontalTextAlignment = TextAlignment.Start,
+                VerticalTextAlignment = TextAlignment.Center,
+                LineBreakMode = LineBreakMode.WordWrap,
+                InputTransparent = true
+            }, 0, 0);
+
+            bool selected = string.Equals(_pendingValue, option.Value, StringComparison.Ordinal);
+            var selectedBadgeLabel = new Label
+            {
+                Text = AppStrings.SettingsOptionSelected,
+                Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["CaptionStyle"],
+                InputTransparent = true
+            };
+            selectedBadgeLabel.SetAppThemeColor(Label.TextColorProperty, Color.FromArgb("#0062BD"), Color.FromArgb("#9BCFFF"));
+            var selectedBadge = new Border
+            {
+                IsVisible = selected,
+                Padding = new Thickness(8, 3),
+                StrokeThickness = 0,
+                StrokeShape = new RoundRectangle { CornerRadius = 10 },
+                VerticalOptions = LayoutOptions.Center,
+                Content = selectedBadgeLabel
+            };
+            selectedBadge.SetAppThemeColor(Border.BackgroundColorProperty, Color.FromArgb("#D6EBFF"), Color.FromArgb("#1A2A3D"));
+            content.Add(selectedBadge, 1, 0);
+
+            var radio = new Border
+            {
+                WidthRequest = 22,
+                HeightRequest = 22,
+                Padding = 4,
+                StrokeThickness = 2,
+                StrokeShape = new RoundRectangle { CornerRadius = 12 },
+                Stroke = selected ? Color.FromArgb("#0071D9") : Color.FromArgb("#A9B0B9"),
+                VerticalOptions = LayoutOptions.Center,
+                Content = new Border
+                {
+                    IsVisible = selected,
+                    StrokeThickness = 0,
+                    StrokeShape = new RoundRectangle { CornerRadius = 8 },
+                    BackgroundColor = Color.FromArgb("#0071D9")
+                }
+            };
+            content.Add(radio, 2, 0);
+            row.Content = content;
+            row.Padding = new Thickness(12, 8);
+            row.MinimumHeightRequest = 56;
+            row.SetAppThemeColor(Border.BackgroundColorProperty, selected ? Color.FromArgb("#EAF4FF") : Colors.Transparent, selected ? Color.FromArgb("#1A2A3D") : Colors.Transparent);
+            SemanticProperties.SetDescription(row, option.Title);
+            SemanticProperties.SetHint(row, selected ? AppStrings.SettingsOptionSelected : AppStrings.SettingsOptionSelectHint);
+            string captured = option.Value;
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (_, _) => StageSingleSelection(captured);
+            row.GestureRecognizers.Add(tap);
+            _singleSelectionRows[option.Value] = row;
+        }
+        else if (_isMultiSelect)
         {
             var content = new Grid
             {
@@ -322,7 +453,7 @@ public partial class AppOptionsSheetPopup : Popup
             row.Content = content;
         }
 
-        if (!_isMultiSelect)
+        if (!_isMultiSelect && !_isSingleSelectionConfirmation)
         {
             SemanticProperties.SetDescription(row, string.Join(". ", new[] { option.Title, option.Description, option.Detail }
                 .Where(value => !string.IsNullOrWhiteSpace(value))));
@@ -347,6 +478,51 @@ public partial class AppOptionsSheetPopup : Popup
 
         SelectedValue = value;
         ClosePopup();
+    }
+
+    private void StageSingleSelection(string value)
+    {
+        if (_isClosing || !_isSingleSelectionConfirmation)
+        {
+            return;
+        }
+
+        _pendingValue = value;
+        foreach ((string optionValue, Border row) in _singleSelectionRows)
+        {
+            bool selected = string.Equals(optionValue, value, StringComparison.Ordinal);
+            row.SetAppThemeColor(Border.BackgroundColorProperty, selected ? Color.FromArgb("#EAF4FF") : Colors.Transparent, selected ? Color.FromArgb("#1A2A3D") : Colors.Transparent);
+            SemanticProperties.SetHint(row, selected ? AppStrings.SettingsOptionSelected : AppStrings.SettingsOptionSelectHint);
+        }
+
+        // Rebuild the small trailing controls to keep the selected marker in sync with the row.
+        RefreshSingleSelectionIndicators();
+    }
+
+    private void RefreshSingleSelectionIndicators()
+    {
+        foreach ((string value, Border row) in _singleSelectionRows)
+        {
+            bool selected = string.Equals(_pendingValue, value, StringComparison.Ordinal);
+            if (row.Content is not Grid content || content.Children.Count < 3)
+            {
+                continue;
+            }
+
+            if (content.Children[1] is Border badge)
+            {
+                badge.IsVisible = selected;
+            }
+
+            if (content.Children[2] is Border radio)
+            {
+                radio.Stroke = selected ? Color.FromArgb("#0071D9") : Color.FromArgb("#A9B0B9");
+                if (radio.Content is Border dot)
+                {
+                    dot.IsVisible = selected;
+                }
+            }
+        }
     }
 
     private void ToggleOption(string value)
@@ -419,13 +595,23 @@ public partial class AppOptionsSheetPopup : Popup
 
     private void OnAcceptTapped(object? sender, TappedEventArgs e)
     {
-        if (!_isMultiSelect || _isClosing)
+        if (_isClosing)
         {
             return;
         }
 
-        SelectedValues = _selectionOrder.ToArray();
-        ClosePopup();
+        if (_isMultiSelect)
+        {
+            SelectedValues = _selectionOrder.ToArray();
+            ClosePopup();
+            return;
+        }
+
+        if (_isSingleSelectionConfirmation)
+        {
+            SelectedValue = _pendingValue;
+            ClosePopup();
+        }
     }
 
     private void OnCancelTapped(object? sender, TappedEventArgs e) => ClosePopup();
@@ -440,6 +626,10 @@ public partial class AppOptionsSheetPopup : Popup
         }
 
         _isClosing = true;
-        SafeAsync.Run(async () => await CloseAsync());
+        SafeAsync.Run(async () =>
+        {
+            await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
+            await CloseAsync();
+        });
     }
 }

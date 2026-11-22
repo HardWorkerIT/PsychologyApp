@@ -8,8 +8,8 @@ namespace PsychologyApp.Domain.Base.Constants;
 
 public class Constants
 {
-    /// <summary>Fallback only; prefer <see cref="PsychologyApp.Application.Configuration.AppSettings.ReviewEmailAddress"/> (set in MauiProgram).</summary>
-    public const string ReviewEmailAddress = "";
+    /// <summary>Fixed recipient for feedback and technical error reports; the user reviews and sends each email.</summary>
+    public const string ReviewEmailAddress = "m.a.sukhih@yandex.ru";
 
 
     public const string AliceUrl = "https://alice.yandex.ru/";

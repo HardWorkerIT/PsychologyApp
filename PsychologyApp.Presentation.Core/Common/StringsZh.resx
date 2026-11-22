@@ -163,7 +163,7 @@
     <value>设置</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>外观与主题</value>
+    <value>外观、语言和提醒</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>应用</value>
@@ -415,11 +415,17 @@
     <value>暂不</value>
   </data>
 
-  <data name="DonateOpenFailed" xml:space="preserve">
-    <value>无法打开捐助页面</value>
+  <data name="DonateTransferInstructions" xml:space="preserve">
+    <value>在银行应用中选择按手机号转账，并选择 Sberbank：{0}。确认前请核对收款人姓名和金额。</value>
+  </data>
+  <data name="DonateCopyNumber" xml:space="preserve">
+    <value>复制号码</value>
+  </data>
+  <data name="DonateNumberCopied" xml:space="preserve">
+    <value>转账号码已复制</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
-    <value>本应用汇集了简单而有效的技巧，帮助你应对压力、恐惧、怀疑、侵入性想法、限制性信念和破坏性模式。这些方法广为人知并经过时间检验，其中一些来自神经语言程序学（NLP）或 Zivorad Slavinski 的研究。这些工具可以帮你节省时间、精力和金钱，不需要深厚的心理学知识。祝你练习顺利！</value>
+    <value>练习、情绪日记、测验和 AI 心理咨询助手帮助你觉察状态并选择下一步。</value>
   </data>
   <data name="CleanerPrayersPage" xml:space="preserve">
     <value>祈祷</value>
@@ -1169,12 +1175,6 @@
   <data name="ProfileRecommended" xml:space="preserve">
     <value>推荐</value>
   </data>
-  <data name="ProfileBestQuotes" xml:space="preserve">
-    <value>收藏的名言</value>
-  </data>
-  <data name="ProfileQuotesSeeAll" xml:space="preserve">
-    <value>所有收藏的名言</value>
-  </data>
   <data name="ProfileJourneyTitle" xml:space="preserve">
     <value>你的旅程</value>
   </data>
@@ -1189,6 +1189,12 @@
   </data>
   <data name="ProfileQuotesEmptyHint" xml:space="preserve">
     <value>收藏想留住的想法，随时可以重温。</value>
+  </data>
+  <data name="ProfileBestQuotes" xml:space="preserve">
+    <value>收藏的名言</value>
+  </data>
+  <data name="ProfileQuotesSeeAll" xml:space="preserve">
+    <value>所有收藏的名言</value>
   </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>打开名言标签页</value>
@@ -1382,6 +1388,9 @@
   <data name="CrisisHubLead" xml:space="preserve">
     <value>安全第一。本应用不能代替紧急救助。</value>
   </data>
+  <data name="CrisisHubEmergencyTitle" xml:space="preserve">
+    <value>如有生命危险</value>
+  </data>
   <data name="CrisisHubSafetyPlanTitle" xml:space="preserve">
     <value>安全计划</value>
   </data>
@@ -1406,32 +1415,37 @@
   <data name="CrisisHubOpenHelpline" xml:space="preserve">
     <value>打开 findahelpline.com</value>
   </data>
+  <data name="CrisisHubOpenHelplineSubtitle" xml:space="preserve">
+    <value>您所在国家/地区的危机援助联系方式</value>
+  </data>
+  <data name="CrisisHubOtherActionsTitle" xml:space="preserve">
+    <value>其他求助方式</value>
+  </data>
   <data name="CrisisHubRecheck" xml:space="preserve">
     <value>再次检查我的状态</value>
   </data>
   <data name="CrisisHubContinueSoft" xml:space="preserve">
     <value>回到轻松的练习</value>
-  </data>
-  <data name="CrisisHubSpecialistHint" xml:space="preserve">
-    <value>请考虑寻求心理咨询师或医生的帮助。自助方法适合轻度到中度的状态。</value>
-  </data>
-  <data name="DataBackupTitle" xml:space="preserve">
+  </data>  <data name="DataBackupTitle" xml:space="preserve">
     <value>数据</value>
   </data>
+  <data name="OptionsDataSubtitle" xml:space="preserve">
+    <value>备份与 PIN 码保护</value>
+  </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>所有数据只保存在这台设备上。请做好备份，以免丢失。</value>
+    <value>你的记录保存在此设备上，也可以单独保存备份。</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
     <value>导出备份</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>包含所有对话、心情记录、测试和练习记录的文件。</value>
+    <value>保存聊天、记录、测验结果和练习</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>从备份恢复</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>添加所选备份文件中的数据。</value>
+    <value>从所选备份添加数据</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>给专业人士的摘要</value>
@@ -1464,25 +1478,19 @@
     <value>无法删除数据，请重试。</value>
   </data>
   <data name="AppLockLabel" xml:space="preserve">
-    <value>使用手机的指纹或 PIN 解锁</value>
+    <value>应用 PIN 码锁</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>在显示日记、对话和笔记之前，应用会要求解锁手机：指纹、面部或 PIN。无需另外设置或记住密码。</value>
+    <value>请设置一个六位 PIN 码。忘记后，可通过手机密码或生物识别验证身份并重置。</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>请先在手机设置中开启屏幕锁定（PIN、图案或指纹），然后再回到这里。</value>
+    <value>请先在手机上设置屏幕锁定；恢复应用 PIN 码时需要验证身份。</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>应用已受保护</value>
+    <value>输入应用 PIN 码</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>使用手机的指纹、面部或 PIN 解锁。</value>
-  </data>
-  <data name="AppLockUnlock" xml:space="preserve">
-    <value>解锁</value>
-  </data>
-  <data name="AppLockHelpTitle" xml:space="preserve">
-    <value>现在就需要帮助？</value>
+    <value>输入六位 PIN 码以打开应用。</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1493,6 +1501,66 @@
   <data name="AppLockEnableTitle" xml:space="preserve">
     <value>开启解锁保护</value>
   </data>
+  <data name="AppLockSetupTitle" xml:space="preserve">
+    <value>保护应用</value>
+  </data>
+  <data name="AppLockSetupLead" xml:space="preserve">
+    <value>创建六位 PIN 码。每次打开应用时都需要输入。</value>
+  </data>
+  <data name="AppLockConfirmLead" xml:space="preserve">
+    <value>请再次输入 PIN 码以确认。</value>
+  </data>
+  <data name="AppLockPinPrompt" xml:space="preserve">
+    <value>六位 PIN 码</value>
+  </data>
+  <data name="AppLockPinEntry" xml:space="preserve">
+    <value>六位应用 PIN 码</value>
+  </data>
+  <data name="AppLockCreatePin" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="AppLockConfirmPin" xml:space="preserve">
+    <value>保存 PIN 码</value>
+  </data>
+  <data name="AppLockPinMismatch" xml:space="preserve">
+    <value>两次输入不一致，请重新创建 PIN 码。</value>
+  </data>
+  <data name="AppLockPinIncorrect" xml:space="preserve">
+    <value>PIN 码错误。</value>
+  </data>
+  <data name="AppLockPinLockedOut" xml:space="preserve">
+    <value>尝试次数过多，请等待 {0} 秒。</value>
+  </data>
+  <data name="AppLockPinProgress" xml:space="preserve">
+    <value>已输入 {0} / {1} 位数字</value>
+  </data>
+  <data name="AppLockDeletePinDigit" xml:space="preserve">
+    <value>删除最后一位</value>
+  </data>
+  <data name="AppLockEmergencyCall" xml:space="preserve">
+    <value>紧急呼叫</value>
+  </data>
+  <data name="AppLockForgotPin" xml:space="preserve">
+    <value>忘记 PIN？验证身份</value>
+  </data>
+  <data name="AppLockPinResetLead" xml:space="preserve">
+    <value>请创建新的应用 PIN 码。</value>
+  </data>
+  <data name="AppLockPinStorageError" xml:space="preserve">
+    <value>无法读取受保护的 PIN 码。请验证身份后重新设置。</value>
+  </data>
+  <data name="AppLockPhoneUnlockUnavailable" xml:space="preserve">
+    <value>无法启动手机身份验证。请检查屏幕锁定设置后重试。</value>
+  </data>
+  <data name="AdsSupportSubtitle" xml:space="preserve">
+    <value>帮助应用保持免费。</value>
+  </data>
+  <data name="AppLockChangePin" xml:space="preserve">
+    <value>更改应用 PIN 码</value>
+  </data>
+  <data name="AppLockPinChanged" xml:space="preserve">
+    <value>应用 PIN 码已更改。</value>
+  </data>
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>文件已可以分享</value>
   </data>
@@ -1500,10 +1568,13 @@
     <value>备份文件太大。请删除部分记录，或尝试不加密码保护地导出。</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>错误日志</value>
+    <value>发送错误日志</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>分享技术错误文件，帮助找到崩溃原因。文件中不包含你的记录。</value>
+    <value>将打开一封发往 {0} 并附有技术错误日志的邮件，不包含你的个人记录。</value>
+  </data>
+  <data name="ErrorLogEmailBody" xml:space="preserve">
+    <value>你好，附件是技术错误日志。</value>
   </data>
   <data name="ErrorLogEmptyToast" xml:space="preserve">
     <value>没有记录到错误</value>
@@ -4201,7 +4272,10 @@
     <value>代码</value>
   </data>
   <data name="AdsApplyCode" xml:space="preserve">
-    <value>应用代码</value>
+    <value>输入代码</value>
+  </data>
+  <data name="AdsConfirmCode" xml:space="preserve">
+    <value>兑换</value>
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>此设备上的未来广告已关闭。</value>
@@ -4216,7 +4290,7 @@
     <value>个性化广告</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>开启后，VK SDK 可能会发送您的广告 ID 以选择横幅广告。聊天和日记内容不会发送。</value>
+    <value>开启后，VK 可能会使用广告 ID 来选择横幅广告。</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>如果您收到关闭广告的邀请码，请在此输入。</value>
@@ -4225,10 +4299,31 @@
     <value>广告横幅会在符合条件的目录中自动加载。使用发放的代码可在此设备上关闭后续广告请求。</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
-    <value>描述问题或想法。应用会打开邮件或短信应用，供你检查内容并决定是否发送。</value>
+    <value>描述问题或想法。应用会打开一封发往下方地址的邮件，供你检查后再发送。</value>
   </data>
-  <data name="AdsDisclosure" xml:space="preserve">
-    <value>打开符合条件的目录时，应用会自动加载横幅广告。VK 可能会收到 IP 地址、设备和应用的技术信息，以及广告请求、展示和点击事件。启用个性化广告后，SDK 还可能发送可用的广告标识符。具体数据取决于 SDK 版本和设备设置。应用不会向 VK 发送聊天或日记文本、练习回答、测试结果或健康信息。详情请参阅隐私政策。</value>
+  <data name="ReviewRecipient" xml:space="preserve">
+    <value>收件人：{0}</value>
+  </data>
+  <data name="AdsDataDetails" xml:space="preserve">
+    <value>数据使用方式</value>
+  </data>
+  <data name="AdsDisclosureTitle" xml:space="preserve">
+    <value>广告与您的数据</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveTitle" xml:space="preserve">
+    <value>VK Ads 可能收到的信息</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
+    <value>打开符合条件的目录时，应用会加载横幅广告。VK 可能会收到 IP 地址、设备和应用的技术信息，以及广告请求、展示和点击事件。启用个性化广告后，SDK 还可能发送可用的广告标识符。具体数据取决于 SDK 版本和设备设置。</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
+    <value>保留在设备上的信息</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceBody" xml:space="preserve">
+    <value>应用不会向 VK Ads 发送聊天或日记文本、练习回答、测试结果或健康信息。</value>
+  </data>
+  <data name="AdsDisclosureDone" xml:space="preserve">
+    <value>知道了</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>快捷操作</value>
@@ -4551,4 +4646,50 @@
   <data name="Asrs6ShadingLegend" xml:space="preserve"><value>浅色标记低于筛查阈值；深色标记计入结果。</value></data>
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>浅色标记：此答案不计入筛查阈值。</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>深色标记：此答案计入筛查阈值。</value></data>
+  <data name="DataBackupIrreversibleSection" xml:space="preserve">
+    <value>不可撤销的操作</value>
+  </data>
+  <data name="OptionsPrivacyNote" xml:space="preserve">
+    <value>个人记录仅保存在此设备上。</value>
+  </data>
+  <data name="OptionsFeedbackSubtitle" xml:space="preserve">
+    <value>报告问题或提出建议</value>
+  </data>
+  <data name="InfoTagline" xml:space="preserve">
+    <value>练习、测验和日记</value>
+  </data>
+  <data name="DataBackupProtectionSection" xml:space="preserve">
+    <value>应用保护</value>
+  </data>
+  <data name="DonateMaskedRecipient" xml:space="preserve">
+    <value>收款人：+7 ••• •••-••-••</value>
+  </data>
+  <data name="DonateBankCheckNote" xml:space="preserve">
+    <value>请在银行应用中确认转账。</value>
+  </data>
+  <data name="DataBackupSection" xml:space="preserve">
+    <value>备份</value>
+  </data>
+  <data name="InfoPurposeTitle" xml:space="preserve">
+    <value>日常支持</value>
+  </data>
+  <data name="DonateOpenSber" xml:space="preserve">
+    <value>打开 Sber</value>
+  </data>
+  <data name="InfoDisclaimer" xml:space="preserve">
+    <value>请注意：本应用不作诊断，也不能替代心理咨询、医疗或紧急服务。</value>
+  </data>
+  <data name="DataBackupShareSection" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="DonatePaymentMethod" xml:space="preserve">
+    <value>通过 SBP 转账</value>
+  </data>
+  <data name="SettingsOptionSelected" xml:space="preserve">
+    <value>已选择</value>
+  </data>
+  <data name="SettingsOptionSelectHint" xml:space="preserve">
+    <value>点按以选择</value>
+  </data>
+  <data name="SettingsPickerDone" xml:space="preserve"><value>完成</value></data>
 </root>

@@ -70,12 +70,10 @@ public partial class SettingsViewModel : BaseViewModel
         Finish = new AsyncCommand(SaveAndGoBackAsync);
         ReplayOnboardingCommand = new AsyncCommand(ReplayOnboardingAsync);
         ApplyAdCodeCommand = new AsyncCommand(ApplyAdCodeAsync);
-        ShowAdsDisclosureCommand = new AsyncCommand(ShowAdsDisclosureAsync);
         OpenAdsPrivacyPolicyCommand = new AsyncCommand(OpenAdsPrivacyPolicyAsync);
     }
 
     public ICommand ReplayOnboardingCommand { get; }
     public ICommand ApplyAdCodeCommand { get; }
-    public ICommand ShowAdsDisclosureCommand { get; }
     public ICommand OpenAdsPrivacyPolicyCommand { get; }
 }

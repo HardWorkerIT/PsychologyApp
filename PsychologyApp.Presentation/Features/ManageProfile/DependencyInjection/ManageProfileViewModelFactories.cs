@@ -12,6 +12,7 @@ using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Quot;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
+using PsychologyApp.Presentation.Shared.Services.Donations;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
@@ -22,6 +23,7 @@ using PsychologyApp.Presentation.Features.ManageQuotes.Index;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileUser;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfilePracticeHistory;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
+using PsychologyApp.Presentation.Shared.Services.Security;
 
 namespace PsychologyApp.Presentation.Features.ManageProfile.DependencyInjection;
 
@@ -66,10 +68,12 @@ public interface IOptionsViewModelFactory
     OptionsViewModel Create(ContentPage page);
 }
 
-public sealed class OptionsViewModelFactory(Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IOptionsViewModelFactory
+public sealed class OptionsViewModelFactory(
+    IDonationSupportService donationSupportService,
+    Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IOptionsViewModelFactory
 {
     public OptionsViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page));
+        new(ResolveNavigation(navigationServiceFactory, page), donationSupportService);
 }
 
 public interface IDataBackupViewModelFactory
@@ -85,10 +89,11 @@ public sealed class DataBackupViewModelFactory(
     IDialogService dialogService,
     IPersonalDataEraser eraser,
     IAppLock appLock,
+    IAppPinCredentialStore appPinCredentialStore,
     Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IDataBackupViewModelFactory
 {
     public DataBackupViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page), backupService, specialistSummaryService, toastService, userPreferencesStore, dialogService, eraser, appLock);
+        new(ResolveNavigation(navigationServiceFactory, page), backupService, specialistSummaryService, toastService, userPreferencesStore, dialogService, eraser, appLock, appPinCredentialStore);
 }
 
 public interface ISettingsViewModelFactory

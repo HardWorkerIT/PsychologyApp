@@ -35,43 +35,45 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border Style="{StaticResource BrandCardStyle}">
-                    <Border.Behaviors>
-                        <behaviors:ListItemRevealBehavior RevealIndex="1" />
-                    </Border.Behaviors>
-                    <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}">
-                        <ui:YesNoSelectorView
-                            LabelText="{Binding SelfHarmLabel}"
-                            YesText="{Binding YesLabel}"
-                            NoText="{Binding NoLabel}"
-                            IsYes="{Binding IsSelfHarmYes}"
-                            IsNo="{Binding IsSelfHarmNo}"
-                            SelectCommand="{Binding SetSelfHarmCommand}" />
-                        <BoxView Style="{StaticResource SubtleDividerStyle}" />
-                        <ui:YesNoSelectorView
-                            LabelText="{Binding DisorientationLabel}"
-                            YesText="{Binding YesLabel}"
-                            NoText="{Binding NoLabel}"
-                            IsYes="{Binding IsDisorientationYes}"
-                            IsNo="{Binding IsDisorientationNo}"
-                            SelectCommand="{Binding SetDisorientationCommand}" />
-                        <BoxView Style="{StaticResource SubtleDividerStyle}" />
-                        <ui:YesNoSelectorView
-                            LabelText="{Binding SubstanceLabel}"
-                            YesText="{Binding YesLabel}"
-                            NoText="{Binding NoLabel}"
-                            IsYes="{Binding IsSubstanceYes}"
-                            IsNo="{Binding IsSubstanceNo}"
-                            SelectCommand="{Binding SetSubstanceCommand}" />
-                        <BoxView Style="{StaticResource SubtleDividerStyle}" />
-                        <ui:YesNoSelectorView
-                            LabelText="{Binding InsomniaLabel}"
-                            YesText="{Binding YesLabel}"
-                            NoText="{Binding NoLabel}"
-                            IsYes="{Binding IsInsomniaYes}"
-                            IsNo="{Binding IsInsomniaNo}"
-                            SelectCommand="{Binding SetInsomniaCommand}" />
-                    </VerticalStackLayout>
+                <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" Padding="12">
+                    <Border.Behaviors><behaviors:ListItemRevealBehavior RevealIndex="1" /></Border.Behaviors>
+                    <ui:YesNoSelectorView
+                        LabelText="{Binding SelfHarmLabel}"
+                        YesText="{Binding YesLabel}"
+                        NoText="{Binding NoLabel}"
+                        IsYes="{Binding IsSelfHarmYes}"
+                        IsNo="{Binding IsSelfHarmNo}"
+                        SelectCommand="{Binding SetSelfHarmCommand}" />
+                </Border>
+                <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" Padding="12">
+                    <Border.Behaviors><behaviors:ListItemRevealBehavior RevealIndex="2" /></Border.Behaviors>
+                    <ui:YesNoSelectorView
+                        LabelText="{Binding DisorientationLabel}"
+                        YesText="{Binding YesLabel}"
+                        NoText="{Binding NoLabel}"
+                        IsYes="{Binding IsDisorientationYes}"
+                        IsNo="{Binding IsDisorientationNo}"
+                        SelectCommand="{Binding SetDisorientationCommand}" />
+                </Border>
+                <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" Padding="12">
+                    <Border.Behaviors><behaviors:ListItemRevealBehavior RevealIndex="3" /></Border.Behaviors>
+                    <ui:YesNoSelectorView
+                        LabelText="{Binding SubstanceLabel}"
+                        YesText="{Binding YesLabel}"
+                        NoText="{Binding NoLabel}"
+                        IsYes="{Binding IsSubstanceYes}"
+                        IsNo="{Binding IsSubstanceNo}"
+                        SelectCommand="{Binding SetSubstanceCommand}" />
+                </Border>
+                <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" Padding="12">
+                    <Border.Behaviors><behaviors:ListItemRevealBehavior RevealIndex="4" /></Border.Behaviors>
+                    <ui:YesNoSelectorView
+                        LabelText="{Binding InsomniaLabel}"
+                        YesText="{Binding YesLabel}"
+                        NoText="{Binding NoLabel}"
+                        IsYes="{Binding IsInsomniaYes}"
+                        IsNo="{Binding IsInsomniaNo}"
+                        SelectCommand="{Binding SetInsomniaCommand}" />
                 </Border>
 
             </VerticalStackLayout>

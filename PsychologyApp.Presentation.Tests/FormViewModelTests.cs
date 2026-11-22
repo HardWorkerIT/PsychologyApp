@@ -41,11 +41,11 @@ public sealed class FormViewModelTests
     }
 
     [Theory]
-    [InlineData("a@b.com", "", FeedbackChannel.Email)]
-    [InlineData("", "+123", FeedbackChannel.Sms)]
-    [InlineData("", "", FeedbackChannel.Share)]
-    [InlineData("a@b.com", "+123", FeedbackChannel.Email)]
-    public void ResolveChannel_PrefersEmailThenSmsThenShare(string email, string sms, FeedbackChannel expected)
+    [InlineData("a@b.com", "")]
+    [InlineData("", "+123")]
+    [InlineData("", "")]
+    [InlineData("a@b.com", "+123")]
+    public void ResolveChannel_AlwaysUsesEmail(string email, string sms)
     {
         var settings = new AppSettings
         {
@@ -53,7 +53,7 @@ public sealed class FormViewModelTests
             ReviewSmsRecipient = sms
         };
 
-        Assert.Equal(expected, FormViewModel.ResolveChannel(settings));
+        Assert.Equal(FeedbackChannel.Email, FormViewModel.ResolveChannel(settings));
     }
 
     private static FormViewModel CreateViewModel(IDialogService dialogService, string email = "", string sms = "") =>

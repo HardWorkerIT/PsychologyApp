@@ -1,6 +1,6 @@
 namespace PsychologyApp.Presentation.Common;
 
-/// <summary>When the app asks for the phone's unlock (fingerprint, face or the phone's PIN) before showing anything.</summary>
+/// <summary>When the app asks for its PIN before showing personal content.</summary>
 public static class AppLockPolicy
 {
     /// <summary>
@@ -10,7 +10,7 @@ public static class AppLockPolicy
     public static readonly TimeSpan RelockAfter = TimeSpan.FromMinutes(1);
 
     /// <param name="enabled">The person turned the lock on.</param>
-    /// <param name="unlockedThisRun">The phone's unlock was already passed since the app started.</param>
+    /// <param name="unlockedThisRun">The app PIN was already passed since the app started.</param>
     /// <param name="awayFor">
     /// How long the app has been in the background since it was last unlocked; null while it stays in front. Measured on a
     /// clock the phone's owner cannot set back, or turning the clock back would skip the lock.

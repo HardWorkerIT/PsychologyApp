@@ -68,25 +68,58 @@ public sealed class ShellStartupCoordinator(
         INavigation navigation,
         Func<TechniqueId?, Task> onTechniqueSelected)
     {
+        TaskCompletionSource onboardingCompleted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        bool completingFromOnboarding = false;
+        OnboardingPage? onboardingPage = null;
+
+        void OnOnboardingPageDisappearing(object? sender, EventArgs args)
+        {
+            if (!completingFromOnboarding)
+            {
+                onboardingCompleted.TrySetResult();
+            }
+        }
+
         try
         {
             await Task.Delay(300);
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                OnboardingPage onboardingPage = new(onboardingViewModelFactory, async techniqueId =>
+                onboardingPage = new(onboardingViewModelFactory, async techniqueId =>
                 {
-                    await Task.Yield();
-                    await navigation.PopModalAsync(false);
-                    await onTechniqueSelected(techniqueId);
+                    completingFromOnboarding = true;
+                    try
+                    {
+                        await Task.Yield();
+                        await navigation.PopModalAsync(false);
+                        await onTechniqueSelected(techniqueId);
+                    }
+                    finally
+                    {
+                        onboardingCompleted.TrySetResult();
+                    }
                 }, dialogService);
 
+                onboardingPage.Disappearing += OnOnboardingPageDisappearing;
                 PressFeedbackHost.AttachToPage(onboardingPage);
                 await navigation.PushModalAsync(onboardingPage, false);
             });
+
+            if (onboardingPage is not null)
+            {
+                await onboardingCompleted.Task;
+            }
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Onboarding presentation skipped.");
+        }
+        finally
+        {
+            if (onboardingPage is not null)
+            {
+                onboardingPage.Disappearing -= OnOnboardingPageDisappearing;
+            }
         }
     }
 
@@ -110,6 +143,13 @@ public sealed class ShellStartupCoordinator(
                 {
                     await navigation.PushAsync(MauiNavigationService.PrepareSecondaryPage(pageFactory.CreateCrisisHubPage()), true);
                 });
+                return;
+            }
+
+            // Do not make a safety questionnaire the first screen after onboarding. The person can start one any time from Profile.
+            RiskAssessmentDTO? latestAssessment = await clinicalCareService.GetLatestRiskAssessmentAsync();
+            if (latestAssessment is null)
+            {
                 return;
             }
 

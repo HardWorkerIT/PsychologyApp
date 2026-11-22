@@ -26,6 +26,12 @@
                         Value="Secondary">
                         <Setter Property="Style" Value="{StaticResource OutlinedActionBorderStyle}" />
                     </DataTrigger>
+                    <DataTrigger
+                        Binding="{TemplateBinding Variant}"
+                        TargetType="Border"
+                        Value="Danger">
+                        <Setter Property="Style" Value="{StaticResource DangerActionBorderStyle}" />
+                    </DataTrigger>
                     <MultiTrigger TargetType="Border">
                         <MultiTrigger.Conditions>
                             <BindingCondition Binding="{TemplateBinding Variant}" Value="Primary" />

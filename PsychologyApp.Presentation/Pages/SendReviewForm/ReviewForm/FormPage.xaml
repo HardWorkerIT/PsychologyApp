@@ -30,6 +30,12 @@
                 <ui:TextEditorView
                     PlaceholderText="{Binding MessagePlaceholder}"
                     BodyText="{Binding MessageText}" />
+                <Border
+                    Style="{StaticResource SettingsSectionCardStyle}"
+                    Margin="0"
+                    Padding="12,10">
+                    <Label Text="{Binding RecipientText}" Style="{StaticResource BodyStyle}" />
+                </Border>
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Margin="4,0">
                     <ui:MaterialIconView
                         IconName="InfoOutline"

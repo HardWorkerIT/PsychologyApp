@@ -1,7 +1,3 @@
-{
-  "AppSettings": {
-    "ReviewEmailAddress": "your-email@example.com",
-    "ReviewSmsRecipient": "89000000000"
-  },
-  "_comment": "Configure at least one feedback channel: ReviewEmailAddress (preferred) or ReviewSmsRecipient. If both are empty, the app uses the system share sheet."
+﻿{
+  "_comment": "Feedback and technical error reports use the fixed recipient in app constants. The app opens an email draft; the user confirms sending."
 }

@@ -2,6 +2,7 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
                x:Class="PsychologyApp.Presentation.Shared.UI.Overlays.AppDialogPopup"
                x:Name="Root"
                BackgroundColor="Transparent"
@@ -18,6 +19,16 @@
             VerticalOptions="Center"
             HorizontalOptions="Center">
             <VerticalStackLayout Spacing="0">
+                <Border
+                    x:Name="SheetGrabber"
+                    WidthRequest="36"
+                    HeightRequest="4"
+                    Margin="0,10,0,8"
+                    HorizontalOptions="Center"
+                    IsVisible="False"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 4"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
                 <VerticalStackLayout
                     Padding="20,20,20,16"
                     Spacing="8">
@@ -79,6 +90,15 @@
                             InputTransparent="True" />
                     </Border>
                 </Grid>
+
+                <VerticalStackLayout
+                    x:Name="SheetActions"
+                    IsVisible="False"
+                    Padding="20,0,20,16"
+                    Spacing="8">
+                    <ui:ButtonView x:Name="SheetAcceptButton" />
+                    <ui:ButtonView x:Name="SheetCancelButton" Variant="Secondary" />
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </Border>
     </Grid>

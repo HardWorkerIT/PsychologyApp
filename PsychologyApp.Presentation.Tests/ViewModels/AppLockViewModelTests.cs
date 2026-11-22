@@ -5,56 +5,76 @@ using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
 
-/// <summary>The lock screen opens the app only after the phone's unlock, and never shuts the person out of their own records.</summary>
+/// <summary>The lock screen keeps personal content closed until an app PIN is set or verified.</summary>
 public sealed class AppLockViewModelTests
 {
     private readonly Mock<IDeviceAuthenticator> _authenticator = new();
+    private readonly Mock<IAppPinCredentialStore> _pinStore = new();
 
-    private AppLockViewModel Create(DeviceUnlockAvailability availability, DeviceUnlockResult result)
+    private AppLockViewModel Create(DeviceUnlockAvailability availability, DeviceUnlockResult result, bool hasPin = true)
     {
         _authenticator.SetupGet(a => a.Availability).Returns(availability);
         _authenticator.Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(result);
-        return new AppLockViewModel(_authenticator.Object);
+        _pinStore.Setup(s => s.HasPinAsync()).ReturnsAsync(hasPin);
+        _pinStore.Setup(s => s.VerifyPinAsync(It.IsAny<string>()))
+            .ReturnsAsync(new AppPinVerificationResult(true, TimeSpan.Zero));
+        return new AppLockViewModel(_authenticator.Object, _pinStore.Object);
     }
 
     [Fact]
-    public async Task The_phones_unlock_opens_the_app()
+    public async Task A_correct_app_pin_opens_the_app()
     {
         AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        await viewModel.InitializeAsync();
+        viewModel.PinInput = "123456";
 
-        await VmTestHelpers.RunAsync(viewModel.UnlockCommand);
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
 
         Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
+        _pinStore.Verify(s => s.VerifyPinAsync("123456"), Times.Once);
     }
 
     [Fact]
-    public async Task A_cancelled_prompt_keeps_the_app_closed()
+    public async Task An_incorrect_app_pin_keeps_personal_content_closed()
     {
-        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.NotPassed);
+        _pinStore.Setup(s => s.VerifyPinAsync(It.IsAny<string>()))
+            .ReturnsAsync(new AppPinVerificationResult(false, TimeSpan.Zero));
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        await viewModel.InitializeAsync();
+        viewModel.PinInput = "123456";
 
-        await VmTestHelpers.RunAsync(viewModel.UnlockCommand);
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
 
         Assert.False(viewModel.Unlocked.IsCompleted);
+        Assert.True(viewModel.HasStatus);
     }
 
     [Fact]
-    public async Task With_the_phones_screen_lock_removed_the_app_opens_instead_of_locking_the_person_out()
+    public async Task The_first_launch_requires_a_pin_to_be_created_and_confirmed()
     {
-        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.NoScreenLock, DeviceUnlockResult.NotPassed);
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed, hasPin: false);
+        await viewModel.InitializeAsync();
+        viewModel.PinInput = "123456";
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
+        Assert.False(viewModel.Unlocked.IsCompleted);
 
-        await VmTestHelpers.RunAsync(viewModel.UnlockCommand);
+        viewModel.PinInput = "123456";
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
 
         Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
-        _authenticator.Verify(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _pinStore.Verify(s => s.SetPinAsync("123456"), Times.Once);
     }
 
     [Fact]
-    public async Task When_the_system_cannot_ask_at_all_the_person_is_let_in()
+    public async Task Phone_authentication_starts_pin_recovery_but_does_not_skip_new_pin_setup()
     {
-        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.CannotAsk);
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        await viewModel.InitializeAsync();
 
-        await VmTestHelpers.RunAsync(viewModel.UnlockCommand);
+        await VmTestHelpers.RunAsync(viewModel.RecoverPinCommand);
 
-        Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
+        Assert.False(viewModel.Unlocked.IsCompleted);
+        Assert.True(viewModel.IsPinEntryVisible);
+        _authenticator.Verify(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 }

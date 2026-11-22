@@ -2,19 +2,23 @@ using Microsoft.Maui.Storage;
 
 namespace PsychologyApp.Presentation.Shared.Common;
 
-/// <summary>External voluntary support link and one-time prompt state, both local to the device.</summary>
+/// <summary>Voluntary support transfer details and one-time prompt state, both local to the device.</summary>
 internal static class DonationConfiguration
 {
     private const string SupportPromptShownKey = "DonationSupportPromptShown";
 
-    // The owner supplied this Sber SBP link for voluntary support; the app never verifies payment.
-    internal const string SberPaymentUrl = "https://www.sberbank.ru/ru/choise_bank?requisiteNumber=79963904980&bankCode=100000000111";
+    // The owner-supplied bank page can open Sber or continue in the browser; the app never verifies or unlocks content after a transfer.
+    internal const string SberTransferPhoneNumber = "79963904980";
+    internal const string SberTransferUrl = "https://www.sberbank.ru/ru/choise_bank?requisiteNumber=79963904980&bankCode=100000000111";
 
-    internal static Uri? SberPaymentUri =>
-        Uri.TryCreate(SberPaymentUrl, UriKind.Absolute, out Uri? uri)
-        && string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase)
-            ? uri
-            : null;
+    internal static bool HasSberTransferPhoneNumber =>
+        SberTransferPhoneNumber.Length == 11
+        && SberTransferPhoneNumber[0] == '7'
+        && SberTransferPhoneNumber.All(char.IsAsciiDigit);
+
+    internal static string SberTransferPhoneNumberDisplay => HasSberTransferPhoneNumber
+        ? $"+{SberTransferPhoneNumber[..1]} {SberTransferPhoneNumber[1..4]} {SberTransferPhoneNumber[4..7]}-{SberTransferPhoneNumber[7..9]}-{SberTransferPhoneNumber[9..11]}"
+        : SberTransferPhoneNumber;
 
     internal static bool HasShownSupportPrompt =>
         Preferences.Default.Get(SupportPromptShownKey, false);

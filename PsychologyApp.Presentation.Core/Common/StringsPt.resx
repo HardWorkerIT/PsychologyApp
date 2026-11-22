@@ -163,7 +163,7 @@
     <value>Configurações</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Aparência e tema</value>
+    <value>Aparência, idioma e lembretes</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Aplicativo</value>
@@ -415,11 +415,17 @@
     <value>Agora não</value>
   </data>
 
-  <data name="DonateOpenFailed" xml:space="preserve">
-    <value>Não foi possível abrir a página de doações</value>
+  <data name="DonateTransferInstructions" xml:space="preserve">
+    <value>No app do seu banco, escolha uma transferência por número de telefone e selecione Sberbank: {0}. Confira o nome do destinatário e o valor antes de confirmar.</value>
+  </data>
+  <data name="DonateCopyNumber" xml:space="preserve">
+    <value>Copiar número</value>
+  </data>
+  <data name="DonateNumberCopied" xml:space="preserve">
+    <value>Número para transferência copiado</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
-    <value>Este aplicativo reúne técnicas simples, mas eficazes, para lidar com estresse, medo, dúvida, pensamentos intrusivos, crenças limitantes e padrões destrutivos. Os métodos são conhecidos e testados pelo tempo. Alguns vêm da PNL ou do trabalho de Zivorad Slavinski. Essas ferramentas podem poupar seu tempo, sua energia e seu dinheiro. Não exigem conhecimento profundo de psicologia. Desejamos sucesso na sua prática!</value>
+    <value>As práticas, o diário de humor, os testes e o psicólogo com IA ajudam a perceber como se sente e a escolher o próximo passo.</value>
   </data>
   <data name="CleanerPrayersPage" xml:space="preserve">
     <value>Orações</value>
@@ -1169,12 +1175,6 @@
   <data name="ProfileRecommended" xml:space="preserve">
     <value>Recomendado</value>
   </data>
-  <data name="ProfileBestQuotes" xml:space="preserve">
-    <value>Citações favoritas</value>
-  </data>
-  <data name="ProfileQuotesSeeAll" xml:space="preserve">
-    <value>Todas as citações favoritas</value>
-  </data>
   <data name="ProfileJourneyTitle" xml:space="preserve">
     <value>Seu caminho</value>
   </data>
@@ -1189,6 +1189,12 @@
   </data>
   <data name="ProfileQuotesEmptyHint" xml:space="preserve">
     <value>Guarde as ideias que quiser lembrar.</value>
+  </data>
+  <data name="ProfileBestQuotes" xml:space="preserve">
+    <value>Citações favoritas</value>
+  </data>
+  <data name="ProfileQuotesSeeAll" xml:space="preserve">
+    <value>Todas as citações favoritas</value>
   </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Abrir a aba Citações</value>
@@ -1382,6 +1388,9 @@
   <data name="CrisisHubLead" xml:space="preserve">
     <value>Segurança em primeiro lugar. Este aplicativo não substitui o atendimento de emergência.</value>
   </data>
+  <data name="CrisisHubEmergencyTitle" xml:space="preserve">
+    <value>Se houver risco de vida</value>
+  </data>
   <data name="CrisisHubSafetyPlanTitle" xml:space="preserve">
     <value>Plano de segurança</value>
   </data>
@@ -1406,32 +1415,37 @@
   <data name="CrisisHubOpenHelpline" xml:space="preserve">
     <value>Abrir findahelpline.com</value>
   </data>
+  <data name="CrisisHubOpenHelplineSubtitle" xml:space="preserve">
+    <value>Contatos de ajuda no seu país</value>
+  </data>
+  <data name="CrisisHubOtherActionsTitle" xml:space="preserve">
+    <value>Mais formas de obter apoio</value>
+  </data>
   <data name="CrisisHubRecheck" xml:space="preserve">
     <value>Ver de novo como estou</value>
   </data>
   <data name="CrisisHubContinueSoft" xml:space="preserve">
     <value>Voltar às práticas suaves</value>
-  </data>
-  <data name="CrisisHubSpecialistHint" xml:space="preserve">
-    <value>Considere procurar um psicólogo ou um médico. A autoajuda serve para estados leves a moderados.</value>
-  </data>
-  <data name="DataBackupTitle" xml:space="preserve">
+  </data>  <data name="DataBackupTitle" xml:space="preserve">
     <value>Dados</value>
   </data>
+  <data name="OptionsDataSubtitle" xml:space="preserve">
+    <value>Cópia de segurança e proteção por PIN</value>
+  </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Todos os dados ficam apenas neste aparelho. Faça um backup para não perdê-los.</value>
+    <value>As suas anotações ficam neste dispositivo. Pode guardar uma cópia separadamente.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
     <value>Exportar um backup</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Um arquivo com todas as conversas, registros de humor, testes e histórico de práticas.</value>
+    <value>Guardar conversas, anotações, resultados de testes e práticas</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restaurar um backup</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Adiciona os dados do arquivo de backup escolhido.</value>
+    <value>Adicionar dados de uma cópia selecionada</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Resumo para um profissional</value>
@@ -1464,25 +1478,19 @@
     <value>Não foi possível excluir os dados. Tente novamente.</value>
   </data>
   <data name="AppLockLabel" xml:space="preserve">
-    <value>Desbloquear com a digital ou o PIN do celular</value>
+    <value>Bloqueio por PIN do aplicativo</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Antes de mostrar o diário, as conversas e as notas, o aplicativo pede o desbloqueio do celular: digital, rosto ou PIN. Não há um PIN separado para criar ou esquecer.</value>
+    <value>Escolha um PIN de seis dígitos. Se esquecer, redefina-o após confirmar sua identidade com o PIN ou a biometria do celular.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Primeiro ative um bloqueio de tela nas configurações do celular (PIN, padrão ou digital) e depois volte aqui.</value>
+    <value>Configure primeiro o bloqueio de tela do celular; ele será necessário para recuperar o PIN do aplicativo.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>O aplicativo está protegido</value>
+    <value>Digite o PIN do aplicativo</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Desbloqueie com a digital, o rosto ou o PIN do celular.</value>
-  </data>
-  <data name="AppLockUnlock" xml:space="preserve">
-    <value>Desbloquear</value>
-  </data>
-  <data name="AppLockHelpTitle" xml:space="preserve">
-    <value>Precisa de ajuda agora?</value>
+    <value>Digite seu PIN de seis dígitos para abrir o aplicativo.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1493,6 +1501,66 @@
   <data name="AppLockEnableTitle" xml:space="preserve">
     <value>Ativar a proteção</value>
   </data>
+  <data name="AppLockSetupTitle" xml:space="preserve">
+    <value>Proteja o aplicativo</value>
+  </data>
+  <data name="AppLockSetupLead" xml:space="preserve">
+    <value>Crie um PIN de seis dígitos. Ele será solicitado ao abrir o aplicativo.</value>
+  </data>
+  <data name="AppLockConfirmLead" xml:space="preserve">
+    <value>Digite o PIN novamente para confirmar.</value>
+  </data>
+  <data name="AppLockPinPrompt" xml:space="preserve">
+    <value>PIN de seis dígitos</value>
+  </data>
+  <data name="AppLockPinEntry" xml:space="preserve">
+    <value>PIN de seis dígitos do aplicativo</value>
+  </data>
+  <data name="AppLockCreatePin" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
+  <data name="AppLockConfirmPin" xml:space="preserve">
+    <value>Salvar PIN</value>
+  </data>
+  <data name="AppLockPinMismatch" xml:space="preserve">
+    <value>Os PINs não coincidem. Crie o PIN novamente.</value>
+  </data>
+  <data name="AppLockPinIncorrect" xml:space="preserve">
+    <value>PIN incorreto.</value>
+  </data>
+  <data name="AppLockPinLockedOut" xml:space="preserve">
+    <value>Muitas tentativas. Aguarde {0} s.</value>
+  </data>
+  <data name="AppLockPinProgress" xml:space="preserve">
+    <value>{0} de {1} dígitos</value>
+  </data>
+  <data name="AppLockDeletePinDigit" xml:space="preserve">
+    <value>Apagar último dígito</value>
+  </data>
+  <data name="AppLockEmergencyCall" xml:space="preserve">
+    <value>Chamada de emergência</value>
+  </data>
+  <data name="AppLockForgotPin" xml:space="preserve">
+    <value>Esqueceu o PIN? Confirmar identidade</value>
+  </data>
+  <data name="AppLockPinResetLead" xml:space="preserve">
+    <value>Crie um novo PIN para o aplicativo.</value>
+  </data>
+  <data name="AppLockPinStorageError" xml:space="preserve">
+    <value>Não foi possível ler o PIN protegido. Confirme sua identidade para definir outro.</value>
+  </data>
+  <data name="AppLockPhoneUnlockUnavailable" xml:space="preserve">
+    <value>Não foi possível abrir a autenticação do celular. Verifique o bloqueio de tela e tente novamente.</value>
+  </data>
+  <data name="AdsSupportSubtitle" xml:space="preserve">
+    <value>Ajuda a manter o aplicativo gratuito.</value>
+  </data>
+  <data name="AppLockChangePin" xml:space="preserve">
+    <value>Alterar o PIN do aplicativo</value>
+  </data>
+  <data name="AppLockPinChanged" xml:space="preserve">
+    <value>PIN do aplicativo alterado.</value>
+  </data>
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>O arquivo está pronto para compartilhar</value>
   </data>
@@ -1500,10 +1568,13 @@
     <value>O backup é grande demais. Exclua parte do histórico ou exporte sem proteção por senha.</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>Registro de erros</value>
+    <value>Enviar registro de erros</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Compartilhe um arquivo de erros técnicos para ajudar a encontrar a causa de uma falha. Ele não contém seus registros.</value>
+    <value>Um e-mail para {0} será aberto com o registro técnico anexado. Suas anotações não serão incluídas.</value>
+  </data>
+  <data name="ErrorLogEmailBody" xml:space="preserve">
+    <value>Olá, estou enviando em anexo o registro técnico de erros.</value>
   </data>
   <data name="ErrorLogEmptyToast" xml:space="preserve">
     <value>Nenhum erro registrado</value>
@@ -4201,7 +4272,10 @@
     <value>Palavra-código</value>
   </data>
   <data name="AdsApplyCode" xml:space="preserve">
-    <value>Aplicar código</value>
+    <value>Inserir código</value>
+  </data>
+  <data name="AdsConfirmCode" xml:space="preserve">
+    <value>Resgatar</value>
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Os anúncios futuros estão desativados neste dispositivo.</value>
@@ -4216,7 +4290,7 @@
     <value>Anúncios personalizados</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>Quando ativado, o SDK do VK pode enviar seu ID de publicidade para selecionar banners. Conversas e registros do diário não são enviados.</value>
+    <value>Ao ativar, o VK pode usar seu ID de publicidade para escolher banners.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Recebeu um código de convite para desativar anúncios? Digite-o aqui.</value>
@@ -4225,10 +4299,31 @@
     <value>Os banners carregam automaticamente nos catálogos elegíveis. Um código fornecido desativa futuras solicitações de anúncios neste dispositivo.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
-    <value>Descreva um problema ou uma ideia. O aplicativo abrirá seu e-mail ou SMS para você revisar a mensagem e decidir se quer enviá-la.</value>
+    <value>Descreva um problema ou uma ideia. Um e-mail para o endereço abaixo será aberto para você revisar antes de enviar.</value>
   </data>
-  <data name="AdsDisclosure" xml:space="preserve">
-    <value>O aplicativo carrega automaticamente um banner ao abrir um catálogo compatível. O VK pode receber o endereço IP, informações técnicas do dispositivo e do aplicativo, além de eventos de solicitação, impressão e clique. Quando os anúncios personalizados estão ativados, o SDK também pode enviar um identificador de publicidade disponível. Os dados exatos dependem da versão do SDK e das configurações do dispositivo. O aplicativo não envia ao VK textos de conversas ou do diário, respostas das práticas, resultados de testes nem informações de saúde. Consulte a política de privacidade.</value>
+  <data name="ReviewRecipient" xml:space="preserve">
+    <value>Para: {0}</value>
+  </data>
+  <data name="AdsDataDetails" xml:space="preserve">
+    <value>Como os seus dados são usados</value>
+  </data>
+  <data name="AdsDisclosureTitle" xml:space="preserve">
+    <value>Anúncios e os seus dados</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveTitle" xml:space="preserve">
+    <value>O que o VK Ads pode receber</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
+    <value>Ao abrir um catálogo compatível, o aplicativo carrega um banner. O VK pode receber seu endereço IP, informações técnicas do dispositivo e do aplicativo, além de eventos de solicitação, impressão e clique. Se a personalização estiver ativada, o SDK também poderá enviar um identificador de publicidade disponível. Os dados exatos dependem da versão do SDK e das configurações do dispositivo.</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
+    <value>O que fica no seu dispositivo</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceBody" xml:space="preserve">
+    <value>O aplicativo não envia ao VK Ads textos de conversas ou do diário, respostas das práticas, resultados de testes nem informações de saúde.</value>
+  </data>
+  <data name="AdsDisclosureDone" xml:space="preserve">
+    <value>Entendi</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Ações rápidas</value>
@@ -4551,4 +4646,50 @@
   <data name="Asrs6ShadingLegend" xml:space="preserve"><value>O tom claro está abaixo do limite; o mais escuro conta no resultado.</value></data>
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Tom claro: esta resposta não conta para o limite da triagem.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Tom escuro: esta resposta conta para o limite da triagem.</value></data>
+  <data name="DataBackupIrreversibleSection" xml:space="preserve">
+    <value>Ação irreversível</value>
+  </data>
+  <data name="OptionsPrivacyNote" xml:space="preserve">
+    <value>As suas notas pessoais ficam neste dispositivo.</value>
+  </data>
+  <data name="OptionsFeedbackSubtitle" xml:space="preserve">
+    <value>Relatar um problema ou sugerir uma ideia</value>
+  </data>
+  <data name="InfoTagline" xml:space="preserve">
+    <value>Práticas, testes e diário</value>
+  </data>
+  <data name="DataBackupProtectionSection" xml:space="preserve">
+    <value>Proteção da aplicação</value>
+  </data>
+  <data name="DonateMaskedRecipient" xml:space="preserve">
+    <value>Destinatário: +7 ••• •••-••-••</value>
+  </data>
+  <data name="DonateBankCheckNote" xml:space="preserve">
+    <value>Confirme a transferência na aplicação do banco.</value>
+  </data>
+  <data name="DataBackupSection" xml:space="preserve">
+    <value>Cópia de segurança</value>
+  </data>
+  <data name="InfoPurposeTitle" xml:space="preserve">
+    <value>Apoio para o dia a dia</value>
+  </data>
+  <data name="DonateOpenSber" xml:space="preserve">
+    <value>Abrir Sber</value>
+  </data>
+  <data name="InfoDisclaimer" xml:space="preserve">
+    <value>Nota: a aplicação não faz diagnósticos nem substitui a ajuda de um psicólogo, médico ou serviço de emergência.</value>
+  </data>
+  <data name="DataBackupShareSection" xml:space="preserve">
+    <value>Partilhar</value>
+  </data>
+  <data name="DonatePaymentMethod" xml:space="preserve">
+    <value>Transferência por SBP</value>
+  </data>
+  <data name="SettingsOptionSelected" xml:space="preserve">
+    <value>Selecionado</value>
+  </data>
+  <data name="SettingsOptionSelectHint" xml:space="preserve">
+    <value>Toque para selecionar</value>
+  </data>
+  <data name="SettingsPickerDone" xml:space="preserve"><value>Concluído</value></data>
 </root>

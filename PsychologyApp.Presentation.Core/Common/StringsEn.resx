@@ -163,7 +163,7 @@
     <value>Settings</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Appearance and theme</value>
+    <value>Appearance, language and reminders</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>App</value>
@@ -415,11 +415,17 @@
     <value>Not now</value>
   </data>
 
-  <data name="DonateOpenFailed" xml:space="preserve">
-    <value>Failed to open the donation page</value>
+  <data name="DonateTransferInstructions" xml:space="preserve">
+    <value>In your banking app, choose a transfer by phone number and select Sberbank: {0}. Check the recipient's name and amount before confirming.</value>
+  </data>
+  <data name="DonateCopyNumber" xml:space="preserve">
+    <value>Copy number</value>
+  </data>
+  <data name="DonateNumberCopied" xml:space="preserve">
+    <value>Transfer number copied</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
-    <value>This app is a collection of simple yet powerful techniques to help with stress, fear, doubt, intrusive thoughts, limiting beliefs, and destructive patterns. The methods are well known and time-tested. Some come from NLP or the work of Zivorad Slavinski. These tools can save you time, energy, and money. They do not require deep knowledge of psychology or subconscious reprogramming. We wish you success in your practice!</value>
+    <value>Practices, mood journal, tests and the AI psychologist help you notice how you feel and choose a next step.</value>
   </data>
   <data name="CleanerPrayersPage" xml:space="preserve">
     <value>Prayers</value>
@@ -1169,12 +1175,6 @@
   <data name="ProfileRecommended" xml:space="preserve">
     <value>Recommended</value>
   </data>
-  <data name="ProfileBestQuotes" xml:space="preserve">
-    <value>Favorite quotes</value>
-  </data>
-  <data name="ProfileQuotesSeeAll" xml:space="preserve">
-    <value>All favorite quotes</value>
-  </data>
   <data name="ProfileJourneyTitle" xml:space="preserve">
     <value>Your path</value>
   </data>
@@ -1189,6 +1189,12 @@
   </data>
   <data name="ProfileQuotesEmptyHint" xml:space="preserve">
     <value>Save thoughts you want to remember.</value>
+  </data>
+  <data name="ProfileBestQuotes" xml:space="preserve">
+    <value>Favorite quotes</value>
+  </data>
+  <data name="ProfileQuotesSeeAll" xml:space="preserve">
+    <value>All favorite quotes</value>
   </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Open Quotes tab</value>
@@ -1382,6 +1388,9 @@
   <data name="CrisisHubLead" xml:space="preserve">
     <value>Safety first. This app does not replace emergency care.</value>
   </data>
+  <data name="CrisisHubEmergencyTitle" xml:space="preserve">
+    <value>If your life is at risk</value>
+  </data>
   <data name="CrisisHubSafetyPlanTitle" xml:space="preserve">
     <value>Safety plan</value>
   </data>
@@ -1406,32 +1415,37 @@
   <data name="CrisisHubOpenHelpline" xml:space="preserve">
     <value>Open findahelpline.com</value>
   </data>
+  <data name="CrisisHubOpenHelplineSubtitle" xml:space="preserve">
+    <value>Crisis contacts in your country</value>
+  </data>
+  <data name="CrisisHubOtherActionsTitle" xml:space="preserve">
+    <value>More ways to get support</value>
+  </data>
   <data name="CrisisHubRecheck" xml:space="preserve">
     <value>Recheck how I'm doing</value>
   </data>
   <data name="CrisisHubContinueSoft" xml:space="preserve">
     <value>Return to gentle practices</value>
-  </data>
-  <data name="CrisisHubSpecialistHint" xml:space="preserve">
-    <value>Please consider a psychologist or doctor. Self-help fits mild to moderate states.</value>
-  </data>
-  <data name="DataBackupTitle" xml:space="preserve">
+  </data>  <data name="DataBackupTitle" xml:space="preserve">
     <value>Data</value>
   </data>
+  <data name="OptionsDataSubtitle" xml:space="preserve">
+    <value>Backup and PIN protection</value>
+  </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>All data stays on this device only. Make a backup so you don't lose it.</value>
+    <value>Your entries stay on this device. You can save a separate backup.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
     <value>Export a backup</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>A file with all chats, mood entries, tests and practice history.</value>
+    <value>Save chats, entries, test results and practices</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restore from a backup</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Adds the data from the chosen backup file.</value>
+    <value>Add data from a selected backup</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Summary for a specialist</value>
@@ -1464,25 +1478,19 @@
     <value>Could not delete the data. Please try again.</value>
   </data>
   <data name="AppLockLabel" xml:space="preserve">
-    <value>Unlock with the phone's fingerprint or PIN</value>
+    <value>App PIN lock</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Before showing the journal, chats and notes, the app asks for the phone's unlock: fingerprint, face or PIN. There is no separate PIN to make up or forget.</value>
+    <value>Choose a six-digit PIN. If you forget it, reset it after confirming with your phone's passcode or biometrics.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>First turn on a screen lock in the phone's settings (a PIN, pattern or fingerprint), then come back here.</value>
+    <value>First set a phone screen lock (passcode or biometrics); it is needed to recover your app PIN.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>The app is protected</value>
+    <value>Enter your app PIN</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Unlock with the phone's fingerprint, face or PIN.</value>
-  </data>
-  <data name="AppLockUnlock" xml:space="preserve">
-    <value>Unlock</value>
-  </data>
-  <data name="AppLockHelpTitle" xml:space="preserve">
-    <value>Need help right now?</value>
+    <value>Enter your six-digit PIN to open the app.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1493,6 +1501,66 @@
   <data name="AppLockEnableTitle" xml:space="preserve">
     <value>Turn on unlock protection</value>
   </data>
+  <data name="AppLockSetupTitle" xml:space="preserve">
+    <value>Protect the app</value>
+  </data>
+  <data name="AppLockSetupLead" xml:space="preserve">
+    <value>Create a six-digit PIN. The app will ask for it when you open it.</value>
+  </data>
+  <data name="AppLockConfirmLead" xml:space="preserve">
+    <value>Enter the PIN again to make sure it is correct.</value>
+  </data>
+  <data name="AppLockPinPrompt" xml:space="preserve">
+    <value>Six-digit PIN</value>
+  </data>
+  <data name="AppLockPinEntry" xml:space="preserve">
+    <value>Six-digit app PIN</value>
+  </data>
+  <data name="AppLockCreatePin" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="AppLockConfirmPin" xml:space="preserve">
+    <value>Save PIN</value>
+  </data>
+  <data name="AppLockPinMismatch" xml:space="preserve">
+    <value>The PINs did not match. Create your PIN again.</value>
+  </data>
+  <data name="AppLockPinIncorrect" xml:space="preserve">
+    <value>Incorrect PIN.</value>
+  </data>
+  <data name="AppLockPinLockedOut" xml:space="preserve">
+    <value>Too many attempts. Wait {0} sec.</value>
+  </data>
+  <data name="AppLockPinProgress" xml:space="preserve">
+    <value>{0} of {1} digits entered</value>
+  </data>
+  <data name="AppLockDeletePinDigit" xml:space="preserve">
+    <value>Delete last digit</value>
+  </data>
+  <data name="AppLockEmergencyCall" xml:space="preserve">
+    <value>Emergency call</value>
+  </data>
+  <data name="AppLockForgotPin" xml:space="preserve">
+    <value>Forgot your PIN? Verify your identity</value>
+  </data>
+  <data name="AppLockPinResetLead" xml:space="preserve">
+    <value>Create a new app PIN.</value>
+  </data>
+  <data name="AppLockPinStorageError" xml:space="preserve">
+    <value>The protected PIN could not be read. Confirm your identity to set a new one.</value>
+  </data>
+  <data name="AppLockPhoneUnlockUnavailable" xml:space="preserve">
+    <value>Phone authentication could not open. Check your screen lock and try again.</value>
+  </data>
+  <data name="AdsSupportSubtitle" xml:space="preserve">
+    <value>Helps keep the app free.</value>
+  </data>
+  <data name="AppLockChangePin" xml:space="preserve">
+    <value>Change app PIN</value>
+  </data>
+  <data name="AppLockPinChanged" xml:space="preserve">
+    <value>App PIN changed.</value>
+  </data>
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>File is ready to share</value>
   </data>
@@ -1500,10 +1568,13 @@
     <value>The backup is too large. Remove some history or try exporting without password protection.</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>Error log</value>
+    <value>Email error log</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Share a file of technical errors to help find the cause of a crash. It does not contain your entries.</value>
+    <value>An email to {0} will open with a technical error log attached. Your notes are not included.</value>
+  </data>
+  <data name="ErrorLogEmailBody" xml:space="preserve">
+    <value>Hello, I have attached the technical error log.</value>
   </data>
   <data name="ErrorLogEmptyToast" xml:space="preserve">
     <value>No errors recorded</value>
@@ -4201,7 +4272,10 @@
     <value>Code word</value>
   </data>
   <data name="AdsApplyCode" xml:space="preserve">
-    <value>Apply code</value>
+    <value>Enter code</value>
+  </data>
+  <data name="AdsConfirmCode" xml:space="preserve">
+    <value>Apply</value>
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Future ads are disabled on this device.</value>
@@ -4216,7 +4290,7 @@
     <value>Personalized ads</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>When enabled, the VK SDK may send your advertising ID to select banners. Chats and journal entries are not sent.</value>
+    <value>When enabled, VK may use your advertising ID to choose banners.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Received an ad-free invitation code? Enter it here.</value>
@@ -4225,10 +4299,31 @@
     <value>Banners load automatically in eligible catalogs. An issued code disables future ad requests on this device.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
-    <value>Describe a problem or idea. The app opens your email or SMS app so you can review the message and choose whether to send it.</value>
+    <value>Describe a problem or idea. An email to the address below will open so you can review it before sending.</value>
   </data>
-  <data name="AdsDisclosure" xml:space="preserve">
-    <value>The app automatically loads a banner when you open an eligible catalog. VK may receive your IP address, technical device and app information, and ad request, impression, and click events. When personalized ads are enabled, the SDK may also send an available advertising ID. The exact data depends on the SDK version and device settings. The app does not send chat or journal text, practice answers, test results, or health information to VK. See the privacy policy for details.</value>
+  <data name="ReviewRecipient" xml:space="preserve">
+    <value>To: {0}</value>
+  </data>
+  <data name="AdsDataDetails" xml:space="preserve">
+    <value>How your data is used</value>
+  </data>
+  <data name="AdsDisclosureTitle" xml:space="preserve">
+    <value>Ads and your data</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveTitle" xml:space="preserve">
+    <value>What VK Ads may receive</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
+    <value>When you open an eligible catalog, the app loads a banner. VK may receive your IP address, technical device and app information, and ad request, impression, and click events. If personalization is enabled, the SDK may also send an available advertising ID. The exact data depends on the SDK version and device settings.</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
+    <value>What stays on your device</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceBody" xml:space="preserve">
+    <value>The app does not send chat or journal text, practice answers, test results, or health information to VK Ads.</value>
+  </data>
+  <data name="AdsDisclosureDone" xml:space="preserve">
+    <value>Got it</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Quick actions</value>
@@ -4551,4 +4646,50 @@
   <data name="Asrs6ShadingLegend" xml:space="preserve"><value>Light shading is below the cutoff; darker shading counts toward the result.</value></data>
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Lightly shaded: this answer does not count toward the screening threshold.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Darkly shaded: this answer counts toward the screening threshold.</value></data>
+  <data name="DataBackupIrreversibleSection" xml:space="preserve">
+    <value>Cannot be undone</value>
+  </data>
+  <data name="OptionsPrivacyNote" xml:space="preserve">
+    <value>Personal notes stay on this device.</value>
+  </data>
+  <data name="OptionsFeedbackSubtitle" xml:space="preserve">
+    <value>Report a problem or suggest an idea</value>
+  </data>
+  <data name="InfoTagline" xml:space="preserve">
+    <value>Practices, tests and journal</value>
+  </data>
+  <data name="DataBackupProtectionSection" xml:space="preserve">
+    <value>App protection</value>
+  </data>
+  <data name="DonateMaskedRecipient" xml:space="preserve">
+    <value>Recipient: +7 ••• •••-••-••</value>
+  </data>
+  <data name="DonateBankCheckNote" xml:space="preserve">
+    <value>Confirm the transfer in your banking app.</value>
+  </data>
+  <data name="DataBackupSection" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="InfoPurposeTitle" xml:space="preserve">
+    <value>Everyday support</value>
+  </data>
+  <data name="DonateOpenSber" xml:space="preserve">
+    <value>Open Sber</value>
+  </data>
+  <data name="InfoDisclaimer" xml:space="preserve">
+    <value>Please note: this app does not diagnose or replace help from a psychologist, doctor or emergency service.</value>
+  </data>
+  <data name="DataBackupShareSection" xml:space="preserve">
+    <value>Share</value>
+  </data>
+  <data name="DonatePaymentMethod" xml:space="preserve">
+    <value>Transfer by SBP</value>
+  </data>
+  <data name="SettingsOptionSelected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="SettingsOptionSelectHint" xml:space="preserve">
+    <value>Tap to select</value>
+  </data>
+  <data name="SettingsPickerDone" xml:space="preserve"><value>Done</value></data>
 </root>

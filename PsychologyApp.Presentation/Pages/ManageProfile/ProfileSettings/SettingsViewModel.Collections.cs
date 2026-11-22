@@ -96,10 +96,11 @@ public partial class SettingsViewModel
     private void NotifyLocalizedLabelsChanged()
     {
         OnPropertyChanged(nameof(AdsTitle));
+        OnPropertyChanged(nameof(AdsSupportSubtitle));
+        OnPropertyChanged(nameof(AdsDataDetails));
         OnPropertyChanged(nameof(AdsPersonalizationLabel));
         OnPropertyChanged(nameof(AdsPersonalizationHelp));
         OnPropertyChanged(nameof(AdsHelp));
-        OnPropertyChanged(nameof(AdsDisclosure));
         OnPropertyChanged(nameof(AdsPrivacyPolicyText));
         OnPropertyChanged(nameof(CanOfferAds));
         OnPropertyChanged(nameof(AdCodePlaceholder));

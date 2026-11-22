@@ -24,6 +24,7 @@ public sealed class DataBackupViewModelTests : IDisposable
     private readonly Mock<IToastService> _toasts = new();
     private readonly Mock<IPersonalDataEraser> _eraser = new();
     private readonly Mock<IAppLock> _appLock = new();
+    private readonly Mock<IAppPinCredentialStore> _appPinCredentialStore = new();
     private readonly string _folder = Path.Combine(Path.GetTempPath(), $"backup-vm-{Guid.NewGuid():N}");
 
     public DataBackupViewModelTests()
@@ -39,7 +40,7 @@ public sealed class DataBackupViewModelTests : IDisposable
     public void Dispose() => Directory.Delete(_folder, recursive: true);
 
     private DataBackupViewModel Create() =>
-        new(new Mock<INavigationService>().Object, _backup.Object, _summary.Object, _toasts.Object, new MauiUserPreferencesStore(), _dialogs.Object, _eraser.Object, _appLock.Object);
+        new(new Mock<INavigationService>().Object, _backup.Object, _summary.Object, _toasts.Object, new MauiUserPreferencesStore(), _dialogs.Object, _eraser.Object, _appLock.Object, _appPinCredentialStore.Object);
 
     private static async Task<T> WaitForCancellationAsync<T>(CancellationToken cancellationToken)
     {

@@ -415,10 +415,17 @@ namespace PsychologyApp.Presentation.Shared.Common
     public static partial class UserPreferences
     {
         public static string Persisted { get; set; } = DefaultLanguage;
+        public static bool PersonalizedAdsConsent { get; private set; }
 
-        private static UserPreferencesState Current => new() { Language = Persisted };
+        private static UserPreferencesState Current => new()
+        {
+            Language = Persisted,
+            PersonalizedAdsConsent = PersonalizedAdsConsent
+        };
 
         public static string GetPersistedLanguage() => Persisted;
+
+        public static void SetPersonalizedAdsConsent(bool consent) => PersonalizedAdsConsent = consent;
     }
 }
 

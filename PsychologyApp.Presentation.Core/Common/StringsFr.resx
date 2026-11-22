@@ -163,7 +163,7 @@
     <value>Réglages</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Apparence et thème</value>
+    <value>Apparence, langue et rappels</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Application</value>
@@ -415,11 +415,17 @@
     <value>Pas maintenant</value>
   </data>
 
-  <data name="DonateOpenFailed" xml:space="preserve">
-    <value>Impossible d'ouvrir la page de dons</value>
+  <data name="DonateTransferInstructions" xml:space="preserve">
+    <value>Dans l'application de votre banque, choisissez un virement par numéro de téléphone et sélectionnez Sberbank : {0}. Vérifiez le nom du bénéficiaire et le montant avant de confirmer.</value>
+  </data>
+  <data name="DonateCopyNumber" xml:space="preserve">
+    <value>Copier le numéro</value>
+  </data>
+  <data name="DonateNumberCopied" xml:space="preserve">
+    <value>Numéro de virement copié</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
-    <value>Cette application réunit des techniques simples mais puissantes pour faire face au stress, à la peur, au doute, aux pensées intrusives, aux croyances limitantes et aux schémas destructeurs. Les méthodes sont connues et éprouvées. Certaines viennent de la PNL ou des travaux de Zivorad Slavinski. Ces outils peuvent vous faire gagner du temps, de l'énergie et de l'argent. Ils ne demandent pas de connaissances approfondies en psychologie. Nous vous souhaitons une bonne pratique !</value>
+    <value>Les exercices, le journal d&apos;humeur, les tests et le psychologue IA vous aident à observer votre état et à choisir la suite.</value>
   </data>
   <data name="CleanerPrayersPage" xml:space="preserve">
     <value>Prières</value>
@@ -1169,12 +1175,6 @@
   <data name="ProfileRecommended" xml:space="preserve">
     <value>Recommandé</value>
   </data>
-  <data name="ProfileBestQuotes" xml:space="preserve">
-    <value>Citations favorites</value>
-  </data>
-  <data name="ProfileQuotesSeeAll" xml:space="preserve">
-    <value>Toutes les citations favorites</value>
-  </data>
   <data name="ProfileJourneyTitle" xml:space="preserve">
     <value>Votre parcours</value>
   </data>
@@ -1189,6 +1189,12 @@
   </data>
   <data name="ProfileQuotesEmptyHint" xml:space="preserve">
     <value>Gardez les pensées qui vous aident.</value>
+  </data>
+  <data name="ProfileBestQuotes" xml:space="preserve">
+    <value>Citations favorites</value>
+  </data>
+  <data name="ProfileQuotesSeeAll" xml:space="preserve">
+    <value>Toutes les citations favorites</value>
   </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Ouvrir l'onglet Citations</value>
@@ -1382,6 +1388,9 @@
   <data name="CrisisHubLead" xml:space="preserve">
     <value>La sécurité d'abord. Cette application ne remplace pas les services d'urgence.</value>
   </data>
+  <data name="CrisisHubEmergencyTitle" xml:space="preserve">
+    <value>En cas de danger de mort</value>
+  </data>
   <data name="CrisisHubSafetyPlanTitle" xml:space="preserve">
     <value>Plan de sécurité</value>
   </data>
@@ -1406,32 +1415,37 @@
   <data name="CrisisHubOpenHelpline" xml:space="preserve">
     <value>Ouvrir findahelpline.com</value>
   </data>
+  <data name="CrisisHubOpenHelplineSubtitle" xml:space="preserve">
+    <value>Contacts d'aide dans votre pays</value>
+  </data>
+  <data name="CrisisHubOtherActionsTitle" xml:space="preserve">
+    <value>Autres moyens de trouver de l'aide</value>
+  </data>
   <data name="CrisisHubRecheck" xml:space="preserve">
     <value>Refaire le point sur mon état</value>
   </data>
   <data name="CrisisHubContinueSoft" xml:space="preserve">
     <value>Revenir à des pratiques douces</value>
-  </data>
-  <data name="CrisisHubSpecialistHint" xml:space="preserve">
-    <value>Pensez à consulter un psychologue ou un médecin. L'auto-assistance convient aux états légers à modérés.</value>
-  </data>
-  <data name="DataBackupTitle" xml:space="preserve">
+  </data>  <data name="DataBackupTitle" xml:space="preserve">
     <value>Données</value>
   </data>
+  <data name="OptionsDataSubtitle" xml:space="preserve">
+    <value>Sauvegarde et protection par code PIN</value>
+  </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Toutes les données restent uniquement sur cet appareil. Faites une sauvegarde pour ne pas les perdre.</value>
+    <value>Vos notes restent sur cet appareil. Vous pouvez enregistrer une sauvegarde séparément.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
     <value>Exporter une sauvegarde</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Un fichier avec toutes les discussions, humeurs, tests et l'historique des pratiques.</value>
+    <value>Enregistrer les discussions, notes, résultats de tests et exercices</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Restaurer une sauvegarde</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Ajoute les données du fichier de sauvegarde choisi.</value>
+    <value>Ajouter les données d&apos;une sauvegarde sélectionnée</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Résumé pour un professionnel</value>
@@ -1464,25 +1478,19 @@
     <value>Les données n'ont pas pu être supprimées. Veuillez réessayer.</value>
   </data>
   <data name="AppLockLabel" xml:space="preserve">
-    <value>Déverrouiller avec l'empreinte ou le code du téléphone</value>
+    <value>Verrouillage par code PIN de l’application</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Avant d'afficher le journal, les discussions et les notes, l'application demande le déverrouillage du téléphone : empreinte, visage ou code. Pas de code à inventer ni à oublier.</value>
+    <value>Choisissez un code PIN à six chiffres. En cas d’oubli, réinitialisez-le après vérification avec le code ou la biométrie du téléphone.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Activez d'abord un verrouillage d'écran dans les réglages du téléphone (code, schéma ou empreinte), puis revenez ici.</value>
+    <value>Activez d’abord le verrouillage de l’écran du téléphone ; il sera nécessaire pour récupérer le code de l’application.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>L'application est protégée</value>
+    <value>Saisissez le code de l’application</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Déverrouillez avec l'empreinte, le visage ou le code du téléphone.</value>
-  </data>
-  <data name="AppLockUnlock" xml:space="preserve">
-    <value>Déverrouiller</value>
-  </data>
-  <data name="AppLockHelpTitle" xml:space="preserve">
-    <value>Besoin d'aide tout de suite ?</value>
+    <value>Saisissez votre code à six chiffres pour ouvrir l’application.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1493,6 +1501,66 @@
   <data name="AppLockEnableTitle" xml:space="preserve">
     <value>Activer la protection</value>
   </data>
+  <data name="AppLockSetupTitle" xml:space="preserve">
+    <value>Protégez l’application</value>
+  </data>
+  <data name="AppLockSetupLead" xml:space="preserve">
+    <value>Créez un code PIN à six chiffres. Il sera demandé à l’ouverture de l’application.</value>
+  </data>
+  <data name="AppLockConfirmLead" xml:space="preserve">
+    <value>Saisissez le code une seconde fois pour le confirmer.</value>
+  </data>
+  <data name="AppLockPinPrompt" xml:space="preserve">
+    <value>Code PIN à six chiffres</value>
+  </data>
+  <data name="AppLockPinEntry" xml:space="preserve">
+    <value>Code PIN de l’application à six chiffres</value>
+  </data>
+  <data name="AppLockCreatePin" xml:space="preserve">
+    <value>Continuer</value>
+  </data>
+  <data name="AppLockConfirmPin" xml:space="preserve">
+    <value>Enregistrer le code</value>
+  </data>
+  <data name="AppLockPinMismatch" xml:space="preserve">
+    <value>Les codes ne correspondent pas. Créez un nouveau code.</value>
+  </data>
+  <data name="AppLockPinIncorrect" xml:space="preserve">
+    <value>Code incorrect.</value>
+  </data>
+  <data name="AppLockPinLockedOut" xml:space="preserve">
+    <value>Trop de tentatives. Réessayez dans {0} s.</value>
+  </data>
+  <data name="AppLockPinProgress" xml:space="preserve">
+    <value>{0} chiffre(s) sur {1}</value>
+  </data>
+  <data name="AppLockDeletePinDigit" xml:space="preserve">
+    <value>Supprimer le dernier chiffre</value>
+  </data>
+  <data name="AppLockEmergencyCall" xml:space="preserve">
+    <value>Appel d'urgence</value>
+  </data>
+  <data name="AppLockForgotPin" xml:space="preserve">
+    <value>PIN oublié ? Vérifier votre identité</value>
+  </data>
+  <data name="AppLockPinResetLead" xml:space="preserve">
+    <value>Créez un nouveau code pour l’application.</value>
+  </data>
+  <data name="AppLockPinStorageError" xml:space="preserve">
+    <value>Le code protégé est illisible. Confirmez votre identité pour en définir un nouveau.</value>
+  </data>
+  <data name="AppLockPhoneUnlockUnavailable" xml:space="preserve">
+    <value>L’authentification du téléphone n’a pas pu s’ouvrir. Vérifiez le verrouillage de l’écran et réessayez.</value>
+  </data>
+  <data name="AdsSupportSubtitle" xml:space="preserve">
+    <value>Aide à garder l’application gratuite.</value>
+  </data>
+  <data name="AppLockChangePin" xml:space="preserve">
+    <value>Modifier le code PIN de l’application</value>
+  </data>
+  <data name="AppLockPinChanged" xml:space="preserve">
+    <value>Code PIN de l’application modifié.</value>
+  </data>
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>Le fichier est prêt à être partagé</value>
   </data>
@@ -1500,10 +1568,13 @@
     <value>La sauvegarde est trop volumineuse. Supprimez une partie de l’historique ou exportez-la sans mot de passe.</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>Journal des erreurs</value>
+    <value>Envoyer le journal des erreurs</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Partagez un fichier d'erreurs techniques pour aider à trouver la cause d'un plantage. Il ne contient pas vos entrées.</value>
+    <value>Un e-mail à {0} s’ouvrira avec le journal technique en pièce jointe. Vos notes ne sont pas incluses.</value>
+  </data>
+  <data name="ErrorLogEmailBody" xml:space="preserve">
+    <value>Bonjour, vous trouverez le journal technique des erreurs en pièce jointe.</value>
   </data>
   <data name="ErrorLogEmptyToast" xml:space="preserve">
     <value>Aucune erreur enregistrée</value>
@@ -4201,7 +4272,10 @@
     <value>Code</value>
   </data>
   <data name="AdsApplyCode" xml:space="preserve">
-    <value>Appliquer le code</value>
+    <value>Saisir le code</value>
+  </data>
+  <data name="AdsConfirmCode" xml:space="preserve">
+    <value>Valider</value>
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Les futures publicités sont désactivées sur cet appareil.</value>
@@ -4216,7 +4290,7 @@
     <value>Publicités personnalisées</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>Si cette option est activée, le SDK VK peut transmettre votre identifiant publicitaire pour choisir les bannières. Les conversations et le journal ne sont pas transmis.</value>
+    <value>Une fois activée, VK peut utiliser votre identifiant publicitaire pour choisir les bannières.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Avez-vous reçu un code d’invitation pour désactiver la publicité ? Saisissez-le ici.</value>
@@ -4225,10 +4299,31 @@
     <value>Les bannières se chargent automatiquement dans les catalogues concernés. Un code fourni désactive les prochaines requêtes publicitaires sur cet appareil.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
-    <value>Décrivez un problème ou une idée. L’application ouvrira votre messagerie ou vos SMS afin que vous puissiez relire le message et décider de l’envoyer ou non.</value>
+    <value>Décrivez un problème ou une idée. Un e-mail adressé à l’adresse ci-dessous s’ouvrira pour que vous puissiez le relire avant l’envoi.</value>
   </data>
-  <data name="AdsDisclosure" xml:space="preserve">
-    <value>Une bannière se charge automatiquement quand vous ouvrez un catalogue éligible. VK peut recevoir votre adresse IP, des informations techniques sur le téléphone et le logiciel, ainsi que des événements de demande, d’affichage et de clic. Lorsque les publicités personnalisées sont activées, le SDK peut également transmettre un identifiant publicitaire disponible. Les données exactes dépendent de la version du SDK et des réglages du téléphone. Cette application ne transmet pas à VK les textes des conversations ou du journal, les réponses aux exercices, les résultats des tests ni les données de santé. Consultez la politique de confidentialité.</value>
+  <data name="ReviewRecipient" xml:space="preserve">
+    <value>À : {0}</value>
+  </data>
+  <data name="AdsDataDetails" xml:space="preserve">
+    <value>Utilisation de vos données</value>
+  </data>
+  <data name="AdsDisclosureTitle" xml:space="preserve">
+    <value>Publicité et vos données</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveTitle" xml:space="preserve">
+    <value>Ce que VK Ads peut recevoir</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
+    <value>Lorsque vous ouvrez un catalogue compatible, l’application charge une bannière. VK peut recevoir votre adresse IP, des informations techniques sur l’appareil et l’application, ainsi que les événements de demande, d’affichage et de clic. Si la personnalisation est activée, le SDK peut aussi transmettre un identifiant publicitaire disponible. Les données exactes dépendent de la version du SDK et des réglages de l’appareil.</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
+    <value>Ce qui reste sur votre appareil</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceBody" xml:space="preserve">
+    <value>L’application n’envoie pas à VK Ads le texte des conversations ou du journal, les réponses aux pratiques, les résultats des tests ni les données de santé.</value>
+  </data>
+  <data name="AdsDisclosureDone" xml:space="preserve">
+    <value>Compris</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Actions rapides</value>
@@ -4551,4 +4646,50 @@
   <data name="Asrs6ShadingLegend" xml:space="preserve"><value>La teinte claire est sous le seuil ; la teinte plus foncée compte dans le résultat.</value></data>
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Teinte claire : cette réponse ne compte pas dans le seuil du dépistage.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Teinte foncée : cette réponse compte dans le seuil du dépistage.</value></data>
+  <data name="DataBackupIrreversibleSection" xml:space="preserve">
+    <value>Action irréversible</value>
+  </data>
+  <data name="OptionsPrivacyNote" xml:space="preserve">
+    <value>Vos notes personnelles restent sur cet appareil.</value>
+  </data>
+  <data name="OptionsFeedbackSubtitle" xml:space="preserve">
+    <value>Signaler un problème ou proposer une idée</value>
+  </data>
+  <data name="InfoTagline" xml:space="preserve">
+    <value>Exercices, tests et journal</value>
+  </data>
+  <data name="DataBackupProtectionSection" xml:space="preserve">
+    <value>Sécurité de l&apos;application</value>
+  </data>
+  <data name="DonateMaskedRecipient" xml:space="preserve">
+    <value>Bénéficiaire : +7 ••• •••-••-••</value>
+  </data>
+  <data name="DonateBankCheckNote" xml:space="preserve">
+    <value>Confirmez le virement dans votre application bancaire.</value>
+  </data>
+  <data name="DataBackupSection" xml:space="preserve">
+    <value>Sauvegarde</value>
+  </data>
+  <data name="InfoPurposeTitle" xml:space="preserve">
+    <value>Un soutien au quotidien</value>
+  </data>
+  <data name="DonateOpenSber" xml:space="preserve">
+    <value>Ouvrir Sber</value>
+  </data>
+  <data name="InfoDisclaimer" xml:space="preserve">
+    <value>À savoir : cette application ne pose pas de diagnostic et ne remplace pas l&apos;aide d&apos;un psychologue, d&apos;un médecin ou des urgences.</value>
+  </data>
+  <data name="DataBackupShareSection" xml:space="preserve">
+    <value>Partager</value>
+  </data>
+  <data name="DonatePaymentMethod" xml:space="preserve">
+    <value>Virement par SBP</value>
+  </data>
+  <data name="SettingsOptionSelected" xml:space="preserve">
+    <value>Sélectionné</value>
+  </data>
+  <data name="SettingsOptionSelectHint" xml:space="preserve">
+    <value>Touchez pour sélectionner</value>
+  </data>
+  <data name="SettingsPickerDone" xml:space="preserve"><value>Terminé</value></data>
 </root>

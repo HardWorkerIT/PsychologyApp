@@ -9,6 +9,20 @@
              Shell.NavBarIsVisible="False"
              Title="{Binding PageTitle}">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ProfileIconTileStyle" TargetType="Border">
+                <Setter Property="WidthRequest" Value="32" />
+                <Setter Property="HeightRequest" Value="32" />
+                <Setter Property="Padding" Value="6" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <!-- Rows grouped in cards, as the phone's own settings: a card with an icon tile for every row made seven heavy blocks. A row keeps a
          subtitle only when it says what is inside (settings, urgent help), not when it repeats the title. -->
     <Grid
@@ -36,7 +50,9 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenSettingsPageCommand}" />
                             </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="Tune" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Style="{StaticResource ProfileIconTileStyle}">
+                                <ui:MaterialIconView IconName="Tune" IconSize="18" IconColor="{DynamicResource Primary}" />
+                            </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding SettingsTitle}" Style="{StaticResource BodyStyle}" />
                                 <Label Text="{Binding SettingsSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
@@ -52,9 +68,12 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenDataBackupCommand}" />
                             </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="Backup" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Style="{StaticResource ProfileIconTileStyle}">
+                                <ui:MaterialIconView IconName="Backup" IconSize="18" IconColor="{DynamicResource Primary}" />
+                            </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding DataBackupTitle}" Style="{StaticResource BodyStyle}" />
+                                <Label Text="{Binding DataBackupSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                             <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                         </Grid>
@@ -74,7 +93,9 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenCrisisHubCommand}" />
                             </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="HealthAndSafety" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Style="{StaticResource ProfileIconTileStyle}">
+                                <ui:MaterialIconView IconName="HealthAndSafety" IconSize="18" IconColor="{DynamicResource Primary}" />
+                            </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding CrisisTitle}" Style="{StaticResource BodyStyle}" />
                                 <Label Text="{Binding CrisisSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
@@ -98,7 +119,9 @@
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding OpenDonationCommand}" />
                                 </Grid.GestureRecognizers>
-                                <ui:MaterialIconView IconName="Favorite" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                                <Border Style="{StaticResource ProfileIconTileStyle}">
+                                    <ui:MaterialIconView IconName="Favorite" IconSize="18" IconColor="{DynamicResource Primary}" />
+                                </Border>
                                 <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                     <Label Text="{Binding DonationTitle}" Style="{StaticResource BodyStyle}" />
                                     <Label Text="{Binding DonationSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
@@ -115,9 +138,12 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenFeedbackPageCommand}" />
                             </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="Feedback" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Style="{StaticResource ProfileIconTileStyle}">
+                                <ui:MaterialIconView IconName="Feedback" IconSize="18" IconColor="{DynamicResource Primary}" />
+                            </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding FeedbackTitle}" Style="{StaticResource BodyStyle}" />
+                                <Label Text="{Binding FeedbackSubtitle}" Style="{StaticResource CaptionStyle}" MaxLines="2" LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                             <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                         </Grid>
@@ -130,7 +156,9 @@
                             <Grid.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding OpenAboutPageCommand}" />
                             </Grid.GestureRecognizers>
-                            <ui:MaterialIconView IconName="Psychology" IconSize="20" VerticalOptions="Center" IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Border Style="{StaticResource ProfileIconTileStyle}">
+                                <ui:MaterialIconView IconName="Psychology" IconSize="18" IconColor="{DynamicResource Primary}" />
+                            </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                 <Label Text="{Binding AboutTitle}" Style="{StaticResource BodyStyle}" />
                             </VerticalStackLayout>
@@ -139,6 +167,11 @@
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
+
+                <Label Text="{Binding PrivacyNote}"
+                       Style="{StaticResource CaptionStyle}"
+                       Margin="4,0"
+                       SemanticProperties.Description="{Binding PrivacyNote}" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

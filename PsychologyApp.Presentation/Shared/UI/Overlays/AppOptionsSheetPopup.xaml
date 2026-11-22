@@ -27,6 +27,15 @@
                 x:Name="SheetCard"
                 Style="{StaticResource AppOptionsSheetPopupCardStyle}">
                 <VerticalStackLayout Spacing="0">
+                    <Border
+                        x:Name="SheetGrabber"
+                        WidthRequest="36"
+                        HeightRequest="4"
+                        Margin="0,10,0,8"
+                        HorizontalOptions="Center"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 4"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
                     <Label
                         x:Name="TitleLabel"
                         Style="{StaticResource AppOptionsSheetTitleStyle}"

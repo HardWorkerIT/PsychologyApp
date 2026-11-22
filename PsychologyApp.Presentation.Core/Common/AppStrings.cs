@@ -24,20 +24,34 @@ public static partial class AppStrings
     public static string OptionsAboutTitle => R(nameof(OptionsAboutTitle));
     public static string OptionsFeedbackTitle => R(nameof(OptionsFeedbackTitle));
     public static string OptionsDonateTitle => R(nameof(OptionsDonateTitle));
+    public static string OptionsDataSubtitle => R(nameof(OptionsDataSubtitle));
+    public static string OptionsFeedbackSubtitle => R(nameof(OptionsFeedbackSubtitle));
+    public static string OptionsPrivacyNote => R(nameof(OptionsPrivacyNote));
 
     public static string AdsTitle => R(nameof(AdsTitle));
     public static string AdsPersonalizationLabel => R(nameof(AdsPersonalizationLabel));
     public static string AdsPersonalizationHelp => R(nameof(AdsPersonalizationHelp));
+    public static string AdsSupportSubtitle => R(nameof(AdsSupportSubtitle));
+    public static string AdsDataDetails => R(nameof(AdsDataDetails));
     public static string AdsHelp => R(nameof(AdsHelp));
     public static string AdsHelpActive => R(nameof(AdsHelpActive));
-    public static string AdsDisclosure => R(nameof(AdsDisclosure));
+    public static string AdsDisclosureTitle => R(nameof(AdsDisclosureTitle));
+    public static string AdsDisclosureMayReceiveTitle => R(nameof(AdsDisclosureMayReceiveTitle));
+    public static string AdsDisclosureMayReceiveBody => R(nameof(AdsDisclosureMayReceiveBody));
+    public static string AdsDisclosureOnDeviceTitle => R(nameof(AdsDisclosureOnDeviceTitle));
+    public static string AdsDisclosureOnDeviceBody => R(nameof(AdsDisclosureOnDeviceBody));
+    public static string AdsDisclosureDone => R(nameof(AdsDisclosureDone));
     public static string AdsPrivacyPolicy => R(nameof(AdsPrivacyPolicy));
     public static string AdsCodePlaceholder => R(nameof(AdsCodePlaceholder));
     public static string AdsApplyCode => R(nameof(AdsApplyCode));
+    public static string AdsConfirmCode => R(nameof(AdsConfirmCode));
     public static string AdsDisabledStatus => R(nameof(AdsDisabledStatus));
     public static string AdsInvalidCode => R(nameof(AdsInvalidCode));
 
     public static string SettingsTitle => R(nameof(SettingsTitle));
+    public static string SettingsOptionSelected => R(nameof(SettingsOptionSelected));
+    public static string SettingsOptionSelectHint => R(nameof(SettingsOptionSelectHint));
+    public static string SettingsPickerDone => R(nameof(SettingsPickerDone));
     public static string SettingsDesignSection => R(nameof(SettingsDesignSection));
     public static string SettingsFontSection => R(nameof(SettingsFontSection));
     public static string SettingsLanguageLabel => R(nameof(SettingsLanguageLabel));
@@ -106,8 +120,8 @@ public static partial class AppStrings
     public static string ReviewTitle => R(nameof(ReviewTitle));
     public static string ReviewPage => R(nameof(ReviewPage));
     public static string ReviewExplanation => R(nameof(ReviewExplanation));
-    // Without a configured address the message goes to the phone's share sheet, so the text must not promise that support receives it.
     public static string ReviewExplanationShare => R(nameof(ReviewExplanationShare));
+    public static string ReviewRecipient(string email) => F(nameof(ReviewRecipient), email);
     public static string ReviewShareButton => R(nameof(ReviewShareButton));
     public static string ReviewMessagePlaceholder => R(nameof(ReviewMessagePlaceholder));
     public static string ReviewMessageRequired => R(nameof(ReviewMessageRequired));
@@ -126,9 +140,18 @@ public static partial class AppStrings
     public static string DonateButton => R(nameof(DonateButton));
     public static string DonatePromptTitle => R(nameof(DonatePromptTitle));
     public static string DonateNotNow => R(nameof(DonateNotNow));
-    public static string DonateOpenFailed => R(nameof(DonateOpenFailed));
+    public static string DonateTransferInstructions(string phoneNumber) => F(nameof(DonateTransferInstructions), phoneNumber);
+    public static string DonateCopyNumber => R(nameof(DonateCopyNumber));
+    public static string DonateNumberCopied => R(nameof(DonateNumberCopied));
+    public static string DonateOpenSber => R(nameof(DonateOpenSber));
+    public static string DonatePaymentMethod => R(nameof(DonatePaymentMethod));
+    public static string DonateMaskedRecipient => R(nameof(DonateMaskedRecipient));
+    public static string DonateBankCheckNote => R(nameof(DonateBankCheckNote));
 
     public static string InfoAboutBody => R(nameof(InfoAboutBody));
+    public static string InfoTagline => R(nameof(InfoTagline));
+    public static string InfoPurposeTitle => R(nameof(InfoPurposeTitle));
+    public static string InfoDisclaimer => R(nameof(InfoDisclaimer));
 
     public static string CleanerPrayersPage => R(nameof(CleanerPrayersPage));
     public static string CleanerPrayerCollection => R(nameof(CleanerPrayerCollection));
@@ -631,15 +654,15 @@ public static partial class AppStrings
     public static string ProfileTechniquesCompleted => R(nameof(ProfileTechniquesCompleted));
     public static string ProfileFollowers => R(nameof(ProfileFollowers));
     public static string ProfileRecommended => R(nameof(ProfileRecommended));
-    public static string ProfileBestQuotes => R(nameof(ProfileBestQuotes));
-    public static string ProfileQuotesSeeAll => R(nameof(ProfileQuotesSeeAll));
-    public static string ProfileQuotesSeeAllSubtitle => R(nameof(ProfileQuotesSeeAllSubtitle));
-    public static string FormatProfileQuotesPreviewSubtitle(int shown, int total)
     public static string ProfileJourneyTitle => R(nameof(ProfileJourneyTitle));
     public static string ProfileJourneySubtitle => R(nameof(ProfileJourneySubtitle));
     public static string ProfileActivityTitle => R(nameof(ProfileActivityTitle));
     public static string ProfileRecommendationTitle => R(nameof(ProfileRecommendationTitle));
     public static string ProfileQuotesEmptyHint => R(nameof(ProfileQuotesEmptyHint));
+    public static string ProfileBestQuotes => R(nameof(ProfileBestQuotes));
+    public static string ProfileQuotesSeeAll => R(nameof(ProfileQuotesSeeAll));
+    public static string ProfileQuotesSeeAllSubtitle => R(nameof(ProfileQuotesSeeAllSubtitle));
+    public static string FormatProfileQuotesPreviewSubtitle(int shown, int total)
     {
         if (shown <= 0 || total <= 0)
         {
@@ -745,6 +768,7 @@ public static partial class AppStrings
     public static string JournalCrisisPromptDecline => R(nameof(JournalCrisisPromptDecline));
     public static string CrisisHubTitle => R(nameof(CrisisHubTitle));
     public static string CrisisHubLead => R(nameof(CrisisHubLead));
+    public static string CrisisHubEmergencyTitle => R(nameof(CrisisHubEmergencyTitle));
     public static string CrisisHubSafetyPlanTitle => R(nameof(CrisisHubSafetyPlanTitle));
     public static string CrisisHubSafetyPlanStep1 => R(nameof(CrisisHubSafetyPlanStep1));
     public static string CrisisHubSafetyPlanStep2 => R(nameof(CrisisHubSafetyPlanStep2));
@@ -756,11 +780,16 @@ public static partial class AppStrings
     public static string CrisisHubCallHotline(string name, string number) => F(nameof(CrisisHubCallHotline), name, number);
     public static string CrisisHubCallEmergency(string number) => F(nameof(CrisisHubCallEmergency), number);
     public static string CrisisHubOpenHelpline => R(nameof(CrisisHubOpenHelpline));
+    public static string CrisisHubOpenHelplineSubtitle => R(nameof(CrisisHubOpenHelplineSubtitle));
+    public static string CrisisHubOtherActionsTitle => R(nameof(CrisisHubOtherActionsTitle));
     public static string CrisisHubRecheck => R(nameof(CrisisHubRecheck));
     public static string CrisisHubContinueSoft => R(nameof(CrisisHubContinueSoft));
-    public static string CrisisHubSpecialistHint => R(nameof(CrisisHubSpecialistHint));
     public static string DataBackupTitle => R(nameof(DataBackupTitle));
     public static string DataBackupLead => R(nameof(DataBackupLead));
+    public static string DataBackupProtectionSection => R(nameof(DataBackupProtectionSection));
+    public static string DataBackupSection => R(nameof(DataBackupSection));
+    public static string DataBackupShareSection => R(nameof(DataBackupShareSection));
+    public static string DataBackupIrreversibleSection => R(nameof(DataBackupIrreversibleSection));
     public static string DataBackupExportTitle => R(nameof(DataBackupExportTitle));
     public static string DataBackupExportSubtitle => R(nameof(DataBackupExportSubtitle));
     public static string DataBackupImportTitle => R(nameof(DataBackupImportTitle));
@@ -780,18 +809,36 @@ public static partial class AppStrings
     public static string AppLockNoScreenLock => R(nameof(AppLockNoScreenLock));
     public static string AppLockTitle => R(nameof(AppLockTitle));
     public static string AppLockLead => R(nameof(AppLockLead));
-    public static string AppLockUnlock => R(nameof(AppLockUnlock));
-    public static string AppLockHelpTitle => R(nameof(AppLockHelpTitle));
     public static string AppLockPromptTitle => R(nameof(AppLockPromptTitle));
     public static string AppLockPromptSubtitle => R(nameof(AppLockPromptSubtitle));
     public static string AppLockEnableTitle => R(nameof(AppLockEnableTitle));
+    public static string AppLockSetupTitle => R(nameof(AppLockSetupTitle));
+    public static string AppLockSetupLead => R(nameof(AppLockSetupLead));
+    public static string AppLockConfirmLead => R(nameof(AppLockConfirmLead));
+    public static string AppLockPinPrompt => R(nameof(AppLockPinPrompt));
+    public static string AppLockPinEntry => R(nameof(AppLockPinEntry));
+    public static string AppLockPinProgress(int entered, int total) => F(nameof(AppLockPinProgress), entered, total);
+    public static string AppLockDeletePinDigit => R(nameof(AppLockDeletePinDigit));
+    public static string AppLockEmergencyCall => R(nameof(AppLockEmergencyCall));
+    public static string AppLockCreatePin => R(nameof(AppLockCreatePin));
+    public static string AppLockConfirmPin => R(nameof(AppLockConfirmPin));
+    public static string AppLockPinMismatch => R(nameof(AppLockPinMismatch));
+    public static string AppLockPinIncorrect => R(nameof(AppLockPinIncorrect));
+    public static string AppLockPinLockedOut(int seconds) => F(nameof(AppLockPinLockedOut), seconds);
+    public static string AppLockForgotPin => R(nameof(AppLockForgotPin));
+    public static string AppLockPinResetLead => R(nameof(AppLockPinResetLead));
+    public static string AppLockPinStorageError => R(nameof(AppLockPinStorageError));
+    public static string AppLockPhoneUnlockUnavailable => R(nameof(AppLockPhoneUnlockUnavailable));
+    public static string AppLockChangePin => R(nameof(AppLockChangePin));
+    public static string AppLockPinChanged => R(nameof(AppLockPinChanged));
     public static string DataBackupExportedToast => R(nameof(DataBackupExportedToast));
     public static string DataBackupExportTooLargeToast => R(nameof(DataBackupExportTooLargeToast));
     public static string DataBackupImportedToast(int moods, int tests, int completions, int chats, int skipped = 0) => skipped > 0
         ? F("DataBackupImportedToast.1", moods, tests, completions, chats, skipped)
         : F("DataBackupImportedToast.2", moods, tests, completions, chats);
     public static string ErrorLogTitle => R(nameof(ErrorLogTitle));
-    public static string ErrorLogSubtitle => R(nameof(ErrorLogSubtitle));
+    public static string ErrorLogSubtitle(string email) => F(nameof(ErrorLogSubtitle), email);
+    public static string ErrorLogEmailBody => R(nameof(ErrorLogEmailBody));
     public static string ErrorLogEmptyToast => R(nameof(ErrorLogEmptyToast));
     public static string DataBackupImportRolledBackToast => R(nameof(DataBackupImportRolledBackToast));
     public static string BackupProtectTitle => R(nameof(BackupProtectTitle));

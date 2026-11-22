@@ -25,6 +25,8 @@
          improvement/success is always this green, wherever in the app they show up. -->
     <Color x:Key="Danger">#C23A3A</Color>
     <Color x:Key="DangerDark">#E5726B</Color>
+    <Color x:Key="DangerHover">#A82E2E</Color>
+    <Color x:Key="DangerHoverDark">#C75B55</Color>
     <!-- Background of a "see a doctor" note: a soft red that keeps body text readable in both themes (tested). -->
     <Color x:Key="DangerSurface">#FCE8E6</Color>
     <Color x:Key="DangerSurfaceDark">#3B2423</Color>

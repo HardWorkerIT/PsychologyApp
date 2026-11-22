@@ -62,6 +62,8 @@ public partial class SettingPickerRowView : ContentView
 
     public string PickerAccessibilityDescription => $"{LabelText}: {SelectedValueLabel?.Text}";
 
+    public string SelectedOptionLabel => GetDisplayLabel(SelectedItem);
+
     private void OnSelectionAreaTapped(object? sender, TappedEventArgs e)
     {
         if (!IsRowEnabled || ItemsSource is not { Count: > 0 })

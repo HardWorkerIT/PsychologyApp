@@ -52,11 +52,11 @@
 
             <Label Text="{Binding LeadText}" Style="{StaticResource BodyStyle}" />
 
-            <!-- Each part of the plan is a card: what is written, then a full-width field with a small "+". Four big blue "Add" buttons
-                 were the loudest thing on the page and cut the examples in the fields short. -->
-            <Border Style="{StaticResource TestListCardStyle}" Margin="4,0">
+            <!-- Headings sit outside the cards like the rest of Settings; the plan remains user-authored and local. -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding WarningSignsTitle}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" Margin="4,0" />
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
-                    <Label Text="{Binding WarningSignsTitle}" Style="{StaticResource ListRowTitleStyle}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding WarningSigns}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="vm:SafetyPlanTextItem">
@@ -83,10 +83,12 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
-            <Border Style="{StaticResource TestListCardStyle}" Margin="4,0">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding CopingTitle}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" Margin="4,0" />
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
-                    <Label Text="{Binding CopingTitle}" Style="{StaticResource ListRowTitleStyle}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding CopingStrategies}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="vm:SafetyPlanTextItem">
@@ -113,10 +115,12 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
-            <Border Style="{StaticResource TestListCardStyle}" Margin="4,0">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding ReasonsTitle}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" Margin="4,0" />
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
-                    <Label Text="{Binding ReasonsTitle}" Style="{StaticResource ListRowTitleStyle}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reasons}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="vm:SafetyPlanTextItem">
@@ -143,10 +147,12 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
-            <Border Style="{StaticResource TestListCardStyle}" Margin="4,0">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding ContactsTitle}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" Margin="4,0" />
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
-                    <Label Text="{Binding ContactsTitle}" Style="{StaticResource ListRowTitleStyle}" />
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Contacts}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="vm:SafetyPlanContactItem">
@@ -186,6 +192,7 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

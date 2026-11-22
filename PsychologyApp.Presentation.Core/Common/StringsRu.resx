@@ -163,7 +163,7 @@
     <value>Настройки</value>
   </data>
   <data name="OptionsSettingsSubtitle" xml:space="preserve">
-    <value>Оформление и тема</value>
+    <value>Внешний вид, язык и напоминания</value>
   </data>
   <data name="OptionsAppSection" xml:space="preserve">
     <value>Приложение</value>
@@ -415,11 +415,17 @@
     <value>Не сейчас</value>
   </data>
 
-  <data name="DonateOpenFailed" xml:space="preserve">
-    <value>Не удалось открыть страницу пожертвования</value>
+  <data name="DonateTransferInstructions" xml:space="preserve">
+    <value>В приложении банка выберите перевод по номеру телефона и Сбербанк: {0}. Перед подтверждением проверьте имя получателя и сумму.</value>
+  </data>
+  <data name="DonateCopyNumber" xml:space="preserve">
+    <value>Скопировать номер</value>
+  </data>
+  <data name="DonateNumberCopied" xml:space="preserve">
+    <value>Номер для перевода скопирован</value>
   </data>
   <data name="InfoAboutBody" xml:space="preserve">
-    <value>Приложение представляет собой список простых, но в то же время мощных техник, которые помогут вам справиться с такими проблемами, как стресс, страх, сомнения, навязчивые мысли, ограничивающие убеждения и деструктивные установки. Все методики являются общеизвестными и проверены временем. Некоторые взяты из НЛП или трудов Живорада Славинского. Эти инструменты позволят вам сэкономить много времени, сил и денег. Они не потребуют глубоких знаний в области психологии и программирования подсознания. Желаем успеха в проработках!</value>
+    <value>Практики, дневник настроения, тесты и ИИ-психолог помогают замечать своё состояние и выбирать следующий шаг.</value>
   </data>
   <data name="CleanerPrayersPage" xml:space="preserve">
     <value>Молитвы</value>
@@ -1169,12 +1175,6 @@
   <data name="ProfileRecommended" xml:space="preserve">
     <value>Советуем пройти</value>
   </data>
-  <data name="ProfileBestQuotes" xml:space="preserve">
-    <value>Избранные цитаты</value>
-  </data>
-  <data name="ProfileQuotesSeeAll" xml:space="preserve">
-    <value>Все избранные цитаты</value>
-  </data>
   <data name="ProfileJourneyTitle" xml:space="preserve">
     <value>Ваш путь</value>
   </data>
@@ -1189,6 +1189,12 @@
   </data>
   <data name="ProfileQuotesEmptyHint" xml:space="preserve">
     <value>Сохраняйте важные мысли — они будут под рукой.</value>
+  </data>
+  <data name="ProfileBestQuotes" xml:space="preserve">
+    <value>Избранные цитаты</value>
+  </data>
+  <data name="ProfileQuotesSeeAll" xml:space="preserve">
+    <value>Все избранные цитаты</value>
   </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Открыть вкладку «Цитаты»</value>
@@ -1382,6 +1388,9 @@
   <data name="CrisisHubLead" xml:space="preserve">
     <value>Сначала безопасность. Приложение не заменяет экстренную помощь.</value>
   </data>
+  <data name="CrisisHubEmergencyTitle" xml:space="preserve">
+    <value>Если есть угроза жизни</value>
+  </data>
   <data name="CrisisHubSafetyPlanTitle" xml:space="preserve">
     <value>План безопасности</value>
   </data>
@@ -1406,32 +1415,37 @@
   <data name="CrisisHubOpenHelpline" xml:space="preserve">
     <value>Открыть findahelpline.com</value>
   </data>
+  <data name="CrisisHubOpenHelplineSubtitle" xml:space="preserve">
+    <value>Контакты кризисной помощи в вашей стране</value>
+  </data>
+  <data name="CrisisHubOtherActionsTitle" xml:space="preserve">
+    <value>Другие способы получить помощь</value>
+  </data>
   <data name="CrisisHubRecheck" xml:space="preserve">
     <value>Перепроверить состояние</value>
   </data>
   <data name="CrisisHubContinueSoft" xml:space="preserve">
     <value>Вернуться к мягким практикам</value>
-  </data>
-  <data name="CrisisHubSpecialistHint" xml:space="preserve">
-    <value>Рекомендуем обратиться к психологу или врачу. Самопомощь подходит для лёгких и умеренных состояний.</value>
-  </data>
-  <data name="DataBackupTitle" xml:space="preserve">
+  </data>  <data name="DataBackupTitle" xml:space="preserve">
     <value>Данные</value>
   </data>
+  <data name="OptionsDataSubtitle" xml:space="preserve">
+    <value>Резервная копия и защита PIN-кодом</value>
+  </data>
   <data name="DataBackupLead" xml:space="preserve">
-    <value>Все данные хранятся только на этом устройстве. Сделайте копию, чтобы не потерять их.</value>
+    <value>Записи хранятся на устройстве. Резервную копию можно сохранить отдельно.</value>
   </data>
   <data name="DataBackupExportTitle" xml:space="preserve">
     <value>Экспортировать резервную копию</value>
   </data>
   <data name="DataBackupExportSubtitle" xml:space="preserve">
-    <value>Файл со всеми чатами, записями настроения, тестами и практиками.</value>
+    <value>Сохранить чаты, записи, результаты тестов и практик</value>
   </data>
   <data name="DataBackupImportTitle" xml:space="preserve">
     <value>Восстановить из копии</value>
   </data>
   <data name="DataBackupImportSubtitle" xml:space="preserve">
-    <value>Добавит данные из выбранного файла резервной копии.</value>
+    <value>Добавит данные из выбранной резервной копии</value>
   </data>
   <data name="DataBackupSummaryTitle" xml:space="preserve">
     <value>Сводка для специалиста</value>
@@ -1464,25 +1478,19 @@
     <value>Не удалось удалить данные. Попробуйте ещё раз.</value>
   </data>
   <data name="AppLockLabel" xml:space="preserve">
-    <value>Вход по отпечатку или PIN-коду телефона</value>
+    <value>Блокировка PIN-кодом приложения</value>
   </data>
   <data name="AppLockHint" xml:space="preserve">
-    <value>Перед тем как показать дневник, чаты и записи, приложение спросит разблокировку телефона — отпечаток, лицо или PIN. Свой PIN придумывать не нужно, забыть нечего.</value>
+    <value>Выберите PIN из шести цифр. Если забудете, сбросьте его после проверки через PIN-код телефона или биометрию.</value>
   </data>
   <data name="AppLockNoScreenLock" xml:space="preserve">
-    <value>Сначала включите блокировку экрана в настройках телефона (PIN, графический ключ или отпечаток), затем вернитесь сюда.</value>
+    <value>Сначала включите блокировку телефона (PIN, пароль или биометрию) — она понадобится для восстановления PIN приложения.</value>
   </data>
   <data name="AppLockTitle" xml:space="preserve">
-    <value>Приложение защищено</value>
+    <value>Введите PIN приложения</value>
   </data>
   <data name="AppLockLead" xml:space="preserve">
-    <value>Разблокируйте отпечатком, лицом или PIN-кодом телефона.</value>
-  </data>
-  <data name="AppLockUnlock" xml:space="preserve">
-    <value>Разблокировать</value>
-  </data>
-  <data name="AppLockHelpTitle" xml:space="preserve">
-    <value>Нужна помощь прямо сейчас?</value>
+    <value>Введите шестизначный PIN, чтобы открыть приложение.</value>
   </data>
   <data name="AppLockPromptTitle" xml:space="preserve">
     <value>Psychology App</value>
@@ -1493,6 +1501,66 @@
   <data name="AppLockEnableTitle" xml:space="preserve">
     <value>Включить защиту входа</value>
   </data>
+  <data name="AppLockSetupTitle" xml:space="preserve">
+    <value>Защитите приложение</value>
+  </data>
+  <data name="AppLockSetupLead" xml:space="preserve">
+    <value>Создайте PIN из шести цифр. Он будет запрашиваться при входе в приложение.</value>
+  </data>
+  <data name="AppLockConfirmLead" xml:space="preserve">
+    <value>Введите PIN ещё раз, чтобы не ошибиться.</value>
+  </data>
+  <data name="AppLockPinPrompt" xml:space="preserve">
+    <value>Шестизначный PIN</value>
+  </data>
+  <data name="AppLockPinEntry" xml:space="preserve">
+    <value>Шестизначный PIN приложения</value>
+  </data>
+  <data name="AppLockCreatePin" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="AppLockConfirmPin" xml:space="preserve">
+    <value>Сохранить PIN</value>
+  </data>
+  <data name="AppLockPinMismatch" xml:space="preserve">
+    <value>Коды не совпали. Создайте PIN заново.</value>
+  </data>
+  <data name="AppLockPinIncorrect" xml:space="preserve">
+    <value>Неверный PIN.</value>
+  </data>
+  <data name="AppLockPinLockedOut" xml:space="preserve">
+    <value>Слишком много попыток. Подождите {0} сек.</value>
+  </data>
+  <data name="AppLockPinProgress" xml:space="preserve">
+    <value>Введено {0} из {1}</value>
+  </data>
+  <data name="AppLockDeletePinDigit" xml:space="preserve">
+    <value>Удалить последнюю цифру</value>
+  </data>
+  <data name="AppLockEmergencyCall" xml:space="preserve">
+    <value>Экстренный вызов</value>
+  </data>
+  <data name="AppLockForgotPin" xml:space="preserve">
+    <value>Забыли PIN? Подтвердить личность</value>
+  </data>
+  <data name="AppLockPinResetLead" xml:space="preserve">
+    <value>Создайте новый PIN для приложения.</value>
+  </data>
+  <data name="AppLockPinStorageError" xml:space="preserve">
+    <value>Не удалось прочитать защищённый PIN. Подтвердите личность, чтобы задать новый.</value>
+  </data>
+  <data name="AppLockPhoneUnlockUnavailable" xml:space="preserve">
+    <value>Не удалось открыть проверку телефона. Проверьте блокировку экрана и попробуйте ещё раз.</value>
+  </data>
+  <data name="AdsSupportSubtitle" xml:space="preserve">
+    <value>Помогает приложению оставаться бесплатным.</value>
+  </data>
+  <data name="AppLockChangePin" xml:space="preserve">
+    <value>Изменить PIN приложения</value>
+  </data>
+  <data name="AppLockPinChanged" xml:space="preserve">
+    <value>PIN приложения изменён.</value>
+  </data>
   <data name="DataBackupExportedToast" xml:space="preserve">
     <value>Файл готов к отправке</value>
   </data>
@@ -1500,10 +1568,13 @@
     <value>Резервная копия слишком велика. Удалите часть истории или попробуйте экспорт без пароля.</value>
   </data>
   <data name="ErrorLogTitle" xml:space="preserve">
-    <value>Журнал ошибок</value>
+    <value>Отправить журнал ошибок</value>
   </data>
   <data name="ErrorLogSubtitle" xml:space="preserve">
-    <value>Поделиться файлом с техническими ошибками, чтобы помочь найти причину сбоя. Он не содержит ваших записей.</value>
+    <value>Откроется письмо на {0}. В журнале только технические ошибки, личные записи не добавляются.</value>
+  </data>
+  <data name="ErrorLogEmailBody" xml:space="preserve">
+    <value>Здравствуйте! Прикрепляю журнал технических ошибок.</value>
   </data>
   <data name="ErrorLogEmptyToast" xml:space="preserve">
     <value>Ошибок не записано</value>
@@ -4207,7 +4278,10 @@
     <value>Кодовое слово</value>
   </data>
   <data name="AdsApplyCode" xml:space="preserve">
-    <value>Применить код</value>
+    <value>Ввести код</value>
+  </data>
+  <data name="AdsConfirmCode" xml:space="preserve">
+    <value>Применить</value>
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Будущая реклама отключена на этом устройстве.</value>
@@ -4222,7 +4296,7 @@
     <value>Персонализированная реклама</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>При включённой настройке SDK VK может передавать рекламный ID для подбора баннеров. Чаты и дневник не передаются.</value>
+    <value>При включении VK может использовать рекламный ID для подбора баннеров.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Получили код приглашения для отключения рекламы? Введите его здесь.</value>
@@ -4231,10 +4305,31 @@
     <value>Баннеры автоматически загружаются в выбранных каталогах. Выданный код отключает будущие рекламные запросы на этом устройстве.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
-    <value>Опишите проблему или идею. Приложение откроет почту или SMS, где вы сможете проверить сообщение и решить, отправлять ли его.</value>
+    <value>Опишите проблему или идею. Откроется письмо на адрес, указанный ниже. Перед отправкой вы сможете проверить текст.</value>
   </data>
-  <data name="AdsDisclosure" xml:space="preserve">
-    <value>При открытии подходящих каталогов приложение автоматически загружает рекламный баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, а также события запроса, показа и нажатия. При включённой персонализации SDK может дополнительно передать доступный рекламный идентификатор. Состав данных зависит от версии SDK и настроек устройства. Приложение не передаёт VK Ads тексты разговоров и дневника, ответы практик, результаты тестов и сведения о здоровье. Подробнее — в политике конфиденциальности.</value>
+  <data name="ReviewRecipient" xml:space="preserve">
+    <value>Кому: {0}</value>
+  </data>
+  <data name="AdsDataDetails" xml:space="preserve">
+    <value>Как используются данные</value>
+  </data>
+  <data name="AdsDisclosureTitle" xml:space="preserve">
+    <value>Реклама и ваши данные</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveTitle" xml:space="preserve">
+    <value>Что может получать VK Ads</value>
+  </data>
+  <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
+    <value>При открытии подходящих каталогов приложение загружает баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, а также события запроса, показа и нажатия. Если включена персонализация, SDK может дополнительно передать доступный рекламный идентификатор. Точный состав зависит от версии SDK и настроек устройства.</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
+    <value>Что остаётся на телефоне</value>
+  </data>
+  <data name="AdsDisclosureOnDeviceBody" xml:space="preserve">
+    <value>Приложение не передаёт VK Ads тексты чатов и дневника, ответы практик, результаты тестов и сведения о здоровье.</value>
+  </data>
+  <data name="AdsDisclosureDone" xml:space="preserve">
+    <value>Понятно</value>
   </data>
   <data name="NextStepTitle" xml:space="preserve">
     <value>Быстрые действия</value>
@@ -4557,4 +4652,50 @@
   <data name="Asrs6ShadingLegend" xml:space="preserve"><value>Светлая подсветка — ответ ниже порога; более тёмная учитывается в результате.</value></data>
   <data name="Asrs6ShadeLightHint" xml:space="preserve"><value>Светлая подсветка: ответ не учитывается в пороге скрининга.</value></data>
   <data name="Asrs6ShadeDarkHint" xml:space="preserve"><value>Тёмная подсветка: ответ учитывается в пороге скрининга.</value></data>
+  <data name="DataBackupIrreversibleSection" xml:space="preserve">
+    <value>Необратимое действие</value>
+  </data>
+  <data name="OptionsPrivacyNote" xml:space="preserve">
+    <value>Личные записи остаются на устройстве.</value>
+  </data>
+  <data name="OptionsFeedbackSubtitle" xml:space="preserve">
+    <value>Сообщить об ошибке или предложить идею</value>
+  </data>
+  <data name="InfoTagline" xml:space="preserve">
+    <value>Практики, тесты и дневник</value>
+  </data>
+  <data name="DataBackupProtectionSection" xml:space="preserve">
+    <value>Защита приложения</value>
+  </data>
+  <data name="DonateMaskedRecipient" xml:space="preserve">
+    <value>Получатель: +7 ••• •••-••-••</value>
+  </data>
+  <data name="DonateBankCheckNote" xml:space="preserve">
+    <value>Перевод подтверждается в банковском приложении.</value>
+  </data>
+  <data name="DataBackupSection" xml:space="preserve">
+    <value>Резервная копия</value>
+  </data>
+  <data name="InfoPurposeTitle" xml:space="preserve">
+    <value>Для повседневной поддержки</value>
+  </data>
+  <data name="DonateOpenSber" xml:space="preserve">
+    <value>Открыть Сбер</value>
+  </data>
+  <data name="InfoDisclaimer" xml:space="preserve">
+    <value>Важно: приложение не ставит диагноз и не заменяет помощь психолога, врача или экстренной службы.</value>
+  </data>
+  <data name="DataBackupShareSection" xml:space="preserve">
+    <value>Поделиться</value>
+  </data>
+  <data name="DonatePaymentMethod" xml:space="preserve">
+    <value>Перевод по СБП</value>
+  </data>
+  <data name="SettingsOptionSelected" xml:space="preserve">
+    <value>Выбрано</value>
+  </data>
+  <data name="SettingsOptionSelectHint" xml:space="preserve">
+    <value>Нажмите, чтобы выбрать</value>
+  </data>
+  <data name="SettingsPickerDone" xml:space="preserve"><value>Готово</value></data>
 </root>

@@ -1,6 +1,8 @@
 using PsychologyApp.Application.Abstractions.Persistence;
 #if ANDROID
 using PsychologyApp.Presentation.Platforms.Android;
+#elif IOS
+using PsychologyApp.Presentation.Platforms.iOS;
 #endif
 using PsychologyApp.Presentation.App.Routes;
 using PsychologyApp.Presentation.Features.Chat;
@@ -20,6 +22,7 @@ using PsychologyApp.Presentation.Shared.Services.Clipboard;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
+using PsychologyApp.Presentation.Shared.Services.Donations;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
 using PsychologyApp.Presentation.Shared.Services.Speech;
 using PsychologyApp.Presentation.Shared.Services.Security;
@@ -36,6 +39,7 @@ public static class SharedPresentationServiceCollectionExtensions
         services.AddSingleton<IAppClipboardService, AppClipboardService>();
         services.AddSingleton<IPageHost, MauiPageHost>();
         services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<IDonationSupportService, DonationSupportService>();
         services.AddSingleton<ISpeechInput, DeviceSpeechInput>();
         services.AddSingleton<ChipUsageStore>();
         services.AddSingleton<GlobalExceptionHandler>();
@@ -65,6 +69,12 @@ public static class SharedPresentationServiceCollectionExtensions
         services.AddSingleton<IMoodReminderScheduler, AndroidMoodReminderScheduler>();
         services.AddSingleton<IChatReminderScheduler, AndroidChatReminderScheduler>();
         services.AddSingleton<IDeviceAuthenticator, AndroidDeviceAuthenticator>();
+#elif IOS
+        services.AddSingleton<IPracticeReminderScheduler, NullPracticeReminderScheduler>();
+        services.AddSingleton<IQuoteReminderScheduler, NullQuoteReminderScheduler>();
+        services.AddSingleton<IMoodReminderScheduler, NullMoodReminderScheduler>();
+        services.AddSingleton<IChatReminderScheduler, NullChatReminderScheduler>();
+        services.AddSingleton<IDeviceAuthenticator, IosDeviceAuthenticator>();
 #else
         services.AddSingleton<IPracticeReminderScheduler, NullPracticeReminderScheduler>();
         services.AddSingleton<IQuoteReminderScheduler, NullQuoteReminderScheduler>();
@@ -72,6 +82,7 @@ public static class SharedPresentationServiceCollectionExtensions
         services.AddSingleton<IChatReminderScheduler, NullChatReminderScheduler>();
         services.AddSingleton<IDeviceAuthenticator, UnavailableDeviceAuthenticator>();
 #endif
+        services.AddSingleton<IAppPinCredentialStore, PsychologyApp.Presentation.Shared.Platform.MauiAppPinCredentialStore>();
         services.AddSingleton<IDatabaseReadySignal, DatabaseReadySignal>();
         services.AddSingleton<LanguageContentReloader>();
         services.AddSingleton<Func<NavigationContext, INavigationService>>(sp => context =>

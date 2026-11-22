@@ -522,7 +522,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
 
     private readonly TaskCompletionSource _startupCompleted = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    /// <summary>Done once onboarding and the safety gate (risk check or crisis hub) have been shown, if they were due.</summary>
+    /// <summary>Done once onboarding, app lock and the safety gate have completed for this launch.</summary>
     internal Task StartupCompleted => _startupCompleted.Task;
 
     /// <summary>The safety gate is on screen: a tap on a reminder or the widget must not move the person away from it.</summary>
@@ -586,10 +586,10 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
     {
         try
         {
-            // The lock comes first: nothing of the person, not even the onboarding or the safety gate, before the phone's unlock.
-            await _appLock.GuardAsync();
             await _startupCoordinator.InitializeAsync();
             await ShowOnboardingIfNeededAsync();
+            // First-run onboarding is shown before PIN setup; returning users are still locked before the safety gate.
+            await _appLock.GuardAsync();
             await ShowClinicalGateIfNeededAsync();
             SyncRemindersFireAndForget();
         }

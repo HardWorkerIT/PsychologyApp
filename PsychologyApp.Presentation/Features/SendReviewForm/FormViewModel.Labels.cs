@@ -5,17 +5,17 @@ namespace PsychologyApp.Presentation.Features.SendReviewForm;
 public partial class FormViewModel
 {
     public string PageTitle => AppStrings.ReviewTitle;
-    private bool SharesInsteadOfSending => ResolveChannel(_settings) == FeedbackChannel.Share;
-
-    public string ExplanationBody => SharesInsteadOfSending ? AppStrings.ReviewExplanationShare : AppStrings.ReviewExplanation;
+    public string ExplanationBody => AppStrings.ReviewExplanation;
+    public string RecipientText => AppStrings.ReviewRecipient(_settings.ReviewEmailAddress);
     public string MessagePlaceholder => AppStrings.ReviewMessagePlaceholder;
-    public string SendButtonText => SharesInsteadOfSending ? AppStrings.ReviewShareButton : AppStrings.Send;
+    public string SendButtonText => AppStrings.Send;
 
     protected override void RefreshLocalizedProperties()
     {
         Notify(
             nameof(PageTitle),
             nameof(ExplanationBody),
+            nameof(RecipientText),
             nameof(MessagePlaceholder),
             nameof(SendButtonText));
     }

@@ -23,18 +23,70 @@
                     <behaviors:StaggerChildrenBehavior />
                 </VerticalStackLayout.Behaviors>
 
-                <Border Style="{StaticResource BrandCardStyle}" Margin="0">
-                    <VerticalStackLayout Spacing="{StaticResource SectionSpacing}">
-                        <Label
-                            Text="{Binding AboutBody}"
-                            Style="{StaticResource BodyStyle}" />
-                        <BoxView Style="{StaticResource SubtleDividerStyle}" />
-                        <Label
-                            Text="{Binding AppVersionText}"
-                            Style="{StaticResource CaptionStyle}"
-                            TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-                    </VerticalStackLayout>
+                <VerticalStackLayout Spacing="4" Padding="0,8,0,10" HorizontalOptions="Center">
+                    <Border
+                        WidthRequest="54"
+                        HeightRequest="54"
+                        HorizontalOptions="Center"
+                        BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 17"
+                        AutomationProperties.IsInAccessibleTree="False">
+                        <Label Text="Ψ"
+                               FontSize="28"
+                               FontFamily="{StaticResource SemiBoldFontFamily}"
+                               TextColor="{DynamicResource PrimaryFill}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                    </Border>
+                    <Label Text="{Binding PageTitle}" Style="{StaticResource SectionTitleStyle}" HorizontalTextAlignment="Center" />
+                    <Label Text="{Binding Tagline}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding PurposeTitle}"
+                           Style="{StaticResource CaptionStyle}"
+                           FontFamily="{StaticResource SemiBoldFontFamily}"
+                           Margin="4,0" />
+                    <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
+                        <Label Text="{Binding AboutBody}" Style="{StaticResource BodyStyle}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <Border
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 14">
+                    <Label Text="{Binding Disclaimer}"
+                           Style="{StaticResource CaptionStyle}"
+                           LineBreakMode="WordWrap" />
                 </Border>
+
+                <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0"
+                        SemanticProperties.Description="{Binding PrivacyPolicyTitle}">
+                    <Border.Behaviors>
+                        <behaviors:PressFeedbackBehavior />
+                    </Border.Behaviors>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenPrivacyPolicyCommand}" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="48">
+                        <Border WidthRequest="32" HeightRequest="32" Padding="6"
+                                BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 10" VerticalOptions="Center">
+                            <ui:MaterialIconView IconName="Policy" IconSize="18" IconColor="{DynamicResource Primary}" />
+                        </Border>
+                        <Label Grid.Column="1" Text="{Binding PrivacyPolicyTitle}" Style="{StaticResource BodyStyle}" VerticalOptions="Center" />
+                        <ui:MaterialIconView Grid.Column="2" IconName="ChevronRight" IconSize="18" VerticalOptions="Center"
+                                             IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    </Grid>
+                </Border>
+
+                <Label Text="{Binding AppVersionText}"
+                       Style="{StaticResource CaptionStyle}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,0,0,4" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

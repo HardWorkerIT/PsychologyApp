@@ -2,10 +2,8 @@ namespace PsychologyApp.Presentation.Pages.ManageProfile.AppLock;
 
 public partial class AppLockPage : ContentPage
 {
-    private const int PromptDelayMs = 250;
-
     private readonly AppLockViewModel _viewModel;
-    private bool _prompted;
+    private bool _initialized;
 
     public AppLockPage(AppLockViewModel viewModel)
     {
@@ -16,17 +14,16 @@ public partial class AppLockPage : ContentPage
 
     public Task Unlocked => _viewModel.Unlocked;
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (_prompted)
+        if (_initialized)
         {
             return;
         }
 
-        // The system prompt opens by itself the first time, once the page is on screen; the button is there to try again.
-        _prompted = true;
-        Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(PromptDelayMs), () => _viewModel.UnlockCommand.Execute(null));
+        _initialized = true;
+        await _viewModel.InitializeAsync();
     }
 
     // Back must not step past the lock into the app. Doing nothing would look like a frozen app, so it leaves to the home

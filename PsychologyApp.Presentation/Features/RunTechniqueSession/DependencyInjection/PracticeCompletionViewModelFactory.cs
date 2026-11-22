@@ -4,6 +4,7 @@ using PsychologyApp.Presentation.App.Providers;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Pages.RunTechniqueSession.PracticeCompletion;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Donations;
 
 namespace PsychologyApp.Presentation.Features.RunTechniqueSession.DependencyInjection;
 
@@ -16,6 +17,7 @@ public sealed class PracticeCompletionViewModelFactory(
     IUserProgressService userProgressService,
     NextPracticeResolver nextPracticeResolver,
     ICrisisDetector crisisDetector,
+    IDonationSupportService donationSupportService,
     PsychologyApp.Application.Practice.ITechniqueCatalogService techniqueCatalog,
     Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IPracticeCompletionViewModelFactory
 {
@@ -29,6 +31,7 @@ public sealed class PracticeCompletionViewModelFactory(
             userProgressService,
             nextPracticeResolver,
             crisisDetector,
+            donationSupportService,
             activeDays,
             completedItemKey,
             sessionResultId,

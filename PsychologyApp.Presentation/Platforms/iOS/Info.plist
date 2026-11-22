@@ -47,6 +47,8 @@
 	<string>Чтобы надиктовать ответ вместо набора текста. Речь распознаётся на устройстве. / To dictate answers instead of typing; speech is recognised on the device.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Чтобы превращать надиктованный ответ в текст прямо на устройстве. / To turn dictated answers into text right on the device.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Для восстановления PIN-кода приложения с помощью системной проверки личности. / To recover the app PIN using the device's system authentication.</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/logo.appiconset</string>
 </dict>

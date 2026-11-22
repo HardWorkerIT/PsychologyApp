@@ -56,6 +56,26 @@ public class DialogService(IPageHost pageHost) : IDialogService
         }
     }
 
+    public async Task<bool> AskSheetAsync(string? title, string message, string accept, string cancel, bool isDestructive = false)
+    {
+        if (!TryEnter())
+        {
+            return false;
+        }
+
+        try
+        {
+            Page page = RequireActivePage();
+            var popup = new AppDialogPopup(title, message, accept, cancel, useBottomSheet: true, isDestructive: isDestructive);
+            IPopupResult popupResult = await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
+            return !popupResult.WasDismissedByTappingOutsideOfPopup && popup.DialogResult == true;
+        }
+        finally
+        {
+            Leave();
+        }
+    }
+
     public async Task<string?> PromptTextAsync(string? title, string message, string accept, string cancel, string initialText, int maxLength)
     {
         if (!TryEnter())
@@ -106,6 +126,37 @@ public class DialogService(IPageHost pageHost) : IDialogService
         }
     }
 
+    public async Task<string?> PromptPasswordSheetAsync(string? title, string message, string placeholder, string accept, string cancel)
+    {
+        if (!TryEnter())
+        {
+            return null;
+        }
+
+        try
+        {
+            Page page = RequireActivePage();
+            var popup = new AppDialogPopup(
+                title,
+                message,
+                accept,
+                cancel,
+                new AppDialogInput(placeholder, IsPassword: true),
+                useBottomSheet: true);
+            IPopupResult popupResult = await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
+            if (popupResult.WasDismissedByTappingOutsideOfPopup || popup.DialogResult != true)
+            {
+                return null;
+            }
+
+            return popup.InputText;
+        }
+        finally
+        {
+            Leave();
+        }
+    }
+
     public async Task<string?> PickOptionAsync(string title, IReadOnlyList<string> options, string cancel)
     {
         DialogOptionItem[] items = options.Select(option => new DialogOptionItem(option, option)).ToArray();
@@ -123,6 +174,26 @@ public class DialogService(IPageHost pageHost) : IDialogService
         {
             Page page = RequireActivePage();
             var popup = new AppOptionsSheetPopup(title, options, cancel);
+            await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
+            return popup.SelectedValue;
+        }
+        finally
+        {
+            Leave();
+        }
+    }
+
+    public async Task<string?> PickOptionWithConfirmationAsync(string title, IReadOnlyList<string> options, string accept, string? cancel = null)
+    {
+        if (options.Count == 0 || !TryEnter())
+        {
+            return null;
+        }
+
+        try
+        {
+            Page page = RequireActivePage();
+            var popup = new AppOptionsSheetPopup(title, options, null, accept, cancel);
             await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
             return popup.SelectedValue;
         }

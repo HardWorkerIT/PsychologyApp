@@ -1,4 +1,3 @@
-using Microsoft.Maui.ApplicationModel;
 using PsychologyApp.Application.Conversation;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Practice;
@@ -7,6 +6,7 @@ using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Donations;
 using PsychologyApp.Presentation.Shared.UI.Components;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
@@ -19,6 +19,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private readonly IUserProgressService _userProgressService;
     private readonly NextPracticeResolver _nextPracticeResolver;
     private readonly ICrisisDetector _crisisDetector;
+    private readonly IDonationSupportService _donationSupportService;
     private TechniqueId? _nextTechniqueId;
     private long? _sessionResultId;
     private int? _preIntensity;
@@ -34,6 +35,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         IUserProgressService userProgressService,
         NextPracticeResolver nextPracticeResolver,
         ICrisisDetector crisisDetector,
+        IDonationSupportService donationSupportService,
         int activeDays,
         string? completedItemKey = null,
         long? sessionResultId = null,
@@ -44,6 +46,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         _userProgressService = userProgressService;
         _nextPracticeResolver = nextPracticeResolver;
         _crisisDetector = crisisDetector;
+        _donationSupportService = donationSupportService;
         _moodCheckIn = new PracticeMoodCheckIn(userProgressService);
         _sessionResultId = sessionResultId;
         ActiveDays = activeDays;
@@ -62,7 +65,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         NextPracticeCommand = new AsyncCommand(StartNextPracticeAsync);
         ChooseAnotherPracticeCommand = new AsyncCommand(() => _navigationService.GoBackAsync());
         GoHomeCommand = new AsyncCommand(() => _navigationService.GoToRootAsync());
-        SupportProjectCommand = new AsyncCommand(OpenDonationAsync);
+        SupportProjectCommand = new AsyncCommand(_donationSupportService.ShowTransferInstructionsAsync);
         DismissSupportPromptCommand = new Command(() => ShowSupportPrompt = false);
         CrisisCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
         ToggleAnswersCommand = new Command(() => IsAnswersExpanded = !IsAnswersExpanded);
@@ -520,21 +523,11 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
     }
 
-    private static async Task OpenDonationAsync()
-    {
-        if (DonationConfiguration.SberPaymentUri is not Uri uri)
-        {
-            return;
-        }
-
-        await Browser.Default.OpenAsync(uri.AbsoluteUri, BrowserLaunchMode.SystemPreferred);
-    }
-
     private void TryShowSupportPrompt()
     {
         if (_showSupportPrompt
             || DonationConfiguration.HasShownSupportPrompt
-            || DonationConfiguration.SberPaymentUri is null
+            || !_donationSupportService.CanSupportProject
             || !_sessionOutcomeReviewed
             || _lifetimeCount is null
             || _lifetimeCount.Value < SupportPromptAfterCompletions

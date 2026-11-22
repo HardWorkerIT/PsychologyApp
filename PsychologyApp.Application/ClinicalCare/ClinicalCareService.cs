@@ -11,7 +11,10 @@ public sealed class ClinicalCareService(
     IUserProgressService userProgressService,
     TimeProvider? timeProvider = null) : IClinicalCareService
 {
-    public static readonly TimeSpan DefaultRiskCheckInterval = TimeSpan.FromDays(7);
+    public static readonly TimeSpan DefaultRiskCheckInterval = TimeSpan.FromDays(30);
+
+    private static readonly TimeSpan ElevatedRiskCheckInterval = TimeSpan.FromDays(7);
+    private static readonly TimeSpan CurrentRedRiskWindow = TimeSpan.FromDays(7);
 
     /// <summary>How long a "weekly_scorecard" escalation of one kind is remembered before another may be recorded.</summary>
     private static readonly TimeSpan ScorecardEscalationCooldown = TimeSpan.FromDays(7);
@@ -22,11 +25,11 @@ public sealed class ClinicalCareService(
 
     private DateTime UtcNow => time.GetUtcNow().UtcDateTime;
 
-    /// <summary>An explicit check is the person's own word for a week; after that it says nothing about today.</summary>
+    /// <summary>An explicit red check-in is time-sensitive; after a week it no longer describes today's risk.</summary>
     private bool IsCurrent(RiskAssessmentDTO assessment)
     {
         TimeSpan age = UtcNow - assessment.AssessedAt;
-        return age >= TimeSpan.Zero && age <= DefaultRiskCheckInterval;
+        return age >= TimeSpan.Zero && age <= CurrentRedRiskWindow;
     }
 
     public async Task<RiskAssessmentDTO> AssessRiskAsync(
@@ -93,15 +96,20 @@ public sealed class ClinicalCareService(
             return true;
         }
 
+        // Elevated results keep a weekly follow-up; a green result uses the less frequent routine interval.
+        TimeSpan effectiveMaxAge = latest.RiskLevel is RiskLevel.Green || maxAge <= ElevatedRiskCheckInterval
+            ? maxAge
+            : ElevatedRiskCheckInterval;
+
         // A restored timestamp or a clock correction must not defer a check indefinitely.
         DateTime now = UtcNow;
-        return latest.AssessedAt > now || now - latest.AssessedAt > maxAge;
+        return latest.AssessedAt > now || now - latest.AssessedAt > effectiveMaxAge;
     }
 
     public async Task<bool> ShouldRouteToCrisisHubAsync(CancellationToken cancellationToken = default)
     {
-        // Only a current Red routes to the crisis hub. An old one must not trap the person there on every launch: once it is
-        // older than the check interval the app asks them to check in again instead (IsRiskCheckDueAsync).
+        // Only a recent Red routes to the crisis hub. An old one must not trap the person there: the weekly follow-up asks them
+        // to check in again instead (IsRiskCheckDueAsync), independently from the monthly routine interval.
         RiskAssessmentDTO? latest = await repository.GetLatestRiskAssessmentAsync(cancellationToken).ConfigureAwait(false);
         return latest is { RiskLevel: RiskLevel.Red } && IsCurrent(latest);
     }

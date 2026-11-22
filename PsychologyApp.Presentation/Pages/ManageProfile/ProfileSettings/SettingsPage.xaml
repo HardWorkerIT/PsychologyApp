@@ -26,15 +26,16 @@
                 <behaviors:StaggerChildrenBehavior />
             </VerticalStackLayout.Behaviors>
 
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding DesignSectionTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <Border.Behaviors>
                     <behaviors:ListItemRevealBehavior RevealIndex="0" />
                 </Border.Behaviors>
                 <VerticalStackLayout Spacing="0">
-                    <Label
-                        Text="{Binding DesignSectionTitle}"
-                        Style="{StaticResource SectionTitleStyle}"
-                        Margin="0,0,0,10" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Theme}"
                         LabelText="{Binding ThemeLabel}"
@@ -56,16 +57,18 @@
                         Margin="0,4,0,0" />
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding FontSectionTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <Border.Behaviors>
                     <behaviors:ListItemRevealBehavior RevealIndex="1" />
                 </Border.Behaviors>
                 <VerticalStackLayout Spacing="0">
-                    <Label
-                        Text="{Binding FontSectionTitle}"
-                        Style="{StaticResource SectionTitleStyle}"
-                        Margin="0,0,0,10" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Size}"
                         LabelText="{Binding SizeLabel}"
@@ -80,16 +83,18 @@
                         ShowDivider="False" />
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding PrimaryConcernSectionTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <Border.Behaviors>
                     <behaviors:ListItemRevealBehavior RevealIndex="2" />
                 </Border.Behaviors>
                 <VerticalStackLayout Spacing="0">
-                    <Label
-                        Text="{Binding PrimaryConcernSectionTitle}"
-                        Style="{StaticResource SectionTitleStyle}"
-                        Margin="0,0,0,10" />
                     <ui:SettingPickerRowView
                         LabelKind="{x:Static converters:PreferenceLabelKind.Concern}"
                         LabelText="{Binding PrimaryConcernLabel}"
@@ -107,20 +112,20 @@
                         SelectionRequested="OnSettingSelectionRequested" />
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
+            <VerticalStackLayout Spacing="6" IsVisible="{Binding AreRemindersSupported}">
+                <Label Text="{Binding RemindersSectionTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
             <Border
-                IsVisible="{Binding AreRemindersSupported}"
                 Style="{StaticResource SettingsSectionCardStyle}"
                 Margin="0">
                 <Border.Behaviors>
                     <behaviors:ListItemRevealBehavior RevealIndex="3" />
                 </Border.Behaviors>
                 <VerticalStackLayout Spacing="0">
-                    <Label
-                        Text="{Binding RemindersSectionTitle}"
-                        Style="{StaticResource SectionTitleStyle}"
-                        Margin="0,0,0,10" />
-
                     <ui:SettingSwitchRowView
                         LabelText="{Binding PracticeRemindersLabel}"
                         IsToggled="{Binding PracticeRemindersEnabled}" />
@@ -173,74 +178,113 @@
                         IsRowEnabled="{Binding ChatRemindersEnabled}" />
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
+            <VerticalStackLayout Spacing="6">
+                <Label Text="{Binding TestsSectionTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <Border.Behaviors>
                     <behaviors:ListItemRevealBehavior RevealIndex="4" />
                 </Border.Behaviors>
                 <VerticalStackLayout Spacing="0">
-                    <Label
-                        Text="{Binding TestsSectionTitle}"
-                        Style="{StaticResource SectionTitleStyle}"
-                        Margin="0,0,0,10" />
                     <ui:SettingSwitchRowView
                         LabelText="{Binding QuestionnaireAutoAdvanceLabel}"
                         IsToggled="{Binding QuestionnaireAutoAdvance}"
                         ShowDivider="False" />
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
-            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" IsVisible="{Binding CanOfferAds}">
+            <VerticalStackLayout Spacing="6" IsVisible="{Binding CanOfferAds}">
+                <Label Text="{Binding AdsTitle}"
+                       Style="{StaticResource CaptionStyle}"
+                       FontFamily="{StaticResource SemiBoldFontFamily}"
+                       Margin="4,0" />
+            <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
                 <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                        <Label Text="{Binding AdsTitle}" Style="{StaticResource SectionTitleStyle}" VerticalOptions="Center" />
-                        <Button
-                            Grid.Column="1"
-                            Text="ⓘ"
-                            FontSize="20"
-                            TextColor="{DynamicResource PrimaryFill}"
-                            BackgroundColor="Transparent"
-                            BorderWidth="0"
-                            Padding="0"
-                            WidthRequest="44"
-                            HeightRequest="44"
-                            Command="{Binding ShowAdsDisclosureCommand}"
-                            SemanticProperties.Description="{Binding AdsTitle}" />
-                    </Grid>
+                    <Label
+                        Text="{Binding AdsSupportSubtitle}"
+                        Style="{StaticResource CaptionStyle}"
+                        Margin="0,0,0,2" />
+                    <Border
+                        BackgroundColor="Transparent"
+                        StrokeThickness="0"
+                        MinimumHeightRequest="48"
+                        Padding="4,6"
+                        SemanticProperties.Description="{Binding AdsDataDetails}">
+                        <Border.Behaviors>
+                            <behaviors:PressFeedbackBehavior />
+                        </Border.Behaviors>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAdsDisclosureTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                            <ui:MaterialIconView
+                                IconName="InfoOutline"
+                                IconSize="20"
+                                IconColor="{DynamicResource Primary}"
+                                InputTransparent="True" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding AdsDataDetails}"
+                                Style="{StaticResource BodyStyle}"
+                                TextColor="{DynamicResource Primary}"
+                                VerticalTextAlignment="Center"
+                                InputTransparent="True" />
+                            <ui:MaterialIconView
+                                Grid.Column="2"
+                                IconName="ChevronRight"
+                                IconSize="20"
+                                IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                InputTransparent="True" />
+                        </Grid>
+                    </Border>
                     <ui:SettingSwitchRowView
                         LabelText="{Binding AdsPersonalizationLabel}"
                         IsToggled="{Binding PersonalizedAdsConsent}"
                         ShowDivider="False" />
                     <Label
-                        Text="{Binding AdsPersonalizationHelp}"
-                        Style="{StaticResource CaptionStyle}"
-                        Margin="0,0,0,2" />
-                    <BoxView Style="{StaticResource SettingRowDividerStyle}" Margin="0,2" />
-                    <ui:ButtonView
-                        Variant="Secondary"
-                        IsCompact="True"
-                        BodyText="{Binding ApplyAdCodeText}"
-                        TapCommand="{Binding ApplyAdCodeCommand}"
-                        IsVisible="{Binding CanEnterAdCode}"
-                        HorizontalOptions="Start" />
-                    <Label
                         Text="{Binding AdCodeStatus}"
                         Style="{StaticResource CaptionStyle}"
                         IsVisible="{Binding HasAdCodeStatus}" />
-                    <Button
-                        Text="{Binding AdsPrivacyPolicyText}"
-                        Command="{Binding OpenAdsPrivacyPolicyCommand}"
+                    <ui:ButtonView
+                        IsVisible="{Binding CanEnterAdCode}"
+                        Variant="Secondary"
+                        BodyText="{Binding ApplyAdCodeText}"
+                        TapCommand="{Binding ApplyAdCodeCommand}"
+                        Margin="0,4,0,0" />
+                    <Border
                         BackgroundColor="Transparent"
-                        BorderWidth="0"
-                        Padding="8,4"
+                        StrokeThickness="0"
                         MinimumHeightRequest="44"
-                        HorizontalOptions="Start"
-                        TextColor="{DynamicResource Primary}"
-                        FontSize="{DynamicResource BodyFontSize}"
-                        FontFamily="{StaticResource MediumFontFamily}"
-                        SemanticProperties.Description="{Binding AdsPrivacyPolicyText}" />
+                        SemanticProperties.Description="{Binding AdsPrivacyPolicyText}"
+                        HorizontalOptions="Fill">
+                        <Border.Behaviors>
+                            <behaviors:PressFeedbackBehavior />
+                        </Border.Behaviors>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenAdsPrivacyPolicyCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                            <ui:MaterialIconView
+                                IconName="Policy"
+                                IconSize="18"
+                                IconColor="{DynamicResource Primary}"
+                                VerticalOptions="Center" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding AdsPrivacyPolicyText}"
+                                Style="{StaticResource CaptionStyle}"
+                                TextColor="{DynamicResource Primary}"
+                                VerticalTextAlignment="Center" />
+                        </Grid>
+                    </Border>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
 
             <ui:ButtonView
                 Variant="Secondary"

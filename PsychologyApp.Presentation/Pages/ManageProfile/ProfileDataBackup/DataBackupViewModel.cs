@@ -1,7 +1,9 @@
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Storage;
+using Microsoft.Maui.ApplicationModel.Communication;
 using PsychologyApp.Application.DataBackup;
 using PsychologyApp.Application.ClinicalCare;
+using PsychologyApp.Domain.Base.Constants;
 using PsychologyApp.Presentation.Features.ManageProfile;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
@@ -26,6 +28,7 @@ public sealed class DataBackupViewModel : BaseViewModel
     private readonly IDialogService _dialogService;
     private readonly IPersonalDataEraser _eraser;
     private readonly IAppLock _appLock;
+    private readonly IAppPinCredentialStore _appPinCredentialStore;
     private readonly object _operationCancellationSync = new();
     private readonly HashSet<CancellationTokenSource> _activeOperationCancellations = [];
 
@@ -38,12 +41,17 @@ public sealed class DataBackupViewModel : BaseViewModel
     public ICommand ExportSummaryCommand { get; }
     public ICommand ShareErrorLogCommand { get; }
     public ICommand EraseAllCommand { get; }
+    public ICommand ChangeAppPinCommand { get; }
 
     public string EraseTitle => AppStrings.DataEraseTitle;
     public string EraseSubtitle => AppStrings.DataEraseSubtitle;
 
     public string AppLockLabel => AppStrings.AppLockLabel;
-    public string AppLockHint => AppStrings.AppLockHint;
+    public string AppLockHint => _appLock.Availability == DeviceUnlockAvailability.NoScreenLock
+        ? AppStrings.AppLockNoScreenLock
+        : AppStrings.AppLockHint;
+    public string ChangeAppPinText => AppStrings.AppLockChangePin;
+    public bool IsAppPinManagementVisible => _appLock.IsEnabled;
 
     /// <summary>Hidden where the system prompt does not exist (before Android 10): there is nothing to offer.</summary>
     public bool IsAppLockOffered => _appLock.Availability != DeviceUnlockAvailability.Unsupported;
@@ -70,14 +78,19 @@ public sealed class DataBackupViewModel : BaseViewModel
 
             _appLock.Disable();
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsAppPinManagementVisible));
         }
     }
 
     public string ErrorLogTitle => AppStrings.ErrorLogTitle;
-    public string ErrorLogSubtitle => AppStrings.ErrorLogSubtitle;
+    public string ErrorLogSubtitle => AppStrings.ErrorLogSubtitle(Constants.ReviewEmailAddress);
 
     public string PageTitle => AppStrings.DataBackupTitle;
     public string LeadText => AppStrings.DataBackupLead;
+    public string ProtectionSectionTitle => AppStrings.DataBackupProtectionSection;
+    public string BackupSectionTitle => AppStrings.DataBackupSection;
+    public string ShareSectionTitle => AppStrings.DataBackupShareSection;
+    public string IrreversibleSectionTitle => AppStrings.DataBackupIrreversibleSection;
     public string ExportTitle => AppStrings.DataBackupExportTitle;
     public string ExportSubtitle => AppStrings.DataBackupExportSubtitle;
     public string ImportTitle => AppStrings.DataBackupImportTitle;
@@ -93,7 +106,8 @@ public sealed class DataBackupViewModel : BaseViewModel
         IUserPreferencesStore preferences,
         IDialogService dialogService,
         IPersonalDataEraser eraser,
-        IAppLock appLock)
+        IAppLock appLock,
+        IAppPinCredentialStore appPinCredentialStore)
     {
         BindNavigation(navigationService);
         _backupService = backupService;
@@ -103,6 +117,7 @@ public sealed class DataBackupViewModel : BaseViewModel
         _dialogService = dialogService;
         _eraser = eraser;
         _appLock = appLock;
+        _appPinCredentialStore = appPinCredentialStore;
 
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
         ExportBackupCommand = new AsyncCommand(() => RunCancelableAsync(ExportBackupAsync));
@@ -110,6 +125,7 @@ public sealed class DataBackupViewModel : BaseViewModel
         ExportSummaryCommand = new AsyncCommand(() => RunCancelableAsync(ExportSummaryAsync));
         ShareErrorLogCommand = new AsyncCommand(() => RunCancelableAsync(ShareErrorLogAsync));
         EraseAllCommand = new AsyncCommand(EraseAllAsync);
+        ChangeAppPinCommand = new AsyncCommand(ChangeAppPinAsync);
     }
 
     public void CancelPendingOperations()
@@ -152,6 +168,10 @@ public sealed class DataBackupViewModel : BaseViewModel
         Notify(
             nameof(PageTitle),
             nameof(LeadText),
+            nameof(ProtectionSectionTitle),
+            nameof(BackupSectionTitle),
+            nameof(ShareSectionTitle),
+            nameof(IrreversibleSectionTitle),
             nameof(ExportTitle),
             nameof(ExportSubtitle),
             nameof(ImportTitle),
@@ -163,7 +183,83 @@ public sealed class DataBackupViewModel : BaseViewModel
             nameof(EraseTitle),
             nameof(EraseSubtitle),
             nameof(AppLockLabel),
-            nameof(AppLockHint));
+            nameof(AppLockHint),
+            nameof(ChangeAppPinText));
+    }
+
+    private async Task ChangeAppPinAsync()
+    {
+        if (!_appLock.IsEnabled)
+        {
+            return;
+        }
+
+        string? currentPin = await _dialogService.PromptPasswordSheetAsync(
+            AppStrings.AppLockChangePin,
+            AppStrings.AppLockPinPrompt,
+            AppStrings.AppLockPinPrompt,
+            AppStrings.AppLockCreatePin,
+            AppStrings.Cancel);
+        if (currentPin is null)
+        {
+            return;
+        }
+
+        try
+        {
+            AppPinVerificationResult verification = await _appPinCredentialStore.VerifyPinAsync(currentPin);
+            currentPin = null;
+            if (!verification.IsValid)
+            {
+                string message = verification.IsLockedOut
+                    ? AppStrings.AppLockPinLockedOut(Math.Max(1, (int)Math.Ceiling(verification.RetryAfter.TotalSeconds)))
+                    : AppStrings.AppLockPinIncorrect;
+                await _dialogService.ShowAsync(AppStrings.AppLockChangePin, message);
+                return;
+            }
+
+            string? newPin = await _dialogService.PromptPasswordSheetAsync(
+                AppStrings.AppLockChangePin,
+                AppStrings.AppLockSetupLead,
+                AppStrings.AppLockPinPrompt,
+                AppStrings.AppLockCreatePin,
+                AppStrings.Cancel);
+            if (newPin is null)
+            {
+                return;
+            }
+
+            if (!AppPinPolicy.IsValid(newPin))
+            {
+                await _dialogService.ShowAsync(AppStrings.AppLockChangePin, AppStrings.AppLockSetupLead);
+                return;
+            }
+
+            string? confirmation = await _dialogService.PromptPasswordSheetAsync(
+                AppStrings.AppLockChangePin,
+                AppStrings.AppLockConfirmLead,
+                AppStrings.AppLockPinPrompt,
+                AppStrings.AppLockConfirmPin,
+                AppStrings.Cancel);
+            if (confirmation is null)
+            {
+                return;
+            }
+
+            if (!string.Equals(newPin, confirmation, StringComparison.Ordinal))
+            {
+                await _dialogService.ShowAsync(AppStrings.AppLockChangePin, AppStrings.AppLockPinMismatch);
+                return;
+            }
+
+            await _appPinCredentialStore.SetPinAsync(newPin);
+            await _dialogService.ShowAsync(AppStrings.AppLockChangePin, AppStrings.AppLockPinChanged);
+        }
+        catch (Exception ex)
+        {
+            BestEffort.Report(ex);
+            await _dialogService.ShowAsync(AppStrings.AppLockChangePin, AppStrings.AppLockPinStorageError);
+        }
     }
 
     private async Task EnableAppLockAsync()
@@ -191,6 +287,7 @@ public sealed class DataBackupViewModel : BaseViewModel
 
             // On or not, the switch shows what is really set.
             OnPropertyChanged(nameof(AppLockEnabled));
+            OnPropertyChanged(nameof(IsAppPinManagementVisible));
         }
     }
 
@@ -200,8 +297,8 @@ public sealed class DataBackupViewModel : BaseViewModel
     /// </summary>
     private async Task EraseAllAsync()
     {
-        if (!await _dialogService.AskAsync(AppStrings.DataEraseConfirmTitle, AppStrings.DataEraseConfirmBody, AppStrings.DataEraseConfirmAccept, AppStrings.Cancel)
-            || !await _dialogService.AskAsync(AppStrings.DataEraseFinalTitle, AppStrings.DataEraseFinalBody, AppStrings.DataEraseConfirmAccept, AppStrings.Cancel))
+        if (!await _dialogService.AskSheetAsync(AppStrings.DataEraseConfirmTitle, AppStrings.DataEraseConfirmBody, AppStrings.DataEraseConfirmAccept, AppStrings.Cancel, isDestructive: true)
+            || !await _dialogService.AskSheetAsync(AppStrings.DataEraseFinalTitle, AppStrings.DataEraseFinalBody, AppStrings.DataEraseConfirmAccept, AppStrings.Cancel, isDestructive: true))
         {
             return;
         }
@@ -221,9 +318,10 @@ public sealed class DataBackupViewModel : BaseViewModel
     {
         try
         {
-            string? choice = await _dialogService.PickOptionAsync(
+            string? choice = await _dialogService.PickOptionWithConfirmationAsync(
                 AppStrings.BackupProtectTitle,
                 [AppStrings.BackupProtectWith, AppStrings.BackupProtectWithout],
+                AppStrings.DataBackupExportTitle,
                 AppStrings.Cancel);
             if (choice is null)
             {
@@ -363,7 +461,7 @@ public sealed class DataBackupViewModel : BaseViewModel
     /// <summary>Asks for a new passphrase twice; null when cancelled or when it is too short or the two differ (a toast says which).</summary>
     private async Task<string?> AskNewPassphraseAsync(CancellationToken cancellationToken)
     {
-        string? first = await _dialogService.PromptPasswordAsync(
+        string? first = await _dialogService.PromptPasswordSheetAsync(
             AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseNewBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
         cancellationToken.ThrowIfCancellationRequested();
         if (first is null)
@@ -377,7 +475,7 @@ public sealed class DataBackupViewModel : BaseViewModel
             return null;
         }
 
-        string? second = await _dialogService.PromptPasswordAsync(
+        string? second = await _dialogService.PromptPasswordSheetAsync(
             AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseConfirmBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
         cancellationToken.ThrowIfCancellationRequested();
         if (second is null)
@@ -399,7 +497,7 @@ public sealed class DataBackupViewModel : BaseViewModel
     {
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            string? passphrase = await _dialogService.PromptPasswordAsync(
+            string? passphrase = await _dialogService.PromptPasswordSheetAsync(
                 AppStrings.BackupPassphraseTitle, AppStrings.BackupPassphraseOpenBody, AppStrings.BackupPassphrasePlaceholder, AppStrings.Ok, AppStrings.Cancel);
             cancellationToken.ThrowIfCancellationRequested();
             if (passphrase is null)
@@ -440,7 +538,52 @@ public sealed class DataBackupViewModel : BaseViewModel
             return;
         }
 
-        await ShareTemporaryFileAsync(SharedFileNames.ErrorLog(DateTime.Now), text, AppStrings.ErrorLogTitle, cancellationToken);
+        try
+        {
+            await EmailTemporaryFileAsync(
+                SharedFileNames.ErrorLog(DateTime.Now),
+                text,
+                AppStrings.ErrorLogTitle,
+                Constants.ReviewEmailAddress,
+                cancellationToken);
+        }
+        catch (FeatureNotSupportedException)
+        {
+            _toastService.LongToast(AppStrings.ReviewEmailNotSupported, AppToastKind.Error);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+        catch (Exception)
+        {
+            _toastService.LongToast(AppStrings.ReviewEmailFailed, AppToastKind.Error);
+        }
+    }
+
+    private static async Task EmailTemporaryFileAsync(
+        string fileName,
+        string content,
+        string subject,
+        string recipient,
+        CancellationToken cancellationToken)
+    {
+        string path = Path.Combine(FileSystem.CacheDirectory, fileName);
+        try
+        {
+            await AtomicFileWriter.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await Email.Default.ComposeAsync(new EmailMessage
+            {
+                Subject = subject,
+                Body = AppStrings.ErrorLogEmailBody,
+                To = [recipient],
+                Attachments = [new EmailAttachment(path)]
+            });
+        }
+        finally
+        {
+            TryDelete(path);
+        }
     }
 
     private async Task ExportSummaryAsync(CancellationToken cancellationToken)

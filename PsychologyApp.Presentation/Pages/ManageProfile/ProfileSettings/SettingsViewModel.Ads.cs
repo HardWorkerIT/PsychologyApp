@@ -12,14 +12,16 @@ public partial class SettingsViewModel
     private string _adCode = string.Empty;
 
     public string AdsTitle => AppStrings.AdsTitle;
+    public string AdsSupportSubtitle => AppStrings.AdsSupportSubtitle;
+    public string AdsDataDetails => AppStrings.AdsDataDetails;
     public string AdsPersonalizationLabel => AppStrings.AdsPersonalizationLabel;
     public string AdsPersonalizationHelp => AppStrings.AdsPersonalizationHelp;
     public string AdsHelp => CanOfferAds ? AppStrings.AdsHelpActive : AppStrings.AdsHelp;
-    public string AdsDisclosure => AppStrings.AdsDisclosure;
     public string AdsPrivacyPolicyText => AppStrings.AdsPrivacyPolicy;
     public bool CanOfferAds => OperatingSystem.IsAndroid() && AdvertisingConfiguration.CanOfferAds;
     public string AdCodePlaceholder => AppStrings.AdsCodePlaceholder;
     public string ApplyAdCodeText => AppStrings.AdsApplyCode;
+    public string ConfirmAdCodeText => AppStrings.AdsConfirmCode;
     public bool AdsDisabled => _adsDisabled;
     public bool PersonalizedAdsConsent
     {
@@ -66,11 +68,11 @@ public partial class SettingsViewModel
         AdCode = string.Empty;
         if (string.IsNullOrWhiteSpace(code))
         {
-            code = await _dialogService.PromptPasswordAsync(
+            code = await _dialogService.PromptPasswordSheetAsync(
                 AdsTitle,
                 string.Empty,
                 AdCodePlaceholder,
-                ApplyAdCodeText,
+                ConfirmAdCodeText,
                 AppStrings.Cancel);
         }
 
@@ -91,8 +93,6 @@ public partial class SettingsViewModel
         OnPropertyChanged(nameof(AdCodeStatus));
         OnPropertyChanged(nameof(HasAdCodeStatus));
     }
-
-    private Task ShowAdsDisclosureAsync() => _dialogService.ShowAsync(AdsTitle, AdsDisclosure);
 
     private async Task OpenAdsPrivacyPolicyAsync()
     {

@@ -6,10 +6,13 @@ namespace PsychologyApp.Presentation.Features.ManageProfile;
 
 /// <summary>
 /// Puts the lock screen in front of the app at start and after an absence (<see cref="AppLockPolicy"/>), and takes it away once the
-/// phone's unlock is passed. The switch is kept under its own preference key, apart from the visual settings: saving a theme
+/// app PIN is passed. The switch is kept under its own preference key, apart from the visual settings: saving a theme
 /// rewrites those as a whole, and the lock must never be turned off as a side effect.
 /// </summary>
-public sealed class AppLockCoordinator(IDeviceAuthenticator authenticator, ILogger<AppLockCoordinator> logger) : IAppLock
+public sealed class AppLockCoordinator(
+    IDeviceAuthenticator authenticator,
+    IAppPinCredentialStore pinCredentialStore,
+    ILogger<AppLockCoordinator> logger) : IAppLock
 {
     private const string EnabledKey = "AppLockEnabled";
     private const int WindowWaitStepMs = 50;
@@ -22,7 +25,7 @@ public sealed class AppLockCoordinator(IDeviceAuthenticator authenticator, ILogg
     // would put two lock screens on top of each other.
     private Task? _guard;
 
-    public bool IsEnabled => Preferences.Default.Get(EnabledKey, false);
+    public bool IsEnabled => Preferences.Default.Get(EnabledKey, Availability == DeviceUnlockAvailability.Available);
 
     public DeviceUnlockAvailability Availability => authenticator.Availability;
 
@@ -103,11 +106,11 @@ public sealed class AppLockCoordinator(IDeviceAuthenticator authenticator, ILogg
                 return;
             }
 
-            AppLockPage page = new(new AppLockViewModel(authenticator));
+            AppLockPage page = new(new AppLockViewModel(authenticator, pinCredentialStore));
             await navigation.PushModalAsync(page, animated: false);
             await page.Unlocked;
 
-            // Nothing is expected above it: onboarding and the safety gate start only after the lock is passed.
+            // Onboarding completes before the lock; the safety gate starts after the lock is passed.
             if (navigation.ModalStack.Count > 0 && ReferenceEquals(navigation.ModalStack[^1], page))
             {
                 await navigation.PopModalAsync(animated: false);

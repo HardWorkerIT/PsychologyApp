@@ -8,12 +8,7 @@ using System.Windows.Input;
 
 namespace PsychologyApp.Presentation.Features.SendReviewForm;
 
-public enum FeedbackChannel
-{
-    Email,
-    Sms,
-    Share
-}
+public enum FeedbackChannel { Email }
 
 public partial class FormViewModel : BaseViewModel
 {

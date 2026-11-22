@@ -26,36 +26,4 @@ public partial class FormViewModel
         }
     }
 
-    private async Task OpenSmsComposerAsync(string messageText, string recipient)
-    {
-        try
-        {
-            SmsMessage message = new(messageText, [recipient]);
-            await Sms.Default.ComposeAsync(message);
-        }
-        catch (FeatureNotSupportedException)
-        {
-            await _dialogService.ShowAsync(null, AppStrings.ReviewSmsNotSupported);
-        }
-        catch (Exception)
-        {
-            await _dialogService.ShowAsync(null, AppStrings.ReviewSmsFailed);
-        }
-    }
-
-    private async Task OpenShareSheetAsync(string messageText)
-    {
-        try
-        {
-            await Share.Default.RequestAsync(new ShareTextRequest
-            {
-                Title = AppStrings.ReviewShareTitle,
-                Text = messageText
-            });
-        }
-        catch (Exception)
-        {
-            await _dialogService.ShowAsync(null, AppStrings.ReviewShareFailed);
-        }
-    }
 }
