@@ -13,7 +13,7 @@
 
     <ContentView.ControlTemplate>
         <ControlTemplate x:DataType="self:ProfileTechniqueCardView">
-            <Border Style="{StaticResource ProfileTechniqueCardStyle}">
+            <Border Style="{StaticResource ProfileTechniqueCardStyle}" WidthRequest="{TemplateBinding CardWidth}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{TemplateBinding TapCommand}" />
                 </Border.GestureRecognizers>

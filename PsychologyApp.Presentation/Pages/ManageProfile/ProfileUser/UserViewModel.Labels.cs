@@ -6,13 +6,20 @@ namespace PsychologyApp.Presentation.Pages.ManageProfile.ProfileUser;
 public partial class UserViewModel
 {
     public string PageTitle => AppStrings.ProfileTitle;
+    public string ProfileJourneyTitle => AppStrings.ProfileJourneyTitle;
+    public string ProfileJourneySubtitle => AppStrings.ProfileJourneySubtitle;
+    public string ProfileActivityTitle => AppStrings.ProfileActivityTitle;
+    public string ProfileRecommendationTitle => AppStrings.ProfileRecommendationTitle;
     public string LoadingText => AppStrings.ProfileLoadingText;
     public string TechniquesCompletedLabel => AppStrings.ProfileTechniquesCompleted;
     public string TestsCompletedLabel => AppStrings.ProfileTestsCompleted;
     public string ActiveDaysLabel => AppStrings.ProfileActiveDaysLabel;
+    public string TestsCompletedAccessibilityText => $"{TestsCompletedCount}, {TestsCompletedLabel}";
     public string RecommendedLabel => AppStrings.ProfileRecommended;
     public string BestQuotesLabel => AppStrings.ProfileBestQuotes;
     public string QuotesEmptyText => AppStrings.ProfileQuotesEmpty;
+    public string QuotesEmptyHint => AppStrings.ProfileQuotesEmptyHint;
+    public string QuotesEmptyAccessibilityText => $"{QuotesEmptyText}. {QuotesEmptyHint}. {GoToQuotesTabText}";
     public string GoToQuotesTabText => AppStrings.QuotesGoToTab;
     public string QuotesSectionActionText =>
         ShowQuotesSectionAction ? AppStrings.ProfileQuotesSeeAll : string.Empty;
@@ -42,13 +49,20 @@ public partial class UserViewModel
     {
         Notify(
             nameof(PageTitle),
+            nameof(ProfileJourneyTitle),
+            nameof(ProfileJourneySubtitle),
+            nameof(ProfileActivityTitle),
+            nameof(ProfileRecommendationTitle),
             nameof(LoadingText),
             nameof(TechniquesCompletedLabel),
             nameof(TestsCompletedLabel),
             nameof(ActiveDaysLabel),
+            nameof(TestsCompletedAccessibilityText),
             nameof(RecommendedLabel),
             nameof(BestQuotesLabel),
             nameof(QuotesEmptyText),
+            nameof(QuotesEmptyHint),
+            nameof(QuotesEmptyAccessibilityText),
             nameof(GoToQuotesTabText),
             nameof(QuotesSectionActionText),
             nameof(ShowQuotesSectionAction),

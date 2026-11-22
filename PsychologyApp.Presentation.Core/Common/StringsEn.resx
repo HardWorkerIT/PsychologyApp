@@ -1175,6 +1175,21 @@
   <data name="ProfileQuotesSeeAll" xml:space="preserve">
     <value>All favorite quotes</value>
   </data>
+  <data name="ProfileJourneyTitle" xml:space="preserve">
+    <value>Your path</value>
+  </data>
+  <data name="ProfileJourneySubtitle" xml:space="preserve">
+    <value>Small steps matter.</value>
+  </data>
+  <data name="ProfileActivityTitle" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="ProfileRecommendationTitle" xml:space="preserve">
+    <value>A good place to start</value>
+  </data>
+  <data name="ProfileQuotesEmptyHint" xml:space="preserve">
+    <value>Save thoughts you want to remember.</value>
+  </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Open Quotes tab</value>
   </data>

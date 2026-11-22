@@ -1175,6 +1175,21 @@
   <data name="ProfileQuotesSeeAll" xml:space="preserve">
     <value>Все избранные цитаты</value>
   </data>
+  <data name="ProfileJourneyTitle" xml:space="preserve">
+    <value>Ваш путь</value>
+  </data>
+  <data name="ProfileJourneySubtitle" xml:space="preserve">
+    <value>Небольшие шаги тоже важны.</value>
+  </data>
+  <data name="ProfileActivityTitle" xml:space="preserve">
+    <value>Активность</value>
+  </data>
+  <data name="ProfileRecommendationTitle" xml:space="preserve">
+    <value>Можно начать с малого</value>
+  </data>
+  <data name="ProfileQuotesEmptyHint" xml:space="preserve">
+    <value>Сохраняйте важные мысли — они будут под рукой.</value>
+  </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>Открыть вкладку «Цитаты»</value>
   </data>

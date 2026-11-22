@@ -30,21 +30,44 @@
                     TitleText="{Binding PageTitle}"
                     BackCommand="{Binding Finish}" />
 
-                <!-- The figures in a white card like the cards of the other tabs; the solid blue block was the loudest thing in the app. The
-                     line explaining the week and the date of the last practice under them are gone: the labels say it, and the recent
-                     practices below carry their dates. -->
-                <Border Style="{StaticResource BrandCardStyle}" Margin="0">
-                    <Border.Behaviors>
-                        <behaviors:ListItemRevealBehavior RevealIndex="0" />
-                    </Border.Behaviors>
-                    <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
+                <VerticalStackLayout Spacing="{StaticResource CompactSpacing}" Margin="0,0,0,4">
+                    <Label Text="{Binding ProfileJourneyTitle}" Style="{StaticResource SectionTitleStyle}" />
+                    <Label Text="{Binding ProfileJourneySubtitle}" Style="{StaticResource CaptionStyle}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
+                    <Label
+                        Text="{Binding ProfileActivityTitle}"
+                        Style="{StaticResource CaptionStyle}"
+                        FontFamily="{StaticResource SemiBoldFontFamily}" />
+                    <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0" Padding="12,8">
                         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="{StaticResource CompactSpacing}">
-                            <ui:MetricTileView Grid.Column="0" ValueText="{Binding TechniquesCompletedCount}" LabelText="{Binding TechniquesCompletedLabel}" />
-                            <ui:MetricTileView Grid.Column="1" ValueText="{Binding TestsCompletedCount}" LabelText="{Binding TestsCompletedLabel}" TapCommand="{Binding OpenTestsListCommand}" />
-                            <ui:MetricTileView Grid.Column="2" ValueText="{Binding ActiveDaysCount}" LabelText="{Binding ActiveDaysLabel}" />
+                            <VerticalStackLayout Grid.Column="0" Spacing="2" MinimumHeightRequest="44" VerticalOptions="Center">
+                                <Label Text="{Binding TechniquesCompletedCount}" Style="{StaticResource EmphasisBodyStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" HorizontalTextAlignment="Center" />
+                                <Label Text="{Binding TechniquesCompletedLabel}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout
+                                Grid.Column="1"
+                                Spacing="2"
+                                MinimumHeightRequest="44"
+                                VerticalOptions="Center"
+                                SemanticProperties.Description="{Binding TestsCompletedAccessibilityText}">
+                                <VerticalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenTestsListCommand}" />
+                                </VerticalStackLayout.GestureRecognizers>
+                                <VerticalStackLayout.Behaviors>
+                                    <behaviors:PressFeedbackBehavior />
+                                </VerticalStackLayout.Behaviors>
+                                <Label Text="{Binding TestsCompletedCount}" Style="{StaticResource EmphasisBodyStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" HorizontalTextAlignment="Center" />
+                                <Label Text="{Binding TestsCompletedLabel}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" Spacing="2" MinimumHeightRequest="44" VerticalOptions="Center">
+                                <Label Text="{Binding ActiveDaysCount}" Style="{StaticResource EmphasisBodyStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" HorizontalTextAlignment="Center" />
+                                <Label Text="{Binding ActiveDaysLabel}" Style="{StaticResource CaptionStyle}" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
                         </Grid>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
+                </VerticalStackLayout>
 
                 <!-- The safety self-check stays one tap away; the week review that stood around it repeated the journal. -->
                 <ui:SettingsLinkCardView
@@ -62,10 +85,25 @@
                         TitleText="{Binding PracticeHistoryTitle}"
                         ActionText="{Binding PracticeHistoryActionText}"
                         ActionCommand="{Binding OpenPracticeHistoryCommand}" />
-                    <ui:EmptyStateView
+                    <Border
                         IsVisible="{Binding ShowPracticeHistoryEmpty}"
-                        BodyText="{Binding PracticeHistoryEmpty}"
-                        IconName="History" />
+                        Style="{StaticResource SettingsSectionCardStyle}"
+                        Margin="0"
+                        Padding="14,12">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <ui:MaterialIconView
+                                IconName="History"
+                                IconSize="22"
+                                VerticalOptions="Center"
+                                IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding PracticeHistoryEmpty}"
+                                Style="{StaticResource CaptionStyle}"
+                                VerticalTextAlignment="Center"
+                                LineBreakMode="WordWrap" />
+                        </Grid>
+                    </Border>
                     <VerticalStackLayout
                         IsVisible="{Binding HasPracticeHistory}"
                         BindableLayout.ItemsSource="{Binding PracticeHistory}"
@@ -87,32 +125,23 @@
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
-                    <ui:SectionHeaderView TitleText="{Binding RecommendedLabel}" />
-                    <CollectionView
-                        MinimumHeightRequest="156"
-                        SelectionMode="None"
-                        HorizontalScrollBarVisibility="Never"
-                        ItemsSource="{Binding Techniques}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="{StaticResource ListItemSpacing}" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="technique:TechniqueItem">
-                                <profileUi:ProfileTechniqueCardView
-                                    Image="{Binding Image}"
-                                    IconName="{Binding IconName}"
-                                    Title="{Binding Title}"
-                                    Subtitle="{Binding Subtitle}"
-                                    Theme="{Binding Theme}"
-                                    Flavor="{Binding Flavor}"
-                                    TapCommand="{Binding TapCommand}">
-                                    <profileUi:ProfileTechniqueCardView.Behaviors>
-                                        <behaviors:ListItemRevealBehavior />
-                                    </profileUi:ProfileTechniqueCardView.Behaviors>
-                                </profileUi:ProfileTechniqueCardView>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                    <ui:SectionHeaderView TitleText="{Binding ProfileRecommendationTitle}" />
+                    <profileUi:ProfileTechniqueCardView
+                        IsVisible="{Binding HasFeaturedTechnique}"
+                        HorizontalOptions="Fill"
+                        CardWidth="-1"
+                        Image="{Binding FeaturedTechnique.Image}"
+                        IconName="{Binding FeaturedTechnique.IconName}"
+                        Title="{Binding FeaturedTechnique.Title}"
+                        Subtitle="{Binding FeaturedTechnique.Subtitle}"
+                        Theme="{Binding FeaturedTechnique.MetaText}"
+                        Flavor="{Binding FeaturedTechnique.Flavor}"
+                        TapCommand="{Binding FeaturedTechnique.TapCommand}"
+                        SemanticProperties.Description="{Binding FeaturedTechnique.AccessibilityDescription}">
+                        <profileUi:ProfileTechniqueCardView.Behaviors>
+                            <behaviors:ListItemRevealBehavior />
+                        </profileUi:ProfileTechniqueCardView.Behaviors>
+                    </profileUi:ProfileTechniqueCardView>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="{StaticResource CompactSpacing}">
@@ -128,12 +157,51 @@
                         ProgressText="{Binding QuotesLoadingText}"
                         CancelCommand="{Binding CancelQuotesCommand}" />
 
-                    <ui:EmptyStateView
+                    <Border
                         IsVisible="{Binding ShowQuotesEmpty}"
-                        BodyText="{Binding QuotesEmptyText}"
-                        IconName="FavoriteBorder"
-                        ActionText="{Binding GoToQuotesTabText}"
-                        ActionCommand="{Binding OpenQuotesTabCommand}" />
+                        Style="{StaticResource SettingsSectionCardStyle}"
+                        Margin="0"
+                        Padding="14,12"
+                        SemanticProperties.Description="{Binding QuotesEmptyAccessibilityText}"
+                        SemanticProperties.Hint="{Binding GoToQuotesTabText}">
+                        <Border.Behaviors>
+                            <behaviors:PressFeedbackBehavior />
+                        </Border.Behaviors>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenQuotesTabCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <Border
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                StrokeThickness="0"
+                                BackgroundColor="{DynamicResource PrimaryTint}"
+                                StrokeShape="{DynamicResource UiCornerRadiusCompactShape}"
+                                VerticalOptions="Center">
+                                <ui:MaterialIconView
+                                    IconName="FavoriteBorder"
+                                    IconSize="20"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    IconColor="{DynamicResource Primary}" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding QuotesEmptyText}" Style="{StaticResource ListRowTitleStyle}" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding QuotesEmptyHint}" Style="{StaticResource CaptionStyle}" LineBreakMode="WordWrap" />
+                                <Label
+                                    Text="{Binding GoToQuotesTabText}"
+                                    FontSize="{DynamicResource CaptionFontSize}"
+                                    FontFamily="{StaticResource SemiBoldFontFamily}"
+                                    TextColor="{DynamicResource Primary}" />
+                            </VerticalStackLayout>
+                            <ui:MaterialIconView
+                                Grid.Column="2"
+                                IconName="ChevronRight"
+                                IconSize="20"
+                                VerticalOptions="Center"
+                                IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                        </Grid>
+                    </Border>
 
                     <VerticalStackLayout
                         IsVisible="{Binding ShowQuotesPreview}"

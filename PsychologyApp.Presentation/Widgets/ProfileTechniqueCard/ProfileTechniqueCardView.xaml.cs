@@ -141,6 +141,15 @@ public partial class ProfileTechniqueCardView : ContentView
         set => SetValue(ThemeProperty, value);
     }
 
+    public static readonly BindableProperty CardWidthProperty =
+        BindableProperty.Create(nameof(CardWidth), typeof(double), typeof(ProfileTechniqueCardView), 280d);
+
+    public double CardWidth
+    {
+        get => (double)GetValue(CardWidthProperty);
+        set => SetValue(CardWidthProperty, value);
+    }
+
     public static readonly BindableProperty TapCommandProperty =
         BindableProperty.Create(nameof(TapCommand), typeof(ICommand), typeof(ProfileTechniqueCardView), null);
 

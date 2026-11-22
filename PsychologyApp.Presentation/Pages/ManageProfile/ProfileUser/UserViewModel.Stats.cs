@@ -13,7 +13,11 @@ public partial class UserViewModel
     public string TestsCompletedCount
     {
         get => _tests_completed_count;
-        set => SetProperty(ref _tests_completed_count, value);
+        set
+        {
+            SetProperty(ref _tests_completed_count, value);
+            OnPropertyChanged(nameof(TestsCompletedAccessibilityText));
+        }
     }
 
     private string _active_days_count = "0";

@@ -1175,6 +1175,21 @@
   <data name="ProfileQuotesSeeAll" xml:space="preserve">
     <value>所有收藏的名言</value>
   </data>
+  <data name="ProfileJourneyTitle" xml:space="preserve">
+    <value>你的旅程</value>
+  </data>
+  <data name="ProfileJourneySubtitle" xml:space="preserve">
+    <value>每一步都很重要。</value>
+  </data>
+  <data name="ProfileActivityTitle" xml:space="preserve">
+    <value>活动</value>
+  </data>
+  <data name="ProfileRecommendationTitle" xml:space="preserve">
+    <value>可以从这里开始</value>
+  </data>
+  <data name="ProfileQuotesEmptyHint" xml:space="preserve">
+    <value>收藏想留住的想法，随时可以重温。</value>
+  </data>
   <data name="ProfileQuotesSeeAllSubtitle" xml:space="preserve">
     <value>打开名言标签页</value>
   </data>

@@ -635,6 +635,11 @@ public static partial class AppStrings
     public static string ProfileQuotesSeeAll => R(nameof(ProfileQuotesSeeAll));
     public static string ProfileQuotesSeeAllSubtitle => R(nameof(ProfileQuotesSeeAllSubtitle));
     public static string FormatProfileQuotesPreviewSubtitle(int shown, int total)
+    public static string ProfileJourneyTitle => R(nameof(ProfileJourneyTitle));
+    public static string ProfileJourneySubtitle => R(nameof(ProfileJourneySubtitle));
+    public static string ProfileActivityTitle => R(nameof(ProfileActivityTitle));
+    public static string ProfileRecommendationTitle => R(nameof(ProfileRecommendationTitle));
+    public static string ProfileQuotesEmptyHint => R(nameof(ProfileQuotesEmptyHint));
     {
         if (shown <= 0 || total <= 0)
         {

@@ -125,6 +125,9 @@ public partial class UserViewModel
         {
             Techniques.Add(item);
         }
+
+        OnPropertyChanged(nameof(FeaturedTechnique));
+        OnPropertyChanged(nameof(HasFeaturedTechnique));
     }
 
     private static bool SameHistory(IReadOnlyList<PracticeHistoryItem> current, IReadOnlyList<PracticeHistoryItem> fresh) =>
