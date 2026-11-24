@@ -11,6 +11,8 @@ public interface IAppPinCredentialStore
 
     Task SetPinAsync(string pin);
 
+    Task ClearPinAsync();
+
     Task<AppPinVerificationResult> VerifyPinAsync(string pin);
 }
 

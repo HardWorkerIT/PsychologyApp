@@ -23,10 +23,25 @@ public static class SharedFileNames
     public static string ErrorLog(DateTime localNow) => $"{AppPrefix}errors-{Stamp(localNow)}.log";
 
     /// <summary>
-    /// Whether a file in the cache is one of these. A picked backup the file picker copied there keeps its exported name, so it
-    /// counts as well.
+    /// Includes the temporary files left when an atomic export is interrupted by process termination.
     /// </summary>
-    public static bool IsOwn(string fileName) =>
+    public static bool IsOwn(string fileName)
+    {
+        ReadOnlySpan<char> name = fileName.AsSpan();
+        if (!name.IsEmpty && name[0] == '.' && name.EndsWith(".tmp", StringComparison.OrdinalIgnoreCase))
+        {
+            // AtomicFileWriter stages exports as .{originalName}.{guid:N}.tmp.
+            const int guidLength = 32;
+            int separator = name.Length - ".tmp".Length - guidLength - 1;
+            return separator > 1 && name[separator] == '.'
+                && Guid.TryParseExact(name.Slice(separator + 1, guidLength), "N", out _)
+                && HasSharedPrefix(name[1..separator]);
+        }
+
+        return HasSharedPrefix(name);
+    }
+
+    private static bool HasSharedPrefix(ReadOnlySpan<char> fileName) =>
         fileName.StartsWith(JournalPrefix, StringComparison.OrdinalIgnoreCase)
         || fileName.StartsWith(AppPrefix, StringComparison.OrdinalIgnoreCase)
         || fileName.StartsWith(SummaryPrefix, StringComparison.OrdinalIgnoreCase);

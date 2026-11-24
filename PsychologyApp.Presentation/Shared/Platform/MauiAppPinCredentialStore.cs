@@ -132,6 +132,52 @@ public sealed class MauiAppPinCredentialStore : IAppPinCredentialStore
         }
     }
 
+    public async Task ClearPinAsync()
+    {
+        await _gate.WaitAsync().ConfigureAwait(false);
+        try
+        {
+#if ANDROID
+            await Task.Run(ClearAndroidPin).ConfigureAwait(false);
+#else
+            if (!SecureStorage.Default.Remove(StorageKey)
+                && await SecureStorage.Default.GetAsync(StorageKey).ConfigureAwait(false) is not null)
+            {
+                throw new IOException("The stored app PIN verifier could not be removed.");
+            }
+#endif
+            ClearLockout();
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+#if ANDROID
+    private static void ClearAndroidPin()
+    {
+        // MAUI SecureStorage.Remove uses Apply. Erasure shuts down the process immediately, so use the
+        // same encrypted preferences with Commit to persist the deletion without touching the database key.
+        var context = Microsoft.Maui.ApplicationModel.Platform.AppContext;
+        string alias = $"{context.PackageName}.microsoft.maui.essentials.preferences";
+#pragma warning disable CS0618 // Match the encrypted preference format used by MAUI SecureStorage.
+        using var builder = new AndroidX.Security.Crypto.MasterKey.Builder(context, alias);
+        builder.SetKeyScheme(AndroidX.Security.Crypto.MasterKey.KeyScheme.Aes256Gcm);
+        using var key = builder.Build() ?? throw new IOException("The app secure storage key is unavailable.");
+        using var preferences = AndroidX.Security.Crypto.EncryptedSharedPreferences.Create(context, alias, key,
+            AndroidX.Security.Crypto.EncryptedSharedPreferences.PrefKeyEncryptionScheme.Aes256Siv,
+            AndroidX.Security.Crypto.EncryptedSharedPreferences.PrefValueEncryptionScheme.Aes256Gcm)
+            ?? throw new IOException("The app secure storage is unavailable.");
+#pragma warning restore CS0618
+        using var editor = preferences.Edit();
+        if (editor?.Remove(StorageKey)?.Commit() != true)
+        {
+            throw new IOException("The stored app PIN verifier could not be removed.");
+        }
+    }
+#endif
+
     private static (int Iterations, byte[] Salt, byte[] Hash) ParseRecord(string record)
     {
         string[] parts = record.Split('$');

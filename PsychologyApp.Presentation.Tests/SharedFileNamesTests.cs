@@ -23,9 +23,16 @@ public sealed class SharedFileNamesTests
         Assert.True(SharedFileNames.IsOwn(fileName), fileName);
 
     [Theory]
+    [MemberData(nameof(Shared))]
+    public void An_interrupted_export_is_found_by_the_eraser(string fileName) =>
+        Assert.True(SharedFileNames.IsOwn($".{fileName}.{Guid.NewGuid():N}.tmp"));
+
+    [Theory]
     [InlineData("MaterialIcons-Regular.ttf")]
     [InlineData("3f2a9c.mp3")]
     [InlineData("other.bin")]
+    [InlineData(".psychologyapp-unrelated.tmp")]
+    [InlineData(".other.bin.228b06475fdf47fd92cc92956e13aa0a.tmp")]
     public void Files_that_are_not_the_persons_stay(string fileName) =>
         Assert.False(SharedFileNames.IsOwn(fileName));
 }

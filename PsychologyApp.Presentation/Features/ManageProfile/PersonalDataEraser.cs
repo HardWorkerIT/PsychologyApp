@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Chat;
+using PsychologyApp.Presentation.Shared.Services.Security;
 
 namespace PsychologyApp.Presentation.Features.ManageProfile;
 
@@ -9,13 +10,14 @@ namespace PsychologyApp.Presentation.Features.ManageProfile;
 /// quotes), settings are cleared, the logs are deleted, and so are the app's own files in the cache: an exported journal,
 /// backup, summary or error log waiting to be shared, and a picked backup the file picker copied there. The rest of the cache is
 /// left alone: it holds the icon fonts MAUI unpacks there, the system's compiled code and downloaded music, none of it the
-/// person's. The database key stays: it protects the new, empty file just as well. Android starts a fresh process; on iOS and
+/// person's. The app PIN is removed. The database key stays to protect the new, empty file. Android starts a fresh process; on iOS and
 /// Mac Catalyst, the app replaces its screens and in-memory preferences before returning to onboarding.
 /// </summary>
 public sealed class PersonalDataEraser(
     IDatabaseInitializer database,
     IPersonalDataEraseLifecycle eraseLifecycle,
     IChatService chat,
+    IAppPinCredentialStore pinCredentialStore,
     ILogger<PersonalDataEraser> logger) : IPersonalDataEraser
 {
     // Screens are detached before the database operation on platforms that cannot restart the process. Android exits inside the
@@ -30,13 +32,21 @@ public sealed class PersonalDataEraser(
                 await chatEraseLifecycle.PrepareForEraseAsync();
             }
 
-            await database.RecreateDatabaseAsync(() =>
+            await database.RecreateDatabaseAsync(async () =>
             {
-                DeleteFilesAndSettings();
+                try
+                {
+                    await pinCredentialStore.ClearPinAsync();
+                }
+                finally
+                {
+                    DeleteFilesAndSettings();
+                }
+
+                logger.LogInformation("All personal data was deleted");
 #if ANDROID
                 Restart();
 #endif
-                return Task.CompletedTask;
             }, cancellationToken);
         }
         finally
@@ -60,8 +70,6 @@ public sealed class PersonalDataEraser(
         {
             throw new IOException("Some app-owned files could not be deleted.");
         }
-
-        logger.LogInformation("All personal data was deleted");
     }
 
     private bool DeleteOwnCacheFiles()
