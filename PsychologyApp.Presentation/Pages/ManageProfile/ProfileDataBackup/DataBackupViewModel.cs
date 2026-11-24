@@ -398,32 +398,25 @@ public sealed class DataBackupViewModel : BaseViewModel
     {
         try
         {
-            FileResult? file = await FilePicker.Default.PickAsync(new PickOptions
-            {
-                PickerTitle = AppStrings.DataBackupImportTitle
-            });
-            if (file is null)
-            {
-                return;
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-            // Keep oversized selections out of memory; malformed files are rejected by the backup parser after reading.
-            if (new FileInfo(file.FullPath).Length > BackupService.MaxImportFileBytes)
-            {
-                throw new BackupFormatException("The file is too large to be a backup.");
-            }
-
             string json;
             try
             {
-                // Do not silently replace invalid UTF-8 bytes: this is a restore path, so replacement characters could
-                // corrupt notes and chat messages while still allowing the backup to be imported.
-                json = await File.ReadAllTextAsync(file.FullPath, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true), cancellationToken);
+                FileResult? file = await FilePicker.Default.PickAsync(new PickOptions
+                {
+                    PickerTitle = AppStrings.DataBackupImportTitle
+                });
+                if (file is null)
+                {
+                    return;
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                await using Stream stream = await file.OpenReadAsync();
+                json = await Task.Run(() => BackupFileReader.ReadAsync(stream, cancellationToken), cancellationToken);
             }
-            catch (DecoderFallbackException ex)
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                throw new BackupFormatException("The backup file is not valid UTF-8.", ex);
+                throw new BackupFormatException("The selected backup file could not be read.", ex);
             }
             bool isEncrypted = await Task.Run(() => _backupService.IsEncrypted(json), cancellationToken);
             BackupImportResult? imported = isEncrypted

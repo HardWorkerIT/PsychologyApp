@@ -332,6 +332,9 @@ namespace Microsoft.Maui.Storage
     public sealed class FileResult(string fullPath)
     {
         public string FullPath { get; } = fullPath;
+        public Func<Stream>? OpenStream { get; init; }
+
+        public Task<Stream> OpenReadAsync() => Task.FromResult(OpenStream?.Invoke() ?? File.OpenRead(FullPath));
     }
 
     public sealed class PickOptions

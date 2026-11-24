@@ -189,6 +189,53 @@ public sealed class DataBackupViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task ABackupFromADocumentProviderIsImportedWithoutAFilePath()
+    {
+        FilePicker.Next = new FileResult("content://documents/backup.json")
+        {
+            OpenStream = () => new NonSeekableBackupStream([0xEF, 0xBB, 0xBF, (byte)'{', (byte)'}'])
+        };
+        _backup.Setup(b => b.ImportAsync("{}", It.IsAny<CancellationToken>())).ReturnsAsync(new BackupImportResult(1, 0, 0, 0, 0, false));
+
+        await VmTestHelpers.RunAsync(Create().ImportBackupCommand);
+
+        _backup.Verify(b => b.ImportAsync("{}", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AnInvalidUtf8BackupWithABomIsRejectedBeforeImport()
+    {
+        FilePicker.Next = new FileResult("content://documents/backup.json")
+        {
+            OpenStream = () => new NonSeekableBackupStream([0xEF, 0xBB, 0xBF, 0xFF])
+        };
+
+        await VmTestHelpers.RunAsync(Create().ImportBackupCommand);
+
+        _backup.Verify(b => b.IsEncrypted(It.IsAny<string>()), Times.Never);
+        _backup.Verify(b => b.ImportAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _toasts.Verify(t => t.LongToast(AppStrings.DataBackupImportFailedToast, AppToastKind.Error), Times.Once);
+    }
+
+    private sealed class NonSeekableBackupStream(byte[] content) : MemoryStream(content)
+    {
+        public override bool CanSeek => false;
+
+        public override long Length => throw new NotSupportedException();
+    }
+
+    [Fact]
+    public async Task AnUnreadableSelectedFileDoesNotReportARollback()
+    {
+        FilePicker.Next = new FileResult(Path.Combine(_folder, "unavailable.json"));
+
+        await VmTestHelpers.RunAsync(Create().ImportBackupCommand);
+
+        _backup.Verify(b => b.ImportAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _toasts.Verify(t => t.LongToast(AppStrings.DataBackupImportFailedToast, AppToastKind.Error), Times.Once);
+    }
+
+    [Fact]
     public async Task AProtectedBackupAllowsThreeTriesAtThePassphrase()
     {
         WriteFile("ENC");
