@@ -63,14 +63,18 @@ public sealed class ProfileQuotesLoader(
         Action onFail,
         ICommand openQuotesTabCommand)
     {
-        _loadCts?.Cancel();
-        _loadCts?.Dispose();
-        _loadCts = CancellationTokenSource.CreateLinkedTokenSource(outerToken);
+        CancellationTokenSource? previousLoadCts = _loadCts;
+        _loadCts = null;
+        previousLoadCts?.Cancel();
+        previousLoadCts?.Dispose();
+
+        CancellationTokenSource loadCts = CancellationTokenSource.CreateLinkedTokenSource(outerToken);
+        _loadCts = loadCts;
 
         try
         {
             IEnumerable<Application.Models.QuotDTO> quotDTOs =
-                await quotService.GetFavouritesAsync(count, _loadCts.Token);
+                await quotService.GetFavouritesAsync(count, loadCts.Token);
 
             if (generation != getCurrentGeneration())
             {
@@ -103,6 +107,15 @@ public sealed class ProfileQuotesLoader(
             }
 
             return new ProfileQuotesLoadResult { Status = ProfileQuotesLoadStatus.Failed };
+        }
+        finally
+        {
+            if (ReferenceEquals(_loadCts, loadCts))
+            {
+                _loadCts = null;
+            }
+
+            loadCts.Dispose();
         }
     }
 }

@@ -103,9 +103,22 @@ public partial class DesignerViewModel : BaseViewModel
 
             _initCts?.Cancel();
             _initCts?.Dispose();
-            _initCts = OperationCancellation.CreateSmallTimeoutSource(_settings);
-            await InitAsync(_initCts.Token);
-            _initialized = !IsFail;
+            CancellationTokenSource initCts = OperationCancellation.CreateSmallTimeoutSource(_settings);
+            _initCts = initCts;
+            try
+            {
+                await InitAsync(initCts.Token);
+                _initialized = !IsFail;
+            }
+            finally
+            {
+                if (ReferenceEquals(_initCts, initCts))
+                {
+                    _initCts = null;
+                }
+
+                initCts.Dispose();
+            }
         }
         finally
         {

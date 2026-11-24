@@ -14,8 +14,9 @@ public partial class QuoteViewModel
     {
         _feedLoadCts?.Cancel();
         _feedLoadCts?.Dispose();
-        _feedLoadCts = OperationCancellation.CreateMiddleTimeoutSource(_settings);
-        CancellationToken cancellationToken = _feedLoadCts.Token;
+        CancellationTokenSource loadCts = OperationCancellation.CreateMiddleTimeoutSource(_settings);
+        _feedLoadCts = loadCts;
+        CancellationToken cancellationToken = loadCts.Token;
 
         try
         {
@@ -80,6 +81,15 @@ public partial class QuoteViewModel
 
             _logger.LogError(e, isInitialLoad ? "QuoteViewModel init failed." : "QuoteViewModel feed reload failed.");
             return false;
+        }
+        finally
+        {
+            if (ReferenceEquals(_feedLoadCts, loadCts))
+            {
+                _feedLoadCts = null;
+            }
+
+            loadCts.Dispose();
         }
     }
 

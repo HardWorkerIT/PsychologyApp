@@ -79,13 +79,19 @@ public partial class BaseViewModel
             return;
         }
 
-        _ = Task.Delay(SlowLoadingDelayMilliseconds).ContinueWith(_ =>
+        PsychologyApp.Presentation.Shared.Common.AsyncCommandExtensions.FireAndForget(ShowSlowLoadingAsync(token));
+    }
+
+    private async Task ShowSlowLoadingAsync(int token)
+    {
+        await Task.Delay(SlowLoadingDelayMilliseconds).ConfigureAwait(false);
+        await PsychologyApp.Presentation.Shared.Common.UiThread.RunAsync(() =>
         {
             if (token == _slowLoadingToken && IsLoadingOverlayVisible)
             {
                 IsSlowLoadingVisible = true;
             }
-        }, TaskScheduler.Default);
+        }).ConfigureAwait(false);
     }
 
     protected string _progress_text = string.Empty;

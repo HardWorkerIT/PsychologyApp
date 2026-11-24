@@ -1,3 +1,5 @@
+using PsychologyApp.Presentation.Common;
+
 namespace PsychologyApp.Presentation.Features.ManageQuotes;
 
 public interface IQuotesChangeNotifier
@@ -9,7 +11,25 @@ public interface IQuotesChangeNotifier
 
 public sealed class QuotesChangeNotifier : IQuotesChangeNotifier
 {
-    public event Action? FavoritesChanged;
+    private readonly WeakActionEvent _favoritesChanged = new();
 
-    public void NotifyFavoritesChanged() => FavoritesChanged?.Invoke();
+    public event Action? FavoritesChanged
+    {
+        add
+        {
+            if (value is not null)
+            {
+                _favoritesChanged.Add(value);
+            }
+        }
+        remove
+        {
+            if (value is not null)
+            {
+                _favoritesChanged.Remove(value);
+            }
+        }
+    }
+
+    public void NotifyFavoritesChanged() => _favoritesChanged.Raise();
 }

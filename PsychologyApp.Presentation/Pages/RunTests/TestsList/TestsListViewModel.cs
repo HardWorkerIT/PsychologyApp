@@ -70,9 +70,22 @@ public partial class TestsListViewModel : BaseViewModel
 
             _initCts?.Cancel();
             _initCts?.Dispose();
-            _initCts = OperationCancellation.CreateMiddleTimeoutSource(_settings);
-            await InitAsync(_initCts.Token);
-            _initialized = !IsFail;
+            CancellationTokenSource initCts = OperationCancellation.CreateMiddleTimeoutSource(_settings);
+            _initCts = initCts;
+            try
+            {
+                await InitAsync(initCts.Token);
+                _initialized = !IsFail;
+            }
+            finally
+            {
+                if (ReferenceEquals(_initCts, initCts))
+                {
+                    _initCts = null;
+                }
+
+                initCts.Dispose();
+            }
         }
         finally
         {

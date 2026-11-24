@@ -85,13 +85,26 @@ public partial class TheoryViewModel : BaseViewModel
             _initCts?.Cancel();
             _initCts?.Dispose();
             IOptions<AppSettings>? settings = _settings;
-            _initCts = settings is null
+            CancellationTokenSource initCts = settings is null
                 ? new CancellationTokenSource(TimeSpan.FromSeconds(10))
                 : OperationCancellation.CreateMiddleTimeoutSource(settings);
+            _initCts = initCts;
             string languageKey = AppStrings.Language;
-            await LoadTechniqueContentAsync(_techniqueId.Value, languageKey, _initCts.Token);
-            _initialized = !IsFail
-                && string.Equals(_loadedLanguageKey, AppStrings.Language, StringComparison.Ordinal);
+            try
+            {
+                await LoadTechniqueContentAsync(_techniqueId.Value, languageKey, initCts.Token);
+                _initialized = !IsFail
+                    && string.Equals(_loadedLanguageKey, AppStrings.Language, StringComparison.Ordinal);
+            }
+            finally
+            {
+                if (ReferenceEquals(_initCts, initCts))
+                {
+                    _initCts = null;
+                }
+
+                initCts.Dispose();
+            }
         }
         finally
         {
