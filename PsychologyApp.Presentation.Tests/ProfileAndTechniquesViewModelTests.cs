@@ -151,6 +151,24 @@ public sealed class TechniquesViewModelTests
     }
 
     [Fact]
+    public async Task FailedDatabaseStartupEndsPracticeLoadingAndShowsTheErrorState()
+    {
+        DatabaseReadySignal databaseReady = new();
+        databaseReady.SignalFailed(new InvalidOperationException("database unavailable"));
+        IUserProgressService progress = Mock.Of<IUserProgressService>();
+        IUserPreferencesStore preferences = new InMemoryUserPreferencesStore();
+        TechniquesViewModel viewModel = CreateViewModel(
+            Mock.Of<ITechniqueService>(), Mock.Of<INavigationService>(), CreateDashboardLoader(progress, preferences),
+            progress, preferences: preferences, databaseReady: databaseReady);
+
+        await viewModel.EnsureInitializedAsync();
+
+        Assert.True(viewModel.IsFail);
+        Assert.False(viewModel.IsLoadingOverlayVisible);
+        Assert.False(viewModel.HasInitialized);
+    }
+
+    [Fact]
     public async Task TryOpenPendingTechniqueAsync_NavigatesWhenPendingExists()
     {
         Mock<IUserProgressService> progress = new();
@@ -319,11 +337,9 @@ public sealed class TechniquesViewModelTests
         PracticeDashboardLoader dashboardLoader,
         IUserProgressService userProgressService,
         ITechniqueMessenger? techniqueMessenger = null,
-        IUserPreferencesStore? preferences = null)
+        IUserPreferencesStore? preferences = null,
+        IDatabaseReadySignal? databaseReady = null)
     {
-        Mock<IDatabaseReadySignal> databaseReady = new();
-        databaseReady.Setup(d => d.WaitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-
         return new TechniquesViewModel(
             techniqueService,
             Mock.Of<IToastService>(),
@@ -331,7 +347,7 @@ public sealed class TechniquesViewModelTests
             techniqueMessenger ?? Mock.Of<ITechniqueMessenger>(),
             navigationService,
             new TechniqueListBuilder(userProgressService, TechniqueCatalogTestHelper.CreateGateway()),
-            databaseReady.Object,
+            databaseReady ?? TestDatabaseReady.CreateSignaled(),
             dashboardLoader,
             TechniqueCatalogTestHelper.CreateTodayRecommendationResolver(),
             new TechniquesListInitializer(),

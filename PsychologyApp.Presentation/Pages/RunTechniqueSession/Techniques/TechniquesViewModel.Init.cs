@@ -39,6 +39,11 @@ public partial class TechniquesViewModel
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateMiddleTimeoutSource(_settings);
             await InitAsync(timeoutSource.Token, showLoadingOverlay: false);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "The practice tab could not start loading.");
+            await UiThread.RunAsync(SetFail);
+        }
         finally
         {
             _initGate.Release();

@@ -34,7 +34,16 @@ public sealed class ShellStartupCoordinator(
         {
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateLargeTimeoutSource(settings);
             await startupService.InitializeAsync(timeoutSource.Token);
-            await preferences.RestoreOnboardingConcernAsync(timeoutSource.Token);
+            try
+            {
+                await preferences.RestoreOnboardingConcernAsync(timeoutSource.Token);
+            }
+            catch (Exception ex)
+            {
+                // A missing personalization choice must not mark the already initialized database as unavailable.
+                logger.LogWarning("Could not restore the onboarding preference ({ExceptionType}).", ex.GetType().Name);
+            }
+
             databaseReadySignal.SignalReady();
             startupService.WarmupAsync().FireAndForget();
         }
