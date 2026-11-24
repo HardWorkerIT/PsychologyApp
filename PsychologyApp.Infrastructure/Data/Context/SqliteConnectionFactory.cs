@@ -14,7 +14,7 @@ public sealed class SqliteConnectionFactory : IDbConnectionFactory
     public SqliteConnectionFactory(IDatabaseKeyProvider keyProvider, string? databasePath = null)
     {
         _keyProvider = keyProvider ?? throw new ArgumentNullException(nameof(keyProvider));
-        DatabasePath = databasePath ?? SqlitePaths.GetDatabasePath();
+        DatabasePath = Path.GetFullPath(databasePath ?? SqlitePaths.GetDatabasePath());
         SqliteProvider.EnsureInitialized();
     }
 
@@ -28,7 +28,7 @@ public sealed class SqliteConnectionFactory : IDbConnectionFactory
 
         // No Cache=Shared: shared-cache mode swaps WAL's reader/writer concurrency for table-level locks, and Microsoft
         // advises against combining it with WAL. Pooling already makes opening a fresh connection per operation cheap.
-        var connection = new SqliteConnection($"Data Source={DatabasePath}");
+        var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = DatabasePath }.ToString());
         try
         {
             await connection.OpenAsync(cancellationToken).ConfigureAwait(false);

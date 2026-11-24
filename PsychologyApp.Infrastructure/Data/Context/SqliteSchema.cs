@@ -486,15 +486,12 @@ public static class SqliteSchema
         }
     }
 
-    public static void DeleteDatabaseFiles()
+    internal static void DeleteDatabaseFiles(string path)
     {
-        string path = SqlitePaths.GetDatabasePath();
-        foreach (string file in new[] { path, $"{path}-wal", $"{path}-shm" })
+        // Remove recovery files before the main file so an interrupted reset cannot restore erased records.
+        foreach (string suffix in new[] { "-wal", "-shm", "-journal", SqliteEncryption.PlainCopySuffix, string.Empty })
         {
-            if (File.Exists(file))
-            {
-                File.Delete(file);
-            }
+            File.Delete(path + suffix);
         }
     }
 

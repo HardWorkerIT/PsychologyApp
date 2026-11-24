@@ -11,7 +11,7 @@ namespace PsychologyApp.Infrastructure.Data.Context;
 /// </summary>
 public static partial class SqliteEncryption
 {
-    private const string PlainCopySuffix = ".plain.bak";
+    internal const string PlainCopySuffix = ".plain.bak";
 
     public static bool IsValidKey(string key) => KeyPattern().IsMatch(key);
 
@@ -21,10 +21,7 @@ public static partial class SqliteEncryption
     /// <summary>Applies the key to an open connection; must be the first statement on it.</summary>
     public static async Task ApplyKeyAsync(SqliteConnection connection, string key, CancellationToken cancellationToken = default)
     {
-        if (!IsValidKey(key))
-        {
-            throw new ArgumentException("The database key must be 64 hexadecimal characters.", nameof(key));
-        }
+        ValidateKey(key);
 
         await UseDirectKeyAsync(connection, cancellationToken).ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition($"PRAGMA hexkey = '{key}';", cancellationToken: cancellationToken)).ConfigureAwait(false);
@@ -44,6 +41,8 @@ public static partial class SqliteEncryption
     /// </summary>
     public static async Task<bool> EnsureEncryptedAsync(string path, string key, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        ValidateKey(key);
         SqliteProvider.EnsureInitialized();
         string plainCopy = path + PlainCopySuffix;
         if (!File.Exists(path) || new FileInfo(path).Length == 0)
@@ -99,14 +98,25 @@ public static partial class SqliteEncryption
             {
                 throw new InvalidOperationException("The encrypted database does not have the same rows as the original.");
             }
-
-            File.Delete(plainCopy);
-            return true;
         }
-        catch (Exception) when (RestorePlainCopy(path, plainCopy))
+        catch (SqliteException ex) when (ex.SqliteErrorCode is SQLitePCL.raw.SQLITE_BUSY or SQLitePCL.raw.SQLITE_LOCKED)
         {
+            // Another connection may still be using the original file. Keep both copies for a retry.
+            throw;
+        }
+        catch (OperationCanceledException)
+        {
+            RestorePlainCopy(path, plainCopy);
+            throw;
+        }
+        catch (Exception)
+        {
+            RestorePlainCopy(path, plainCopy);
             return false;
         }
+
+        File.Delete(plainCopy);
+        return true;
     }
 
     /// <summary>
@@ -115,10 +125,12 @@ public static partial class SqliteEncryption
     /// </summary>
     public static async Task<bool> CanCreateKeyAsync(string path, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         SqliteProvider.EnsureInitialized();
         if (!File.Exists(path) || new FileInfo(path).Length == 0)
         {
-            return true;
+            string plainCopy = path + PlainCopySuffix;
+            return !File.Exists(plainCopy) || await IsRecoveryCopyValidAsync(plainCopy, cancellationToken).ConfigureAwait(false);
         }
 
         return await IsPlainAsync(path, cancellationToken).ConfigureAwait(false);
@@ -126,23 +138,46 @@ public static partial class SqliteEncryption
 
     private static async Task<bool> TryRestorePlainCopyAsync(string path, string plainCopy, CancellationToken cancellationToken)
     {
-        if (!File.Exists(plainCopy) || !await IsPlainAsync(plainCopy, cancellationToken).ConfigureAwait(false))
+        if (!await IsRecoveryCopyValidAsync(plainCopy, cancellationToken).ConfigureAwait(false))
         {
             return false;
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         RestorePlainCopy(path, plainCopy);
         return true;
     }
 
-    private static bool RestorePlainCopy(string path, string plainCopy)
+    private static async Task<bool> IsRecoveryCopyValidAsync(string plainCopy, CancellationToken cancellationToken)
+    {
+        // SQLite accepts a zero-byte file as a new database. It is not a usable recovery copy.
+        if (!File.Exists(plainCopy) || new FileInfo(plainCopy).Length == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            await using SqliteConnection connection = Open(plainCopy, SqliteOpenMode.ReadOnly);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+            string? status = await connection.ExecuteScalarAsync<string>(new CommandDefinition(
+                "PRAGMA quick_check;", cancellationToken: cancellationToken)).ConfigureAwait(false);
+            return string.Equals(status, "ok", StringComparison.Ordinal);
+        }
+        catch (SqliteException ex) when (IsUnreadable(ex))
+        {
+            return false;
+        }
+    }
+
+    private static void RestorePlainCopy(string path, string plainCopy)
     {
         SqliteConnection.ClearAllPools();
-        File.Copy(plainCopy, path, overwrite: true);
-        TryDelete(path + "-wal");
-        TryDelete(path + "-shm");
-        File.Delete(plainCopy);
-        return true;
+        // A journal from the failed migration must not be replayed against the restored snapshot.
+        File.Delete(path + "-wal");
+        File.Delete(path + "-shm");
+        File.Delete(path + "-journal");
+        File.Move(plainCopy, path, overwrite: true);
     }
 
     private static async Task RekeyAsync(string path, string key, CancellationToken cancellationToken)
@@ -168,7 +203,7 @@ public static partial class SqliteEncryption
             await CountRowsAsync(path, null, cancellationToken).ConfigureAwait(false);
             return true;
         }
-        catch (SqliteException)
+        catch (SqliteException ex) when (IsUnreadable(ex))
         {
             return false;
         }
@@ -181,7 +216,7 @@ public static partial class SqliteEncryption
             await CountRowsAsync(path, key, cancellationToken).ConfigureAwait(false);
             return true;
         }
-        catch (SqliteException)
+        catch (SqliteException ex) when (IsUnreadable(ex))
         {
             return false;
         }
@@ -211,7 +246,22 @@ public static partial class SqliteEncryption
         return counts;
     }
 
-    private static SqliteConnection Open(string path) => new($"Data Source={path};Pooling=False");
+    private static bool IsUnreadable(SqliteException ex) => ex.SqliteErrorCode is SQLitePCL.raw.SQLITE_NOTADB or SQLitePCL.raw.SQLITE_CORRUPT;
+
+    private static void ValidateKey(string key)
+    {
+        if (!IsValidKey(key))
+        {
+            throw new ArgumentException("The database key must be 64 hexadecimal characters.", nameof(key));
+        }
+    }
+
+    private static SqliteConnection Open(string path, SqliteOpenMode mode = SqliteOpenMode.ReadWriteCreate) => new(new SqliteConnectionStringBuilder
+    {
+        DataSource = path,
+        Mode = mode,
+        Pooling = false
+    }.ToString());
 
     private static void TryDelete(string file)
     {

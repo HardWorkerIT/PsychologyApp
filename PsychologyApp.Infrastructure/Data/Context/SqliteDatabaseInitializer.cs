@@ -14,16 +14,36 @@ public sealed class SqliteDatabaseInitializer(IDbConnectionFactory connectionFac
     public Task RecreateDatabaseAsync(Func<Task>? whileExclusive = null, CancellationToken cancellationToken = default) =>
         SqliteOperationLane.RunAsync(connectionFactory, async () =>
         {
+            string path;
             await using (System.Data.Common.DbConnection checkpointConnection =
                          await connectionFactory.CreateOpenConnectionAsync(cancellationToken).ConfigureAwait(false))
             {
-                await checkpointConnection.ExecuteScalarAsync<long>(new CommandDefinition("PRAGMA wal_checkpoint(TRUNCATE);", cancellationToken: cancellationToken)).ConfigureAwait(false);
+                if (checkpointConnection is not SqliteConnection sqlite
+                    || !Path.IsPathFullyQualified(sqlite.DataSource)
+                    || new SqliteConnectionStringBuilder(sqlite.ConnectionString).Mode != SqliteOpenMode.ReadWriteCreate)
+                {
+                    throw new NotSupportedException("Database recreation requires a SQLite file connection that can create the database.");
+                }
+
+                // SQLite resolves the open file's path, including directory aliases used by Android.
+                path = sqlite.DataSource;
+
+                // SQLite returns a nonzero first column when another connection prevents truncation.
+                long busy = await sqlite.ExecuteScalarAsync<long>(new CommandDefinition(
+                    "PRAGMA wal_checkpoint(TRUNCATE);", cancellationToken: cancellationToken)).ConfigureAwait(false);
+                if (busy != 0)
+                {
+                    throw new IOException("The database is busy and could not be reset.");
+                }
+
+                SqliteConnection.ClearPool(sqlite);
             }
 
-            SqliteConnection.ClearAllPools();
-            SqliteSchema.DeleteDatabaseFiles();
+            cancellationToken.ThrowIfCancellationRequested();
+            SqliteSchema.DeleteDatabaseFiles(path);
 
-            await EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
+            // Finish the reset once the original database has been removed, even if the caller cancels.
+            await EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
 
             if (whileExclusive is not null)
             {

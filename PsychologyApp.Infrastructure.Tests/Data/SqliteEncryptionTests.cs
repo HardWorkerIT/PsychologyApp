@@ -125,6 +125,52 @@ public sealed class SqliteEncryptionTests : IDisposable
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public async Task EmptyRecoveryCopyCannotReplaceMissingOrUnreadableDatabase(bool mainFileExists)
+    {
+        byte[] original = [0xFF, 0xEE, 0xDD];
+        if (mainFileExists)
+        {
+            await File.WriteAllBytesAsync(_path, original);
+        }
+        string backup = _path + SqliteEncryption.PlainCopySuffix;
+        await File.WriteAllBytesAsync(backup, []);
+
+        Assert.False(await SqliteEncryption.EnsureEncryptedAsync(_path, Key));
+
+        Assert.Equal(mainFileExists, File.Exists(_path));
+        if (mainFileExists)
+        {
+            Assert.Equal(original, await File.ReadAllBytesAsync(_path));
+        }
+        Assert.True(File.Exists(backup));
+    }
+
+    [Fact]
+    public async Task ACancelledEncryptionCheckCannotApproveCreatingADatabaseOrKey()
+    {
+        using CancellationTokenSource cancellation = new();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => SqliteEncryption.EnsureEncryptedAsync(_path, Key, cancellation.Token));
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => SqliteEncryption.CanCreateKeyAsync(_path, cancellation.Token));
+        Assert.False(File.Exists(_path));
+    }
+
+    [Fact]
+    public async Task AnInvalidMigrationKeyIsRejectedWithoutTouchingTheDatabase()
+    {
+        await CreatePlainDatabaseAsync(wal: false);
+        byte[] original = await File.ReadAllBytesAsync(_path);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => SqliteEncryption.EnsureEncryptedAsync(_path, "zz"));
+
+        Assert.Equal(original, await File.ReadAllBytesAsync(_path));
+        Assert.False(File.Exists(_path + SqliteEncryption.PlainCopySuffix));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public async Task APlainDatabaseIsMovedToTheKeyAndKeepsEveryRow(bool wal)
     {
         await CreatePlainDatabaseAsync(wal);
