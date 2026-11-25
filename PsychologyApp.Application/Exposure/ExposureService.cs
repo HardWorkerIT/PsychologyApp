@@ -19,6 +19,10 @@ public sealed record ExposureReport(
 /// <param name="Crisis">The words read as a crisis: the screen leads to help instead of the next step.</param>
 public sealed record ExposureReportResult(ExposurePlan Plan, bool Crisis);
 
+/// <summary>A crisis signal was detected in a report that could not be saved.</summary>
+public sealed class ExposureCrisisReportWriteException(Exception innerException)
+    : Exception("The exposure report could not be saved.", innerException);
+
 public interface IExposureService
 {
     Task<ExposurePlan?> GetPlanAsync(CancellationToken cancellationToken = default);
@@ -135,22 +139,29 @@ public sealed class ExposureService(IExposureRepository repository, ICrisisDetec
 
     public async Task<ExposureReportResult> ReportTaskAsync(string sessionId, ExposureReport report, CancellationToken cancellationToken = default)
     {
+        // Check the original answers before a read or write failure can hide the signal.
+        bool crisis = crisisDetector.IsCrisis(report.WhatHappened) || crisisDetector.IsCrisis(report.Learned);
         string happened = Clean(report.WhatHappened, MaxFreeText);
         string learned = Clean(report.Learned, MaxFreeText);
-        ExposurePlan plan = await ReplaceSessionAsync(sessionId, session => session with
+        try
         {
-            ReportedAt = Now,
-            WhatHappened = happened,
-            Outcome = report.Outcome,
-            BeliefAfter = Percent(report.BeliefAfter),
-            PeakDistress = Percent(report.PeakDistress),
-            UsedSafetyBehaviour = report.UsedSafetyBehaviour,
-            Learned = learned,
-            Interrupted = false
-        }, cancellationToken).ConfigureAwait(false);
-
-        // Check the original answers: storage truncation must not remove a crisis signal.
-        return new ExposureReportResult(plan, crisisDetector.IsCrisis(report.WhatHappened) || crisisDetector.IsCrisis(report.Learned));
+            ExposurePlan plan = await ReplaceSessionAsync(sessionId, session => session with
+            {
+                ReportedAt = Now,
+                WhatHappened = happened,
+                Outcome = report.Outcome,
+                BeliefAfter = Percent(report.BeliefAfter),
+                PeakDistress = Percent(report.PeakDistress),
+                UsedSafetyBehaviour = report.UsedSafetyBehaviour,
+                Learned = learned,
+                Interrupted = false
+            }, cancellationToken).ConfigureAwait(false);
+            return new ExposureReportResult(plan, crisis);
+        }
+        catch (Exception writeError) when (crisis && !cancellationToken.IsCancellationRequested)
+        {
+            throw new ExposureCrisisReportWriteException(writeError);
+        }
     }
 
     public Task<ExposurePlan> InterruptTaskAsync(string sessionId, int? peakDistress, CancellationToken cancellationToken = default) =>

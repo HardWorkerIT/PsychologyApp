@@ -152,6 +152,32 @@ public sealed class RiskCheckViewModelTests
     }
 
     [Fact]
+    public async Task AFailedAssessmentWriteStillOpensHelpForElevatedAnswers()
+    {
+        RiskCheckViewModel viewModel = Create(RiskLevel.Green);
+        AnswerAll(viewModel);
+        viewModel.SetDisorientationCommand.Execute(true);
+        _care.Setup(c => c.AssessRiskAsync(It.IsAny<RiskAssessmentInput>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Could not save the assessment."));
+
+        await VmTestHelpers.RunAsync(viewModel.SubmitCommand);
+
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task AFailedBackNavigationStillOpensHelpAfterAnElevatedResult()
+    {
+        RiskCheckViewModel viewModel = Create(RiskLevel.Amber);
+        AnswerAll(viewModel);
+        _navigation.Setup(n => n.GoBackAsync()).ThrowsAsync(new InvalidOperationException("Could not go back."));
+
+        await VmTestHelpers.RunAsync(viewModel.SubmitCommand);
+
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task TheHelpNowButtonOpensTheCrisisScreenWithoutSubmitting()
     {
         RiskCheckViewModel viewModel = Create(RiskLevel.Green);

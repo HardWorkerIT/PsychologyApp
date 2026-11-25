@@ -189,9 +189,17 @@ public sealed class ExposureViewModel : BaseViewModel
         }
 
         bool[] answers = Questions.Select(question => question.Answer == true).ToArray();
-        ExposureScreeningResult result = await _service.ScreenAsync(
-            new ExposureScreeningAnswers(answers[0], answers[1], answers[2], answers[3], answers[4], answers[5]));
-        _plan = await _service.GetPlanAsync();
+        var screening = new ExposureScreeningAnswers(answers[0], answers[1], answers[2], answers[3], answers[4], answers[5]);
+        ExposureScreeningResult result;
+        try
+        {
+            result = await _service.ScreenAsync(screening);
+        }
+        catch when (ExposureScreening.Decide(screening) == ExposureScreeningResult.Crisis)
+        {
+            await TryOpenHelpAfterFailureAsync();
+            throw;
+        }
 
         switch (result)
         {
@@ -203,6 +211,7 @@ public sealed class ExposureViewModel : BaseViewModel
                 Mode = ExposureMode.Referral;
                 break;
             default:
+                _plan = await _service.GetPlanAsync();
                 if (_plan is { Steps.Count: > 0 })
                 {
                     ShowHome();
@@ -213,6 +222,18 @@ public sealed class ExposureViewModel : BaseViewModel
                 }
 
                 break;
+        }
+    }
+
+    private async Task TryOpenHelpAfterFailureAsync()
+    {
+        try
+        {
+            await _navigation.GoToCrisisHubAsync();
+        }
+        catch (Exception navigationError)
+        {
+            BestEffort.Report(navigationError);
         }
     }
 
@@ -786,9 +807,18 @@ public sealed class ExposureViewModel : BaseViewModel
             return;
         }
 
-        ExposureReportResult result = await _service.ReportTaskAsync(
-            task.Id,
-            new ExposureReport(WhatHappened, outcome, FromScale(BeliefAfter), FromScale(PeakDistress), usedSafety, Learned));
+        ExposureReportResult result;
+        try
+        {
+            result = await _service.ReportTaskAsync(
+                task.Id,
+                new ExposureReport(WhatHappened, outcome, FromScale(BeliefAfter), FromScale(PeakDistress), usedSafety, Learned));
+        }
+        catch (ExposureCrisisReportWriteException)
+        {
+            await TryOpenHelpAfterFailureAsync();
+            throw;
+        }
         _plan = result.Plan;
 
         if (result.Crisis)

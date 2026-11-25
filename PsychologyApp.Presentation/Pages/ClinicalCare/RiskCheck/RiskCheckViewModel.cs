@@ -1,5 +1,6 @@
 using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Domain.ClinicalCare;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
@@ -183,26 +184,60 @@ public sealed class RiskCheckViewModel : BaseViewModel
             return;
         }
 
-        RiskAssessmentDTO assessment = await _clinicalCareService.AssessRiskAsync(
-            new RiskAssessmentInput
-            {
-                HasSelfHarmThoughts = selfHarm,
-                HasSevereDisorientation = disorientation,
-                HasSubstanceRisk = substance,
-                HasSevereInsomnia = insomnia,
-                Source = _source
-            });
-
-        if (_onCompleted is not null)
+        RiskAssessmentInput input = new()
         {
-            await _onCompleted(assessment);
-            return;
+            HasSelfHarmThoughts = selfHarm,
+            HasSevereDisorientation = disorientation,
+            HasSubstanceRisk = substance,
+            HasSevereInsomnia = insomnia,
+            Source = _source
+        };
+
+        RiskAssessmentDTO assessment;
+        try
+        {
+            assessment = await _clinicalCareService.AssessRiskAsync(input);
+        }
+        catch when (NeedsHelp(RiskClassifier.Classify(new RiskAssessmentSignals(selfHarm, disorientation, substance, insomnia))))
+        {
+            await TryOpenHelpAfterFailureAsync();
+            throw;
         }
 
-        await _navigationService.GoBackAsync();
-        if (assessment.RiskLevel is RiskLevel.Red or RiskLevel.Amber)
+        bool needsHelp = NeedsHelp(assessment.RiskLevel);
+        try
+        {
+            if (_onCompleted is not null)
+            {
+                await _onCompleted(assessment);
+                return;
+            }
+
+            await _navigationService.GoBackAsync();
+        }
+        catch when (needsHelp)
+        {
+            await TryOpenHelpAfterFailureAsync();
+            throw;
+        }
+
+        if (needsHelp)
         {
             await _navigationService.GoToCrisisHubAsync();
+        }
+    }
+
+    private static bool NeedsHelp(RiskLevel level) => level is RiskLevel.Red or RiskLevel.Amber;
+
+    private async Task TryOpenHelpAfterFailureAsync()
+    {
+        try
+        {
+            await _navigationService.GoToCrisisHubAsync();
+        }
+        catch (Exception navigationError)
+        {
+            BestEffort.Report(navigationError);
         }
     }
 }
