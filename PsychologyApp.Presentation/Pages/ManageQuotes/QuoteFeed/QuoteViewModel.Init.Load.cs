@@ -22,14 +22,14 @@ public partial class QuoteViewModel
         {
             if (isInitialLoad)
             {
-                await _databaseReadySignal.WaitAsync(cancellationToken);
                 await UiThread.RunAsync(SetInit);
+                await _databaseReadySignal.WaitAsync(cancellationToken);
             }
 
             await LoadDailyQuoteAsync(cancellationToken);
             if (generation != _feedLoadGeneration)
             {
-                return true;
+                return false;
             }
 
             QuoteFeedLoadResult loadResult = await _feedCoordinator.LoadItemsAsync(
@@ -45,9 +45,10 @@ public partial class QuoteViewModel
 
             if (generation != _feedLoadGeneration)
             {
-                return true;
+                return false;
             }
 
+            bool applied = false;
             await UiThread.RunAsync(() =>
             {
                 if (generation != _feedLoadGeneration)
@@ -59,15 +60,16 @@ public partial class QuoteViewModel
                 ShowAllReadEmpty = loadResult.ShowAllCaughtUp;
                 SetDone();
                 NotifySearchRelatedProperties();
+                applied = true;
             });
 
-            return true;
+            return applied;
         }
         catch (OperationCanceledException)
         {
             if (generation == _feedLoadGeneration)
             {
-                await UiThread.RunAsync(CancelProgress);
+                await UiThread.RunAsync(RestoreAfterCancelledLoad);
             }
 
             return false;
@@ -96,6 +98,7 @@ public partial class QuoteViewModel
     private async Task LoadDailyQuoteAsync(CancellationToken cancellationToken)
     {
         QuotDTO? daily = await _quotService.GetDailyQuoteAsync(DateOnly.FromDateTime(DateTime.Now), cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
         if (daily is not { Text: not null and not "" } dailyDto)
         {
             await UiThread.RunAsync(() => DailyQuote = null);

@@ -43,7 +43,11 @@ public sealed class ForYouViewModel : BaseViewModel
         _progress = progress;
         _databaseReady = databaseReady;
         TakeTestCommand = new AsyncCommand(() => _navigation.GoToTestsTabAsync());
-        ReloadCommand = new AsyncCommand(RefreshAsync);
+        ReloadCommand = new AsyncCommand(async () =>
+        {
+            _databaseReady.RequestRetry();
+            await RefreshAsync();
+        });
     }
 
     public string PageTitle => AppStrings.ArticlesForYou;

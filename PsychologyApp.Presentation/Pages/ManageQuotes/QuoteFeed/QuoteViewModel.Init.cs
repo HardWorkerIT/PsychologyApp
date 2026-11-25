@@ -29,7 +29,11 @@ public partial class QuoteViewModel
         await SwitchFeedAsync(_feedCoordinator.FeedMode);
     }
 
-    public Task ReloadFromPullAsync() => RunInitAsync(seedNewQuote: false);
+    public Task ReloadFromPullAsync()
+    {
+        _databaseReadySignal.RequestRetry();
+        return RunInitAsync(seedNewQuote: false);
+    }
 
     private bool ApplyPendingQuoteFeedIfNeeded()
     {
@@ -86,6 +90,17 @@ public partial class QuoteViewModel
         _feedLoadGeneration++;
         _feedLoadCts?.Cancel();
         _searchController.CancelPendingSearch();
+        RestoreAfterCancelledLoad();
+    }
+
+    private void RestoreAfterCancelledLoad()
+    {
+        if (!_initialized)
+        {
+            SetFail();
+            return;
+        }
+
         CancelProgress();
     }
 }

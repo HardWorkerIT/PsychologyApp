@@ -34,7 +34,11 @@ public partial class TechniquesViewModel
         OpenTraumaCommand = new AsyncCommand(() => _navigationService.GoToArticleAsync(ArticleIds.TraumaStart));
 
         Cancel = new Command(CancelProgress);
-        Reload = new AsyncCommand(() => InitializeAsync(showLoadingOverlay: true));
+        Reload = new AsyncCommand(async () =>
+        {
+            _databaseReadySignal.RequestRetry();
+            await InitializeAsync(showLoadingOverlay: true);
+        });
         LoadMoreCustomTechniquesCommand = new AsyncCommand(LoadMoreCustomTechniquesAsync);
     }
 

@@ -60,7 +60,11 @@ public sealed class CourseViewModel : BaseViewModel
         _databaseReady = databaseReady;
         _courseId = courseId;
         BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
-        ReloadCommand = new AsyncCommand(RefreshAsync);
+        ReloadCommand = new AsyncCommand(async () =>
+        {
+            _databaseReady.RequestRetry();
+            await RefreshAsync();
+        });
         PrimaryCommand = new AsyncCommand(StartOrContinueAsync);
         TakeTestCommand = new AsyncCommand(() => _course is { } course ? _navigation.GoToTestAsync(course.TestId) : Task.CompletedTask);
         ResetCommand = new AsyncCommand(ResetAsync);

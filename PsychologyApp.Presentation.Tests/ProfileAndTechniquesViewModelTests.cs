@@ -154,7 +154,7 @@ public sealed class TechniquesViewModelTests
     public async Task FailedDatabaseStartupEndsPracticeLoadingAndShowsTheErrorState()
     {
         DatabaseReadySignal databaseReady = new();
-        databaseReady.SignalFailed(new InvalidOperationException("database unavailable"));
+        _ = databaseReady.SignalFailureAndWaitForRetryAsync(new InvalidOperationException("database unavailable"));
         IUserProgressService progress = Mock.Of<IUserProgressService>();
         IUserPreferencesStore preferences = new InMemoryUserPreferencesStore();
         TechniquesViewModel viewModel = CreateViewModel(

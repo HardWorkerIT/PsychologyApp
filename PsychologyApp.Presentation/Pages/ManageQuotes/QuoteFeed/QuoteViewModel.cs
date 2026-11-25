@@ -96,7 +96,7 @@ public partial class QuoteViewModel : BaseViewModel
             ToggleThemesCommand = new Command(ToggleThemes);
             ShowFavoritesCommand = new AsyncCommand(() => SwitchFeedAsync(QuoteFeedMode.Favorites));
             ShowAgainCommand = new AsyncCommand(ResetReadStateAsync);
-            Reload = new AsyncCommand(() => RunInitAsync(seedNewQuote: false));
+            Reload = new AsyncCommand(ReloadFromPullAsync);
             EnsureFeedFilters();
             EnsureThemeFilters();
         }

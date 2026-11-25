@@ -19,8 +19,8 @@ public partial class TestsListViewModel
     {
         try
         {
-            await _databaseReadySignal.WaitAsync(cancellationToken);
             await UiThread.RunAsync(SetInit);
+            await _databaseReadySignal.WaitAsync(cancellationToken);
 
             TestsListLoadResult result = await _testsListLoader.LoadItemsAsync(
                 _navigationService,
@@ -29,7 +29,9 @@ public partial class TestsListViewModel
 
             await UiThread.RunAsync(() =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 TestItemCollection.ReplaceRange(result.Items);
+                _initialized = true;
                 SetDone();
             });
 

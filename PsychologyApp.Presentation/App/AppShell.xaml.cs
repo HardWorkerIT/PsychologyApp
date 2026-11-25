@@ -521,9 +521,12 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
     }
 
     private readonly TaskCompletionSource _startupCompleted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource _initialLockCompleted = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     /// <summary>Done once onboarding, app lock and the safety gate have completed for this launch.</summary>
     internal Task StartupCompleted => _startupCompleted.Task;
+
+    internal Task InitialLockCompleted => _initialLockCompleted.Task;
 
     /// <summary>The safety gate is on screen: a tap on a reminder or the widget must not move the person away from it.</summary>
     internal static bool IsSafetyPageShown =>
@@ -565,16 +568,20 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
 
     public async Task CompleteEraseAsync()
     {
-        await _preferences.RestoreOnboardingConcernAsync();
-
         await MainThread.InvokeOnMainThreadAsync(() =>
         {
-            _preferences.ApplyAll();
-            _languageContentReloader.CompleteErase();
-            _isPreparingDataErase = false;
-            ShowTab(PracticeTab);
-            UpdateTabIcons();
-            IsEnabled = true;
+            try
+            {
+                _languageContentReloader.CompleteErase();
+                _preferences.ApplyAll();
+            }
+            finally
+            {
+                _isPreparingDataErase = false;
+                IsEnabled = true;
+                ShowTab(PracticeTab);
+                UpdateTabIcons();
+            }
         });
 
         await ShowOnboardingIfNeededAsync();
@@ -586,10 +593,19 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
     {
         try
         {
-            await _startupCoordinator.InitializeAsync();
-            await ShowOnboardingIfNeededAsync();
-            // First-run onboarding is shown before PIN setup; returning users are still locked before the safety gate.
-            await _appLock.GuardAsync();
+            if (_preferences.Load().HasCompletedOnboarding)
+            {
+                // Cover returning users' content synchronously while the database is still opening.
+                Task unlock = GuardInitialLockAsync();
+                await Task.WhenAll(_startupCoordinator.InitializeAsync(), unlock);
+            }
+            else
+            {
+                await _startupCoordinator.InitializeAsync();
+                await ShowOnboardingIfNeededAsync();
+                await GuardInitialLockAsync();
+            }
+
             await ShowClinicalGateIfNeededAsync();
             SyncRemindersFireAndForget();
         }
@@ -599,8 +615,16 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         }
         finally
         {
+            _initialLockCompleted.TrySetResult();
             _startupCompleted.TrySetResult();
         }
+    }
+
+    private async Task GuardInitialLockAsync()
+    {
+        await _appLock.GuardAsync();
+        // A failed database startup may be waiting for a Retry tap when a returning user backgrounds the app.
+        _initialLockCompleted.TrySetResult();
     }
 
     private void SyncRemindersFireAndForget()

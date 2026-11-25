@@ -69,7 +69,11 @@ public sealed class InsightsViewModel : BaseViewModel
         _body = body;
         _names = names;
         _databaseReady = databaseReady;
-        RetryCommand = new AsyncCommand(LoadAsync);
+        RetryCommand = new AsyncCommand(async () =>
+        {
+            _databaseReady.RequestRetry();
+            await LoadAsync();
+        });
     }
 
     public ICommand RetryCommand { get; }

@@ -75,7 +75,6 @@ public partial class TestsListViewModel : BaseViewModel
             try
             {
                 await InitAsync(initCts.Token);
-                _initialized = !IsFail;
             }
             finally
             {
@@ -95,6 +94,7 @@ public partial class TestsListViewModel : BaseViewModel
 
     private async Task ReloadAsync()
     {
+        _databaseReadySignal.RequestRetry();
         _initialized = false;
         await EnsureInitializedAsync();
     }
@@ -102,6 +102,5 @@ public partial class TestsListViewModel : BaseViewModel
     private void CancelInit()
     {
         _initCts?.Cancel();
-        CancelProgress();
     }
 }

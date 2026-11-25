@@ -83,7 +83,8 @@ public static class SharedPresentationServiceCollectionExtensions
         services.AddSingleton<IDeviceAuthenticator, UnavailableDeviceAuthenticator>();
 #endif
         services.AddSingleton<IAppPinCredentialStore, PsychologyApp.Presentation.Shared.Platform.MauiAppPinCredentialStore>();
-        services.AddSingleton<IDatabaseReadySignal, DatabaseReadySignal>();
+        services.AddSingleton<DatabaseReadySignal>();
+        services.AddSingleton<IDatabaseReadySignal>(sp => sp.GetRequiredService<DatabaseReadySignal>());
         services.AddSingleton<LanguageContentReloader>();
         services.AddSingleton<Func<NavigationContext, INavigationService>>(sp => context =>
             context.NavigationService ?? new MauiNavigationService(

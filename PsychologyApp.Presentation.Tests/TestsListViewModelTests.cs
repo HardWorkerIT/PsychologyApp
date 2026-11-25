@@ -21,6 +21,60 @@ public sealed class TestsListViewModelTests
         AppStrings.LanguageOverride = UserPreferences.DefaultLanguage;
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TestCatalogRecoversAfterCancellationOrADatabaseStartupFailure(bool databaseFailed)
+    {
+        DatabaseReadySignal databaseReady = new();
+        var progress = new Mock<IUserProgressService>();
+        progress.Setup(p => p.GetLatestTestResultsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<string, TestResultDTO>());
+        progress.Setup(p => p.GetTestResultCountsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<string, int>());
+        var catalog = new FakeTestCatalogService().WithCatalog(new TestDefinition
+        {
+            TestId = "beck",
+            Title = "Beck",
+            Subtitle = "Sub",
+            Description = "Desc",
+            Comment = "Note",
+            Algorithm = ["Step"],
+            Kind = TestKind.Questionnaire,
+            Questions = [],
+            SingleAnswer = true
+        });
+        TestsListViewModel viewModel = new(
+            new TestNavigationService(new Mock<INavigation>().Object),
+            databaseReady,
+            TestRunTestHelpers.CreateTestsListLoader(progress.Object, catalog),
+            Options.Create(new AppSettings()),
+            NullLogger<TestsListViewModel>.Instance);
+
+        if (databaseFailed)
+        {
+            Task retryRequested = databaseReady.SignalFailureAndWaitForRetryAsync(new IOException("Database unavailable"));
+            await viewModel.EnsureInitializedAsync();
+            Assert.True(viewModel.IsFail);
+
+            Assert.IsType<AsyncCommand>(viewModel.Reload).Execute(null);
+            await retryRequested.WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        else
+        {
+            Task firstLoad = viewModel.EnsureInitializedAsync();
+            Assert.IsType<Command>(viewModel.Cancel).Execute(null);
+            await firstLoad;
+            Assert.False(viewModel.IsLoadingOverlayVisible);
+        }
+
+        databaseReady.SignalReady();
+        await viewModel.EnsureInitializedAsync();
+
+        Assert.True(viewModel.HasInitialized);
+        Assert.Equal("beck", Assert.Single(viewModel.TestItemCollection).TestId);
+    }
+
     [Fact]
     public async Task A_short_luscher_result_reads_in_the_current_language()
     {
@@ -119,5 +173,28 @@ public sealed class TestsListViewModelTests
         progress.Verify(p => p.GetTestResultCountsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()), Times.Once);
         progress.Verify(p => p.GetLatestTestResultAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         progress.Verify(p => p.GetTestResultHistoryAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+}
+
+public sealed class DatabaseReadySignalTests
+{
+    [Fact]
+    public async Task TwoRetryTapsJoinTheSameAttemptAndBothScreensWaitForReadiness()
+    {
+        DatabaseReadySignal signal = new();
+        Task firstLoad = signal.WaitAsync();
+        Task retryRequested = signal.SignalFailureAndWaitForRetryAsync(new IOException("Database unavailable"));
+        await Assert.ThrowsAsync<IOException>(() => firstLoad);
+
+        signal.RequestRetry();
+        await retryRequested.WaitAsync(TimeSpan.FromSeconds(3));
+        Task practiceLoad = signal.WaitAsync();
+        signal.RequestRetry();
+        Task testLoad = signal.WaitAsync();
+        Assert.False(practiceLoad.IsCompleted);
+        Assert.False(testLoad.IsCompleted);
+
+        signal.SignalReady();
+        await Task.WhenAll(practiceLoad, testLoad).WaitAsync(TimeSpan.FromSeconds(3));
     }
 }

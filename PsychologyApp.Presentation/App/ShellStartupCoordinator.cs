@@ -23,17 +23,29 @@ public sealed class ShellStartupCoordinator(
     IPageFactory pageFactory,
     IDialogService dialogService,
     IOptions<AppSettings> settings,
-    IDatabaseReadySignal databaseReadySignal,
+    DatabaseReadySignal databaseReadySignal,
     IToastService toastService,
     IUserPreferencesStore preferences,
     ILogger<ShellStartupCoordinator> logger) : IShellStartupCoordinator
 {
     public async Task InitializeAsync()
     {
-        try
+        while (true)
         {
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateLargeTimeoutSource(settings);
-            await startupService.InitializeAsync(timeoutSource.Token);
+            try
+            {
+                await startupService.InitializeAsync(timeoutSource.Token);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Database startup failed.");
+                Task retryRequested = databaseReadySignal.SignalFailureAndWaitForRetryAsync(ex);
+                toastService.ShortToast(AppStrings.LoadFailed, AppToastKind.Error);
+                await retryRequested;
+                continue;
+            }
+
             try
             {
                 await preferences.RestoreOnboardingConcernAsync(timeoutSource.Token);
@@ -46,18 +58,7 @@ public sealed class ShellStartupCoordinator(
 
             databaseReadySignal.SignalReady();
             startupService.WarmupAsync().FireAndForget();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Application startup failed.");
-            databaseReadySignal.SignalFailed(ex);
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                toastService.ShortToast(AppStrings.StartupErrorMessage, AppToastKind.Error);
-                return Task.CompletedTask;
-            });
-
-            throw;
+            return;
         }
     }
 

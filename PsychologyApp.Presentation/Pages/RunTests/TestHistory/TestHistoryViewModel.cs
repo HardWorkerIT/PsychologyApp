@@ -60,7 +60,11 @@ public partial class TestHistoryViewModel : BaseViewModel
         PageName = AppStrings.TestHistoryTitle;
 
         BindNavigation(navigationService);
-        Reload = new AsyncCommand(LoadAsync);
+        Reload = new AsyncCommand(async () =>
+        {
+            _databaseReadySignal.RequestRetry();
+            await LoadAsync();
+        });
         RetakeCommand = new AsyncCommand(RetakeAsync);
         LoadAsync().FireAndForget();
     }

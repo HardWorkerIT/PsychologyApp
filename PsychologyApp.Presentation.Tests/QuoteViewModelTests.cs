@@ -42,6 +42,30 @@ public sealed class QuoteViewModelTests
     }
 
     [Fact]
+    public async Task CancellingTheFirstQuoteLoadLeavesARetryAndDoesNotMarkTheEmptyFeedAsLoaded()
+    {
+        var quotService = CreateQuotServiceMock();
+        TaskCompletionSource<QuotDTO?> pendingQuote = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        quotService.Setup(s => s.GetDailyQuoteAsync(It.IsAny<DateOnly>(), It.IsAny<CancellationToken>()))
+            .Returns(pendingQuote.Task);
+        QuoteViewModel viewModel = CreateViewModel(quotService.Object);
+
+        Task loading = viewModel.EnsureInitializedAsync();
+        Assert.IsType<Command>(viewModel.Cancel).Execute(null);
+        pendingQuote.SetResult(null);
+        await loading;
+
+        Assert.False(viewModel.HasInitialized);
+        Assert.True(viewModel.IsFail);
+        Assert.Empty(viewModel.DisplayItems);
+
+        await viewModel.ReloadFromPullAsync();
+
+        Assert.True(viewModel.HasInitialized);
+        Assert.NotEmpty(viewModel.DisplayItems);
+    }
+
+    [Fact]
     public async Task LikeCommand_NotifiesFavoritesChanged()
     {
         var quotService = CreateQuotServiceMock();

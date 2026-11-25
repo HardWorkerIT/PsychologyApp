@@ -71,6 +71,9 @@ public static partial class UserPreferences
     // SharedPreferences for ~20 keys over JNI hundreds of times. All writes go through Save, which refreshes this cache.
     private static UserPreferencesState? _persistedCache;
 
+    // A full reset clears Preferences outside Save; the next read must also discard the cached encrypted concern.
+    internal static void InvalidateAfterErase() => _persistedCache = null;
+
     private static UserPreferencesState Current => _inMemoryState ?? (_persistedCache ??= ReadPersisted());
 
     private static UserPreferencesState ReadPersisted()

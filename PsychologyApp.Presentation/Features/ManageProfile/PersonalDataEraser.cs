@@ -203,6 +203,7 @@ public sealed class PersonalDataEraser(
 #else
         Preferences.Default.Clear();
 #endif
+        UserPreferences.InvalidateAfterErase();
     }
 
     private static void Restart()

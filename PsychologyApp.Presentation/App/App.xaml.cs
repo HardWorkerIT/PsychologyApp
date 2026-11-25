@@ -56,17 +56,17 @@ public partial class App : Microsoft.Maui.Controls.Application
     {
         base.OnResume();
         ReduceMotion.Refresh();
-        GuardAfterStartupAsync().FireAndForget();
+        GuardAfterInitialLockAsync().FireAndForget();
         _services.GetRequiredService<IPracticeReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IQuoteReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IMoodReminderCoordinator>().SyncAsync().FireAndForget();
         _services.GetRequiredService<IChatReminderCoordinator>().SyncAsync().FireAndForget();
     }
 
-    private async Task GuardAfterStartupAsync()
+    private async Task GuardAfterInitialLockAsync()
     {
         AppShell shell = _services.GetRequiredService<AppShell>();
-        await shell.StartupCompleted;
+        await shell.InitialLockCompleted;
         await _services.GetRequiredService<Features.ManageProfile.AppLockCoordinator>().GuardAsync();
     }
 
