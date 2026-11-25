@@ -22,7 +22,7 @@
         <ControlTemplate x:Key="JournalNoteTemplate" x:DataType="vm:JournalViewModel">
             <VerticalStackLayout Spacing="{StaticResource CompactSpacing}" IsVisible="{Binding IsEditorReady}">
                 <!-- A quiet status: the chosen face already shows the answer; large blue text was the loudest thing on the page. -->
-                <Grid IsVisible="{Binding HasMoodSelected}" ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                <Grid IsVisible="{Binding IsMoodSaved}" ColumnDefinitions="Auto,*" ColumnSpacing="6">
                     <ui:MaterialIconView
                         IconName="CheckCircle"
                         IconSize="16"

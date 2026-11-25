@@ -5,7 +5,6 @@ using PsychologyApp.Presentation.Core.Charts;
 using PsychologyApp.Presentation.Entities.Journal;
 using PsychologyApp.Presentation.Features.ManageJournal;
 using PsychologyApp.Presentation.Shared.Common;
-using PsychologyApp.Presentation.Shared.Lib.Navigation;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.ViewModels;
@@ -100,11 +99,8 @@ public sealed class JournalViewModel : BaseViewModel
             await FlushPendingNoteSaveAsync();
             await navigationService.GoToAnchorThoughtsAsync();
         });
-        OpenLowMoodHelpCommand = new AsyncCommand(async () =>
-        {
-            await FlushPendingNoteSaveAsync();
-            await navigationService.GoToCrisisHubAsync();
-        });
+        // The page already flushes notes when leaving. Urgent help must also open while that write is unavailable.
+        OpenLowMoodHelpCommand = new AsyncCommand(navigationService.GoToCrisisHubAsync);
         RecordMoodCommand = new AsyncCommand<object?>(async parameter =>
         {
             int level = parameter switch
@@ -119,6 +115,7 @@ public sealed class JournalViewModel : BaseViewModel
                 Interlocked.Increment(ref _moodRevision);
                 _moodDirty = true;
                 SelectedMoodLevel = level;
+                NotifyMoodSaveStatus();
                 await SaveMoodAsync();
             }
         });
@@ -273,8 +270,9 @@ public sealed class JournalViewModel : BaseViewModel
             ? slotName + ". " + AppStrings.JournalSlotAdd
             : slotName + ". " + AppStrings.MoodLevelName(slot.MoodLevel) + (slot.Note is null ? string.Empty : ". " + slot.Note);
 
-    public string MoodSavedStatus =>
-        HasMoodSelected ? AppStrings.TodayMoodSaved : string.Empty;
+    public bool IsMoodSaved => HasMoodSelected && _editorEntryId is > 0 && !_editorStale && !_moodDirty && !_noteDirty;
+
+    public string MoodSavedStatus => IsMoodSaved ? AppStrings.TodayMoodSaved : string.Empty;
 
     private IReadOnlyList<JournalDayChip> _weekDays = [];
     public IReadOnlyList<JournalDayChip> WeekDays
@@ -310,7 +308,6 @@ public sealed class JournalViewModel : BaseViewModel
                 NotifyLowMoodSupport();
                 OnPropertyChanged(nameof(HasMoodSelected));
                 OnPropertyChanged(nameof(ShowNoteEditor));
-                OnPropertyChanged(nameof(MoodSavedStatus));
                 NotifyEmptyState();
             }
         }
@@ -348,6 +345,7 @@ public sealed class JournalViewModel : BaseViewModel
             {
                 Interlocked.Increment(ref _noteRevision);
                 _noteDirty = true;
+                NotifyMoodSaveStatus();
                 ScheduleNoteAutosave();
             }
         }
@@ -436,6 +434,7 @@ public sealed class JournalViewModel : BaseViewModel
         OnPropertyChanged(nameof(IsEditorReady));
         OnPropertyChanged(nameof(DayHeaderText));
         Notify(nameof(PromptText), nameof(NotePlaceholder), nameof(ShowPrompt));
+        NotifyMoodSaveStatus();
         if (dayChanged)
         {
             NotifySlots();
@@ -644,7 +643,7 @@ public sealed class JournalViewModel : BaseViewModel
         Notify(nameof(ShowPrompt), nameof(NotePlaceholder));
         NotifyLowMoodSupport();
         OnPropertyChanged(nameof(ShowNoteEditor));
-        OnPropertyChanged(nameof(MoodSavedStatus));
+        NotifyMoodSaveStatus();
     }
 
     private async Task SaveMoodAsync(bool reload = true)
@@ -690,7 +689,7 @@ public sealed class JournalViewModel : BaseViewModel
         _noteDirty = false;
         _moodDirty = false;
         _noteLooksLikeCrisis = saveResult.LooksLikeCrisis;
-        OnPropertyChanged(nameof(MoodSavedStatus));
+        NotifyMoodSaveStatus();
         NotifyLowMoodSupport();
         if (reload)
         {
@@ -704,6 +703,8 @@ public sealed class JournalViewModel : BaseViewModel
             await OfferCrisisHelpAsync();
         }
     }
+
+    private void NotifyMoodSaveStatus() => Notify(nameof(IsMoodSaved), nameof(MoodSavedStatus));
 
     private bool IsCurrentMoodSave(
         int moodLevel,

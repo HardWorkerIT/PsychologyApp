@@ -347,6 +347,8 @@
     <Compile Include="Stubs\FakeTestCatalogService.cs" />
     <Compile Include="TestTrendResolverTests.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/ManageJournal/JournalMoodLoader.cs" Link="Linked/Features/ManageJournal/JournalMoodLoader.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ManageJournal/Journal/JournalViewModel.cs" Link="Linked/Pages/ManageJournal/Journal/JournalViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Entities/Journal/JournalActivityChip.cs" Link="Linked/Entities/Journal/JournalActivityChip.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/ManageJournal/JournalCalendarScale.cs" Link="Linked/Features/ManageJournal/JournalCalendarScale.cs" />
     <Compile Include="../PsychologyApp.Presentation/Entities/Journal/JournalTimelineDayGroup.cs" Link="Linked/Entities/Journal/JournalTimelineDayGroup.cs" />
     <Compile Include="../PsychologyApp.Presentation/Entities/Profile/MoodNoteItem.cs" Link="Linked/Entities/Profile/MoodNoteItem.cs" />
