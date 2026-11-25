@@ -23,6 +23,7 @@ public partial class CreatedViewModel : BaseViewModel
     private readonly IUserProgressService _userProgressService;
     private readonly CustomTechniqueSessionOperations _sessionOperations;
     private readonly TechniqueSessionCompletionService _sessionCompletionService;
+    private readonly PracticeSessionCompletionState _completion = new();
     private readonly DateTime _sessionStartedAt = DateTime.UtcNow;
     private readonly SemaphoreSlim _initGate = new(1, 1);
     private bool _initialized;
@@ -89,7 +90,6 @@ public partial class CreatedViewModel : BaseViewModel
             try
             {
                 await InitAsync(initCts.Token);
-                _initialized = !IsFail;
             }
             finally
             {
@@ -113,9 +113,5 @@ public partial class CreatedViewModel : BaseViewModel
         await EnsureInitializedAsync();
     }
 
-    private void CancelInit()
-    {
-        _initCts?.Cancel();
-        CancelProgress();
-    }
+    private void CancelInit() => _initCts?.Cancel();
 }

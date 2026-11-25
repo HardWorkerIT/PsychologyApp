@@ -16,6 +16,7 @@ public class ListSessionDraftCoordinator<TItem, TDraft, TDraftItem>
 {
     private readonly JsonTypeInfo<TDraft> _draftTypeInfo;
     private readonly ILogger? _logger;
+    private readonly SemaphoreSlim _saveGate = new(1, 1);
     private string _techniqueKey = string.Empty;
     private IUserProgressService _userProgressService = default!;
 
@@ -36,33 +37,47 @@ public class ListSessionDraftCoordinator<TItem, TDraft, TDraftItem>
         Func<TDraftItem, TItem> map,
         Action<bool> setHasItems)
     {
-        TDraft? draft = await SessionDraftStore.LoadAsync(
-            _userProgressService,
-            _techniqueKey,
-            _draftTypeInfo,
-            _logger);
-        if (draft?.Items is null)
+        try
         {
-            return;
-        }
-
-        await UiThread.RunAsync(() =>
-        {
-            foreach (TDraftItem item in draft.Items)
+            TDraft? draft = await SessionDraftStore.LoadAsync(
+                _userProgressService,
+                _techniqueKey,
+                _draftTypeInfo,
+                _logger);
+            if (draft?.Items is null)
             {
-                target.Add(map(item));
+                return;
             }
 
-            setHasItems(target.Count > 0);
-        });
+            await UiThread.RunAsync(() =>
+            {
+                foreach (TDraftItem item in draft.Items)
+                {
+                    target.Add(map(item));
+                }
+
+                setHasItems(target.Count > 0);
+            });
+        }
+        catch (Exception error)
+        {
+            _logger?.LogWarning(error, "Failed to load session draft for {TechniqueKey}.", _techniqueKey);
+        }
     }
 
-    public Task SaveAsync(IEnumerable<TItem> source, Func<TItem, TDraftItem> map) =>
-        SessionDraftStore.SaveAsync(
-            _userProgressService,
-            _techniqueKey,
-            new TDraft { Items = source.Select(map).ToList() },
-            _draftTypeInfo);
+    public async Task SaveAsync(IEnumerable<TItem> source, Func<TItem, TDraftItem> map)
+    {
+        TDraft draft = new() { Items = source.Select(map).ToList() };
+        await _saveGate.WaitAsync();
+        try
+        {
+            await SessionDraftStore.SaveAsync(_userProgressService, _techniqueKey, draft, _draftTypeInfo);
+        }
+        finally
+        {
+            _saveGate.Release();
+        }
+    }
 }
 
 public sealed class PaperListDraft : IListSessionDraft<PaperListDraftItem>

@@ -14,6 +14,7 @@ public partial class DesignerViewModel
             {
                 await UiThread.RunAsync(() =>
                 {
+                    _initialized = true;
                     SetDone();
                     RaiseSaveCanExecuteChanged();
                 });
@@ -40,14 +41,20 @@ public partial class DesignerViewModel
 
             await UiThread.RunAsync(() =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyForm(form);
+                _initialized = true;
                 SetDone();
                 RaiseSaveCanExecuteChanged();
             });
         }
         catch (OperationCanceledException)
         {
-            await UiThread.RunAsync(CancelProgress);
+            await UiThread.RunAsync(() =>
+            {
+                SetFail();
+                RaiseSaveCanExecuteChanged();
+            });
         }
         catch (Exception e)
         {

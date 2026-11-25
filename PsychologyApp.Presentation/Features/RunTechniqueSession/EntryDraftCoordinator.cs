@@ -14,6 +14,8 @@ public sealed class EntryDraftCoordinator(ILogger<EntryDraftCoordinator> logger)
     private const int DraftSaveDebounceMs = 400;
 
     private readonly ILogger<EntryDraftCoordinator> _logger = logger;
+    private readonly SemaphoreSlim _draftGate = new(1, 1);
+    private readonly List<EntryItem> _wiredEntries = [];
 
     private CancellationTokenSource? _draftSaveCts;
     private bool _handlersWired;
@@ -35,6 +37,7 @@ public sealed class EntryDraftCoordinator(ILogger<EntryDraftCoordinator> logger)
         foreach (EntryItem entry in _entries)
         {
             entry.PropertyChanged += OnEntryFieldChanged;
+            _wiredEntries.Add(entry);
         }
 
         _handlersWired = true;
@@ -47,19 +50,35 @@ public sealed class EntryDraftCoordinator(ILogger<EntryDraftCoordinator> logger)
             return;
         }
 
-        foreach (EntryItem entry in _entries)
+        foreach (EntryItem entry in _wiredEntries)
         {
             entry.PropertyChanged -= OnEntryFieldChanged;
         }
 
+        _wiredEntries.Clear();
         _handlersWired = false;
     }
 
-    public void MarkSessionCompleted()
+    public async Task MarkSessionCompletedAsync()
     {
         _sessionCompleted = true;
         CancelDraftSave();
         UnwireHandlers();
+
+        // A debounced or page-exit save may already be writing. Drain it before deleting the completed session's draft.
+        await _draftGate.WaitAsync();
+        try
+        {
+            await _userProgressService.DeleteSessionDraftAsync(_techniqueId.ToString());
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(exception, "Failed to delete a completed technique session draft.");
+        }
+        finally
+        {
+            _draftGate.Release();
+        }
     }
 
     public void SaveIfNeeded()
@@ -87,6 +106,11 @@ public sealed class EntryDraftCoordinator(ILogger<EntryDraftCoordinator> logger)
 
         await UiThread.RunAsync(() =>
         {
+            if (_sessionCompleted)
+            {
+                return;
+            }
+
             for (int i = 0; i < _entries.Count; i++)
             {
                 if (draft.Fields.TryGetValue(i.ToString(), out string? value))
@@ -101,27 +125,40 @@ public sealed class EntryDraftCoordinator(ILogger<EntryDraftCoordinator> logger)
 
     public async Task SaveAsync()
     {
-        Dictionary<string, string> fields = new(StringComparer.Ordinal);
-        for (int i = 0; i < _entries.Count; i++)
+        await _draftGate.WaitAsync();
+        try
         {
-            if (!string.IsNullOrWhiteSpace(_entries[i].Text))
+            if (_sessionCompleted)
             {
-                fields[i.ToString()] = _entries[i].Text;
+                return;
             }
-        }
 
-        string key = _techniqueId.ToString();
-        if (fields.Count == 0)
+            Dictionary<string, string> fields = new(StringComparer.Ordinal);
+            for (int i = 0; i < _entries.Count; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(_entries[i].Text))
+                {
+                    fields[i.ToString()] = _entries[i].Text;
+                }
+            }
+
+            string key = _techniqueId.ToString();
+            if (fields.Count == 0)
+            {
+                await _userProgressService.DeleteSessionDraftAsync(key);
+                return;
+            }
+
+            await SessionDraftStore.SaveAsync(
+                _userProgressService,
+                key,
+                new EntryDraft { Fields = fields },
+                SessionDraftJsonSerializerContext.Default.EntryDraft);
+        }
+        finally
         {
-            await _userProgressService.DeleteSessionDraftAsync(key);
-            return;
+            _draftGate.Release();
         }
-
-        await SessionDraftStore.SaveAsync(
-            _userProgressService,
-            key,
-            new EntryDraft { Fields = fields },
-            SessionDraftJsonSerializerContext.Default.EntryDraft);
     }
 
     private void OnEntryFieldChanged(object? sender, PropertyChangedEventArgs e)

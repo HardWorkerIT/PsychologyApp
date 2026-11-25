@@ -29,6 +29,7 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
     private readonly ICrisisDetector _crisisDetector;
     private readonly IUserProgressService _userProgressService;
     private readonly TechniqueSessionCompletionService _completionService;
+    private readonly PracticeSessionCompletionState _completion = new();
     private readonly RecentProblemStore? _recentProblems;
     private readonly ChipUsageStore? _chipUsage;
     private readonly DateTime _sessionStartedAt = DateTime.UtcNow;
@@ -150,9 +151,13 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
             return;
         }
 
-        bool savedFields = await SaveAnswersAsync();
-        await RememberProblemAsync();
-        RememberTypedAnswers();
+        bool savedFields = false;
+        if (!_completion.HasSavedResult)
+        {
+            savedFields = await SaveAnswersAsync();
+            await RememberProblemAsync();
+            RememberTypedAnswers();
+        }
 
         await _completionService.CompleteStandardSessionAsync(
             _userProgressService,
@@ -161,6 +166,7 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
             ModuleName,
             PageName,
             _sessionStartedAt,
+            _completion,
             preIntensity: PreIntensity(),
             deleteDraft: savedFields);
     }

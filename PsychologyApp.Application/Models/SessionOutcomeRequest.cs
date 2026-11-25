@@ -14,6 +14,8 @@ public sealed class SessionOutcomeRequest
 
     public int? PreIntensity { get; init; }
 
+    public int? PostIntensity { get; init; }
+
     public string? ProgramType { get; init; }
 
     public int? ProgramWeek { get; init; }

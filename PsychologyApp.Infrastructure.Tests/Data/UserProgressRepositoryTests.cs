@@ -528,6 +528,7 @@ public sealed class UserProgressRepositoryTests : IAsyncLifetime
             DurationSeconds = 90,
             PayloadJson = """{"done":true}""",
             PreIntensity = 3,
+            PostIntensity = 0,
             DeleteDraft = true
         });
 
@@ -537,6 +538,7 @@ public sealed class UserProgressRepositoryTests : IAsyncLifetime
         Assert.Equal(key, session!.ItemKey);
         Assert.Equal(90, session.DurationSeconds);
         Assert.Equal(3, session.PreIntensity);
+        Assert.Equal(0, session.PostIntensity);
         Assert.Equal("""{"done":true}""", session.PayloadJson);
 
         IReadOnlyList<CompletionDTO> completions = await _repository.GetRecentTechniqueCompletionsAsync(5);

@@ -217,7 +217,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
                     request.DurationSeconds,
                     request.PayloadJson,
                     request.PreIntensity,
-                    PostIntensity = (int?)null,
+                    request.PostIntensity,
                     request.ProgramType,
                     request.ProgramWeek
                 },

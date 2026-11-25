@@ -7,9 +7,11 @@ namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueDesigner
 
 public partial class DesignerViewModel
 {
+    private bool CanSave() => !IsSaving && !IsFail && (_techniqueId <= 0 || (_initialized && IsDone));
+
     private async Task ExecuteOperationAsync()
     {
-        if (IsSaving)
+        if (!CanSave())
         {
             return;
         }

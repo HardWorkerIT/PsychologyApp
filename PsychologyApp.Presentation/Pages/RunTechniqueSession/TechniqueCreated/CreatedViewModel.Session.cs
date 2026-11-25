@@ -46,14 +46,16 @@ public partial class CreatedViewModel
 
             await UiThread.RunAsync(() =>
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 Algorithm.Clear();
                 Algorithm.AddRange(actions);
+                _initialized = true;
                 SetDone();
             });
         }
         catch (OperationCanceledException)
         {
-            await UiThread.RunAsync(CancelProgress);
+            await UiThread.RunAsync(SetFail);
         }
         catch (Exception e)
         {
@@ -64,17 +66,17 @@ public partial class CreatedViewModel
 
     private async Task CompleteSessionAsync()
     {
-        try
+        if (!_completion.HasSavedResult)
         {
-            using CancellationTokenSource timeoutSource = OperationCancellation.CreateSmallTimeoutSource(_settings);
-            await _sessionOperations.MarkCompletedAsync(
-                _techniqueId,
-                _techniqueService,
-                timeoutSource.Token);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Failed to mark custom technique as completed.");
+            try
+            {
+                using CancellationTokenSource timeoutSource = OperationCancellation.CreateSmallTimeoutSource(_settings);
+                await _sessionOperations.MarkCompletedAsync(_techniqueId, _techniqueService, timeoutSource.Token);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to mark custom technique as completed.");
+            }
         }
 
         await _sessionCompletionService.CompleteStandardSessionAsync(
@@ -84,6 +86,7 @@ public partial class CreatedViewModel
             ModuleName,
             PageName,
             _sessionStartedAt,
+            _completion,
             TryGetPreIntensity(),
             deleteDraft: false);
     }

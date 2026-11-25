@@ -62,9 +62,13 @@ public partial class TechniqueSessionViewModel
 
     private async Task CompleteSessionAsync()
     {
-        _entryDraftCoordinator.MarkSessionCompleted();
-        await RememberProblemAsync();
-        RememberTypedAnswers();
+        if (!_sessionHelper.HasSavedResult)
+        {
+            // The result is built from the persisted draft; do not let the debounce omit the user's last answer.
+            await _entryDraftCoordinator.SaveAsync();
+            await RememberProblemAsync();
+            RememberTypedAnswers();
+        }
 
         await _sessionHelper.CompleteAsync(
             _techniqueId.ToString(),
@@ -72,7 +76,8 @@ public partial class TechniqueSessionViewModel
             PageName,
             _sessionStartedAt,
             RatingOf(EntryFieldRole.IntensityBefore) ?? TryGetPreIntensity(),
-            RatingOf(EntryFieldRole.IntensityAfter));
+            RatingOf(EntryFieldRole.IntensityAfter),
+            onSaved: _entryDraftCoordinator.MarkSessionCompletedAsync);
     }
 
     /// <summary>The 0..10 answer of the step with this role, when the practice has one and it was answered.</summary>

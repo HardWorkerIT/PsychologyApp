@@ -107,6 +107,30 @@ public sealed class DesignerViewModelTests
     }
 
     [Fact]
+    public async Task CancelledLoadDoesNotExposeAnEmptyEditablePracticeAndCanBeRetried()
+    {
+        Mock<ITechniqueService> techniqueService = new();
+        techniqueService.SetupSequence(t => t.GetTechniqueByIdAsync(42, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new OperationCanceledException())
+            .ReturnsAsync(new TechniqueDTO { TechniqueId = 42, Header = "Existing practice", Algorithm = "Saved step" });
+        DesignerViewModel viewModel = CreateViewModel(42, techniqueService.Object, Mock.Of<ITechniqueMessenger>(),
+            Mock.Of<INavigationService>(), Options.Create(new AppSettings()));
+
+        await viewModel.EnsureInitializedAsync();
+
+        Assert.False(viewModel.HasInitialized);
+        Assert.True(viewModel.IsFail);
+        Assert.False(viewModel.ExecuteTechnique.CanExecute(null));
+
+        await viewModel.EnsureInitializedAsync();
+
+        Assert.True(viewModel.HasInitialized);
+        Assert.True(viewModel.ExecuteTechnique.CanExecute(null));
+        Assert.Equal("Existing practice", viewModel.Name);
+        Assert.Equal("Saved step", viewModel.Actions);
+    }
+
+    [Fact]
     public async Task EnsureInitializedAsync_LoadsExistingTechnique()
     {
         Mock<ITechniqueService> techniqueService = new();

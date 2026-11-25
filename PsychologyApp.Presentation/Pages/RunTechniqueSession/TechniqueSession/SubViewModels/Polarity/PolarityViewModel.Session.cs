@@ -22,7 +22,7 @@ public partial class PolarityViewModel
             });
 
     private Task SaveDraftAsync() =>
-        _draftCoordinator.SaveAsync(
+        _sessionHelper.HasSavedResult ? Task.CompletedTask : _draftCoordinator.SaveAsync(
             polarities,
             polarity => new PolarityListDraftItem
             {
@@ -31,13 +31,16 @@ public partial class PolarityViewModel
                 Negative = polarity.Negative
             });
 
-    private Task CompleteSessionAsync() =>
-        _sessionHelper.CompleteAsync(
+    private async Task CompleteSessionAsync()
+    {
+        await SaveDraftAsync();
+        await _sessionHelper.CompleteAsync(
             TechniqueId.Polarity.ToString(),
             ModuleName,
             PageName,
             _sessionStartedAt,
             TryGetPreIntensity());
+    }
 
     private void DeleteItem(Models.Practice.Techniques.Polarity item)
     {

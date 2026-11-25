@@ -70,7 +70,7 @@ public partial class DesignerViewModel : BaseViewModel
 
         BindNavigation(_navigationService);
 
-        ExecuteTechnique = new AsyncCommand(ExecuteOperationAsync, () => !IsSaving && !IsFail && (_techniqueId <= 0 || IsDone));
+        ExecuteTechnique = new AsyncCommand(ExecuteOperationAsync, CanSave);
         Cancel = new Command(CancelInit);
         Reload = new AsyncCommand(ReloadAsync);
 
@@ -108,7 +108,6 @@ public partial class DesignerViewModel : BaseViewModel
             try
             {
                 await InitAsync(initCts.Token);
-                _initialized = !IsFail;
             }
             finally
             {
@@ -132,9 +131,5 @@ public partial class DesignerViewModel : BaseViewModel
         await EnsureInitializedAsync();
     }
 
-    private void CancelInit()
-    {
-        _initCts?.Cancel();
-        CancelProgress();
-    }
+    private void CancelInit() => _initCts?.Cancel();
 }

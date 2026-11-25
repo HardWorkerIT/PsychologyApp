@@ -8,13 +8,18 @@ public sealed class ListTechniqueSessionHelper(
     IUserProgressService progress,
     INavigationService navigation)
 {
+    private readonly PracticeSessionCompletionState _completion = new();
+
+    public bool HasSavedResult => _completion.HasSavedResult;
+
     public Task CompleteAsync(
         string techniqueKey,
         string moduleName,
         string pageName,
         DateTime sessionStartedAt,
         int? preIntensity = null,
-        int? postIntensity = null) =>
+        int? postIntensity = null,
+        Func<Task>? onSaved = null) =>
         sessionCompletionService.CompleteStandardSessionAsync(
             progress,
             navigation,
@@ -22,6 +27,8 @@ public sealed class ListTechniqueSessionHelper(
             moduleName,
             pageName,
             sessionStartedAt,
+            _completion,
             preIntensity,
-            postIntensity: postIntensity);
+            postIntensity: postIntensity,
+            onSaved: onSaved);
 }

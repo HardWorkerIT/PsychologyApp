@@ -33,7 +33,7 @@ public sealed class TechniqueSessionCompletionServiceTests
         progress.Setup(p => p.GetSessionDraftAsync("Paper", It.IsAny<CancellationToken>())).ReturnsAsync((string?)null);
         progress.Setup(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(42L);
         Mock<INavigationService> navigation = new();
-        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).Returns(Task.CompletedTask);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).ReturnsAsync(NavigationRunStatus.Completed);
         TechniqueSessionCompletionService service = CreateService();
         DateTime startedAt = DateTime.UtcNow.AddMinutes(-2);
 
@@ -44,7 +44,9 @@ public sealed class TechniqueSessionCompletionServiceTests
             "Practice",
             "Paper technique",
             startedAt,
-            preIntensity: 7);
+            new PracticeSessionCompletionState(),
+            preIntensity: 7,
+            postIntensity: 2);
 
         progress.Verify(
             p => p.RecordSessionOutcomeAsync(
@@ -53,11 +55,66 @@ public sealed class TechniqueSessionCompletionServiceTests
                     && request.ModuleName == "Practice"
                     && request.PageName == "Paper technique"
                     && request.PreIntensity == 7
+                    && request.PostIntensity == 2
                     && request.DeleteDraft
                     && request.DurationSeconds >= 110 && request.DurationSeconds <= 130),
                 It.IsAny<CancellationToken>()),
             Times.Once);
+        progress.Verify(p => p.UpdateSessionResultPostIntensityAsync(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
         navigation.Verify(n => n.GoToPracticeCompletionAsync(3, "Paper", 42L), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task SavedPracticeShowsItsResultWhenOptionalWorkFails(bool weeklyActivityFails)
+    {
+        var progress = new Mock<IUserProgressService>();
+        var reminder = new Mock<IPracticeReminderCoordinator>();
+        var navigation = new Mock<INavigationService>();
+        progress.Setup(p => p.GetSessionDraftAsync("Paper", It.IsAny<CancellationToken>())).ReturnsAsync((string?)null);
+        progress.Setup(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(42L);
+        if (weeklyActivityFails)
+        {
+            progress.Setup(p => p.GetActiveDaysThisWeekAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new IOException("Weekly activity unavailable"));
+        }
+        else
+        {
+            progress.Setup(p => p.GetActiveDaysThisWeekAsync(It.IsAny<CancellationToken>())).ReturnsAsync(3);
+            reminder.Setup(r => r.SyncAsync(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new IOException("Reminder unavailable"));
+        }
+
+        var service = new TechniqueSessionCompletionService(reminder.Object, Mock.Of<IClinicalCareService>());
+        await service.CompleteStandardSessionAsync(progress.Object, navigation.Object, "Paper", "Practice", "Paper", DateTime.UtcNow, new());
+
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(weeklyActivityFails ? 0 : 3, "Paper", 42L), Times.Once);
+        reminder.Verify(r => r.SyncAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task TryingToOpenASavedPracticeAgainDoesNotRecordASecondCompletion()
+    {
+        var progress = new Mock<IUserProgressService>();
+        var navigation = new Mock<INavigationService>();
+        progress.Setup(p => p.GetActiveDaysThisWeekAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        progress.Setup(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(42L);
+        navigation.SetupSequence(n => n.GoToPracticeCompletionAsync(1, "Paper", 42L))
+            .ReturnsAsync(NavigationRunStatus.Failed)
+            .ReturnsAsync(NavigationRunStatus.DroppedTimeout)
+            .ReturnsAsync(NavigationRunStatus.Failed)
+            .ReturnsAsync(NavigationRunStatus.Completed);
+        ListTechniqueSessionHelper session = new(CreateService(), progress.Object, navigation.Object);
+        DateTime startedAt = DateTime.UtcNow;
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => session.CompleteAsync("Paper", "Practice", "Paper", startedAt));
+        Assert.True(session.HasSavedResult);
+        await session.CompleteAsync("Paper", "Practice", "Paper", startedAt);
+
+        progress.Verify(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(1, "Paper", 42L), Times.Exactly(4));
     }
 
     [Fact]
@@ -68,7 +125,7 @@ public sealed class TechniqueSessionCompletionServiceTests
         progress.Setup(p => p.GetSessionDraftAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync((string?)null);
         progress.Setup(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(7L);
         Mock<INavigationService> navigation = new();
-        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).Returns(Task.CompletedTask);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).ReturnsAsync(NavigationRunStatus.Completed);
         TechniqueSessionCompletionService service = CreateService();
 
         await service.CompleteStandardSessionAsync(
@@ -78,6 +135,7 @@ public sealed class TechniqueSessionCompletionServiceTests
             "Practice",
             "Custom",
             DateTime.UtcNow,
+            new PracticeSessionCompletionState(),
             deleteDraft: false);
 
         progress.Verify(

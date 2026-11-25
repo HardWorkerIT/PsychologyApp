@@ -18,7 +18,7 @@ public sealed class ListTechniqueSessionHelperTests
         Mock<IUserProgressService> progress = new();
         progress.Setup(p => p.GetActiveDaysThisWeekAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2);
         Mock<INavigationService> navigation = new();
-        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).Returns(Task.CompletedTask);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>())).ReturnsAsync(NavigationRunStatus.Completed);
 
         ListTechniqueSessionHelper helper = new(
             new TechniqueSessionCompletionService(Mock.Of<IPracticeReminderCoordinator>(), Mock.Of<PsychologyApp.Application.ClinicalCare.IClinicalCareService>()),

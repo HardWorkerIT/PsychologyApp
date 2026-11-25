@@ -7,6 +7,13 @@ using PsychologyApp.Presentation.Shared.Services.Notifications;
 
 namespace PsychologyApp.Presentation.Features.RunTechniqueSession;
 
+public sealed class PracticeSessionCompletionState
+{
+    internal long? ResultId { get; set; }
+
+    public bool HasSavedResult => ResultId.HasValue;
+}
+
 public sealed class TechniqueSessionCompletionService(
     IPracticeReminderCoordinator practiceReminderCoordinator,
     IClinicalCareService clinicalCareService)
@@ -18,10 +25,38 @@ public sealed class TechniqueSessionCompletionService(
         string moduleName,
         string pageName,
         DateTime sessionStartedAt,
+        PracticeSessionCompletionState completion,
         int? preIntensity = null,
         bool deleteDraft = true,
         int? postIntensity = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Func<Task>? onSaved = null)
+    {
+        if (!completion.HasSavedResult)
+        {
+            completion.ResultId = await SaveSessionAsync(progress, itemKey, moduleName, pageName, sessionStartedAt,
+                preIntensity, deleteDraft, postIntensity, cancellationToken);
+
+            if (onSaved is not null)
+            {
+                await onSaved();
+            }
+        }
+
+        await PracticeCompletionNavigator.NavigateAfterCompletionAsync(navigation, progress, itemKey, completion.ResultId);
+        SyncReminderAsync(cancellationToken).FireAndForget();
+    }
+
+    private async Task<long> SaveSessionAsync(
+        IUserProgressService progress,
+        string itemKey,
+        string moduleName,
+        string pageName,
+        DateTime sessionStartedAt,
+        int? preIntensity,
+        bool deleteDraft,
+        int? postIntensity,
+        CancellationToken cancellationToken)
     {
         int durationSeconds = Math.Max(0, (int)(DateTime.UtcNow - sessionStartedAt).TotalSeconds);
         string? draftJson = await progress.GetSessionDraftAsync(itemKey, cancellationToken);
@@ -43,7 +78,7 @@ public sealed class TechniqueSessionCompletionService(
             BestEffort.Report(bestEffortError);
         }
 
-        long sessionResultId = await progress.RecordSessionOutcomeAsync(
+        return await progress.RecordSessionOutcomeAsync(
             new SessionOutcomeRequest
             {
                 ItemKey = itemKey,
@@ -52,24 +87,23 @@ public sealed class TechniqueSessionCompletionService(
                 DurationSeconds = durationSeconds,
                 PayloadJson = draftJson,
                 PreIntensity = preIntensity,
+                PostIntensity = postIntensity is >= 0 and <= 10 ? postIntensity : null,
                 ProgramType = programType,
                 ProgramWeek = programWeek,
                 DeleteDraft = deleteDraft
             },
             cancellationToken);
+    }
 
-        if (postIntensity is >= 0 and <= 10)
+    private async Task SyncReminderAsync(CancellationToken cancellationToken)
+    {
+        try
         {
-            // The practice asked "after" as its own last step: the result page shows it instead of asking again.
-            await progress.UpdateSessionResultPostIntensityAsync(sessionResultId, postIntensity.Value, cancellationToken);
+            await practiceReminderCoordinator.SyncAsync(cancellationToken);
         }
-
-        await PracticeCompletionNavigator.NavigateAfterCompletionAsync(
-            navigation,
-            progress,
-            itemKey,
-            sessionResultId);
-
-        await practiceReminderCoordinator.SyncAsync(cancellationToken);
+        catch (Exception error)
+        {
+            BestEffort.Report(error);
+        }
     }
 }

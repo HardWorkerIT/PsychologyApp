@@ -93,8 +93,6 @@ public partial class TheoryViewModel : BaseViewModel
             try
             {
                 await LoadTechniqueContentAsync(_techniqueId.Value, languageKey, initCts.Token);
-                _initialized = !IsFail
-                    && string.Equals(_loadedLanguageKey, AppStrings.Language, StringComparison.Ordinal);
             }
             finally
             {
@@ -119,11 +117,7 @@ public partial class TheoryViewModel : BaseViewModel
         await EnsureInitializedAsync();
     }
 
-    private void CancelInit()
-    {
-        _initCts?.Cancel();
-        CancelProgress();
-    }
+    private void CancelInit() => _initCts?.Cancel();
 
     protected override void RefreshLocalizedProperties()
     {
@@ -165,20 +159,21 @@ public partial class TheoryViewModel : BaseViewModel
 
             await UiThread.RunAsync(() =>
             {
-                if (cancellationToken.IsCancellationRequested
-                    || !string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
                 {
                     return;
                 }
 
                 ApplyContent(definition);
                 _loadedLanguageKey = languageKey;
+                _initialized = true;
                 SetDone();
             });
         }
         catch (OperationCanceledException)
         {
-            await UiThread.RunAsync(CancelProgress);
+            await UiThread.RunAsync(SetFail);
         }
         catch (Exception ex)
         {

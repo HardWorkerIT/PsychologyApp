@@ -13,17 +13,20 @@ public partial class PaperListViewModel
             SetCollection);
 
     private Task SaveDraftAsync() =>
-        _draftCoordinator.SaveAsync(
+        _sessionHelper.HasSavedResult ? Task.CompletedTask : _draftCoordinator.SaveAsync(
             PapersObservableCollection,
             paper => new PaperListDraftItem { Id = paper.Id, Text = paper.Text });
 
-    private Task CompleteSessionAsync() =>
-        _sessionHelper.CompleteAsync(
+    private async Task CompleteSessionAsync()
+    {
+        await SaveDraftAsync();
+        await _sessionHelper.CompleteAsync(
             _techniqueId.ToString(),
             ModuleName,
             PageName,
             _sessionStartedAt,
             TryGetPreIntensity());
+    }
 
     private void SetCollection(bool visible)
     {
