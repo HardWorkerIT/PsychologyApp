@@ -52,6 +52,44 @@ public sealed class SafetyPlanViewModelTests
     }
 
     [Fact]
+    public async Task AnEditWhileLoadingPreservesTheSavedPlan()
+    {
+        TaskCompletionSource<SafetyPlanDTO> load = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        _care.Setup(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>())).Returns(load.Task);
+        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object)
+        {
+            NewCopingStrategyText = "call a friend"
+        };
+
+        viewModel.AddCopingStrategyCommand.Execute(null);
+        load.SetResult(new SafetyPlanDTO { Reasons = ["family"] });
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.AddCopingStrategyCommand.CanExecute(null));
+
+        SafetyPlanDTO saved = Assert.Single(_saved);
+        Assert.Equal(["family"], saved.Reasons);
+        Assert.Equal(["call a friend"], saved.CopingStrategies);
+    }
+
+    [Fact]
+    public async Task FailedWritesKeepTheContactAndTheUnsentDraft()
+    {
+        SafetyPlanViewModel viewModel = await CreateAsync(new SafetyPlanDTO
+        {
+            Contacts = [new SafetyPlanContactDTO { Name = "Anna", Phone = "100" }]
+        });
+        _care.Setup(c => c.SaveSafetyPlanAsync(It.IsAny<SafetyPlanDTO>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Could not write the plan."));
+        viewModel.NewWarningSignText = "a draft";
+
+        await VmTestHelpers.RunAsync(viewModel.Contacts[0].DeleteCommand);
+        await VmTestHelpers.RunAsync(viewModel.AddWarningSignCommand);
+
+        Assert.Equal("Anna", Assert.Single(viewModel.Contacts).Name);
+        Assert.Empty(viewModel.WarningSigns);
+        Assert.Equal("a draft", viewModel.NewWarningSignText);
+    }
+
+    [Fact]
     public async Task AddingAnEntryTrimsItClearsTheFieldAndSavesTheWholePlan()
     {
         SafetyPlanViewModel viewModel = await CreateAsync(new SafetyPlanDTO { Reasons = ["family"] });

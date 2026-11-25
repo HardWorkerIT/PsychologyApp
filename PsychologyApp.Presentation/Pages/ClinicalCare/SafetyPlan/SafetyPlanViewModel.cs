@@ -30,6 +30,8 @@ public sealed class SafetyPlanViewModel : BaseViewModel
 {
     private readonly INavigationService _navigationService;
     private readonly IClinicalCareService _clinicalCareService;
+    private readonly SemaphoreSlim _editGate = new(1, 1);
+    private Task? _loadTask;
 
     public RangeObservableCollection<SafetyPlanTextItem> WarningSigns { get; } = [];
     public RangeObservableCollection<SafetyPlanTextItem> CopingStrategies { get; } = [];
@@ -74,7 +76,7 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         AddReasonCommand = new AsyncCommand(() => AddTextAsync(Reasons, () => NewReasonText, value => NewReasonText = value, nameof(NewReasonText)));
         AddContactCommand = new AsyncCommand(AddContactAsync);
 
-        LoadAsync().FireAndForget();
+        EnsureLoadedAsync().FireAndForget();
     }
 
     protected override void RefreshLocalizedProperties()
@@ -93,6 +95,9 @@ public sealed class SafetyPlanViewModel : BaseViewModel
             nameof(ContactPhonePlaceholder),
             nameof(AddButtonText));
     }
+
+    private Task EnsureLoadedAsync() =>
+        _loadTask is { IsFaulted: false, IsCanceled: false } current ? current : _loadTask = LoadAsync();
 
     private async Task LoadAsync()
     {
@@ -134,45 +139,90 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         Action<string> setValue,
         string propertyName)
     {
-        string text = getValue().Trim();
+        string draft = getValue();
+        string text = draft.Trim();
         if (text.Length == 0)
         {
             return;
         }
 
-        collection.Add(BuildTextItem(collection, text));
-        setValue(string.Empty);
-        OnPropertyChanged(propertyName);
-        await PersistAsync();
+        await ChangePlanAsync(collection, BuildTextItem(collection, text), add: true);
+        if (getValue() == draft)
+        {
+            setValue(string.Empty);
+            OnPropertyChanged(propertyName);
+        }
     }
 
-    private async Task RemoveTextAsync(ObservableCollection<SafetyPlanTextItem> collection, SafetyPlanTextItem item)
-    {
-        collection.Remove(item);
-        await PersistAsync();
-    }
+    private Task RemoveTextAsync(ObservableCollection<SafetyPlanTextItem> collection, SafetyPlanTextItem item) =>
+        ChangePlanAsync(collection, item, add: false);
 
     private async Task AddContactAsync()
     {
-        string name = NewContactName.Trim();
-        string phone = NewContactPhone.Trim();
+        string nameDraft = NewContactName;
+        string phoneDraft = NewContactPhone;
+        string name = nameDraft.Trim();
+        string phone = phoneDraft.Trim();
         if (name.Length == 0 && phone.Length == 0)
         {
             return;
         }
 
-        Contacts.Add(BuildContactItem(name, phone));
-        NewContactName = string.Empty;
-        NewContactPhone = string.Empty;
-        OnPropertyChanged(nameof(NewContactName));
-        OnPropertyChanged(nameof(NewContactPhone));
-        await PersistAsync();
+        await ChangePlanAsync(Contacts, BuildContactItem(name, phone), add: true);
+        if (NewContactName == nameDraft && NewContactPhone == phoneDraft)
+        {
+            NewContactName = string.Empty;
+            NewContactPhone = string.Empty;
+            Notify(nameof(NewContactName), nameof(NewContactPhone));
+        }
     }
 
-    private async Task RemoveContactAsync(SafetyPlanContactItem item)
+    private Task RemoveContactAsync(SafetyPlanContactItem item) =>
+        ChangePlanAsync(Contacts, item, add: false);
+
+    private async Task ChangePlanAsync<TItem>(ObservableCollection<TItem> collection, TItem item, bool add)
     {
-        Contacts.Remove(item);
-        await PersistAsync();
+        // Each write replaces the whole document. Wait for the initial read and serialize edits across sections.
+        await _editGate.WaitAsync();
+        try
+        {
+            await EnsureLoadedAsync();
+            int index = add ? collection.Count : collection.IndexOf(item);
+            if (index < 0)
+            {
+                return;
+            }
+
+            if (add)
+            {
+                collection.Add(item);
+            }
+            else
+            {
+                collection.RemoveAt(index);
+            }
+
+            try
+            {
+                await PersistAsync();
+            }
+            catch
+            {
+                if (add)
+                {
+                    collection.RemoveAt(index);
+                }
+                else
+                {
+                    collection.Insert(index, item);
+                }
+                throw;
+            }
+        }
+        finally
+        {
+            _editGate.Release();
+        }
     }
 
     private async Task PersistAsync()
