@@ -165,7 +165,7 @@ public sealed class CourseDayViewModel : BaseViewModel
         _busy = true;
         try
         {
-            await _reading.StartCourseAsync(_courseId);
+            // Completion checks the reflection before opening the database and can start a new course itself.
             CourseDayOutcome outcome = await _reading.CompleteDayAsync(_courseId, _day, Reflection);
             switch (outcome)
             {
@@ -181,7 +181,7 @@ public sealed class CourseDayViewModel : BaseViewModel
                 default:
                     IsDayDone = true;
                     UiHaptics.Tick();
-                    bool finished = (await _reading.GetAsync()).Course(_courseId)?.FinishedUtc is not null;
+                    bool finished = await TryReadCourseFinishedAsync();
                     await _dialogs.ShowAsync(null, finished ? AppStrings.CourseAllDone : AppStrings.CourseDayClosed(_day));
                     await _navigation.GoBackAsync();
                     break;
@@ -190,6 +190,20 @@ public sealed class CourseDayViewModel : BaseViewModel
         finally
         {
             _busy = false;
+        }
+    }
+
+    private async Task<bool> TryReadCourseFinishedAsync()
+    {
+        try
+        {
+            return (await _reading.GetAsync()).Course(_courseId)?.FinishedUtc is not null;
+        }
+        catch (Exception readError)
+        {
+            // The day is already saved. The extra lookup only selects the confirmation text.
+            BestEffort.Report(readError);
+            return false;
         }
     }
 

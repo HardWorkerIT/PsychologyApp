@@ -25,7 +25,6 @@ public sealed class ReadingIntegrationTests : IAsyncLifetime
     public async Task A_course_day_and_saved_articles_are_stored_and_restored_from_a_backup()
     {
         IReadingService source = _source.GetRequiredService<IReadingService>();
-        await source.StartCourseAsync(CourseIds.Sleep);
         Assert.Equal(CourseDayOutcome.Done, await source.CompleteDayAsync(CourseIds.Sleep, 1, "I go to bed at 11"));
         await source.ToggleSavedAsync(ArticleIds.Panic);
 
@@ -38,6 +37,15 @@ public sealed class ReadingIntegrationTests : IAsyncLifetime
         ReadingState restored = await _target.GetRequiredService<IReadingService>().GetAsync();
         Assert.Equal([ArticleIds.Panic], restored.Saved);
         Assert.Equal("I go to bed at 11", Assert.Single(restored.Course(CourseIds.Sleep)!.Days).Reflection);
+    }
+
+    [Fact]
+    public async Task CompletingAnUnknownCourseDoesNotCreateProgress()
+    {
+        IReadingService service = _source.GetRequiredService<IReadingService>();
+
+        Assert.Equal(CourseDayOutcome.NotOpen, await service.CompleteDayAsync("missing-course", 1, "a note"));
+        Assert.Empty((await service.GetAsync()).Courses);
     }
 
     public async Task DisposeAsync()

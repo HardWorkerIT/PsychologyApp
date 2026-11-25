@@ -81,6 +81,11 @@ public sealed class ReadingService(IReadingRepository repository, ICrisisDetecto
             return CourseDayOutcome.Crisis;
         }
 
+        if (ArticleContent.FindCourse(courseId, "ru") is not { } course || day < 1 || day > course.Days.Count)
+        {
+            return CourseDayOutcome.NotOpen;
+        }
+
         CourseDayOutcome outcome = CourseDayOutcome.NotOpen;
         await UpdateAsync(
             state =>
@@ -92,10 +97,9 @@ public sealed class ReadingService(IReadingRepository repository, ICrisisDetecto
                 }
 
                 outcome = CourseDayOutcome.Done;
-                int total = ArticleContent.FindCourse(courseId, "ru")?.Days.Count ?? int.MaxValue;
                 List<CourseDayRecord> days = [.. progress.Days, new CourseDayRecord(day, Now(), words)];
-                CourseProgress updated = progress with { Days = days, FinishedUtc = days.Count >= total ? Now() : null };
-                return state with { Courses = [.. state.Courses.Where(course => course.CourseId != courseId), updated] };
+                CourseProgress updated = progress with { Days = days, FinishedUtc = days.Count >= course.Days.Count ? Now() : null };
+                return state with { Courses = [.. state.Courses.Where(entry => entry.CourseId != courseId), updated] };
             },
             cancellationToken).ConfigureAwait(false);
         return outcome;
