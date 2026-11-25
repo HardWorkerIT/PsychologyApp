@@ -508,14 +508,15 @@ public sealed class ChatViewModel : BaseViewModel
 
     private Task SendDraftAsync()
     {
-        string text = ChatText.Capitalize(DraftText);
+        string draft = DraftText;
+        string text = ChatText.Capitalize(draft);
         if (text.Length == 0)
         {
             return Task.CompletedTask;
         }
 
         DraftText = string.Empty;
-        return TakeTurnAsync(text, () => _chat.SendTextAsync(_sessionId!.Value, text, CancellationToken.None));
+        return TakeTurnAsync(text, () => _chat.SendTextAsync(_sessionId!.Value, text, CancellationToken.None), draft);
     }
 
     private async Task SendQuickReplyAsync(ChatQuickReply reply)
@@ -523,11 +524,10 @@ public sealed class ChatViewModel : BaseViewModel
         // The value just given is what the next slider shows as "was N".
         int? picked = reply.Kind == ChatQuickReplyKinds.Rating && int.TryParse(reply.Payload, out int value) ? value : null;
         int? previousRating = RatingReference;
-        IReadOnlyList<ChatQuickReply> retryReplies = QuickReplies.Select(item => item.Reply).ToList();
         RatingReference = picked ?? previousRating;
         try
         {
-            await TakeTurnAsync(reply.Label, () => _chat.SendQuickReplyAsync(_sessionId!.Value, reply, CancellationToken.None), retryReplies);
+            await TakeTurnAsync(reply.Label, () => _chat.SendQuickReplyAsync(_sessionId!.Value, reply, CancellationToken.None));
         }
         catch
         {
@@ -539,8 +539,9 @@ public sealed class ChatViewModel : BaseViewModel
     private async Task TakeTurnAsync(
         string userText,
         Func<Task<ChatTurnResult>> send,
-        IReadOnlyList<ChatQuickReply>? retryReplies = null)
+        string? sentDraft = null)
     {
+        IReadOnlyList<ChatQuickReply> previousReplies = QuickReplies.Select(item => item.Reply).ToList();
         DateTime? previousCreatedUtc = _lastCreatedUtc;
         bool? previousWasUser = _lastWasUser;
         ChatBubble userBubble = CreateBubble(userText, isUser: true, Now(), animate: true);
@@ -561,14 +562,12 @@ public sealed class ChatViewModel : BaseViewModel
                 Messages.Remove(userBubble);
                 _lastCreatedUtc = previousCreatedUtc;
                 _lastWasUser = previousWasUser;
-                if (retryReplies is null)
+                if (sentDraft is not null)
                 {
-                    DraftText = userText;
+                    DraftText = string.IsNullOrEmpty(DraftText) ? sentDraft : $"{sentDraft}\n{DraftText}";
                 }
-                else
-                {
-                    SetQuickReplies(retryReplies);
-                }
+
+                SetQuickReplies(previousReplies);
             }
 
             throw;

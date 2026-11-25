@@ -340,7 +340,7 @@ public sealed class ChatViewModelTests
             await VmTestHelpers.RunAsync(viewModel.SendCommand);
             await VmTestHelpers.WaitUntilAsync(() => reported.Count == 1);
             Assert.False(viewModel.IsTyping);
-            Assert.Equal("First", viewModel.DraftText);
+            Assert.Equal("first", viewModel.DraftText);
             Assert.DoesNotContain(viewModel.Messages, message => message.IsUser && message.Text == "First");
 
             viewModel.DraftText = "second";
@@ -351,6 +351,28 @@ public sealed class ChatViewModelTests
         {
             AsyncCommandExtensions.DefaultErrorHandler = previous;
         }
+    }
+
+    [Fact]
+    public async Task AFailedTextSendKeepsTheOriginalDraftNewTextAndReplyOptions()
+    {
+        ChatQuickReply chip = new(ChatQuickReplyKinds.Emotion, "Anxiety", "Anxiety");
+        History(Message(ChatRole.Companion, "Pick a feeling", Now, chip));
+        TaskCompletionSource<ChatTurnResult> pendingSend = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        _chat.Setup(c => c.SendTextAsync(5, It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(pendingSend.Task);
+        ChatViewModel viewModel = Create();
+        await viewModel.LoadAsync();
+
+        viewModel.DraftText = "first message";
+        viewModel.SendCommand.Execute(null);
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.IsTyping);
+        viewModel.DraftText = "another detail";
+        pendingSend.SetException(new IOException("Database unavailable"));
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.CanSend);
+
+        Assert.Equal("first message\nanother detail", viewModel.DraftText);
+        Assert.Equal(chip, Assert.Single(viewModel.QuickReplies).Reply);
+        Assert.DoesNotContain(viewModel.Messages, message => message.IsUser);
     }
 
     [Fact]
