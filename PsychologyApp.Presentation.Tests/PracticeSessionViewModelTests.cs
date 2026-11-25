@@ -83,7 +83,7 @@ public sealed class PracticeSessionViewModelTests
     }
 
     [Fact]
-    public void TechniqueSessionViewModel_MarkSessionCompleted_StopsDraftSave()
+    public async Task TechniqueSessionViewModel_MarkSessionCompleted_StopsDraftSave()
     {
         Mock<IUserProgressService> progress = new();
         progress
@@ -100,7 +100,7 @@ public sealed class PracticeSessionViewModelTests
             draftCoordinator,
             Catalog());
 
-        draftCoordinator.MarkSessionCompleted();
+        await draftCoordinator.MarkSessionCompletedAsync();
         viewModel.SaveEntryDraftIfNeeded();
 
         progress.Verify(
