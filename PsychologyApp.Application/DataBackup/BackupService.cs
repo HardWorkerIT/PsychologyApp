@@ -443,7 +443,7 @@ public sealed class BackupService(
                 .Where(chat => chat.Session.CreatedAt != default)
                 .ToList(),
             SafetyPlan = SanitizeSafetyPlan(backup.SafetyPlan, nowUtc),
-            ChatMemory = backup.ChatMemory
+            ChatMemory = ChatMemoryKeys.NormalizeImportedCounters(backup.ChatMemory)
                 .Where(pair => !string.IsNullOrWhiteSpace(pair.Key) && pair.Value is not null)
                 .ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.Ordinal),
             FavoriteQuoteTexts = backup.FavoriteQuoteTexts.Where(text => !string.IsNullOrWhiteSpace(text)).ToList(),

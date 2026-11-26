@@ -52,6 +52,40 @@ public static class ChatMemoryKeys
             }
         }
     }
+
+    internal static Dictionary<TechniqueId, int> CountsByTechnique(IReadOnlyDictionary<string, string> memory, string prefix)
+    {
+        Dictionary<TechniqueId, int> counts = new();
+        foreach ((TechniqueId technique, int count) in Counters(memory, prefix))
+        {
+            // Older aliases can describe the same counter. Summing them would count the same practice twice.
+            counts[technique] = Math.Max(counts.GetValueOrDefault(technique), count);
+        }
+
+        return counts;
+    }
+
+    internal static IReadOnlyDictionary<string, string> NormalizeImportedCounters(IReadOnlyDictionary<string, string> memory)
+    {
+        Dictionary<string, string> normalized = new(StringComparer.Ordinal);
+        foreach ((string key, string value) in memory)
+        {
+            if (!key.StartsWith(TriedPrefix, StringComparison.Ordinal) && !key.StartsWith(HelpedPrefix, StringComparison.Ordinal))
+            {
+                normalized.Add(key, value);
+            }
+        }
+
+        foreach (string prefix in new[] { TriedPrefix, HelpedPrefix })
+        {
+            foreach ((TechniqueId technique, int count) in CountsByTechnique(memory, prefix))
+            {
+                normalized.Add(prefix + technique, count.ToString(CultureInfo.InvariantCulture));
+            }
+        }
+
+        return normalized;
+    }
 }
 
 public sealed record PracticeStat(TechniqueId Technique, int Tried, int Helped);

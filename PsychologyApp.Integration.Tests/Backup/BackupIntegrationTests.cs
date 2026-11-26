@@ -49,6 +49,25 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task ImportNormalizesAliasesOfTheSamePracticeCounter()
+    {
+        string canonical = ChatMemoryKeys.Tried(PsychologyApp.Domain.Practice.TechniqueId.Breathing);
+        string legacy = ChatMemoryKeys.TriedPrefix + PsychologyApp.Domain.Practice.TechniqueId.Breathing.ToString("D");
+        IChatRepository sourceChat = _source.GetRequiredService<IChatRepository>();
+        await sourceChat.SetMemoryAsync(canonical, "2");
+        await sourceChat.SetMemoryAsync(legacy, "3");
+        await sourceChat.SetMemoryAsync(ChatMemoryKeys.Name, "Sam");
+        string json = await _source.GetRequiredService<IBackupService>().ExportAsync();
+
+        await _target.GetRequiredService<IBackupService>().ImportAsync(json);
+
+        IReadOnlyDictionary<string, string> memory = await _target.GetRequiredService<IChatRepository>().GetMemoryAsync();
+        Assert.Equal("3", memory[canonical]);
+        Assert.DoesNotContain(legacy, memory.Keys);
+        Assert.Equal("Sam", memory[ChatMemoryKeys.Name]);
+    }
+
+    [Fact]
     public async Task EncryptedBackup_NeedsThePassphrase_AndRestoresTheSameData()
     {
         await _source.GetRequiredService<IUserProgressService>().RecordMoodAsync(4, "a private note", LongAgo);
