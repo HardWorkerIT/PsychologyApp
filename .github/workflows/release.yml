@@ -2,9 +2,8 @@ name: release
 
 # Publishes the signed production APK and AAB as a GitHub Release when a new version reaches main.
 #
-# It runs on every push to main: android-smoke first (the Release build on an emulator; called from here rather than on its
-# own, because workflow_run only fires for workflows of the default branch, which is not main). A release happens only for a
-# version that has no tag yet, after that smoke run passed, the tests pass here, the version in the csproj matches the
+# It runs on every push to main and calls both CI and android-smoke for that exact commit. A release happens only for a
+# version that has no tag yet, after both workflows pass, the version in the csproj matches the
 # CHANGELOG and [Unreleased] is empty: the published notes must describe everything in the package. So a release is a
 # deliberate act: raise ApplicationDisplayVersion and ApplicationVersion, move [Unreleased] into the new section, push to main
 # (see AGENTS.md, "Выпуск").
@@ -16,18 +15,21 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release
   cancel-in-progress: false
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   smoke:
     uses: ./.github/workflows/android-smoke.yml
 
   check:
-    needs: smoke
+    needs: [ci, smoke]
     runs-on: ubuntu-24.04
     outputs:
       release: ${{ steps.decide.outputs.release }}
@@ -64,6 +66,8 @@ jobs:
   release:
     needs: check
     if: needs.check.outputs.release == 'true'
+    permissions:
+      contents: write
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -84,12 +88,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Tests
-        run: |
-          for tests in PsychologyApp.Domain.Tests PsychologyApp.Application.Tests PsychologyApp.Infrastructure.Tests \
-                       PsychologyApp.Integration.Tests PsychologyApp.Presentation.Tests; do
-            dotnet test "$tests" -c Debug -p:Net11Only=true --verbosity minimal
-          done
       - run: dotnet workload install maui-android
       - name: Release key
         env:
