@@ -39,6 +39,11 @@
     <Compile Include="Body\**\*.cs" />
     <Compile Include="Serialization\**\*.cs" />
     <Compile Include="QuoteCatalogContentTests.cs" />
+    <Compile Include="LibraryCatalogRefreshTests.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Articles/ArticlesViewModel.cs" Link="Linked/Pages/ReadArticles/Articles/ArticlesViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CoursesViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CoursesViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCardItem.cs" Link="Linked/Widgets/LibraryCard/LibraryCardItem.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCards.cs" Link="Linked/Widgets/LibraryCard/LibraryCards.cs" />
     <Compile Include="NavigationCoordinatorTests.cs" />
     <Compile Include="NavigationRetryTests.cs" />
     <Compile Include="OnboardingStepNavigatorTests.cs" />

@@ -56,8 +56,14 @@ public sealed class ArticlesViewModel : BaseViewModel
         _databaseReady = databaseReady;
         SelectFilterCommand = new Command<string?>(key =>
         {
-            _selectedKey = string.IsNullOrEmpty(key) ? AllKey : key;
+            string selectedKey = string.IsNullOrEmpty(key) ? AllKey : key;
             UiHaptics.Tick();
+            if (selectedKey == _selectedKey && _lastCanPlaceArticleAd == CanPlaceArticleAd)
+            {
+                return;
+            }
+
+            _selectedKey = selectedKey;
             foreach (FilterChipTabItem filter in Filters)
             {
                 filter.IsSelected = filter.Key == _selectedKey;
@@ -76,7 +82,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     internal bool IsBrowsingGeneralCatalog => _selectedKey == AllKey && string.IsNullOrWhiteSpace(_query);
 
     private bool CanPlaceArticleAd => OperatingSystem.IsAndroid()
-        && _query.Trim().Length == 0
+        && string.IsNullOrWhiteSpace(_query)
         && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
     public bool IsArticleAdEligible => Sections.Any(section => section.HasAdPlacement)
@@ -107,8 +113,6 @@ public sealed class ArticlesViewModel : BaseViewModel
             }
         }
     }
-
-    private bool IsSearching => _query.Trim().Length >= ArticleSearch.MinQueryLength;
 
     public IReadOnlyList<ArticleSectionItem> Sections
     {
@@ -177,17 +181,17 @@ public sealed class ArticlesViewModel : BaseViewModel
 
     private void Load()
     {
-        _lastCanPlaceArticleAd = CanPlaceArticleAd;
-        HashSet<string>? savedArticleIds = _selectedKey == SavedKey
-            ? _state.Saved.ToHashSet(StringComparer.Ordinal)
-            : null;
+        bool canPlaceAd = CanPlaceArticleAd;
+        _lastCanPlaceArticleAd = canPlaceAd;
+        int queryLength = _query.AsSpan().Trim().Length;
 
-        if (IsSearching)
+        if (queryLength >= ArticleSearch.MinQueryLength)
         {
-            IEnumerable<Article> searchResults = ArticleSearch.Find(_query, Language);
-            if (savedArticleIds is not null)
+            IReadOnlyList<Article> found = ArticleSearch.Find(_query, Language);
+            if (_selectedKey == SavedKey)
             {
-                searchResults = searchResults.Where(article => savedArticleIds.Contains(article.Id));
+                HashSet<string> savedArticleIds = _state.Saved.ToHashSet(StringComparer.Ordinal);
+                found = found.Where(article => savedArticleIds.Contains(article.Id)).ToList();
             }
             else if (_selectedKey != AllKey)
             {
@@ -196,23 +200,22 @@ public sealed class ArticlesViewModel : BaseViewModel
                     .SelectMany(section => section.Articles)
                     .Select(article => article.Id)
                     .ToHashSet(StringComparer.Ordinal);
-                searchResults = searchResults.Where(article => selectedArticleIds.Contains(article.Id));
+                found = found.Where(article => selectedArticleIds.Contains(article.Id)).ToList();
             }
 
-            IReadOnlyList<Article> found = searchResults.ToList();
             Sections = found.Count == 0 ? [] : [new ArticleSectionItem(string.Empty, found.Select(Card))];
             EmptyText = found.Count == 0 ? AppStrings.ArticlesNothingFound : string.Empty;
             return;
         }
 
-        if (savedArticleIds is not null)
+        if (_selectedKey == SavedKey)
         {
             List<Article> savedArticles = _state.Saved
                 .Select(id => ArticleContent.Find(id, Language))
                 .OfType<Article>()
                 .ToList();
             Sections = savedArticles.Count == 0 ? [] : [new ArticleSectionItem(string.Empty, savedArticles.Select(Card))];
-            if (_query.Trim().Length > 0)
+            if (queryLength > 0)
             {
                 EmptyText = AppStrings.ArticlesSearchMinLength;
             }
@@ -224,12 +227,12 @@ public sealed class ArticlesViewModel : BaseViewModel
             return;
         }
 
-        EmptyText = _query.Trim().Length > 0 ? AppStrings.ArticlesSearchMinLength : string.Empty;
+        EmptyText = queryLength > 0 ? AppStrings.ArticlesSearchMinLength : string.Empty;
         IReadOnlyList<ArticleSection> sourceSections = ArticleContent.Sections(Language)
             .Where(section => _selectedKey == AllKey || section.Key == _selectedKey)
             .ToList();
         int articleCount = sourceSections.Sum(section => section.Articles.Count);
-        if (!CanPlaceArticleAd || articleCount < ArticlesBeforeAdCount)
+        if (!canPlaceAd || articleCount < ArticlesBeforeAdCount)
         {
             Sections = sourceSections
                 .Select(section => new ArticleSectionItem(section.Title, section.Articles.Select(Card)))
@@ -242,26 +245,25 @@ public sealed class ArticlesViewModel : BaseViewModel
         bool adPlaced = false;
         foreach (ArticleSection section in sourceSections)
         {
-            List<LibraryCardItem> cards = section.Articles.Select(Card).ToList();
-            if (!adPlaced && cards.Count >= articlesUntilAd)
+            IReadOnlyList<Article> articles = section.Articles;
+            if (!adPlaced && articles.Count >= articlesUntilAd)
             {
                 displaySections.Add(new ArticleSectionItem(
                     section.Title,
-                    cards.Take(articlesUntilAd),
+                    articles.Take(articlesUntilAd).Select(Card),
                     hasAdPlacement: true));
-                cards = cards.Skip(articlesUntilAd).ToList();
                 adPlaced = true;
-                if (cards.Count > 0)
+                if (articles.Count > articlesUntilAd)
                 {
-                    displaySections.Add(new ArticleSectionItem(string.Empty, cards));
+                    displaySections.Add(new ArticleSectionItem(string.Empty, articles.Skip(articlesUntilAd).Select(Card)));
                 }
             }
             else
             {
-                displaySections.Add(new ArticleSectionItem(section.Title, cards));
+                displaySections.Add(new ArticleSectionItem(section.Title, articles.Select(Card)));
                 if (!adPlaced)
                 {
-                    articlesUntilAd -= cards.Count;
+                    articlesUntilAd -= articles.Count;
                 }
             }
         }

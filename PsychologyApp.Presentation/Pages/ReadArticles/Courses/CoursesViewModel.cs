@@ -27,6 +27,7 @@ public sealed class CoursesViewModel : BaseViewModel
     private readonly IDatabaseReadySignal _databaseReady;
     private ReadingState _state = new();
     private IReadOnlyList<LibraryCardItem> _courses = [];
+    private IReadOnlyList<CourseSectionItem> _sections = [];
 
     public CoursesViewModel(INavigationService navigation, IReadingService reading, IDatabaseReadySignal databaseReady)
     {
@@ -44,14 +45,21 @@ public sealed class CoursesViewModel : BaseViewModel
         && Courses.Count >= CoursesBeforeAdCount + 2
         && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
-    public IReadOnlyList<CourseSectionItem> Sections => IsCourseAdEligible
-        ? [new(Courses.Take(CoursesBeforeAdCount), hasAdPlacement: true), new(Courses.Skip(CoursesBeforeAdCount))]
-        : [new(Courses)];
+    public IReadOnlyList<CourseSectionItem> Sections
+    {
+        get => _sections;
+        private set => SetProperty(ref _sections, value);
+    }
 
     public void RefreshAdEligibility()
     {
+        bool showAd = IsCourseAdEligible;
+        if (showAd != (Sections.Count > 0 && Sections[0].HasAdPlacement))
+        {
+            UpdateSections(showAd);
+        }
+
         OnPropertyChanged(nameof(IsCourseAdEligible));
-        OnPropertyChanged(nameof(Sections));
     }
 
     public IReadOnlyList<LibraryCardItem> Courses
@@ -64,8 +72,8 @@ public sealed class CoursesViewModel : BaseViewModel
                 return;
             }
 
+            UpdateSections(IsCourseAdEligible);
             OnPropertyChanged(nameof(IsCourseAdEligible));
-            OnPropertyChanged(nameof(Sections));
         }
     }
 
@@ -78,8 +86,13 @@ public sealed class CoursesViewModel : BaseViewModel
             ReadingState state = await _reading.GetAsync();
             await UiThread.RunAsync(() =>
             {
+                IReadOnlyList<Course> catalog = ArticleContent.Courses(AppStrings.Language);
+                bool progressChanged = HasVisibleProgressChanged(catalog, _state, state);
                 _state = state;
-                Load();
+                if (progressChanged)
+                {
+                    Load(catalog);
+                }
             });
         }
         catch (Exception loadError)
@@ -89,8 +102,37 @@ public sealed class CoursesViewModel : BaseViewModel
         }
     }
 
-    private void Load() =>
-        Courses = [.. ArticleContent.Courses(AppStrings.Language).Select(course => LibraryCards.Course(course, _state, _navigation))];
+    private static bool HasVisibleProgressChanged(IReadOnlyList<Course> catalog, ReadingState previous, ReadingState current)
+    {
+        if (ReferenceEquals(previous.Courses, current.Courses))
+        {
+            return false;
+        }
+
+        // The card displays whether a course was started or finished and how many days are complete.
+        foreach (Course course in catalog)
+        {
+            CourseProgress? before = previous.Course(course.Id);
+            CourseProgress? after = current.Course(course.Id);
+            bool wasFinished = before?.FinishedUtc is not null;
+            bool isFinished = after?.FinishedUtc is not null;
+            if (wasFinished != isFinished || (!isFinished && before?.Days.Count != after?.Days.Count))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void UpdateSections(bool showAd) => Sections = showAd
+        ? [new(Courses.Take(CoursesBeforeAdCount), hasAdPlacement: true), new(Courses.Skip(CoursesBeforeAdCount))]
+        : [new(Courses)];
+
+    private void Load() => Load(ArticleContent.Courses(AppStrings.Language));
+
+    private void Load(IReadOnlyList<Course> catalog) =>
+        Courses = [.. catalog.Select(course => LibraryCards.Course(course, _state, _navigation))];
 
     protected override void RefreshLocalizedProperties()
     {

@@ -23,7 +23,19 @@ public sealed record ReadingState
 
     public bool IsEmpty => Read.Count == 0 && Saved.Count == 0 && LastArticleId is null && Courses.Count == 0;
 
-    public CourseProgress? Course(string courseId) => Courses.FirstOrDefault(course => course.CourseId == courseId);
+    public CourseProgress? Course(string courseId)
+    {
+        for (int index = 0; index < Courses.Count; index++)
+        {
+            CourseProgress progress = Courses[index];
+            if (progress.CourseId == courseId)
+            {
+                return progress;
+            }
+        }
+
+        return null;
+    }
 }
 
 public enum CourseDayState
