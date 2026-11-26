@@ -33,7 +33,7 @@ public sealed class JournalCsvExporterTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Sharing_removes_the_temporary_file_containing_private_notes(bool shareFails)
+    public async Task Sharing_keeps_the_export_only_if_handed_to_the_share_sheet(bool shareFails)
     {
         string directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(directory);
@@ -49,13 +49,14 @@ public sealed class JournalCsvExporterTests
             if (shareFails)
             {
                 await Assert.ThrowsAsync<IOException>(() => sharing);
+                Assert.Empty(Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories));
             }
             else
             {
                 await sharing;
-                Assert.Contains("private journal note", Share.Shared[^1].Content);
+                string file = Assert.Single(Directory.EnumerateFiles(directory, "*.csv", SearchOption.AllDirectories));
+                Assert.Contains("private journal note", await File.ReadAllTextAsync(file));
             }
-            Assert.Empty(Directory.EnumerateFiles(directory));
         }
         finally
         {
@@ -83,7 +84,7 @@ public sealed class JournalCsvExporterTests
                 cancellation.Token));
 
             Assert.Equal(previousShareCount, Share.Shared.Count);
-            Assert.Empty(Directory.EnumerateFiles(directory));
+            Assert.Empty(Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories));
         }
         finally
         {

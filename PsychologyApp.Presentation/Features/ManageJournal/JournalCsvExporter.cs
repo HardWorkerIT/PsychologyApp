@@ -1,7 +1,5 @@
 using System.Globalization;
 using System.Text;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using Microsoft.Maui.Storage;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
@@ -32,37 +30,12 @@ public static class JournalCsvExporter
         return builder.ToString();
     }
 
-    public static async Task ShareAsync(
+    public static Task ShareAsync(
         IReadOnlyList<MoodEntryDTO> entries,
         CancellationToken cancellationToken = default)
     {
         string fileName = SharedFileNames.JournalExport(DateTime.Now);
-        string path = Path.Combine(FileSystem.CacheDirectory, fileName);
-        try
-        {
-            await AtomicFileWriter.WriteAllTextAsync(path, BuildCsv(entries), Encoding.UTF8, cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
-            await Share.Default.RequestAsync(new ShareFileRequest
-            {
-                Title = AppStrings.JournalExportTitle,
-                File = new ShareFile(path)
-            });
-        }
-        finally
-        {
-            // Journal notes must not remain in the cache after the share attempt.
-            try
-            {
-                File.Delete(path);
-            }
-            catch (IOException)
-            {
-                // The OS may still hold the shared file; personal-data erasure also removes it.
-            }
-            catch (UnauthorizedAccessException)
-            {
-            }
-        }
+        return SharedExportFile.ShareAsync(fileName, BuildCsv(entries), AppStrings.JournalExportTitle, cancellationToken);
     }
 
     private static string Csv(string? value)

@@ -54,6 +54,8 @@ internal static class VkRewardedAds
 
     internal static void CancelPending() => VkRewardedHost.CancelPending();
 
+    internal static void CancelForActivity(global::Android.App.Activity activity) => VkRewardedHost.CancelForActivity(activity);
+
     private static bool CanWatch(UserPreferencesState preferences) =>
         AdvertisingConfiguration.CanRequestAds(
             preferences, AdvertisingConfiguration.PrivacyPolicyUrl, AdvertisingConfiguration.VkRewardedSlotId);

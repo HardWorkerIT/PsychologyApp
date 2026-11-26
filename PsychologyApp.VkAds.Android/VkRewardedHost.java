@@ -15,8 +15,11 @@ import java.lang.ref.WeakReference;
 public final class VkRewardedHost {
     private static final String TAG = "VkRewarded";
     private static final Handler main = new Handler(Looper.getMainLooper());
-    private static final Runnable timeout = VkRewardedHost::cancelPending;
+    private static final Runnable loadTimeout = VkRewardedHost::cancelPending;
+    private static final Runnable showTimeout = VkRewardedHost::expireShowing;
+    private static final long SHOW_TIMEOUT_MS = 180_000;
     private static RewardedAd current;
+    private static WeakReference<Activity> ownerActivity;
     private static Runnable unavailable;
     private static boolean personalizedConsent;
     private static boolean showing;
@@ -41,6 +44,7 @@ public final class VkRewardedHost {
             RewardedAd ad = new RewardedAd(slotId, context);
             current = ad;
             WeakReference<Activity> owner = new WeakReference<>(activity);
+            ownerActivity = owner;
             ad.setListener(new RewardedAd.RewardedAdListener() {
                 @Override public void onLoad(RewardedAd loaded) {
                     if (loaded != current) return;
@@ -50,8 +54,9 @@ public final class VkRewardedHost {
                         return;
                     }
 
-                    main.removeCallbacks(timeout);
+                    main.removeCallbacks(loadTimeout);
                     showing = true;
+                    main.postDelayed(showTimeout, SHOW_TIMEOUT_MS);
                     try { loaded.show(host); }
                     catch (RuntimeException | LinkageError error) {
                         logFailure(error);
@@ -92,7 +97,7 @@ public final class VkRewardedHost {
 
                 @Override public void onClick(RewardedAd ad) { }
             });
-            main.postDelayed(timeout, 20_000);
+            main.postDelayed(loadTimeout, 20_000);
             Log.i(TAG, "Requesting ad: slot=" + slotId + ", package=" + context.getPackageName());
             ad.load();
         } catch (RuntimeException | LinkageError error) {
@@ -105,6 +110,14 @@ public final class VkRewardedHost {
         if (current != null && !showing) finish(unavailable);
     }
 
+    private static void expireShowing() {
+        if (current != null && showing) finish(unavailable);
+    }
+
+    public static void cancelForActivity(Activity activity) {
+        if (current != null && ownerActivity != null && ownerActivity.get() == activity) finish(unavailable);
+    }
+
     public static void updateEligibility(boolean enabled, boolean consent) {
         if (!enabled || personalizedConsent != consent) cancelPending();
     }
@@ -114,9 +127,11 @@ public final class VkRewardedHost {
     }
 
     private static void finish(Runnable callback) {
-        main.removeCallbacks(timeout);
+        main.removeCallbacks(loadTimeout);
+        main.removeCallbacks(showTimeout);
         RewardedAd ad = current;
         current = null;
+        ownerActivity = null;
         unavailable = null;
         showing = false;
         rewarded = false;

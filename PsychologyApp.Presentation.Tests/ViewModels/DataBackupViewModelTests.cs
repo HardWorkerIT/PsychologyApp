@@ -5,6 +5,7 @@ using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.DataBackup;
 using PsychologyApp.Presentation.Features.ManageProfile;
 using PsychologyApp.Presentation.Pages.ManageProfile.ProfileDataBackup;
+using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 using PsychologyApp.Presentation.Shared.Services.Security;
@@ -32,12 +33,17 @@ public sealed class DataBackupViewModelTests : IDisposable
         Directory.CreateDirectory(_folder);
         FileSystem.CacheDirectory = _folder;
         Share.Shared.Clear();
+        Share.FileShareError = null;
         FilePicker.Next = null;
         _backup.Setup(b => b.ExportAsync(It.IsAny<CancellationToken>())).ReturnsAsync("PLAIN-BACKUP");
         _backup.Setup(b => b.ExportEncryptedAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync("ENCRYPTED-BACKUP");
     }
 
-    public void Dispose() => Directory.Delete(_folder, recursive: true);
+    public void Dispose()
+    {
+        Share.FileShareError = null;
+        Directory.Delete(_folder, recursive: true);
+    }
 
     private DataBackupViewModel Create() =>
         new(new Mock<INavigationService>().Object, _backup.Object, _summary.Object, _toasts.Object, new MauiUserPreferencesStore(), _dialogs.Object, _eraser.Object, _appLock.Object, _appPinCredentialStore.Object);
@@ -80,6 +86,16 @@ public sealed class DataBackupViewModelTests : IDisposable
         (string _, string fileName, string content) = Assert.Single(Share.Shared);
         Assert.Contains("-protected-", fileName);
         Assert.Equal("ENCRYPTED-BACKUP", content);
+    }
+
+    [Fact]
+    public async Task TheReceivingAppCanReadTheBackupAfterTheShareSheetOpens()
+    {
+        Choose(AppStrings.BackupProtectWithout);
+        await VmTestHelpers.RunAsync(Create().ExportBackupCommand);
+
+        string file = Assert.Single(Directory.GetFiles(_folder, "psychologyapp-backup*.json", SearchOption.AllDirectories));
+        Assert.Equal("PLAIN-BACKUP", await File.ReadAllTextAsync(file));
     }
 
     [Fact]
@@ -165,13 +181,63 @@ public sealed class DataBackupViewModelTests : IDisposable
     }
 
     [Fact]
-    public async Task TheTemporaryFileIsRemovedAfterSharing()
+    public async Task AnExpiredExportIsRemovedButARecentOneCanStillBeRead()
     {
         Choose(AppStrings.BackupProtectWithout);
+        DataBackupViewModel viewModel = Create();
+        await VmTestHelpers.RunAsync(viewModel.ExportBackupCommand);
+        string expired = Assert.Single(Directory.GetFiles(_folder, "*.json", SearchOption.AllDirectories));
+        Directory.SetLastWriteTimeUtc(Path.GetDirectoryName(expired)!, DateTime.UtcNow.AddHours(-1));
+        await VmTestHelpers.RunAsync(viewModel.ExportBackupCommand);
 
+        SharedExportFile.ResumeCleanup();
+
+        Assert.False(File.Exists(expired));
+        Assert.Single(Directory.GetFiles(_folder, "*.json", SearchOption.AllDirectories));
+    }
+
+    [Fact]
+    public async Task AShareFailureRemovesTheUnsentFile()
+    {
+        Choose(AppStrings.BackupProtectWithout);
+        Share.FileShareError = new IOException("Share unavailable");
         await VmTestHelpers.RunAsync(Create().ExportBackupCommand);
 
-        Assert.Empty(Directory.GetFiles(_folder, "psychologyapp-backup*"));
+        Assert.Empty(Directory.GetFiles(_folder, "*.json", SearchOption.AllDirectories));
+    }
+
+    [Fact]
+    public async Task ImportKeepsTheOriginalSelectedDocument()
+    {
+        string original = Path.Combine(_folder, "renamed-backup.json");
+        await File.WriteAllTextAsync(original, "{}");
+        _backup.Setup(b => b.ImportAsync("{}", It.IsAny<CancellationToken>())).ReturnsAsync(new BackupImportResult(0, 0, 0, 0, 0, false));
+
+        FilePicker.Next = new FileResult(original);
+        await VmTestHelpers.RunAsync(Create().ImportBackupCommand);
+        Assert.True(File.Exists(original));
+    }
+
+    [Fact]
+    public async Task ErrorLogAttachmentRemainsReadableAfterOpeningTheMailClient()
+    {
+        string original = DebugFileLoggerProvider.ErrorLogPath;
+        DebugFileLoggerProvider.ErrorLogPath = Path.Combine(_folder, "sample.log");
+        Email.Composed.Clear();
+        try
+        {
+            await File.WriteAllTextAsync(DebugFileLoggerProvider.ErrorLogPath, "Test diagnostics");
+            await VmTestHelpers.RunAsync(Create().ShareErrorLogCommand);
+
+            EmailMessage message = Assert.Single(Email.Composed);
+            EmailAttachment attachment = Assert.Single(message.Attachments!);
+            Assert.Equal("Test diagnostics", await File.ReadAllTextAsync(attachment.FileName));
+        }
+        finally
+        {
+            DebugFileLoggerProvider.ErrorLogPath = original;
+            Email.Composed.Clear();
+        }
     }
 
     [Fact]

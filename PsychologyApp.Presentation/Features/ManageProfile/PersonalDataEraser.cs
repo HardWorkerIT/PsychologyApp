@@ -134,7 +134,8 @@ public sealed class PersonalDataEraser(
                         continue;
                     }
 
-                    if (SharedFileNames.IsOwn(Path.GetFileName(entry)) && !DeleteQuietly(entry))
+                    if ((SharedFileNames.IsOwn(Path.GetFileName(entry)) || SharedFileNames.IsMauiPickerCopy(cacheDirectory, entry))
+                        && !DeleteQuietly(entry))
                     {
                         complete = false;
                     }
@@ -142,7 +143,7 @@ public sealed class PersonalDataEraser(
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                 {
                     complete = false;
-                    logger.LogWarning(ex, "A cache entry could not be inspected while erasing the data");
+                    logger.LogWarning("A cache entry could not be inspected while erasing the data ({ErrorType})", ex.GetType().Name);
                 }
             }
         }
@@ -179,7 +180,7 @@ public sealed class PersonalDataEraser(
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            logger.LogWarning(ex, "A file could not be deleted while erasing the data");
+            logger.LogWarning("A file could not be deleted while erasing the data ({ErrorType})", ex.GetType().Name);
             return false;
         }
     }

@@ -44,6 +44,7 @@ public partial class App : Microsoft.Maui.Controls.Application
             tabNavigator,
             _services.GetRequiredService<JournalMoodLoader>(),
             _services.GetRequiredService<IDatabaseReadySignal>());
+        Task.Run(SharedExportFile.ResumeCleanup).FireAndForget();
 #if DEBUG
         Shared.Common.Infrastructure.DemoDataImporter.TryImportAsync(_services).FireAndForget();
 #endif

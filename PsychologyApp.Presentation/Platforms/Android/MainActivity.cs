@@ -5,6 +5,7 @@ using Android.OS;
 using System.Diagnostics;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Features.ManageJournal;
+using PsychologyApp.Presentation.Platforms.Android;
 using PsychologyApp.Presentation.Shared.Common.Diagnostics;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 
@@ -32,6 +33,19 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnNewIntent(intent);
         HandleReminderIntent(intent);
+    }
+
+    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
+    {
+        BackupDocumentPicker.OnActivityResult(this, requestCode, resultCode, data);
+        base.OnActivityResult(requestCode, resultCode, data);
+    }
+
+    protected override void OnDestroy()
+    {
+        BackupDocumentPicker.OnDestroyed(this);
+        VkRewardedAds.CancelForActivity(this);
+        base.OnDestroy();
     }
 
     private static void HandleReminderIntent(Intent? intent)

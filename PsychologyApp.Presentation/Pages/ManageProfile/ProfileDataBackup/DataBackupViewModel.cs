@@ -1,4 +1,3 @@
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel.Communication;
 using PsychologyApp.Application.DataBackup;
@@ -348,7 +347,7 @@ public sealed class DataBackupViewModel : BaseViewModel
             }
 
             string fileName = SharedFileNames.Backup(passphraseProtected, DateTime.Now);
-            await ShareTemporaryFileAsync(fileName, json, AppStrings.DataBackupExportTitle, cancellationToken);
+            await SharedExportFile.ShareAsync(fileName, json, AppStrings.DataBackupExportTitle, cancellationToken);
         }
         catch (BackupFormatException)
         {
@@ -356,51 +355,17 @@ public sealed class DataBackupViewModel : BaseViewModel
         }
     }
 
-    /// <summary>
-    /// The file holds chats, mood notes and the safety plan in plain text, so it is written to the cache only for the moment
-    /// the share sheet is open and removed afterwards (also when sharing fails or is cancelled).
-    /// </summary>
-    private static async Task ShareTemporaryFileAsync(string fileName, string content, string title, CancellationToken cancellationToken)
-    {
-        string path = Path.Combine(FileSystem.CacheDirectory, fileName);
-        try
-        {
-            await AtomicFileWriter.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
-            await Share.Default.RequestAsync(new ShareFileRequest
-            {
-                Title = title,
-                File = new ShareFile(path)
-            });
-        }
-        finally
-        {
-            TryDelete(path);
-        }
-    }
-
-    private static void TryDelete(string path)
-    {
-        try
-        {
-            File.Delete(path);
-        }
-        catch (IOException)
-        {
-            // Left for the OS to clear from the cache.
-        }
-        catch (UnauthorizedAccessException)
-        {
-        }
-    }
-
     private async Task ImportBackupAsync(CancellationToken cancellationToken)
     {
         try
         {
-            string json;
+            string? json;
             try
             {
+#if ANDROID
+                json = await PsychologyApp.Presentation.Platforms.Android.BackupDocumentPicker.ReadAsync(
+                    AppStrings.DataBackupImportTitle, cancellationToken);
+#else
                 FileResult? file = await FilePicker.Default.PickAsync(new PickOptions
                 {
                     PickerTitle = AppStrings.DataBackupImportTitle
@@ -413,11 +378,17 @@ public sealed class DataBackupViewModel : BaseViewModel
                 cancellationToken.ThrowIfCancellationRequested();
                 await using Stream stream = await file.OpenReadAsync();
                 json = await Task.Run(() => BackupFileReader.ReadAsync(stream, cancellationToken), cancellationToken);
+#endif
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
                 throw new BackupFormatException("The selected backup file could not be read.", ex);
             }
+            if (json is null)
+            {
+                return;
+            }
+
             bool isEncrypted = await Task.Run(() => _backupService.IsEncrypted(json), cancellationToken);
             BackupImportResult? imported = isEncrypted
                 ? await ImportProtectedAsync(json, cancellationToken)
@@ -553,37 +524,25 @@ public sealed class DataBackupViewModel : BaseViewModel
         }
     }
 
-    private static async Task EmailTemporaryFileAsync(
+    private static Task EmailTemporaryFileAsync(
         string fileName,
         string content,
         string subject,
         string recipient,
-        CancellationToken cancellationToken)
-    {
-        string path = Path.Combine(FileSystem.CacheDirectory, fileName);
-        try
+        CancellationToken cancellationToken) =>
+        SharedExportFile.DeliverAsync(fileName, content, path => Email.Default.ComposeAsync(new EmailMessage
         {
-            await AtomicFileWriter.WriteAllTextAsync(path, content, Encoding.UTF8, cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
-            await Email.Default.ComposeAsync(new EmailMessage
-            {
-                Subject = subject,
-                Body = AppStrings.ErrorLogEmailBody,
-                To = [recipient],
-                Attachments = [new EmailAttachment(path)]
-            });
-        }
-        finally
-        {
-            TryDelete(path);
-        }
-    }
+            Subject = subject,
+            Body = AppStrings.ErrorLogEmailBody,
+            To = [recipient],
+            Attachments = [new EmailAttachment(path)]
+        }), cancellationToken);
 
     private async Task ExportSummaryAsync(CancellationToken cancellationToken)
     {
         string language = UserPreferences.NormalizeLanguageKey(_preferences.Load().Language);
         string summary = await _specialistSummaryService.BuildSummaryAsync(language, cancellationToken);
         string fileName = SharedFileNames.SpecialistSummary(DateTime.Now);
-        await ShareTemporaryFileAsync(fileName, summary, AppStrings.DataBackupSummaryTitle, cancellationToken);
+        await SharedExportFile.ShareAsync(fileName, summary, AppStrings.DataBackupSummaryTitle, cancellationToken);
     }
 }
