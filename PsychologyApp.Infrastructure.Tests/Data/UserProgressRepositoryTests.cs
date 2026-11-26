@@ -405,6 +405,57 @@ public sealed class UserProgressRepositoryTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task ConcurrentWidgetCheckInsAndAnEditorSaveShareOneSlotAndKeepTheNote()
+    {
+        DateOnly day = new(2025, 5, 10);
+        DateTime morning = day.ToDateTime(new TimeOnly(9, 0)).ToUniversalTime();
+        DateTime evening = day.ToDateTime(new TimeOnly(21, 0)).ToUniversalTime();
+        long eveningId = await _repository.RecordMoodAsync(new MoodEntryDTO { MoodLevel = 2, RecordedAt = evening });
+        TaskCompletionSource start = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        Task<long>[] saves = Enumerable.Range(0, 6).Select(index => Task.Run(async () =>
+        {
+            await start.Task;
+            return await _repository.SaveJournalSlotAsync(new MoodEntryDTO
+            {
+                RecordedAt = morning.AddMinutes(index),
+                MoodLevel = 4,
+                Note = index == 0 ? "Journal draft" : null
+            }, day, morning: true, preserveNote: index != 0);
+        })).ToArray();
+
+        start.SetResult();
+        long id = Assert.Single((await Task.WhenAll(saves)).Distinct());
+        await _repository.SaveJournalSlotAsync(new MoodEntryDTO { RecordedAt = morning, MoodLevel = 5 },
+            day, morning: true, preserveNote: true);
+
+        IReadOnlyList<MoodEntryDTO> entries = await _repository.GetRecentMoodsAsync(10);
+        Assert.Collection(entries,
+            entry => Assert.Equal(eveningId, entry.MoodEntryId),
+            entry =>
+            {
+                Assert.Equal(id, entry.MoodEntryId);
+                Assert.Equal(5, entry.MoodLevel);
+                Assert.Equal("Journal draft", entry.Note);
+            });
+    }
+
+    [Fact]
+    public async Task ADelayedNoteSaveKeepsTheRatingWrittenByTheWidget()
+    {
+        DateOnly day = new(2025, 5, 10);
+        DateTime morning = day.ToDateTime(new TimeOnly(9, 0)).ToUniversalTime();
+        long id = await _repository.RecordMoodAsync(new MoodEntryDTO { MoodLevel = 2, RecordedAt = morning });
+        await _repository.SaveJournalSlotAsync(new MoodEntryDTO { MoodLevel = 5, RecordedAt = morning },
+            day, morning: true, preserveNote: true);
+
+        await _repository.UpdateMoodNoteAsync(id, "New note");
+
+        MoodEntryDTO entry = Assert.Single(await _repository.GetRecentMoodsAsync(10));
+        Assert.Equal(5, entry.MoodLevel);
+        Assert.Equal("New note", entry.Note);
+    }
+
+    [Fact]
     public async Task UpdateMoodEntryAsync_UpdatesLevelAndNote()
     {
         await _repository.RecordMoodAsync(new MoodEntryDTO

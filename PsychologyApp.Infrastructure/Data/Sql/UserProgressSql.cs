@@ -189,14 +189,27 @@ internal static class UserProgressSql
         FROM MoodEntries
         WHERE (@fromUtc IS NULL OR RecordedAt >= @fromUtc)
           AND (@toUtc IS NULL OR RecordedAt < @toUtc)
-        ORDER BY RecordedAt DESC
+        ORDER BY RecordedAt DESC, MoodEntryId DESC
         LIMIT @limit;
+        """;
+
+    internal const string SelectJournalSlot = """
+        SELECT MoodEntryId
+        FROM (
+            SELECT MoodEntryId, RecordedAt, COUNT(*) OVER () AS DayCount
+            FROM MoodEntries
+            WHERE RecordedAt >= @fromUtc AND RecordedAt < @toUtc
+        )
+        WHERE DayCount > 1 OR (RecordedAt < @cutoffUtc) = @morning
+        ORDER BY CASE WHEN @morning THEN RecordedAt END ASC, RecordedAt DESC,
+                 CASE WHEN @morning THEN MoodEntryId END DESC, MoodEntryId ASC
+        LIMIT 1;
         """;
 
     internal const string UpdateMoodEntry = """
         UPDATE MoodEntries
-        SET MoodLevel = @MoodLevel,
-            Note = @Note
+        SET MoodLevel = COALESCE(@MoodLevel, MoodLevel),
+            Note = CASE WHEN @preserveNote THEN Note ELSE @Note END
         WHERE MoodEntryId = @MoodEntryId;
         """;
 

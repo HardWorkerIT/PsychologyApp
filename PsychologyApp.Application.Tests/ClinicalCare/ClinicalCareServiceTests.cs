@@ -319,6 +319,8 @@ public sealed class ClinicalCareServiceTests
         public Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<long> RecordMoodAsync(int moodLevel, string? note = null, DateTime? recordedAtUtc = null, CancellationToken cancellationToken = default) => Task.FromResult(0L);
         public Task UpdateMoodEntryAsync(long moodEntryId, int moodLevel, string? note = null, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<long> SaveJournalSlotAsync(MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public IReadOnlyList<MoodEntryDTO> Moods { get; init; } = [];
         public Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit = 7, CancellationToken cancellationToken = default) => Task.FromResult(Moods);

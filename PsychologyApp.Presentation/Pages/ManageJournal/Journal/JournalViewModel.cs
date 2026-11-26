@@ -659,48 +659,77 @@ public sealed class JournalViewModel : BaseViewModel
         DateOnly day = _editorDay;
         JournalCheckInSlot slot = _editorSlot;
 
-        JournalMoodSaveResult saveResult;
-        await _moodSaveGate.WaitAsync();
+        _noteLooksLikeCrisis = _journalMoodLoader.NoteLooksLikeCrisis(note);
+        NotifyLowMoodSupport();
+        Task offerHelp = Task.CompletedTask;
+        if (_noteLooksLikeCrisis && !string.Equals(note, _crisisOfferedForNote, StringComparison.Ordinal))
+        {
+            _crisisOfferedForNote = note;
+            offerHelp = OfferNoteCrisisHelpAsync(note);
+        }
+
         try
         {
-            // A newer note may have arrived while this save waited behind an earlier write.
+            await _moodSaveGate.WaitAsync();
+            try
+            {
+                // A newer note may have arrived while this save waited behind an earlier write.
+                if (!IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
+                {
+                    return;
+                }
+
+                if (!_moodDirty && _editorEntryId is long entryId)
+                {
+                    await _journalMoodLoader.SaveNoteAsync(entryId, note);
+                }
+                else
+                {
+                    long savedEntryId = await _journalMoodLoader.SaveMoodAsync(moodLevel, note, _editorEntryId, day, slot);
+                    if (day == _editorDay && slot == _editorSlot && !_editorStale && _editorEntryId is null)
+                    {
+                        _editorEntryId = savedEntryId;
+                    }
+                }
+            }
+            finally
+            {
+                _moodSaveGate.Release();
+            }
+
             if (!IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
             {
                 return;
             }
 
-            // Resolve the id after entering the gate. An earlier queued insert may have created this slot while this save waited.
-            saveResult = await _journalMoodLoader.SaveMoodWithResultAsync(moodLevel, note, _editorEntryId, day, slot);
-            if (day == _editorDay && slot == _editorSlot && !_editorStale && _editorEntryId is null)
+            _noteDirty = false;
+            _moodDirty = false;
+            NotifyMoodSaveStatus();
+            if (reload)
             {
-                _editorEntryId = saveResult.EntryId;
+                await LoadAsync(keepCurrentEditorReady: true);
             }
         }
         finally
         {
-            _moodSaveGate.Release();
+            await offerHelp;
         }
+    }
 
-        if (!IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
+    private async Task OfferNoteCrisisHelpAsync(string? note)
+    {
+        try
         {
-            return;
-        }
-
-        _noteDirty = false;
-        _moodDirty = false;
-        _noteLooksLikeCrisis = saveResult.LooksLikeCrisis;
-        NotifyMoodSaveStatus();
-        NotifyLowMoodSupport();
-        if (reload)
-        {
-            await LoadAsync(keepCurrentEditorReady: true);
-        }
-
-        // Asked once per distinct note text: autosave fires repeatedly while the person is still typing.
-        if (saveResult.LooksLikeCrisis && !string.Equals(note, _crisisOfferedForNote, StringComparison.Ordinal))
-        {
-            _crisisOfferedForNote = note;
             await OfferCrisisHelpAsync();
+        }
+        catch (Exception ex)
+        {
+            if (string.Equals(note, _crisisOfferedForNote, StringComparison.Ordinal))
+            {
+                _crisisOfferedForNote = null;
+            }
+
+            BestEffort.Report(ex);
         }
     }
 

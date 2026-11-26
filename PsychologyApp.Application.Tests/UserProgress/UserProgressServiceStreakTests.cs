@@ -99,6 +99,8 @@ public sealed class UserProgressServiceStreakTests
         public Task SetSavedNextStepsAsync(IReadOnlyList<SavedNextStep> nextSteps, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<long> RecordMoodAsync(MoodEntryDTO entry, CancellationToken cancellationToken = default) => Task.FromResult(0L);
         public Task UpdateMoodEntryAsync(long moodEntryId, int moodLevel, string? note, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<long> SaveJournalSlotAsync(MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);
         public Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(DateTime? fromUtc, DateTime? toUtc, int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);

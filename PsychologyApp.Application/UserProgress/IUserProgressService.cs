@@ -37,6 +37,8 @@ public interface IUserProgressService
 
     Task<long> RecordMoodAsync(int moodLevel, string? note = null, DateTime? recordedAtUtc = null, CancellationToken cancellationToken = default);
     Task UpdateMoodEntryAsync(long moodEntryId, int moodLevel, string? note = null, CancellationToken cancellationToken = default);
+    Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default);
+    Task<long> SaveJournalSlotAsync(MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default);
     Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit = 7, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(

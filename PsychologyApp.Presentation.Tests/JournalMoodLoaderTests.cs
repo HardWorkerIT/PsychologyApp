@@ -400,54 +400,43 @@ public sealed class JournalMoodLoaderTests
 
         progress.Verify(p => p.UpdateMoodEntryAsync(9, 5, "updated", It.IsAny<CancellationToken>()), Times.Once);
         progress.Verify(
-            p => p.RecordMoodAsync(
-                It.IsAny<int>(),
-                It.IsAny<string?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<CancellationToken>()),
+            p => p.SaveJournalSlotAsync(It.IsAny<MoodEntryDTO>(), It.IsAny<DateOnly>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()),
             Times.Never);
     }
 
     [Fact]
-    public async Task SaveMoodAsync_Inserts_WhenNoEntryId()
+    public async Task SaveMoodAsync_SavesTheEditorNoteInTheSelectedSlot_WhenNoEntryId()
     {
+        DateOnly day = DateOnly.FromDateTime(DateTime.Today);
         Mock<IUserProgressService> progress = new();
         progress
-            .Setup(p => p.RecordMoodAsync(
-                4,
-                "note",
-                It.IsAny<DateTime?>(),
-                It.IsAny<CancellationToken>()))
+            .Setup(p => p.SaveJournalSlotAsync(It.IsAny<MoodEntryDTO>(), day, true, false, It.IsAny<CancellationToken>()))
             .ReturnsAsync(1L);
 
         JournalMoodLoader loader = new(progress.Object, new KeywordCrisisDetector());
-        await loader.SaveMoodAsync(
+        long id = await loader.SaveMoodAsync(
             4,
             "note",
             null,
-            DateOnly.FromDateTime(DateTime.Today),
+            day,
             JournalCheckInSlot.Morning);
 
+        Assert.Equal(1, id);
         progress.Verify(
-            p => p.RecordMoodAsync(4, "note", It.IsAny<DateTime?>(), It.IsAny<CancellationToken>()),
+            p => p.SaveJournalSlotAsync(It.Is<MoodEntryDTO>(m => m.MoodLevel == 4 && m.Note == "note"), day, true, false,
+                It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
     [Theory]
     [InlineData("Не хочу жить", true)]
     [InlineData("Устала, но вечер был спокойный", false)]
-    public async Task A_note_that_reads_like_a_crisis_is_saved_and_asks_for_the_help_page(string note, bool crisis)
+    public void A_note_that_reads_like_a_crisis_is_identified_without_storage(string note, bool crisis)
     {
-        Mock<IUserProgressService> progress = new();
-        progress
-            .Setup(p => p.RecordMoodAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<DateTime?>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(1L);
+        Mock<IUserProgressService> progress = new(MockBehavior.Strict);
         JournalMoodLoader loader = new(progress.Object, new KeywordCrisisDetector());
 
-        bool offerHelp = await loader.SaveMoodAsync(2, note, null, DateOnly.FromDateTime(DateTime.Today), JournalCheckInSlot.Evening);
-
-        Assert.Equal(crisis, offerHelp);
-        progress.Verify(p => p.RecordMoodAsync(2, note, It.IsAny<DateTime?>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Equal(crisis, loader.NoteLooksLikeCrisis(note));
     }
 
     [Fact]

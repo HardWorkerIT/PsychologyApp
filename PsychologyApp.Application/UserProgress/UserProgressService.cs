@@ -183,6 +183,12 @@ public sealed class UserProgressService(IUserProgressRepository repository) : IU
     public Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default) =>
         repository.DeleteMoodEntryAsync(moodEntryId, cancellationToken);
 
+    public Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default) =>
+        repository.UpdateMoodNoteAsync(moodEntryId, note, cancellationToken);
+
+    public Task<long> SaveJournalSlotAsync(MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default) =>
+        repository.SaveJournalSlotAsync(entry, day, morning, preserveNote, cancellationToken);
+
     public Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit = 7, CancellationToken cancellationToken = default) =>
         repository.GetRecentMoodsAsync(limit, cancellationToken);
 

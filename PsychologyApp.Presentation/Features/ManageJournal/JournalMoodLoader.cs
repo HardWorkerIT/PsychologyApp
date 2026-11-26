@@ -56,7 +56,6 @@ public sealed record JournalMoodSnapshot(
 public sealed record JournalSlotPreview(int MoodLevel, string? Note);
 
 /// <summary>The persisted row id is needed by the next autosave so it updates this check-in instead of inserting a duplicate.</summary>
-public sealed record JournalMoodSaveResult(long EntryId, bool LooksLikeCrisis);
 
 public sealed class JournalMoodLoader(IUserProgressService userProgressService, ICrisisDetector crisisDetector)
 {
@@ -277,17 +276,11 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
     }
 
     /// <summary>Backwards-compatible save API for callers that only need crisis classification.</summary>
-    public async Task<bool> SaveMoodAsync(
-        int moodLevel,
-        string? note,
-        long? entryId,
-        DateOnly day,
-        JournalCheckInSlot slot,
-        CancellationToken cancellationToken = default) =>
-        (await SaveMoodWithResultAsync(moodLevel, note, entryId, day, slot, cancellationToken)).LooksLikeCrisis;
+    internal bool NoteLooksLikeCrisis(string? note) => crisisDetector.IsCrisis(note);
 
-    /// <summary>Saves the check-in and returns its row id and crisis classification.</summary>
-    public async Task<JournalMoodSaveResult> SaveMoodWithResultAsync(
+    internal Task SaveNoteAsync(long entryId, string? note) => userProgressService.UpdateMoodNoteAsync(entryId, note);
+
+    public async Task<long> SaveMoodAsync(
         int moodLevel,
         string? note,
         long? entryId,
@@ -295,42 +288,28 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         JournalCheckInSlot slot,
         CancellationToken cancellationToken = default)
     {
-        long savedEntryId;
         if (entryId is > 0)
         {
             await userProgressService.UpdateMoodEntryAsync(entryId.Value, moodLevel, note, cancellationToken);
-            savedEntryId = entryId.Value;
-        }
-        else
-        {
-            DateTime recordedAtUtc = ResolveSlotTimestamp(day, slot);
-            savedEntryId = await userProgressService.RecordMoodAsync(
-                moodLevel,
-                note,
-                recordedAtUtc,
-                cancellationToken);
+            return entryId.Value;
         }
 
-        // A journal note is where people write what they would not say in the chat; it gets the same local check.
-        return new JournalMoodSaveResult(savedEntryId, crisisDetector.IsCrisis(note));
+        return await userProgressService.SaveJournalSlotAsync(
+            new MoodEntryDTO { MoodLevel = moodLevel, Note = note, RecordedAt = ResolveSlotTimestamp(day, slot) },
+            day, slot == JournalCheckInSlot.Morning, preserveNote: false, cancellationToken);
     }
 
     /// <summary>
     /// A check-in "now" from outside the journal (the home-screen widget): it fills or replaces today's current slot, as
     /// tapping a face in the journal does, and keeps a note already written there.
     /// </summary>
-    public async Task SaveNowAsync(int moodLevel, CancellationToken cancellationToken = default)
+    public Task SaveNowAsync(int moodLevel, CancellationToken cancellationToken = default)
     {
-        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-        JournalCheckInSlot slot = MoodCheckInSlotPolicy.IsMorningLocalHour(DateTime.Now.Hour)
-            ? JournalCheckInSlot.Morning
-            : JournalCheckInSlot.Evening;
-        DateTime fromUtc = today.ToDateTime(TimeOnly.MinValue).ToUniversalTime();
-        IReadOnlyList<MoodEntryDTO> todays = await userProgressService.GetMoodsAsync(
-            fromUtc, fromUtc.AddDays(1), 50, cancellationToken);
-        (MoodEntryDTO? morning, MoodEntryDTO? evening) = SplitDaySlots(todays);
-        MoodEntryDTO? current = slot == JournalCheckInSlot.Morning ? morning : evening;
-        await SaveMoodAsync(moodLevel, current?.Note, current?.MoodEntryId, today, slot, cancellationToken);
+        DateTimeOffset now = DateTimeOffset.Now;
+        return userProgressService.SaveJournalSlotAsync(
+            new MoodEntryDTO { MoodLevel = moodLevel, RecordedAt = now.UtcDateTime },
+            DateOnly.FromDateTime(now.DateTime), MoodCheckInSlotPolicy.IsMorningLocalHour(now.Hour),
+            preserveNote: true, cancellationToken);
     }
 
     public async Task<IReadOnlyList<MoodEntryDTO>> GetExportMoodsAsync(

@@ -6,7 +6,9 @@ public interface IMoodProgressRepository
 {
     /// <returns>The id of the new entry, so a correction of the same check-in updates it instead of adding another.</returns>
     Task<long> RecordMoodAsync(MoodEntryDTO entry, CancellationToken cancellationToken = default);
+    Task<long> SaveJournalSlotAsync(MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default);
     Task UpdateMoodEntryAsync(long moodEntryId, int moodLevel, string? note, CancellationToken cancellationToken = default);
+    Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default);
     Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(

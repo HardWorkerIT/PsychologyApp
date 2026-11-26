@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Configuration;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Domain.UserProgress;
 using PsychologyApp.Infrastructure.Data;
 using PsychologyApp.Infrastructure.Data.Repositories.Base;
 using PsychologyApp.Infrastructure.Data.Sql;
@@ -436,30 +437,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
 
         try
         {
-            long id = await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
-                UserProgressSql.InsertMoodEntry,
-                new
-                {
-                    entry.MoodLevel,
-                    entry.Note,
-                    RecordedAt = SqliteTime.ToIso(entry.RecordedAt)
-                },
-                transaction,
-                CommandTimeoutSeconds,
-                cancellationToken)).ConfigureAwait(false);
-
-            await connection.ExecuteAsync(DapperCommandFactory.Create(
-                UserProgressSql.InsertMoodCompletion,
-                new
-                {
-                    moduleName = "Practice",
-                    pageName = "Mood",
-                    completedAt = SqliteTime.ToIso(entry.RecordedAt)
-                },
-                transaction,
-                CommandTimeoutSeconds,
-                cancellationToken)).ConfigureAwait(false);
-
+            long id = await InsertMoodAsync(connection, transaction, entry, cancellationToken).ConfigureAwait(false);
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             return id;
         }
@@ -468,6 +446,56 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
             throw;
         }
+    }
+
+    public async Task<long> SaveJournalSlotAsync(
+        MoodEntryDTO entry, DateOnly day, bool morning, bool preserveNote, CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        // Reserve the writer before looking up the slot so concurrent saves cannot both find it empty.
+        await using SqliteTransaction transaction = connection.BeginTransaction(deferred: false);
+        long? existingId = await connection.ExecuteScalarAsync<long?>(DapperCommandFactory.Create(
+            UserProgressSql.SelectJournalSlot,
+            new
+            {
+                fromUtc = SqliteTime.ToIso(day.ToDateTime(TimeOnly.MinValue).ToUniversalTime()),
+                toUtc = SqliteTime.ToIso(day.AddDays(1).ToDateTime(TimeOnly.MinValue).ToUniversalTime()),
+                cutoffUtc = SqliteTime.ToIso(day.ToDateTime(new TimeOnly(MoodCheckInSlotPolicy.MorningHourCutoff, 0)).ToUniversalTime()),
+                morning
+            },
+            transaction, CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+
+        long id;
+        if (existingId is long moodEntryId)
+        {
+            await UpdateMoodEntryAsync(connection, transaction, moodEntryId, entry.MoodLevel, entry.Note, preserveNote, cancellationToken)
+                .ConfigureAwait(false);
+            id = moodEntryId;
+        }
+        else
+        {
+            id = await InsertMoodAsync(connection, transaction, entry, cancellationToken).ConfigureAwait(false);
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return id;
+    }
+
+    private async Task<long> InsertMoodAsync(
+        SqliteConnection connection, SqliteTransaction transaction, MoodEntryDTO entry, CancellationToken cancellationToken)
+    {
+        string recordedAt = SqliteTime.ToIso(entry.RecordedAt);
+        long id = await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
+            UserProgressSql.InsertMoodEntry,
+            new { entry.MoodLevel, entry.Note, RecordedAt = recordedAt },
+            transaction, CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+
+        await connection.ExecuteAsync(DapperCommandFactory.Create(
+            UserProgressSql.InsertMoodCompletion,
+            new { moduleName = "Practice", pageName = "Mood", completedAt = recordedAt },
+            transaction, CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+        return id;
     }
 
     public async Task<IReadOnlyList<MoodEntryDTO>> GetRecentMoodsAsync(int limit, CancellationToken cancellationToken = default)
@@ -510,17 +538,30 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
-        await connection.ExecuteAsync(DapperCommandFactory.Create(
+        await UpdateMoodEntryAsync(connection, null, moodEntryId, moodLevel, note, preserveNote: false, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task UpdateMoodNoteAsync(long moodEntryId, string? note, CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
+        await UpdateMoodEntryAsync(connection, null, moodEntryId, null, note, preserveNote: false, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private Task UpdateMoodEntryAsync(
+        SqliteConnection connection, SqliteTransaction? transaction, long moodEntryId, int? moodLevel, string? note,
+        bool preserveNote, CancellationToken cancellationToken) =>
+        connection.ExecuteAsync(DapperCommandFactory.Create(
             UserProgressSql.UpdateMoodEntry,
             new
             {
                 MoodEntryId = moodEntryId,
                 MoodLevel = moodLevel,
-                Note = note
+                Note = note,
+                preserveNote
             },
-            commandTimeout: CommandTimeoutSeconds,
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
-    }
+            transaction, CommandTimeoutSeconds, cancellationToken));
 
     public async Task DeleteMoodEntryAsync(long moodEntryId, CancellationToken cancellationToken = default)
     {
