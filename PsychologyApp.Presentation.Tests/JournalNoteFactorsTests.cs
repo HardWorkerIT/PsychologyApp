@@ -91,7 +91,7 @@ public sealed class JournalNoteFactorsTests
 
         IReadOnlyList<JournalActivityInsight> insights = JournalNoteFactors.Analyze(
         [
-            (sleepNote, 4),
+            ($"  {sleepNote}\r{sleepNote}\n\t", 4),
             (sleepNote, 2),
             (walkNote, 5)
         ]);

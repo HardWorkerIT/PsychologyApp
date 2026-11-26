@@ -12,6 +12,16 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class JournalMoodLoaderTests
 {
     [Fact]
+    public void SplitDaySlots_UsesDistinctEntriesWithEqualTimestamps()
+    {
+        DateTime timestamp = DateTime.Today.AddHours(12);
+        MoodEntryDTO first = new() { MoodEntryId = 1, RecordedAt = timestamp };
+        MoodEntryDTO last = new() { MoodEntryId = 2, RecordedAt = timestamp };
+
+        Assert.Equal((first, last), JournalMoodLoader.SplitDaySlots([first, last]));
+    }
+
+    [Fact]
     public async Task LoadAsync_ShowsChart_WhenTwoMoodsExist()
     {
         Mock<IUserProgressService> progress = new();
@@ -191,6 +201,35 @@ public sealed class JournalMoodLoaderTests
 
         Assert.Equal(2, snapshot.ChartPoints.Count);
     }
+
+    [Fact]
+    public async Task FilteringTheTimelineKeepsChronologyAndTheTrendOfTheWholePeriod()
+    {
+        DateTime older = DateTime.Today.AddDays(-1).AddHours(10).ToUniversalTime();
+        DateTime newer = DateTime.Today.AddHours(10).ToUniversalTime();
+        Mock<IUserProgressService> progress = new();
+        progress.Setup(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(),
+                It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([
+                new() { MoodEntryId = 1, MoodLevel = 2, RecordedAt = older },
+                new() { MoodEntryId = 2, MoodLevel = 1, RecordedAt = newer },
+                new() { MoodEntryId = 3, MoodLevel = 3, RecordedAt = older },
+                new() { MoodEntryId = 4, MoodLevel = 5, RecordedAt = newer }
+            ]);
+        progress.Setup(p => p.GetRecentTechniqueCompletionsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+        JournalMoodLoader loader = new(progress.Object, new KeywordCrisisDetector());
+
+        JournalMoodSnapshot all = await loader.LoadAsync();
+        JournalMoodSnapshot filtered = await loader.LoadAsync(filterDay: DateOnly.FromDateTime(older.ToLocalTime()));
+
+        Assert.Equal([2L, 4L, 1L, 3L], all.TimelineEntries.Select(entry => entry.MoodEntryId));
+        Assert.Equal([2, 3, 1, 5], all.ChartPoints.Select(point => point.MoodLevel));
+        Assert.Equal([2, 3], filtered.ChartPoints.Select(point => point.MoodLevel));
+        Assert.Equal(AppStrings.MoodTrendUp, filtered.Stats.MoodTrendLabel);
+        Assert.Equal(AppStrings.JournalCheckInDays(2, 7), filtered.Stats.CheckInDaysDisplay);
+    }
+
     [Fact]
     public async Task LoadAsync_Accepts90DayRange()
     {

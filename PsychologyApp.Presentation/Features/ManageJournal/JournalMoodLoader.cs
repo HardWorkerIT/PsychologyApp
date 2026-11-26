@@ -125,24 +125,68 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             .OrderByDescending(entry => entry.RecordedAt)
             .ToList();
 
-        Dictionary<DateOnly, MoodEntryDTO> byDay = BuildByDay(orderedNewestFirst);
-        Dictionary<DateOnly, List<MoodEntryDTO>> dayEntries = BuildDayEntries(orderedNewestFirst);
+        Dictionary<DateOnly, int> moodLevelByDay = [];
+        List<MoodEntryDTO> editorDayEntries = [];
+        List<MoodNoteItem> timeline = filterDay is null ? new(orderedNewestFirst.Count) : [];
+        List<MoodChartPoint> points = [];
+        List<MoodEntryDTO> statsSource = [];
+        string noNoteCaption = AppStrings.JournalNoNoteCaption;
+        MoodEntryDTO? lastYearEntry = null;
+        DateTime chartTimestamp = default;
+        int sameTimestampStart = 0;
+        int daysWithMood = 0;
+        foreach (MoodEntryDTO entry in orderedNewestFirst)
+        {
+            DateTime local = entry.RecordedAt.ToLocalTime();
+            DateOnly day = DateOnly.FromDateTime(local);
+            bool inRange = day >= rangeStart && day <= today;
+            if (moodLevelByDay.TryAdd(day, entry.MoodLevel) && inRange)
+            {
+                daysWithMood++;
+            }
 
-        List<MoodNoteItem> timeline = FilterForDay(orderedNewestFirst, filterDay)
-            .Select(ToTimelineItem)
-            .ToList();
+            if (inRange)
+            {
+                statsSource.Add(entry);
+            }
 
-        // The calendar may have fetched more than the chosen range (a month or a year back): the chart shows the range only. A single chosen day keeps its own points.
-        List<MoodChartPoint> points = FilterForDay(orderedNewestFirst, filterDay)
-            .Where(entry => filterDay is not null || DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()) >= rangeStart)
-            .OrderBy(entry => entry.RecordedAt)
-            .Select(entry => new MoodChartPoint(entry.RecordedAt.ToLocalTime(), entry.MoodLevel))
-            .ToList();
+            if (day == resolvedEditorDay)
+            {
+                editorDayEntries.Add(entry);
+            }
+
+            if (day == lastYearSameDay)
+            {
+                lastYearEntry ??= entry;
+            }
+
+            if (filterDay is not null && day != filterDay)
+            {
+                continue;
+            }
+
+            timeline.Add(ToTimelineItem(entry, local, day, today, noNoteCaption));
+            // The wider calendar query does not extend the chart range unless a specific day was selected.
+            if (filterDay is null && day < rangeStart)
+            {
+                continue;
+            }
+
+            if (entry.RecordedAt != chartTimestamp)
+            {
+                // Reverse each tie now so the final reversal keeps the source order for identical timestamps.
+                points.Reverse(sameTimestampStart, points.Count - sameTimestampStart);
+                sameTimestampStart = points.Count;
+                chartTimestamp = entry.RecordedAt;
+            }
+
+            points.Add(new MoodChartPoint(local, entry.MoodLevel));
+        }
+
+        points.Reverse(sameTimestampStart, points.Count - sameTimestampStart);
+        points.Reverse();
 
         List<JournalTimelineDayGroup> groups = BuildTimelineGroups(timeline);
-        Dictionary<DateOnly, int> moodLevelByDay = byDay.ToDictionary(
-            pair => pair.Key,
-            pair => pair.Value.MoodLevel);
         DateOnly? selectedCalendarDay = filterDay ?? editorDay;
         List<JournalDayChip> weekDays = calendarScale == JournalCalendarScale.Week
             ? JournalCalendarBuilder.BuildWeekDays(stripEnd, moodLevelByDay, selectedCalendarDay)
@@ -154,9 +198,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             ? JournalCalendarBuilder.BuildYearCells(resolvedYear, today, moodLevelByDay, selectedCalendarDay)
             : [];
 
-        dayEntries.TryGetValue(resolvedEditorDay, out List<MoodEntryDTO>? editorDayList);
-        editorDayList ??= [];
-        (MoodEntryDTO? morningEntry, MoodEntryDTO? eveningEntry) = SplitDaySlots(editorDayList);
+        (MoodEntryDTO? morningEntry, MoodEntryDTO? eveningEntry) = SplitDaySlots(editorDayEntries);
         JournalCheckInSlot resolvedSlot = JournalEditorSlotResolver.Resolve(
             editorSlot,
             morningEntry,
@@ -181,14 +223,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             .Select(mood => AppStrings.MoodHistoryEntry(mood.RecordedAt.ToLocalTime().ToString("d"), mood.MoodLevel, 5))
             .ToArray();
 
-        IReadOnlyList<MoodEntryDTO> statsSource = orderedNewestFirst
-            .Where(entry =>
-            {
-                DateOnly day = DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime());
-                return day >= rangeStart && day <= today;
-            })
-            .ToList();
-        JournalMoodStats stats = BuildStats(statsSource, rangeStart, today);
+        JournalMoodStats stats = BuildStats(statsSource, daysWithMood, clampedRange);
 
         // A quiet week hides the week's line that leads to the overview; earlier check-ins are then the only reason to offer it.
         bool hasEarlierEntries = stats.HasStats
@@ -200,10 +235,10 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             points,
             rangeStart,
             today,
-            byDay,
+            moodLevelByDay,
             cancellationToken);
 
-        string onThisDay = BuildOnThisDayLastYear(lastYearSameDay, dayEntries);
+        string onThisDay = BuildOnThisDayLastYear(lastYearEntry);
 
         return new JournalMoodSnapshot(
             points,
@@ -375,7 +410,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         IReadOnlyList<MoodChartPoint> points,
         DateOnly rangeStart,
         DateOnly today,
-        IReadOnlyDictionary<DateOnly, MoodEntryDTO> byDay,
+        IReadOnlyDictionary<DateOnly, int> moodLevelByDay,
         CancellationToken cancellationToken)
     {
         IReadOnlyList<CompletionDTO> completions;
@@ -409,21 +444,18 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
                 .Select(at => new TrendAnnotation(at))];
         }
 
-        return (BuildPracticeMoodInsight(completions, rangeStart, today, byDay), marks);
+        return (BuildPracticeMoodInsight(completions, rangeStart, today, moodLevelByDay), marks);
     }
 
     private static string BuildPracticeMoodInsight(
         IReadOnlyList<CompletionDTO> completions,
         DateOnly rangeStart,
         DateOnly today,
-        IReadOnlyDictionary<DateOnly, MoodEntryDTO> byDay)
+        IReadOnlyDictionary<DateOnly, int> moodLevelByDay)
     {
         HashSet<DateOnly> practiceDays = completions
             .Select(completion => DateOnly.FromDateTime(completion.CompletedAt.ToLocalTime()))
             .ToHashSet();
-        Dictionary<DateOnly, int> moodLevelByDay = byDay.ToDictionary(
-            pair => pair.Key,
-            pair => pair.Value.MoodLevel);
         JournalPracticeMoodInsightResult insight = JournalPracticeMoodInsightBuilder.Build(
             rangeStart,
             today,
@@ -446,33 +478,43 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         return AppStrings.JournalPracticeMoodInsight(insight.PracticeDayCount, averageOnPractice);
     }
 
-    private static string BuildOnThisDayLastYear(
-        DateOnly lastYearDay,
-        IReadOnlyDictionary<DateOnly, List<MoodEntryDTO>> dayEntries)
+    private static string BuildOnThisDayLastYear(MoodEntryDTO? entry)
     {
-        if (!dayEntries.TryGetValue(lastYearDay, out List<MoodEntryDTO>? entries) || entries.Count == 0)
+        if (entry is null)
         {
             return string.Empty;
         }
 
-        MoodEntryDTO best = entries.OrderByDescending(entry => entry.RecordedAt).First();
-        string snippet = JournalNoteFactors.StripFactorLines(best.Note);
-        return AppStrings.JournalOnThisDayLastYear(best.MoodLevel, snippet);
+        string snippet = JournalNoteFactors.StripFactorLines(entry.Note);
+        return AppStrings.JournalOnThisDayLastYear(entry.MoodLevel, snippet);
     }
 
-    private static List<JournalTimelineDayGroup> BuildTimelineGroups(IReadOnlyList<MoodNoteItem> timeline) =>
-        timeline
-            .GroupBy(entry => entry.Day)
-            .OrderByDescending(group => group.Key)
-            .Select(group => new JournalTimelineDayGroup(
-                group.Key,
-                AppStrings.JournalEditorDayTitle(group.Key),
-                group.ToList()))
-            .ToList();
-
-    private static JournalMoodStats BuildStats(IReadOnlyList<MoodEntryDTO> moods, DateOnly rangeStart, DateOnly today)
+    private static List<JournalTimelineDayGroup> BuildTimelineGroups(IReadOnlyList<MoodNoteItem> timeline)
     {
-        if (moods.Count == 0)
+        Dictionary<DateOnly, List<MoodNoteItem>> entriesByDay = [];
+        foreach (MoodNoteItem entry in timeline)
+        {
+            if (!entriesByDay.TryGetValue(entry.Day, out List<MoodNoteItem>? dayEntries))
+            {
+                dayEntries = new(capacity: 2);
+                entriesByDay.Add(entry.Day, dayEntries);
+            }
+
+            dayEntries.Add(entry);
+        }
+
+        List<JournalTimelineDayGroup> groups = new(entriesByDay.Count);
+        foreach ((DateOnly day, List<MoodNoteItem> entries) in entriesByDay.OrderByDescending(group => group.Key))
+        {
+            groups.Add(new JournalTimelineDayGroup(day, AppStrings.JournalEditorDayTitle(day), entries));
+        }
+
+        return groups;
+    }
+
+    private static JournalMoodStats BuildStats(IReadOnlyList<MoodEntryDTO> newestFirst, int daysWithMood, int periodDays)
+    {
+        if (newestFirst.Count == 0)
         {
             return new JournalMoodStats(
                 0,
@@ -483,23 +525,39 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
                 false);
         }
 
-        double average = moods.Average(entry => entry.MoodLevel);
-        HashSet<DateOnly> daysWithMood = moods
-            .Select(entry => DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()))
-            .ToHashSet();
-        // Days with a check-in out of the days in the period, not days in a row: a missed day does not undo the others.
-        int periodDays = today.DayNumber - rangeStart.DayNumber + 1;
-        JournalMoodTrend trend = JournalMoodTrendResolver.Resolve(
-            moods.OrderBy(entry => entry.RecordedAt).Select(entry => entry.MoodLevel).ToList());
-        int best = moods.Max(entry => entry.MoodLevel);
-        int worst = moods.Min(entry => entry.MoodLevel);
+        MoodEntryDTO newest = newestFirst[0];
+        MoodEntryDTO oldest = newest;
+        int best = newest.MoodLevel;
+        int worst = newest.MoodLevel;
+        long sum = newest.MoodLevel;
+        for (int index = 1; index < newestFirst.Count; index++)
+        {
+            MoodEntryDTO entry = newestFirst[index];
+            sum += entry.MoodLevel;
+            best = Math.Max(best, entry.MoodLevel);
+            worst = Math.Min(worst, entry.MoodLevel);
+
+            // Match the endpoints of a stable chronological sort, including equal timestamps.
+            if (entry.RecordedAt == newest.RecordedAt)
+            {
+                newest = entry;
+            }
+
+            if (entry.RecordedAt < oldest.RecordedAt)
+            {
+                oldest = entry;
+            }
+        }
+
+        double average = (double)sum / newestFirst.Count;
+        JournalMoodTrend trend = JournalMoodTrendResolver.Resolve([oldest.MoodLevel, newest.MoodLevel]);
         // "Best 4 · worst 4" says nothing: the pill shows only when the moods of the period differ.
         string bestWorst = best == worst ? string.Empty : AppStrings.JournalBestWorstPill(best, worst);
 
         return new JournalMoodStats(
-            moods.Count,
+            newestFirst.Count,
             AppStrings.FormatAverageMood(average),
-            AppStrings.JournalCheckInDays(daysWithMood.Count, periodDays),
+            AppStrings.JournalCheckInDays(daysWithMood, periodDays),
             FormatMoodTrend(trend),
             bestWorst,
             true);
@@ -512,20 +570,6 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         JournalMoodTrend.Flat => AppStrings.MoodTrendFlat,
         _ => string.Empty
     };
-
-    private static Dictionary<DateOnly, MoodEntryDTO> BuildByDay(IReadOnlyList<MoodEntryDTO> moods) =>
-        moods
-            .GroupBy(entry => DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()))
-            .ToDictionary(
-                group => group.Key,
-                group => group.OrderByDescending(entry => entry.RecordedAt).First());
-
-    private static Dictionary<DateOnly, List<MoodEntryDTO>> BuildDayEntries(IReadOnlyList<MoodEntryDTO> moods) =>
-        moods
-            .GroupBy(entry => DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()))
-            .ToDictionary(
-                group => group.Key,
-                group => group.OrderBy(entry => entry.RecordedAt).ToList());
 
     private static JournalSlotPreview? ToSlotPreview(MoodEntryDTO? entry) =>
         entry is null
@@ -540,16 +584,32 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             return (null, null);
         }
 
-        List<MoodEntryDTO> ordered = dayEntries.OrderBy(entry => entry.RecordedAt).ToList();
-        if (ordered.Count == 1)
+        MoodEntryDTO earliest = dayEntries[0];
+        if (dayEntries.Count == 1)
         {
-            int hour = ordered[0].RecordedAt.ToLocalTime().Hour;
+            int hour = earliest.RecordedAt.ToLocalTime().Hour;
             return MoodCheckInSlotPolicy.IsMorningLocalHour(hour)
-                ? (ordered[0], null)
-                : (null, ordered[0]);
+                ? (earliest, null)
+                : (null, earliest);
         }
 
-        return (ordered[0], ordered[^1]);
+        MoodEntryDTO latest = earliest;
+        for (int i = 1; i < dayEntries.Count; i++)
+        {
+            MoodEntryDTO entry = dayEntries[i];
+            if (entry.RecordedAt < earliest.RecordedAt)
+            {
+                earliest = entry;
+            }
+
+            // For equal timestamps, preserve the first and last positions of a stable sort.
+            if (entry.RecordedAt >= latest.RecordedAt)
+            {
+                latest = entry;
+            }
+        }
+
+        return (earliest, latest);
     }
 
     private static DateTime ResolveSlotTimestamp(DateOnly day, JournalCheckInSlot slot)
@@ -575,34 +635,25 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         return day.ToDateTime(time).ToUniversalTime();
     }
 
-    private static IEnumerable<MoodEntryDTO> FilterForDay(
-        IEnumerable<MoodEntryDTO> moods,
-        DateOnly? filterDay)
+    private static MoodNoteItem ToTimelineItem(
+        MoodEntryDTO entry,
+        DateTime local,
+        DateOnly day,
+        DateOnly today,
+        string noNoteCaption)
     {
-        if (filterDay is null)
-        {
-            return moods;
-        }
-
-        DateOnly day = filterDay.Value;
-        return moods.Where(entry => DateOnly.FromDateTime(entry.RecordedAt.ToLocalTime()) == day);
-    }
-
-    private static MoodNoteItem ToTimelineItem(MoodEntryDTO entry)
-    {
-        DateTime local = entry.RecordedAt.ToLocalTime();
         bool hasNote = !string.IsNullOrWhiteSpace(entry.Note);
         string formattedNote = hasNote
             ? JournalNoteFactors.FormatDisplayNote(entry.Note)
-            : AppStrings.JournalNoNoteCaption;
+            : noNoteCaption;
         return new MoodNoteItem(
             entry.MoodEntryId,
-            DateOnly.FromDateTime(local),
+            day,
             local.ToString("d"),
             local.ToString("t"),
             formattedNote,
             hasNote,
             entry.MoodLevel,
-            local.Date == DateTime.Today);
+            day == today);
     }
 }

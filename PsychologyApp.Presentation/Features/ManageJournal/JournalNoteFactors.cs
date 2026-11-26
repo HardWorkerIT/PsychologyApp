@@ -77,8 +77,20 @@ public static class JournalNoteFactors
             return false;
         }
 
-        return note.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Any(line => IsFactorLine(line, prefix));
+        return ContainsFactorLine(note.AsSpan(), prefix.AsSpan().TrimEnd());
+    }
+
+    private static bool ContainsFactorLine(ReadOnlySpan<char> note, ReadOnlySpan<char> prefix)
+    {
+        foreach (Range line in note.SplitAny("\r\n"))
+        {
+            if (note[line].Trim().StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static string ToggleFactor(string? note, string key)
@@ -174,26 +186,46 @@ public static class JournalNoteFactors
     public static IReadOnlyList<JournalActivityInsight> Analyze(
         IEnumerable<(string? Note, int MoodLevel)> entries)
     {
-        List<(string? Note, int MoodLevel)> material = entries.ToList();
-        List<JournalActivityInsight> insights = [];
-        foreach (string key in AllKeys)
+        string[] prefixes = AllKeys.Select(key => GetPrefix(key).TrimEnd()).ToArray();
+        Span<int> counts = stackalloc int[prefixes.Length];
+        Span<long> totals = stackalloc long[prefixes.Length];
+        counts.Clear();
+        totals.Clear();
+        foreach ((string? note, int moodLevel) in entries)
         {
-            List<int> moods = material
-                .Where(entry => HasFactor(entry.Note, key))
-                .Select(entry => entry.MoodLevel)
-                .ToList();
-            if (moods.Count == 0)
+            if (string.IsNullOrWhiteSpace(note))
             {
                 continue;
             }
 
-            string? average = moods.Count >= 2
-                ? AppStrings.FormatAverageMood(moods.Average())
+            for (int index = 0; index < prefixes.Length; index++)
+            {
+                string prefix = prefixes[index];
+                if (prefix.Length != 0 && ContainsFactorLine(note.AsSpan(), prefix.AsSpan()))
+                {
+                    counts[index]++;
+                    totals[index] += moodLevel;
+                }
+            }
+        }
+
+        List<JournalActivityInsight> insights = [];
+        for (int index = 0; index < AllKeys.Length; index++)
+        {
+            int count = counts[index];
+            if (count == 0)
+            {
+                continue;
+            }
+
+            string key = AllKeys[index];
+            string? average = count >= 2
+                ? AppStrings.FormatAverageMood((double)totals[index] / count)
                 : null;
             insights.Add(new JournalActivityInsight(
                 key,
                 GetLabel(key),
-                moods.Count,
+                count,
                 average));
         }
 
