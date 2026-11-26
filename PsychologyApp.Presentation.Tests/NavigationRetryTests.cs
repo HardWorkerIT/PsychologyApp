@@ -6,6 +6,27 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class NavigationRetryTests
 {
     [Fact]
+    public async Task AnUnopenedStartupGateKeepsStartupPendingUntilTheUserRetries()
+    {
+        TaskCompletionSource retry = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        int attempts = 0;
+        bool recoveryShown = false;
+        Task startup = NavigationRetry.CompleteWithRecoveryAsync(() => ++attempts == 1
+            ? Task.FromException(new InvalidOperationException("Cannot open help"))
+            : Task.CompletedTask, _ =>
+        {
+            recoveryShown = true;
+            return retry.Task;
+        });
+
+        Assert.True(recoveryShown);
+        Assert.False(startup.IsCompleted);
+        retry.SetResult();
+        await startup.WaitAsync(TimeSpan.FromSeconds(3));
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
     public async Task TryExecuteWithRetryAsync_ReturnsTrue_WhenFirstAttemptSucceeds()
     {
         int attempts = 0;

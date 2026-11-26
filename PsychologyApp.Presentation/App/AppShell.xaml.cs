@@ -585,7 +585,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         });
 
         await ShowOnboardingIfNeededAsync();
-        await ShowClinicalGateIfNeededAsync();
+        await CompleteClinicalStartupAsync();
         SyncRemindersFireAndForget();
     }
 
@@ -606,17 +606,18 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
                 await GuardInitialLockAsync();
             }
 
-            await ShowClinicalGateIfNeededAsync();
+            await CompleteClinicalStartupAsync();
             SyncRemindersFireAndForget();
+            _startupCompleted.TrySetResult();
         }
         catch (Exception ex)
         {
             _logger.LogError("Shell startup completed with errors ({ExceptionType}).", ex.GetType().Name);
+            _startupCompleted.TrySetException(ex);
         }
         finally
         {
             _initialLockCompleted.TrySetResult();
-            _startupCompleted.TrySetResult();
         }
     }
 
@@ -666,19 +667,58 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         });
     }
 
-    private async Task ShowClinicalGateIfNeededAsync()
+    private async Task CompleteClinicalStartupAsync()
     {
         if (!_preferences.Load().HasCompletedOnboarding)
         {
             return;
         }
 
-        Page? currentPage = Microsoft.Maui.Controls.Application.Current?.Windows.FirstOrDefault()?.Page;
-        if (currentPage?.Navigation is not INavigation navigation)
+        Window? window;
+        while ((window = Window) is null)
         {
-            return;
+            await Task.Delay(50);
         }
 
-        await _startupCoordinator.ShowClinicalGateIfNeededAsync(navigation);
+        bool recovering = false;
+        await NavigationRetry.CompleteWithRecoveryAsync(() => _startupCoordinator.ShowClinicalGateIfNeededAsync(Navigation), async ex =>
+        {
+            _logger.LogError("Clinical startup could not present help ({ExceptionType}).", ex.GetType().Name);
+            recovering = true;
+            IsEnabled = false;
+            await WaitForClinicalRetryAsync(window);
+        });
+        if (recovering)
+        {
+            IsEnabled = true;
+        }
+    }
+
+    private async Task WaitForClinicalRetryAsync(Window window)
+    {
+        TaskCompletionSource retryRequested = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        Button retry = new() { Text = AppStrings.Repeat, Command = new Command(() => retryRequested.TrySetResult()) };
+        Button emergency = new()
+        {
+            Text = AppStrings.AppLockEmergencyCall,
+            Command = new AsyncCommand(() => PhoneCall.DialAsync(CrisisLines.For(DeviceCountry.Code).Emergency))
+        };
+        Label heading = new() { Text = AppStrings.CrisisHubTitle, FontAttributes = FontAttributes.Bold, FontSize = 20 };
+        SemanticProperties.SetHeadingLevel(heading, SemanticHeadingLevel.Level1);
+        ContentPage recovery = new()
+        {
+            Title = AppStrings.CrisisHubTitle,
+            Content = new ScrollView
+            {
+                Content = new VerticalStackLayout
+                {
+                    Padding = new Thickness(24, 40), Spacing = 16,
+                    Children = { heading, new Label { Text = AppStrings.LoadFailed }, emergency, retry }
+                }
+            }
+        };
+        window.Page = recovery;
+        await retryRequested.Task;
+        window.Page = this;
     }
 }

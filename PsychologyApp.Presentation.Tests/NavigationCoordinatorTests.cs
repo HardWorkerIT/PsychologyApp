@@ -17,6 +17,46 @@ public sealed class NavigationCoordinatorTests : IDisposable
     }
 
     [Fact]
+    public async Task ASecondUrgentHelpRequestWaitsForTheActivePushAndRecoversFromItsFailure()
+    {
+        TaskCompletionSource started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        TaskCompletionSource finishFirst = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        int attempts = 0;
+        bool visible = false;
+
+        Task<bool> OpenHelp() => NavigationRetry.TryOpenPageAsync(() => visible, async () =>
+        {
+            if (++attempts == 1)
+            {
+                started.SetResult();
+                await finishFirst.Task;
+                throw new InvalidOperationException("First push failed");
+            }
+
+            visible = true;
+        });
+
+        Task<bool> first = OpenHelp();
+        await started.Task;
+        Task<bool> second = OpenHelp();
+        try
+        {
+            Assert.False(second.IsCompleted);
+            Assert.False(visible);
+        }
+        finally
+        {
+            finishFirst.TrySetResult();
+            await Task.WhenAll(first, second);
+        }
+
+        Assert.True(await first);
+        Assert.True(await second);
+        Assert.True(visible);
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
     public async Task RunPushAsync_ExecutesNavigationDelegate()
     {
         bool executed = false;

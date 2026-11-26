@@ -311,8 +311,21 @@ public sealed class MauiNavigationService : INavigationService
             return hostNavigation.PushAsync(PrepareSecondaryPage(_pageFactory.CreateChatInfoPage(sessionId, hostNavigation)), true);
         });
 
-    public Task GoToCrisisHubAsync() =>
-        NavigationCoordinator.RunPushAsync(() => ResolveNavigation().PushAsync(PrepareSecondaryPage(_pageFactory.CreateCrisisHubPage()), true));
+    public async Task GoToCrisisHubAsync()
+    {
+        bool opened = await NavigationRetry.TryOpenPageAsync(
+            () => Shell.Current?.CurrentPage is Pages.ClinicalCare.CrisisHub.CrisisHubPage,
+            () =>
+            {
+                INavigation navigation = Shell.Current?.CurrentPage?.Navigation ?? ResolveNavigation();
+                return navigation.PushAsync(PrepareSecondaryPage(_pageFactory.CreateCrisisHubPage()), true);
+            });
+
+        if (!opened)
+        {
+            throw new InvalidOperationException("The urgent help screen could not be opened.");
+        }
+    }
 
     public Task GoToRiskCheckAsync(string source) =>
         NavigationCoordinator.RunPushAsync(() => ResolveNavigation().PushAsync(PrepareSecondaryPage(_pageFactory.CreateRiskCheckPage(source)), true));
