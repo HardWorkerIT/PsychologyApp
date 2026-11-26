@@ -150,7 +150,7 @@ public sealed class QuotRepository : BaseRepository<Quot>, IQuotRepository
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<string>> GetFavoriteTextsAsync(CancellationToken cancellationToken = default)
@@ -161,7 +161,7 @@ public sealed class QuotRepository : BaseRepository<Quot>, IQuotRepository
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task AddManyAsync(IReadOnlyList<Quot> quots, CancellationToken cancellationToken = default)

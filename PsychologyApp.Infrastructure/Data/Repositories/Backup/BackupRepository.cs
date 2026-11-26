@@ -42,7 +42,7 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
             new { Limit = Math.Max(1, limit) },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<BackupImportResult> ImportAsync(AppBackupDTO backup, CancellationToken cancellationToken = default)

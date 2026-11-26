@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 using System.Text.Json;
 
@@ -28,7 +29,7 @@ public sealed record TraumaNotes(IReadOnlyList<StuckPointNote> StuckPoints, IRea
 
     public string Serialize()
     {
-        using MemoryStream buffer = new();
+        ArrayBufferWriter<byte> buffer = new();
         using (Utf8JsonWriter w = new(buffer))
         {
             w.WriteStartObject();
@@ -61,7 +62,7 @@ public sealed record TraumaNotes(IReadOnlyList<StuckPointNote> StuckPoints, IRea
             w.WriteEndObject();
         }
 
-        return Encoding.UTF8.GetString(buffer.ToArray());
+        return Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
     /// <summary>A missing or damaged value reads as no notes rather than an error.</summary>

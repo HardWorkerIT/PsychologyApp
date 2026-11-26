@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 using System.Text.Json;
 using PsychologyApp.Application.Conversation.Companion;
@@ -189,7 +190,7 @@ public sealed record CompanionState
 
     public string Serialize()
     {
-        using MemoryStream buffer = new();
+        ArrayBufferWriter<byte> buffer = new();
         using (Utf8JsonWriter w = new(buffer))
         {
             w.WriteStartObject();
@@ -252,7 +253,7 @@ public sealed record CompanionState
             w.WriteEndObject();
         }
 
-        return Encoding.UTF8.GetString(buffer.ToArray());
+        return Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
     /// <summary>Restores a state; a missing or damaged blob yields a fresh state instead of an error.</summary>

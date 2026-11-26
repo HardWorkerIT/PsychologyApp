@@ -69,6 +69,26 @@ public sealed class ChatRepositoryTests
     }
 
     [Fact]
+    public async Task Paging_returns_each_message_once_in_chronological_order()
+    {
+        long sessionId = await _repository.CreateSessionAsync("Test", T0);
+        IReadOnlyList<long> ids = await _repository.AddMessagesAsync(
+        [
+            new ChatMessageDTO { SessionId = sessionId, Role = ChatRole.User, Text = "First", CreatedAt = T0 },
+            new ChatMessageDTO { SessionId = sessionId, Role = ChatRole.Companion, Text = "Second", CreatedAt = T0 },
+            new ChatMessageDTO { SessionId = sessionId, Role = ChatRole.User, Text = "Third", CreatedAt = T0 }
+        ]);
+
+        ChatMessagePage latest = await _repository.GetMessagesPageAsync(sessionId, null, 2);
+        ChatMessagePage earlier = await _repository.GetMessagesPageAsync(sessionId, latest.Messages[0].Id, 2);
+
+        Assert.Equal(ids.Skip(1), latest.Messages.Select(message => message.Id));
+        Assert.True(latest.HasOlderMessages);
+        Assert.Equal(ids[0], Assert.Single(earlier.Messages).Id);
+        Assert.False(earlier.HasOlderMessages);
+    }
+
+    [Fact]
     public async Task Sessions_are_listed_by_latest_activity_with_preview_and_count()
     {
         long older = await _repository.CreateSessionAsync("Старый", T0);

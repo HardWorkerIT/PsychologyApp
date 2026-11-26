@@ -306,9 +306,15 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
             new { SessionId = sessionId, BeforeMessageId = beforeMessageId, Limit = limit + 1 },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
-        List<MessageRow> newestFirst = rows.Take(limit + 1).ToList();
-        bool hasOlder = newestFirst.Count > limit;
-        return new ChatMessagePage(newestFirst.Take(limit).Reverse().Select(ToMessageDto).ToList(), hasOlder);
+        List<MessageRow> newestFirst = rows.AsList();
+        int count = Math.Min(newestFirst.Count, limit);
+        ChatMessageDTO[] messages = new ChatMessageDTO[count];
+        for (int i = 0; i < count; i++)
+        {
+            messages[i] = ToMessageDto(newestFirst[count - 1 - i]);
+        }
+
+        return new ChatMessagePage(messages, newestFirst.Count > limit);
     }
 
     private static ChatMessageDTO ToMessageDto(MessageRow row) => new()

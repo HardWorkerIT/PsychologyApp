@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Text;
 using System.Text.Json;
 
@@ -13,7 +14,7 @@ public static class ChatQuickReplyJson
             return null;
         }
 
-        using MemoryStream buffer = new();
+        ArrayBufferWriter<byte> buffer = new();
         using (Utf8JsonWriter writer = new(buffer))
         {
             writer.WriteStartArray();
@@ -33,7 +34,7 @@ public static class ChatQuickReplyJson
             writer.WriteEndArray();
         }
 
-        return Encoding.UTF8.GetString(buffer.ToArray());
+        return Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
     public static IReadOnlyList<ChatQuickReply> Deserialize(string? json)

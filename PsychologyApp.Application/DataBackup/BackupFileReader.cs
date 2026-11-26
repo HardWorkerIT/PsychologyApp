@@ -1,36 +1,54 @@
+using System.Buffers;
 using System.Text;
 
 namespace PsychologyApp.Application.DataBackup;
 
 public static class BackupFileReader
 {
+    private const int ReadBufferSize = 64 * 1024;
+    private const int MaxInitialCapacity = 1024 * 1024;
     private static readonly UTF8Encoding StrictUtf8 = new(false, throwOnInvalidBytes: true);
 
     public static async Task<string> ReadAsync(Stream source, CancellationToken cancellationToken)
     {
-        if (source.CanSeek && source.Length > BackupService.MaxImportFileBytes)
+        int initialCapacity = 0;
+        if (source.CanSeek)
         {
-            throw TooLarge();
-        }
-
-        using MemoryStream content = new();
-        byte[] buffer = new byte[64 * 1024];
-        while (true)
-        {
-            // A picker stream can be non-seekable. Read at most one byte past the limit to detect overflow.
-            int requested = (int)Math.Min(buffer.Length, BackupService.MaxImportFileBytes - content.Length + 1);
-            int read = await source.ReadAtLeastAsync(buffer.AsMemory(0, requested), requested, throwOnEndOfStream: false, cancellationToken)
-                .ConfigureAwait(false);
-            if (content.Length + read > BackupService.MaxImportFileBytes)
+            long length = source.Length;
+            if (length > BackupService.MaxImportFileBytes)
             {
                 throw TooLarge();
             }
 
-            content.Write(buffer, 0, read);
-            if (read < requested)
+            initialCapacity = (int)Math.Clamp(length - source.Position, 0, MaxInitialCapacity);
+        }
+
+        using MemoryStream content = new(initialCapacity);
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(ReadBufferSize);
+        try
+        {
+            while (true)
             {
-                break;
+                // A picker stream can be non-seekable. Read at most one byte past the limit to detect overflow.
+                int requested = (int)Math.Min(ReadBufferSize, BackupService.MaxImportFileBytes - content.Length + 1);
+                int read = await source.ReadAtLeastAsync(buffer.AsMemory(0, requested), requested, throwOnEndOfStream: false, cancellationToken)
+                    .ConfigureAwait(false);
+                if (content.Length + read > BackupService.MaxImportFileBytes)
+                {
+                    throw TooLarge();
+                }
+
+                content.Write(buffer, 0, read);
+                if (read < requested)
+                {
+                    break;
+                }
             }
+        }
+        finally
+        {
+            // The scratch buffer can contain journal and chat text.
+            ArrayPool<byte>.Shared.Return(buffer, clearArray: true);
         }
 
         cancellationToken.ThrowIfCancellationRequested();

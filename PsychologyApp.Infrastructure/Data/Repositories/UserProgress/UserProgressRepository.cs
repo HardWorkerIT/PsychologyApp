@@ -69,7 +69,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<TestResultDTO>> GetTestResultsBetweenAsync(
@@ -90,7 +90,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<TestResultDTO>> GetAllTestResultsAsync(int limit, CancellationToken cancellationToken = default)
@@ -102,7 +102,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<TestResultDTO>> GetLatestTestResultsAsync(
@@ -121,7 +121,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<(string TestId, int Count)>> GetTestResultCountsAsync(
@@ -141,7 +141,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
                 commandTimeout: CommandTimeoutSeconds,
                 cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<DateTime?> GetLastTechniqueCompletionDateAsync(CancellationToken cancellationToken = default)
@@ -270,7 +270,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<int> CountTechniqueCompletionsBetweenAsync(
@@ -479,7 +479,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<IReadOnlyList<MoodEntryDTO>> GetMoodsAsync(
@@ -500,7 +500,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task UpdateMoodEntryAsync(
@@ -587,7 +587,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        return rows.ToList();
+        return rows.AsList();
     }
 
     public async Task<int> CountDistinctTechniqueCompletionsForItemsBetweenAsync(
