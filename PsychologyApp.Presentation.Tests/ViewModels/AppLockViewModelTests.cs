@@ -66,6 +66,22 @@ public sealed class AppLockViewModelTests
     }
 
     [Fact]
+    public async Task UnavailablePhoneAuthenticationKeepsTheAppLockedAndAllowsRetry()
+    {
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.CannotAsk);
+        await viewModel.InitializeAsync();
+
+        await VmTestHelpers.RunAsync(viewModel.RecoverPinCommand);
+
+        Assert.False(viewModel.Unlocked.IsCompleted);
+        Assert.True(viewModel.HasSystemRecovery);
+        Assert.Equal(AppStrings.AppLockPhoneUnlockUnavailable, viewModel.StatusText);
+        viewModel.PinInput = "123456";
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
+        Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
+    }
+
+    [Fact]
     public async Task Phone_authentication_starts_pin_recovery_but_does_not_skip_new_pin_setup()
     {
         AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);

@@ -302,8 +302,8 @@ public sealed class AppLockViewModel : BaseViewModel
             }
             else if (result == DeviceUnlockResult.CannotAsk)
             {
-                // Keep the existing recovery contract: if the OS cannot verify anyone, do not make the app a wall around records.
-                _unlocked.TrySetResult();
+                _statusText = AppStrings.AppLockPhoneUnlockUnavailable;
+                Notify(nameof(StatusText), nameof(HasStatus));
             }
         }
         finally

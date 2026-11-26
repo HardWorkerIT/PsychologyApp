@@ -20,8 +20,7 @@ public enum DeviceUnlockResult
     NotPassed,
 
     /// <summary>
-    /// The system could not ask at all (the screen lock is gone, the sensor is broken, the prompt failed to open). The lock must
-    /// not turn into a wall between the person and their own records, so this lets them in.
+    /// The system could not verify the person because the prompt or the phone credential was unavailable.
     /// </summary>
     CannotAsk
 }

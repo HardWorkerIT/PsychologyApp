@@ -56,7 +56,6 @@ public sealed class AndroidDeviceAuthenticator(ILogger<AndroidDeviceAuthenticato
         }
         catch (Exception ex)
         {
-            // Some vendors' prompts refuse to open; the person is let in rather than shut out (see DeviceUnlockResult.CannotAsk).
             logger.LogError(ex, "The system unlock prompt could not be shown");
             result.TrySetResult(DeviceUnlockResult.CannotAsk);
         }

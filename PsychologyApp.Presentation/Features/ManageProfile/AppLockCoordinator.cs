@@ -15,8 +15,7 @@ public sealed class AppLockCoordinator(
     ILogger<AppLockCoordinator> logger) : IAppLock
 {
     private const string EnabledKey = "AppLockEnabled";
-    private const int WindowWaitStepMs = 50;
-    private const int WindowWaitSteps = 60;
+    private static readonly TimeSpan WindowRetryDelay = TimeSpan.FromMilliseconds(250);
 
     private bool _unlocked;
     private long? _leftAtMs;
@@ -58,7 +57,6 @@ public sealed class AppLockCoordinator(
         }
     }
 
-    /// <summary>At start and on every return: shows the lock screen when it is due and waits until it is passed.</summary>
     /// <summary>
     /// True while the app's own content must stay out of sight: from the moment the lock is found due (before the first frame of a
     /// start or a return) until it is passed. The shell hides its content then, so nothing flashes before the lock screen.
@@ -67,6 +65,7 @@ public sealed class AppLockCoordinator(
 
     public event EventHandler? CoveringChanged;
 
+    /// <summary>At start and on every return: shows the lock screen when it is due and waits until it is passed.</summary>
     public Task GuardAsync()
     {
         // Runs on the UI thread (the shell's constructor, App.OnResume), so this check and the assignment cannot interleave.
@@ -77,59 +76,82 @@ public sealed class AppLockCoordinator(
 
         // Decided here, synchronously, so the content is covered before the next frame is drawn.
         TimeSpan? awayFor = _leftAtMs is long left ? TimeSpan.FromMilliseconds(SinceBootMs() - left) : null;
+        bool mustCheckLegacyPin = !Preferences.Default.ContainsKey(EnabledKey) && !IsEnabled;
         bool due = AppLockPolicy.NeedsUnlock(IsEnabled, _unlocked, awayFor);
-        if (due)
+        if (due || mustCheckLegacyPin)
         {
             SetCovering(true);
         }
 
-        return _guard = GuardCoreAsync(due);
+        return _guard = GuardCoreAsync(due, mustCheckLegacyPin);
     }
 
-    private async Task GuardCoreAsync(bool due)
+    private async Task GuardCoreAsync(bool due, bool mustCheckLegacyPin)
     {
-        INavigation? navigation = await WaitForWindowAsync();
+        if (mustCheckLegacyPin)
+        {
+            try
+            {
+                due = await pinCredentialStore.HasPinAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Could not check the existing app PIN");
+                due = true;
+            }
+        }
 
-        // Applied once there is an activity: at a cold start the shell is built before it.
-        ApplyRecentsPreview();
         if (!due)
         {
             _leftAtMs = null;
+            SetCovering(false);
+            ApplyRecentsPreview();
             return;
         }
 
+        (Window window, Page root) = await WaitForWindowAsync();
+        ApplyRecentsPreview();
+
+        AppLockPage page = new(new AppLockViewModel(authenticator, pinCredentialStore));
+        bool useRootFallback = false;
         try
         {
-            if (navigation is null)
-            {
-                logger.LogError("No window to show the lock screen in");
-                return;
-            }
-
-            AppLockPage page = new(new AppLockViewModel(authenticator, pinCredentialStore));
-            await navigation.PushModalAsync(page, animated: false);
-            await page.Unlocked;
-
-            // Onboarding completes before the lock; the safety gate starts after the lock is passed.
-            if (navigation.ModalStack.Count > 0 && ReferenceEquals(navigation.ModalStack[^1], page))
-            {
-                await navigation.PopModalAsync(animated: false);
-            }
-            else
-            {
-                logger.LogWarning("The lock screen was not on top when it was passed");
-            }
-
-            _unlocked = true;
-            _leftAtMs = null;
+            await root.Navigation.PushModalAsync(page, animated: false);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "The lock screen could not be shown or closed");
+            logger.LogWarning(ex, "Could not present the app lock as a modal");
+            useRootFallback = true;
+            page = new AppLockPage(new AppLockViewModel(authenticator, pinCredentialStore));
+            // The dedicated lock page also works without a modal navigation stack.
+            window.Page = page;
+        }
+
+        await page.Unlocked;
+        try
+        {
+            if (useRootFallback)
+            {
+                window.Page = root;
+            }
+            else if (root.Navigation.ModalStack.LastOrDefault() == page)
+            {
+                await root.Navigation.PopModalAsync(animated: false);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Could not dismiss the authenticated app lock");
         }
         finally
         {
-            // Also when the lock screen could not be shown: a blank app would shut the person out of their records.
+            // The lock flow must complete before modal navigation can release the cover.
+            if (!Preferences.Default.ContainsKey(EnabledKey))
+            {
+                Preferences.Default.Set(EnabledKey, true);
+            }
+            _unlocked = true;
+            _leftAtMs = null;
             SetCovering(false);
         }
     }
@@ -159,22 +181,19 @@ public sealed class AppLockCoordinator(
     }
 
     /// <summary>
-    /// The start-up check runs from the shell's constructor, before the shell is in a window. Giving up there would quietly leave
-    /// the app open, so it waits (up to three seconds) for the window to be ready.
+    /// Startup can reach the lock before MAUI attaches the window. Keep the content covered until a lock can be presented.
     /// </summary>
-    private static async Task<INavigation?> WaitForWindowAsync()
+    private static async Task<(Window Window, Page Root)> WaitForWindowAsync()
     {
-        for (int step = 0; step < WindowWaitSteps; step++)
+        while (true)
         {
-            if (Microsoft.Maui.Controls.Application.Current?.Windows.FirstOrDefault()?.Page is { Handler: not null } page)
+            if (Microsoft.Maui.Controls.Application.Current?.Windows.FirstOrDefault() is { Page: { Handler: not null } root } window)
             {
-                return page.Navigation;
+                return (window, root);
             }
 
-            await Task.Delay(WindowWaitStepMs);
+            await Task.Delay(WindowRetryDelay);
         }
-
-        return null;
     }
 
     /// <summary>With the lock on, the recent-apps list shows no picture of the last screen (Android 13+; screenshots still work).</summary>

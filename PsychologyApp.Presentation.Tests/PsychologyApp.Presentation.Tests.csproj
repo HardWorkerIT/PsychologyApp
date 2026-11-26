@@ -127,6 +127,7 @@
     <Compile Include="../PsychologyApp.Presentation/Pages/ManageProfile/ProfileDataBackup/DataBackupViewModel.cs" Link="Linked/ViewModels/DataBackupViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/ManageProfile/IPersonalDataEraser.cs" Link="Linked/ViewModels/IPersonalDataEraser.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/ManageProfile/IAppLock.cs" Link="Linked/ViewModels/IAppLock.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Features/ManageProfile/AppLockCoordinator.cs" Link="Linked/ViewModels/AppLockCoordinator.cs" />
     <Compile Include="../PsychologyApp.Presentation/Shared/Services/Security/IDeviceAuthenticator.cs" Link="Linked/ViewModels/IDeviceAuthenticator.cs" />
     <Compile Include="../PsychologyApp.Presentation/Shared/Services/Security/IAppPinCredentialStore.cs" Link="Linked/ViewModels/IAppPinCredentialStore.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ManageProfile/AppLock/AppLockViewModel.cs" Link="Linked/ViewModels/AppLockViewModel.cs" />

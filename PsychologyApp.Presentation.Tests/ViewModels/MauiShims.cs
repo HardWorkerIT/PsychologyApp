@@ -4,9 +4,29 @@ using System.Windows.Input;
 
 namespace Microsoft.Maui.Controls
 {
-    public class Page;
+    public class Page
+    {
+        private INavigation? _navigation;
+        public object? Handler { get; set; }
+        public INavigation Navigation
+        {
+            get => _navigation ?? throw new InvalidOperationException("No navigation was provided by the test.");
+            set => _navigation = value;
+        }
+    }
 
     public class ContentPage : Page;
+
+    public sealed class Window(Page page)
+    {
+        public Page Page { get; set; } = page;
+    }
+
+    public sealed class Application
+    {
+        public static Application? Current { get; set; }
+        public IList<Window> Windows { get; } = new List<Window>();
+    }
 
     /// <summary>The MAUI navigation contract, member for member, so a test can stand in for the page stack.</summary>
     public interface INavigation
@@ -319,9 +339,17 @@ namespace Microsoft.Maui.Storage
 
         public static Preferences Default { get; } = new();
 
+        public bool ContainsKey(string key) => _values.ContainsKey(key);
+
+        public void Remove(string key) => _values.TryRemove(key, out _);
+
         public string Get(string key, string defaultValue) => _values.TryGetValue(key, out string? value) ? value : defaultValue;
 
         public void Set(string key, string value) => _values[key] = value;
+
+        public bool Get(string key, bool defaultValue) => bool.TryParse(Get(key, string.Empty), out bool value) ? value : defaultValue;
+
+        public void Set(string key, bool value) => Set(key, value.ToString());
     }
 
     public static class FileSystem
@@ -350,6 +378,15 @@ namespace Microsoft.Maui.Storage
         public static FileResult? Next { get; set; }
 
         public Task<FileResult?> PickAsync(PickOptions? options = null) => Task.FromResult(Next);
+    }
+}
+
+namespace PsychologyApp.Presentation.Pages.ManageProfile.AppLock
+{
+    internal sealed class AppLockPage(AppLockViewModel viewModel) : Microsoft.Maui.Controls.ContentPage
+    {
+        internal AppLockViewModel ViewModel { get; } = viewModel;
+        internal Task Unlocked => ViewModel.Unlocked;
     }
 }
 
