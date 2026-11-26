@@ -246,6 +246,11 @@
                         LabelText="{Binding AdsPersonalizationLabel}"
                         IsToggled="{Binding PersonalizedAdsConsent}"
                         ShowDivider="False" />
+                    <VerticalStackLayout x:Name="RewardPanel" Spacing="6" IsVisible="False">
+                        <Label x:Name="RewardDescription" Style="{StaticResource CaptionStyle}" />
+                        <ui:ButtonView x:Name="RewardButton" Variant="Secondary" />
+                        <Label x:Name="RewardStatus" Style="{StaticResource CaptionStyle}" IsVisible="False" />
+                    </VerticalStackLayout>
                     <Label
                         Text="{Binding AdCodeStatus}"
                         Style="{StaticResource CaptionStyle}"

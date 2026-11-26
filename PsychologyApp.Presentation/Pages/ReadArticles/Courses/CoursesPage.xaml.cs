@@ -11,6 +11,7 @@ public partial class CoursesPage : ContentPage
     private readonly CoursesViewModel _viewModel;
 #if ANDROID
     private VerticalStackLayout? _courseAdFooter;
+    private bool _catalogVisible;
 #endif
 
     public CoursesPage(ICoursesViewModelFactory viewModelFactory)
@@ -24,6 +25,7 @@ public partial class CoursesPage : ContentPage
     {
         base.OnAppearing();
 #if ANDROID
+        _catalogVisible = true;
         ReconnectCourseAdFooter();
 #endif
         _viewModel.RefreshAdEligibility();
@@ -33,6 +35,7 @@ public partial class CoursesPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        _catalogVisible = false;
         DisconnectCourseAdFooter();
 #endif
         base.OnDisappearing();
@@ -75,7 +78,7 @@ public partial class CoursesPage : ContentPage
 #if ANDROID
     private void ReconnectCourseAdFooter()
     {
-        if (_courseAdFooter is null)
+        if (!_catalogVisible || _courseAdFooter is null)
         {
             return;
         }
@@ -86,18 +89,18 @@ public partial class CoursesPage : ContentPage
             return;
         }
 
-        if (host.Content is not VkBannerView adView)
+        if (host.Content is not VkNativeView adView)
         {
-            adView = new VkBannerView();
+            adView = new VkNativeView();
             adView.SetBinding(
-                VkBannerView.IsEligibleProperty,
+                VkNativeView.IsEligibleProperty,
                 new Binding(nameof(CoursesViewModel.IsCourseAdEligible)) { Source = _viewModel });
             host.Content = adView;
         }
 
         _courseAdFooter.SetBinding(
             VisualElement.IsVisibleProperty,
-            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
+            new Binding(nameof(VkNativeView.IsAdLoaded)) { Source = adView });
     }
 
     private void DisconnectCourseAdFooter() => DisconnectCourseAdFooter(_courseAdFooter);

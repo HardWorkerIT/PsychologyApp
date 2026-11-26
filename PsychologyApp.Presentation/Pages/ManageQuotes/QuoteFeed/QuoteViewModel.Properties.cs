@@ -27,7 +27,7 @@ public partial class QuoteViewModel
         && !IsSearching
         && !ShowAllReadEmpty
         && DisplayItems.Count >= 8
-        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
     public void RefreshQuoteAdEligibility() => OnPropertyChanged(nameof(IsQuoteAdEligible));
 

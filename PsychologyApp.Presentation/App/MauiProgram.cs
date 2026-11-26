@@ -53,7 +53,7 @@ public static class MauiProgram
                 handlers.AddHandler<Shell, Microsoft.Maui.Controls.Handlers.Compatibility.ShellRenderer>();
                 handlers.AddHandler<PsychologyApp.Presentation.Widgets.TechniqueListCard.TechniqueCardNativeView,
                     PsychologyApp.Presentation.Platforms.Android.TechniqueCardHandler>();
-                handlers.AddHandler<VkBannerView, VkBannerHandler>();
+                handlers.AddHandler<VkNativeView, VkNativeHandler>();
             })
 #endif
             ;

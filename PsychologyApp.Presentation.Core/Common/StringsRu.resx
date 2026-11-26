@@ -4220,6 +4220,24 @@
   <data name="ChatEmotionGuilt" xml:space="preserve">
     <value>Вина</value>
   </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Полный просмотр даст {0} минут без рекламы в каталогах и полноэкранных вставок.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Смотреть видео</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Загружаем видео…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Пауза рекламы действует.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>Видео закрыто до начисления награды.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>Видео сейчас недоступно. Попробуйте позже.</value>
+  </data>
   <data name="ChatEmotionSadness" xml:space="preserve">
     <value>Грусть</value>
   </data>
@@ -4296,13 +4314,13 @@
     <value>Персонализированная реклама</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>При включении VK может использовать рекламный ID для подбора баннеров.</value>
+    <value>При включении VK может использовать рекламный ID для подбора объявлений.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Получили код приглашения для отключения рекламы? Введите его здесь.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Баннеры автоматически загружаются в выбранных каталогах. Выданный код отключает будущие рекламные запросы на этом устройстве.</value>
+    <value>Рекламные карточки автоматически загружаются в выбранных каталогах. Выданный код отключает будущие рекламные запросы на этом устройстве.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Опишите проблему или идею. Откроется письмо на адрес, указанный ниже. Перед отправкой вы сможете проверить текст.</value>
@@ -4320,7 +4338,7 @@
     <value>Что может получать VK Ads</value>
   </data>
   <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
-    <value>При открытии подходящих каталогов приложение загружает баннер. VK может получать IP-адрес, технические сведения об устройстве и приложении, а также события запроса, показа и нажатия. Если включена персонализация, SDK может дополнительно передать доступный рекламный идентификатор. Точный состав зависит от версии SDK и настроек устройства.</value>
+    <value>При открытии подходящих каталогов приложение может запросить объявление. VK может получать IP-адрес, технические сведения об устройстве и приложении, а также события запроса, показа и нажатия. Если включена персонализация, SDK может дополнительно передать доступный рекламный идентификатор. Точный состав зависит от версии SDK и настроек устройства.</value>
   </data>
   <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
     <value>Что остаётся на телефоне</value>

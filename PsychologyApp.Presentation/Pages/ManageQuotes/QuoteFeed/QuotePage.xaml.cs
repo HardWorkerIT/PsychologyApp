@@ -20,6 +20,7 @@ public partial class QuotePage : ContentPage
     private QuoteFeedMode _lastFeedMode;
 #if ANDROID
     private VerticalStackLayout? _quoteAdRow;
+    private bool _feedVisible;
 #endif
 
     public QuotePage(IPageViewModelActivator pageViewModelActivator, IQuoteViewModelFactory quoteViewModelFactory)
@@ -108,6 +109,7 @@ public partial class QuotePage : ContentPage
     {
         base.OnAppearing();
 #if ANDROID
+        _feedVisible = true;
         ReconnectQuoteAdRow();
 #endif
         ViewModel.RefreshQuoteAdEligibility();
@@ -117,6 +119,7 @@ public partial class QuotePage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        _feedVisible = false;
         DisconnectQuoteAdRow();
 #endif
         base.OnDisappearing();
@@ -147,7 +150,6 @@ public partial class QuotePage : ContentPage
         }
 
         _quoteAdRow = row;
-        row.IsVisible = true;
         ReconnectQuoteAdRow();
 #else
         if (sender is VisualElement footer)
@@ -160,12 +162,10 @@ public partial class QuotePage : ContentPage
 #if ANDROID
     private void ReconnectQuoteAdRow()
     {
-        if (_quoteAdRow is null)
+        if (!_feedVisible || _quoteAdRow is null)
         {
             return;
         }
-
-        _quoteAdRow.IsVisible = true;
 
         ContentView? host = _quoteAdRow.Children.OfType<ContentView>().FirstOrDefault();
         if (host is null)
@@ -173,14 +173,18 @@ public partial class QuotePage : ContentPage
             return;
         }
 
-        if (host.Content is not VkBannerView adView)
+        if (host.Content is not VkNativeView adView)
         {
-            adView = new VkBannerView();
+            adView = new VkNativeView();
             adView.SetBinding(
-                VkBannerView.IsEligibleProperty,
+                VkNativeView.IsEligibleProperty,
                 new Binding(nameof(QuoteViewModel.IsQuoteAdEligible)) { Source = ViewModel });
             host.Content = adView;
         }
+
+        _quoteAdRow.SetBinding(
+            VisualElement.IsVisibleProperty,
+            new Binding(nameof(VkNativeView.IsAdLoaded)) { Source = adView });
 
     }
 

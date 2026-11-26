@@ -13,6 +13,7 @@ public static partial class UserPreferences
     public const string ThemeKey = "Theme";
     private const string LegacyAccentColorKey = "Color";
     public const string AdsDisabledKey = "AdsDisabled";
+    private const string AdsRewardUntilUtcKey = "AdsRewardUntilUtcTicks";
     public const string PersonalizedAdsConsentKey = "PersonalizedAdsConsent";
     public const string FormKey = "Form";
     public const string SizeKey = "Size";
@@ -86,6 +87,7 @@ public static partial class UserPreferences
             Size = NormalizeSizeKey(Preferences.Get(SizeKey, DefaultSize)),
             IsBold = Preferences.Get(IsBoldKey, false),
             AdsDisabled = Preferences.Get(AdsDisabledKey, false),
+            AdsRewardUntilUtcTicks = Preferences.Get(AdsRewardUntilUtcKey, 0L),
             PersonalizedAdsConsent = Preferences.Get(PersonalizedAdsConsentKey, false),
             QuestionnaireAutoAdvance = Preferences.Get(QuestionnaireAutoAdvanceKey, true),
             HasCompletedOnboarding = Preferences.ContainsKey(HasCompletedOnboardingKey)
@@ -148,6 +150,25 @@ public static partial class UserPreferences
         else
         {
             Preferences.Set(PersonalizedAdsConsentKey, consent);
+            _persistedCache = updated;
+        }
+
+        RaiseChanged();
+    }
+
+    internal static void GrantAdsReward()
+    {
+        UserPreferencesState current = Current;
+        long until = Math.Max(current.AdsRewardUntilUtcTicks,
+            DateTime.UtcNow.AddMinutes(AdvertisingConfiguration.AdsRewardMinutes).Ticks);
+        UserPreferencesState updated = current with { AdsRewardUntilUtcTicks = until };
+        if (_inMemoryState is not null)
+        {
+            _inMemoryState = updated;
+        }
+        else
+        {
+            Preferences.Set(AdsRewardUntilUtcKey, until);
             _persistedCache = updated;
         }
 

@@ -4220,6 +4220,24 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>疲惫</value>
   </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>完整观看视频后，目录中的广告和全屏广告将暂停 {0} 分钟。</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>观看视频</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>正在加载视频…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>广告暂停已生效。</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>视频在获得奖励前已关闭。</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>暂时没有可播放的视频，请稍后再试。</value>
+  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>孤独</value>
   </data>
@@ -4290,13 +4308,13 @@
     <value>个性化广告</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>开启后，VK 可能会使用广告 ID 来选择横幅广告。</value>
+    <value>开启后，VK 可能会使用广告 ID 来选择广告。</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>如果您收到关闭广告的邀请码，请在此输入。</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>广告横幅会在符合条件的目录中自动加载。使用发放的代码可在此设备上关闭后续广告请求。</value>
+    <value>广告卡片会在符合条件的目录中自动加载。使用发放的代码可在此设备上关闭后续广告请求。</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>描述问题或想法。应用会打开一封发往下方地址的邮件，供你检查后再发送。</value>
@@ -4314,7 +4332,7 @@
     <value>VK Ads 可能收到的信息</value>
   </data>
   <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
-    <value>打开符合条件的目录时，应用会加载横幅广告。VK 可能会收到 IP 地址、设备和应用的技术信息，以及广告请求、展示和点击事件。启用个性化广告后，SDK 还可能发送可用的广告标识符。具体数据取决于 SDK 版本和设备设置。</value>
+    <value>打开符合条件的目录时，应用可能会请求广告。VK 可能会收到 IP 地址、设备和应用的技术信息，以及广告请求、展示和点击事件。启用个性化广告后，SDK 还可能发送可用的广告标识符。具体数据取决于 SDK 版本和设备设置。</value>
   </data>
   <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
     <value>保留在设备上的信息</value>

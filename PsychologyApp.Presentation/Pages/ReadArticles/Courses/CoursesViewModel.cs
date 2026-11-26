@@ -42,7 +42,7 @@ public sealed class CoursesViewModel : BaseViewModel
     public string LeadText => AppStrings.ArticlesCoursesLead;
     public bool IsCourseAdEligible => OperatingSystem.IsAndroid()
         && Courses.Count >= CoursesBeforeAdCount + 2
-        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
     public IReadOnlyList<CourseSectionItem> Sections => IsCourseAdEligible
         ? [new(Courses.Take(CoursesBeforeAdCount), hasAdPlacement: true), new(Courses.Skip(CoursesBeforeAdCount))]

@@ -4220,6 +4220,24 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>Exhaustion</value>
   </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Watch the full video for {0} minutes without ads in catalogs or fullscreen interruptions.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Watch video</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Loading video…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Your ad break is active.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>The video was closed before the reward was earned.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>Video unavailable. Try again later.</value>
+  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>Loneliness</value>
   </data>
@@ -4290,13 +4308,13 @@
     <value>Personalized ads</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>When enabled, VK may use your advertising ID to choose banners.</value>
+    <value>When enabled, VK may use your advertising ID to choose ads.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Received an ad-free invitation code? Enter it here.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Banners load automatically in eligible catalogs. An issued code disables future ad requests on this device.</value>
+    <value>Ad cards load automatically in eligible catalogs. An issued code disables future ad requests on this device.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Describe a problem or idea. An email to the address below will open so you can review it before sending.</value>
@@ -4314,7 +4332,7 @@
     <value>What VK Ads may receive</value>
   </data>
   <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
-    <value>When you open an eligible catalog, the app loads a banner. VK may receive your IP address, technical device and app information, and ad request, impression, and click events. If personalization is enabled, the SDK may also send an available advertising ID. The exact data depends on the SDK version and device settings.</value>
+    <value>When you open an eligible catalog, the app may request an ad. VK may receive your IP address, technical device and app information, and ad request, impression, and click events. If personalization is enabled, the SDK may also send an available advertising ID. The exact data depends on the SDK version and device settings.</value>
   </data>
   <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
     <value>What stays on your device</value>

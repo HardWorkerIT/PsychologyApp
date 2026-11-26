@@ -47,6 +47,12 @@ public static partial class AppStrings
     public static string AdsConfirmCode => R(nameof(AdsConfirmCode));
     public static string AdsDisabledStatus => R(nameof(AdsDisabledStatus));
     public static string AdsInvalidCode => R(nameof(AdsInvalidCode));
+    public static string AdsRewardDescription(int minutes) => F(nameof(AdsRewardDescription), minutes);
+    public static string AdsRewardWatch => R(nameof(AdsRewardWatch));
+    public static string AdsRewardLoading => R(nameof(AdsRewardLoading));
+    public static string AdsRewardActive => R(nameof(AdsRewardActive));
+    public static string AdsRewardClosedEarly => R(nameof(AdsRewardClosedEarly));
+    public static string AdsRewardUnavailable => R(nameof(AdsRewardUnavailable));
 
     public static string SettingsTitle => R(nameof(SettingsTitle));
     public static string SettingsOptionSelected => R(nameof(SettingsOptionSelected));

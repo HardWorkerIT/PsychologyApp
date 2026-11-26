@@ -4220,6 +4220,24 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>Erschöpfung</value>
   </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Nach dem vollständigen Video sind Anzeigen in Katalogen und Vollbildanzeigen für {0} Minuten pausiert.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Video ansehen</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Video wird geladen…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Deine Werbepause läuft.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>Das Video wurde vor der Belohnung geschlossen.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>Das Video ist gerade nicht verfügbar. Versuch es später erneut.</value>
+  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>Einsamkeit</value>
   </data>
@@ -4290,13 +4308,13 @@
     <value>Personalisierte Werbung</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>Bei aktivierter Option kann VK Ihre Werbe-ID zur Auswahl von Bannern verwenden.</value>
+    <value>Bei aktivierter Option kann VK Ihre Werbe-ID zur Auswahl von Anzeigen verwenden.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>Sie haben einen Code zur Deaktivierung der Werbung erhalten? Geben Sie ihn hier ein.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Banner werden in ausgewählten Katalogen automatisch geladen. Ein bereitgestellter Code deaktiviert künftige Werbeanfragen auf diesem Gerät.</value>
+    <value>Werbekarten werden in ausgewählten Katalogen automatisch geladen. Ein bereitgestellter Code deaktiviert künftige Werbeanfragen auf diesem Gerät.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Beschreibe ein Problem oder eine Idee. Es öffnet sich eine E-Mail an die unten angegebene Adresse, die du vor dem Senden prüfen kannst.</value>
@@ -4314,7 +4332,7 @@
     <value>Was VK Ads erhalten kann</value>
   </data>
   <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
-    <value>Wenn Sie einen passenden Katalog öffnen, lädt die App ein Banner. VK kann Ihre IP-Adresse, technische Geräte- und App-Informationen sowie Ereignisse zu Anfrage, Anzeige und Klick erhalten. Bei aktivierter Personalisierung kann das SDK zusätzlich eine verfügbare Werbekennung übermitteln. Die genauen Daten hängen von SDK-Version und Geräteeinstellungen ab.</value>
+    <value>Wenn Sie einen passenden Katalog öffnen, kann die App eine Anzeige anfordern. VK kann Ihre IP-Adresse, technische Geräte- und App-Informationen sowie Ereignisse zu Anfrage, Anzeige und Klick erhalten. Bei aktivierter Personalisierung kann das SDK zusätzlich eine verfügbare Werbekennung übermitteln. Die genauen Daten hängen von SDK-Version und Geräteeinstellungen ab.</value>
   </data>
   <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
     <value>Was auf Ihrem Gerät bleibt</value>

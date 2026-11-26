@@ -104,7 +104,7 @@ public partial class TechniquesViewModel
         && !UserPreferencesStore.Load().AdsDisabled;
 
     public bool IsPracticeAdEligible => IsPracticeAdPlacementAvailable
-        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
     private void NotifyPracticeAdProperties()
     {

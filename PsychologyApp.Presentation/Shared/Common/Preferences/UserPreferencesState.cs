@@ -12,6 +12,7 @@ public sealed record UserPreferencesState
     public string Size { get; init; } = UserPreferences.DefaultSize;
     public bool IsBold { get; init; }
     public bool AdsDisabled { get; init; }
+    public long AdsRewardUntilUtcTicks { get; init; }
     public bool PersonalizedAdsConsent { get; init; }
     public bool QuestionnaireAutoAdvance { get; init; } = true;
     public bool HasCompletedOnboarding { get; init; }

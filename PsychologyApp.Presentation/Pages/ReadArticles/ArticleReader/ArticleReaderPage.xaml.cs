@@ -9,6 +9,11 @@ public partial class ArticleReaderPage : ContentPage
 
     private readonly ArticleReaderViewModel _viewModel;
 
+#if ANDROID
+    internal bool CanShowInterstitialOnReturn { get; set; }
+    internal bool HasReachedEnd { get; private set; }
+#endif
+
     public ArticleReaderPage(IArticleReaderViewModelFactory viewModelFactory, string articleId)
     {
         InitializeComponent();
@@ -25,8 +30,12 @@ public partial class ArticleReaderPage : ContentPage
 
     private void CheckEnd()
     {
-        if (Scroller.ContentSize.Height > 0 && Scroller.ScrollY + Scroller.Height >= Scroller.ContentSize.Height - EndSlack)
+        if (Scroller.Height > 0 && Scroller.ContentSize.Height > 0
+            && Scroller.ScrollY + Scroller.Height >= Scroller.ContentSize.Height - EndSlack)
         {
+#if ANDROID
+            HasReachedEnd = true;
+#endif
             _viewModel.ReachedEnd();
         }
     }

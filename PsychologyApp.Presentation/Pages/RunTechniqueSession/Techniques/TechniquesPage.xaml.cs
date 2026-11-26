@@ -33,12 +33,12 @@ public partial class TechniquesPage : ContentPage
 
         _viewModel.RefreshPracticeAdEligibility();
 #if ANDROID
-        VkBannerView adView = new();
-        adView.SetBinding(VkBannerView.IsEligibleProperty, nameof(TechniquesViewModel.IsPracticeAdEligible));
+        VkNativeView adView = new();
+        adView.SetBinding(VkNativeView.IsEligibleProperty, nameof(TechniquesViewModel.IsPracticeAdEligible));
         PracticeAdHost.Content = adView;
         PracticeAdHost.SetBinding(
             VisualElement.IsVisibleProperty,
-            new Binding(nameof(VkBannerView.IsAdLoaded)) { Source = adView });
+            new Binding(nameof(VkNativeView.IsAdLoaded)) { Source = adView });
 #endif
 
         _viewModel.RefreshOnAppearAsync().FireAndForget();

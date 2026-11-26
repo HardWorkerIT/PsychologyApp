@@ -73,9 +73,11 @@ public sealed class ArticlesViewModel : BaseViewModel
     public string SearchPlaceholder => AppStrings.ArticlesSearchPlaceholder;
     public ICommand SelectFilterCommand { get; }
 
+    internal bool IsBrowsingGeneralCatalog => _selectedKey == AllKey && string.IsNullOrWhiteSpace(_query);
+
     private bool CanPlaceArticleAd => OperatingSystem.IsAndroid()
         && _query.Trim().Length == 0
-        && AdvertisingConfiguration.CanRequestAds(UserPreferencesStore.Load());
+        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
     public bool IsArticleAdEligible => Sections.Any(section => section.HasAdPlacement)
         && CanPlaceArticleAd;

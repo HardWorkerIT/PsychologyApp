@@ -7,6 +7,12 @@ using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
 using AppShell = PsychologyApp.Presentation.App.AppShell;
+#if ANDROID
+using PsychologyApp.Application.Articles;
+using PsychologyApp.Presentation.Pages.ReadArticles.ArticleReader;
+using PsychologyApp.Presentation.Pages.ReadArticles.Articles;
+using PsychologyApp.Presentation.Platforms.Android;
+#endif
 
 namespace PsychologyApp.Presentation.App.Routes;
 
@@ -40,7 +46,33 @@ public sealed class MauiNavigationService : INavigationService
     public INavigation Navigation => ResolveNavigation();
 
     public Task GoBackAsync() =>
+#if ANDROID
+        NavigationCoordinator.RunAsync(async () =>
+        {
+            INavigation navigation = ResolveNavigation();
+            var reader = Shell.Current?.CurrentPage as ArticleReaderPage;
+            await navigation.PopAsync(true);
+            if (reader is not { CanShowInterstitialOnReturn: true })
+            {
+                return;
+            }
+
+            // Popping detaches the reader's navigation proxy. Check the page Shell actually presents.
+            if (reader.HasReachedEnd
+                && Shell.Current?.CurrentPage is ArticlesPage { IsBrowsingGeneralCatalog: true } catalog
+                && catalog.Navigation.ModalStack.Count == 0)
+            {
+                VkInterstitialAds.ShowIfReady(_preferences.Load());
+            }
+            else
+            {
+                Android.Util.Log.Info("VkInterstitial", $"Reader return skipped: reachedEnd={reader.HasReachedEnd}.");
+                VkInterstitialAds.DiscardPending();
+            }
+        });
+#else
         NavigationCoordinator.RunAsync(() => ResolveNavigation().PopAsync(true));
+#endif
 
     public Task GoToRootAsync() =>
         NavigationCoordinator.RunAsync(() => ResolveNavigation().PopToRootAsync(true));
@@ -292,7 +324,27 @@ public sealed class MauiNavigationService : INavigationService
         NavigationCoordinator.RunPushAsync(() => ResolveNavigation().PushAsync(PrepareSecondaryPage(_pageFactory.CreateExposurePage()), true));
 
     public Task GoToArticleAsync(string articleId) =>
+#if ANDROID
+        NavigationCoordinator.RunPushAsync(async () =>
+        {
+            INavigation navigation = ResolveNavigation();
+            ArticleReaderPage reader = _pageFactory.CreateArticleReaderPage(articleId);
+            // Only general reading can trigger an ad. Support and clinical articles stay outside this placement.
+            reader.CanShowInterstitialOnReturn =
+                articleId is ArticleIds.Sleep or ArticleIds.HabitFormation or ArticleIds.Procrastination
+                    or ArticleIds.ValuesAction or ArticleIds.RestBreak
+                && navigation.ModalStack.Count == 0
+                && navigation.NavigationStack.LastOrDefault() is ArticlesPage { IsBrowsingGeneralCatalog: true };
+            await navigation.PushAsync(PrepareSecondaryPage(reader), true);
+            if (reader.CanShowInterstitialOnReturn
+                && ReferenceEquals(navigation.NavigationStack.LastOrDefault(), reader))
+            {
+                VkInterstitialAds.Preload(_preferences.Load());
+            }
+        });
+#else
         NavigationCoordinator.RunPushAsync(() => ResolveNavigation().PushAsync(PrepareSecondaryPage(_pageFactory.CreateArticleReaderPage(articleId)), true));
+#endif
 
     public Task GoToTestAsync(string testId) => _testOpener.OpenAsync(testId, this);
 

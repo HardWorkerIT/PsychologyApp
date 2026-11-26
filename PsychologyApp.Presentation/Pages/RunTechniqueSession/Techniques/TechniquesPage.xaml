@@ -129,10 +129,6 @@
                         </today:TodayPracticeRowView.Behaviors>
                     </today:TodayPracticeRowView>
 
-                    <ContentView x:Name="PracticeAdHost"
-                                 IsVisible="False"
-                                 Margin="0,8,0,16" />
-
                     <FlexLayout Direction="Row"
                                 Wrap="Wrap"
                                 AlignItems="Center"
@@ -219,6 +215,7 @@
 
             <CollectionView.Footer>
                 <VerticalStackLayout Spacing="8">
+                    <ContentView x:Name="PracticeAdHost" IsVisible="False" Margin="0,8,0,0" />
                     <Grid
                         HeightRequest="{Binding LoadMoreFooterHeight}"
                         MinimumHeightRequest="{Binding LoadMoreFooterHeight}"

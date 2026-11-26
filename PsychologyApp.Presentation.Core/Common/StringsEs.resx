@@ -4220,6 +4220,24 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>Agotamiento</value>
   </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Mira el vídeo completo para pausar los anuncios de los catálogos y los de pantalla completa durante {0} minutos.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Ver vídeo</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Cargando vídeo…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Tu pausa publicitaria está activa.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>El vídeo se cerró antes de obtener la recompensa.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>El vídeo no está disponible. Inténtalo más tarde.</value>
+  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>Soledad</value>
   </data>
@@ -4290,13 +4308,13 @@
     <value>Anuncios personalizados</value>
   </data>
   <data name="AdsPersonalizationHelp" xml:space="preserve">
-    <value>Al activarla, VK puede usar tu ID publicitario para elegir banners.</value>
+    <value>Al activarla, VK puede usar tu ID publicitario para elegir anuncios.</value>
   </data>
   <data name="AdsHelp" xml:space="preserve">
     <value>¿Has recibido un código de invitación para quitar la publicidad? Introdúcelo aquí.</value>
   </data>
   <data name="AdsHelpActive" xml:space="preserve">
-    <value>Los banners se cargan automáticamente en los catálogos habilitados. Un código emitido desactiva futuras solicitudes de anuncios en este dispositivo.</value>
+    <value>Las tarjetas publicitarias se cargan automáticamente en los catálogos habilitados. Un código emitido desactiva futuras solicitudes de anuncios en este dispositivo.</value>
   </data>
   <data name="ReviewExplanation" xml:space="preserve">
     <value>Describe un problema o una idea. Se abrirá un correo a la dirección indicada abajo para que puedas revisarlo antes de enviarlo.</value>
@@ -4314,7 +4332,7 @@
     <value>Qué puede recibir VK Ads</value>
   </data>
   <data name="AdsDisclosureMayReceiveBody" xml:space="preserve">
-    <value>Al abrir un catálogo compatible, la aplicación carga un banner. VK puede recibir tu dirección IP, datos técnicos del dispositivo y de la aplicación, y eventos de solicitud, impresión y clic. Si activas la personalización, el SDK también puede enviar un identificador publicitario disponible. Los datos concretos dependen de la versión del SDK y de la configuración del dispositivo.</value>
+    <value>Al abrir un catálogo compatible, la aplicación puede solicitar un anuncio. VK puede recibir tu dirección IP, datos técnicos del dispositivo y de la aplicación, y eventos de solicitud, impresión y clic. Si activas la personalización, el SDK también puede enviar un identificador publicitario disponible. Los datos concretos dependen de la versión del SDK y de la configuración del dispositivo.</value>
   </data>
   <data name="AdsDisclosureOnDeviceTitle" xml:space="preserve">
     <value>Qué permanece en tu dispositivo</value>

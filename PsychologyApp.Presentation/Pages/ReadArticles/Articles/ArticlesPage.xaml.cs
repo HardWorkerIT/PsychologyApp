@@ -10,7 +10,9 @@ public partial class ArticlesPage : ContentPage
 {
     private readonly ArticlesViewModel _viewModel;
 #if ANDROID
+    internal bool IsBrowsingGeneralCatalog => _viewModel.IsBrowsingGeneralCatalog;
     private VerticalStackLayout? _articleAdFooter;
+    private bool _catalogVisible;
 #endif
 
     public ArticlesPage(IArticlesViewModelFactory viewModelFactory)
@@ -25,6 +27,7 @@ public partial class ArticlesPage : ContentPage
     {
         base.OnAppearing();
 #if ANDROID
+        _catalogVisible = true;
         ReconnectArticleAdFooter();
 #endif
         _viewModel.RefreshAdEligibility();
@@ -34,6 +37,7 @@ public partial class ArticlesPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
+        _catalogVisible = false;
         DisconnectArticleAdFooter();
 #endif
         base.OnDisappearing();
@@ -64,7 +68,6 @@ public partial class ArticlesPage : ContentPage
         }
 
         _articleAdFooter = footer;
-        footer.IsVisible = true;
         ReconnectArticleAdFooter();
 #else
         if (sender is VisualElement footer)
@@ -77,12 +80,10 @@ public partial class ArticlesPage : ContentPage
 #if ANDROID
     private void ReconnectArticleAdFooter()
     {
-        if (_articleAdFooter is null)
+        if (!_catalogVisible || _articleAdFooter is null)
         {
             return;
         }
-
-        _articleAdFooter.IsVisible = true;
 
         ContentView? host = _articleAdFooter.Children.OfType<ContentView>().FirstOrDefault();
         if (host is null)
@@ -90,15 +91,18 @@ public partial class ArticlesPage : ContentPage
             return;
         }
 
-        if (host.Content is not VkBannerView adView)
+        if (host.Content is not VkNativeView adView)
         {
-            adView = new VkBannerView();
+            adView = new VkNativeView();
             adView.SetBinding(
-                VkBannerView.IsEligibleProperty,
+                VkNativeView.IsEligibleProperty,
                 new Binding(nameof(ArticlesViewModel.IsArticleAdEligible)) { Source = _viewModel });
             host.Content = adView;
         }
 
+        _articleAdFooter.SetBinding(
+            VisualElement.IsVisibleProperty,
+            new Binding(nameof(VkNativeView.IsAdLoaded)) { Source = adView });
     }
 
     private void DisconnectArticleAdFooter() => DisconnectArticleAdFooter(_articleAdFooter);
