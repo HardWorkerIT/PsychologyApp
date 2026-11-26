@@ -14,6 +14,7 @@ public sealed class PageAnimationHelper : IDisposable
     private CancellationTokenSource? _cts;
     private bool _contentRevealed;
     private bool _introDismissed;
+    private bool _disposed;
 
     public PageAnimationHelper(
         BaseViewModel? viewModel,
@@ -67,41 +68,45 @@ public sealed class PageAnimationHelper : IDisposable
 
     private async Task HandleLoadingStateAsync()
     {
-        if (_viewModel is null)
+        if (_disposed || _viewModel is null)
         {
             return;
         }
 
-        ResetCancellation();
-
-        if (_viewModel.IsInit && _introView is not null && !_introDismissed && _introView.IsVisible)
+        if (_viewModel.IsInit)
         {
-            _introDismissed = true;
-            await UiAnimations.SafeHideAsync(_introView, cancellationToken: _cts!.Token);
+            if (_contentRevealed)
+            {
+                _cts?.Cancel();
+                _contentRevealed = false;
+            }
+
+            if (_introView is not null && !_introDismissed && _introView.IsVisible)
+            {
+                _introDismissed = true;
+                await UiAnimations.SafeHideAsync(_introView, cancellationToken: ResetCancellation());
+            }
+            else
+            {
+                UiAnimations.ResetVisualState(_contentView);
+            }
+
             return;
         }
 
         if (_viewModel.IsDone && !_contentRevealed)
         {
+            CancellationToken cancellationToken = ResetCancellation();
             _contentRevealed = true;
 
             if (_contentView is not null && _contentView.IsVisible && !ShouldSkipContentReveal(_contentView))
             {
-                await UiAnimations.SafeRevealPremiumAsync(_contentView, cancellationToken: _cts!.Token);
+                await UiAnimations.SafeRevealPremiumAsync(_contentView, cancellationToken: cancellationToken);
             }
 
-            if (_staggerLayout is not null && _staggerLayout.IsVisible)
+            if (!cancellationToken.IsCancellationRequested && _staggerLayout is not null && _staggerLayout.IsVisible)
             {
-                await UiAnimations.RevealChildrenStaggeredAsync(_staggerLayout, cancellationToken: _cts!.Token);
-            }
-        }
-        else if (_viewModel.IsInit)
-        {
-            _contentRevealed = false;
-
-            if (_contentView is not null)
-            {
-                UiAnimations.ResetVisualState(_contentView);
+                await UiAnimations.RevealChildrenStaggeredAsync(_staggerLayout, cancellationToken: cancellationToken);
             }
         }
     }
@@ -109,15 +114,17 @@ public sealed class PageAnimationHelper : IDisposable
     internal static bool ShouldSkipContentReveal(VisualElement contentView) =>
         contentView is CollectionView or ItemsView;
 
-    private void ResetCancellation()
+    private CancellationToken ResetCancellation()
     {
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = new CancellationTokenSource();
+        return _cts.Token;
     }
 
     public void Dispose()
     {
+        _disposed = true;
         if (_viewModel is not null)
         {
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
@@ -126,5 +133,6 @@ public sealed class PageAnimationHelper : IDisposable
         _cts?.Cancel();
         _cts?.Dispose();
         _cts = null;
+        UiAnimations.ResetVisualState(_contentView);
     }
 }
