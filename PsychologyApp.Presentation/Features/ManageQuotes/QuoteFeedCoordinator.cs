@@ -121,11 +121,13 @@ public sealed class QuoteFeedCoordinator
         int collectionCount,
         bool isDone,
         IQuotService quotService,
-        CancellationToken cancellationToken) =>
+        CancellationToken cancellationToken,
+        string? dailyQuoteText = null) =>
         _feedMode == QuoteFeedMode.All &&
+        !HasThemeSelected &&
         collectionCount == 0 &&
         isDone &&
-        await quotService.IsAllCaughtUpAsync(cancellationToken);
+        await quotService.IsAllCaughtUpAsync(cancellationToken, dailyQuoteText);
 
     public void EnsureFeedFilters(
         ObservableCollection<FilterChipTabItem> filters,
@@ -199,11 +201,21 @@ public sealed class QuoteFeedCoordinator
             onFail,
             cancellationToken);
 
+        if (items.Count == 0 && _feedMode == QuoteFeedMode.All && !HasThemeSelected)
+        {
+            // Startup can finish before the quote catalog has been populated. The daily quote is displayed separately.
+            await quotService.EnsureUnreadQuotesInFeedAsync(
+                string.IsNullOrEmpty(dailyQuoteText) ? count : count + 1, cancellationToken);
+            items = await FetchMappedItemsAsync(
+                quotService, factory, count, dailyQuoteText, refreshBindingAsync, onFail, cancellationToken);
+        }
+
         bool allCaughtUp = await ShouldShowAllReadEmptyAsync(
             items.Count,
             isDone: true,
             quotService,
-            cancellationToken);
+            cancellationToken,
+            dailyQuoteText);
 
         return new QuoteFeedLoadResult(items, allCaughtUp);
     }

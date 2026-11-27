@@ -57,6 +57,19 @@ public sealed class QuotService(
         return quots.Select(QuotMapper.GetQuotDTO);
     }
 
+    public async Task EnsureUnreadQuotesInFeedAsync(int count, CancellationToken cancellationToken = default)
+    {
+        if (count <= 0)
+        {
+            return;
+        }
+
+        using MutationLease mutation = await EnterMutationAsync(cancellationToken).ConfigureAwait(false);
+        int unreadCount = await quotRepository.CountUnreadAsync(cancellationToken).ConfigureAwait(false);
+        await AddRandomQuotesAsync(count - unreadCount, cancellationToken, recycleExhaustedCatalog: false)
+            .ConfigureAwait(false);
+    }
+
     public async Task<IEnumerable<QuotDTO>> GetUnreadByThemesAsync(
         IReadOnlyList<string> themes,
         int count,
@@ -267,11 +280,24 @@ public sealed class QuotService(
         return quots.Select(QuotMapper.GetQuotDTO);
     }
 
-    public async Task<bool> IsAllCaughtUpAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> IsAllCaughtUpAsync(CancellationToken cancellationToken = default, string? dailyQuoteText = null)
     {
-        if (await quotRepository.CountUnreadAsync(cancellationToken).ConfigureAwait(false) > 0)
+        if (dailyQuoteText is null)
         {
-            return false;
+            if (await quotRepository.CountUnreadAsync(cancellationToken).ConfigureAwait(false) > 0)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            // Quote text is unique in storage, so at most one row can be the featured quote.
+            IEnumerable<global::PsychologyApp.Domain.Entities.Quot> unread =
+                await quotRepository.GetUnreadLatestAsync(2, cancellationToken).ConfigureAwait(false);
+            if (unread.Any(quote => !string.Equals(quote.Text, dailyQuoteText, StringComparison.Ordinal)))
+            {
+                return false;
+            }
         }
 
         IReadOnlyList<QuotSeed> seeds = await quotContentProvider.LoadAllAsync(cancellationToken).ConfigureAwait(false);
@@ -356,7 +382,8 @@ public sealed class QuotService(
     private async Task AddRandomQuotesAsync(
         int count,
         CancellationToken cancellationToken,
-        bool loadExistingFromDatabase = true)
+        bool loadExistingFromDatabase = true,
+        bool recycleExhaustedCatalog = true)
     {
         if (count <= 0)
         {
@@ -371,7 +398,9 @@ public sealed class QuotService(
 
         for (int i = 0; i < count; i++)
         {
-            QuotSeed? seed = await PickRandomSeedAsync(context, available, cancellationToken).ConfigureAwait(false);
+            QuotSeed? seed = recycleExhaustedCatalog
+                ? await PickRandomSeedAsync(context, available, cancellationToken).ConfigureAwait(false)
+                : TakeUnknown(context, available);
             if (seed is null)
             {
                 break;
@@ -380,7 +409,10 @@ public sealed class QuotService(
             quots.Add(CreateQuotFromSeed(seed));
         }
 
-        await quotRepository.AddManyAsync(quots, cancellationToken).ConfigureAwait(false);
+        if (quots.Count > 0)
+        {
+            await quotRepository.AddManyAsync(quots, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     // Draws from the shared pool by swap-remove, so a page of N quotes no longer re-filters the whole catalog N times.

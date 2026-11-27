@@ -26,6 +26,29 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class QuoteViewModelTests
 {
     [Fact]
+    public async Task FirstOpen_PopulatesTheGeneralFeedWhenOnlyTheDailyQuoteIsStored()
+    {
+        QuotDTO daily = new() { QuotId = 1, Text = "Daily quote", Title = "Author" };
+        QuotDTO another = new() { QuotId = 2, Text = "Another quote", Title = "Author" };
+        var quotService = CreateQuotServiceMock();
+        quotService.Setup(s => s.GetDailyQuoteAsync(It.IsAny<DateOnly>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(daily);
+        IReadOnlyList<QuotDTO> unread = [daily];
+        quotService.Setup(s => s.GetUnreadAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => unread);
+        quotService.Setup(s => s.EnsureUnreadQuotesInFeedAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .Callback(() => unread = [another, daily])
+            .Returns(Task.CompletedTask);
+        QuoteViewModel viewModel = CreateViewModel(quotService.Object);
+
+        await viewModel.EnsureInitializedAsync();
+
+        Assert.True(viewModel.IsDone);
+        Assert.Equal(daily.Text, viewModel.DailyQuoteText);
+        Assert.Equal(another.Text, Assert.Single(viewModel.DisplayItems).Text);
+    }
+
+    [Fact]
     public async Task Reload_DoesNotCallLoadSingleAsync()
     {
         var quotService = CreateQuotServiceMock();

@@ -10,6 +10,7 @@ public interface IQuotService
 
     Task<IEnumerable<QuotDTO>> GetAllAsync(int count, CancellationToken cancellationToken = default);
     Task<IEnumerable<QuotDTO>> GetUnreadAsync(int count, CancellationToken cancellationToken = default);
+    Task EnsureUnreadQuotesInFeedAsync(int count, CancellationToken cancellationToken = default);
     Task<IEnumerable<QuotDTO>> GetUnreadByThemesAsync(
         IReadOnlyList<string> themes,
         int count,
@@ -32,7 +33,7 @@ public interface IQuotService
     Task MarkAsReadedAsync(long quotId, CancellationToken cancellationToken = default);
     Task MarkAsFavouriteAsync(long quotId, bool isFavourite, CancellationToken cancellationToken = default);
     Task<IEnumerable<QuotDTO>> GetFavouritesAsync(int count, CancellationToken cancellationToken = default);
-    Task<bool> IsAllCaughtUpAsync(CancellationToken cancellationToken = default);
+    Task<bool> IsAllCaughtUpAsync(CancellationToken cancellationToken = default, string? dailyQuoteText = null);
     Task ResetReadStateAsync(CancellationToken cancellationToken = default);
     Task<QuotDTO?> GetDailyQuoteAsync(DateOnly date, CancellationToken cancellationToken = default);
 }

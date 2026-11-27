@@ -161,7 +161,8 @@ public partial class QuoteViewModel
                 _feedState.FeedItemCount,
                 IsDone,
                 _quotService,
-                effectiveToken);
+                effectiveToken,
+                DailyQuote?.Text);
 
             await UiThread.RunAsync(() => ShowAllReadEmpty = allReadEmpty);
         }
