@@ -51,7 +51,7 @@ public sealed class MusicPlaybackPresenter(
         try
         {
             await playbackService.PlayAsync(item.URL);
-            return true;
+            return playbackService.IsPlaying;
         }
         catch (Exception ex)
         {
@@ -69,7 +69,7 @@ public sealed class MusicPlaybackPresenter(
         }
 
         await playbackService.ResumeAsync();
-        return true;
+        return playbackService.IsPlaying;
     }
 
     public async Task<TimeSpan> SeekToFractionAsync(IAudioPlaybackService playbackService, double fraction)

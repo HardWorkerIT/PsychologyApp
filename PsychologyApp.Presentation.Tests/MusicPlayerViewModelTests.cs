@@ -66,6 +66,21 @@ public sealed class MusicPlayerViewModelTests
     }
 
     [Fact]
+    public async Task Playback_controls_remain_paused_when_the_player_denies_audio_focus()
+    {
+        Mock<IAudioPlaybackService> playback = new();
+        playback.Setup(p => p.PlayAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        playback.Setup(p => p.ResumeAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        MusicPlaybackPresenter presenter = new(
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<MusicPlaybackPresenter>.Instance,
+            new MusicPlaylistPresenter());
+        Audio track = CreateViewModel(playback).AllItems[0];
+
+        Assert.False(await presenter.PlayTrackAsync(playback.Object, track));
+        Assert.False(await presenter.TogglePlayPauseAsync(playback.Object, isPlaying: false));
+    }
+
+    [Fact]
     public async Task PlayCommand_SetsActiveTrackAndPlaybackFlags()
     {
         Mock<IAudioPlaybackService> playback = new();
