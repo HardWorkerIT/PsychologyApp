@@ -27,6 +27,13 @@ public interface IChatEraseLifecycle
 /// <param name="Action">Something the UI must do after showing the messages.</param>
 public sealed record ChatTurnResult(ChatSessionDTO Session, IReadOnlyList<ChatMessageDTO> NewMessages, DialogueAction? Action);
 
+/// <summary>A crisis response that must reach the person even though the turn could not be saved.</summary>
+public sealed class ChatCrisisTurnNotSavedException(string reply, Exception innerException)
+    : Exception("The crisis turn could not be saved.", innerException)
+{
+    public string Reply { get; } = reply;
+}
+
 /// <summary>A bounded slice of one chat, oldest first, with a flag for an earlier page.</summary>
 public sealed record ChatMessagePage(IReadOnlyList<ChatMessageDTO> Messages, bool HasOlderMessages);
 
@@ -554,6 +561,11 @@ public sealed class ChatService(
 
             return await TakeTurnWithMemoryAsync(sessionId, userText, input, session, cancellationToken).ConfigureAwait(false);
         }
+        catch (Exception error) when (error is not OperationCanceledException
+            && new CompanionDialogue(analyzer, crisisDetector, language.IsEnglish).IsCrisisInput(input))
+        {
+            throw new ChatCrisisTurnNotSavedException(CompanionContent.Crisis(language.IsEnglish), error);
+        }
         finally
         {
             _memoryGate.Release();
@@ -575,20 +587,17 @@ public sealed class ChatService(
         CompanionReply reply = dialogue.Respond(state, input);
         ApplyReply(session, reply, now, firstText: input is CompanionInput.FreeText ? userText : null);
 
-        // Do not persist a reply that says the mood was logged before the journal write commits. A failed journal
-        // write leaves the user's turn unsaved, so the UI can restore the chip and retry the same action.
-        if (reply.Action is { Kind: DialogueActionKind.LogMood, MoodLevel: { } moodLevel })
-        {
-            await progress.RecordMoodAsync(moodLevel, reply.Action.Note, now, cancellationToken).ConfigureAwait(false);
-        }
+        // The journal entry and its chat acknowledgement must commit together. Retrying a failed turn then writes one entry.
+        MoodEntryDTO? mood = reply.Action is { Kind: DialogueActionKind.LogMood, MoodLevel: { } moodLevel }
+            ? new MoodEntryDTO { MoodLevel = moodLevel, Note = reply.Action.Note, RecordedAt = now }
+            : null;
 
-        // The user's message and the whole reply are stored in one transaction: a turn is saved completely or not at all.
         List<ChatMessageDTO> pending =
         [
             new() { SessionId = sessionId, Role = ChatRole.User, Text = userText, CreatedAt = now },
             .. CompanionMessages(session, reply, now)
         ];
-        IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, pending, MemoryChanges(state, reply, memory, now), cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, pending, MemoryChanges(state, reply, memory, now), cancellationToken, mood).ConfigureAwait(false);
 
         // Logging to the journal is a side effect the companion carries out itself; the UI never sees it as a navigation instruction.
         if (reply.Action?.Kind == DialogueActionKind.LogMood)
@@ -651,10 +660,11 @@ public sealed class ChatService(
         ChatSessionDTO session,
         IEnumerable<ChatMessageDTO> messages,
         IReadOnlyList<ChatMemoryChange> memory,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        MoodEntryDTO? mood = null)
     {
         List<ChatMessageDTO> pending = messages.ToList();
-        IReadOnlyList<long> ids = await repository.SaveTurnAsync(session, pending, memory, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<long> ids = await repository.SaveTurnAsync(session, pending, memory, mood, cancellationToken).ConfigureAwait(false);
         return pending.Select((m, i) => new ChatMessageDTO
         {
             Id = ids[i],
@@ -675,11 +685,10 @@ public sealed class ChatService(
         CancellationToken cancellationToken, bool includeTodayMood = false, long? currentSessionId = null, IReadOnlyDictionary<string, int>? earlierTopicChats = null)
     {
         // Heavy days that keep coming back are measured: earlier chats of two weeks that ended at 7 or more, and the questionnaires already taken.
-        IReadOnlyList<ChatSessionDTO> sessions = await repository.GetSessionsAsync(cancellationToken).ConfigureAwait(false);
         DateTime now = Now();
         DateTime since = now - HeavyWindow;
-        int heavyChats = sessions.Count(s => s.Id != currentSessionId && s.UpdatedAt >= since && s.UpdatedAt <= now
-            && (s.LastIntensity ?? s.FirstIntensity) is >= 0 and <= 10 and >= HeavyTension);
+        int heavyChats = await repository.CountHighTensionSessionsAsync(since, now, currentSessionId, HeavyTension, cancellationToken)
+            .ConfigureAwait(false);
 
         Task<IReadOnlyDictionary<string, TestResultDTO>> takenTask = progress.GetLatestTestResultsAsync(["phq9", "gad7", "pcl5"], cancellationToken);
         Task<IReadOnlyList<QuotSeed>> quotesTask = quotes.LoadAllAsync(cancellationToken);

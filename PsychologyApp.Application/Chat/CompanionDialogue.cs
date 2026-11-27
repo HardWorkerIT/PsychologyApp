@@ -966,15 +966,31 @@ public sealed partial class CompanionDialogue(
         return AskNextQuestion(state, messages, emotion, theme);
     }
 
+    // Used when a repository failure prevents the normal dialogue from responding.
+    internal bool IsCrisisInput(CompanionInput input) => input switch
+    {
+        CompanionInput.FreeText text => IsCrisisWithoutAnalysis(text.Value.Trim()),
+        CompanionInput.QuickReply { Reply.Kind: ChatQuickReplyKinds.Act, Reply.Payload: { } payload }
+            when payload.StartsWith("say:", StringComparison.Ordinal) => IsCrisisWithoutAnalysis(payload["say:".Length..]),
+        _ => false
+    };
+
+    private bool IsCrisisWithoutAnalysis(string text) =>
+        crisisDetector.IsCrisis(text)
+        || (!english && UtteranceClassifier.TryFixLayout(text) is { } mapped && crisisDetector.IsCrisis(mapped));
+
+    private bool IsCrisisQuickReply(ChatQuickReply reply) =>
+        reply.Kind == ChatQuickReplyKinds.Act
+        && reply.Payload is { } payload
+        && payload.StartsWith("say:", StringComparison.Ordinal)
+        && crisisDetector.IsCrisis(FixWrongLayout(payload["say:".Length..]));
+
     private CompanionReply RespondToQuickReply(CompanionState state, ChatQuickReply reply)
     {
         CompanionEmotion emotion = ParseEmotion(state.Emotion);
         CompanionTheme? theme = ParseTheme(state.Theme);
 
-        if (reply.Kind == ChatQuickReplyKinds.Act
-            && reply.Payload is { } payload
-            && payload.StartsWith("say:", StringComparison.Ordinal)
-            && crisisDetector.IsCrisis(FixWrongLayout(payload["say:".Length..])))
+        if (IsCrisisQuickReply(reply))
         {
             return CrisisReply(state);
         }

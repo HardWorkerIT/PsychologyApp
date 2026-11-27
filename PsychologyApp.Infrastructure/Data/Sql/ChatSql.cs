@@ -29,6 +29,14 @@ internal static class ChatSql
         ORDER BY s.UpdatedAt DESC, s.SessionId DESC;
         """;
 
+    internal const string CountHighTensionSessions = """
+        SELECT COUNT(*)
+        FROM ChatSessions
+        WHERE UpdatedAt >= @FromUtc AND UpdatedAt <= @ThroughUtc
+          AND (@ExcludedSessionId IS NULL OR SessionId <> @ExcludedSessionId)
+          AND COALESCE(LastIntensity, FirstIntensity) BETWEEN @Minimum AND 10;
+        """;
+
     internal const string SelectExportSessions = $"""
         SELECT
             {SessionColumns}

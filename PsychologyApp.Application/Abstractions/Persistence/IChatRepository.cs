@@ -1,5 +1,6 @@
 using System.Text;
 using PsychologyApp.Application.Chat;
+using PsychologyApp.Application.Models;
 
 namespace PsychologyApp.Application.Abstractions.Persistence;
 
@@ -9,6 +10,9 @@ public interface IChatRepository
 
     /// <summary>Newest activity first, each with its last message as <see cref="ChatSessionDTO.Preview"/>.</summary>
     Task<IReadOnlyList<ChatSessionDTO>> GetSessionsAsync(CancellationToken cancellationToken = default);
+
+    Task<int> CountHighTensionSessionsAsync(
+        DateTime fromUtc, DateTime throughUtc, long? excludedSessionId, int minimum, CancellationToken cancellationToken = default);
 
     Task<ChatSessionDTO?> GetSessionAsync(long sessionId, CancellationToken cancellationToken = default);
 
@@ -122,36 +126,14 @@ public interface IChatRepository
 
     /// <summary>
     /// Everything one turn changes, saved together: the memory it revealed, the messages (user and companion) and the session
-    /// (state, title, activity time). Either all of it is stored or none of it, so a chat can never show messages whose state was
-    /// lost, or counters for a turn that was not saved. Returns the message ids in order. Implementations should make it one
-    /// transaction; this default applies the steps one after another.
+    /// (state, title, activity time), plus any journal entry. Returns the message ids in order after a single commit.
     /// </summary>
-    async Task<IReadOnlyList<long>> SaveTurnAsync(
+    Task<IReadOnlyList<long>> SaveTurnAsync(
         ChatSessionDTO session,
         IReadOnlyList<ChatMessageDTO> messages,
         IReadOnlyList<ChatMemoryChange> memory,
-        CancellationToken cancellationToken = default)
-    {
-        foreach (ChatMemoryChange change in memory)
-        {
-            if (change.Increment)
-            {
-                await IncrementMemoryAsync(change.Key, cancellationToken).ConfigureAwait(false);
-            }
-            else if (change.Value is null)
-            {
-                await DeleteMemoryAsync(change.Key, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                await SetMemoryAsync(change.Key, change.Value, cancellationToken).ConfigureAwait(false);
-            }
-        }
-
-        IReadOnlyList<long> ids = await AddMessagesAsync(messages, cancellationToken).ConfigureAwait(false);
-        await UpdateSessionAsync(session, cancellationToken).ConfigureAwait(false);
-        return ids;
-    }
+        MoodEntryDTO? mood = null,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>One change to what the companion remembers: set a value, add one to a counter, or (null value, no increment) forget a key.</summary>

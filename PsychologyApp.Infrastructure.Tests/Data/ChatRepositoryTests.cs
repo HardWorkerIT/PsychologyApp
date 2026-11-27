@@ -1,5 +1,7 @@
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Chat;
+using PsychologyApp.Application.Models;
+using PsychologyApp.Infrastructure.Data.Repositories.UserProgress;
 using PsychologyApp.Infrastructure.Data.Repositories.Chat;
 using PsychologyApp.Testing.Data;
 using Xunit;
@@ -8,7 +10,10 @@ namespace PsychologyApp.Infrastructure.Tests.Data;
 
 public sealed class ChatRepositoryTests
 {
-    private readonly ChatRepository _repository = new(new SharedMemoryConnectionFactory(), RepositoryTestContext.Settings);
+    private readonly SharedMemoryConnectionFactory _database = new();
+    private readonly ChatRepository _repository;
+
+    public ChatRepositoryTests() => _repository = new(_database, RepositoryTestContext.Settings);
 
     private static readonly DateTime T0 = new(2026, 9, 21, 12, 0, 0, DateTimeKind.Utc);
 
@@ -271,7 +276,7 @@ public sealed class ChatRepositoryTests
     }
 
     [Fact]
-    public async Task SaveTurn_that_fails_leaves_no_memory_no_messages_and_the_old_session()
+    public async Task SaveTurn_that_fails_rolls_back_the_journal_entry_and_all_chat_changes()
     {
         long id = await _repository.CreateSessionAsync("old", T0);
         ChatSessionDTO session = (await _repository.GetSessionAsync(id))!;
@@ -284,10 +289,43 @@ public sealed class ChatRepositoryTests
                 new ChatMessageDTO { SessionId = id, Role = ChatRole.User, Text = "ok", CreatedAt = T0 },
                 new ChatMessageDTO { SessionId = 9999, Role = ChatRole.User, Text = "orphan", CreatedAt = T0 }
             ],
-            [new ChatMemoryChange("name", "Аня")]));
+            [new ChatMemoryChange("name", "Аня")],
+            mood: new MoodEntryDTO { MoodLevel = 4, RecordedAt = T0 }));
 
+        UserProgressRepository progress = new(_database, RepositoryTestContext.Settings);
+        Assert.Empty(await progress.GetRecentMoodsAsync(10));
         Assert.Equal("old", (await _repository.GetSessionAsync(id))!.Title);
         Assert.Empty(await _repository.GetMessagesAsync(id));
         Assert.Empty(await _repository.GetMemoryAsync());
+
+        await _repository.SaveTurnAsync(session,
+            [new ChatMessageDTO { SessionId = id, Role = ChatRole.User, Text = "ok", CreatedAt = T0 }],
+            [], mood: new MoodEntryDTO { MoodLevel = 4, RecordedAt = T0 });
+        Assert.Equal(4, Assert.Single(await progress.GetRecentMoodsAsync(10)).MoodLevel);
+    }
+
+    [Fact]
+    public async Task High_tension_count_respects_dates_current_session_and_latest_valid_rating()
+    {
+        async Task<long> AddSession(DateTime timestamp, int? first, int? last)
+        {
+            long id = await _repository.CreateSessionAsync("chat", timestamp);
+            ChatSessionDTO session = (await _repository.GetSessionAsync(id))!;
+            session.FirstIntensity = first;
+            session.LastIntensity = last;
+            await _repository.UpdateSessionAsync(session);
+            return id;
+        }
+
+        await AddSession(T0.AddDays(-1), 8, null);
+        await AddSession(T0, 7, null);
+        await AddSession(T0.AddDays(1), 3, 9);
+        await AddSession(T0.AddDays(1), 9, 3);
+        await AddSession(T0.AddDays(1), 9, 11);
+        await AddSession(T0.AddDays(2), 9, null);
+        long current = await AddSession(T0.AddDays(1), 9, null);
+
+        Assert.Equal(2, await _repository.CountHighTensionSessionsAsync(T0, T0.AddDays(1), current, minimum: 7));
+        Assert.Equal(3, await _repository.CountHighTensionSessionsAsync(T0, T0.AddDays(1), null, minimum: 7));
     }
 }

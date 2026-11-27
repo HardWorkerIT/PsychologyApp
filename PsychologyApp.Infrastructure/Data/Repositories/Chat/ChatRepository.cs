@@ -5,7 +5,9 @@ using Microsoft.Extensions.Options;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Chat;
 using PsychologyApp.Application.Configuration;
+using PsychologyApp.Application.Models;
 using PsychologyApp.Infrastructure.Data.Repositories.Base;
+using PsychologyApp.Infrastructure.Data.Repositories.UserProgress;
 using PsychologyApp.Infrastructure.Data.Sql;
 
 namespace PsychologyApp.Infrastructure.Data.Repositories.Chat;
@@ -38,6 +40,17 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         return await connection.QuerySingleAsync<ChatExportMetrics>(DapperCommandFactory.Create(
             ChatSql.SelectExportMetrics,
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+    }
+
+    public async Task<int> CountHighTensionSessionsAsync(
+        DateTime fromUtc, DateTime throughUtc, long? excludedSessionId, int minimum, CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await connection.ExecuteScalarAsync<int>(DapperCommandFactory.Create(
+            ChatSql.CountHighTensionSessions,
+            new { FromUtc = ToIso(fromUtc), ThroughUtc = ToIso(throughUtc), ExcludedSessionId = excludedSessionId, Minimum = minimum },
             commandTimeout: CommandTimeoutSeconds,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
@@ -198,10 +211,17 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
         ChatSessionDTO session,
         IReadOnlyList<ChatMessageDTO> messages,
         IReadOnlyList<ChatMemoryChange> memory,
+        MoodEntryDTO? mood = null,
         CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenConnectionAsync(cancellationToken);
         await using SqliteTransaction transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+
+        if (mood is not null)
+        {
+            await UserProgressRepository.InsertMoodAsync(connection, transaction, mood, CommandTimeoutSeconds, cancellationToken)
+                .ConfigureAwait(false);
+        }
 
         foreach (ChatMemoryChange change in memory)
         {

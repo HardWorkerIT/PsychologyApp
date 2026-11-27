@@ -437,7 +437,7 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
 
         try
         {
-            long id = await InsertMoodAsync(connection, transaction, entry, cancellationToken).ConfigureAwait(false);
+            long id = await InsertMoodAsync(connection, transaction, entry, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             return id;
         }
@@ -475,26 +475,30 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         }
         else
         {
-            id = await InsertMoodAsync(connection, transaction, entry, cancellationToken).ConfigureAwait(false);
+            id = await InsertMoodAsync(connection, transaction, entry, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
         }
 
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         return id;
     }
 
-    private async Task<long> InsertMoodAsync(
-        SqliteConnection connection, SqliteTransaction transaction, MoodEntryDTO entry, CancellationToken cancellationToken)
+    internal static async Task<long> InsertMoodAsync(
+        SqliteConnection connection,
+        SqliteTransaction transaction,
+        MoodEntryDTO entry,
+        int commandTimeoutSeconds,
+        CancellationToken cancellationToken)
     {
         string recordedAt = SqliteTime.ToIso(entry.RecordedAt);
         long id = await connection.ExecuteScalarAsync<long>(DapperCommandFactory.Create(
             UserProgressSql.InsertMoodEntry,
             new { entry.MoodLevel, entry.Note, RecordedAt = recordedAt },
-            transaction, CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+            transaction, commandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
 
         await connection.ExecuteAsync(DapperCommandFactory.Create(
             UserProgressSql.InsertMoodCompletion,
             new { moduleName = "Practice", pageName = "Mood", completedAt = recordedAt },
-            transaction, CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+            transaction, commandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
         return id;
     }
 

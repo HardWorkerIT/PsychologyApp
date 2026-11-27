@@ -555,7 +555,7 @@ public sealed class ChatViewModel : BaseViewModel
         {
             result = await Task.Run(send);
         }
-        catch
+        catch (Exception error)
         {
             if (!_lifetime.IsCancellationRequested)
             {
@@ -565,6 +565,15 @@ public sealed class ChatViewModel : BaseViewModel
                 if (sentDraft is not null)
                 {
                     DraftText = string.IsNullOrEmpty(DraftText) ? sentDraft : $"{sentDraft}\n{DraftText}";
+                }
+
+                if (error is ChatCrisisTurnNotSavedException crisis)
+                {
+                    IsTyping = false;
+                    Messages.Add(CreateBubble(crisis.Reply, isUser: false, Now(), animate: false));
+                    BestEffort.Report(crisis);
+                    await NavigationService!.GoToCrisisHubAsync();
+                    return;
                 }
 
                 SetQuickReplies(previousReplies);

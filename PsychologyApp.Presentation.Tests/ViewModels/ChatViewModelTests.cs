@@ -290,6 +290,27 @@ public sealed class ChatViewModelTests
     }
 
     [Fact]
+    public async Task AnUnsavedCrisisTurnKeepsTheDraftAndShowsHelpWithoutRestoringPriorSuggestions()
+    {
+        ChatQuickReply chip = new(ChatQuickReplyKinds.Emotion, "Anxiety", "Anxiety");
+        History(Message(ChatRole.Companion, "Pick a feeling", Now, chip));
+        _chat.Setup(c => c.SendTextAsync(5, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ChatCrisisTurnNotSavedException("Crisis help", new IOException("Storage unavailable")));
+        ChatViewModel viewModel = Create();
+        await viewModel.LoadAsync();
+        Assert.Single(viewModel.QuickReplies);
+        viewModel.DraftText = "help";
+
+        await VmTestHelpers.RunAsync(viewModel.SendCommand);
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.CanSend);
+
+        Assert.Equal("help", viewModel.DraftText);
+        Assert.Empty(viewModel.QuickReplies);
+        Assert.Equal("Crisis help", viewModel.Messages[^1].Text);
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task ACrisisActionOpensTheCrisisScreenAfterTheAnswer()
     {
         History();

@@ -34,6 +34,52 @@ public class ChatServiceTests
         public Func<long, Task>? SessionReadBarrier { get; set; }
         public Func<Task>? SessionListBarrier { get; set; }
         public Action<long>? SessionRead { get; set; }
+        public Exception? TurnWriteFailure { get; set; }
+        public List<MoodEntryDTO> JournalEntries { get; } = [];
+
+        public Task<int> CountHighTensionSessionsAsync(
+            DateTime fromUtc, DateTime throughUtc, long? excludedSessionId, int minimum, CancellationToken cancellationToken = default) =>
+            Task.FromResult(_sessions.Values.Count(session => session.Id != excludedSessionId
+                && session.UpdatedAt >= fromUtc && session.UpdatedAt <= throughUtc
+                && (session.LastIntensity ?? session.FirstIntensity) is int intensity && intensity >= minimum && intensity <= 10));
+
+        public async Task<IReadOnlyList<long>> SaveTurnAsync(
+            ChatSessionDTO session,
+            IReadOnlyList<ChatMessageDTO> messages,
+            IReadOnlyList<ChatMemoryChange> memory,
+            MoodEntryDTO? mood = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (TurnWriteFailure is { } error)
+            {
+                throw error;
+            }
+
+            foreach (ChatMemoryChange change in memory)
+            {
+                if (change.Increment)
+                {
+                    await IncrementMemoryAsync(change.Key, cancellationToken);
+                }
+                else if (change.Value is null)
+                {
+                    await DeleteMemoryAsync(change.Key, cancellationToken);
+                }
+                else
+                {
+                    await SetMemoryAsync(change.Key, change.Value, cancellationToken);
+                }
+            }
+
+            IReadOnlyList<long> ids = await AddMessagesAsync(messages, cancellationToken);
+            await UpdateSessionAsync(session, cancellationToken);
+            if (mood is not null)
+            {
+                JournalEntries.Add(mood);
+            }
+
+            return ids;
+        }
 
         public Task<long> CreateSessionAsync(string title, DateTime nowUtc, CancellationToken cancellationToken = default)
         {
@@ -751,7 +797,7 @@ public class ChatServiceTests
         ChatTurnResult logged = await service.SendQuickReplyAsync(id, journalChip);
 
         Assert.Null(logged.Action);
-        _progress.Verify(p => p.RecordMoodAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Equal(_clock.Utc, Assert.Single(_repository.JournalEntries).RecordedAt);
     }
 
     [Fact]
@@ -765,8 +811,7 @@ public class ChatServiceTests
         ChatQuickReply journalChip = thanks.NewMessages[^1].QuickReplies.First(c => c.Payload == "journal:log");
         int savedMessages = (await _repository.GetMessagesAsync(id)).Count;
         ChatSessionDTO before = (await _repository.GetSessionAsync(id))!;
-        _progress.Setup(p => p.RecordMoodAsync(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new InvalidOperationException("Journal unavailable"));
+        _repository.TurnWriteFailure = new InvalidOperationException("Transaction unavailable");
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.SendQuickReplyAsync(id, journalChip));
 
@@ -774,6 +819,38 @@ public class ChatServiceTests
         ChatSessionDTO after = (await _repository.GetSessionAsync(id))!;
         Assert.Equal(before.StateJson, after.StateJson);
         Assert.Equal(before.UpdatedAt, after.UpdatedAt);
+        Assert.Empty(_repository.JournalEntries);
+
+        _repository.TurnWriteFailure = null;
+        await service.SendQuickReplyAsync(id, journalChip);
+
+        Assert.Single(_repository.JournalEntries);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Crisis_help_survives_a_storage_error_before_or_after_recognition(bool failsBeforeRecognition)
+    {
+        ChatService service = CreateService();
+        long id = (await service.StartNewChatAsync()).Session.Id;
+        int savedMessages = (await _repository.GetMessagesAsync(id)).Count;
+        IOException failure = new("Storage unavailable");
+        if (failsBeforeRecognition)
+        {
+            _repository.MemoryReadBarrier = () => Task.FromException(failure);
+        }
+        else
+        {
+            _repository.TurnWriteFailure = failure;
+        }
+
+        ChatCrisisTurnNotSavedException error = await Assert.ThrowsAsync<ChatCrisisTurnNotSavedException>(
+            () => service.SendTextAsync(id, "хочу покончить с собой"));
+
+        Assert.Same(failure, error.InnerException);
+        Assert.Equal(CompanionContent.Crisis(english: false), error.Reply);
+        Assert.Equal(savedMessages, (await _repository.GetMessagesAsync(id)).Count);
     }
 
     [Fact]
