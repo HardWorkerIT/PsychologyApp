@@ -36,6 +36,11 @@
                     </HorizontalStackLayout>
                 </Border>
             </HorizontalStackLayout>
+            <Label Text="{Binding ListenError}"
+                   IsVisible="{Binding HasListenError}"
+                   Style="{StaticResource CaptionStyle}" />
+
+            <ui:RetryView IsVisible="{Binding IsLoadFailed}" FailedText="{Binding LoadFailedText}" RetryText="{Binding RetryText}" RetryCommand="{Binding RetryLoadCommand}" />
 
             <blocks:ArticleBlocksView Blocks="{Binding Blocks}" />
 

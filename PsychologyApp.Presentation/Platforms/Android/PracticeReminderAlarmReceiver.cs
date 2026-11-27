@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content;
 using AndroidX.Core.App;
 using PsychologyApp.Domain.Practice;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
 
 namespace PsychologyApp.Presentation.Platforms.Android;
@@ -13,6 +14,12 @@ public sealed class PracticeReminderAlarmReceiver : BroadcastReceiver
     public override void OnReceive(Context? context, Intent? intent)
     {
         if (context is null || intent?.Action != PracticeReminderConstants.ActionReminder)
+        {
+            return;
+        }
+
+        var preferences = UserPreferences.Load();
+        if (!preferences.PracticeRemindersEnabled || !preferences.HasCompletedOnboarding)
         {
             return;
         }

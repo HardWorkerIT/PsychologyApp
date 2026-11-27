@@ -17,15 +17,25 @@ public partial class PaperListViewModel
             PapersObservableCollection,
             paper => new PaperListDraftItem { Id = paper.Id, Text = paper.Text });
 
+    private bool _completing;
+
     private async Task CompleteSessionAsync()
     {
-        await SaveDraftAsync();
-        await _sessionHelper.CompleteAsync(
-            _techniqueId.ToString(),
-            ModuleName,
-            PageName,
-            _sessionStartedAt,
-            TryGetPreIntensity());
+        _completing = true;
+        try
+        {
+            await SaveDraftAsync();
+            await _sessionHelper.CompleteAsync(
+                _techniqueId.ToString(),
+                ModuleName,
+                PageName,
+                _sessionStartedAt,
+                TryGetPreIntensity());
+        }
+        finally
+        {
+            _completing = false;
+        }
     }
 
     private void SetCollection(bool visible)
@@ -37,6 +47,10 @@ public partial class PaperListViewModel
 
     private void ToAdd(object obj)
     {
+        if (_completing)
+        {
+            return;
+        }
         if (string.IsNullOrWhiteSpace(Text))
         {
             return;
@@ -62,6 +76,7 @@ public partial class PaperListViewModel
 
     private void DeleteItem(Paper item)
     {
+        if (_completing) return;
         if (item is null)
         {
             return;

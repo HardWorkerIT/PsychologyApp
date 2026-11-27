@@ -42,14 +42,15 @@ public sealed class MediaElementAudioPlaybackService : IAudioPlaybackService
 
     public async Task PlayAsync(string uri, CancellationToken cancellationToken = default)
     {
-        MediaElement player = RequirePlayer();
-        AudioCacheResult result = await MusicAudioCache.ResolvePlaybackUriAsync(uri);
+        await PauseAsync(cancellationToken);
+        AudioCacheResult result = await MusicAudioCache.ResolvePlaybackUriAsync(uri, cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
         if (result.DownloadFailed)
         {
             throw new InvalidOperationException("Audio download failed.");
         }
 
-        cancellationToken.ThrowIfCancellationRequested();
+        MediaElement player = RequirePlayer();
         player.Source = MediaSource.FromUri(result.Uri);
         player.Play();
         _isPlaying = true;

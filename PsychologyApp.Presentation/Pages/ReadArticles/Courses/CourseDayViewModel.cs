@@ -28,6 +28,7 @@ public sealed class CourseDayViewModel : BaseViewModel
     private bool _isDone;
     private bool _isOpen;
     private bool _busy;
+    private bool _isLoadFailed;
 
     public CourseDayViewModel(
         INavigationService navigation,
@@ -44,13 +45,29 @@ public sealed class CourseDayViewModel : BaseViewModel
         _databaseReady = databaseReady;
         _courseId = courseId;
         _day = day;
+        RetryLoadCommand = new AsyncCommand(async () =>
+        {
+            _databaseReady.RequestRetry();
+            await LoadStateAsync();
+        });
         BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
         CompleteCommand = new AsyncCommand(CompleteAsync);
-        ListenCommand = new AsyncCommand(() => _readAloud.ToggleAsync(_spoken));
-        _readAloud.Changed += () => UiThread.RunAsync(() => Notify(nameof(ListenText), nameof(ListenIcon))).FireAndForget();
+        // This command must remain executable during speech so the same control can stop playback.
+        ListenCommand = new Command(() => _readAloud.ToggleAsync(_spoken).FireAndForget());
+        _readAloud.Changed += () => UiThread.RunAsync(() => Notify(
+            nameof(ListenText), nameof(ListenIcon), nameof(ListenError), nameof(HasListenError))).FireAndForget();
         Load();
         LoadStateAsync().FireAndForget();
     }
+
+    public ICommand RetryLoadCommand { get; }
+    public bool IsLoadFailed
+    {
+        get => _isLoadFailed;
+        private set => SetProperty(ref _isLoadFailed, value);
+    }
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     public ICommand BackCommand { get; }
     public ICommand CompleteCommand { get; }
@@ -92,6 +109,8 @@ public sealed class CourseDayViewModel : BaseViewModel
     public string DoneText => AppStrings.CourseDayDone;
     public string ListenText => _readAloud.IsSpeaking ? AppStrings.ArticleStopListening : AppStrings.ArticleListen;
     public string ListenIcon => _readAloud.IsSpeaking ? "StopCircle" : "VolumeUp";
+    public string? ListenError => _readAloud.HasError ? AppStrings.ArticleListenUnavailable : null;
+    public bool HasListenError => _readAloud.HasError;
 
     public bool IsDayDone
     {
@@ -140,19 +159,28 @@ public sealed class CourseDayViewModel : BaseViewModel
 
     private async Task LoadStateAsync()
     {
-        await _databaseReady.WaitAsync();
-        CourseProgress? progress = (await _reading.GetAsync()).Course(_courseId);
-        CourseDayRecord? record = progress?.Days.FirstOrDefault(entry => entry.Day == _day);
-        CourseDayState state = _reading.StateOf(_day, progress);
-        await UiThread.RunAsync(() =>
+        try
         {
-            IsDayDone = state == CourseDayState.Done;
-            IsOpen = state is CourseDayState.Open or CourseDayState.Done;
-            if (record?.Reflection is { } words)
+            IsLoadFailed = false;
+            await _databaseReady.WaitAsync();
+            CourseProgress? progress = (await _reading.GetAsync()).Course(_courseId);
+            CourseDayRecord? record = progress?.Days.FirstOrDefault(entry => entry.Day == _day);
+            CourseDayState state = _reading.StateOf(_day, progress);
+            await UiThread.RunAsync(() =>
             {
-                Reflection = words;
-            }
-        });
+                IsDayDone = state == CourseDayState.Done;
+                IsOpen = state is CourseDayState.Open or CourseDayState.Done;
+                if (record?.Reflection is { } words)
+                {
+                    Reflection = words;
+                }
+            });
+        }
+        catch (Exception error)
+        {
+            BestEffort.Report(error);
+            IsLoadFailed = true;
+        }
     }
 
     private async Task CompleteAsync()
@@ -210,6 +238,6 @@ public sealed class CourseDayViewModel : BaseViewModel
     protected override void RefreshLocalizedProperties()
     {
         Load();
-        Notify(nameof(ReflectionPlaceholder), nameof(CompleteText), nameof(DoneText), nameof(ListenText));
+        Notify(nameof(ReflectionPlaceholder), nameof(CompleteText), nameof(DoneText), nameof(ListenText), nameof(ListenError));
     }
 }

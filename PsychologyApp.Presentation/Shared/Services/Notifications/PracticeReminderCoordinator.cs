@@ -53,17 +53,18 @@ public sealed class PracticeReminderCoordinator(
             return;
         }
 
+        _ = reasonFormatter;
         TodayRecommendationContext context =
             await TodayRecommendationContextBuilder.BuildAsync(progress, state.OnboardingConcern, cancellationToken);
         TodayRecommendationDecision decision = recommendationService.ResolveTodayTechnique(context);
         TechniqueId techniqueId = decision.TechniqueId;
         BuiltInTechniqueDefinition definition = await techniqueCatalog.GetAsync(techniqueId, cancellationToken);
-        string reason = reasonFormatter.Format(decision, context);
+
 
         scheduler.Schedule(
             nextFireLocal.Value,
             techniqueId,
             AppStrings.PracticeReminderTitleNamed(definition.ListTitle),
-            AppStrings.PracticeReminderBodyNamed(definition.ListTitle, reason));
+            AppStrings.PracticeReminderBodyNamed(definition.ListTitle, string.Empty));
     }
 }

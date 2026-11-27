@@ -111,7 +111,7 @@ public static partial class UserPreferences
     {
         if (_inMemoryState is not null)
         {
-            _inMemoryState = state;
+            _inMemoryState = state with { PersonalizedAdsConsent = _inMemoryState.PersonalizedAdsConsent };
             return;
         }
 
@@ -121,7 +121,7 @@ public static partial class UserPreferences
         Preferences.Set(SizeKey, NormalizeSizeKey(state.Size));
         Preferences.Set(IsBoldKey, state.IsBold);
         Preferences.Set(AdsDisabledKey, state.AdsDisabled);
-        Preferences.Set(PersonalizedAdsConsentKey, state.PersonalizedAdsConsent);
+        // Consent is persisted immediately by SetPersonalizedAdsConsent and must not be overwritten by an older settings snapshot.
         Preferences.Set(QuestionnaireAutoAdvanceKey, state.QuestionnaireAutoAdvance);
         Preferences.Set(HasCompletedOnboardingKey, state.HasCompletedOnboarding);
         Preferences.Set(PracticeRemindersEnabledKey, state.PracticeRemindersEnabled);

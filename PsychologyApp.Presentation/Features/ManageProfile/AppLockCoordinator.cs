@@ -142,6 +142,7 @@ public sealed class AppLockCoordinator(
         catch (Exception ex)
         {
             logger.LogError(ex, "Could not dismiss the authenticated app lock");
+            window.Page = root;
         }
         finally
         {

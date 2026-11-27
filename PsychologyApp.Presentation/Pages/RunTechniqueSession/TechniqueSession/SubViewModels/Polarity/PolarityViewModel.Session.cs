@@ -31,19 +31,33 @@ public partial class PolarityViewModel
                 Negative = polarity.Negative
             });
 
+    private bool _completing;
+
     private async Task CompleteSessionAsync()
     {
-        await SaveDraftAsync();
-        await _sessionHelper.CompleteAsync(
-            TechniqueId.Polarity.ToString(),
-            ModuleName,
-            PageName,
-            _sessionStartedAt,
-            TryGetPreIntensity());
+        _completing = true;
+        try
+        {
+            await SaveDraftAsync();
+            await _sessionHelper.CompleteAsync(
+                TechniqueId.Polarity.ToString(),
+                ModuleName,
+                PageName,
+                _sessionStartedAt,
+                TryGetPreIntensity());
+        }
+        finally
+        {
+            _completing = false;
+        }
     }
 
     private void DeleteItem(Models.Practice.Techniques.Polarity item)
     {
+        if (_completing)
+        {
+            return;
+        }
         if (item is null)
         {
             return;
@@ -61,6 +75,7 @@ public partial class PolarityViewModel
 
     private void ToAdd(object obj)
     {
+        if (_completing) return;
         if (string.IsNullOrEmpty(Negative) || string.IsNullOrEmpty(Positive))
         {
             return;

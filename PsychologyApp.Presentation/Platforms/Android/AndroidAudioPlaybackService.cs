@@ -37,6 +37,7 @@ public sealed class AndroidAudioPlaybackService : Java.Lang.Object, IAudioPlayba
 
     public async Task PlayAsync(string uri, CancellationToken cancellationToken = default)
     {
+        await PauseAsync(cancellationToken);
         AudioCacheResult result = await MusicAudioCache.ResolvePlaybackUriAsync(uri, cancellationToken);
         if (result.DownloadFailed)
         {
@@ -118,6 +119,7 @@ public sealed class AndroidAudioPlaybackService : Java.Lang.Object, IAudioPlayba
     {
         AbandonFocus();
         _prepared?.TrySetCanceled();
+        _prepared = null;
         if (_player is null)
         {
             return;
