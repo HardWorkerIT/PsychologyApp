@@ -141,18 +141,51 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
             completion.DurationSeconds
         })).ConfigureAwait(false);
 
-        int sessionResults = await run(BackupSql.InsertSessionResult, backup.SessionResults.Select(result => new
+        // A later note or rating must not turn a local result into a different session. Keep separate rows
+        // when the same snapshot really contains more than one result with the same stable fields.
+        List<object> importedResults = new(backup.SessionResults.Count);
+        foreach (var group in backup.SessionResults.GroupBy(result => new
         {
             result.ItemKey,
             CompletedAt = SqliteTime.ToIso(result.CompletedAt),
             result.DurationSeconds,
             result.PayloadJson,
             result.PreIntensity,
-            result.PostIntensity,
             result.ProgramType,
-            result.ProgramWeek,
-            result.Note
-        })).ConfigureAwait(false);
+            result.ProgramWeek
+        }))
+        {
+            List<SessionResultDTO> distinct = group.DistinctBy(result => (result.PostIntensity, result.Note)).ToList();
+            if (distinct.Count > 1)
+            {
+                // Match exact copies before using any remaining local rows for older revisions in the snapshot.
+                IEnumerable<(int? PostIntensity, string? Note)> local = await connection.QueryAsync<(int?, string?)>(
+                    DapperCommandFactory.Create(BackupSql.SelectSessionResultEdits, group.Key, transaction,
+                        CommandTimeoutSeconds, cancellationToken)).ConfigureAwait(false);
+                HashSet<(int?, string?)> localEdits = local.ToHashSet();
+                distinct = distinct.OrderByDescending(result => localEdits.Contains((result.PostIntensity, result.Note))).ToList();
+            }
+
+            for (int index = 0; index < distinct.Count; index++)
+            {
+                SessionResultDTO result = distinct[index];
+                importedResults.Add(new
+                {
+                    group.Key.ItemKey,
+                    group.Key.CompletedAt,
+                    group.Key.DurationSeconds,
+                    group.Key.PayloadJson,
+                    group.Key.PreIntensity,
+                    group.Key.ProgramType,
+                    group.Key.ProgramWeek,
+                    result.PostIntensity,
+                    result.Note,
+                    MatchingResultIndex = index
+                });
+            }
+        }
+
+        int sessionResults = await run(BackupSql.InsertSessionResult, importedResults).ConfigureAwait(false);
 
         List<(BackupChatSessionDTO Chat, string Key)> chatImports = backup.ChatSessions
             .Select(chat => (chat, GetBackupKey(chat.Session)))

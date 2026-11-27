@@ -127,6 +127,60 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Import_AnOlderPracticeCopy_PreservesLocalEditsWithoutHidingAnotherResult()
+    {
+        AppBackupDTO backup = new()
+        {
+            SessionResults = [new SessionResultDTO { ItemKey = "breathing", CompletedAt = LongAgo, DurationSeconds = 60 }]
+        };
+        IBackupService service = _target.GetRequiredService<IBackupService>();
+        IUserProgressService progress = _target.GetRequiredService<IUserProgressService>();
+        string older = JsonSerializer.Serialize(backup, BackupJsonContext.Default.AppBackupDTO);
+        await service.ImportAsync(older);
+        SessionResultDTO saved = Assert.Single(await progress.GetRecentSessionResultsAsync());
+        await progress.UpdateSessionResultNoteAsync(saved.SessionResultId, "local note");
+        await progress.UpdateSessionResultPostIntensityAsync(saved.SessionResultId, 4);
+
+        await service.ImportAsync(older);
+
+        SessionResultDTO edited = Assert.Single(await progress.GetRecentSessionResultsAsync());
+        Assert.Equal("local note", edited.Note);
+        Assert.Equal(4, edited.PostIntensity);
+
+        AppBackupDTO twoResults = new()
+        {
+            SessionResults =
+            [
+                backup.SessionResults[0],
+                new SessionResultDTO { ItemKey = "breathing", CompletedAt = LongAgo, DurationSeconds = 60, Note = "another result" }
+            ]
+        };
+        string twoResultsJson = JsonSerializer.Serialize(twoResults, BackupJsonContext.Default.AppBackupDTO);
+        await service.ImportAsync(twoResultsJson);
+        await service.ImportAsync(twoResultsJson);
+
+        Assert.Equal(new[] { "another result", "local note" },
+            (await progress.GetRecentSessionResultsAsync()).Select(result => result.Note).Order());
+    }
+
+    [Fact]
+    public async Task Import_MatchesTheExistingPracticeBeforeAddingAnotherAtTheSameTimestamp()
+    {
+        SessionResultDTO existing = new() { ItemKey = "breathing", CompletedAt = LongAgo, Note = "existing" };
+        SessionResultDTO other = new() { ItemKey = "breathing", CompletedAt = LongAgo, Note = "different" };
+        IBackupService service = _target.GetRequiredService<IBackupService>();
+        await service.ImportAsync(JsonSerializer.Serialize(new AppBackupDTO { SessionResults = [existing] },
+            BackupJsonContext.Default.AppBackupDTO));
+
+        await service.ImportAsync(JsonSerializer.Serialize(new AppBackupDTO { SessionResults = [other, existing] },
+            BackupJsonContext.Default.AppBackupDTO));
+
+        IUserProgressService progress = _target.GetRequiredService<IUserProgressService>();
+        Assert.Equal(new[] { "different", "existing" },
+            (await progress.GetRecentSessionResultsAsync()).Select(result => result.Note).Order());
+    }
+
+    [Fact]
     public async Task Import_WhenARowFails_RollsEverythingBack()
     {
         string json = """

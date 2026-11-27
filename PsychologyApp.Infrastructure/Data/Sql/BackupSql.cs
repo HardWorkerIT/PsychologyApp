@@ -96,12 +96,25 @@ internal static class BackupSql
             WHERE CompletionKind = @CompletionKind AND ItemKey = @ItemKey AND CompletedAt = @CompletedAt);
         """;
 
-    internal const string InsertSessionResult = """
+    private const string SessionResultIdentity = """
+        ItemKey = @ItemKey AND CompletedAt = @CompletedAt
+        AND DurationSeconds IS @DurationSeconds AND PayloadJson IS @PayloadJson
+        AND PreIntensity IS @PreIntensity AND ProgramType IS @ProgramType AND ProgramWeek IS @ProgramWeek
+        """;
+
+    internal const string SelectSessionResultEdits = $"""
+        SELECT PostIntensity, Note FROM SessionResults WHERE {SessionResultIdentity};
+        """;
+
+    internal const string InsertSessionResult = $"""
         INSERT INTO SessionResults (
             ItemKey, CompletedAt, DurationSeconds, PayloadJson, PreIntensity, PostIntensity, ProgramType, ProgramWeek, Note)
         SELECT
             @ItemKey, @CompletedAt, @DurationSeconds, @PayloadJson, @PreIntensity, @PostIntensity, @ProgramType, @ProgramWeek, @Note
-        WHERE NOT EXISTS (SELECT 1 FROM SessionResults WHERE ItemKey = @ItemKey AND CompletedAt = @CompletedAt);
+        WHERE NOT EXISTS (
+            SELECT 1 FROM SessionResults
+            WHERE {SessionResultIdentity}
+            LIMIT 1 OFFSET @MatchingResultIndex);
         """;
 
     internal const string InsertChatSession = """
