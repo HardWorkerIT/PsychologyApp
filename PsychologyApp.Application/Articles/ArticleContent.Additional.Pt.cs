@@ -224,7 +224,13 @@ public static partial class ArticleContent
                 H("Feche as pendências"),
                 P("Anote o que foi concluído, o que realmente precisa de uma próxima ação e o que pode esperar. Para uma tarefa importante, registre um primeiro passo concreto para amanhã e um horário aproximado. Se precisar conversar sobre um prazo ou pedir ajuda, anote com quem falar e quando. Não é necessário planejar a semana inteira."),
                 H("Escolha um sinal de encerramento"),
-                P("Guarde a anotação e feche a lista. Depois, escolha uma ação simples que marque o fim das tarefas de hoje: diminuir a luz, guardar os materiais, lavar o rosto ou sentar em silêncio. Isso não garante o sono, mas pode ajudar a parar de resolver pendências na cama.")
+                P("Guarde a anotação e feche a lista. Depois, escolha uma ação simples que marque o fim das tarefas de hoje: diminuir a luz, guardar os materiais, lavar o rosto ou sentar em silêncio. Isso não garante o sono, mas pode ajudar a parar de resolver pendências na cama."),
+                H("Três perguntas para o fim do dia"),
+                List(
+                    "O que já fiz hoje?",
+                    "Qual tarefa precisa de um próximo passo?",
+                    "O que pode esperar até a hora combinada?"),
+                P("Se a preocupação atrapalha seu sono com frequência, converse com um profissional de saúde.")
             ]),
         new(
             ArticleIds.AnxietyComedown,
@@ -237,7 +243,14 @@ public static partial class ArticleContent
                 H("Volte ao simples e conhecido"),
                 P("Se estiver em segurança, escolha algo familiar e pouco exigente: sente-se, beba água, coma alguma coisa, aqueça-se ou vá para um lugar mais silencioso. Você não precisa fazer um exercício de respiração nem fechar os olhos. Se algo aumentar o desconforto, pare e escolha outra opção."),
                 H("Reflita apenas sobre o que pode ajudar"),
-                P("Mais tarde, quando estiver mais fácil se concentrar, anote o que estava acontecendo, o que ajudou um pouco e se existe uma questão prática para a próxima vez. Não é preciso encontrar uma única causa nem se culpar. Se houver algo a fazer, registre o próximo passo ou com quem conversar. Sintomas novos ou incomuns merecem avaliação profissional.")
+                P("Mais tarde, quando estiver mais fácil se concentrar, anote o que estava acontecendo, o que ajudou um pouco e se existe uma questão prática para a próxima vez. Não é preciso encontrar uma única causa nem se culpar. Se houver algo a fazer, registre o próximo passo ou com quem conversar. Sintomas novos ou incomuns merecem avaliação profissional."),
+                H("Retome o ritmo aos poucos"),
+                List(
+                    "Confira se você está em um lugar seguro.",
+                    "Atenda a uma necessidade simples ou escolha uma atividade familiar.",
+                    "Adie a reflexão se ela aumentar a sobrecarga.",
+                    "Volte aos afazeres habituais aos poucos."),
+                P("Se os episódios se repetem, atrapalham muito o dia a dia ou envolvem sintomas intensos, procure ajuda profissional.")
             ]),
         new(
             ArticleIds.SafePractice,
@@ -250,7 +263,13 @@ public static partial class ArticleContent
                 H("Mantenha suas opções"),
                 P("Antes de começar, decida como pode parar e para onde pode voltar a atenção. Você pode manter os olhos abertos, encurtar o tempo, mudar de posição ou escolher um ponto externo para observar. Exercícios focados na respiração ou no corpo não servem para todo mundo: escolha uma alternativa que não aumente seu desconforto."),
                 H("Se o desconforto aparecer"),
-                P("Pare, retome a respiração natural e olhe ao redor. Se for seguro, mude de posição ou passe para uma atividade simples e conhecida. Você não precisa aguentar até o fim para provar nada. Se o desconforto continuar ou aumentar, procure apoio.")
+                P("Pare, retome a respiração natural e olhe ao redor. Se for seguro, mude de posição ou passe para uma atividade simples e conhecida. Você não precisa aguentar até o fim para provar nada. Se o desconforto continuar ou aumentar, procure apoio."),
+                H("Antes de começar"),
+                List(
+                    "Este exercício é adequado para mim agora?",
+                    "Como vou saber quando parar?",
+                    "O que posso fazer no lugar se sentir desconforto?"),
+                P("Uma prática não substitui o cuidado profissional. Em caso de perigo imediato, procure ajuda urgente.")
             ]),
 
         new(

@@ -39,4 +39,18 @@ public partial class QuestionPage : ContentPage
             SafeAsync.Run(() => UiAnimations.SafeShakeAsync(QuestionCard));
         }
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (BindingContext is not QuestionViewModel viewModel)
+        {
+            return base.OnBackButtonPressed();
+        }
+
+        if (viewModel.BackCommand.CanExecute(null))
+        {
+            viewModel.BackCommand.Execute(null);
+        }
+        return true;
+    }
 }

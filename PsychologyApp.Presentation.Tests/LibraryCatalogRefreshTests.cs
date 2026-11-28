@@ -1,9 +1,14 @@
 using Moq;
 using PsychologyApp.Application.Articles;
+using PsychologyApp.Application.Models;
+using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Presentation.Pages.ReadArticles.ArticleReader;
 using PsychologyApp.Presentation.Pages.ReadArticles.Articles;
 using PsychologyApp.Presentation.Pages.ReadArticles.Courses;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
+using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests;
@@ -11,6 +16,33 @@ namespace PsychologyApp.Presentation.Tests;
 [Collection("Localization")]
 public sealed class LibraryCatalogRefreshTests
 {
+    [Fact]
+    public async Task ASlowOrFailedMeasurementHistoryDoesNotBlockTheCourse()
+    {
+        Course course = ArticleContent.Courses(AppStrings.Language)[0];
+        var reading = new Mock<IReadingService>();
+        reading.Setup(service => service.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new ReadingState());
+        var progress = new Mock<IUserProgressService>();
+        var history = new TaskCompletionSource<IReadOnlyList<TestResultDTO>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        progress.Setup(service => service.GetTestResultHistoryAsync(course.TestId, It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .Returns(history.Task);
+        var viewModel = new CourseViewModel(new TestNavigationService(Mock.Of<INavigation>()), reading.Object,
+            progress.Object, Mock.Of<IDialogService>(), ReadyDatabase(), course.Id);
+
+        Task refresh = viewModel.RefreshAsync();
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => !viewModel.IsLoading);
+        Assert.True(viewModel.CanAct);
+        Assert.False(refresh.IsCompleted);
+        Assert.NotEmpty(viewModel.Days);
+
+        history.SetException(new IOException("Test history unavailable"));
+        await refresh;
+
+        Assert.True(viewModel.CanAct);
+        Assert.False(viewModel.IsLoadFailed);
+        Assert.False(viewModel.HasMeasure);
+    }
+
     [Fact]
     public async Task ReturningToCoursesWithoutVisibleProgressChangesKeepsTheListInPlace()
     {
@@ -88,6 +120,58 @@ public sealed class LibraryCatalogRefreshTests
         viewModel.SelectFilterCommand.Execute(viewModel.Filters[2].Key);
 
         Assert.Same(topicSections, viewModel.Sections);
+    }
+
+    [Fact]
+    public async Task AFailedReadMarkRemainsUnsavedUntilTheReaderSuccessfullyRetries()
+    {
+        var reading = new Mock<IReadingService>();
+        reading.Setup(service => service.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new ReadingState());
+        reading.SetupSequence(service => service.MarkReadAsync(ArticleIds.Sleep, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Reading progress unavailable"))
+            .Returns(Task.CompletedTask);
+        var viewModel = new ArticleReaderViewModel(new TestNavigationService(Mock.Of<INavigation>()),
+            reading.Object, ReadyDatabase(), ArticleIds.Sleep);
+
+        await viewModel.ReachedEndAsync();
+
+        Assert.False(viewModel.IsRead);
+        Assert.True(viewModel.ShowReadSaveFailure);
+        await viewModel.ReachedEndAsync();
+        reading.Verify(service => service.MarkReadAsync(ArticleIds.Sleep, It.IsAny<CancellationToken>()), Times.Once);
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.RetryReadSaveCommand);
+
+        Assert.True(viewModel.IsRead);
+        Assert.False(viewModel.ShowReadSaveFailure);
+        reading.Verify(service => service.MarkReadAsync(ArticleIds.Sleep, It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task CancellingTheExitFromACourseDayKeepsTheUnsavedNote()
+    {
+        var navigation = new Mock<INavigationService>();
+        var reading = new Mock<IReadingService>();
+        var dialogs = new Mock<IDialogService>();
+        reading.Setup(service => service.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new ReadingState());
+        reading.Setup(service => service.StateOf(1, null)).Returns(CourseDayState.Open);
+        dialogs.SetupSequence(service => service.AskSheetAsync(AppStrings.CourseDiscardReflectionTitle,
+                AppStrings.CourseDiscardReflectionBody, AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, true))
+            .ReturnsAsync(false)
+            .ReturnsAsync(true);
+        string courseId = ArticleContent.Courses(AppStrings.Language)[0].Id;
+        var viewModel = new CourseDayViewModel(navigation.Object, reading.Object, dialogs.Object, ReadyDatabase(), courseId, 1);
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => viewModel.CanWrite);
+        viewModel.Reflection = "My note";
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.BackCommand);
+
+        Assert.Equal("My note", viewModel.Reflection);
+        navigation.Verify(service => service.GoBackAsync(), Times.Never);
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.BackCommand);
+
+        navigation.Verify(service => service.GoBackAsync(), Times.Once);
     }
 
     private static DatabaseReadySignal ReadyDatabase()

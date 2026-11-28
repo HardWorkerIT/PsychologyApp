@@ -50,7 +50,7 @@ public sealed class CourseDayViewModel : BaseViewModel
             _databaseReady.RequestRetry();
             await LoadStateAsync();
         });
-        BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
+        BackCommand = new AsyncCommand(ConfirmBackAsync);
         CompleteCommand = new AsyncCommand(CompleteAsync);
         // This command must remain executable during speech so the same control can stop playback.
         ListenCommand = new Command(() => _readAloud.ToggleAsync(_spoken).FireAndForget());
@@ -140,6 +140,21 @@ public sealed class CourseDayViewModel : BaseViewModel
     public bool CanWrite => CanComplete;
 
     public void StopListening() => _readAloud.Stop();
+
+    private async Task ConfirmBackAsync()
+    {
+        if (_busy)
+        {
+            return;
+        }
+
+        if (!CanWrite || string.IsNullOrWhiteSpace(Reflection)
+            || await _dialogs.AskSheetAsync(AppStrings.CourseDiscardReflectionTitle, AppStrings.CourseDiscardReflectionBody,
+                AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, isDestructive: true))
+        {
+            await _navigation.GoBackAsync();
+        }
+    }
 
     private void Load()
     {

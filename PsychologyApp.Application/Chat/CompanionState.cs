@@ -162,6 +162,8 @@ public sealed record CompanionState
 
     /// <summary>The step decided on in an earlier chat that this chat opened by asking about.</summary>
     public string? OpenPlan { get; init; }
+    public string? OpenPlanAt { get; init; }
+    public bool HasManualTitle { get; init; }
 
     /// <summary>The earlier step has been asked about and answered: it is no longer remembered.</summary>
     public bool PlanResolved { get; init; }
@@ -367,6 +369,11 @@ public sealed record CompanionState
             w.WriteBoolean("protocolOffered", ProtocolOffered);
             WriteOptional(w, "newPlan", NewPlan);
             WriteOptional(w, "openPlan", OpenPlan);
+            WriteOptional(w, "openPlanAt", OpenPlanAt);
+            if (HasManualTitle)
+            {
+                w.WriteBoolean("manualTitle", true);
+            }
             w.WriteBoolean("planResolved", PlanResolved);
             w.WriteBoolean("testSuggested", TestSuggested);
             w.WriteBoolean("articleOffered", ArticleOffered);
@@ -451,6 +458,8 @@ public sealed record CompanionState
                 ProtocolOffered = Bool(r, "protocolOffered"),
                 NewPlan = Str(r, "newPlan"),
                 OpenPlan = Str(r, "openPlan"),
+                OpenPlanAt = Str(r, "openPlanAt"),
+                HasManualTitle = Bool(r, "manualTitle"),
                 PlanResolved = Bool(r, "planResolved"),
                 TestSuggested = Bool(r, "testSuggested"),
                 ArticleOffered = Bool(r, "articleOffered"),

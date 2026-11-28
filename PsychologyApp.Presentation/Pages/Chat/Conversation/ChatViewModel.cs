@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using PsychologyApp.Application.Chat;
 using PsychologyApp.Application.Conversation;
+using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Shared.ViewModels;
@@ -18,6 +19,9 @@ public sealed record ChatBubble(string Text, bool IsUser, string TimeText, strin
     public long? MessageId { get; init; }
 
     public DateTime CreatedUtc { get; init; }
+    public ICommand? CrisisHelpCommand { get; init; }
+    public bool HasCrisisHelp => CrisisHelpCommand is not null;
+    public string CrisisHelpText => AppStrings.CrisisHubTitle;
 
     /// <summary>True for a message that has just arrived: the page slides it in once, then clears the flag. History is never animated.</summary>
     public bool Animate { get; set; }
@@ -46,6 +50,7 @@ public sealed class ChatViewModel : BaseViewModel
     private const int HistoryPageSize = 100;
 
     private readonly IChatService _chat;
+    private readonly ICrisisDetector _crisisDetector;
     private readonly IChatLanguageProvider _language;
     private readonly TimeProvider _time;
     private readonly CancellationTokenSource _lifetime = new();
@@ -79,6 +84,7 @@ public sealed class ChatViewModel : BaseViewModel
         TimeProvider time,
         long? sessionId,
         PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService dialogs,
+        ICrisisDetector crisisDetector,
         string? topic = null,
         string? opener = null)
     {
@@ -87,6 +93,7 @@ public sealed class ChatViewModel : BaseViewModel
         ModuleName = AppStrings.ChatsTitle;
         PageName = AppStrings.ChatHeroTitle;
         _chat = chat;
+        _crisisDetector = crisisDetector;
         _language = language;
         _time = time;
         _sessionId = sessionId;
@@ -94,6 +101,7 @@ public sealed class ChatViewModel : BaseViewModel
 
         BindNavigation(navigationService);
         BackCommand = new AsyncCommand(() => ConfirmBackAsync(dialogs));
+        OpenCrisisHelpCommand = new AsyncCommand(OpenCrisisHelpAsync);
         // The header of an open chat leads to that chat's page; before the chat exists there is only the companion to show.
         OpenProfileCommand = new AsyncCommand(() => _sessionId is { } id
             ? NavigationService!.GoToChatInfoAsync(id)
@@ -109,6 +117,7 @@ public sealed class ChatViewModel : BaseViewModel
     public ObservableCollection<QuickReplyItem> QuickReplies { get; } = [];
 
     public ICommand BackCommand { get; }
+    private ICommand OpenCrisisHelpCommand { get; }
     public ICommand OpenProfileCommand { get; }
     public ICommand SendCommand { get; }
     public ICommand QuickReplyCommand { get; }
@@ -143,6 +152,11 @@ public sealed class ChatViewModel : BaseViewModel
 
     internal async Task ConfirmBackAsync(PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService dialogs)
     {
+        if (IsPersistingDraft)
+        {
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(DraftText)
             || await dialogs.AskSheetAsync(AppStrings.ChatDiscardDraftTitle, AppStrings.ChatDiscardDraftBody,
                 AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, isDestructive: true))
@@ -246,7 +260,21 @@ public sealed class ChatViewModel : BaseViewModel
 
     /// <summary>Subtitle under the chat name: "typing..." while the companion answers, otherwise a privacy reminder.</summary>
     /// <summary>Under the companion's own name the status is only "offline"; under a chat's name it says whose chat it is.</summary>
-    public string StatusText => IsTyping
+    private bool _isPersistingDraft;
+    private bool IsPersistingDraft
+    {
+        get => _isPersistingDraft;
+        set
+        {
+            if (_isPersistingDraft != value)
+            {
+                _isPersistingDraft = value;
+                OnPropertyChanged(nameof(StatusText));
+            }
+        }
+    }
+
+    public string StatusText => IsPersistingDraft ? AppStrings.Saving : IsTyping
         ? AppStrings.DialogueTyping
         : Title == AppStrings.ChatProfileTitle ? AppStrings.ChatStatusOffline : AppStrings.ChatStatusIdle;
 
@@ -309,7 +337,7 @@ public sealed class ChatViewModel : BaseViewModel
 
         // Visible history changes only after both the session and its first page have loaded.
         Title = HeaderTitle(session.Title);
-        Messages.AddRange(history.Messages.Select(m => CreateBubble(m.Text, m.Role == ChatRole.User, m.CreatedAt, animate: false, m.Id)).ToList());
+        Messages.AddRange(history.Messages.Select(m => CreateBubble(m, animate: false)).ToList());
         _oldestLoadedMessageId = history.Messages.FirstOrDefault()?.Id;
         HasOlderMessages = history.HasOlderMessages;
 
@@ -341,7 +369,7 @@ public sealed class ChatViewModel : BaseViewModel
             _lastCreatedUtc = null;
             _lastWasUser = null;
             List<ChatBubble> older = page.Messages
-                .Select(message => CreateBubble(message.Text, message.Role == ChatRole.User, message.CreatedAt, animate: false, message.Id))
+                .Select(message => CreateBubble(message, animate: false))
                 .ToList();
             _lastCreatedUtc = newestCreatedUtc;
             _lastWasUser = newestWasUser;
@@ -445,18 +473,28 @@ public sealed class ChatViewModel : BaseViewModel
                 return;
             }
 
-            ChatTurnResult? followUp = await Task.Run(() => _chat.CheckPracticeFollowUpAsync(id, _lifetime.Token));
-            if (followUp is not null)
-            {
-                Title = HeaderTitle(followUp.Session.Title);
-                await RevealAsync(followUp.NewMessages);
-            }
-
             // The same path as a typed message, so the crisis check and the engine read it as the person's own words.
-            if (_opener is { } opener)
+            if (_opener is { } opener && !_lifetime.IsCancellationRequested)
             {
                 _opener = null;
-                await TakeTurnAsync(opener, () => _chat.SendTextAsync(id, opener, CancellationToken.None));
+                DraftText = opener;
+                await RunGuardedAsync(SendDraftAsync);
+                return;
+            }
+
+            try
+            {
+                ChatTurnResult? followUp = await Task.Run(() => _chat.CheckPracticeFollowUpAsync(id, _lifetime.Token));
+                if (followUp is not null)
+                {
+                    Title = HeaderTitle(followUp.Session.Title);
+                    await RevealAsync(followUp.NewMessages);
+                }
+            }
+            catch (Exception error) when (error is not OperationCanceledException)
+            {
+                IsTyping = false;
+                BestEffort.Report(error);
             }
         }
         catch (OperationCanceledException)
@@ -528,8 +566,8 @@ public sealed class ChatViewModel : BaseViewModel
             return Task.CompletedTask;
         }
 
-        DraftText = string.Empty;
-        return TakeTurnAsync(text, () => _chat.SendTextAsync(_sessionId!.Value, text, CancellationToken.None), draft);
+        return TakeTurnAsync(text, new CompanionInput.FreeText(text),
+            () => _chat.SendTextAsync(_sessionId!.Value, text, CancellationToken.None), draft);
     }
 
     private async Task SendQuickReplyAsync(ChatQuickReply reply)
@@ -540,7 +578,8 @@ public sealed class ChatViewModel : BaseViewModel
         RatingReference = picked ?? previousRating;
         try
         {
-            await TakeTurnAsync(reply.Label, () => _chat.SendQuickReplyAsync(_sessionId!.Value, reply, CancellationToken.None));
+            await TakeTurnAsync(reply.Label, new CompanionInput.QuickReply(reply),
+                () => _chat.SendQuickReplyAsync(_sessionId!.Value, reply, CancellationToken.None));
         }
         catch
         {
@@ -551,6 +590,7 @@ public sealed class ChatViewModel : BaseViewModel
 
     private async Task TakeTurnAsync(
         string userText,
+        CompanionInput input,
         Func<Task<ChatTurnResult>> send,
         string? sentDraft = null)
     {
@@ -560,32 +600,55 @@ public sealed class ChatViewModel : BaseViewModel
         ChatBubble userBubble = CreateBubble(userText, isUser: true, Now(), animate: true);
         Messages.Add(userBubble);
         SetQuickReplies([]);
-        IsTyping = true;
+        bool isCrisis = CompanionDialogue.IsCrisisInput(_crisisDetector, _language.IsEnglish, input);
+        ChatBubble? immediateHelp = null;
+        IsTyping = !isCrisis;
+        if (isCrisis)
+        {
+            immediateHelp = CreateBubble(CompanionContent.Crisis(_language.IsEnglish), isUser: false, Now(),
+                animate: false, isCrisisHelp: true);
+            Messages.Add(immediateHelp);
+            OpenCrisisHelpCommand.Execute(null);
+        }
 
         // The service awaits without ConfigureAwait(false), so understanding the message would run on the UI thread.
         ChatTurnResult result;
+        IsPersistingDraft = sentDraft is not null && !isCrisis;
         try
         {
             result = await Task.Run(send);
+            if (sentDraft is not null && DraftText == sentDraft)
+            {
+                DraftText = string.Empty;
+            }
         }
         catch (Exception error)
         {
             if (!_lifetime.IsCancellationRequested)
             {
                 Messages.Remove(userBubble);
+                if (immediateHelp is not null)
+                {
+                    Messages.Remove(immediateHelp);
+                }
                 _lastCreatedUtc = previousCreatedUtc;
                 _lastWasUser = previousWasUser;
-                if (sentDraft is not null)
+                if (sentDraft is not null && DraftText != sentDraft)
                 {
                     DraftText = string.IsNullOrEmpty(DraftText) ? sentDraft : $"{sentDraft}\n{DraftText}";
                 }
 
-                if (error is ChatCrisisTurnNotSavedException crisis)
+                if (error is ChatCrisisTurnNotSavedException || isCrisis)
                 {
                     IsTyping = false;
-                    Messages.Add(CreateBubble(crisis.Reply, isUser: false, Now(), animate: false));
-                    BestEffort.Report(crisis);
-                    await NavigationService!.GoToCrisisHubAsync();
+                    string response = error is ChatCrisisTurnNotSavedException crisis
+                        ? crisis.Reply : CompanionContent.Crisis(_language.IsEnglish);
+                    Messages.Add(CreateBubble(response, isUser: false, Now(), animate: false, isCrisisHelp: true));
+                    BestEffort.Report(error);
+                    if (!isCrisis)
+                    {
+                        OpenCrisisHelpCommand.Execute(null);
+                    }
                     return;
                 }
 
@@ -594,6 +657,10 @@ public sealed class ChatViewModel : BaseViewModel
 
             throw;
         }
+        finally
+        {
+            IsPersistingDraft = false;
+        }
 
         if (_lifetime.IsCancellationRequested)
         {
@@ -601,6 +668,20 @@ public sealed class ChatViewModel : BaseViewModel
         }
 
         Title = HeaderTitle(result.Session.Title);
+
+        if (result.Action?.Kind == DialogueActionKind.OpenCrisisHub)
+        {
+            if (immediateHelp is null)
+            {
+                IsTyping = false;
+                foreach (ChatMessageDTO message in result.NewMessages.Skip(1))
+                {
+                    Messages.Add(CreateBubble(message, animate: false, forceCrisisHelp: true));
+                }
+                OpenCrisisHelpCommand.Execute(null);
+            }
+            return;
+        }
 
         // NewMessages[0] is the user's own message, which is already on screen.
         await RevealAsync(result.NewMessages.Skip(1).ToList());
@@ -625,7 +706,7 @@ public sealed class ChatViewModel : BaseViewModel
             IsTyping = true;
             await Task.Delay(delayPerMessageMs, _lifetime.Token);
             IsTyping = false;
-            Messages.Add(CreateBubble(message.Text, message.Role == ChatRole.User, message.CreatedAt, animate: true, message.Id));
+            Messages.Add(CreateBubble(message, animate: true));
         }
 
         IsTyping = false;
@@ -640,11 +721,6 @@ public sealed class ChatViewModel : BaseViewModel
                 await Task.Delay(HandOverDelayMs, _lifetime.Token);
                 TechniqueNavigationStarting?.Invoke(this, EventArgs.Empty);
                 await NavigationService!.GoToTechniqueAsync(technique);
-                break;
-
-            case { Kind: DialogueActionKind.OpenCrisisHub }:
-                await Task.Delay(HandOverDelayMs, _lifetime.Token);
-                await NavigationService!.GoToCrisisHubAsync();
                 break;
 
             case { Kind: DialogueActionKind.OpenTests }:
@@ -689,7 +765,10 @@ public sealed class ChatViewModel : BaseViewModel
         QuickReplies.Clear();
         foreach (ChatQuickReply reply in replies)
         {
-            QuickReplies.Add(new QuickReplyItem(reply, QuickReplyCommand));
+            if (reply.Kind != ChatQuickReplyKinds.CrisisHelp)
+            {
+                QuickReplies.Add(new QuickReplyItem(reply, QuickReplyCommand));
+            }
         }
 
         OnPropertyChanged(nameof(HasQuickReplies));
@@ -702,7 +781,19 @@ public sealed class ChatViewModel : BaseViewModel
     }
 
     /// <summary>Builds a bubble with a day divider above the first message of a day and tighter spacing inside a run from one sender. Bubbles must be created in display order.</summary>
-    private ChatBubble CreateBubble(string text, bool isUser, DateTime createdUtc, bool animate, long? messageId = null)
+    private ChatBubble CreateBubble(ChatMessageDTO message, bool animate, bool forceCrisisHelp = false)
+    {
+        bool isUser = message.Role == ChatRole.User;
+        bool isCrisisHelp = !isUser && (forceCrisisHelp
+            || message.QuickReplies.Any(reply => reply.Kind == ChatQuickReplyKinds.CrisisHelp)
+            || message.Text == CompanionContent.Crisis(english: true)
+            || message.Text == CompanionContent.Crisis(english: false));
+        return CreateBubble(message.Text, isUser, message.CreatedAt, animate, message.Id, isCrisisHelp);
+    }
+
+    private Task OpenCrisisHelpAsync() => NavigationService!.GoToCrisisHubAsync();
+
+    private ChatBubble CreateBubble(string text, bool isUser, DateTime createdUtc, bool animate, long? messageId = null, bool isCrisisHelp = false)
     {
         bool newDay = _lastCreatedUtc is not { } last || !ChatTimeFormatter.SameDay(last, createdUtc);
         ChatBubble bubble = new(
@@ -714,6 +805,7 @@ public sealed class ChatViewModel : BaseViewModel
         {
             Animate = animate,
             MessageId = messageId,
+            CrisisHelpCommand = isCrisisHelp ? OpenCrisisHelpCommand : null,
             CreatedUtc = createdUtc
         };
         _lastCreatedUtc = createdUtc;

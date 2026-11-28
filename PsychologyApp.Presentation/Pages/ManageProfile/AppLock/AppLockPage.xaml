@@ -4,11 +4,18 @@
              x:Class="PsychologyApp.Presentation.Pages.ManageProfile.AppLock.AppLockPage"
              SafeAreaEdges="All"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ManageProfile.AppLock"
              x:DataType="vm:AppLockViewModel"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
+
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior
+            StatusBarColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+            StatusBarStyle="{AppThemeBinding Light=DarkContent, Dark=LightContent}" />
+    </ContentPage.Behaviors>
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -23,20 +30,24 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView VerticalScrollBarVisibility="Never">
+    <Grid RowDefinitions="*,Auto">
+    <ScrollView x:Name="PinScroll" VerticalScrollBarVisibility="Never" SizeChanged="OnPinScrollSizeChanged">
         <VerticalStackLayout
+            x:Name="PinContent"
             Margin="{StaticResource LayoutPageMarginThickness}"
             Spacing="16"
             Padding="0,24,0,28"
-            VerticalOptions="Center">
+            VerticalOptions="Start">
             <!-- Keep the calm chat illustration from the previous lock screen; PIN entry remains the actual unlock path. -->
             <Grid
+                x:Name="LockIllustration"
                 WidthRequest="280"
                 HeightRequest="176"
                 HorizontalOptions="Center"
                 RowDefinitions="*,*,*"
                 ColumnDefinitions="*,*"
-                AutomationProperties.IsInAccessibleTree="False">
+                AutomationProperties.IsInAccessibleTree="False"
+                IsVisible="False">
                 <Grid.Behaviors>
                     <behaviors:EmptyStateRevealBehavior />
                 </Grid.Behaviors>
@@ -87,6 +98,14 @@
                     <ui:MaterialIconView IconName="Lock" IconSize="34" IconColor="{DynamicResource PrimaryFill}" HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
             </Grid>
+            <Border x:Name="CompactLock"
+                    WidthRequest="52" HeightRequest="52" StrokeThickness="0"
+                    HorizontalOptions="Center" StrokeShape="RoundRectangle 26"
+                    AutomationProperties.IsInAccessibleTree="False"
+                    BackgroundColor="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}">
+                <ui:MaterialIconView IconName="Lock" IconSize="24" IconColor="{DynamicResource PrimaryFill}"
+                                     HorizontalOptions="Center" VerticalOptions="Center" />
+            </Border>
 
             <VerticalStackLayout Spacing="8" HorizontalOptions="Fill">
                 <Label
@@ -156,20 +175,66 @@
                     <ui:ButtonView Grid.Row="3" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="0" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="0" />
                     <ui:ButtonView Grid.Row="3" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="⌫" IsEnabled="{Binding CanDeletePin}" TapCommand="{Binding DeletePinDigitCommand}" AccessibilityLabel="{Binding DeletePinDigitText}" />
                 </Grid>
+            </VerticalStackLayout>
 
-                <Label
-                    Text="{Binding StatusText}"
-                    TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
-                    FontSize="{DynamicResource CaptionFontSize}"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding HasStatus}" />
-                <ui:ButtonView
-                    Variant="Secondary"
-                    IsCompact="True"
-                    BodyText="{Binding RecoveryText}"
-                    TapCommand="{Binding RecoverPinCommand}"
-                    IsVisible="{Binding HasSystemRecovery}" />
+            <Label Text="{Binding StatusText}"
+                   FontSize="{DynamicResource CaptionFontSize}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding HasStatus}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsCheckingPin}" Value="True">
+                                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+
+            <ui:ButtonView
+                Variant="Secondary"
+                IsCompact="True"
+                BodyText="{Binding RecoveryText}"
+                TapCommand="{Binding RecoverPinCommand}"
+                IsEnabled="{Binding CanUseRecoveryActions}"
+                IsVisible="{Binding HasSystemRecovery}" />
+            <ui:ButtonView Variant="Secondary"
+                           IsCompact="True"
+                           BodyText="{Binding RetryStorageText}"
+                           TapCommand="{Binding RetryPinStorageCommand}"
+                           IsEnabled="{Binding CanUseRecoveryActions}"
+                           IsVisible="{Binding ShowRetryStorage}" />
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding ShowRecoveryUnavailable}">
+                <Label Text="{Binding RecoveryUnavailableText}"
+                       Style="{StaticResource CaptionStyle}"
+                       HorizontalTextAlignment="Center" />
+                <ui:ButtonView Variant="Secondary"
+                               IsCompact="True"
+                               BodyText="{Binding OpenSecuritySettingsText}"
+                               TapCommand="{Binding OpenSecuritySettingsCommand}"
+                               IsVisible="{Binding CanOpenSecuritySettings}" />
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+        <VerticalStackLayout Grid.Row="1"
+                             Margin="{StaticResource LayoutPageMarginThickness}"
+                             Spacing="8">
+            <Label Text="{Binding DialFailureText}"
+                   IsVisible="{Binding ShowDialFailure}"
+                   Style="{StaticResource BodyStyle}"
+                   HorizontalTextAlignment="Center" />
+            <ui:ButtonView Variant="Secondary"
+                           IsCompact="True"
+                           IsVisible="{Binding ShowDialFailure}"
+                           BodyText="{Binding CopyNumberText}"
+                           TapCommand="{Binding CopyNumberCommand}" />
+            <ui:ButtonView Variant="Secondary"
+                           IsCompact="True"
+                           MinimumHeightRequest="48"
+                           BodyText="{Binding CallEmergencyText}"
+                           TapCommand="{Binding CallEmergencyCommand}" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

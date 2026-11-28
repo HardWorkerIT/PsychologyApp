@@ -56,6 +56,7 @@ public sealed class RiskCheckViewModel : BaseViewModel
             if (SetProperty(ref _hasSelfHarmThoughts, value))
             {
                 OnPropertyChanged(nameof(ShowOpenHelpNow));
+                OnPropertyChanged(nameof(SubmitVariant));
                 OnPropertyChanged(nameof(IsSelfHarmYes));
                 OnPropertyChanged(nameof(IsSelfHarmNo));
                 NotifyAnswered();
@@ -121,6 +122,7 @@ public sealed class RiskCheckViewModel : BaseViewModel
     public bool IsInsomniaNo => HasSevereInsomnia == false;
 
     public bool ShowOpenHelpNow => HasSelfHarmThoughts == true;
+    public string SubmitVariant => ShowOpenHelpNow ? "Secondary" : "Primary";
 
     /// <summary>
     /// An unanswered question is not a "no": a tap on "Done" before answering used to save "no risk" and silence the next check

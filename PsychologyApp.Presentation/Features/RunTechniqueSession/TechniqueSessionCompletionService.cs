@@ -30,12 +30,13 @@ public sealed class TechniqueSessionCompletionService(
         bool deleteDraft = true,
         int? postIntensity = null,
         CancellationToken cancellationToken = default,
-        Func<Task>? onSaved = null)
+        Func<Task>? onSaved = null,
+        string? sessionPayloadJson = null)
     {
         if (!completion.HasSavedResult)
         {
             completion.ResultId = await SaveSessionAsync(progress, itemKey, moduleName, pageName, sessionStartedAt,
-                preIntensity, deleteDraft, postIntensity, cancellationToken);
+                preIntensity, deleteDraft, postIntensity, sessionPayloadJson, cancellationToken);
 
             if (onSaved is not null)
             {
@@ -56,10 +57,11 @@ public sealed class TechniqueSessionCompletionService(
         int? preIntensity,
         bool deleteDraft,
         int? postIntensity,
+        string? sessionPayloadJson,
         CancellationToken cancellationToken)
     {
         int durationSeconds = Math.Max(0, (int)(DateTime.UtcNow - sessionStartedAt).TotalSeconds);
-        string? draftJson = await progress.GetSessionDraftAsync(itemKey, cancellationToken);
+        string? payloadJson = sessionPayloadJson ?? await progress.GetSessionDraftAsync(itemKey, cancellationToken);
 
         string? programType = null;
         int? programWeek = null;
@@ -85,7 +87,7 @@ public sealed class TechniqueSessionCompletionService(
                 ModuleName = moduleName,
                 PageName = pageName,
                 DurationSeconds = durationSeconds,
-                PayloadJson = draftJson,
+                PayloadJson = payloadJson,
                 PreIntensity = preIntensity,
                 PostIntensity = postIntensity is >= 0 and <= 10 ? postIntensity : null,
                 ProgramType = programType,

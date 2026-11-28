@@ -1,4 +1,5 @@
 using PsychologyApp.Presentation.Features.ReadArticles;
+using PsychologyApp.Presentation.Shared.Common;
 
 namespace PsychologyApp.Presentation.Pages.ReadArticles.ArticleReader;
 
@@ -36,7 +37,7 @@ public partial class ArticleReaderPage : ContentPage
 #if ANDROID
             HasReachedEnd = true;
 #endif
-            _viewModel.ReachedEnd();
+            _viewModel.ReachedEndAsync().FireAndForget();
         }
     }
 

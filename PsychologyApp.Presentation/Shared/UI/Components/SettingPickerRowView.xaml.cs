@@ -19,7 +19,6 @@ public partial class SettingPickerRowView : ContentView
 
     private void OnLoaded(object? sender, EventArgs e)
     {
-        VisualElementPressFeedback.Attach(SettingLabel);
         VisualElementPressFeedback.Attach(SelectionTapArea);
         RefreshSelectedValue();
     }

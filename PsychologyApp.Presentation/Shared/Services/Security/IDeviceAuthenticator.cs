@@ -34,6 +34,10 @@ public interface IDeviceAuthenticator
     DeviceUnlockAvailability Availability { get; }
 
     Task<DeviceUnlockResult> AuthenticateAsync(string title, string subtitle);
+
+    bool CanOpenSecuritySettings => false;
+
+    Task<bool> TryOpenSecuritySettingsAsync() => Task.FromResult(false);
 }
 
 public sealed class UnavailableDeviceAuthenticator : IDeviceAuthenticator

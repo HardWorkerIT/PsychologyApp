@@ -59,7 +59,6 @@ public static partial class ArticleIds
     public const string BodyNoticingChoice = "body-noticing-choice";
     public const string PauseBeforeReact = "pause-before-react";
     public const string EmotionalBoundary = "emotional-boundary";
-    public const string FeelingNotAction = "feeling-not-action";
     public const string AfterCrying = "after-crying";
 
     public const string SpecificRequest = "specific-request";

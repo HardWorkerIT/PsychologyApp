@@ -8,17 +8,17 @@
 
     <Grid MinimumHeightRequest="52" ColumnSpacing="12">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Label
-            x:Name="SettingLabel"
             Grid.Column="0"
             Text="{Binding LabelText, Source={x:Reference Root}}"
             Style="{StaticResource BodyStyle}"
             VerticalOptions="Center"
-            LineBreakMode="TailTruncation"
-            MaxLines="2" />
+            LineBreakMode="WordWrap"
+            InputTransparent="True"
+            AutomationProperties.IsInAccessibleTree="False" />
         <Grid
             Grid.Column="1"
             HorizontalOptions="Fill"
@@ -31,8 +31,7 @@
                 TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                 HorizontalTextAlignment="End"
                 VerticalTextAlignment="Center"
-                LineBreakMode="TailTruncation"
-                MaxLines="1"
+                LineBreakMode="WordWrap"
                 InputTransparent="True"
                 AutomationProperties.IsInAccessibleTree="False">
                 <Label.Triggers>
@@ -60,21 +59,19 @@
                     </DataTrigger>
                 </self:MaterialIconView.Triggers>
             </self:MaterialIconView>
-            <Border
-                x:Name="SelectionTapArea"
-                Grid.ColumnSpan="2"
-                BackgroundColor="Transparent"
-                Stroke="Transparent"
-                MinimumHeightRequest="44"
-                HorizontalOptions="Fill"
-                VerticalOptions="Center"
-                IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
-                SemanticProperties.Description="{Binding PickerAccessibilityDescription, Source={x:Reference Root}}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnSelectionAreaTapped" />
-                </Border.GestureRecognizers>
-            </Border>
         </Grid>
+        <Border
+            x:Name="SelectionTapArea"
+            Grid.ColumnSpan="2"
+            BackgroundColor="Transparent"
+            Stroke="Transparent"
+            MinimumHeightRequest="44"
+            IsEnabled="{Binding IsRowEnabled, Source={x:Reference Root}}"
+            SemanticProperties.Description="{Binding PickerAccessibilityDescription, Source={x:Reference Root}}">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSelectionAreaTapped" />
+            </Border.GestureRecognizers>
+        </Border>
     </Grid>
 
 </ContentView>

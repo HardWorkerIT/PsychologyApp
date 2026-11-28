@@ -165,19 +165,20 @@ public sealed class CourseViewModel : BaseViewModel
         {
             await _databaseReady.WaitAsync();
             ReadingState reading = await _reading.GetAsync();
-            IReadOnlyList<TestResultDTO> history = await _progress.GetTestResultHistoryAsync(course.TestId, HistoryLimit);
+            CourseProgress? state = reading.Course(course.Id);
             await UiThread.RunAsync(() =>
             {
                 if (generation == Volatile.Read(ref _refreshGeneration)
                     && string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
                 {
-                    Apply(course, reading.Course(course.Id), history);
+                    Apply(course, state);
                     _hasRefreshed = true;
                     _loadedLanguageKey = languageKey;
                     IsLoadFailed = false;
                     IsLoading = false;
                 }
             });
+            await RefreshMeasurementAsync(course, state, generation, languageKey);
         }
         catch (Exception loadError)
         {
@@ -194,16 +195,42 @@ public sealed class CourseViewModel : BaseViewModel
         }
     }
 
-    private void Apply(Course course, CourseProgress? state, IReadOnlyList<TestResultDTO> history)
+    private async Task RefreshMeasurementAsync(Course course, CourseProgress? state, int generation, string languageKey)
     {
-        _state = state;
-        CourseMeasurement measure = CourseMeasure.Of(history, state?.StartedUtc);
-        MeasureText = measure switch
+        try
         {
-            { Before: { } before, Now: { } now } => AppStrings.CourseMeasureChange(course.TestName, before, now),
-            { Now: { } now } => AppStrings.CourseMeasureOnce(course.TestName, now),
-            _ => string.Empty
-        };
+            IReadOnlyList<TestResultDTO> history = await _progress.GetTestResultHistoryAsync(course.TestId, HistoryLimit);
+            await UiThread.RunAsync(() =>
+            {
+                if (generation != Volatile.Read(ref _refreshGeneration)
+                    || !string.Equals(languageKey, AppStrings.Language, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                CourseMeasurement measure = CourseMeasure.Of(history, state?.StartedUtc);
+                MeasureText = measure switch
+                {
+                    { Before: { } before, Now: { } now } => AppStrings.CourseMeasureChange(course.TestName, before, now),
+                    { Now: { } now } => AppStrings.CourseMeasureOnce(course.TestName, now),
+                    _ => string.Empty
+                };
+            });
+        }
+        catch (Exception historyError)
+        {
+            BestEffort.Report(historyError);
+        }
+    }
+
+    private void Apply(Course course, CourseProgress? state)
+    {
+        if (_state?.StartedUtc != state?.StartedUtc)
+        {
+            MeasureText = string.Empty;
+        }
+
+        _state = state;
 
         int done = state?.Days.Count ?? 0;
         CourseProgressText = state is null ? AppStrings.ArticlesCourseMeta(course.Days.Count, course.Days.Max(day => day.Minutes)) : AppStrings.CourseProgress(done, course.Days.Count);
@@ -279,6 +306,7 @@ public sealed class CourseViewModel : BaseViewModel
         {
             _loadedLanguageKey = languageKey;
             _course = ArticleContent.FindCourse(_courseId, languageKey);
+            MeasureText = string.Empty;
         }
 
         Notify(nameof(Title), nameof(Summary), nameof(MeasureTitle), nameof(MeasureHint), nameof(TakeTestText), nameof(ResetText),

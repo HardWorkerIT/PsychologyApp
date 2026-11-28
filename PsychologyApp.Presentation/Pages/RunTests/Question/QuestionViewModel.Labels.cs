@@ -14,6 +14,7 @@ public partial class QuestionViewModel
             nameof(PageTitle),
             nameof(FinishButtonText),
             nameof(NextButtonText),
+            nameof(ResultNavigationFailedText),
             nameof(PreviousButtonText),
             nameof(StepLabel),
             nameof(Progress),

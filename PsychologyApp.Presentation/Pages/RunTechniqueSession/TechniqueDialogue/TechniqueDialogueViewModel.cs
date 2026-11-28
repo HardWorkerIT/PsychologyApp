@@ -35,6 +35,15 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
     private readonly DateTime _sessionStartedAt = DateTime.UtcNow;
 
     private ConversationSession? _scenarioSession;
+    private bool _completionSaveFailed;
+
+    public bool CompletionSaveFailed
+    {
+        get => _completionSaveFailed;
+        private set => SetProperty(ref _completionSaveFailed, value);
+    }
+
+    public string CompletionSaveFailedText => AppStrings.DialogueAnswersSaveFailed;
 
     public TechniqueDialogueViewModel(
         TechniqueId techniqueId,
@@ -151,24 +160,31 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
             return;
         }
 
-        bool savedFields = false;
-        if (!_completion.HasSavedResult)
+        try
         {
-            savedFields = await SaveAnswersAsync();
-            await RememberProblemAsync();
-            RememberTypedAnswers();
+            Dictionary<string, string> fields = CapturedFields();
+            string? payload = _completion.HasSavedResult ? null : System.Text.Json.JsonSerializer.Serialize(
+                new PsychologyApp.Presentation.Common.EntryDraft { Fields = fields },
+                SessionDraftJsonSerializerContext.Default.EntryDraft);
+            await _completionService.CompleteStandardSessionAsync(
+                _userProgressService,
+                NavigationService!,
+                _techniqueId.ToString(),
+                ModuleName,
+                PageName,
+                _sessionStartedAt,
+                _completion,
+                preIntensity: PreIntensity(),
+                postIntensity: _scenarioSession?.GetRating("rating_after"),
+                deleteDraft: fields.Count > 0,
+                onSaved: RememberCompletedAnswersAsync,
+                sessionPayloadJson: payload);
         }
-
-        await _completionService.CompleteStandardSessionAsync(
-            _userProgressService,
-            NavigationService!,
-            _techniqueId.ToString(),
-            ModuleName,
-            PageName,
-            _sessionStartedAt,
-            _completion,
-            preIntensity: PreIntensity(),
-            deleteDraft: savedFields);
+        catch (Exception error) when (!_completion.HasSavedResult && error is not OperationCanceledException)
+        {
+            BestEffort.Report(error);
+            CompletionSaveFailed = true;
+        }
     }
 
     /// <summary>The rating taken before the practice: the scenario's "rating_before", or else the first rating field of the form (Spin asks it as f2).</summary>
@@ -189,28 +205,17 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
                            && int.TryParse(pair.Key[FieldCapturePrefix.Length..], out _))
             .ToDictionary(pair => pair.Key[FieldCapturePrefix.Length..], pair => pair.Value, StringComparer.Ordinal);
 
-    /// <summary>Writes the answers as the session draft (replacing any older form draft), so completion records them as the payload.</summary>
-    private async Task<bool> SaveAnswersAsync()
+    private async Task RememberCompletedAnswersAsync()
     {
-        Dictionary<string, string> fields = CapturedFields();
-        if (fields.Count == 0)
-        {
-            return false;
-        }
-
+        CompletionSaveFailed = false;
         try
         {
-            await SessionDraftStore.SaveAsync(
-                _userProgressService,
-                _techniqueId.ToString(),
-                new PsychologyApp.Presentation.Common.EntryDraft { Fields = fields },
-                SessionDraftJsonSerializerContext.Default.EntryDraft);
-            return true;
+            await RememberProblemAsync();
+            RememberTypedAnswers();
         }
         catch (Exception bestEffortError)
         {
             BestEffort.Report(bestEffortError);
-            return false;
         }
     }
 

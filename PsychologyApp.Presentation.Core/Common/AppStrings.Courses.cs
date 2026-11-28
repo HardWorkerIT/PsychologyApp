@@ -13,6 +13,9 @@ public static partial class AppStrings
     public static string ArticleListenUnavailable => R(nameof(ArticleListenUnavailable));
     public static string ArticleStopListening => R(nameof(ArticleStopListening));
     public static string ArticleReadMark => R(nameof(ArticleReadMark));
+    public static string ArticleReadSaveFailed => R(nameof(ArticleReadSaveFailed));
+    public static string CourseDiscardReflectionTitle => R(nameof(CourseDiscardReflectionTitle));
+    public static string CourseDiscardReflectionBody => R(nameof(CourseDiscardReflectionBody));
     public static string ArticleRight => R(nameof(ArticleRight));
     public static string ArticleNotQuite => R(nameof(ArticleNotQuite));
     public static string ArticlesSearchPlaceholder => R(nameof(ArticlesSearchPlaceholder));

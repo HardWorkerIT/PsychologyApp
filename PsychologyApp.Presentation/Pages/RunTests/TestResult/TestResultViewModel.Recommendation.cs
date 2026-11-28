@@ -21,7 +21,7 @@ public partial class TestResultViewModel
         RecommendationTheme = string.Empty;
         RecommendationIconName = string.Empty;
 
-        if (_result.RecommendedTechnique is TechniqueId techniqueId)
+        if (HasRecommendation && _result.RecommendedTechnique is TechniqueId techniqueId)
         {
             try
             {

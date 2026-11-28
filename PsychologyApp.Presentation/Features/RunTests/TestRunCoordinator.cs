@@ -2,6 +2,7 @@
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Models.Tests;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
 
@@ -121,19 +122,22 @@ public sealed class TestRunCoordinator(
     {
         QuestionnaireSubmission submission = saved.Submission;
         QuestionnaireCompletionRequest request = saved.Request;
+        TestResultInfo result = new()
+        {
+            Score = submission.Score,
+            Interpretation = submission.Interpretation,
+            InterpretationDetail = submission.InterpretationDetail,
+            AnalyzerId = request.Session.AnalyzerId,
+            RecommendedTechnique = submission.SelfHarmItemEndorsed ? null : submission.RecommendedTechnique,
+            TestId = request.Session.TestId,
+            Detail = saved.Detail,
+            NeedsUrgentHelp = submission.SelfHarmItemEndorsed
+        };
 
         try
         {
             bool completed = await NavigationRetry.TryExecuteWithRetryAsync(
-                () => navigationService.GoToTestResultAsync(
-                    submission.Score,
-                    submission.Interpretation,
-                    submission.RecommendedTechnique,
-                    request.Session.TestId,
-                    submission.InterpretationDetail,
-                    request.Session.AnalyzerId,
-                    saved.Detail,
-                    cancellationToken),
+                () => navigationService.GoToTestResultAsync(result, cancellationToken),
                 status => status is NavigationRunStatus.Completed or NavigationRunStatus.DroppedDuplicate,
                 maxAttempts: submission.SelfHarmItemEndorsed ? 1 : 3,
                 cancellationToken: cancellationToken);

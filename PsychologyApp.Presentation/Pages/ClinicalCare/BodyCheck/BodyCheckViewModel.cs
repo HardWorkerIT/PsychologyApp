@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using PsychologyApp.Application.Body;
+using PsychologyApp.Application.Conversation;
 using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Practice;
 using PsychologyApp.Domain.Practice;
@@ -25,6 +26,7 @@ public sealed class BodyCheckViewModel : BaseViewModel
 
     private readonly INavigationService _navigation;
     private readonly IBodyService _service;
+    private readonly ICrisisDetector _crisisDetector;
     private readonly IDialogService _dialogs;
     private readonly IDatabaseReadySignal _databaseReady;
     private readonly ITechniqueCatalogService? _techniqueCatalog;
@@ -51,6 +53,7 @@ public sealed class BodyCheckViewModel : BaseViewModel
     public BodyCheckViewModel(
         INavigationService navigation,
         IBodyService service,
+        ICrisisDetector crisisDetector,
         IDialogService dialogs,
         IDatabaseReadySignal databaseReady,
         ITechniqueCatalogService? techniqueCatalog = null)
@@ -59,6 +62,7 @@ public sealed class BodyCheckViewModel : BaseViewModel
         BackCommand = new AsyncCommand(GoBackAsync);
         _navigation = navigation;
         _service = service;
+        _crisisDetector = crisisDetector;
         _dialogs = dialogs;
         _databaseReady = databaseReady;
         _techniqueCatalog = techniqueCatalog;
@@ -402,53 +406,37 @@ public sealed class BodyCheckViewModel : BaseViewModel
             return;
         }
 
+        string note = _note;
+        IsCrisis |= _crisisDetector.IsCrisis(note);
+        // Keep the help path available while storage is busy or unavailable.
+        List<BodyFeeling> feelings = [.. GuessChips.Concat(OtherChips).Select(chip => (BodyFeeling)chip.Value).Where(_feelings.Contains)];
+        BodyCheckResult result;
         try
         {
-            // In the order shown, so the saved entry reads like the screen did.
-            List<BodyFeeling> feelings = [.. GuessChips.Concat(OtherChips).Select(chip => (BodyFeeling)chip.Value).Where(_feelings.Contains)];
-            BodyCheckResult result = await _service.SaveAsync(area, sensation, _intensity, feelings, _note);
-            BodyLog? log = null;
-            int logRequestId = Interlocked.Increment(ref _logLoadRequestId);
-            try
-            {
-                log = await _service.GetLogAsync();
-            }
-            catch (Exception historyError)
-            {
-                // The entry is already saved; a history refresh failure must not tell the person to save it again.
-                BestEffort.Report(historyError);
-            }
-
-            IReadOnlyList<TechniqueId> practiceIds = BodyRules.Practices(feelings);
-            _practiceIds = practiceIds;
-            int requestId = 0;
-            string languageKey = string.Empty;
-            await UiThread.RunAsync(() =>
-            {
-                IsCrisis = result.Crisis;
-                IsSaved = true;
-                languageKey = AppStrings.Language;
-                _practiceTitleLanguageKey = languageKey;
-                requestId = Interlocked.Increment(ref _practiceTitleRequestId);
-                Practices = [.. practiceIds.Select(Practice)];
-                if (log is not null && logRequestId == Volatile.Read(ref _logLoadRequestId))
-                {
-                    _lastLoadedLog = log;
-                    ShowLog(log);
-                    _historyLanguageKey = AppStrings.Language;
-                }
-            });
-
-            if (!result.Crisis && practiceIds.Count > 0)
-            {
-                SafeAsync.Run(() => LoadLocalizedPracticeTitlesAsync(practiceIds, requestId, languageKey));
-            }
+            result = await _service.SaveAsync(area, sensation, _intensity, feelings, note);
         }
         catch (Exception saveError)
         {
             BestEffort.Report(saveError);
             await _dialogs.ShowAsync(null, AppStrings.BodySaveError);
+            return;
         }
+
+        await UiThread.RunAsync(() =>
+        {
+            IsCrisis |= result.Crisis;
+            IsSaved = true;
+            _practiceIds = IsCrisis ? [] : BodyRules.Practices(feelings);
+            Practices = [.. _practiceIds.Select(Practice)];
+            if (_practiceIds.Count > 0)
+            {
+                IReadOnlyList<TechniqueId> ids = _practiceIds;
+                string languageKey = _practiceTitleLanguageKey = AppStrings.Language;
+                int requestId = Interlocked.Increment(ref _practiceTitleRequestId);
+                SafeAsync.Run(() => LoadLocalizedPracticeTitlesAsync(ids, requestId, languageKey));
+            }
+        });
+        LoadAsync().FireAndForget();
     }
 
     private BodyPracticeItem Practice(TechniqueId id) =>

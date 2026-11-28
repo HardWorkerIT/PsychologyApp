@@ -21,6 +21,7 @@ public partial class QuestionViewModel : BaseViewModel
     private readonly DateTime _startedAtUtc;
     private readonly ILogger<QuestionViewModel> _logger;
     private readonly IToastService _toastService;
+    private readonly IDialogService _dialogService;
     private readonly IUserProgressService _userProgressService;
     private readonly INavigationService _navigationService;
     private readonly QuestionnaireSubmissionService _submissionService;
@@ -47,7 +48,7 @@ public partial class QuestionViewModel : BaseViewModel
         BindNavigation(navigationService);
         _logger = logger;
         _toastService = toastService;
-        _ = dialogService;
+        _dialogService = dialogService;
         _navigationService = navigationService;
         _userProgressService = userProgressService;
         _submissionService = submissionService;
@@ -61,7 +62,26 @@ public partial class QuestionViewModel : BaseViewModel
         Questions.AddRange(questions);
 
         ConfirmCommand = new AsyncCommand(CalculateAnswersAsync);
-        BackCommand = new AsyncCommand(GoBackAsync);
+        BackCommand = new AsyncCommand(ConfirmExitAsync);
         InitializeWizard();
+    }
+
+    private async Task ConfirmExitAsync()
+    {
+        if (_isCompleting)
+        {
+            return;
+        }
+
+        _wizard.CancelAutoAdvance();
+        bool hasUnsavedAnswers = _savedResult is null && Questions.Any(question => question.Answers.Any(answer => answer.Selected));
+        if (!hasUnsavedAnswers || await _dialogService.AskSheetAsync(AppStrings.UnsavedExitTitle,
+                AppStrings.TestsDiscardAnswers, AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, isDestructive: true))
+        {
+            if (!_isCompleting)
+            {
+                await GoBackAsync();
+            }
+        }
     }
 }

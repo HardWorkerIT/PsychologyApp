@@ -160,37 +160,16 @@ public sealed class MauiNavigationService : INavigationService
         NavigationCoordinator.RunPushAsync(() => ResolveNavigation().PushAsync(PrepareSecondaryPage(_pageFactory.CreateTestsListPage()), true));
 
     public Task<NavigationRunStatus> GoToTestResultAsync(
-        int score,
-        string interpretation,
-        TechniqueId? recommendedTechnique = null,
-        string? testId = null,
-        string? interpretationDetail = null,
-        string? analyzerId = null,
-        QuestionnaireResultDetail? detail = null,
+        TestResultInfo result,
         CancellationToken cancellationToken = default) =>
-        NavigationCoordinator.RunCompletionPushAsync(async () =>
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // Let the current page finish layout/animation before pushing the result page.
-            await Task.Yield();
-
-            TestResultInfo result = new()
+        ReplaceOwnerPageAsync(
+            _ =>
             {
-                Score = score,
-                Interpretation = interpretation,
-                InterpretationDetail = interpretationDetail,
-                AnalyzerId = analyzerId,
-                RecommendedTechnique = recommendedTechnique,
-                TestId = testId,
-                Detail = detail,
-                CompletedAtUtc = DateTime.UtcNow
-            };
-
-            await ResolveNavigation().PushAsync(
-                PrepareSecondaryPage(_pageFactory.CreateTestResultPage(result)),
-                animated: false);
-        });
+                cancellationToken.ThrowIfCancellationRequested();
+                return _pageFactory.CreateTestResultPage(result);
+            },
+            nameof(GoToTestResultAsync),
+            animated: false);
 
     /// <summary>
     /// The finished practice leaves the stack once its result is shown: Back from the result used to land on the practice again,
@@ -204,7 +183,8 @@ public sealed class MauiNavigationService : INavigationService
     public Task<NavigationRunStatus> OpenNextPracticeAsync(TechniqueId techniqueId) =>
         ReplaceOwnerPageAsync(navigation => _pageFactory.CreateTechniquePage(techniqueId, navigation), nameof(OpenNextPracticeAsync));
 
-    private Task<NavigationRunStatus> ReplaceOwnerPageAsync(Func<INavigation, ContentPage> createPage, string destination) =>
+    private Task<NavigationRunStatus> ReplaceOwnerPageAsync(
+        Func<INavigation, ContentPage> createPage, string destination, bool animated = true) =>
         NavigationCoordinator.RunCompletionPushAsync(async () =>
         {
             if (_ownerPage is null || !_ownerPage.TryGetTarget(out ContentPage? owner))
@@ -223,7 +203,7 @@ public sealed class MauiNavigationService : INavigationService
 
             await navigation.PushAsync(
                 PrepareSecondaryPage(createPage(navigation)),
-                true);
+                animated);
             if (navigation.NavigationStack.Contains(owner))
             {
                 try

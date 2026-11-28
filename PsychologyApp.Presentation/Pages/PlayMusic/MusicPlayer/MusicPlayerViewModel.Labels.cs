@@ -13,6 +13,7 @@ public partial class MusicPlayerViewModel
     public string BufferingText => AppStrings.CleanerPreparingAudio;
     public string NeedsInternetText => AppStrings.CleanerNeedsInternet;
     public string LoadFailedText => AppStrings.LoadFailed;
+    public string PlaybackFailedText => AppStrings.AudioPlaybackFailed;
     public string RetryText => AppStrings.RetryQuestion;
 
     protected override void RefreshLocalizedProperties()
@@ -26,6 +27,8 @@ public partial class MusicPlayerViewModel
             nameof(ListEmptyBodyText),
             nameof(BufferingText),
             nameof(NeedsInternetText),
+            nameof(PlaybackFailedText),
+            nameof(RetryText),
             nameof(ProgressDisplay));
 
         if (IsDone)

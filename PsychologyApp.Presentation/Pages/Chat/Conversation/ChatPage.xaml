@@ -82,6 +82,11 @@
                                         </DataTrigger>
                                     </Label.Triggers>
                                 </Label>
+                                <ui:ButtonView
+                                    IsVisible="{Binding HasCrisisHelp}"
+                                    Variant="Secondary"
+                                    BodyText="{Binding CrisisHelpText}"
+                                    TapCommand="{Binding CrisisHelpCommand}" />
                                 <Label
                                     Text="{Binding TimeText}"
                                     Style="{StaticResource CaptionStyle}"
@@ -271,7 +276,6 @@
                                     FontSize="14"
                                     FontFamily="{StaticResource MediumFontFamily}"
                                     TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                                    MaxLines="2"
                                     LineBreakMode="WordWrap">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsPractice}" Value="True">

@@ -6,6 +6,7 @@ using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Technique;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueDesigner;
@@ -188,12 +189,34 @@ public sealed class DesignerViewModelTests
         Assert.Equal(["One", "Two"], viewModel.Steps.Select(step => step.Text));
     }
 
+    [Fact]
+    public async Task CancellingExitKeepsChangesToADraftPractice()
+    {
+        var dialogs = new Mock<IDialogService>();
+        var navigation = new Mock<INavigationService>();
+        dialogs.SetupSequence(service => service.AskSheetAsync(AppStrings.UnsavedExitTitle, AppStrings.DesignerDiscardChanges,
+            AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, true)).ReturnsAsync(false).ReturnsAsync(true);
+        DesignerViewModel viewModel = CreateViewModel(0, Mock.Of<ITechniqueService>(), Mock.Of<ITechniqueMessenger>(),
+            navigation.Object, Options.Create(new AppSettings()), dialogs.Object);
+        viewModel.Actions = "My step";
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.Finish);
+
+        Assert.Equal("My step", viewModel.Actions);
+        navigation.Verify(service => service.GoBackAsync(), Times.Never);
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.Finish);
+
+        navigation.Verify(service => service.GoBackAsync(), Times.Once);
+    }
+
     private static DesignerViewModel CreateViewModel(
         long techniqueId,
         ITechniqueService techniqueService,
         ITechniqueMessenger messenger,
         INavigationService navigation,
-        IOptions<AppSettings> settings) =>
+        IOptions<AppSettings> settings,
+        IDialogService? dialogs = null) =>
         new(
             techniqueId,
             techniqueService,
@@ -202,7 +225,8 @@ public sealed class DesignerViewModelTests
             Mock.Of<IToastService>(),
             NullLogger<DesignerViewModel>.Instance,
             settings,
-            navigation);
+            navigation,
+            dialogs ?? Mock.Of<IDialogService>());
 }
 
 public sealed class DesignerTechniqueOperationsTests

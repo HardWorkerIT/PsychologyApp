@@ -82,7 +82,7 @@ public sealed class JournalOverviewViewModel : BaseViewModel
                 return;
             }
 
-            _journalScreenCoordinator.OpenEditorDayAsync(day.Value, _navigationService).FireAndForget();
+            _journalScreenCoordinator.ReturnToEditorAsync(day.Value, _navigationService).FireAndForget();
         });
 
         RangeFilters =

@@ -96,16 +96,7 @@
                 BodyText="{Binding SubmitText}"
                 TapCommand="{Binding SubmitCommand}"
                 IsEnabled="{Binding CanSubmit}"
-                Variant="Primary">
-                <ui:ButtonView.Triggers>
-                    <DataTrigger
-                        TargetType="ui:ButtonView"
-                        Binding="{Binding ShowOpenHelpNow}"
-                        Value="True">
-                        <Setter Property="Variant" Value="Secondary" />
-                    </DataTrigger>
-                </ui:ButtonView.Triggers>
-            </ui:ButtonView>
+                Variant="{Binding SubmitVariant}" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

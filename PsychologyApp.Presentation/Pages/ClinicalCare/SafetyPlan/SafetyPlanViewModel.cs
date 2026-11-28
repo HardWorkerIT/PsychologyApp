@@ -3,6 +3,8 @@ using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -20,9 +22,10 @@ public sealed class SafetyPlanContactItem
 {
     public required string Name { get; init; }
     public required string Phone { get; init; }
-    public required ICommand CallCommand { get; init; }
+    public ICommand? CallCommand { get; init; }
+    public bool CanCall => CallCommand is not null;
     public required ICommand DeleteCommand { get; init; }
-    public string CallText => AppStrings.SafetyPlanCallAction;
+    public string ContactDescription => CanCall ? $"{AppStrings.SafetyPlanCallAction}. {Name}. {Phone}" : Name;
     public string DeleteText => AppStrings.Remove;
 }
 
@@ -30,6 +33,8 @@ public sealed class SafetyPlanViewModel : BaseViewModel
 {
     private readonly INavigationService _navigationService;
     private readonly IClinicalCareService _clinicalCareService;
+    private readonly IDialogService _dialogs;
+    private readonly IAppClipboardService _clipboard;
     private readonly SemaphoreSlim _editGate = new(1, 1);
     private Task? _loadTask;
     private bool _isLoading = true;
@@ -73,11 +78,15 @@ public sealed class SafetyPlanViewModel : BaseViewModel
 
     public SafetyPlanViewModel(
         INavigationService navigationService,
-        IClinicalCareService clinicalCareService)
+        IClinicalCareService clinicalCareService,
+        IDialogService dialogs,
+        IAppClipboardService clipboard)
     {
         BindNavigation(navigationService);
         _navigationService = navigationService;
         _clinicalCareService = clinicalCareService;
+        _dialogs = dialogs;
+        _clipboard = clipboard;
 
         BackCommand = new AsyncCommand(() => _navigationService.GoBackAsync());
         AddWarningSignCommand = new AsyncCommand(() => AddTextAsync(WarningSigns, () => NewWarningSignText, value => NewWarningSignText = value, nameof(NewWarningSignText)));
@@ -167,7 +176,7 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         {
             Name = name,
             Phone = phone,
-            CallCommand = new AsyncCommand(() => DialAsync(phone)),
+            CallCommand = LooksLikePhoneNumber(phone) ? new AsyncCommand(() => DialAsync(phone)) : null,
             DeleteCommand = new AsyncCommand(() => RemoveContactAsync(item!))
         };
         return item;
@@ -203,8 +212,9 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         string phoneDraft = NewContactPhone;
         string name = nameDraft.Trim();
         string phone = phoneDraft.Trim();
-        if (name.Length == 0 && phone.Length == 0)
+        if (!LooksLikePhoneNumber(phone))
         {
+            await _dialogs.ShowAsync(ContactsTitle, AppStrings.SafetyPlanContactPhoneInvalid);
             return;
         }
 
@@ -278,27 +288,23 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         await _clinicalCareService.SaveSafetyPlanAsync(plan);
     }
 
-    private static async Task DialAsync(string number)
+    private static bool LooksLikePhoneNumber(string value)
     {
-        if (string.IsNullOrWhiteSpace(number))
+        string digitsAndSeparators = value.StartsWith('+') ? value[1..] : value;
+        return digitsAndSeparators.Any(char.IsAsciiDigit) && digitsAndSeparators.All(character =>
+            char.IsAsciiDigit(character) || char.IsWhiteSpace(character) || character is '-' or '(' or ')' or '.');
+    }
+
+    private async Task DialAsync(string number)
+    {
+        if (await PhoneCall.TryDialAsync(number))
         {
             return;
         }
 
-        try
+        if (await _dialogs.AskAsync(null, AppStrings.CrisisDialUnavailable(number), AppStrings.DonateCopyNumber, AppStrings.Cancel))
         {
-            if (PhoneDialer.Default.IsSupported)
-            {
-                PhoneDialer.Default.Open(number);
-                return;
-            }
-
-            await Launcher.Default.OpenAsync($"tel:{number}");
-        }
-        catch (Exception bestEffortError)
-        {
-            // Best-effort dial.
-            BestEffort.Report(bestEffortError);
+            await _clipboard.CopyWithFeedbackAsync(number, AppStrings.QuoteCopied);
         }
     }
 }

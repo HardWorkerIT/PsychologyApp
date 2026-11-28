@@ -20,6 +20,7 @@ public static class ChatQuickReplyKinds
     public const string Emotion = "emotion";
     public const string Act = "act";
     public const string Recap = "recap";
+    public const string CrisisHelp = "crisis-help";
 }
 
 public sealed class ChatMessageDTO

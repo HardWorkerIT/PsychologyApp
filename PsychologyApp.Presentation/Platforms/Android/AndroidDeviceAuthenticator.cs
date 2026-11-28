@@ -14,6 +14,28 @@ namespace PsychologyApp.Presentation.Platforms.Android;
 /// </summary>
 public sealed class AndroidDeviceAuthenticator(ILogger<AndroidDeviceAuthenticator> logger) : IDeviceAuthenticator
 {
+    public bool CanOpenSecuritySettings => OperatingSystem.IsAndroidVersionAtLeast(29);
+
+    public Task<bool> TryOpenSecuritySettingsAsync()
+    {
+        if (!CanOpenSecuritySettings || Platform.CurrentActivity is not Activity activity)
+        {
+            return Task.FromResult(false);
+        }
+
+        try
+        {
+            using var intent = new Intent(global::Android.Provider.Settings.ActionSecuritySettings);
+            activity.StartActivity(intent);
+            return Task.FromResult(true);
+        }
+        catch (ActivityNotFoundException ex)
+        {
+            logger.LogWarning(ex, "Device security settings are unavailable");
+            return Task.FromResult(false);
+        }
+    }
+
     public DeviceUnlockAvailability Availability
     {
         get

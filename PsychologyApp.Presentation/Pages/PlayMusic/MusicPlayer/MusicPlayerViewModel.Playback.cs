@@ -6,6 +6,13 @@ namespace PsychologyApp.Presentation.Pages.PlayMusic.MusicPlayer;
 public partial class MusicPlayerViewModel
 {
     private CancellationTokenSource? _pendingPlayback;
+    private bool _playbackFailed;
+
+    public bool PlaybackFailed
+    {
+        get => _playbackFailed;
+        private set => SetProperty(ref _playbackFailed, value);
+    }
 
     public void UpdatePlaybackProgressFromService() =>
         ApplyProgress(_playbackPresenter.CreateProgress(_playbackService.Position, _playbackService.Duration));
@@ -22,6 +29,7 @@ public partial class MusicPlayerViewModel
         using CancellationTokenSource playback = new();
         _pendingPlayback = playback;
         ActiveTrack = item;
+        PlaybackFailed = false;
         IsBuffering = true;
 
         try
@@ -30,6 +38,7 @@ public partial class MusicPlayerViewModel
             if (ReferenceEquals(_pendingPlayback, playback))
             {
                 SetPlaybackState(started);
+                PlaybackFailed = !started && !playback.IsCancellationRequested;
                 if (started)
                 {
                     RefreshCacheFlags();
@@ -72,6 +81,7 @@ public partial class MusicPlayerViewModel
         _pendingPlayback = null;
         playback?.Cancel();
         IsBuffering = false;
+        PlaybackFailed = false;
         SetPlaybackState(false);
     }
 

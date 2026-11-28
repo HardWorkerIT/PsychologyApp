@@ -21,12 +21,7 @@ public partial class AppDialogPopup : Popup
         _input = input;
         if (input is not null)
         {
-            Microsoft.Maui.Devices.DisplayInfo display = Microsoft.Maui.Devices.DeviceDisplay.MainDisplayInfo;
-            double screenWidthDp = display.Width / Math.Max(1d, display.Density);
-            DialogCardHost.Margin = new Thickness(16, 24);
             DialogCardHost.HorizontalOptions = LayoutOptions.Fill;
-            DialogCard.MaximumWidthRequest = 320;
-            DialogCard.WidthRequest = Math.Min(320d, Math.Max(280d, screenWidthDp - 32d));
             DialogCard.HorizontalOptions = LayoutOptions.Fill;
 
             InputBorder.IsVisible = true;
@@ -34,8 +29,6 @@ public partial class AppDialogPopup : Popup
             InputEntry.Placeholder = input.Placeholder;
             InputEntry.Text = input.InitialText;
             InputEntry.MaxLength = input.MaxLength;
-            AcceptLabel.LineBreakMode = LineBreakMode.NoWrap;
-            CancelLabel.LineBreakMode = LineBreakMode.NoWrap;
         }
 
         if (string.IsNullOrWhiteSpace(title))
@@ -75,6 +68,16 @@ public partial class AppDialogPopup : Popup
 
     private void OnLoaded(object? sender, EventArgs e)
     {
+        if (Microsoft.Maui.Controls.Application.Current?.Windows.FirstOrDefault() is { Height: > 0, Width: > 0 } window)
+        {
+            // Cap the scroll area independently so short dialogs shrink to their content.
+            MessageScroll.MaximumHeightRequest = Math.Max(1, Math.Min(420, window.Height * 0.55));
+            if (_input is not null)
+            {
+                DialogCard.WidthRequest = Math.Min(320, Math.Max(1, window.Width - DialogCardHost.Margin.HorizontalThickness));
+            }
+        }
+
         UiAnimations.AnimateAlertPopInAsync(DialogCardHost).FireAndForget();
         // A text to edit gets the keyboard at once, the cursor after the current text; a secret waits for a tap, as before.
         if (_input is { IsPassword: false })

@@ -72,6 +72,35 @@ public sealed class TechniqueSessionCompletionServiceTests
         navigation.Verify(n => n.GoToPracticeCompletionAsync(3, "Paper", 42L), Times.Once);
     }
 
+    [Fact]
+    public async Task AFailedCompletionKeepsTheCurrentAnswersForRetryWithoutReadingAnOlderDraft()
+    {
+        const string currentAnswers = "{\"Fields\":{\"0\":\"current answer\"}}";
+        var progress = new Mock<IUserProgressService>();
+        var navigation = new Mock<INavigationService>();
+        var completion = new PracticeSessionCompletionState();
+        var service = CreateService();
+        progress.SetupSequence(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Storage unavailable"))
+            .ReturnsAsync(42L);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), "Paper", 42L)).ReturnsAsync(NavigationRunStatus.Completed);
+
+        Task CompleteAsync() => service.CompleteStandardSessionAsync(progress.Object, navigation.Object, "Paper", "Practice",
+            "Paper", DateTime.UtcNow, completion, sessionPayloadJson: currentAnswers);
+
+        await Assert.ThrowsAsync<IOException>(CompleteAsync);
+        Assert.False(completion.HasSavedResult);
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>()), Times.Never);
+
+        await CompleteAsync();
+
+        Assert.True(completion.HasSavedResult);
+        progress.Verify(p => p.GetSessionDraftAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        progress.Verify(p => p.RecordSessionOutcomeAsync(It.Is<SessionOutcomeRequest>(request =>
+            request.PayloadJson == currentAnswers && request.DeleteDraft), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), "Paper", 42L), Times.Once);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -175,6 +204,42 @@ public sealed class TechniqueSessionCompletionServiceTests
 
 public sealed class PracticeCompletionViewModelSafetyTests
 {
+    [Fact]
+    public async Task TensionRatingKeepsTheLatestChoiceAndCanRetryAFailedWrite()
+    {
+        var outcome = new TaskCompletionSource<SessionResultDTO?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var firstWrite = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var latestWrite = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var progress = new Mock<IUserProgressService>();
+        progress.Setup(p => p.GetSessionResultAsync(42, It.IsAny<CancellationToken>())).Returns(outcome.Task);
+        progress.Setup(p => p.GetRecentMoodsAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        progress.Setup(p => p.UpdateSessionResultPostIntensityAsync(42, 8, It.IsAny<CancellationToken>())).Returns(firstWrite.Task);
+        progress.SetupSequence(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()))
+            .Returns(latestWrite.Task)
+            .Returns(Task.CompletedTask);
+        var resolver = new NextPracticeResolver(progress.Object, Mock.Of<IUserPreferencesStore>(),
+            Mock.Of<ITechniqueRecommendationService>(), new TechniqueCatalogGateway(Mock.Of<ITechniqueCatalogService>()),
+            Mock.Of<IClinicalCareService>());
+        var viewModel = new PracticeCompletionViewModel(Mock.Of<INavigationService>(), progress.Object, resolver,
+            Mock.Of<ICrisisDetector>(), Mock.Of<IDonationSupportService>(), 1, sessionResultId: 42);
+
+        viewModel.PostIntensityText = "8";
+        viewModel.PostIntensityText = "3";
+        progress.Verify(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()), Times.Never);
+        outcome.SetResult(new SessionResultDTO { PreIntensity = 9, PostIntensity = 8 });
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => viewModel.HasSudsDelta);
+        Assert.Equal("3", viewModel.PostIntensityText);
+
+        firstWrite.SetResult();
+        latestWrite.SetException(new IOException("Storage unavailable"));
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => viewModel.HasPostIntensitySaveError);
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.RetryPostIntensityCommand);
+
+        Assert.False(viewModel.HasPostIntensitySaveError);
+        Assert.Equal("3", viewModel.PostIntensityText);
+        progress.Verify(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

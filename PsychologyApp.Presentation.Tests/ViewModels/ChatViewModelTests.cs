@@ -23,14 +23,15 @@ public sealed class ChatViewModelTests
     private readonly Mock<INavigationService> _navigation = new();
     private readonly Mock<IDialogService> _dialogs = new();
 
-    private ChatViewModel Create(long? sessionId = 5)
+    private ChatViewModel Create(long? sessionId = 5, string? opener = null)
     {
         Mock<IChatLanguageProvider> language = new();
         language.SetupGet(l => l.IsEnglish).Returns(false);
         _navigation.Setup(n => n.GoToCrisisHubAsync()).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoToTechniqueAsync(It.IsAny<TechniqueId>())).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoToTestsTabAsync()).Returns(Task.CompletedTask);
-        return new ChatViewModel(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId, _dialogs.Object);
+        return new ChatViewModel(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId, _dialogs.Object,
+            new KeywordCrisisDetector(), opener: opener);
     }
 
     [Fact]
@@ -169,8 +170,7 @@ public sealed class ChatViewModelTests
             .ReturnsAsync(new ChatTurnResult(new ChatSessionDTO { Id = 5, Title = "New" }, [], null));
         History(Message(ChatRole.Companion, "hi", Now));
         _chat.Setup(c => c.SendTextAsync(5, "I can't fall asleep", It.IsAny<CancellationToken>())).ReturnsAsync(Turn(null, "Let's look at it"));
-        Mock<IChatLanguageProvider> language = new();
-        ChatViewModel viewModel = new(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId: null, dialogs: _dialogs.Object, opener: "I can't fall asleep");
+        ChatViewModel viewModel = Create(sessionId: null, opener: "I can't fall asleep");
 
         await viewModel.OnAppearedAsync();
         await viewModel.OnAppearedAsync();
@@ -178,6 +178,52 @@ public sealed class ChatViewModelTests
         _chat.Verify(c => c.SendTextAsync(5, "I can't fall asleep", It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal(["hi", "I can't fall asleep", "Let's look at it"], viewModel.Messages.Select(m => m.Text));
         Assert.True(viewModel.Messages[1].IsUser);
+    }
+
+    [Fact]
+    public async Task AFailedReadyMessageRemainsInTheComposer()
+    {
+        History(Message(ChatRole.Companion, "hi", Now));
+        const string opener = "I can't fall asleep";
+        _chat.Setup(c => c.SendTextAsync(5, opener, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Write unavailable"));
+        ChatViewModel vm = Create(opener: opener);
+
+        await vm.OnAppearedAsync();
+
+        Assert.Equal(opener, vm.DraftText);
+        Assert.True(vm.CanSend);
+        Assert.DoesNotContain(vm.Messages, message => message.IsUser);
+    }
+
+    [Fact]
+    public async Task ARecognizedCrisisOpensHelpBeforeStorageAndKeepsTheActionAfterReopening()
+    {
+        History(Message(ChatRole.Companion, "hi", Now));
+        const string input = "Я не хочу жить";
+        var write = new TaskCompletionSource<ChatTurnResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _chat.Setup(c => c.SendTextAsync(5, input, It.IsAny<CancellationToken>())).Returns(write.Task);
+        ChatViewModel vm = Create();
+        await vm.LoadAsync();
+        vm.DraftText = input;
+
+        vm.SendCommand.Execute(null);
+
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Once);
+        Assert.False(write.Task.IsCompleted);
+        Assert.True(vm.Messages[^1].HasCrisisHelp);
+        Assert.False(vm.IsTyping);
+
+        var helpMessage = Message(ChatRole.Companion, "Help", Now, new ChatQuickReply(ChatQuickReplyKinds.CrisisHelp, ""));
+        write.SetResult(new(new ChatSessionDTO { Id = 5 }, [Message(ChatRole.User, input, Now), helpMessage],
+            new DialogueAction(DialogueActionKind.OpenCrisisHub)));
+        await VmTestHelpers.WaitUntilAsync(() => vm.DraftText.Length == 0);
+        History(helpMessage, Message(ChatRole.User, "Later message", Now));
+        ChatViewModel reopened = Create();
+        await reopened.LoadAsync();
+
+        reopened.Messages[0].CrisisHelpCommand!.Execute(null);
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Exactly(2));
     }
 
     [Fact]
@@ -242,17 +288,17 @@ public sealed class ChatViewModelTests
         _chat.Setup(c => c.SendTextAsync(5, It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns((long _, string _, CancellationToken _) => response.Task);
         ChatViewModel viewModel = Create();
-        List<bool> sendAvailability = [];
+        await viewModel.LoadAsync();
+        viewModel.DraftText = "first";
+        TaskCompletionSource sendEnabled = new(TaskCreationOptions.RunContinuationsAsynchronously);
         viewModel.PropertyChanged += (_, args) =>
         {
-            if (args.PropertyName == nameof(viewModel.CanSend))
+            if (args.PropertyName == nameof(viewModel.CanSend) && viewModel.CanSend)
             {
-                sendAvailability.Add(viewModel.CanSend);
+                sendEnabled.TrySetResult();
             }
         };
-        await viewModel.LoadAsync();
 
-        viewModel.DraftText = "first";
         viewModel.SendCommand.Execute(null);
         await VmTestHelpers.WaitUntilAsync(() => viewModel.IsTyping, 5000);
         viewModel.DraftText = "second";
@@ -260,12 +306,12 @@ public sealed class ChatViewModelTests
         Assert.False(viewModel.CanSend);
 
         response.SetResult(Turn(null, "I'm listening"));
-        await VmTestHelpers.WaitUntilAsync(() => viewModel.Messages.Any(message => message.Text == "I'm listening") && !viewModel.IsTyping, 5000);
+        await sendEnabled.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
+        Assert.Contains(viewModel.Messages, message => message.Text == "I'm listening");
+        Assert.False(viewModel.IsTyping);
         Assert.Equal("second", viewModel.DraftText);
         Assert.True(viewModel.CanSend);
-        Assert.Contains(false, sendAvailability);
-        Assert.True(sendAvailability[^1]);
     }
 
     [Fact]
@@ -407,6 +453,9 @@ public sealed class ChatViewModelTests
         viewModel.DraftText = "first message";
         viewModel.SendCommand.Execute(null);
         await VmTestHelpers.WaitUntilAsync(() => viewModel.IsTyping);
+        Assert.Equal("first message", viewModel.DraftText);
+        await viewModel.ConfirmBackAsync(_dialogs.Object);
+        _navigation.Verify(n => n.GoBackAsync(), Times.Never);
         viewModel.DraftText = "another detail";
         pendingSend.SetException(new IOException("Database unavailable"));
         await VmTestHelpers.WaitUntilAsync(() => viewModel.CanSend);

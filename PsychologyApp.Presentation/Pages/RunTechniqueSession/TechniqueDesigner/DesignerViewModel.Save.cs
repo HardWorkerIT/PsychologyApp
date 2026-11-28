@@ -38,7 +38,8 @@ public partial class DesignerViewModel
     {
         try
         {
-            TechniqueDTO item = _techniqueOperations.BuildDto(_techniqueId, CaptureForm());
+            DesignerTechniqueForm form = CaptureForm();
+            TechniqueDTO item = _techniqueOperations.BuildDto(_techniqueId, form);
 
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateSmallTimeoutSource(_settings);
             await _techniqueOperations.UpdateAsync(
@@ -47,6 +48,7 @@ public partial class DesignerViewModel
                 _techniqueMessenger,
                 timeoutSource.Token);
 
+            _savedForm = form;
             await GoToRootAsync();
         }
         catch (Exception e)
@@ -60,7 +62,8 @@ public partial class DesignerViewModel
     {
         try
         {
-            TechniqueDTO technique = _techniqueOperations.BuildDto(-1, CaptureForm());
+            DesignerTechniqueForm form = CaptureForm();
+            TechniqueDTO technique = _techniqueOperations.BuildDto(-1, form);
 
             using CancellationTokenSource timeoutSource = OperationCancellation.CreateSmallTimeoutSource(_settings);
             await _techniqueOperations.AddAsync(
@@ -69,6 +72,7 @@ public partial class DesignerViewModel
                 _techniqueMessenger,
                 timeoutSource.Token);
 
+            _savedForm = form;
             await GoBackAsync();
         }
         catch (Exception e)

@@ -1,4 +1,5 @@
 using PsychologyApp.Application.Chat;
+using PsychologyApp.Application.Conversation;
 using PsychologyApp.Application.Practice;
 using PsychologyApp.Presentation.Pages.Chat.ChatInfo;
 using PsychologyApp.Presentation.Pages.Chat.ChatList;
@@ -22,6 +23,7 @@ public interface IChatViewModelFactory
 
 public sealed class ChatViewModelFactory(
     IChatService chat,
+    ICrisisDetector crisisDetector,
     IChatLanguageProvider language,
     IDialogService dialogs,
     TimeProvider time,
@@ -29,7 +31,7 @@ public sealed class ChatViewModelFactory(
     ITechniqueCatalogService? techniqueCatalog = null) : IChatViewModelFactory
 {
     public ChatViewModel CreateConversation(long? sessionId, INavigation navigation, string? topic = null, string? opener = null) =>
-        new(chat, Resolve(navigation), language, time, sessionId, dialogs, topic, opener);
+        new(chat, Resolve(navigation), language, time, sessionId, dialogs, crisisDetector, topic, opener);
 
     public ChatListViewModel CreateList(INavigation navigation) =>
         new(chat, Resolve(navigation), language, dialogs, time);

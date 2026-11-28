@@ -452,6 +452,27 @@ public sealed class DataBackupViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task ChangingTheAppPinUsesThePinPromptForEachStepAndSavesTheConfirmedPin()
+    {
+        _appLock.SetupGet(l => l.IsEnabled).Returns(true);
+        _appPinCredentialStore.Setup(store => store.VerifyPinAsync("123456"))
+            .ReturnsAsync(new AppPinVerificationResult(true, TimeSpan.Zero));
+        _dialogs.SetupSequence(d => d.PromptPinSheetAsync(AppStrings.AppLockChangePin,
+                It.IsAny<string>(), AppStrings.AppLockPinPrompt, It.IsAny<string>(), AppStrings.Cancel))
+            .ReturnsAsync("123456")
+            .ReturnsAsync("654321")
+            .ReturnsAsync("654321");
+
+        await VmTestHelpers.RunAsync(Create().ChangeAppPinCommand);
+
+        _dialogs.Verify(d => d.PromptPinSheetAsync(AppStrings.AppLockChangePin,
+            It.IsAny<string>(), AppStrings.AppLockPinPrompt, It.IsAny<string>(), AppStrings.Cancel), Times.Exactly(3));
+        _dialogs.Verify(d => d.PromptPasswordSheetAsync(
+            It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _appPinCredentialStore.Verify(store => store.SetPinAsync("654321"), Times.Once);
+    }
+
+    [Fact]
     public void TheSwitchIsHiddenWhereThePhoneCannotShowTheSystemPrompt()
     {
         _appLock.SetupGet(l => l.Availability).Returns(DeviceUnlockAvailability.Unsupported);

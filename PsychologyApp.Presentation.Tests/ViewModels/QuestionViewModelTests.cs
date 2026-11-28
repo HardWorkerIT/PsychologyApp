@@ -4,6 +4,7 @@ using Moq;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Tests;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Features.RunTests;
 using PsychologyApp.Presentation.Pages.RunTests.Question;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
@@ -17,6 +18,7 @@ namespace PsychologyApp.Presentation.Tests.ViewModels;
 public sealed class QuestionViewModelTests
 {
     private readonly Mock<IToastService> _toasts = new();
+    private readonly Mock<IDialogService> _dialogs = new();
     private readonly Mock<INavigationService> _navigation = new();
     private readonly Mock<IUserProgressService> _progress = new();
     private readonly Mock<IQuestionnaireScoringService> _scoring = new();
@@ -42,8 +44,7 @@ public sealed class QuestionViewModelTests
             .ReturnsAsync((QuestionnaireResultDetail?)null);
         _progress.Setup(p => p.SaveTestResultAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoToTestResultAsync(
-                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-                It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()))
+                It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NavigationRunStatus.Completed);
         _navigation.Setup(n => n.GoBackAsync()).Returns(Task.CompletedTask);
 
@@ -54,7 +55,7 @@ public sealed class QuestionViewModelTests
             score => $"score {score}",
             single,
             _toasts.Object,
-            new Mock<IDialogService>().Object,
+            _dialogs.Object,
             _navigation.Object,
             _progress.Object,
             submission,
@@ -139,10 +140,12 @@ public sealed class QuestionViewModelTests
         _progress.Verify(p => p.SaveTestResultAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
 
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
+        await VmTestHelpers.RunAsync(viewModel.NextCommand);
 
         _progress.Verify(p => p.SaveTestResultAsync("gad7", 7, It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
         _navigation.Verify(n => n.GoToTestResultAsync(
-            7, It.IsAny<string>(), It.IsAny<TechniqueId?>(), "gad7", It.IsAny<string?>(), "gad7", It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Once);
+            It.Is<TestResultInfo>(result => result.Score == 7 && result.TestId == "gad7" && result.AnalyzerId == "gad7"),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -157,7 +160,13 @@ public sealed class QuestionViewModelTests
         Pick(viewModel, 1);
 
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
+        Assert.True(viewModel.ResultNavigationFailed);
+        Assert.False(viewModel.CanEditAnswers);
+        Pick(viewModel, 0);
+        Assert.True(viewModel.CurrentAnswers[1].IsSelected);
+        Assert.Equal(AppStrings.TestsOpenSavedResult, viewModel.NextButtonText);
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
+        Assert.False(viewModel.ResultNavigationFailed);
 
         _progress.Verify(p => p.SaveTestResultAsync("gad7", 7, It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
         _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Exactly(2));
@@ -175,7 +184,9 @@ public sealed class QuestionViewModelTests
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
 
         _navigation.Verify(n => n.GoToTestResultAsync(
-            7, It.IsAny<string>(), TechniqueId.Spin, "gad7", It.IsAny<string?>(), "gad7", It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Once);
+            It.Is<TestResultInfo>(result => result.Score == 7 && result.RecommendedTechnique == TechniqueId.Spin
+                && result.TestId == "gad7" && result.AnalyzerId == "gad7"),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -209,8 +220,26 @@ public sealed class QuestionViewModelTests
         Assert.Equal(0, viewModel.CurrentIndex);
         Assert.True(viewModel.CurrentAnswers[1].IsSelected);
 
+        _dialogs.Setup(dialogs => dialogs.AskSheetAsync(AppStrings.UnsavedExitTitle, AppStrings.TestsDiscardAnswers,
+            AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, true)).ReturnsAsync(true);
         await VmTestHelpers.RunAsync(viewModel.PreviousCommand);
         _navigation.Verify(n => n.GoBackAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task CancellingExitKeepsTheAnswersInTheQuestionnaire()
+    {
+        QuestionViewModel viewModel = Create(1);
+        _dialogs.Setup(dialogs => dialogs.AskSheetAsync(AppStrings.UnsavedExitTitle, AppStrings.TestsDiscardAnswers,
+            AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, true)).ReturnsAsync(false);
+        Pick(viewModel, 1);
+
+        await VmTestHelpers.RunAsync(viewModel.BackCommand);
+
+        Assert.True(viewModel.CurrentAnswers[1].IsSelected);
+        _navigation.Verify(n => n.GoBackAsync(), Times.Never);
+        _dialogs.Verify(dialogs => dialogs.AskSheetAsync(AppStrings.UnsavedExitTitle, AppStrings.TestsDiscardAnswers,
+            AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, true), Times.Once);
     }
 
     [Fact]
@@ -226,13 +255,11 @@ public sealed class QuestionViewModelTests
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
         _toasts.Verify(t => t.LongToast(AppStrings.TestsResultSaveFailedMessage, It.IsAny<AppToastKind>()), Times.Once);
         _navigation.Verify(n => n.GoToTestResultAsync(
-            It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-            It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Never);
+            It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()), Times.Never);
 
         await VmTestHelpers.RunAsync(viewModel.NextCommand);
         _navigation.Verify(n => n.GoToTestResultAsync(
-            7, It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-            It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Once);
+            It.Is<TestResultInfo>(result => result.Score == 7), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

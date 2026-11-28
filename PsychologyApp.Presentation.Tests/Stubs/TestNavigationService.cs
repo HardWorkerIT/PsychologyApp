@@ -60,13 +60,7 @@ public class TestNavigationService(INavigation navigation) : INavigationService
     public Task GoToTestsListAsync() => Task.CompletedTask;
 
     public virtual Task<NavigationRunStatus> GoToTestResultAsync(
-        int score,
-        string interpretation,
-        TechniqueId? recommendedTechnique = null,
-        string? testId = null,
-        string? interpretationDetail = null,
-        string? analyzerId = null,
-        QuestionnaireResultDetail? detail = null,
+        TestResultInfo result,
         CancellationToken cancellationToken = default) =>
         Task.FromResult(NavigationRunStatus.Completed);
 

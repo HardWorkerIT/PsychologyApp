@@ -193,7 +193,7 @@ public sealed class DataBackupViewModel : BaseViewModel
             return;
         }
 
-        string? currentPin = await _dialogService.PromptPasswordSheetAsync(
+        string? currentPin = await _dialogService.PromptPinSheetAsync(
             AppStrings.AppLockChangePin,
             AppStrings.AppLockPinPrompt,
             AppStrings.AppLockPinPrompt,
@@ -217,7 +217,7 @@ public sealed class DataBackupViewModel : BaseViewModel
                 return;
             }
 
-            string? newPin = await _dialogService.PromptPasswordSheetAsync(
+            string? newPin = await _dialogService.PromptPinSheetAsync(
                 AppStrings.AppLockChangePin,
                 AppStrings.AppLockSetupLead,
                 AppStrings.AppLockPinPrompt,
@@ -234,7 +234,7 @@ public sealed class DataBackupViewModel : BaseViewModel
                 return;
             }
 
-            string? confirmation = await _dialogService.PromptPasswordSheetAsync(
+            string? confirmation = await _dialogService.PromptPinSheetAsync(
                 AppStrings.AppLockChangePin,
                 AppStrings.AppLockConfirmLead,
                 AppStrings.AppLockPinPrompt,

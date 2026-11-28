@@ -74,8 +74,9 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         int? yearCursor = null,
         JournalCheckInSlot editorSlot = JournalCheckInSlot.Morning,
         JournalCalendarScale calendarScale = JournalCalendarScale.Week,
-        CancellationToken cancellationToken = default) =>
-        Task.Run(() => LoadCoreAsync(rangeDays, filterDay, editorDay, weekStripEnd, monthCursor, yearCursor, editorSlot, calendarScale, cancellationToken), cancellationToken);
+        CancellationToken cancellationToken = default,
+        long? selectedEntryId = null) =>
+        Task.Run(() => LoadCoreAsync(rangeDays, filterDay, editorDay, weekStripEnd, monthCursor, yearCursor, editorSlot, calendarScale, selectedEntryId, cancellationToken), cancellationToken);
 
     private async Task<JournalMoodSnapshot> LoadCoreAsync(
         int rangeDays = 7,
@@ -86,6 +87,7 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
         int? yearCursor = null,
         JournalCheckInSlot editorSlot = JournalCheckInSlot.Morning,
         JournalCalendarScale calendarScale = JournalCalendarScale.Week,
+        long? selectedEntryId = null,
         CancellationToken cancellationToken = default)
     {
         int clampedRange = Math.Clamp(rangeDays, 1, 90);
@@ -197,6 +199,13 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             ? JournalCalendarBuilder.BuildYearCells(resolvedYear, today, moodLevelByDay, selectedCalendarDay)
             : [];
 
+        if (selectedEntryId is not null && !editorDayEntries.Any(entry => entry.MoodEntryId == selectedEntryId))
+        {
+            DateTime dayStart = resolvedEditorDay.ToDateTime(TimeOnly.MinValue).ToUniversalTime();
+            DateTime dayEnd = resolvedEditorDay.AddDays(1).ToDateTime(TimeOnly.MinValue).ToUniversalTime();
+            editorDayEntries = [.. await userProgressService.GetMoodsAsync(dayStart, dayEnd, TimelineLimit, cancellationToken)];
+        }
+
         (MoodEntryDTO? morningEntry, MoodEntryDTO? eveningEntry) = SplitDaySlots(editorDayEntries);
         JournalCheckInSlot resolvedSlot = JournalEditorSlotResolver.Resolve(
             editorSlot,
@@ -204,6 +213,26 @@ public sealed class JournalMoodLoader(IUserProgressService userProgressService, 
             eveningEntry,
             DateTime.Now.Hour);
         MoodEntryDTO? editorEntry = resolvedSlot == JournalCheckInSlot.Morning ? morningEntry : eveningEntry;
+        if (selectedEntryId is long id)
+        {
+            editorEntry = editorDayEntries.Find(entry => entry.MoodEntryId == id);
+            if (editorEntry is not null)
+            {
+                // For an older day with extra check-ins, keep the exact timeline entry in the editor.
+                resolvedSlot = id == morningEntry?.MoodEntryId ? JournalCheckInSlot.Morning
+                    : id == eveningEntry?.MoodEntryId ? JournalCheckInSlot.Evening
+                    : MoodCheckInSlotPolicy.IsMorningLocalHour(editorEntry.RecordedAt.ToLocalTime().Hour)
+                        ? JournalCheckInSlot.Morning : JournalCheckInSlot.Evening;
+                if (resolvedSlot == JournalCheckInSlot.Morning)
+                {
+                    morningEntry = editorEntry;
+                }
+                else
+                {
+                    eveningEntry = editorEntry;
+                }
+            }
+        }
 
         long? editorEntryId = editorEntry?.MoodEntryId;
         string? editorNote = string.IsNullOrWhiteSpace(editorEntry?.Note) ? null : editorEntry!.Note!.Trim();

@@ -18,4 +18,14 @@ public partial class CourseDayPage : ContentPage
         base.OnDisappearing();
         _viewModel.StopListening();
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (_viewModel.BackCommand.CanExecute(null))
+        {
+            _viewModel.BackCommand.Execute(null);
+        }
+
+        return true;
+    }
 }

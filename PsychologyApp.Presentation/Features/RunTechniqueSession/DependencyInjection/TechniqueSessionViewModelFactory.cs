@@ -60,6 +60,7 @@ public sealed class DesignerViewModelFactory(
     IToastService toastService,
     ILogger<DesignerViewModel> logger,
     IOptions<AppSettings> settings,
+    PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService dialogService,
     Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, IDesignerViewModelFactory
 {
     public DesignerViewModel Create(ContentPage page, long techniqueId) =>
@@ -71,7 +72,8 @@ public sealed class DesignerViewModelFactory(
             toastService,
             logger,
             settings,
-            ResolveNavigation(navigationServiceFactory, page));
+            ResolveNavigation(navigationServiceFactory, page),
+            dialogService);
 }
 
 public interface ITechniqueViewModelFactory

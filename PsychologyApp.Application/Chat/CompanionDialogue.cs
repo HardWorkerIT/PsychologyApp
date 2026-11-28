@@ -154,6 +154,11 @@ public sealed partial class CompanionDialogue(
     /// </summary>
     public CompanionReply Respond(CompanionState state, CompanionInput input)
     {
+        if (IsCrisisInput(crisisDetector, english, input))
+        {
+            return CrisisReply(state);
+        }
+
         CompanionState clean = state with { NamePending = false };
         CompanionReply reply = Compute(clean, state.NamePending, input);
         for (int attempt = 0; attempt < MaxRedraws && RepeatsRecent(reply, state); attempt++)
@@ -322,11 +327,6 @@ public sealed partial class CompanionDialogue(
         }
 
         text = FixWrongLayout(text);
-
-        if (crisisDetector.IsCrisis(text))
-        {
-            return CrisisReply(previous);
-        }
 
         // An explicit interrupt or question about the current prompt must not be recorded as an exercise answer.
         if (previous.Protocol is not null)
@@ -511,7 +511,6 @@ public sealed partial class CompanionDialogue(
         }
 
         bool meaningful = analyzer.Analyze(mapped).Emotion != CompanionEmotion.Unknown
-            || crisisDetector.IsCrisis(mapped)
             || UtteranceClassifier.Classify(mapped, hasFeeling: false) is not (Utterance.Statement or Utterance.Noise);
         return meaningful ? mapped : text;
     }
@@ -1288,34 +1287,23 @@ public sealed partial class CompanionDialogue(
         return AskNextQuestion(state, messages, emotion, theme);
     }
 
-    // Used when a repository failure prevents the normal dialogue from responding.
-    internal bool IsCrisisInput(CompanionInput input) => input switch
+    // Both the screen and the service can recognize urgent input without consulting stored history.
+    public static bool IsCrisisInput(ICrisisDetector detector, bool english, CompanionInput input) => input switch
     {
-        CompanionInput.FreeText text => IsCrisisWithoutAnalysis(text.Value.Trim()),
+        CompanionInput.FreeText text => IsCrisisWithoutAnalysis(detector, english, text.Value.Trim()),
         CompanionInput.QuickReply { Reply.Kind: ChatQuickReplyKinds.Act, Reply.Payload: { } payload }
-            when payload.StartsWith("say:", StringComparison.Ordinal) => IsCrisisWithoutAnalysis(payload["say:".Length..]),
+            when payload.StartsWith("say:", StringComparison.Ordinal) => IsCrisisWithoutAnalysis(detector, english, payload["say:".Length..]),
         _ => false
     };
 
-    private bool IsCrisisWithoutAnalysis(string text) =>
-        crisisDetector.IsCrisis(text)
-        || (!english && UtteranceClassifier.TryFixLayout(text) is { } mapped && crisisDetector.IsCrisis(mapped));
-
-    private bool IsCrisisQuickReply(ChatQuickReply reply) =>
-        reply.Kind == ChatQuickReplyKinds.Act
-        && reply.Payload is { } payload
-        && payload.StartsWith("say:", StringComparison.Ordinal)
-        && crisisDetector.IsCrisis(FixWrongLayout(payload["say:".Length..]));
+    private static bool IsCrisisWithoutAnalysis(ICrisisDetector detector, bool english, string text) =>
+        detector.IsCrisis(text)
+        || (!english && UtteranceClassifier.TryFixLayout(text) is { } mapped && detector.IsCrisis(mapped));
 
     private CompanionReply RespondToQuickReply(CompanionState state, ChatQuickReply reply)
     {
         CompanionEmotion emotion = ParseEmotion(state.Emotion);
         CompanionTheme? theme = ParseTheme(state.Theme);
-
-        if (IsCrisisQuickReply(reply))
-        {
-            return CrisisReply(state);
-        }
 
         switch (reply.Kind)
         {
@@ -1835,10 +1823,12 @@ public sealed partial class CompanionDialogue(
         CompanionTheme? theme) =>
         new(messages, quick, null, state, emotion, theme);
 
-    private CompanionReply CrisisReply(CompanionState state)
+    internal CompanionReply CrisisReply(CompanionState state)
     {
         CompanionState interrupted = EndProtocol(state) with
         {
+            NamePending = false,
+            UnclearStreak = 0,
             AwaitingPostPracticeRating = false,
             PendingPractice = null,
             PendingPracticeStartedUtc = null,

@@ -25,6 +25,7 @@ public partial class TestResultViewModel : BaseViewModel
 
     public ICommand TryTechniqueCommand { get; }
     public ICommand ExplorePracticeCommand { get; }
+    public ICommand OpenUrgentHelpCommand { get; }
     public ICommand RetakeCommand { get; }
     public ICommand BackToListCommand { get; }
 
@@ -49,8 +50,9 @@ public partial class TestResultViewModel : BaseViewModel
 
         BindNavigation(navigationService);
 
-        TryTechniqueCommand = new AsyncCommand(TryTechniqueAsync, () => _result.RecommendedTechnique is not null);
-        ExplorePracticeCommand = new AsyncCommand(ExplorePracticeAsync, () => _result.RecommendedTechnique is null);
+        TryTechniqueCommand = new AsyncCommand(TryTechniqueAsync, () => !NeedsUrgentHelp && _result.RecommendedTechnique is not null);
+        ExplorePracticeCommand = new AsyncCommand(ExplorePracticeAsync, () => !NeedsUrgentHelp && _result.RecommendedTechnique is null);
+        OpenUrgentHelpCommand = new AsyncCommand(navigationService.GoToCrisisHubAsync);
         RetakeCommand = new AsyncCommand(RetakeAsync, () => !string.IsNullOrWhiteSpace(_result.TestId));
         BackToListCommand = new AsyncCommand(GoToRootAsync);
 
@@ -68,7 +70,8 @@ public partial class TestResultViewModel : BaseViewModel
     public string CompletedAtText { get; private set; } = string.Empty;
     public bool HasCompletedAt { get; private set; }
     public bool HasRecommendation { get; private set; }
-    public bool ShowExplorePractice => !HasRecommendation;
+    public bool NeedsUrgentHelp => _result.NeedsUrgentHelp;
+    public bool ShowExplorePractice => !NeedsUrgentHelp && !HasRecommendation;
     public string TrendText { get; private set; } = string.Empty;
     public TestTrendKind TrendKind { get; private set; } = TestTrendKind.None;
     public bool HasTrendBadge { get; private set; }
@@ -90,7 +93,7 @@ public partial class TestResultViewModel : BaseViewModel
         HasInterpretationDetail = !string.IsNullOrWhiteSpace(InterpretationDetail);
         CompletedAtText = AppStrings.TestCompletedAt(_result.CompletedAtUtc.ToLocalTime().ToString("g"));
         HasCompletedAt = true;
-        HasRecommendation = _result.RecommendedTechnique is not null;
+        HasRecommendation = !NeedsUrgentHelp && _result.RecommendedTechnique is not null;
         ApplyAnswerDetail(_result.Detail);
         RefreshRecommendationCopy();
 

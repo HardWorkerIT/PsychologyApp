@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>Failed to save the test result. Please try again.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Open result</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>The result was saved, but the result screen could not be opened. Tap Finish again.</value>
+    <value>Your result was saved, but the next screen could not be opened.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>Couldn&apos;t save this entry. Your text is still here.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>Couldn&apos;t save your answers. Tap Finish again.</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>Leave this lesson?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Your note for this lesson will be lost.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>Technique not found.</value>
@@ -1154,6 +1169,21 @@
   <data name="LoadFailed" xml:space="preserve">
     <value>Failed to load</value>
   </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>Leave without saving?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Your answers to this questionnaire will be lost.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>Your changes to this practice will be lost.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Enter a phone number you can call.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>Could not play the audio.</value>
+  </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>Try again?</value>
   </data>
@@ -1541,7 +1571,7 @@
     <value>Emergency call</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>Forgot your PIN? Verify your identity</value>
+    <value>Forgot PIN?</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>Create a new app PIN.</value>
@@ -3353,6 +3383,9 @@
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Stop</value>
   </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>Couldn't save the read status.</value>
+  </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Read</value>
   </data>
@@ -4664,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Discard and leave</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>The dialer could not open. Dial {0} manually or copy the number.</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>AI chat</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>Could not save the tension rating.</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>Could not access the protected PIN. Try again or recover your PIN.</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>The PIN is still unavailable.</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>Open security settings</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>Screen lock recovery is unavailable on this device.</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>Checking your PIN…</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>You can enter your PIN again.</value>
+  </data>
 </root>
