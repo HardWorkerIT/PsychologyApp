@@ -203,12 +203,12 @@ public static partial class ArticleContent
                     "Safety nets and avoidance",
                     4,
                     [
-                        P("The strongest thing keeping anxiety going is avoidance. It can be open (I don't go, I don't call) or hidden: safety nets people use to get through a situation."),
-                        Check("Do I have safety nets?", 2, "You have several safety nets. They keep the fear going: the brain thinks things turned out fine only thanks to them. Try giving one up in an easy situation.", "You have few safety nets. Also notice what you avoid completely.", "I carry a pill, water or a charged phone \"just in case\"", "I only go to hard places with someone", "I sit close to the exit", "I distract myself so as not to notice the anxiety", "I check or ask again many times"),
-                        P("The way out is to meet what you fear gradually and do without safety nets. Then the brain learns from experience that the feared thing doesn't happen or is bearable.")
+                        P("Avoidance can contribute to anxiety, especially when it increasingly gets in the way of important activities. It can be obvious (not going or calling) or less visible, such as repeated checking, seeking reassurance, or planning every detail."),
+                        Check("Which ways of coping do I notice?", 2, "You noticed several ways of coping. This is not a score or diagnosis. If they limit your life, discuss gradual, safe changes with a professional. Keep prescribed medication and necessary safety measures.", "Few or no items is also common. These habits depend on the situation and do not indicate a diagnosis.", "I check repeatedly or ask others to reassure me", "I rehearse phrases for a long time or try to plan every outcome", "I distract myself so I do not notice anxiety", "In a situation I consider safe, I leave as soon as anxiety rises"),
+                        P("If an everyday situation is safe and you want to try, choose a small, voluntary step. Go at your own pace and pause if needed. Do not stop prescribed medication or give up necessary safety measures. If anxiety greatly limits daily life, discuss a plan with a professional.")
                     ],
-                    "Make a list of three to five situations you avoid, from the easiest to the hardest.",
-                    "Which situation from the list are you ready to try first?"),
+                    "List up to five everyday situations you tend to avoid. Leave out real danger or traumatic memories; you can skip this step.",
+                    "If there is a safe situation, what small step would you like to consider or discuss with a professional?"),
                 new(
                     "The first step and a plan",
                     4,

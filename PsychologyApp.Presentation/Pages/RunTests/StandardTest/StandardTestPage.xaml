@@ -52,23 +52,12 @@
                         FirstPassTitle="{Binding StandardFirstPassTitle}"
                         SecondPassTitle="{Binding StandardSecondPassTitle}"
                         FirstPassColors="{Binding StandardFirstPassDisplay}"
-                        SecondPassColors="{Binding StandardSecondPassDisplay}"
-                        HasRecommendation="{Binding HasRecommendation}"
-                        RecommendationHint="{Binding RecommendationHint}"
-                        RecommendationTitle="{Binding RecommendationTitle}"
-                        RecommendationSubtitle="{Binding RecommendationSubtitle}"
-                        RecommendationTheme="{Binding RecommendationTheme}"
-                        RecommendationIconName="{Binding RecommendationIconName}"
-                        TryTechniqueCommand="{Binding TryTechniqueCommand}" />
+                        SecondPassColors="{Binding StandardSecondPassDisplay}" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="2" IsVisible="{Binding IsFinish}" Spacing="{StaticResource CompactSpacing}">
-            <ui:ButtonView
-                IsVisible="{Binding HasRecommendation}"
-                BodyText="{Binding TryTechniqueButtonText}"
-                TapCommand="{Binding TryTechniqueCommand}" />
             <ui:ButtonView
                 BodyText="{Binding RestartButtonText}"
                 TapCommand="{Binding Restart}" />

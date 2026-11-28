@@ -109,4 +109,7 @@ public static partial class ArticleIds
     public const string SupportPlan = "support-plan";
     public const string CrisisSteps = "crisis-steps";
     public const string MedicationWithClinician = "medication-with-clinician";
+    public const string DeadlineConversation = "deadline-conversation";
+    public const string DifficultMessageReply = "difficult-message-reply";
+    public const string CancelPlans = "cancel-plans";
 }

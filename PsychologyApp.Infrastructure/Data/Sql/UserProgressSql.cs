@@ -286,6 +286,14 @@ internal static class UserProgressSql
         LIMIT @limit;
         """;
 
+    internal const string SelectRecentPracticeIntensity = """
+        SELECT ItemKey, PreIntensity, PostIntensity
+        FROM SessionResults
+        WHERE CompletedAt < @beforeUtc
+        ORDER BY CompletedAt DESC, SessionResultId DESC
+        LIMIT @limit;
+        """;
+
     internal const string SelectLastSessionNoteForItem = """
         SELECT Note
         FROM SessionResults

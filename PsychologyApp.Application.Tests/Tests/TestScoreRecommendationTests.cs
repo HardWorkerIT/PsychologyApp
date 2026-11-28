@@ -24,8 +24,8 @@ public sealed class TestScoreRecommendationTests
     [Theory]
     [InlineData("beck", 10, TechniqueId.ThoughtDefusion)]
     [InlineData("beck", 5, TechniqueId.ThoughtRecord)]
-    [InlineData("heck_hess", 25, TechniqueId.CheckTheFacts)]
-    [InlineData("haer", 29, TechniqueId.SmallStep)]
+    [InlineData("heck_hess", 25, null)]
+    [InlineData("haer", 29, null)]
     [InlineData("gad7", 10, TechniqueId.CheckTheFacts)]
     [InlineData("gad7", 5, TechniqueId.Breathing)]
     [InlineData("k10", 22, TechniqueId.Grounding)]
@@ -68,7 +68,7 @@ public sealed class TestScoreRecommendationTests
     [InlineData("pcl5", 33, TechniqueId.Grounding)]
     [InlineData("pcl5", 15, TechniqueId.Grounding)]
     [InlineData("unknown", 0, TechniqueId.Grounding)]
-    public void RecommendTechnique_ReturnsExpected(string analyzerId, int score, TechniqueId expected)
+    public void RecommendTechnique_ReturnsExpected(string analyzerId, int score, TechniqueId? expected)
     {
         TechniqueId? result = TestScoreRecommendation.RecommendTechnique(analyzerId, score);
 

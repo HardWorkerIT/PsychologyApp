@@ -29,7 +29,14 @@ public partial class BalloonPopView : ContentView
         StartButton.TapCommand = new Command(StartRound);
         PopButton.BodyText = AppStrings.BalloonsPopOne;
         PopButton.TapCommand = new Command(PopNext);
-        Unloaded += (_, _) => StopTimer();
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(IsVisible) && !IsVisible)
+            {
+                ResetRound();
+            }
+        };
+        Unloaded += (_, _) => ResetRound();
         ShowIdle();
     }
 
@@ -149,6 +156,15 @@ public partial class BalloonPopView : ContentView
             _timer.Stop();
             _timer.Tick -= OnTick;
         }
+    }
+
+    private void ResetRound()
+    {
+        StopTimer();
+        _drawable.Round = null;
+        _still = false;
+        ShowIdle();
+        Field.Invalidate();
     }
 
     private sealed class BalloonDrawable : IDrawable

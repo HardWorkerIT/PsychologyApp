@@ -76,6 +76,26 @@ public static class ConversationScenarioParser
         return Build(dto);
     }
 
+    /// <summary>Reads a packaged UTF-8 asset without materializing its full text. The caller owns the stream.</summary>
+    public static async ValueTask<ParseResult<ConversationScenario>> ParseUtf8Async(
+        Stream stream,
+        CancellationToken cancellationToken = default)
+    {
+        JsonConversationScenario? dto;
+        try
+        {
+            dto = await JsonSerializer.DeserializeAsync(
+                stream, ConversationJsonSerializerContext.Default.JsonConversationScenario, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (JsonException ex)
+        {
+            return ParseResult<ConversationScenario>.Failure($"Invalid JSON: {ex.Message}");
+        }
+
+        return dto is null ? ParseResult<ConversationScenario>.Failure("Scenario is empty.") : Build(dto);
+    }
+
     private static ParseResult<ConversationScenario> Build(JsonConversationScenario dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Id))
@@ -88,7 +108,7 @@ public static class ConversationScenarioParser
             return Fail("Scenario 'start' and 'crisis' node ids are required.");
         }
 
-        Dictionary<string, ConversationNode> nodes = new(StringComparer.Ordinal);
+        Dictionary<string, ConversationNode> nodes = new(dto.Nodes?.Count ?? 0, StringComparer.Ordinal);
         foreach (JsonConversationNode? raw in dto.Nodes ?? [])
         {
             if (raw is null)

@@ -5,6 +5,8 @@ namespace PsychologyApp.Presentation.Pages.PlayMusic.MusicPlayer;
 
 public partial class MusicPlayerViewModel
 {
+    private CancellationTokenSource? _pendingPlayback;
+
     public void UpdatePlaybackProgressFromService() =>
         ApplyProgress(_playbackPresenter.CreateProgress(_playbackService.Position, _playbackService.Duration));
 
@@ -16,17 +18,32 @@ public partial class MusicPlayerViewModel
 
     private async Task PlayTrackAsync(Audio item)
     {
+        _pendingPlayback?.Cancel();
+        using CancellationTokenSource playback = new();
+        _pendingPlayback = playback;
         ActiveTrack = item;
         IsBuffering = true;
 
-        bool started = await _playbackPresenter.PlayTrackAsync(_playbackService, item);
-        SetPlaybackState(started);
-        if (started)
+        try
         {
-            RefreshCacheFlags();
+            bool started = await _playbackPresenter.PlayTrackAsync(_playbackService, item, playback.Token);
+            if (ReferenceEquals(_pendingPlayback, playback))
+            {
+                SetPlaybackState(started);
+                if (started)
+                {
+                    RefreshCacheFlags();
+                }
+            }
         }
-
-        IsBuffering = false;
+        finally
+        {
+            if (ReferenceEquals(_pendingPlayback, playback))
+            {
+                _pendingPlayback = null;
+                IsBuffering = false;
+            }
+        }
     }
 
     private async Task PlayNextAsync()
@@ -48,6 +65,15 @@ public partial class MusicPlayerViewModel
     }
 
     public void SetPlaybackState(bool isPlaying) => IsPlaying = isPlaying;
+
+    internal void OnPageLeaving()
+    {
+        CancellationTokenSource? playback = _pendingPlayback;
+        _pendingPlayback = null;
+        playback?.Cancel();
+        IsBuffering = false;
+        SetPlaybackState(false);
+    }
 
     public void SyncActiveTrackFlags() =>
         MusicPlaybackPresenter.SyncActiveTrackFlags(AllItems, ActiveTrack, IsPlaying);

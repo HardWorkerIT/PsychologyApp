@@ -41,7 +41,8 @@ public sealed class MusicPlaybackPresenter(
         int step) =>
         playlistPresenter.ResolveAdjacentTrack(activeTrack, filteredItems, allItems, step);
 
-    public async Task<bool> PlayTrackAsync(IAudioPlaybackService playbackService, Audio item)
+    public async Task<bool> PlayTrackAsync(
+        IAudioPlaybackService playbackService, Audio item, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(item.URL))
         {
@@ -50,8 +51,12 @@ public sealed class MusicPlaybackPresenter(
 
         try
         {
-            await playbackService.PlayAsync(item.URL);
+            await playbackService.PlayAsync(item.URL, cancellationToken);
             return playbackService.IsPlaying;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return false;
         }
         catch (Exception ex)
         {

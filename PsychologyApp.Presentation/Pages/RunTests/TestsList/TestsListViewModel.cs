@@ -20,6 +20,7 @@ public partial class TestsListViewModel : BaseViewModel
     private readonly IOptions<AppSettings> _settings;
     private readonly ILogger<TestsListViewModel> _logger;
     private readonly SemaphoreSlim _initGate = new(1, 1);
+    private readonly SemaphoreSlim _progressGate = new(1, 1);
     private bool _initialized;
     private CancellationTokenSource? _initCts;
     private string _loadedLanguageKey = AppStrings.Language;
@@ -57,6 +58,11 @@ public partial class TestsListViewModel : BaseViewModel
 
         return InitializeAsync();
     }
+
+    public Task RefreshOnAppearingAsync() =>
+        _initialized && !IsFail
+            ? RefreshProgressAsync(TestItemCollection.ToArray())
+            : EnsureInitializedAsync();
 
     private async Task InitializeAsync()
     {

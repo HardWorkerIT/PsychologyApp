@@ -76,6 +76,45 @@ public sealed class TestsListViewModelTests
     }
 
     [Fact]
+    public async Task ReturningToCatalogShowsTheFirstSavedResultOnTheSameCard()
+    {
+        var progress = new Mock<IUserProgressService>();
+        Dictionary<string, TestResultDTO> latest = [];
+        progress.Setup(p => p.GetLatestTestResultsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => latest);
+        progress.Setup(p => p.GetTestResultCountsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<string, int>());
+        var catalog = new FakeTestCatalogService().WithCatalog(new TestDefinition
+        {
+            TestId = "sample",
+            Title = "Sample",
+            Subtitle = "Sample test",
+            Description = "Sample description",
+            Comment = "Sample comment",
+            Algorithm = [],
+            Kind = TestKind.Questionnaire,
+            Questions = []
+        });
+        TestsListViewModel viewModel = new(
+            new TestNavigationService(new Mock<INavigation>().Object),
+            TestDatabaseReady.CreateSignaled(),
+            TestRunTestHelpers.CreateTestsListLoader(progress.Object, catalog),
+            Options.Create(new AppSettings()),
+            NullLogger<TestsListViewModel>.Instance);
+
+        await viewModel.RefreshOnAppearingAsync();
+        TestItem card = Assert.Single(viewModel.TestItemCollection);
+        Assert.False(card.HasLastResult);
+
+        latest["sample"] = new TestResultDTO { TestId = "sample", Summary = "First result", CompletedAt = DateTime.UtcNow };
+        await viewModel.RefreshOnAppearingAsync();
+
+        Assert.Same(card, Assert.Single(viewModel.TestItemCollection));
+        Assert.True(card.HasLastResult);
+        Assert.Contains("First result", card.LastResultSummary);
+    }
+
+    [Fact]
     public async Task A_short_luscher_result_reads_in_the_current_language()
     {
         // Saved in Chinese, the summary stayed "蓝色 / 红色" on the German list; the stored colour codes are named anew.

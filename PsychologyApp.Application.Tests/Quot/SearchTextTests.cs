@@ -29,4 +29,15 @@ public class SearchTextTests
 
     [Fact]
     public void Every_word_of_the_query_must_be_present() => Assert.False(Finds("Тревога", "тревога работа"));
+
+    [Theory]
+    [InlineData(256)]
+    [InlineData(257)]
+    public void Case_and_yo_match_on_both_sides_of_the_buffer_limit(int length)
+    {
+        string quote = new string('x', length - 4) + " ЁЖ!";
+
+        Assert.True(Finds(quote, "еж"));
+        Assert.False(Finds(quote, "еж я"));
+    }
 }

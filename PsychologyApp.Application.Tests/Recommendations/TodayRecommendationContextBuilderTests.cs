@@ -21,16 +21,16 @@ public sealed class TodayRecommendationContextBuilderTests
             .ReturnsAsync((IReadOnlyDictionary<string, DateTime>)new Dictionary<string, DateTime>());
         progress.Setup(p => p.GetSessionDraftKeysAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((IReadOnlySet<string>)new HashSet<string>());
-        progress.Setup(p => p.GetRecentSessionResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<SessionResultDTO>)
+        progress.Setup(p => p.GetRecentPracticeIntensityAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((IReadOnlyList<PracticeIntensitySample>)
             [
-                new SessionResultDTO { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 8, PostIntensity = 3 },
-                new SessionResultDTO { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 6, PostIntensity = 4 },
-                new SessionResultDTO { ItemKey = TechniqueId.Grounding.ToString(), PreIntensity = 7, PostIntensity = 6 },
+                new PracticeIntensitySample { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 8, PostIntensity = 3 },
+                new PracticeIntensitySample { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 6, PostIntensity = 4 },
+                new PracticeIntensitySample { ItemKey = TechniqueId.Grounding.ToString(), PreIntensity = 7, PostIntensity = 6 },
                 // Only one session: not enough to trust the average yet.
-                new SessionResultDTO { ItemKey = TechniqueId.SmallStep.ToString(), PreIntensity = 9, PostIntensity = 1 },
+                new PracticeIntensitySample { ItemKey = TechniqueId.SmallStep.ToString(), PreIntensity = 9, PostIntensity = 1 },
                 // Missing a reading: excluded from the average entirely.
-                new SessionResultDTO { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 5, PostIntensity = null },
+                new PracticeIntensitySample { ItemKey = TechniqueId.Breathing.ToString(), PreIntensity = 5, PostIntensity = null },
             ]);
 
         TodayRecommendationContext context = await TodayRecommendationContextBuilder.BuildAsync(
@@ -41,5 +41,7 @@ public sealed class TodayRecommendationContextBuilderTests
         Assert.Equal(3.5, context.TechniqueEffectiveness![TechniqueId.Breathing.ToString()]);
         Assert.False(context.TechniqueEffectiveness.ContainsKey(TechniqueId.Grounding.ToString()));
         Assert.False(context.TechniqueEffectiveness.ContainsKey(TechniqueId.SmallStep.ToString()));
+        progress.Verify(p => p.GetRecentPracticeIntensityAsync(300, It.IsAny<CancellationToken>()), Times.Once);
+        progress.Verify(p => p.GetRecentSessionResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

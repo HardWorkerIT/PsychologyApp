@@ -27,6 +27,14 @@ public static class CompanionActContent
         ? "That's okay; you don't have to know right now. We can leave that question aside. Tell me what feels most important in this situation at the moment."
         : "Ничего страшного, не обязательно знать это сейчас. Можем пока оставить этот вопрос. Расскажите, что в этой ситуации сейчас важнее всего для вас.";
 
+    public static string DontKnowWhileListening(bool english) => english
+        ? "That's okay. You don't have to know yet. We can leave the question here; I'll listen whenever you want to continue."
+        : "Ничего страшного. Не обязательно знать ответ сейчас. Можем оставить этот вопрос — я выслушаю, когда захотите продолжить.";
+
+    public static string UnsureAboutFeelings(bool english) => english
+        ? "You don't have to find a name for the feeling right now. If you want, we can start with what happened or what feels hardest."
+        : "Не обязательно сразу подбирать название чувству. Если хотите, можем начать с того, что произошло или что сейчас труднее всего.";
+
     public static string Refuses(bool english) => english
         ? "Okay, we won't go into that. We can do something for the body, talk about something else, or stop here."
         : "Хорошо, не будем об этом. Можем сделать что-то для тела, поговорить о другом или остановиться.";
@@ -72,19 +80,41 @@ public static class CompanionActContent
         ? $"There seem to be several feelings at once here: {CompanionContent.EmotionName(first, true)} and {CompanionContent.EmotionName(second, true)}. That happens when a situation touches a lot at once."
         : $"Здесь, похоже, сразу несколько чувств: {CompanionContent.EmotionName(first, false)} и {CompanionContent.EmotionName(second, false)}. Так бывает, когда ситуация задевает многое сразу.";
 
-    public static string Recap(CompanionEmotion emotion, CompanionTheme? theme, CompanionPerson? person, int? first, int? last, bool english)
+    public static string Recap(
+        CompanionEmotion emotion,
+        CompanionTheme? theme,
+        CompanionPerson? person,
+        int? first,
+        int? last,
+        bool english,
+        string? earlierContext = null,
+        string? goal = null)
     {
         string feeling = CompanionContent.EmotionName(emotion, english);
         string about = person is { } p ? PersonName(p, english) : theme is { } t ? CompanionContent.ThemeName(t, english) : string.Empty;
         string tension = first is { } f && last is { } l && f != l
             ? (english ? $" The tension went from {f} to {l}." : $" Напряжение изменилось с {f} до {l}.")
             : last is { } only ? (english ? $" The tension is about {only}." : $" Напряжение около {only}.") : string.Empty;
+        string context = string.IsNullOrWhiteSpace(earlierContext)
+            ? string.Empty
+            : english ? $" Earlier you mentioned: “{earlierContext}”." : $" Раньше вы упоминали: «{earlierContext}».";
+        string supportGoal = goal switch
+        {
+            CompanionCaseContent.GoalVent => english ? " You wanted to get it off your chest first." : " Вы хотели сначала просто выговориться.",
+            CompanionCaseContent.GoalUnderstand => english ? " You wanted help making sense of what happened." : " Вы хотели разобраться в происходящем.",
+            CompanionCaseContent.GoalCalm => english ? " You wanted help finding a little calm." : " Вам хотелось немного успокоиться.",
+            _ => string.Empty
+        };
 
         string subject = about.Length == 0 ? feeling : $"{feeling} ({(english ? "about" : "тема")}: {about})";
         return english
-            ? $"Let me sum up: the main thing right now is {subject}.{tension} Is that right?"
-            : $"Если подытожить: главное сейчас — {subject}.{tension} Верно ли это?";
+            ? $"Let me sum up: the main thing right now is {subject}.{tension}{supportGoal}{context} Is that right?"
+            : $"Если подытожить: главное сейчас — {subject}.{tension}{supportGoal}{context} Верно ли это?";
     }
+
+    public static string ContextRecall(string quote, bool english) => english
+        ? $"Earlier you said: “{quote}”. Is this the same situation coming back?"
+        : $"Раньше вы говорили: «{quote}». Это снова та же ситуация?";
 
     public static IReadOnlyList<ChatQuickReply> RecapReplies(bool english) =>
     [

@@ -13,16 +13,18 @@ namespace PsychologyApp.Presentation.Pages.ReadArticles.Articles;
 /// <summary>A section of the list: a group of a grouped CollectionView is a list of its items with a header.</summary>
 public sealed class ArticleSectionItem : List<LibraryCardItem>
 {
-    public ArticleSectionItem(string title, IEnumerable<LibraryCardItem> articles, bool hasAdPlacement = false)
+    public ArticleSectionItem(string title, IEnumerable<LibraryCardItem> articles, bool hasAdPlacement = false, bool hasBannerPlacement = false)
         : base(articles)
     {
         Title = title;
         HasAdPlacement = hasAdPlacement;
+        HasBannerPlacement = hasBannerPlacement;
     }
 
     public string Title { get; }
     public bool HasTitle => Title.Length > 0;
     public bool HasAdPlacement { get; }
+    public bool HasBannerPlacement { get; }
 }
 
 /// <summary>
@@ -36,6 +38,7 @@ public sealed class ArticlesViewModel : BaseViewModel
     private const string AllKey = "all";
     private const string SavedKey = "saved";
     private const int ArticlesBeforeAdCount = 6;
+    private const int ArticlesBeforeBannerCount = 2;
 
     private readonly INavigationService _navigation;
     private readonly IReadingService _reading;
@@ -43,9 +46,12 @@ public sealed class ArticlesViewModel : BaseViewModel
     private string _selectedKey = AllKey;
     private string _query = string.Empty;
     private ReadingState _state = new();
+    private bool _readingStateLoaded;
+    private bool _readingStateFailed;
+    private bool _refreshing;
     private IReadOnlyList<ArticleSectionItem> _sections = [];
     private string _emptyText = string.Empty;
-    private bool? _lastCanPlaceArticleAd;
+    private (bool Banner, bool Native)? _lastArticleAdEligibility;
 
     public ArticlesViewModel(INavigationService navigation, IReadingService reading, IDatabaseReadySignal databaseReady)
     {
@@ -58,7 +64,7 @@ public sealed class ArticlesViewModel : BaseViewModel
         {
             string selectedKey = string.IsNullOrEmpty(key) ? AllKey : key;
             UiHaptics.Tick();
-            if (selectedKey == _selectedKey && _lastCanPlaceArticleAd == CanPlaceArticleAd)
+            if (selectedKey == _selectedKey && _lastArticleAdEligibility == ArticleAdEligibility)
             {
                 return;
             }
@@ -70,7 +76,9 @@ public sealed class ArticlesViewModel : BaseViewModel
             }
 
             Load();
+            NotifySavedState();
         });
+        RetrySavedCommand = new AsyncCommand(RefreshAsync);
         BuildFilters();
         Load();
     }
@@ -78,24 +86,45 @@ public sealed class ArticlesViewModel : BaseViewModel
     public string PageTitle => AppStrings.ShellTabArticlesShort;
     public string SearchPlaceholder => AppStrings.ArticlesSearchPlaceholder;
     public ICommand SelectFilterCommand { get; }
+    public ICommand RetrySavedCommand { get; }
+    public bool ShowSavedLoading => _selectedKey == SavedKey && !_readingStateLoaded && !_readingStateFailed;
+    public bool ShowSavedLoadFailure => _selectedKey == SavedKey && _readingStateFailed;
+    public string SavedLoadingText => AppStrings.SkeletonLoadingLabel;
+    public string SavedLoadFailedText => AppStrings.LoadFailed;
+    public string RetrySavedText => AppStrings.RetryQuestion;
 
     internal bool IsBrowsingGeneralCatalog => _selectedKey == AllKey && string.IsNullOrWhiteSpace(_query);
 
-    private bool CanPlaceArticleAd => OperatingSystem.IsAndroid()
-        && string.IsNullOrWhiteSpace(_query)
-        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
+    private (bool Banner, bool Native) ArticleAdEligibility
+    {
+        get
+        {
+            if (!OperatingSystem.IsAndroid() || !string.IsNullOrWhiteSpace(_query))
+            {
+                return (false, false);
+            }
+
+            UserPreferencesState preferences = UserPreferencesStore.Load();
+            return (AdvertisingConfiguration.CanRequestBannerAd(preferences), AdvertisingConfiguration.CanRequestNativeAd(preferences));
+        }
+    }
 
     public bool IsArticleAdEligible => Sections.Any(section => section.HasAdPlacement)
-        && CanPlaceArticleAd;
+        && OperatingSystem.IsAndroid()
+        && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
+    public bool IsArticleBannerEligible => Sections.Any(section => section.HasBannerPlacement)
+        && OperatingSystem.IsAndroid()
+        && AdvertisingConfiguration.CanRequestBannerAd(UserPreferencesStore.Load());
 
     public void RefreshAdEligibility()
     {
-        if (_lastCanPlaceArticleAd != CanPlaceArticleAd)
+        if (_lastArticleAdEligibility != ArticleAdEligibility)
         {
             Load();
         }
 
         OnPropertyChanged(nameof(IsArticleAdEligible));
+        OnPropertyChanged(nameof(IsArticleBannerEligible));
     }
 
     public ObservableCollection<FilterChipTabItem> Filters { get; } = [];
@@ -110,6 +139,7 @@ public sealed class ArticlesViewModel : BaseViewModel
             {
                 Load();
                 OnPropertyChanged(nameof(IsArticleAdEligible));
+                OnPropertyChanged(nameof(IsArticleBannerEligible));
             }
         }
     }
@@ -122,6 +152,7 @@ public sealed class ArticlesViewModel : BaseViewModel
             if (SetProperty(ref _sections, value))
             {
                 OnPropertyChanged(nameof(IsArticleAdEligible));
+                OnPropertyChanged(nameof(IsArticleBannerEligible));
             }
         }
     }
@@ -143,6 +174,15 @@ public sealed class ArticlesViewModel : BaseViewModel
     /// <summary>Called whenever the page appears: an article read or saved meanwhile changes its marks.</summary>
     public async Task RefreshAsync()
     {
+        if (_refreshing)
+        {
+            return;
+        }
+
+        bool retrying = _readingStateFailed;
+        _refreshing = true;
+        _readingStateFailed = false;
+        NotifySavedState();
         try
         {
             await _databaseReady.WaitAsync();
@@ -150,8 +190,9 @@ public sealed class ArticlesViewModel : BaseViewModel
             await UiThread.RunAsync(() =>
             {
                 // The page appears again after every article: rebuild the list only when a read or saved mark actually changed.
-                bool marksChanged = !state.Read.SequenceEqual(_state.Read) || !state.Saved.SequenceEqual(_state.Saved);
+                bool marksChanged = retrying || !_readingStateLoaded || !state.Read.SequenceEqual(_state.Read) || !state.Saved.SequenceEqual(_state.Saved);
                 _state = state;
+                _readingStateLoaded = true;
                 if (marksChanged)
                 {
                     Load();
@@ -160,10 +201,21 @@ public sealed class ArticlesViewModel : BaseViewModel
         }
         catch (Exception loadError)
         {
-            // The articles are in the app; only the read and saved marks are missing.
             BestEffort.Report(loadError);
+            _readingStateFailed = true;
+            if (_selectedKey == SavedKey)
+            {
+                Load();
+            }
+        }
+        finally
+        {
+            _refreshing = false;
+            NotifySavedState();
         }
     }
+
+    private void NotifySavedState() => Notify(nameof(ShowSavedLoading), nameof(ShowSavedLoadFailure));
 
     private static string Language => AppStrings.Language;
 
@@ -181,9 +233,16 @@ public sealed class ArticlesViewModel : BaseViewModel
 
     private void Load()
     {
-        bool canPlaceAd = CanPlaceArticleAd;
-        _lastCanPlaceArticleAd = canPlaceAd;
+        (bool canPlaceBanner, bool canPlaceNative) = ArticleAdEligibility;
+        _lastArticleAdEligibility = (canPlaceBanner, canPlaceNative);
         int queryLength = _query.AsSpan().Trim().Length;
+
+        if (_selectedKey == SavedKey && !_readingStateLoaded)
+        {
+            Sections = [];
+            EmptyText = string.Empty;
+            return;
+        }
 
         if (queryLength >= ArticleSearch.MinQueryLength)
         {
@@ -204,7 +263,7 @@ public sealed class ArticlesViewModel : BaseViewModel
             }
 
             Sections = found.Count == 0 ? [] : [new ArticleSectionItem(string.Empty, found.Select(Card))];
-            EmptyText = found.Count == 0 ? AppStrings.ArticlesNothingFound : string.Empty;
+            EmptyText = found.Count == 0 && !ShowSavedLoadFailure ? AppStrings.ArticlesNothingFound : string.Empty;
             return;
         }
 
@@ -221,7 +280,7 @@ public sealed class ArticlesViewModel : BaseViewModel
             }
             else
             {
-                EmptyText = savedArticles.Count == 0 ? AppStrings.ArticlesNothingSaved : string.Empty;
+                EmptyText = savedArticles.Count == 0 && !ShowSavedLoadFailure ? AppStrings.ArticlesNothingSaved : string.Empty;
             }
 
             return;
@@ -232,7 +291,9 @@ public sealed class ArticlesViewModel : BaseViewModel
             .Where(section => _selectedKey == AllKey || section.Key == _selectedKey)
             .ToList();
         int articleCount = sourceSections.Sum(section => section.Articles.Count);
-        if (!canPlaceAd || articleCount < ArticlesBeforeAdCount)
+        bool placeBanner = canPlaceBanner && articleCount >= ArticlesBeforeBannerCount;
+        bool placeNative = canPlaceNative && articleCount >= ArticlesBeforeAdCount;
+        if (!placeBanner && !placeNative)
         {
             Sections = sourceSections
                 .Select(section => new ArticleSectionItem(section.Title, section.Articles.Select(Card)))
@@ -241,30 +302,32 @@ public sealed class ArticlesViewModel : BaseViewModel
         }
 
         List<ArticleSectionItem> displaySections = [];
-        int articlesUntilAd = ArticlesBeforeAdCount;
-        bool adPlaced = false;
+        int displayedArticleCount = 0;
+        bool bannerPlaced = false;
+        bool nativePlaced = false;
         foreach (ArticleSection section in sourceSections)
         {
-            IReadOnlyList<Article> articles = section.Articles;
-            if (!adPlaced && articles.Count >= articlesUntilAd)
+            int offset = 0;
+            bool titlePending = true;
+            while (offset < section.Articles.Count)
             {
+                int nextPlacement = int.MaxValue;
+                if (placeBanner && !bannerPlaced) nextPlacement = Math.Min(nextPlacement, ArticlesBeforeBannerCount);
+                if (placeNative && !nativePlaced) nextPlacement = Math.Min(nextPlacement, ArticlesBeforeAdCount);
+                int take = Math.Min(section.Articles.Count - offset, Math.Max(1, nextPlacement - displayedArticleCount));
+                int countAfterChunk = displayedArticleCount + take;
+                bool hasBannerPlacement = placeBanner && !bannerPlaced && countAfterChunk == ArticlesBeforeBannerCount;
+                bool hasAdPlacement = placeNative && !nativePlaced && countAfterChunk == ArticlesBeforeAdCount;
                 displaySections.Add(new ArticleSectionItem(
-                    section.Title,
-                    articles.Take(articlesUntilAd).Select(Card),
-                    hasAdPlacement: true));
-                adPlaced = true;
-                if (articles.Count > articlesUntilAd)
-                {
-                    displaySections.Add(new ArticleSectionItem(string.Empty, articles.Skip(articlesUntilAd).Select(Card)));
-                }
-            }
-            else
-            {
-                displaySections.Add(new ArticleSectionItem(section.Title, articles.Select(Card)));
-                if (!adPlaced)
-                {
-                    articlesUntilAd -= articles.Count;
-                }
+                    titlePending ? section.Title : string.Empty,
+                    section.Articles.Skip(offset).Take(take).Select(Card),
+                    hasAdPlacement,
+                    hasBannerPlacement));
+                bannerPlaced |= hasBannerPlacement;
+                nativePlaced |= hasAdPlacement;
+                titlePending = false;
+                offset += take;
+                displayedArticleCount = countAfterChunk;
             }
         }
 
@@ -277,6 +340,6 @@ public sealed class ArticlesViewModel : BaseViewModel
     {
         BuildFilters();
         Load();
-        Notify(nameof(PageTitle), nameof(SearchPlaceholder));
+        Notify(nameof(PageTitle), nameof(SearchPlaceholder), nameof(SavedLoadingText), nameof(SavedLoadFailedText), nameof(RetrySavedText));
     }
 }

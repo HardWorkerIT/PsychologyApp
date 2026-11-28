@@ -11,7 +11,7 @@
 
     <Grid RowDefinitions="*,Auto">
     <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Never">
-        <VerticalStackLayout Margin="{StaticResource LayoutTabPageMarginThickness}" Spacing="{StaticResource LayoutSpacing}">
+        <VerticalStackLayout Margin="20,12,20,20" Spacing="{StaticResource SectionSpacing}">
             <VerticalStackLayout.Behaviors>
                 <behaviors:StaggerChildrenBehavior />
             </VerticalStackLayout.Behaviors>
@@ -25,20 +25,20 @@
                 x:Name="Hero"
                 IsVisible="{Binding Source={x:Reference Root}, Path=HasHero}"
                 Margin="0"
-                Padding="16,14"
+                Padding="16,12"
                 StrokeThickness="0"
                 StrokeShape="{DynamicResource UiCornerRadiusCompactShape}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
                     <Border
                         x:Name="HeroTile"
-                        WidthRequest="56"
-                        HeightRequest="56"
-                        VerticalOptions="Start"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        VerticalOptions="Center"
                         StrokeThickness="0"
-                        StrokeShape="RoundRectangle 18">
+                        StrokeShape="{DynamicResource UiCornerRadiusCompactShape}">
                         <ui:MaterialIconView
                             x:Name="HeroIconView"
-                            IconSize="30"
+                            IconSize="26"
                             HorizontalOptions="Center"
                             VerticalOptions="Center" />
                     </Border>
@@ -57,8 +57,7 @@
             <Border
                 x:Name="StepsSummary"
                 IsVisible="False"
-                Margin="4,0"
-                Padding="12,4"
+                Padding="8,4"
                 MinimumHeightRequest="44"
                 StrokeThickness="0"
                 BackgroundColor="Transparent">
@@ -126,8 +125,15 @@
                     Grid.Column="1"
                     BodyText="{Binding Source={x:Reference Root}, Path=FinishText}"
                     TapCommand="{Binding Source={x:Reference Root}, Path=FinishCommand}"
-                    IsEnabled="{Binding Source={x:Reference Root}, Path=FinishEnabled}"
-                    IsVisible="{Binding Source={x:Reference Root}, Path=FinishEnabled}" />
+                    IsVisible="False" />
+                <ui:ButtonView
+                    x:Name="EarlyFinishButton"
+                    Grid.Column="1"
+                    BodyText="{Binding Source={x:Reference Root}, Path=FinishText}"
+                    TapCommand="{Binding Source={x:Reference Root}, Path=FinishCommand}"
+                    Variant="Secondary"
+                    IsCompact="True"
+                    IsVisible="False" />
             </Grid>
         </VerticalStackLayout>
     </Border>

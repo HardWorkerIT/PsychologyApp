@@ -33,8 +33,10 @@ public sealed class ArticleReaderViewModel : BaseViewModel
         _articleId = articleId;
         BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
         SaveCommand = new AsyncCommand(ToggleSavedAsync);
-        ListenCommand = new AsyncCommand(() => _readAloud.ToggleAsync(_spoken));
-        _readAloud.Changed += () => UiThread.RunAsync(() => Notify(nameof(ListenText), nameof(ListenIcon))).FireAndForget();
+        // This command must remain executable during speech so the same control can stop playback.
+        ListenCommand = new Command(() => _readAloud.ToggleAsync(_spoken).FireAndForget());
+        _readAloud.Changed += () => UiThread.RunAsync(() => Notify(
+            nameof(ListenText), nameof(ListenIcon), nameof(ListenError), nameof(HasListenError))).FireAndForget();
         Load();
         LoadStateAsync().FireAndForget();
     }
@@ -65,6 +67,8 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     public string SaveIcon => _isSaved ? "Bookmarks" : "BookmarkBorder";
     public string ListenText => _readAloud.IsSpeaking ? AppStrings.ArticleStopListening : AppStrings.ArticleListen;
     public string ListenIcon => _readAloud.IsSpeaking ? "StopCircle" : "VolumeUp";
+    public string? ListenError => _readAloud.HasError ? AppStrings.ArticleListenUnavailable : null;
+    public bool HasListenError => _readAloud.HasError;
     public string ReadMarkText => AppStrings.ArticleReadMark;
 
     public bool IsRead
@@ -98,7 +102,7 @@ public sealed class ArticleReaderViewModel : BaseViewModel
         Title = article.Title;
         Summary = article.Summary;
         Blocks = ArticleBlockItems.Build(article.Blocks, _navigation);
-        _spoken = ArticleSpeech.Parts(article.Title, article.Blocks);
+        _spoken = ArticleSpeech.Parts(article.Title, article.Summary, article.Blocks);
     }
 
     private async Task LoadStateAsync()
@@ -125,6 +129,6 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     protected override void RefreshLocalizedProperties()
     {
         Load();
-        Notify(nameof(SaveText), nameof(ListenText), nameof(ReadMarkText));
+        Notify(nameof(SaveText), nameof(ListenText), nameof(ListenError), nameof(ReadMarkText));
     }
 }

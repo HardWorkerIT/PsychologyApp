@@ -171,6 +171,13 @@ public static class CompanionCaseContent
             return yes ? CompanionActContent.RecapYes(english) : CompanionActContent.RecapNo(english);
         }
 
+        if (questionId == "context_recall")
+        {
+            return yes
+                ? (english ? "What feels most important about it now?" : "Что сейчас важнее всего в этой ситуации?")
+                : (english ? "What is different this time?" : "Что в этот раз происходит иначе?");
+        }
+
         if (questionId.StartsWith("e:", StringComparison.Ordinal) && Enum.TryParse(questionId[2..], out CompanionEvent kind) && Enum.IsDefined(kind) && Texts.TryGetValue(kind, out EventText? t))
         {
             // "Yes" to "what worries you most: money, the future or others?" answers nothing: ask for the choice, do not pretend it was understood.
@@ -190,6 +197,11 @@ public static class CompanionCaseContent
     public static string GoalQuestion(bool english) => english
         ? "Before we go on: what do you need most right now: to get it off your chest, to sort things out, or to calm down?"
         : "Прежде чем двигаться дальше: что вам сейчас нужнее: выговориться, разобраться или успокоиться?";
+    public static string AdviceDecisionQuestion(bool english) => english
+        ? "If this is still about the earlier situation, what decision are you weighing now?"
+        : "Если вопрос всё ещё о прежней ситуации, какой выбор вы сейчас обдумываете?";
+
+
 
     public static IReadOnlyList<ChatQuickReply> GoalChips(bool english) =>
     [
@@ -376,6 +388,46 @@ public static class CompanionCaseContent
         string t = text.ToLowerInvariant();
         return PlanPhrases.Any(t.Contains);
     }
+    /// <summary>Reads only clear, leading answers to the saved-plan follow-up; detailed replies stay in the conversation flow.</summary>
+    internal static string? ReadPlanOutcome(string text)
+    {
+        string normalized = text.ToLowerInvariant()
+            .Replace("’", string.Empty, StringComparison.Ordinal)
+            .Replace("'", string.Empty, StringComparison.Ordinal);
+        normalized = string.Concat(normalized.Select(character =>
+            char.IsLetterOrDigit(character) || char.IsWhiteSpace(character) ? character : ' '));
+        normalized = string.Join(' ', normalized.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+
+        if (PlanReplyStartsWith(normalized, "частично", "не до конца", "partly", "partially", "not all the way"))
+        {
+            return "partly";
+        }
+
+        if (PlanReplyStartsWith(
+            normalized,
+            "не получилось", "не вышло", "не удалось", "не смог", "не смогла", "не смогли",
+            "не сделал", "не сделала", "не сделали", "не поговорил", "не поговорила",
+            "не позвонил", "не позвонила", "не написал", "не написала", "нет", "no",
+            "i couldnt", "i could not", "i didnt", "i did not", "it didnt work out",
+            "it did not work out", "wasnt able", "was not able"))
+        {
+            return "no";
+        }
+
+        return PlanReplyStartsWith(
+            normalized,
+            "да", "yes", "получилось", "удалось", "сделал", "сделала", "смог", "смогла", "смогли",
+            "поговорил", "поговорила", "позвонил", "позвонила", "написал", "написала",
+            "i did it", "i managed", "i talked", "i called", "i wrote", "i sent", "i was able",
+            "got it done", "it worked out")
+            ? "done"
+            : null;
+    }
+
+    private static bool PlanReplyStartsWith(string text, params string[] phrases) =>
+        phrases.Any(phrase =>
+            text.Equals(phrase, StringComparison.Ordinal)
+            || text.StartsWith(phrase + " ", StringComparison.Ordinal));
 
     public static string PlanReply(bool english) => english
         ? "That sounds like a real step, and it is yours to take. What would make it a little easier to start?"

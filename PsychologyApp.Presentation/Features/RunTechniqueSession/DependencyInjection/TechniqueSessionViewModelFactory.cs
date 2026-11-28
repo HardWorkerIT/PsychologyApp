@@ -76,9 +76,9 @@ public sealed class DesignerViewModelFactory(
 
 public interface ITechniqueViewModelFactory
 {
-    BaseViewModel Create(TechniqueId techniqueId, INavigation navigation);
+    BaseViewModel Create(TechniqueId techniqueId, NavigationContext context);
 
-    Task<BaseViewModel> CreateAsync(TechniqueId techniqueId, INavigation navigation);
+    Task<BaseViewModel> CreateAsync(TechniqueId techniqueId, NavigationContext context);
 }
 
 public sealed class TechniqueViewModelFactory(
@@ -93,19 +93,32 @@ public sealed class TechniqueViewModelFactory(
     RecentProblemStore recentProblems,
     PsychologyApp.Presentation.Shared.Services.Preferences.ChipUsageStore chipUsage) : ViewModelFactoryBase, ITechniqueViewModelFactory
 {
-    public BaseViewModel Create(TechniqueId techniqueId, INavigation navigation) =>
-        CreateViewModel(techniqueId, navigation);
+    public BaseViewModel Create(TechniqueId techniqueId, NavigationContext context) =>
+        CreateViewModel(techniqueId, context);
 
-    public async Task<BaseViewModel> CreateAsync(TechniqueId techniqueId, INavigation navigation)
+    public async Task<BaseViewModel> CreateAsync(TechniqueId techniqueId, NavigationContext context)
     {
-        BaseViewModel viewModel = CreateViewModel(techniqueId, navigation);
+        BaseViewModel viewModel = CreateViewModel(techniqueId, context);
         await viewModel.InitializeTechniqueAsync(techniqueId);
+        switch (viewModel)
+        {
+            case TechniqueSessionViewModel techniqueSession:
+                await techniqueSession.WaitForDraftLoadAsync();
+                break;
+            case PaperListViewModel paperList:
+                await paperList.WaitForDraftLoadAsync();
+                break;
+            case PolarityViewModel polarity:
+                await polarity.WaitForDraftLoadAsync();
+                break;
+        }
+
         return viewModel;
     }
 
-    private BaseViewModel CreateViewModel(TechniqueId techniqueId, INavigation navigation)
+    private BaseViewModel CreateViewModel(TechniqueId techniqueId, NavigationContext context)
     {
-        INavigationService navigationService = navigationServiceFactory(NavigationContext.From(navigation));
+        INavigationService navigationService = navigationServiceFactory(context);
         ListTechniqueSessionHelper sessionHelper = new(
             sessionCompletionService,
             userProgressService,

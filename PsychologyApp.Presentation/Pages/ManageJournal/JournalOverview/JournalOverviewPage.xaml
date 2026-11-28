@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.ManageJournal.JournalOverview.JournalOverviewPage"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:filterTabs="clr-namespace:PsychologyApp.Presentation.Widgets.FilterChipTabs"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:moodTrend="clr-namespace:PsychologyApp.Presentation.Widgets.Profile"
              xmlns:journalStrip="clr-namespace:PsychologyApp.Presentation.Widgets.Journal"
@@ -28,7 +29,7 @@
                 BackCommand="{Binding BackCommand}" />
 
             <!-- One row of periods drives everything below it: two rows of chips (a calendar scale and a range) made the page loud. -->
-            <ui:FilterChipTabBarView
+            <filterTabs:FilterChipTabBarView
                 ItemsSource="{Binding RangeFilters}"
                 TapCommand="{Binding SelectRangeCommand}" />
 

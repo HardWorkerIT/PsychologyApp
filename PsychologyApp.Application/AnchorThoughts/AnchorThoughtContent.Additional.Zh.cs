@@ -13,9 +13,9 @@ public static partial class AnchorThoughtContent
         ["exp-two-minute-start-counts"] = ("先开始两分钟也算行动", "之后我可以再决定要不要继续。"),
         ["exp-checking-has-a-limit"] = ("我可以按计划结束检查", "反复检查不会自动带来新事实。"),
         ["exp-i-can-leave"] = ("我可以离开，也可以求助", "留意周围不代表我必须留下。"),
-        ["exp-not-whole-week"] = ("今天先照顾今天的事就好", "早上不必解决整整一周的问题。"),
+        ["exp-not-whole-week"] = ("今天可以先选一件事", "我可以先决定什么需要现在处理，把其余的事记下来。"),
         ["exp-less-input-is-okay"] = ("我可以减少周围的信息和刺激", "暂停一下，能让我选择留下什么。"),
-        ["exp-evening-not-decision-time"] = ("今晚不必把所有事都决定好", "疲惫会让视野变窄，明天也许会有新精力。"),
+        ["exp-evening-not-decision-time"] = ("我可以把决定留到明天", "如果这件事可以等，我可以先记下来，再选个时间处理。"),
         ["exp-after-anxiety-rest"] = ("焦虑之后，我可以给自己时间恢复", "强烈的紧张会消耗身体和注意力。"),
         ["exp-practice-with-choice"] = ("我可以选择练习，也可以停下来", "练习应当适合我，并且让人感到安全。"),
 
@@ -99,7 +99,7 @@ public static partial class AnchorThoughtContent
         ["exp-movement-as-anchor"] = ("轻柔的动作也可以成为支点", "我可以选择舒服的幅度，也可以不动。"),
         ["exp-senses-can-be-chosen"] = ("我可以选择一种舒服的感官线索", "气味、声音和触感并不适合每个人。"),
         ["exp-early-signs-are-info"] = ("紧张的早期信号是一种信息", "我可以留意它们，而不责怪自己。"),
-        ["exp-relaxation-not-performance"] = ("放松没有标准答案", "练习不应该变成又一项任务。"),
+        ["exp-relaxation-not-performance"] = ("我可以停下练习", "如果感觉不舒服，我可以休息一下，或者换个活动。"),
         ["exp-basic-care-no-rules"] = ("照顾自己不必做到完美", "一个可行的小选择有时比清单更合适。"),
         ["exp-new-symptoms-deserve-care"] = ("新的症状可以请专业人士评估", "应用无法判断症状的医学原因。"),
         ["exp-therapist-fit-can-be-discussed"] = ("我可以讨论这位专业人士是否适合我", "信任和清楚的约定很重要。"),
@@ -110,6 +110,9 @@ public static partial class AnchorThoughtContent
         ["exp-screen-not-diagnosis"] = ("筛查结果不是诊断", "专业评估会考虑整体情况。"),
         ["exp-support-plan-simple"] = ("支持计划可以很简短", "遇到困难时，短计划更容易找到。"),
         ["exp-immediate-safety-first"] = ("有即时危险时，应尽快寻求帮助", "联系当地紧急服务或信任的人。"),
-        ["exp-medication-with-clinician"] = ("药物调整要和专业人士商量", "开药的专业人士能评估治疗和风险。")
+        ["exp-medication-with-clinician"] = ("药物调整要和专业人士商量", "开药的专业人士能评估治疗和风险。"),
+        ["exp-deadline-update-is-responsible"] = ("提前告知延误，是负责任的做法", "新的时间安排能帮助他人调整计划。"),
+        ["exp-confirming-agreement-is-care"] = ("确认约定并不等于争论", "开始之前确认，可以发现双方期待的不同。"),
+        ["exp-new-facts-can-change-agreement"] = ("新情况可能改变原来的决定", "可以重新商量约定，并清楚说明变化。")
     };
 }

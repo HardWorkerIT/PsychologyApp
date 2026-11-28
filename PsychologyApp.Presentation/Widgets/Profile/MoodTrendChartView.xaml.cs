@@ -11,7 +11,7 @@ public partial class MoodTrendChartView : ContentView
     public MoodTrendChartView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         Title = AppStrings.ProfileMoodTrendTitle;
         HasTitle = true;
         ChartView.Drawable = _drawable;

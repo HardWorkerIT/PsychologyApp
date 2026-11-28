@@ -54,6 +54,7 @@ public static class MauiProgram
                 handlers.AddHandler<PsychologyApp.Presentation.Widgets.TechniqueListCard.TechniqueCardNativeView,
                     PsychologyApp.Presentation.Platforms.Android.TechniqueCardHandler>();
                 handlers.AddHandler<VkNativeView, VkNativeHandler>();
+                handlers.AddHandler<VkBannerView, VkBannerHandler>();
             })
 #endif
             ;

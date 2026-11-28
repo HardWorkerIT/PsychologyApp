@@ -22,26 +22,6 @@ public static partial class AppStrings
         _ => R("BeckScoreDetail.default")
     };
 
-    public static string HeckHessScore(BinarySeverityBand band) =>
-        band == BinarySeverityBand.Low
-            ? R("HeckHessScore.1")
-            : R("HeckHessScore.2");
-
-    public static string HeckHessScoreDetail(BinarySeverityBand band) =>
-        band == BinarySeverityBand.Low
-            ? R("HeckHessScoreDetail.1")
-            : R("HeckHessScoreDetail.2");
-
-    public static string HaerScore(BinarySeverityBand band) =>
-        band == BinarySeverityBand.Low
-            ? R("HaerScore.1")
-            : R("HaerScore.2");
-
-    public static string HaerScoreDetail(BinarySeverityBand band) =>
-        band == BinarySeverityBand.Low
-            ? R("HaerScoreDetail.1")
-            : R("HaerScoreDetail.2");
-
     public static string PochebutScore(PochebutBand band) => band switch
     {
         PochebutBand.Low => R("PochebutScore.PochebutBand.Low"),
@@ -60,16 +40,6 @@ public static partial class AppStrings
         lane == RecommendationLane.High
             ? R("TestRecommendationReasonBeck.1")
             : R("TestRecommendationReasonBeck.2");
-
-    public static string TestRecommendationReasonHeckHess(RecommendationLane lane) =>
-        lane == RecommendationLane.High
-            ? R("TestRecommendationReasonHeckHess.1")
-            : R("TestRecommendationReasonHeckHess.2");
-
-    public static string TestRecommendationReasonHaer(RecommendationLane lane) =>
-        lane == RecommendationLane.High
-            ? R("TestRecommendationReasonHaer.1")
-            : R("TestRecommendationReasonHaer.2");
 
     public static string TestRecommendationReasonPochebut(RecommendationLane lane) =>
         lane == RecommendationLane.High

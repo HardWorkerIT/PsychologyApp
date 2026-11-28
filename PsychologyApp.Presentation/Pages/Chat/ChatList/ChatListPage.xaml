@@ -78,22 +78,18 @@
                                 </Grid>
                             </Border>
                             <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
                                     <Label
                                         Grid.Column="0"
                                         Text="{Binding Title}"
                                         Style="{StaticResource ListRowTitleStyle}"
                                         LineBreakMode="TailTruncation"
-                                        MaxLines="1" />
-                                    <Label
-                                        Grid.Column="1"
-                                        Text="{Binding TimeText}"
-                                        Style="{StaticResource CaptionStyle}"
-                                        VerticalOptions="Center" />
+                                        MaxLines="2" />
                                     <!-- A native button keeps this tap separate from the card tap. Its 44-point target sits in the card's
                                          padding, so the row height stays unchanged. -->
                                     <ImageButton
-                                        Grid.Column="2"
+                                        Grid.Column="1"
+                                        VerticalOptions="Start"
                                         WidthRequest="44"
                                         HeightRequest="44"
                                         Margin="0,-12,-14,-12"
@@ -115,6 +111,9 @@
                                     Style="{StaticResource CaptionStyle}"
                                     LineBreakMode="TailTruncation"
                                     MaxLines="2" />
+                                <Label
+                                    Text="{Binding TimeText}"
+                                    Style="{StaticResource CaptionStyle}" />
                                 <Label
                                     IsVisible="{Binding HasMood}"
                                     Text="{Binding MoodText}"

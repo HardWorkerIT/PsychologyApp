@@ -1,33 +1,22 @@
 using PsychologyApp.Presentation.Shared.Common;
-using System.Collections.Concurrent;
-using System.Runtime;
+using System.Runtime.CompilerServices;
 
 namespace PsychologyApp.Presentation.Features.RunTechniqueSession;
 
-public class WeakReferenceManager<TMessage>
+internal sealed class WeakReferenceManager<TMessage>
 {
-    private readonly ConcurrentDictionary<object, List<WeakReference<Action<TMessage>>>> _subscribers = new();
+    // Keep callbacks alive for as long as their owner lives, even if a callback captures that owner.
+    private readonly ConditionalWeakTable<object, List<Action<TMessage>>> _subscribers = new();
+    private readonly Lock _gate = new();
 
     public void Subscribe(object subscriber, Action<TMessage> handler)
     {
-        if (subscriber == null)
-            throw new ArgumentNullException(nameof(subscriber));
-        if (handler == null)
-            throw new ArgumentNullException(nameof(handler));
-
-        var weakHandler = new WeakReference<Action<TMessage>>(handler);
-        
-        _subscribers.AddOrUpdate(
-            subscriber,
-            new List<WeakReference<Action<TMessage>>> { weakHandler },
-            (key, existingList) =>
-            {
-                lock (existingList)
-                {
-                    existingList.Add(weakHandler);
-                }
-                return existingList;
-            });
+        ArgumentNullException.ThrowIfNull(subscriber);
+        ArgumentNullException.ThrowIfNull(handler);
+        lock (_gate)
+        {
+            _subscribers.GetOrCreateValue(subscriber).Add(handler);
+        }
     }
 
     public void Unsubscribe(object subscriber)
@@ -35,7 +24,10 @@ public class WeakReferenceManager<TMessage>
         if (subscriber == null)
             return;
 
-        _subscribers.TryRemove(subscriber, out _);
+        lock (_gate)
+        {
+            _subscribers.Remove(subscriber);
+        }
     }
 
     public void Send(TMessage message)
@@ -43,51 +35,25 @@ public class WeakReferenceManager<TMessage>
         if (message == null)
             return;
 
-        var keysToRemove = new List<object>();
-
-        foreach (var kvp in _subscribers)
+        List<Action<TMessage>> handlers = [];
+        lock (_gate)
         {
-            var subscriber = kvp.Key;
-            var handlers = kvp.Value;
-            var handlersToRemove = new List<WeakReference<Action<TMessage>>>();
-
-            lock (handlers)
+            foreach (KeyValuePair<object, List<Action<TMessage>>> subscription in _subscribers)
             {
-                foreach (var weakHandler in handlers)
-                {
-                    if (weakHandler.TryGetTarget(out var handler))
-                    {
-                        try
-                        {
-                            handler(message);
-                        }
-                        catch (Exception bestEffortError)
-                        {
-                            // Игнорируем ошибки в обработчиках, чтобы не прерывать отправку другим подписчикам
-                            BestEffort.Report(bestEffortError);
-                        }
-                    }
-                    else
-                    {
-                        handlersToRemove.Add(weakHandler);
-                    }
-                }
-
-                foreach (var handlerToRemove in handlersToRemove)
-                {
-                    handlers.Remove(handlerToRemove);
-                }
-
-                if (handlers.Count == 0)
-                {
-                    keysToRemove.Add(subscriber);
-                }
+                handlers.AddRange(subscription.Value);
             }
         }
 
-        foreach (var keyToRemove in keysToRemove)
+        foreach (Action<TMessage> handler in handlers)
         {
-            _subscribers.TryRemove(keyToRemove, out _);
+            try
+            {
+                handler(message);
+            }
+            catch (Exception error)
+            {
+                BestEffort.Report(error);
+            }
         }
     }
 }

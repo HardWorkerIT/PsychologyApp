@@ -14,7 +14,7 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class QuoteSearchControllerTests
 {
     [Fact]
-    public void SetFeedItems_PlacesOneAdRowAfterEightQuotesAndPreservesOrder()
+    public void SetFeedItems_SeparatesBannerAndNativeRowsAndPreservesQuoteOrder()
     {
         QuoteFeedState feedState = new();
         QuoteItem[] quotes = Enumerable.Range(1, 17)
@@ -23,8 +23,10 @@ public sealed class QuoteSearchControllerTests
 
         feedState.SetFeedItems(quotes);
 
-        Assert.Equal(18, feedState.DisplayRows.Count);
-        Assert.True(feedState.DisplayRows[8].IsAdPlacement);
+        Assert.Equal(19, feedState.DisplayRows.Count);
+        Assert.True(feedState.DisplayRows[3].IsBannerPlacement);
+        Assert.True(feedState.DisplayRows[9].IsAdPlacement);
+        Assert.Single(feedState.DisplayRows, row => row.IsBannerPlacement);
         Assert.Single(feedState.DisplayRows, row => row.IsAdPlacement);
         Assert.Equal(
             quotes.Select(quote => quote.Text),
@@ -39,8 +41,9 @@ public sealed class QuoteSearchControllerTests
 
         feedState.AppendItems([CreateFeedItem("Quote 8")]);
 
-        Assert.Equal(9, feedState.DisplayRows.Count);
-        Assert.True(feedState.DisplayRows[8].IsAdPlacement);
+        Assert.Equal(10, feedState.DisplayRows.Count);
+        Assert.True(feedState.DisplayRows[3].IsBannerPlacement);
+        Assert.True(feedState.DisplayRows[9].IsAdPlacement);
         Assert.Equal(8, feedState.DisplayRows.Count(row => row.Quote is not null));
     }
 
@@ -52,18 +55,18 @@ public sealed class QuoteSearchControllerTests
         Mock<IQuoteSearchService> searchService = new();
         searchService
             .Setup(s => s.SearchCatalogAsync("calm", It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync([
-                new QuotSeed("Seneca", "Calm quote", "calm"),
-                new QuotSeed("Marcus", "Peace quote", "calm")
-            ]);
+            .ReturnsAsync(Enumerable.Range(1, 12)
+                .Select(index => new QuotSeed($"Author {index}", $"Calm quote {index}", "calm"))
+                .ToArray());
 
         QuoteSearchController controller = CreateController(feedState, searchService.Object);
         controller.Query = "calm";
         await WaitForSearchAsync(controller);
 
-        Assert.Equal(2, feedState.DisplayItems.Count);
-        Assert.Equal("Calm quote", feedState.DisplayItems[0].Text);
-        Assert.Equal("Peace quote", feedState.DisplayItems[1].Text);
+        Assert.Equal(12, feedState.DisplayItems.Count);
+        Assert.Equal("Calm quote 1", feedState.DisplayItems[0].Text);
+        Assert.Equal("Calm quote 2", feedState.DisplayItems[1].Text);
+        Assert.DoesNotContain(feedState.DisplayRows, row => row.IsBannerPlacement || row.IsAdPlacement);
     }
 
     [Fact]

@@ -14,32 +14,44 @@ public static class JournalPracticeMoodInsightBuilder
         IReadOnlySet<DateOnly> practiceDays,
         IReadOnlyDictionary<DateOnly, int> moodLevelByDay)
     {
-        HashSet<DateOnly> inRangePracticeDays = practiceDays
-            .Where(day => day >= rangeStart && day <= today)
-            .ToHashSet();
-        if (inRangePracticeDays.Count == 0)
+        int practiceDayCount = 0;
+        int recordedPracticeDayCount = 0;
+        long practiceMoodTotal = 0;
+        foreach (DateOnly day in practiceDays)
         {
-            return new JournalPracticeMoodInsightResult(false, 0, null, null);
+            if (day < rangeStart || day > today)
+            {
+                continue;
+            }
+
+            practiceDayCount++;
+            if (moodLevelByDay.TryGetValue(day, out int mood))
+            {
+                recordedPracticeDayCount++;
+                practiceMoodTotal += mood;
+            }
         }
 
-        List<int> moodsOnPracticeDays = inRangePracticeDays
-            .Where(moodLevelByDay.ContainsKey)
-            .Select(day => moodLevelByDay[day])
-            .ToList();
-        if (moodsOnPracticeDays.Count == 0)
+        if (recordedPracticeDayCount == 0)
         {
-            return new JournalPracticeMoodInsightResult(false, inRangePracticeDays.Count, null, null);
+            return new JournalPracticeMoodInsightResult(false, practiceDayCount, null, null);
         }
 
-        List<int> moodsWithoutPractice = moodLevelByDay
-            .Where(pair => pair.Key >= rangeStart && pair.Key <= today && !inRangePracticeDays.Contains(pair.Key))
-            .Select(pair => pair.Value)
-            .ToList();
+        int otherDayCount = 0;
+        long otherMoodTotal = 0;
+        foreach ((DateOnly day, int mood) in moodLevelByDay)
+        {
+            if (day >= rangeStart && day <= today && !practiceDays.Contains(day))
+            {
+                otherDayCount++;
+                otherMoodTotal += mood;
+            }
+        }
 
         return new JournalPracticeMoodInsightResult(
             true,
-            inRangePracticeDays.Count,
-            moodsOnPracticeDays.Average(),
-            moodsWithoutPractice.Count > 0 ? moodsWithoutPractice.Average() : null);
+            practiceDayCount,
+            (double)practiceMoodTotal / recordedPracticeDayCount,
+            otherDayCount > 0 ? (double)otherMoodTotal / otherDayCount : null);
     }
 }

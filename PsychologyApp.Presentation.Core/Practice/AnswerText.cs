@@ -53,14 +53,48 @@ public static class AnswerText
     /// <summary>A single line for a chip: the start of the text with an ellipsis when it is longer than <paramref name="maxLength"/>.</summary>
     public static string Shorten(string? text, int maxLength = 40)
     {
-        string line = string.Join(' ', (text ?? string.Empty).Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
-        if (line.Length <= maxLength || maxLength < 2)
+        if (string.IsNullOrEmpty(text))
         {
-            return line;
+            return string.Empty;
         }
 
-        string cut = line[..(maxLength - 1)].TrimEnd(' ', ',', '.', ';', ':');
-        return cut + "…";
+        // One extra character tells us whether the normalized line actually needs an ellipsis.
+        int capacity = maxLength >= 2 && maxLength < text.Length ? maxLength + 1 : text.Length;
+        Span<char> line = capacity <= 512 ? stackalloc char[capacity] : new char[capacity];
+        int length = 0;
+        bool pendingSpace = false;
+        foreach (char character in text)
+        {
+            if (char.IsWhiteSpace(character))
+            {
+                pendingSpace = length > 0;
+                continue;
+            }
+
+            if (pendingSpace)
+            {
+                line[length++] = ' ';
+                pendingSpace = false;
+                if (length == capacity)
+                {
+                    break;
+                }
+            }
+
+            line[length++] = character;
+            if (length == capacity)
+            {
+                break;
+            }
+        }
+
+        if (maxLength >= 2 && length > maxLength)
+        {
+            return string.Concat(line[..(maxLength - 1)].TrimEnd(" ,.;:"), "…");
+        }
+
+        ReadOnlySpan<char> preview = line[..length];
+        return preview.SequenceEqual(text) ? text : new string(preview);
     }
 
     /// <summary>The chip as a whole part of the answer: at the start or after a comma, and followed by a comma or the end.</summary>

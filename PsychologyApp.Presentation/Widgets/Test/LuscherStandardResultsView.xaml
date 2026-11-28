@@ -2,7 +2,6 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:testUi="clr-namespace:PsychologyApp.Presentation.Widgets.Test"
-             xmlns:profileUi="clr-namespace:PsychologyApp.Presentation.Widgets.ProfileTechniqueCard"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:models="clr-namespace:PsychologyApp.Presentation.Pages.RunTests.LuscherTest"
              xmlns:self="clr-namespace:PsychologyApp.Presentation.Widgets.Test"
@@ -44,22 +43,6 @@
                 Colors="{Binding SecondPassColors, Source={x:Reference Root}}" />
         </VerticalStackLayout>
 
-        <VerticalStackLayout
-            IsVisible="{Binding HasRecommendation, Source={x:Reference Root}}"
-            Spacing="{StaticResource CompactSpacing}">
-            <VerticalStackLayout.Behaviors>
-                <behaviors:ListItemRevealBehavior RevealIndex="2" />
-            </VerticalStackLayout.Behaviors>
-            <Label
-                Text="{Binding RecommendationHint, Source={x:Reference Root}}"
-                Style="{StaticResource CaptionStyle}" />
-            <profileUi:ProfileTechniqueCardView
-                IconName="{Binding RecommendationIconName, Source={x:Reference Root}}"
-                Title="{Binding RecommendationTitle, Source={x:Reference Root}}"
-                Subtitle="{Binding RecommendationSubtitle, Source={x:Reference Root}}"
-                Theme="{Binding RecommendationTheme, Source={x:Reference Root}}"
-                TapCommand="{Binding TryTechniqueCommand, Source={x:Reference Root}}" />
-        </VerticalStackLayout>
     </VerticalStackLayout>
 
 </ContentView>

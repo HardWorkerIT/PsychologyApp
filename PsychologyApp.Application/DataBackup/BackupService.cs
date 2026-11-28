@@ -8,24 +8,14 @@ using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Conversation.Companion;
 using PsychologyApp.Application.Exposure;
 using PsychologyApp.Application.Models;
-using PsychologyApp.Application.UserProgress;
 using PsychologyApp.Domain.Exposure;
 using System.Text.Json;
 
 namespace PsychologyApp.Application.DataBackup;
 
-public sealed class BackupService(
-    IUserProgressRepository progress,
-    IChatRepository chatRepository,
-    IClinicalCareRepository clinicalCareRepository,
-    IFavoriteQuoteTextStore favoriteQuoteTextStore,
-    IBackupRepository backupRepository,
-    IExposureRepository exposureRepository,
-    IReadingRepository readingRepository,
-    IBodyRepository bodyRepository) : IBackupService
+public sealed class BackupService(IBackupRepository backupRepository) : IBackupService
 {
     private const int ExportLimit = 100_000;
-    private const int ExportProbeLimit = ExportLimit + 1;
 
     /// <summary>A real backup is a few MB; this only stops a wrong file (a video, a database) from being read into memory.</summary>
     internal const int MaxImportCharacters = 64 * 1024 * 1024;
@@ -40,119 +30,8 @@ public sealed class BackupService(
 
     public async Task<string> ExportAsync(CancellationToken cancellationToken = default)
     {
-        BackupExportMetrics exportMetrics = await backupRepository.GetExportMetricsAsync(cancellationToken).ConfigureAwait(false);
-        if (exportMetrics.MoodEntryCount > ExportLimit
-            || exportMetrics.TestResultCount > ExportLimit
-            || exportMetrics.CompletionCount > ExportLimit
-            || exportMetrics.SessionResultCount > ExportLimit
-            || exportMetrics.TechniqueCount > ExportLimit
-            || exportMetrics.EscalationCount > MaxEscalations
-            || exportMetrics.Utf8PayloadBytes > MaxImportFileBytes)
-        {
-            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
-        }
-
-        ChatExportMetrics chatMetrics = await chatRepository.GetExportMetricsAsync(cancellationToken).ConfigureAwait(false);
-        if (chatMetrics.SessionCount > ExportLimit
-            || chatMetrics.MessageCount > ExportLimit
-            || chatMetrics.MemoryCount > ExportLimit
-            || chatMetrics.Utf8PayloadBytes > MaxImportFileBytes)
-        {
-            throw new BackupFormatException("The chat history is too large to export and restore on this device.");
-        }
-
-        IReadOnlyList<MoodEntryDTO> moods = await progress.GetMoodsAsync(null, null, ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<TestResultDTO> testResults = await progress.GetAllTestResultsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<CompletionDTO> completions = await progress.GetRecentTechniqueCompletionsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<SessionResultDTO> sessionResults = await progress.GetRecentSessionResultsAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<BackupTechniqueDTO> techniques = await backupRepository.GetTechniquesAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<EscalationEventDTO> escalations = await clinicalCareRepository.GetRecentEscalationsAsync(MaxEscalations + 1, cancellationToken).ConfigureAwait(false);
-
-        if (moods.Count > ExportLimit
-            || testResults.Count > ExportLimit
-            || completions.Count > ExportLimit
-            || sessionResults.Count > ExportLimit
-            || techniques.Count > ExportLimit
-            || escalations.Count > MaxEscalations)
-        {
-            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
-        }
-
-        SafetyPlanDTO? safetyPlan = await clinicalCareRepository.GetSafetyPlanAsync(cancellationToken).ConfigureAwait(false);
-        ChatExportSnapshot chatSnapshot = await chatRepository.GetExportSnapshotAsync(ExportProbeLimit, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<ChatSessionDTO> sessions = chatSnapshot.Sessions;
-        IReadOnlyList<ChatMessageDTO> exportMessages = chatSnapshot.Messages;
-        IReadOnlyDictionary<string, string> chatMemory = chatSnapshot.Memory;
-        if (sessions.Count > ExportLimit || exportMessages.Count > ExportLimit || chatMemory.Count > ExportLimit)
-        {
-            throw new BackupFormatException("The chat history is too large to export and restore on this device.");
-        }
-
-        Dictionary<long, List<ChatMessageDTO>> messagesBySession = new();
-        foreach (ChatMessageDTO message in exportMessages)
-        {
-            if (!messagesBySession.TryGetValue(message.SessionId, out List<ChatMessageDTO>? sessionMessages))
-            {
-                sessionMessages = [];
-                messagesBySession.Add(message.SessionId, sessionMessages);
-            }
-
-            sessionMessages.Add(message);
-        }
-
-        List<BackupChatSessionDTO> chatSessions = new(sessions.Count);
-        foreach (ChatSessionDTO session in sessions)
-        {
-            messagesBySession.Remove(session.Id, out List<ChatMessageDTO>? messages);
-            chatSessions.Add(new BackupChatSessionDTO
-            {
-                Session = new BackupChatSessionInfoDTO
-                {
-                    Id = session.Id,
-                    Title = session.Title,
-                    CreatedAt = session.CreatedAt,
-                    UpdatedAt = session.UpdatedAt,
-                    Emotion = session.Emotion,
-                    Theme = session.Theme,
-                    FirstIntensity = session.FirstIntensity,
-                    LastIntensity = session.LastIntensity,
-                    StateJson = session.StateJson,
-                    BackupKey = session.BackupKey
-                },
-                Messages = messages is null ? Array.Empty<ChatMessageDTO>() : messages
-            });
-        }
-        messagesBySession.Clear();
-        exportMessages = Array.Empty<ChatMessageDTO>();
-        sessions = Array.Empty<ChatSessionDTO>();
-
-        IReadOnlySet<string> favourites = await favoriteQuoteTextStore.GetTextsAsync(cancellationToken).ConfigureAwait(false);
-        if (favourites.Count > ExportLimit)
-        {
-            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
-        }
-
-        AppBackupDTO backup = new()
-        {
-            ExportedAtUtc = DateTime.UtcNow,
-            MoodEntries = moods,
-            TestResults = testResults,
-            Completions = completions,
-            SessionResults = sessionResults,
-            ChatSessions = chatSessions,
-            SafetyPlan = safetyPlan is null || safetyPlan.IsEmpty ? null : safetyPlan,
-            ChatMemory = chatMemory,
-            FavoriteQuoteTexts = favourites.OrderBy(text => text, StringComparer.Ordinal).ToList(),
-            Techniques = techniques,
-            LatestRiskAssessment = await clinicalCareRepository.GetLatestRiskAssessmentAsync(cancellationToken).ConfigureAwait(false),
-            TherapyProgram = await clinicalCareRepository.GetActiveProgramAsync(cancellationToken).ConfigureAwait(false),
-            Escalations = escalations,
-            ExposurePlan = await exposureRepository.GetAsync(cancellationToken).ConfigureAwait(false),
-            Reading = await readingRepository.GetAsync(cancellationToken).ConfigureAwait(false),
-            Body = await bodyRepository.GetAsync(cancellationToken).ConfigureAwait(false),
-            SavedNextStep = SavedNextStepCollection.Serialize(
-                await progress.GetSavedNextStepsAsync(cancellationToken).ConfigureAwait(false))
-        };
+        AppBackupDTO backup = await backupRepository.ReadExportSnapshotAsync(
+            ExportLimit, MaxEscalations, MaxImportFileBytes, cancellationToken).ConfigureAwait(false);
 
         BoundedBackupBufferWriter output = new(MaxImportCharacters);
         using Utf8JsonWriter jsonWriter = new(output);

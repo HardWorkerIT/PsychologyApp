@@ -10,14 +10,17 @@ public partial class CoursesPage : ContentPage
 {
     private readonly CoursesViewModel _viewModel;
 #if ANDROID
-    private VerticalStackLayout? _courseAdFooter;
-    private bool _catalogVisible;
+    private VkCatalogAdRows? _catalogAds;
 #endif
 
     public CoursesPage(ICoursesViewModelFactory viewModelFactory)
     {
         InitializeComponent();
         _viewModel = viewModelFactory.Create(this);
+#if ANDROID
+        _catalogAds = new(_viewModel, nameof(CoursesViewModel.IsCourseBannerEligible),
+            nameof(CoursesViewModel.IsCourseAdEligible), new Thickness(0, 16, 0, 16));
+#endif
         BindingContext = _viewModel;
     }
 
@@ -25,8 +28,7 @@ public partial class CoursesPage : ContentPage
     {
         base.OnAppearing();
 #if ANDROID
-        _catalogVisible = true;
-        ReconnectCourseAdFooter();
+        _catalogAds?.SetPageVisible(true);
 #endif
         _viewModel.RefreshAdEligibility();
         _viewModel.RefreshAsync().FireAndForget();
@@ -35,8 +37,7 @@ public partial class CoursesPage : ContentPage
     protected override void OnDisappearing()
     {
 #if ANDROID
-        _catalogVisible = false;
-        DisconnectCourseAdFooter();
+        _catalogAds?.SetPageVisible(false);
 #endif
         base.OnDisappearing();
     }
@@ -44,83 +45,16 @@ public partial class CoursesPage : ContentPage
     private void OnCourseAdFooterBindingContextChanged(object? sender, EventArgs e)
     {
 #if ANDROID
-        if (sender is not VerticalStackLayout footer)
+        if (sender is ContentView row)
         {
-            return;
-        }
-
-        if (footer.BindingContext is not CourseSectionItem { HasAdPlacement: true })
-        {
-            DisconnectCourseAdFooter(footer);
-            if (ReferenceEquals(_courseAdFooter, footer))
+            bool? isBanner = row.BindingContext switch
             {
-                _courseAdFooter = null;
-            }
-
-            return;
-        }
-
-        if (_courseAdFooter is not null && !ReferenceEquals(_courseAdFooter, footer))
-        {
-            DisconnectCourseAdFooter(_courseAdFooter);
-        }
-
-        _courseAdFooter = footer;
-        ReconnectCourseAdFooter();
-#else
-        if (sender is VisualElement footer)
-        {
-            footer.IsVisible = false;
+                CourseSectionItem { HasBannerPlacement: true } => true,
+                CourseSectionItem { HasAdPlacement: true } => false,
+                _ => null
+            };
+            _catalogAds?.BindRow(row, isBanner);
         }
 #endif
     }
-
-#if ANDROID
-    private void ReconnectCourseAdFooter()
-    {
-        if (!_catalogVisible || _courseAdFooter is null)
-        {
-            return;
-        }
-
-        ContentView? host = _courseAdFooter.Children.OfType<ContentView>().FirstOrDefault();
-        if (host is null)
-        {
-            return;
-        }
-
-        if (host.Content is not VkNativeView adView)
-        {
-            adView = new VkNativeView();
-            adView.SetBinding(
-                VkNativeView.IsEligibleProperty,
-                new Binding(nameof(CoursesViewModel.IsCourseAdEligible)) { Source = _viewModel });
-            host.Content = adView;
-        }
-
-        _courseAdFooter.SetBinding(
-            VisualElement.IsVisibleProperty,
-            new Binding(nameof(VkNativeView.IsAdLoaded)) { Source = adView });
-    }
-
-    private void DisconnectCourseAdFooter() => DisconnectCourseAdFooter(_courseAdFooter);
-
-    private static void DisconnectCourseAdFooter(VerticalStackLayout? footer)
-    {
-        if (footer is null)
-        {
-            return;
-        }
-
-        ContentView? host = footer.Children.OfType<ContentView>().FirstOrDefault();
-        host?.Content?.Handler?.DisconnectHandler();
-        if (host is not null)
-        {
-            host.Content = null;
-        }
-
-        footer.RemoveBinding(VisualElement.IsVisibleProperty);
-        footer.IsVisible = false;
-    }
-#endif
 }

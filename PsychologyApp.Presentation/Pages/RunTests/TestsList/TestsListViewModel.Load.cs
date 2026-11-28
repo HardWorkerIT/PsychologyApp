@@ -37,7 +37,7 @@ public partial class TestsListViewModel
 
             if (result.ProgressDeferred)
             {
-                EnrichProgressInBackgroundAsync(result.Items).FireAndForget();
+                RefreshProgressAsync(result.Items).FireAndForget();
             }
         }
         catch (OperationCanceledException)
@@ -51,15 +51,20 @@ public partial class TestsListViewModel
         }
     }
 
-    private async Task EnrichProgressInBackgroundAsync(IReadOnlyList<TestItem> items)
+    private async Task RefreshProgressAsync(IReadOnlyList<TestItem> items)
     {
+        await _progressGate.WaitAsync();
         try
         {
             await _testsListLoader.EnrichProgressAsync(items);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Deferred test progress enrichment failed.");
+            _logger.LogWarning(ex, "Test catalog progress refresh failed.");
+        }
+        finally
+        {
+            _progressGate.Release();
         }
     }
 }

@@ -2,6 +2,7 @@ using PsychologyApp.Presentation.App.Providers;
 using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Features.RunTests.DependencyInjection;
 using PsychologyApp.Presentation.Shared.Common;
+using System.ComponentModel;
 
 namespace PsychologyApp.Presentation.Pages.RunTests.Question;
 
@@ -15,12 +16,20 @@ public partial class QuestionPage : ContentPage
         TestSessionInfo? session = null)
     {
         BindingContext = questionViewModelFactory.Create(this, questions, analyzer, singleAnswer, session);
+        InitializeComponent();
         if (BindingContext is QuestionViewModel viewModel)
         {
             viewModel.ValidationHintRequested += OnValidationHintRequested;
+            viewModel.PropertyChanged += OnViewModelPropertyChanged;
         }
+    }
 
-        InitializeComponent();
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(QuestionViewModel.CurrentIndex))
+        {
+            QuestionScroll.ScrollToAsync(0, 0, animated: false).FireAndForget();
+        }
     }
 
     private void OnValidationHintRequested(object? sender, EventArgs e)

@@ -36,8 +36,8 @@ public static class TodayRecommendationContextBuilder
             progress.GetLastPracticeDatesAsync(CatalogTechniqueKeys, cancellationToken);
         Task<IReadOnlySet<string>> draftsTask =
             progress.GetSessionDraftKeysAsync(CatalogTechniqueKeys, cancellationToken);
-        Task<IReadOnlyList<SessionResultDTO>> sessionResultsTask =
-            progress.GetRecentSessionResultsAsync(SessionHistoryLimit, cancellationToken);
+        Task<IReadOnlyList<PracticeIntensitySample>> sessionResultsTask =
+            progress.GetRecentPracticeIntensityAsync(SessionHistoryLimit, cancellationToken);
         Task<TherapyProgramStateDTO?>? programTask = clinicalCare is null
             ? null
             : LoadProgramForRecommendationAsync(clinicalCare, cancellationToken);
@@ -105,10 +105,10 @@ public static class TodayRecommendationContextBuilder
 
     /// <summary>Average drop in tension (pre minus post SUDS) per technique key, for techniques practiced
     /// often enough that the average means something.</summary>
-    private static IReadOnlyDictionary<string, double> ComputeEffectiveness(IReadOnlyList<SessionResultDTO> sessions)
+    private static IReadOnlyDictionary<string, double> ComputeEffectiveness(IReadOnlyList<PracticeIntensitySample> sessions)
     {
         Dictionary<string, List<int>> deltasByItem = new(StringComparer.Ordinal);
-        foreach (SessionResultDTO session in sessions)
+        foreach (PracticeIntensitySample session in sessions)
         {
             if (session.PreIntensity is not (>= 0 and <= 10) || session.PostIntensity is not (>= 0 and <= 10))
             {

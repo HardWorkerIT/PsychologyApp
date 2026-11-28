@@ -15,11 +15,11 @@
         <ControlTemplate x:DataType="self:NavigationBarSimpleView">
             <Grid
                 Margin="{StaticResource NavBarBottomMargin}"
-                ColumnDefinitions="44,*,44"
+                ColumnDefinitions="44,*"
                 ColumnSpacing="{StaticResource CompactSpacing}"
                 MinimumHeightRequest="48">
                 <BoxView
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     HeightRequest="1"
                     VerticalOptions="End"
                     Color="{AppThemeBinding Light={StaticResource NeutralBorder}, Dark={StaticResource InputBorderDark}}" />
@@ -44,8 +44,7 @@
                     Style="{StaticResource NavTitleStyle}"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
-                    LineBreakMode="TailTruncation"
-                    MaxLines="2" />
+                    LineBreakMode="WordWrap" />
             </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>

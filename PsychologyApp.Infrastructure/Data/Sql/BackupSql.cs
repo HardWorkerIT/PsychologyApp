@@ -64,7 +64,7 @@ internal static class BackupSql
                 LIMIT 1), 0)
             + COALESCE((SELECT SUM(length(CAST(Value AS BLOB)))
                 FROM AppMetadata
-                WHERE Key IN ('FavoriteQuoteTexts', 'BodyLog', 'ReadingState', 'ExposurePlan', 'SafetyPlan')), 0)
+                WHERE Key IN ('FavoriteQuoteTexts', 'BodyLog', 'ReadingState', 'ExposurePlan', 'SafetyPlan', 'SavedNextStep')), 0)
             AS Utf8PayloadBytes;
         """;
 
@@ -85,7 +85,10 @@ internal static class BackupSql
     internal const string InsertTestResult = """
         INSERT INTO TestResults (TestId, Score, Summary, DetailJson, CompletedAt)
         SELECT @TestId, @Score, @Summary, @DetailJson, @CompletedAt
-        WHERE NOT EXISTS (SELECT 1 FROM TestResults WHERE TestId = @TestId AND CompletedAt = @CompletedAt);
+        WHERE NOT EXISTS (
+            SELECT 1 FROM TestResults
+            WHERE TestId = @TestId AND CompletedAt = @CompletedAt
+              AND Score IS @Score AND Summary IS @Summary AND DetailJson IS @DetailJson);
         """;
 
     internal const string InsertCompletion = """

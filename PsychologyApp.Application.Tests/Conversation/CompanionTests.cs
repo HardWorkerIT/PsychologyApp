@@ -48,16 +48,16 @@ public class LexiconSituationAnalyzerTests
     }
 
     [Theory]
-    [InlineData("Мама очень тревожится из-за переезда")]
-    [InlineData("Он меня разозлил своим поступком")]
-    [InlineData("My mother is anxious about the move")]
-    [InlineData("He made me angry with what he said")]
-    public void Does_not_attribute_another_persons_emotion_to_the_user(string text)
+    [InlineData("Мама очень тревожится из-за переезда", CompanionEmotion.Unknown, true)]
+    [InlineData("Он меня разозлил своим поступком", CompanionEmotion.Anger, false)]
+    [InlineData("My mother is anxious about the move", CompanionEmotion.Unknown, true)]
+    [InlineData("He made me angry with what he said", CompanionEmotion.Anger, false)]
+    public void Attributes_emotion_to_the_correct_person(string text, CompanionEmotion expectedEmotion, bool attributedToOther)
     {
         SituationAnalysis analysis = _analyzer.Analyze(text);
 
-        Assert.Equal(CompanionEmotion.Unknown, analysis.Emotion);
-        Assert.True(analysis.EmotionAttributedToOther);
+        Assert.Equal(expectedEmotion, analysis.Emotion);
+        Assert.Equal(attributedToOther, analysis.EmotionAttributedToOther);
     }
 
     [Fact]

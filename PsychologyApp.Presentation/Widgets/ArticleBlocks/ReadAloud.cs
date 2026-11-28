@@ -13,6 +13,8 @@ public sealed class ReadAloud
 
     public bool IsSpeaking => _speaking is not null;
 
+    public bool HasError { get; private set; }
+
     public event Action? Changed;
 
     public async Task ToggleAsync(IReadOnlyList<string> parts)
@@ -23,6 +25,7 @@ public sealed class ReadAloud
             return;
         }
 
+        HasError = false;
         CancellationTokenSource speaking = new();
         _speaking = speaking;
         Changed?.Invoke();
@@ -30,7 +33,15 @@ public sealed class ReadAloud
         {
             // The articles are read in the interface language: each language has its own text now.
             string language = AppLanguages.Normalize(AppStrings.Language);
-            Locale? locale = (await TextToSpeech.Default.GetLocalesAsync())
+            Task<IEnumerable<Locale>> localesTask = TextToSpeech.Default.GetLocalesAsync();
+            // GetLocalesAsync has no cancellation parameter. Observe a late platform failure while allowing a screen leave/stop
+            // to release this speech operation immediately instead of retaining the page until the platform responds.
+            _ = localesTask.ContinueWith(
+                static task => { _ = task.Exception; },
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+            Locale? locale = (await localesTask.WaitAsync(speaking.Token))
                 .FirstOrDefault(candidate => candidate.Language.StartsWith(language, StringComparison.OrdinalIgnoreCase));
             SpeechOptions options = new() { Locale = locale };
             foreach (string part in parts)
@@ -45,7 +56,7 @@ public sealed class ReadAloud
         }
         catch (Exception speechError)
         {
-            // No speech engine or no voice for the language: the text is still there to read.
+            HasError = true;
             BestEffort.Report(speechError);
         }
         finally

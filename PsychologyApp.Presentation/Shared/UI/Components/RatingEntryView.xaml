@@ -36,16 +36,7 @@
                     VerticalOptions="Center"
                     MinimumWidthRequest="44"
                     HorizontalTextAlignment="End"
-                    SemanticProperties.Description="{Binding ValueDisplay, Source={x:Reference Root}}">
-                    <Label.Triggers>
-                        <DataTrigger
-                            Binding="{Binding HasValue, Source={x:Reference Root}}"
-                            TargetType="Label"
-                            Value="False">
-                            <Setter Property="IsVisible" Value="False" />
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
+                    SemanticProperties.Description="{Binding ValueDisplay, Source={x:Reference Root}}" />
             </Grid>
             <Slider
                 x:Name="RatingSlider"
@@ -55,18 +46,26 @@
                 Value="{Binding SliderValue, Source={x:Reference Root}, Mode=TwoWay}"
                 MinimumTrackColor="{Binding AccentColor, Source={x:Reference Root}}"
                 ThumbColor="{Binding AccentColor, Source={x:Reference Root}}"
+                SemanticProperties.Description="{Binding TitleText, Source={x:Reference Root}}"
                 ValueChanged="OnSliderValueChanged" />
             <!-- The bottom padding keeps the descenders of the captions ("strong") from being cut by the row. -->
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <Label
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button
                     Grid.Column="0"
                     Text="{Binding MinimumCaption, Source={x:Reference Root}}"
-                    Padding="0,0,0,2"
-                    Style="{StaticResource CaptionStyle}" />
+                    HorizontalOptions="Start"
+                    MinimumHeightRequest="44"
+                    Padding="0"
+                    BorderWidth="0"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
+                    FontSize="{DynamicResource CaptionFontSize}"
+                    Clicked="OnMinimumClicked" />
                 <Label
-                    Grid.Column="2"
+                    Grid.Column="1"
                     Text="{Binding MaximumCaption, Source={x:Reference Root}}"
-                    Padding="0,0,0,2"
+                    VerticalOptions="Center"
+                    HorizontalTextAlignment="End"
                     Style="{StaticResource CaptionStyle}" />
             </Grid>
         </VerticalStackLayout>

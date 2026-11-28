@@ -17,10 +17,10 @@ public partial class LuscherTestViewModel
 
         ResultItems[0].PropertyName = AppStrings.TestsCoLabel;
         ResultItems[0].PropertyValue = AppStrings.TestsScoreOutOf(_lastCoValue, "32");
-        ResultItems[0].PropertyText = LuscherStrings.InterpretCo(_lastCoValue);
+        ResultItems[0].PropertyText = LuscherStrings.SelfReflectionNote;
         ResultItems[1].PropertyName = AppStrings.TestsBkLabel;
         ResultItems[1].PropertyValue = AppStrings.TestsDecimalScoreOutOf(Math.Round(_lastBkValue, 2), "3.2");
-        ResultItems[1].PropertyText = LuscherStrings.InterpretBk(_lastBkValue);
+        ResultItems[1].PropertyText = string.Empty;
         OnPropertyChanged(nameof(ResultItems));
     }
 
@@ -32,7 +32,7 @@ public partial class LuscherTestViewModel
         }
 
         (ColourValue colour, _) = _colourSelectedItems[0];
-        FirstResult = ColourStrings.GetExplanation(colour, ColourMeaningType.Wanted);
+        FirstResult = LuscherStrings.SelfReflectionNote;
         FirstName = ColourStrings.GetColorName(colour);
 
         if (_colourSelectedItems.Count < 2)
@@ -41,7 +41,7 @@ public partial class LuscherTestViewModel
         }
 
         (ColourValue secondColour, _) = _colourSelectedItems[1];
-        SecondResult = ColourStrings.GetExplanation(secondColour, ColourMeaningType.Unwanted);
+        SecondResult = string.Empty;
         SecondName = ColourStrings.GetColorName(secondColour);
     }
 }

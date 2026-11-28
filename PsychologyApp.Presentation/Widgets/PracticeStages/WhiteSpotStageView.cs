@@ -45,6 +45,14 @@ public sealed class WhiteSpotStageView : PracticeStageView
         Unloaded += (_, _) => _running?.Cancel();
     }
 
+    protected override void OnStageVisibilityChanged(bool isVisible)
+    {
+        if (!isVisible)
+        {
+            _running?.Cancel();
+        }
+    }
+
     protected override void OnSourceTextChanged()
     {
         _words.Text = SourceText;

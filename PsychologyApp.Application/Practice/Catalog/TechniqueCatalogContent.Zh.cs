@@ -8,7 +8,7 @@ internal static class TechniqueCatalogContentZh
     internal static TheorySection[] Theory(string what, string when, string how, string example) =>
     [
         new("这是什么", what),
-        new("什么时候有帮助", when),
+        new("什么时候可以尝试", when),
         new("练习怎么做", how),
         new("示例", example)
     ];
@@ -24,49 +24,49 @@ internal static class TechniqueCatalogContentZh
         ["“我会把一切都搞砸”", "“他们会评判我”", "“我应付不了”", "“没有人需要我”", "“这是一场灾难”", "“什么都不会成功”", "“我不如别人”", "“总是事事不顺”", "“都是我的错”", "“我有问题”", "“这永远不会结束”", "“我必须完美”"];
 
     internal static readonly BuiltInTechniqueDefinition Spin = new(
-        "练习", "旋转",
+        "练习", "说出此刻的感受",
         [
-            "1. 描述困扰你的那件事",
-            "2. 说出主要的感受",
-            "3. 给这种感受打分（0 到 10）"
+            "1. 选择最近一件让你有些不舒服的日常小事",
+            "2. 说出最主要的感受",
+            "3. 评估此刻的感受强度（0 到 10）"
         ],
-        "日沃拉德·斯拉文斯基的“旋转”技巧有助于减轻痛苦记忆的情绪负荷。",
-        TechniqueUiKind.Entry, "技巧 #1", "26.01.2023", "旋转", "三步减轻情绪负荷", "艰难时刻", "日沃拉德·斯拉文斯基", 5, "Autorenew",
+        "简单记录事情和感受，不必期待马上轻松下来。",
+        TechniqueUiKind.Entry, "技巧 #1", "26.01.2023", "说出此刻的感受", "留意现在的感受", "艰难时刻", "PsychologyApp 团队", 5, "Autorenew",
         [
-            new TechniqueEntrySeed("事件", "例如：昨天那段让你放不下的谈话", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("主要感受", "委屈、恐惧、愤怒……", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("感受强度", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("情境", "例如：工作中一件小事。无需写下令人痛苦的细节。", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("主要感受", "委屈、担心、愤怒……", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("此刻的强度", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "一个简单的中和技巧：说出事件、感受和它的强度。很多时候，仅仅觉察就能减轻负荷。",
-            "当某个场景或想法反复出现，焦虑或怨恨挥之不去时。",
-            "写下事件和感受，然后如实评估强度。如有需要，改天再做一次。",
-            "事件：“同事无视了我的想法”。感受：委屈。评分：8 → 之后 5。"),
+            "记录情境、感受及其此刻的强度。这是自我观察，不是治疗，也不保证感受会立刻改变。",
+            "如果你愿意书写，可用于一件程度较轻的日常烦心事。不要选择创伤性回忆或正在经历的急性危机。",
+            "只写必要内容，并评估此刻的感受。如果不适加重，请停下来，看看周围，再选择更中性的练习。无需重复。",
+            "情境：同事打断了我。感受：烦躁。此刻强度：5 分（满分 10 分）。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Comparison = new(
-        "练习", "重要性比较",
+        "练习", "看看更广阔的生活背景",
         [
-            "1. 说出问题",
-            "2. 过去在这方面什么最重要？",
-            "3. 现在什么最重要？",
-            "4. 将来什么会重要？",
-            "5. 比较三个答案，记下有什么变化"
+            "1. 说说现在什么让你为难，不必淡化它",
+            "2. 这件事影响了生活中的哪些方面？",
+            "3. 还有什么重要的事也需要关注？",
+            "4. 今天你想照顾谁或什么？",
+            "5. 记下你的发现，不必判断问题是大是小"
         ],
-        "跨时间比较重要性，有助于把问题放到你整个人生的背景中去看。",
-        TechniqueUiKind.Entry, "技巧 #2", "26.01.2023", "重要性比较", "当问题显得太大时", "问题的规模", "NLP", 7, "CompareArrows",
+        "这个练习帮助你列出生活中的不同方面；它不能判断问题有多严重。",
+        TechniqueUiKind.Entry, "技巧 #2", "26.01.2023", "看看更广阔的生活背景", "当一件困难的事占据全部注意力时", "问题的规模", string.Empty, 7, "CompareArrows",
         [
-            new TechniqueEntrySeed("问题", "现在什么让你觉得难以忍受？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("过去重要的", "例如：学业、感情、事业", Suggestions: ["学业", "家庭", "朋友", "健康", "事业", "爱好", "运动", "爱情", "旅行", "自由", "认可", "家"]),
-            new TechniqueEntrySeed("现在重要的", "什么占据了你最多的注意力？", Suggestions: ["工作", "家庭", "健康", "钱", "人际关系", "休息", "孩子", "朋友", "学业", "睡眠", "内心平静", "自我成长"]),
-            new TechniqueEntrySeed("将来重要的", "你想要奔向什么？", Suggestions: ["稳定", "家庭", "自由", "健康", "成长", "我爱的人", "属于自己的家", "喜欢的工作", "旅行", "平静", "孩子", "积蓄"]),
-            new TechniqueEntrySeed("有什么变化？", "这个问题还主宰着一切吗？", Suggestions: ["问题只是生活的一部分", "重要的东西比想象的多", "这只是暂时的阶段", "感觉没那么尖锐了", "我感觉平静了些", "我看到自己以前也挺过来过", "出现了希望", "暂时还没有变化"])
+            new TechniqueEntrySeed("正在发生什么", "现在什么让你为难？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("受到影响的方面", "例如：工作、健康、人际关系", Suggestions: ["工作", "家庭", "朋友", "健康", "学业", "金钱", "人际关系", "睡眠", "居住", "爱好", "休息", "计划"]),
+            new TechniqueEntrySeed("还有什么重要", "什么也需要你的关注？", Suggestions: ["工作", "家庭", "健康", "人际关系", "休息", "孩子", "朋友", "学业", "睡眠", "内心平静", "自我成长", "日常事务"]),
+            new TechniqueEntrySeed("想照顾的事", "今天谁或什么需要你的关注？", Suggestions: ["健康", "亲近的人", "睡眠", "休息", "工作上的事", "一次谈话", "日常任务", "个人界限", "还不确定"]),
+            new TechniqueEntrySeed("你注意到了什么", "不必得出积极的结论")
         ],
         Theory(
-            "这个技巧说明，问题的分量会随时间改变，很少会永远处于中心。",
-            "当一个困难占满了整个视野，而且感觉会永远持续时。",
-            "填写四个字段，然后比较：其他价值常常会让问题变小。",
-            "问题：“没有工作”。过去：学业。现在：找工作。将来：稳定。领悟：这是一个阶段，不是整个人生。"),
+            "这个练习帮助你说出其他需求和事务，同时不否定当前困难的重要性。",
+            "当一个话题几乎占满你的注意力，而你想看看还有哪些需求或事情需要关注时。",
+            "用自己的话填写，不必寻找积极的转折。如果需要处理实际行动或安全问题，请先处理。任何一栏都可以留空。",
+            "找工作影响了收入和睡眠；今天我也想照顾一位亲近的人。也许我可以选择一个求职步骤并寻求支持。这并不意味着烦恼不严重。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Polarity = new(
@@ -87,56 +87,56 @@ internal static class TechniqueCatalogContentZh
         "你不喜欢的", "你喜欢的");
 
     internal static readonly BuiltInTechniqueDefinition Paper = new(
-        "练习", "一张纸",
+        "练习", "把想法写下来",
         [
-            "1. 把想法写在纸上（或下面的输入框里）",
-            "2. 大声读一遍",
-            "3. 把纸折起来、撕掉，或象征性地放下它"
+            "1. 在下方或纸上写下一句话",
+            "2. 读一遍；如果愿意，说出此刻的感受",
+            "3. 自己决定怎么处理这张纸：保留、折起或撕掉；什么也不做也可以"
         ],
-        "把想法写在纸上，能减轻它们的情绪负荷。",
-        TechniqueUiKind.Paper, "技巧 #4", "26.01.2023", "一张纸", "当想法反复打转时", "想法", "心理", 3, "Description",
-        [new TechniqueEntrySeed("想法", "例如：“我会把演讲搞砸”", Suggestions: HarshThoughts)],
+        "写下来可以看清想法的表达方式；不必撕掉纸，也不必期待马上轻松。",
+        TechniqueUiKind.Paper, "技巧 #4", "26.01.2023", "把想法写下来", "当一个想法反复出现时", "想法", "PsychologyApp 团队", 3, "Description",
+        [new TechniqueEntrySeed("想法", "例如：“我会把演讲搞砸。”", Suggestions: HarshThoughts)],
         Theory(
-            "写下来能把想法从脑子里拿出来。毁掉这张纸，象征着放下。",
-            "当同一句话在脑中转了好几个小时，影响睡眠或专注时。",
-            "把想法倒出来，读一遍，然后毁掉这张纸——真的或在想象中。",
-            "想法：“他们会觉得我没能力”。写下并烧掉这张纸后，焦虑常常会减轻。"),
+            "写下一句话，看看这个想法是怎样表达的。这是自我观察，不是治疗，也不保证感受会改变。",
+            "当想法反复出现，而且你愿意写下来时尝试。如果书写让你更不舒服，请停下。",
+            "写一句话并读一遍。保留、收起或撕掉纸张都由你决定；不必强迫自己平静下来。",
+            "想法：“我会把演讲搞砸。”你可以保留这张纸，再检查一页幻灯片。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Future = new(
-        "练习", "50 年后",
+        "练习", "从未来回看",
         [
-            "1. 说出问题",
-            "2. 评估 50 年后它的重要性（0 到 10）"
+            "1. 选择一件目前能够应对的日常困难",
+            "2. 选择一个时间跨度，例如一年或五年后，再想象从那里回看这件事"
         ],
-        "把问题放到更远的未来，能降低它在主观上的重要性。",
-        TechniqueUiKind.Entry, "技巧 #5", "30.01.2023", "50 年后", "把问题放到未来去看", "问题的规模", "NLP", 2, "Schedule",
+        "试着从未来的角度评估眼前的事。它仍然可能很重要，不必刻意淡化。",
+        TechniqueUiKind.Entry, "技巧 #5", "30.01.2023", "从未来回看", "换个角度，但不淡化问题", "问题的规模", "PsychologyApp 团队", 2, "Schedule",
         [
-            new TechniqueEntrySeed("问题", "今天什么让你觉得像一场灾难？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("50 年后的重要性", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("情境", "例如：工作中一件可以处理的小困难。", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("从这个时间跨度看，它有多重要？", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "想象一件事放到遥远的未来，常常会让它变得不那么尖锐——你能从更广的视角看待它。",
-            "当一次挫折虽然是暂时的，却感觉像世界末日时。",
-            "说出问题，并评估五十年后它还有多重要。分数通常会更低。",
-            "问题：“开会没叫我”。50 年后：1–2 分（满分 10）。"),
+            "时间视角是一种想象中的观察方式。事情的重要性可能保持不变，这也完全可以。",
+            "适用于能够应对的日常困难。不要选择创伤性回忆或需要立即处理的紧急问题。",
+            "选择一个时间跨度，例如一年或五年后，想象从那里回看，并给重要性打分。没有标准答案；如果这种角度不合适，就停下来。",
+            "一年后，没收到邀请的事仍可能重要。今天可以询问计划，也可以选择下一步行动。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Hack = new(
-        "练习", "白色光斑",
+        "练习", "留意身边的细节",
         [
-            "1. 回想那件困扰你的事",
-            "2. 把它想象成一个没有细节的白色光斑",
-            "3. 一直保持这个光斑，直到紧张缓解"
+            "1. 选择身边一个中性的物品，不必回想痛苦的经历",
+            "2. 说出它的三个细节：颜色、形状和表面",
+            "3. 决定要继续练习还是停下来"
         ],
-        "去掉记忆中的细节，常常能减轻它的情绪负荷。",
-        TechniqueUiKind.Entry, "技巧 #6", "30.01.2023", "白色光斑", "软化痛苦的记忆", "艰难时刻", "NLP", 3, "BlurOn",
-        [new TechniqueEntrySeed("事件", "简单说：发生了什么，什么最让你痛", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
+        "短暂留意身边的物品，不必重新回想痛苦事件。",
+        TechniqueUiKind.Entry, "技巧 #6", "30.01.2023", "留意身边的细节", "把注意力转向周围", "艰难时刻", "PsychologyApp 团队", 3, "BlurOn",
+        [new TechniqueEntrySeed("身边的物品", "例如：杯子、窗户或书。", Role: EntryFieldRole.None)],
         Theory(
-            "细节会加剧感受。白色光斑去掉了触发点，让神经系统喘口气。",
-            "当过去的鲜明画面带着情绪向你袭来时。",
-            "回想那件事，然后用一个单纯的白色光斑替换画面，保持 30–60 秒。",
-            "伤害你的人的脸被一个白色光斑取代。呼吸平稳下来，心思回到当下。"),
+            "把注意力放在眼前一个中性的物品上。这是短暂的定向练习，不是治疗，也不能替代专业支持。",
+            "当你想短暂关注周围环境时可以尝试。不要用它代替紧急求助。",
+            "说出物品的三个细节。如果感觉更糟或不舒服，请停下来，看看周围，并选择其他做法。",
+            "例如：杯子——白色、圆形、摸起来有些凉。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Experience = new(
@@ -173,76 +173,76 @@ internal static class TechniqueCatalogContentZh
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Copied = new(
-        "练习", "重复说",
+        "练习", "留意这个想法",
         [
-            "1. 写下困扰你的那句话",
-            "2. 大声重复，就像第一次听到一样",
-            "3. 一直重复，直到情绪缓和"
+            "1. 写下一句反复出现的简短想法",
+            "2. 读一遍，然后问自己：这是事实、预测还是评价？",
+            "3. 如果感觉舒服，可以核实一个事实；如果不适加重，就停下来"
         ],
-        "“像第一次那样”重复描述问题的句子，可以降低情绪强度。",
-        TechniqueUiKind.Copied, "技巧 #8", "21.01.2025", "重复说", "像第一次那样听这个问题", "问题的规模", "NLP", 2, "Repeat",
+        "这个练习帮助你观察想法是如何表达的；重复它并不保证焦虑会减轻。",
+        TechniqueUiKind.Copied, "技巧 #8", "21.01.2025", "留意这个想法", "说出一个焦虑的想法，不必和自己争辩", "问题的规模", string.Empty, 2, "Repeat",
         [new TechniqueEntrySeed("句子", "我害怕失去工作", Suggestions: HarshThoughts)],
         Theory(
-            "一句熟悉的话，慢慢地、平淡地、不带戏剧性地说出来，就会失去分量。",
-            "当一个想法在脑中听起来像判决时。",
-            "写下这句话，然后停顿着重复 5–10 遍，留意身体的感觉。",
-            "“没有人需要我”——重复七遍后，常常会听起来有些荒谬，也轻了一些。"),
+            "这是一个简短的方法，用来留意想法中的措辞并检查它依据什么。不必大声说出来，也不必重复。",
+            "当一句话反复出现，而你愿意暂时看看它时可以尝试。如果这个想法现在让你难以承受，就跳过练习。",
+            "用几个字写下这个想法。问问自己，哪些是确定知道的，哪些是预测。不要强迫自己相信某个答案。如果不适加重，就停下来。",
+            "想法：“我肯定会搞砸会议。”事实：“我明天有个会议。”结果目前还不知道。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Extend = new(
-        "练习", "备用计划",
+        "练习", "为不确定情况做计划",
         [
-            "1. 说出问题",
-            "2. 写下三个现实的备选方案",
-            "3. 留意有退路时焦虑如何变化"
+            "1. 说出你想为之准备备选方案的情况",
+            "2. 写下一种现实可行的选择和可用资源",
+            "3. 选择下一步，或决定何时再考虑这个计划"
         ],
-        "备选方案能降低对单一结果的过度重视。",
-        TechniqueUiKind.Entry, "技巧 #9", "21.01.2025", "备用计划", "用备用计划降低压力", "问题的规模", "NLP", 3, "Backup",
+        "计划可以帮助看清可采取的行动；它不保证结果，也不保证马上轻松。",
+        TechniqueUiKind.Entry, "技巧 #9", "21.01.2025", "为不确定情况做计划", "找到一个实际可行的下一步", "问题的规模", string.Empty, 3, "Backup",
         [
-            new TechniqueEntrySeed("问题", "如果主要计划失败了呢？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("备选方案 1", "例如：接一个自由职业项目", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("备选方案 2", "例如：学习相关岗位的技能", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("备选方案 3", "例如：暂时缩减开支", Suggestions: BackupOptions)
+            new TechniqueEntrySeed("情况", "什么可能不会按计划发展？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("实际可行的选择", "例如：确认期限或寻求帮助", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("资源或支持", "可以向谁或什么资源求助？", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("下一步", "现在可以做什么，或何时再回头处理？", Suggestions: BackupOptions)
         ],
         Theory(
-            "当事情显得非成即败时，头脑会紧绷。备选方案能找回选择的感觉。",
-            "在面试、考试或失败会显得灾难性的事情之前。",
-            "说出问题和三个可行的备用计划——哪怕很普通。",
-            "问题：“拿不到这份工作”。备用计划：实习、找人推荐、去别的城市。"),
+            "计划可以帮你理清可行的行动，但无法控制他人的决定，也不保证让人平静。",
+            "当你面对具体的实际不确定性，并想考虑一种可执行的选择时。",
+            "把已知事实和担忧分开，找出一个现实的步骤、可用资源，或之后重新考虑的时间。如果计划让你反复检查所有可能性并更不安，就停下来。",
+            "面试后还没有收到回复，可以选择一个合适的时间询问，同时先处理其他事情。这无法预测招聘方会如何决定。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Resize = new(
-        "练习", "缩小它",
+        "练习", "从远处观察画面",
         [
-            "1. 描述困扰你的事",
-            "2. 把它想象成你面前的一个物体",
-            "3. 把它缩小并推远，直到不再在意"
+            "1. 简短说出一个日常情境；不必使用痛苦的回忆",
+            "2. 如果感觉舒服，可以把它想象成一幅静止的画面",
+            "3. 你可以调整画面的大小或距离，但不要强迫它改变"
         ],
-        "在想象中缩小并推远问题，能降低你对它的情绪关注。",
-        TechniqueUiKind.Entry, "技巧 #10", "22.01.2025", "缩小它", "让问题变小、变远", "问题的规模", "NLP", 2, "ZoomOutMap",
+        "一种可选的想象练习，用来观察注意力；它不会改变现实情境，也不保证带来轻松。",
+        TechniqueUiKind.Entry, "技巧 #10", "22.01.2025", "从远处观察画面", "只在感觉舒服时尝试拉开距离", "问题的规模", string.Empty, 2, "ZoomOutMap",
         [new TechniqueEntrySeed("困扰你的事", "例如：让你睡不着的冲突", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "画面的大小和距离会影响它的分量。一个又小又远的东西，很少会牵动你的神经。",
-            "当问题显得巨大，就在眼前时。",
-            "想象一个画面，慢慢缩小它，把它推到地平线，持续 10–20 秒。",
-            "一场争吵变成一个小点。呼吸放松，思绪清晰。"),
+            "这是一个简短的想象练习：你可以试着从一定距离观察画面。每个人的反应不同，现实情境本身不会因此改变。",
+            "仅适用于可以应对的日常烦恼。不要选择痛苦的回忆；你也可以跳过练习。",
+            "想象情境时不要补充细节。只有在感觉舒服时才调整大小或距离。如果不适加重，就停下来看看周围的房间。",
+            "你可以把一项任务想象成桌上的便条，然后决定何时再处理它。画面不必变小，也不必变得平静。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Check = new(
-        "练习", "检验一下",
+        "练习", "转移注意力",
         [
-            "1. 描述让你反复纠结的事",
-            "2. 有意停止去想它 1–2 分钟",
-            "3. 留意身体和心情有什么变化"
+            "1. 用一句简短的话说出反复出现的想法，不必描述细节",
+            "2. 留意：“我正在有这样的想法……”",
+            "3. 如果愿意，可以把注意力转向一个中性的声音或物品；想法可能仍会存在"
         ],
-        "过多的关注会放大重要性。短暂的停顿可以检验这个想法控制你的程度。",
-        TechniqueUiKind.Entry, "技巧 #11", "22.01.2025", "检验一下", "看看放下会怎样", "问题的规模", "NLP", 2, "FactCheck",
+        "这个练习帮助你选择把注意力放在哪里；它不要求想法消失。",
+        TechniqueUiKind.Entry, "技巧 #11", "22.01.2025", "转移注意力", "留意想法并选择一个中性焦点", "问题的规模", string.Empty, 2, "FactCheck",
         [new TechniqueEntrySeed("让你反复纠结的事", "哪个想法不断回来？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "如果一个想法关乎生存，放下它会让人觉得危险。这个实验通常会表明，什么灾难都不会发生。",
-            "当你停不下来反复想同一件事时。",
-            "说出这个想法，然后温和地把注意力转到呼吸或周围的声音上。",
-            "想法：“万一我病了怎么办”。停顿之后，焦虑常常从 7 降到 4。"),
+            "这是一个简短的方法，用来留意反复出现的想法，并给注意力安排另一件事。不必压制想法，也不必追求平静。",
+            "当你反复琢磨同一件事，并且愿意短暂转移注意力时可以尝试。如果想法涉及真实危险，请先处理安全问题。",
+            "用一句话说出这个想法，然后选择周围一个中性的声音或物品。如果不适加重，就停下来。不要用它代替必要的医疗或实际行动。",
+            "想法：“万一我生病了呢？”你可以把它当作一个想法留意，并判断是否需要采取实际步骤，例如因某个症状咨询医生。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
@@ -310,10 +310,10 @@ internal static class TechniqueCatalogContentZh
             new TechniqueEntrySeed("1 种味道或舒服的感觉", "例如：口中的水、柔软的布料", Suggestions: ["水", "茶", "柔软的布料", "温暖的手掌", "口气清新", "咖啡", "薄荷口香糖", "巧克力", "一个苹果", "温暖的毯子"])
         ],
         Theory(
-            "焦虑常常把你拉到过去或未来。通过感官逐一数出来，能把你带回此时此地。",
-            "在惊恐、强烈焦虑、头晕或感觉与现实脱离时。",
-            "慢慢地完成每一步，说出具体的感觉。每一项之间保持均匀呼吸。",
-            "看到 5 样 → 感觉到 4 样 → 听到 3 种 → 呼吸平稳，思绪放慢。"),
+            "把注意力放在周围能看到、听到和感觉到的事物上。",
+            "当担忧占据注意力，而你想把注意力转向周围时。",
+            "先从看到的事物开始。如果闻不到气味或尝不到味道，可以跳过。照常呼吸。",
+            "我看到杯子和台灯，感觉到脚下的地板，听到窗外的车声。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
@@ -366,26 +366,26 @@ internal static class TechniqueCatalogContentZh
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
         "练习", "想法记录",
         [
-            "1. 描述情境",
+            "1. 不作评价地描述情境",
             "2. 写下自动想法",
-            "3. 给情绪打分",
-            "4. 写出一个更平衡的替代想法",
-            "5. 再次给情绪打分"
+            "3. 说出感受并评估此刻强度",
+            "4. 区分事实和推测，寻找另一种可能",
+            "5. 再次评估感受；它可能没有变化"
         ],
-        "结构化的认知行为疗法记录，帮助你看到情境、想法和情绪之间的联系。",
-        TechniqueUiKind.Entry, "技巧 #17", "04.07.2026", "想法记录", "拆解一个想法，减轻情绪负荷", "艰难时刻", "CBT", 7, "EditNote",
+        "区分情境、想法和感受，再用事实检查结论。感受不必因此减轻。",
+        TechniqueUiKind.Entry, "技巧 #17", "04.07.2026", "想法记录", "区分事实与解读", "艰难时刻", "CBT", 7, "EditNote",
         [
-            new TechniqueEntrySeed("情境", "发生了什么？在哪里、什么时候？", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("情境", "发生了什么？在哪里、什么时候？只写必要内容。", Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("自动想法", "那一刻你在想什么？", Suggestions: HarshThoughts),
-            new TechniqueEntrySeed("情绪", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("替代想法", "还有什么可能是真的？更平衡的看法", Role: EntryFieldRole.Reframe),
-            new TechniqueEntrySeed("现在的情绪", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
+            new TechniqueEntrySeed("记录前的感受", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
+            new TechniqueEntrySeed("更准确的看法", "哪些事实支持或反驳它？还有什么可能？", Role: EntryFieldRole.Reframe),
+            new TechniqueEntrySeed("记录后的感受", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "自动想法听起来常常像事实，但其实是解读。写下来，就能看清并检验它们。",
-            "在冲突、批评、失败之后，或某个想法反复出现时。",
-            "描述情境和想法，给情绪打分，然后找一个替代想法——不是强行乐观，而是更准确的看法。",
-            "情境：消息没有回复。想法：没有人需要我。替代：对方在忙。情绪：8 → 5。"),
+            "这个练习把事件和你对它的解读区分开。它不是诊断或治疗。",
+            "如果你现在有精力书写，可用于程度较轻的日常烦心事。不要选择创伤性回忆或急性危机。",
+            "先写可观察到的事实，再写想法。寻找同时考虑已知事实和未知信息的解释；不要强迫自己积极思考。评分没有变化，不代表你做错了。",
+            "情境：消息暂时没有回复。想法：“没有人需要我。”事实：目前还没有回复。另一种可能：原因未知，对方可能正忙。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SelfCompassion = new(
@@ -419,10 +419,10 @@ internal static class TechniqueCatalogContentZh
             "3. 找到感觉最强烈的地方",
             "4. 描述它：是什么样的，大还是小，暖还是冷",
             "5. 说出伴随它的情绪",
-            "6. 慢慢呼气 5 次，就像每次呼气都穿过那个地方，然后再次评估紧张程度"
+            "6. 如果你愿意，可以留意哪些感觉变了、哪些保持不变。你随时可以停止练习，或把注意力转向周围环境。"
         ],
-        "身体扫描：觉察情绪住在哪里，说出它的名字，让身体放松下来，不与感觉对抗。",
-        TechniqueUiKind.Entry, "技巧 #19", "16.10.2026", "它在身体的哪里？", "觉察情绪在身体的哪里，并缓解紧张", "艰难时刻", "正念", 4, "Accessibility",
+        "身体扫描邀请你留意身体感觉和情绪，不必试图改变它们。",
+        TechniqueUiKind.Entry, "技巧 #19", "16.10.2026", "它在身体的哪里？", "留意身体感觉，不必试图改变它们", "艰难时刻", "正念", 4, "Accessibility",
         [
             new TechniqueEntrySeed("现在的紧张程度", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("你在身体的哪里感觉到它？", "例如：胸口、喉咙、肩膀", Suggestions: ["头", "额头", "眼睛", "下巴", "喉咙", "脖子", "肩膀", "胸口", "心脏", "腹部", "背", "腰", "手臂", "双手", "腿", "全身"]),
@@ -431,10 +431,10 @@ internal static class TechniqueCatalogContentZh
             new TechniqueEntrySeed("练习后的紧张程度", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "情绪会在身体里回响：焦虑像胸口发紧，委屈像喉咙哽住，疲惫像肩膀沉重。当我们觉察到感觉并说出情绪时，紧张通常会缓解。这正是正念课程中身体扫描的核心。",
+            "身体扫描可以帮助你留意身体感觉，以及可能伴随的情绪。留意这些感觉并不一定会减轻紧张；它也可能保持不变。这类练习会用于一些正念课程中。",
             "当你感到焦虑或沉重，却说不清到底是什么感受时；当一次艰难的谈话或一天之后身体紧绷时。这个练习不解释疾病，也不能代替医生：如果某种感觉是新出现的、强烈的或一直不消退，请去看医生。",
-            "舒服地坐好，把注意力从头顶慢慢移到双脚。在感觉最明显的地方停下。不要改变它，也不要对抗它：描述它，并说出情绪。然后慢慢呼几口气，就像每次呼气都穿过那个地方。",
-            "紧张程度 6。位置：胸口。感觉：紧绷，像攥着的拳头。情绪：谈话前的焦虑。呼气 5 次后，紧绷感柔和了一些，紧张程度 4。"),
+            "如果这样让你感觉舒服，可以坐好，把注意力慢慢移到身体的不同部位。尽可能具体地描述一种感觉；如果合适，也可以说出伴随的情绪。你不必改变任何东西。如果向内关注让你不舒服，请睁开眼睛，看看周围的物品，或结束练习。保持自然呼吸。",
+            "紧张程度 6/10。位置：胸口。感觉：紧绷。情绪：谈话前的焦虑。之后紧张程度仍为 6/10。我睁开眼睛，说出周围的物品。这也是有效的结果。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Flashback = new(
@@ -521,18 +521,18 @@ internal static class TechniqueCatalogContentZh
             "4. 跟着圆圈的节奏呼吸约三分钟",
             "5. 再给紧张程度打分"
         ],
-        "两次吸气加一次长呼气，能很快让身体平静，不需要屏气。",
+        "两次轻柔吸气后接一次较长的呼气，形成一个呼吸节奏。不需要屏气，也不必比平时吸得更深。",
         TechniqueUiKind.Entry, "技巧 #23", "26.10.2026", "循环叹息呼吸", "两次吸气、一次长呼气，让身体平静下来", "艰难时刻", "心理", 3, "Air",
         [
             new TechniqueEntrySeed("之前的紧张程度", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("笔记", "呼吸之后，有什么变化？", Suggestions: ["身体平静了些", "肩膀放松下来了", "心跳慢下来了", "思绪慢下来了", "有点头晕", "没什么变化", "想再做一次"]),
+            new TechniqueEntrySeed("笔记", "你注意到了什么？", Suggestions: ["稍微平静一些", "没有明显变化", "感觉更不舒服", "有点头晕", "不想评价", "其他"]),
             new TechniqueEntrySeed("之后的紧张程度", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "第二次短促的吸气让肺部更充分地张开，而长长的呼气会踩下神经系统的“刹车”：心跳变慢，身体平静下来。2023 年的一项研究发现，每天五分钟这样的呼吸，对情绪的改善比正念冥想更明显。这不是治疗，而是快速降低紧张的方法。",
-            "当焦虑、愤怒或紧张涌上来，需要在几分钟内让身体平静时。也适合在艰难的谈话前或睡前使用。",
-            "轻松地呼吸，不要用尽全力：第二次吸气要短，呼气要慢、不要用力。如果感到头晕，就恢复正常呼吸，很快会过去。圆圈会在三分钟后自动停止。",
-            "打电话前紧张程度 6/10。三分钟两次吸气、一次长呼气。紧张程度 3/10，说话声音也更平稳了。"),
+            "一项有111名参与者的随机研究中，参与者连续一个月每天练习五分钟循环叹息。该组的积极情绪评分提升幅度大于正念冥想组。这并不能证明只练一次就能迅速减轻紧张，也不代表每个人都会有相同反应。",
+            "如果关注呼吸让你觉得舒服，可以尝试一下，例如在谈话前或短暂休息时。如果这样让你更不舒服，就选一个关注周围环境的练习。",
+            "轻柔呼吸，不必尽可能深吸。只在感觉舒服时重复这个节奏。如果头晕或不适，请停止练习，坐稳并恢复平常的呼吸。如果症状严重或持续不退，请寻求医疗建议。",
+            "打电话前，我注意到自己有些紧张，试着做几个轻柔的循环。如果没有变化或感觉更不舒服，就停下来，恢复平常的呼吸。"),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition MuscleRelax = new(

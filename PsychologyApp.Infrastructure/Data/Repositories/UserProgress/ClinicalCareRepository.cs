@@ -30,10 +30,16 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
     public async Task<SafetyPlanDTO?> GetSafetyPlanAsync(CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await GetSafetyPlanAsync(connection, null, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal static async Task<SafetyPlanDTO?> GetSafetyPlanAsync(SqliteConnection connection, SqliteTransaction? transaction, int commandTimeout, CancellationToken cancellationToken)
+    {
         string? json = await connection.ExecuteScalarAsync<string?>(DapperCommandFactory.Create(
             "SELECT Value FROM AppMetadata WHERE Key = @key;",
             new { key = SafetyPlanMetadataKey },
-            commandTimeout: CommandTimeoutSeconds,
+            transaction: transaction,
+            commandTimeout: commandTimeout,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         if (string.IsNullOrWhiteSpace(json))
@@ -89,10 +95,16 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
     public async Task<RiskAssessmentDTO?> GetLatestRiskAssessmentAsync(CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await GetLatestRiskAssessmentAsync(connection, null, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal static async Task<RiskAssessmentDTO?> GetLatestRiskAssessmentAsync(SqliteConnection connection, SqliteTransaction? transaction, int commandTimeout, CancellationToken cancellationToken)
+    {
         ClinicalRiskRow? row = await connection.QuerySingleOrDefaultAsync<ClinicalRiskRow>(DapperCommandFactory.Create(
             ClinicalCareSql.SelectLatestRiskAssessment,
             new { beforeUtc = CurrentUtcUpperBound },
-            commandTimeout: CommandTimeoutSeconds,
+            transaction: transaction,
+            commandTimeout: commandTimeout,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
         return row is null
             ? null
@@ -142,9 +154,15 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
     public async Task<TherapyProgramStateDTO?> GetActiveProgramAsync(CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await GetActiveProgramAsync(connection, null, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal static async Task<TherapyProgramStateDTO?> GetActiveProgramAsync(SqliteConnection connection, SqliteTransaction? transaction, int commandTimeout, CancellationToken cancellationToken)
+    {
         ProgramRow? row = await connection.QuerySingleOrDefaultAsync<ProgramRow>(DapperCommandFactory.Create(
             ClinicalCareSql.SelectActiveProgram,
-            commandTimeout: CommandTimeoutSeconds,
+            transaction: transaction,
+            commandTimeout: commandTimeout,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
         if (row is null)
         {
@@ -185,10 +203,16 @@ public sealed class ClinicalCareRepository : SqliteRepositoryBase, IClinicalCare
     public async Task<IReadOnlyList<EscalationEventDTO>> GetRecentEscalationsAsync(int limit, CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        return await GetRecentEscalationsAsync(connection, null, CommandTimeoutSeconds, limit, cancellationToken).ConfigureAwait(false);
+    }
+
+    internal static async Task<IReadOnlyList<EscalationEventDTO>> GetRecentEscalationsAsync(SqliteConnection connection, SqliteTransaction? transaction, int commandTimeout, int limit, CancellationToken cancellationToken)
+    {
         IEnumerable<EscalationRow> rows = await connection.QueryAsync<EscalationRow>(DapperCommandFactory.Create(
             ClinicalCareSql.SelectRecentEscalations,
             new { limit, beforeUtc = CurrentUtcUpperBound },
-            commandTimeout: CommandTimeoutSeconds,
+            transaction: transaction,
+            commandTimeout: commandTimeout,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return rows.Select(row => new EscalationEventDTO

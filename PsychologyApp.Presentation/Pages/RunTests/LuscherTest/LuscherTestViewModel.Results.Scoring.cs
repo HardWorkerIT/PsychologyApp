@@ -48,20 +48,19 @@ public partial class LuscherTestViewModel
         {
             PropertyName = AppStrings.TestsCoLabel,
             PropertyValue = AppStrings.TestsScoreOutOf(_lastCoValue, "32"),
-            PropertyText = LuscherStrings.InterpretCo(_lastCoValue)
+            PropertyText = LuscherStrings.SelfReflectionNote
         });
 
         ResultItems.Add(new ResultItem
         {
             PropertyName = AppStrings.TestsBkLabel,
             PropertyValue = AppStrings.TestsDecimalScoreOutOf(Math.Round(_lastBkValue, 2), "3.2"),
-            PropertyText = LuscherStrings.InterpretBk(_lastBkValue)
+            PropertyText = string.Empty
         });
 
         SetFinish();
         NotifyStandardPassProgress();
         RefreshStandardPassDisplay();
-        LoadRecommendationAsync(_lastCoValue).FireAndForget();
         PersistStandardResultAsync(_lastCoValue, _lastBkValue).FireAndForget();
     }
 
@@ -71,7 +70,7 @@ public partial class LuscherTestViewModel
         {
             _colourSelectedItems.Add((colourValue, colourMeaningVoted));
             CurrentInstruction = AppStrings.TestsLuscherSecondInstruction;
-            FirstResult = ColourStrings.GetExplanation(colourValue, ColourMeaningType.Wanted);
+            FirstResult = LuscherStrings.SelfReflectionNote;
             FirstColor = Color.FromArgb(colourValue.Code);
             FirstName = ColourStrings.GetColorName(colourValue);
             NotifyBriefProgress();
@@ -79,7 +78,7 @@ public partial class LuscherTestViewModel
         }
 
         _colourSelectedItems.Add((colourValue, colourMeaningUnvoted));
-        SecondResult = ColourStrings.GetExplanation(colourValue, ColourMeaningType.Unwanted);
+        SecondResult = string.Empty;
         SecondColor = Color.FromArgb(colourValue.Code);
         SecondName = ColourStrings.GetColorName(colourValue);
         SetFinish();

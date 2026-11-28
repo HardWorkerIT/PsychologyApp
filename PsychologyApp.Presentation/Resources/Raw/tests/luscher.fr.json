@@ -1,32 +1,32 @@
 [
   {
-    "title": "Test de Lüscher court",
-    "subtitle": "Version alternative",
+    "title": "Choix de couleurs pour l’observation de soi",
+    "subtitle": "Exercice bref · pas un diagnostic",
     "estimatedMinutes": 2,
     "questionCount": 2,
-    "construct": "État émotionnel",
-    "betterWhen": "lower",
-    "description": "Choisissez la couleur la plus et la moins agréable en ce moment — pas vos couleurs préférées en général.",
+    "construct": "Auto-réflexion",
+    "betterWhen": "none",
+    "description": "Choisissez les couleurs qui vous semblent les plus et les moins agréables maintenant. Cet exercice permet d’observer vos préférences.",
     "algorithm": [
       "1. Choisissez la couleur la plus agréable",
       "2. Choisissez la couleur la moins agréable"
     ],
-    "comment": "Ne choisissez pas vos couleurs préférées. Le test mesure votre état émotionnel actuel.",
+    "comment": "Le choix des couleurs n’est pas utilisé pour évaluer l’humeur ou la personnalité.",
     "navigationTarget": "brief"
   },
   {
-    "title": "Test de Lüscher complet",
-    "subtitle": "Version standard",
+    "title": "Choix de couleurs : deux tours",
+    "subtitle": "Exercice · pas un diagnostic",
     "estimatedMinutes": 7,
     "questionCount": 8,
-    "construct": "État émotionnel",
-    "betterWhen": "lower",
-    "description": "Classez deux fois 8 couleurs de la plus à la moins agréable, selon ce que vous ressentez ici et maintenant.",
+    "construct": "Auto-réflexion",
+    "betterWhen": "none",
+    "description": "Classez huit couleurs deux fois, de la plus à la moins agréable. Vous pouvez simplement remarquer si vos choix ont changé.",
     "algorithm": [
       "1. Classez 8 couleurs de la plus à la moins agréable",
       "2. Refaites l'étape 1 sans regarder votre premier résultat"
     ],
-    "comment": "Ne choisissez pas vos couleurs préférées. Le test mesure votre état émotionnel actuel.",
+    "comment": "Le choix des couleurs n’est pas utilisé pour évaluer l’humeur ou la personnalité.",
     "navigationTarget": "standard"
   }
 ]

@@ -635,6 +635,17 @@ public sealed class UserProgressRepository : SqliteRepositoryBase, IUserProgress
         return rows.AsList();
     }
 
+    public async Task<IReadOnlyList<PracticeIntensitySample>> GetRecentPracticeIntensityAsync(int limit, CancellationToken cancellationToken = default)
+    {
+        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
+        IEnumerable<PracticeIntensitySample> rows = await connection.QueryAsync<PracticeIntensitySample>(DapperCommandFactory.Create(
+            UserProgressSql.SelectRecentPracticeIntensity,
+            new { limit, beforeUtc = CurrentUtcUpperBound },
+            commandTimeout: CommandTimeoutSeconds,
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
+        return rows.AsList();
+    }
+
     public async Task<int> CountDistinctTechniqueCompletionsForItemsBetweenAsync(
         IReadOnlyList<string> itemKeys,
         DateTime sinceUtc,

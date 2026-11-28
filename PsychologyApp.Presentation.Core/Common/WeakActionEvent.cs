@@ -18,6 +18,7 @@ public sealed class WeakActionEvent
     {
         lock (_sync)
         {
+            _subscriptions.RemoveAll(static subscription => !subscription.IsAlive);
             foreach (Delegate single in handler.GetInvocationList())
             {
                 _subscriptions.Add(Subscription.For((Action)single));
@@ -70,6 +71,8 @@ public sealed class WeakActionEvent
         private readonly Action? _strong;
         private readonly WeakReference<object>? _target;
         private readonly MethodInfo _method;
+
+        public bool IsAlive => _strong is not null || _target!.TryGetTarget(out _);
 
         private Subscription(Action? strong, WeakReference<object>? target, MethodInfo method)
         {

@@ -35,14 +35,18 @@ saves the person's message and the whole reply in one transaction and updates th
    Russian typed on the English layout ("ghbdtn" for "привет") is read as Russian when the Russian reading means something to the engine.
    One or two words with no feeling, topic or person, said when nothing was asked, are not thanked as a story.
 3. `UtteranceClassifier` says what the person is doing: greeting, thanks, goodbye, yes/no, "I don't know", refusing to talk, asking for
-   advice, asking to explain, why, is it normal, backchannel, laughter/emoji, good news, how are you, name, capabilities, "say that
+   advice (including a direct question at the end of a long message), explicitly asking how to support someone else, asking to explain, why, is it normal, backchannel, laughter/emoji, good news, how are you, name, capabilities, "say that
    again", "skip". Social phrases count only when the message carries no feeling ("thanks, but I'm still anxious" is a statement).
-4. Anything else is a statement about a situation: quote one sentence back (only when the message has several), name the feeling, ask
-   one fitting question at a time, measure tension, summarise now and then, return to the first thing said, offer a practice. Replies
-   are selected and assembled by the deterministic dialogue engine.
-5. If the reply would repeat one of the last eight companion messages, it is drawn again (up to four times).
+4. Anything else is a statement about a situation: quote the latest sentence that carries the recognised feeling when possible; if it is long, shorten only at a
+   word boundary, and omit the quote if a useful intact excerpt does not fit. Closing quotes after sentence punctuation are handled, and Chinese and other CJK sentence endings are recognised;
+   text without spaces is shortened at a Unicode character boundary. When the analysis recognises two distinct feelings, name both tentatively and ask one fitting question at a time. A brief advice request that names no new situation carries the active theme into the reflection. When an explicit advice request has a recognised event, the companion asks an unanswered event-specific question if one is available. If a brief advice request has no clear feeling but the saved context names a situation, ask what decision the person is weighing instead of inferring one.
+   The companion measures tension, summarises now and then, returns to earlier context and offers a practice. Replies are selected and assembled by the deterministic dialogue engine. When asked why, it gives a cautious explanation and asks one follow-up tied to a remembered situation, or asks when and around what the feeling first appeared.
+5. If a reply repeats one of the last eight companion messages, it is drawn again (up to four times). A conservative, ordered content-word overlap check also catches near-verbatim variants while keeping negation and distinguishing questions from statements; this is a lexical heuristic, not general semantic understanding.
 
 `CompanionState` is an immutable record serialised to JSON with the chat, so a chat resumes exactly where it stopped.
+Asked question ids are stored uniquely (up to 128 ids, more than the current built-in question set needs), so a long chat does not restart its question cycle when a short rolling list fills up.
+
+Besides the three-message analysis window and the first quote, it keeps at most eight short excerpts, tagging them when a theme, person or event is recognised. It preserves an early anchor for each of the most recently active contexts first, then uses remaining slots for fresh updates; a newer anchor refreshes no more than once every four message turns, so repeated wording does not crowd memory. The same wording can be kept separately when its recognised tags point to a different topic, person or event, so an earlier case does not hide the new one. These anchors stay in the encrypted chat database. An emotion-only excerpt is kept as untagged context only when no earlier theme, person or event is active, so it cannot be mistaken for a quote from a previous situation. A later recap can reuse an earlier anchor from the same topic and, when the person explicitly chose a support goal, remind them whether they wanted to vent, understand the situation or calm down. A short “again / still / как раньше” can bring back a matching excerpt even when a feeling is named, as long as the message does not identify a new theme, person or event, and ask whether it is the same situation. Retrieval prioritises matching events, people and themes, and rejects an excerpt when a recognised tag conflicts with the current case. A plain yes or no to the recall question gets a specific follow-up. If the person says the recalled context was wrong, that anchor and its active theme, person, event and intensity are cleared before the dialogue continues. Old excerpts are never sent back through emotion analysis, trauma and bereavement messages are not added to this recall list, and the callback is suppressed after either is disclosed. Missing fields in older saved states remain valid and start with an empty list.
 
 ## Memory between chats
 
@@ -60,13 +64,15 @@ Table `ChatMemory (MemoryKey, MemoryValue)`:
 "Delete all chats" keeps only `name`, `tried:` and `helped:` (its dialog promises the name and preferences); the rest was taken
 from the conversations and is deleted with them (`ChatMemoryKeys.OutlivesChats`). "Forget about you" clears the whole table.
 
-The practice with the most `helped` marks is offered first in the next chat ("Last time X helped you"), except during a panic attack,
-where the standard help is used. Deleting all chats keeps the memory; "forget" clears the memory and keeps the chats.
+Among equally relevant practices, the one with fewer prior starts is offered first; when counts are tied, the reviewed order stays
+unchanged unless that would repeat the previous primary suggestion in the same chat. The previously helpful practice can lead when it
+has not been tried more often than the current alternative, with a note that it helped before. Panic recommendations remain within the
+reviewed panic options. Deleting all chats keeps the practice counters; "forget" clears the memory and keeps the chats. When both shown options have been passed over, the companion asks what did not fit instead of repeating one.
 
 A step decided on (the end of problem solving, or "I'll talk to him tomorrow" said in a chat) is asked about when a new chat opens,
 from six hours on and for two weeks: "Last time you decided: … How did it go?" with "I did it / Partly / It didn't work out". The
-answer is met (what helped, what got in the way, a five-minute version of the step) and the step is forgotten. A low mood logged
-today still comes first.
+answer can use those buttons or begin with a clear natural-language outcome phrase. If a detailed reply includes that result,
+the companion continues through its normal conversation flow and resolves the old plan instead of reducing the message to a button.
 
 ## Guided exercises in the chat
 

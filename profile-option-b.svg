@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="2000" viewBox="0 0 450 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Профиль — вариант B: опоры под рукой</title>
+  <desc id="desc">Профиль начинается с проверки состояния, показывает краткую статистику и объединяет историю с избранным.</desc>
+  <defs>
+    <style>
+      .text { font-family: Roboto, Arial, sans-serif; fill: #30343a; }
+      .muted { fill: #73777c; }
+      .blue { fill: #0787f9; }
+      .section { font-size: 18px; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="450" height="1000" fill="#f2f3f5"/>
+  <rect width="450" height="54" fill="#fff"/>
+  <text class="text muted" x="20" y="34" font-size="15">9:41</text>
+  <path d="M71 24l8-5 8 5v6c0 6-4 10-8 12-4-2-8-6-8-12z" fill="none" stroke="#72767b" stroke-width="2"/>
+  <path d="M73 23l11 13" stroke="#72767b" stroke-width="1.5"/>
+  <path d="M378 27c7-8 16-8 23 0l-11 13z" fill="#6f7479"/><path d="M405 39l12-15v15z" fill="#6f7479"/>
+  <rect x="426" y="20" width="11" height="20" rx="2" fill="#6f7479"/><rect x="429" y="17" width="5" height="3" rx="1" fill="#6f7479"/>
+  <rect y="54" width="450" height="58" fill="#fff"/>
+  <path d="M34 82h-12m0 0 9-9m-9 9 9 9" fill="none" stroke="#0875cf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="text" x="225" y="89" text-anchor="middle" font-size="21" font-weight="600">Профиль</text>
+  <line x1="20" y1="111.5" x2="430" y2="111.5" stroke="#e9eaec"/>
+
+  <text class="text" x="24" y="151" font-size="23" font-weight="700">Ваши опоры</text>
+  <text class="text muted" x="24" y="176" font-size="14">Всё важное — под рукой</text>
+
+  <rect x="20" y="194" width="410" height="112" rx="20" fill="#e6f2ff"/>
+  <circle cx="72" cy="250" r="30" fill="#d3eaff"/>
+  <rect x="61" y="235" width="22" height="26" rx="4" fill="none" stroke="#0787f9" stroke-width="2.2"/>
+  <path d="M66 244l3 3 7-7m-10 15 3 3 7-7" fill="none" stroke="#0787f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="text" x="119" y="242" font-size="17" font-weight="700">Как я сейчас?</text>
+  <text class="text muted" x="119" y="266" font-size="13">Короткая проверка состояния</text>
+  <path d="M405 243l6 7-6 7" fill="none" stroke="#7b8b9a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text class="text section" x="24" y="350">Активность</text>
+  <rect x="20" y="366" width="410" height="99" rx="18" fill="#fff" stroke="#e8eaed"/>
+  <line x1="157" y1="384" x2="157" y2="447" stroke="#eceef0"/>
+  <line x1="293" y1="384" x2="293" y2="447" stroke="#eceef0"/>
+  <text class="text" x="89" y="411" text-anchor="middle" font-size="24" font-weight="700">0</text>
+  <text class="text muted" x="89" y="438" text-anchor="middle" font-size="13">практик</text>
+  <text class="text" x="225" y="411" text-anchor="middle" font-size="24" font-weight="700">0</text>
+  <text class="text muted" x="225" y="438" text-anchor="middle" font-size="13">тестов</text>
+  <text class="text" x="361" y="411" text-anchor="middle" font-size="24" font-weight="700">0/7</text>
+  <text class="text muted" x="361" y="438" text-anchor="middle" font-size="13">дней на неделе</text>
+
+  <text class="text section" x="24" y="510">Попробовать</text>
+  <rect x="20" y="526" width="410" height="102" rx="18" fill="#fff" stroke="#e8eaed"/>
+  <rect x="36" y="546" width="62" height="62" rx="18" fill="#daf1ec"/>
+  <circle cx="67" cy="570" r="10" fill="#188879"/><path d="M67 580v12m-9 0h18" stroke="#188879" stroke-width="3" stroke-linecap="round"/>
+  <text class="text" x="112" y="560" font-size="16" font-weight="700">Заземление 5–4–3–2–1</text>
+  <text class="text muted" x="112" y="585" font-size="13">Опора через пять чувств</text>
+  <text class="text muted" x="112" y="608" font-size="12">~3 мин</text>
+  <path d="M407 566l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text class="text section" x="24" y="673">Ваши записи</text>
+  <rect x="20" y="689" width="410" height="167" rx="18" fill="#fff" stroke="#e8eaed"/>
+  <circle cx="57" cy="730" r="18" fill="#eef5ff"/>
+  <path d="M49 730h16m-16 5h11m-11-10h16" stroke="#1688ed" stroke-width="2" stroke-linecap="round"/>
+  <text class="text" x="88" y="728" font-size="15" font-weight="600">История практик</text>
+  <text class="text muted" x="88" y="750" font-size="12">Пока нет завершённых</text>
+  <path d="M407 724l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="42" y1="772" x2="408" y2="772" stroke="#eceef0"/>
+  <circle cx="57" cy="814" r="18" fill="#eef5ff"/>
+  <path d="M57 823s-9-6-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z" fill="none" stroke="#1688ed" stroke-width="1.8"/>
+  <text class="text" x="88" y="812" font-size="15" font-weight="600">Избранные цитаты</text>
+  <text class="text muted" x="88" y="834" font-size="12">Сохранённое будет здесь</text>
+  <path d="M407 808l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect y="963" width="450" height="37" fill="#fff"/><rect x="165" y="980" width="120" height="4" rx="2" fill="#5e6064"/>
+</svg>

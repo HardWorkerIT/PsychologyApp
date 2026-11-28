@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.Architecture;
@@ -60,6 +61,23 @@ public sealed class FsdArchitectureTests
             !violations.Any(),
             "Shared layer must not import pages/widgets/features/entities/app slices:\n"
             + string.Join("\n", violations.Take(30)));
+    }
+
+    [Fact]
+    public void SharedXaml_ShouldNotImportUpperLayers()
+    {
+        const string clrPrefix = "clr-namespace:";
+        var violations = Directory.EnumerateFiles(Path.Combine(PresentationRoot, "Shared"), "*.xaml", SearchOption.AllDirectories)
+            .SelectMany(file => XDocument.Load(file).Descendants().Attributes()
+                .Where(attribute => attribute.IsNamespaceDeclaration && attribute.Value.StartsWith(clrPrefix, StringComparison.Ordinal))
+                .Select(attribute => attribute.Value[clrPrefix.Length..].Split(';')[0])
+                .Where(ns => ns.StartsWith("PsychologyApp.Presentation.", StringComparison.Ordinal)
+                    && ForbiddenSharedImports.Any(marker => (ns + ".").Contains(marker, StringComparison.Ordinal)))
+                .Select(ns => $"{Path.GetRelativePath(PresentationRoot, file)}: {ns}"))
+            .ToArray();
+
+        Assert.True(violations.Length == 0, "Shared XAML must not import upper layers:" + Environment.NewLine
+            + string.Join(Environment.NewLine, violations));
     }
 
     [Fact]

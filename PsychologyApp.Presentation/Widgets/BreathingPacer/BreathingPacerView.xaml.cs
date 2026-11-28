@@ -54,6 +54,13 @@ public partial class BreathingPacerView : ContentView
         ToggleButton.TapCommand = new Command(Toggle);
         FullscreenButton.BodyText = AppStrings.BreathFullscreen;
         SizeChanged += OnSizeChanged;
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(IsVisible) && !IsVisible)
+            {
+                StopForHidden();
+            }
+        };
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
         ShowReady();
@@ -112,11 +119,17 @@ public partial class BreathingPacerView : ContentView
 
     private void OnSizeChanged(object? sender, EventArgs e) => FitCircleToWidth();
 
-    private void OnLoaded(object? sender, EventArgs e) => SafeAsync.Run(StartImmersiveAfterDelayAsync);
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        if (IsVisible)
+        {
+            SafeAsync.Run(StartImmersiveAfterDelayAsync);
+        }
+    }
 
     private async Task StartImmersiveAfterDelayAsync()
     {
-        if (!IsImmersive || _running)
+        if (!IsImmersive || _running || !IsVisible)
         {
             return;
         }
@@ -127,7 +140,7 @@ public partial class BreathingPacerView : ContentView
         try
         {
             await Task.Delay(ImmersiveStartDelayMs, startCts.Token);
-            if (!startCts.IsCancellationRequested && UiAnimations.CanAnimate(this) && IsImmersive && !_running)
+            if (!startCts.IsCancellationRequested && UiAnimations.CanAnimate(this) && IsImmersive && !_running && IsVisible)
             {
                 Start();
             }
@@ -147,7 +160,9 @@ public partial class BreathingPacerView : ContentView
         }
     }
 
-    private void OnUnloaded(object? sender, EventArgs e)
+    private void OnUnloaded(object? sender, EventArgs e) => StopForHidden();
+
+    private void StopForHidden()
     {
         CancelImmersiveStart();
         Stop();

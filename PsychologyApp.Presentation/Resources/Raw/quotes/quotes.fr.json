@@ -335,7 +335,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Maya Angelou",
+    "author": "Carl W. Buehner",
     "text": "Les gens oublieront ce que vous avez dit, mais ils n'oublieront jamais ce que vous leur avez fait ressentir.",
     "theme": "relationships"
   },
@@ -365,7 +365,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Will Durant",
+    "author": "Will Durant (résumant Aristote)",
     "text": "Nous sommes ce que nous faisons de manière répétée. L'excellence n'est donc pas un acte, mais une habitude.",
     "theme": "habits"
   },
@@ -425,7 +425,7 @@
     "theme": "acceptance"
   },
   {
-    "author": "Rûmî",
+    "author": "Inspiré de Rûmî",
     "text": "La blessure est l'endroit par où la lumière entre en vous.",
     "theme": "healing"
   },
@@ -1177,6 +1177,21 @@
   {
     "author": "PsychologyApp",
     "text": "Le lien peut se construire par des pas compatibles avec votre vie.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Un plan est plus réaliste s’il prévoit une marge pour l’imprévu.",
+    "theme": "motivation"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Vous pouvez demander un temps de réflexion avant de vous engager.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Équipe PsychologyApp",
+    "text": "Vérifier que chacun a compris l’accord est plus simple avant de commencer.",
     "theme": "relationships"
   }
 ]

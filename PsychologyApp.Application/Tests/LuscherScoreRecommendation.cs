@@ -1,20 +1,8 @@
 using PsychologyApp.Application.Models.Tests;
-using PsychologyApp.Domain.Practice;
 using System.Text.Json;
 using PsychologyApp.Application.Serialization;
 
 namespace PsychologyApp.Application.Tests;
-
-public static class LuscherScoreRecommendation
-{
-    public static TechniqueId RecommendTechnique(int coValue) => coValue switch
-    {
-        >= 23 => TechniqueId.Grounding,
-        >= 17 => TechniqueId.Breathing,
-        >= 12 => TechniqueId.Grounding,
-        _ => TechniqueId.Grounding
-    };
-}
 
 public sealed class LuscherDetailReader
 {

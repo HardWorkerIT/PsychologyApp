@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1720,33 +1720,6 @@
   <data name="MoodReminderBody" xml:space="preserve">
     <value>Wie fühlst du dich heute? Trag es in dein Tagebuch ein.</value>
   </data>
-  <data name="LuscherCoStable" xml:space="preserve">
-    <value>Keine unproduktive Anspannung; hohe emotionale Stabilität. Handlungen sind zielgerichtet und effizient. Die Grundstimmung ist optimistisch.</value>
-  </data>
-  <data name="LuscherCoMildTension" xml:space="preserve">
-    <value>Mäßige Anspannung, die die Leistungsfähigkeit mindern kann. Die emotionale Stabilität ist insgesamt ausreichend, mit gelegentlicher Belastung.</value>
-  </data>
-  <data name="LuscherCoModerateTension" xml:space="preserve">
-    <value>Spürbare Anspannung und emotionale Belastung. Die Leistungsfähigkeit kann sinken; Erholung und Ruhe werden empfohlen.</value>
-  </data>
-  <data name="LuscherCoElevatedTension" xml:space="preserve">
-    <value>Erhöhte Anspannung und verminderte emotionale Stabilität. Anhaltende Anstrengung kann sich erzwungen anfühlen; Ruhe und Unterstützung werden empfohlen.</value>
-  </data>
-  <data name="LuscherCoHighTension" xml:space="preserve">
-    <value>Hohe Anspannung und emotionale Instabilität. Deutliche Belastung; professionelle Unterstützung kann hilfreich sein.</value>
-  </data>
-  <data name="LuscherBkExhausted" xml:space="preserve">
-    <value>Niedriger vegetativer Koeffizient: Erschöpfung, Passivität und ein großer Erholungsbedarf.</value>
-  </data>
-  <data name="LuscherBkConserving" xml:space="preserve">
-    <value>Ausgeglichener vegetativer Koeffizient: mäßiger Ruhebedarf bei genügend Energie für gewohnte Abläufe.</value>
-  </data>
-  <data name="LuscherBkOptimal" xml:space="preserve">
-    <value>Optimale Mobilisierung: körperliche und geistige Ressourcen sind gut auf Handeln ausgerichtet.</value>
-  </data>
-  <data name="LuscherBkOveraroused" xml:space="preserve">
-    <value>Hoher vegetativer Koeffizient: starke emotionale Erregung und vegetative Reaktivität.</value>
-  </data>
   <data name="TherapyProgramTitle" xml:space="preserve">
     <value>Dein Programm</value>
   </data>
@@ -1952,10 +1925,10 @@
     <value>Antwortmöglichkeit</value>
   </data>
   <data name="TestsCoLabel" xml:space="preserve">
-    <value>Gesamtabweichung von der autogenen Norm (GA)</value>
+    <value>Übungswert (CO)</value>
   </data>
   <data name="TestsBkLabel" xml:space="preserve">
-    <value>Vegetativer Koeffizient (VK)</value>
+    <value>Übungswert (BK)</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ja</value>
@@ -2605,47 +2578,11 @@
   <data name="TodayRecommendationReasonContinueDraft.1" xml:space="preserve">
     <value>Mach dort weiter, wo du aufgehört hast</value>
   </data>
-  <data name="HeckHessScore.1" xml:space="preserve">
-    <value>0-24 - geringer Neurotizismus</value>
-  </data>
-  <data name="HeckHessScore.2" xml:space="preserve">
-    <value>25-40 - hoher Neurotizismus</value>
-  </data>
-  <data name="HeckHessScoreDetail.1" xml:space="preserve">
-    <value>Die emotionale Reaktivität liegt im Normalbereich. Achte weiter auf Stress und Erholung.</value>
-  </data>
-  <data name="HeckHessScoreDetail.2" xml:space="preserve">
-    <value>Erhöhter Neurotizismus. Übungen mit Polaritäten und zum Vergleich von Wichtigkeit können die Anspannung lösen.</value>
-  </data>
-  <data name="HaerScore.1" xml:space="preserve">
-    <value>0-28 - geringe Psychopathie</value>
-  </data>
-  <data name="HaerScore.2" xml:space="preserve">
-    <value>29-40 - hohe Psychopathie</value>
-  </data>
-  <data name="HaerScoreDetail.1" xml:space="preserve">
-    <value>Der Wert liegt im niedrigen Bereich. Das ist ein Screening, keine Diagnose.</value>
-  </data>
-  <data name="HaerScoreDetail.2" xml:space="preserve">
-    <value>Erhöhter Wert. Die Arbeit mit früheren Erfahrungen und Überzeugungen kann helfen.</value>
-  </data>
   <data name="TestRecommendationReasonBeck.1" xml:space="preserve">
     <value>Bei depressiven Symptomen hilft Spin, die Ladung schmerzhafter Erinnerungen zu senken.</value>
   </data>
   <data name="TestRecommendationReasonBeck.2" xml:space="preserve">
     <value>Zur Vorbeugung hilft es, Gedanken auf Papier zu schreiben.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.1" xml:space="preserve">
-    <value>Bei hohem Neurotizismus helfen Polaritäten, beide Seiten zu sehen.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.2" xml:space="preserve">
-    <value>Der Vergleich von Wichtigkeit stärkt den Abstand.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.1" xml:space="preserve">
-    <value>„50 Jahre später“ verschiebt das Problem in die Zukunft.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.2" xml:space="preserve">
-    <value>Die Veränderung von Erfahrungen hilft, Überzeugungen neu zu betrachten.</value>
   </data>
   <data name="TestRecommendationReasonPochebut.1" xml:space="preserve">
     <value>„Mach es klein“ verkleinert die Bedeutung des Auslösers sichtbar.</value>
@@ -3409,6 +3346,9 @@
   </data>
   <data name="ArticleListen" xml:space="preserve">
     <value>Anhören</value>
+  </data>
+  <data name="ArticleListenUnavailable" xml:space="preserve">
+    <value>Vorlesen ließ sich nicht starten. Prüfe, ob eine Stimme für diese Sprache installiert ist.</value>
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Stopp</value>
@@ -4220,24 +4160,6 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>Erschöpfung</value>
   </data>
-  <data name="AdsRewardDescription" xml:space="preserve">
-    <value>Nach dem vollständigen Video sind Anzeigen in Katalogen und Vollbildanzeigen für {0} Minuten pausiert.</value>
-  </data>
-  <data name="AdsRewardWatch" xml:space="preserve">
-    <value>Video ansehen</value>
-  </data>
-  <data name="AdsRewardLoading" xml:space="preserve">
-    <value>Video wird geladen…</value>
-  </data>
-  <data name="AdsRewardActive" xml:space="preserve">
-    <value>Deine Werbepause läuft.</value>
-  </data>
-  <data name="AdsRewardClosedEarly" xml:space="preserve">
-    <value>Das Video wurde vor der Belohnung geschlossen.</value>
-  </data>
-  <data name="AdsRewardUnavailable" xml:space="preserve">
-    <value>Das Video ist gerade nicht verfügbar. Versuch es später erneut.</value>
-  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>Einsamkeit</value>
   </data>
@@ -4297,6 +4219,24 @@
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Künftige Werbung ist auf diesem Gerät deaktiviert.</value>
+  </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Nach dem vollständigen Video sind Anzeigen in Katalogen und Vollbildanzeigen für {0} Minuten pausiert.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Video ansehen</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Video wird geladen…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Deine Werbepause läuft.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>Das Video wurde vor der Belohnung geschlossen.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>Das Video ist gerade nicht verfügbar. Versuch es später erneut.</value>
   </data>
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Dieser Code ist ungültig.</value>
@@ -4710,4 +4650,18 @@
     <value>Zum Auswählen tippen</value>
   </data>
   <data name="SettingsPickerDone" xml:space="preserve"><value>Fertig</value></data>
+  <data name="ReflectiveQuestionnaireScoreSummary" xml:space="preserve"><value>Zur Selbstreflexion</value></data>
+  <data name="ReflectiveQuestionnaireScoreDetail" xml:space="preserve"><value>Dieser Punktwert ist keine Diagnose und belegt weder ein Merkmal noch eine Erkrankung. Nutze deine Antworten als Anregung, über eigene Erfahrungen nachzudenken. Wenn dich etwas beunruhigt, besprich es mit einer qualifizierten Fachperson.</value></data>
+  <data name="LuscherSelfReflectionNote" xml:space="preserve"><value>Die Farbauswahl ist eine Übung zur Selbstbeobachtung. Sie beurteilt weder Stimmung noch Persönlichkeit.</value></data>
+  <data name="TechniqueInstructions" xml:space="preserve"><value>So geht’s</value></data>
+  <data name="PracticeCompletionDone" xml:space="preserve"><value>Fertig</value></data>
+  <data name="PracticeReflectionSaved" xml:space="preserve"><value>Notiz gespeichert</value></data>
+  <data name="PracticeReflectionSaveError" xml:space="preserve"><value>Die Notiz konnte nicht gespeichert werden. Versuche es erneut.</value></data>
+  <data name="PracticeIntensitySummary" xml:space="preserve"><value>Anspannung vorher und nachher</value></data>
+  <data name="RatingNotSelected" xml:space="preserve"><value>Nicht bewertet</value></data>
+  <data name="ChatDiscardDraftTitle" xml:space="preserve"><value>Chat verlassen?</value></data>
+  <data name="ChatDiscardDraftBody" xml:space="preserve"><value>Deine ungesendete Nachricht geht verloren.</value></data>
+  <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Verwerfen und verlassen</value></data>
+  <data name="CrisisDialUnavailable" xml:space="preserve"><value>Die Telefon-App konnte nicht geöffnet werden. Wähle {0} manuell oder kopiere die Nummer.</value></data>
+  <data name="ShellBottomChat" xml:space="preserve"><value>KI-Chat</value></data>
 </root>

@@ -266,7 +266,7 @@ public static class UiAnimations
         ResetVisualState(view);
     }
 
-    public static Task AnimateRevealAsync(
+    public static async Task AnimateRevealAsync(
         VisualElement view,
         double targetY,
         double startY,
@@ -278,15 +278,6 @@ public static class UiAnimations
         view.AbortAnimation("Reveal");
 
         var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        if (cancellationToken.CanBeCanceled)
-        {
-            cancellationToken.Register(() =>
-            {
-                view.AbortAnimation("Reveal");
-                tcs.TrySetCanceled(cancellationToken);
-            });
-        }
-
         var opacityAnimation = new Animation(v => view.Opacity = v, 0, 1, EnterOpacityEasing);
         var translateAnimation = new Animation(v => view.TranslationY = v, startY, targetY, EnterTransformEasing);
 
@@ -312,7 +303,14 @@ public static class UiAnimations
                 tcs.TrySetResult(!cancelled);
             });
 
-        return tcs.Task;
+        using CancellationTokenRegistration registration = cancellationToken.Register(() =>
+        {
+            if (tcs.TrySetCanceled(cancellationToken))
+            {
+                view.AbortAnimation("Reveal");
+            }
+        });
+        await tcs.Task;
     }
 
     public static async Task SafePulseAsync(
@@ -442,15 +440,6 @@ public static class UiAnimations
 
         border.StrokeThickness = 1;
         var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        if (cancellationToken.CanBeCanceled)
-        {
-            cancellationToken.Register(() =>
-            {
-                border.AbortAnimation("InputFocus");
-                tcs.TrySetCanceled(cancellationToken);
-            });
-        }
-
         var animation = new Animation(
             progress =>
             {
@@ -467,8 +456,17 @@ public static class UiAnimations
             easing: EnterOpacityEasing,
             finished: (_, cancelled) => tcs.TrySetResult(!cancelled));
 
-        await tcs.Task;
-        ApplyInputFocusInstant(border, focused);
+        using CancellationTokenRegistration registration = cancellationToken.Register(() =>
+        {
+            if (tcs.TrySetCanceled(cancellationToken))
+            {
+                border.AbortAnimation("InputFocus");
+            }
+        });
+        if (await tcs.Task)
+        {
+            ApplyInputFocusInstant(border, focused);
+        }
     }
 
     private static void ApplyInputFocusInstant(Border border, bool focused)

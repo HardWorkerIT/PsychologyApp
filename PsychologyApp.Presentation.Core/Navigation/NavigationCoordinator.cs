@@ -70,6 +70,13 @@ public static class NavigationCoordinator
             destination,
             () => RunCoreAsync(navigate, waitForGate: true, gateWait: CompletionGateWait));
 
+    public static Task<NavigationRunStatus> RunCompletionPushAsync(
+        Func<Task<NavigationRunStatus>> navigate,
+        [CallerMemberName] string? destination = null) =>
+        RunGuardedAsync(
+            destination,
+            () => RunCoreAsync(navigate, waitForGate: true, gateWait: CompletionGateWait));
+
     private static async Task<NavigationRunStatus> RunGuardedAsync(string? destination, Func<Task<NavigationRunStatus>> run)
     {
         if (destination is null)
@@ -99,13 +106,22 @@ public static class NavigationCoordinator
     {
         lock (DuplicateLock)
         {
+            long now = Environment.TickCount64;
+            // Dictionary removals do not invalidate its enumerator on .NET.
+            foreach ((string key, long opened) in LastOpenedTicks)
+            {
+                if (now - opened >= DuplicateWindow.TotalMilliseconds)
+                {
+                    LastOpenedTicks.Remove(key);
+                }
+            }
+
             if (InFlight.Contains(destination))
             {
                 return false;
             }
 
-            if (LastOpenedTicks.TryGetValue(destination, out long openedAt)
-                && Environment.TickCount64 - openedAt < DuplicateWindow.TotalMilliseconds)
+            if (LastOpenedTicks.ContainsKey(destination))
             {
                 return false;
             }
@@ -133,10 +149,20 @@ public static class NavigationCoordinator
         }
     }
 
-    private static async Task<NavigationRunStatus> RunCoreAsync(
+    private static Task<NavigationRunStatus> RunCoreAsync(
         Func<Task> navigate,
         bool waitForGate = false,
-        TimeSpan? gateWait = null)
+        TimeSpan? gateWait = null) =>
+        RunCoreAsync(async () =>
+        {
+            await navigate();
+            return NavigationRunStatus.Completed;
+        }, waitForGate, gateWait);
+
+    private static async Task<NavigationRunStatus> RunCoreAsync(
+        Func<Task<NavigationRunStatus>> navigate,
+        bool waitForGate,
+        TimeSpan? gateWait)
     {
         TimeSpan gateWaitDuration = gateWait ?? PushGateWait;
 
@@ -155,8 +181,10 @@ public static class NavigationCoordinator
 
         try
         {
-            await NavigationThread.InvokeAsync(navigate).ConfigureAwait(false);
-            return NavigationRunStatus.Completed;
+            // The status is assigned inside the UI delegate so both the source check and the push run under the gate.
+            NavigationRunStatus status = NavigationRunStatus.Failed;
+            await NavigationThread.InvokeAsync(async () => { status = await navigate(); }).ConfigureAwait(false);
+            return status;
         }
         catch (Exception ex)
         {

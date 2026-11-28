@@ -23,8 +23,6 @@ public partial class LuscherTestViewModel
 
         _colourSelectedItems.Clear();
         ResultItems = [];
-        _recommendedTechnique = null;
-        HasRecommendation = false;
         SetColorsVisibility();
         SetStart();
         NotifyBriefProgress();

@@ -109,6 +109,7 @@ public sealed class UserProgressServiceStreakTests
         public Task<string?> GetLastSessionNoteAsync(string itemKey, CancellationToken cancellationToken = default) => Task.FromResult<string?>(null);
         public Task<SessionResultDTO?> GetSessionResultAsync(long sessionResultId, CancellationToken cancellationToken = default) => Task.FromResult<SessionResultDTO?>(null);
         public Task<IReadOnlyList<SessionResultDTO>> GetRecentSessionResultsAsync(int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<SessionResultDTO>>([]);
+        public Task<IReadOnlyList<PracticeIntensitySample>> GetRecentPracticeIntensityAsync(int limit, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<PracticeIntensitySample>>([]);
         public Task<int> CountDistinctTechniqueCompletionsForItemsBetweenAsync(IReadOnlyList<string> itemKeys, DateTime sinceUtc, DateTime beforeUtc, CancellationToken cancellationToken = default) => Task.FromResult(0);
     }
 }

@@ -43,6 +43,15 @@ public partial class TechniquePageShell : ContentView
     public static readonly BindableProperty FinishEnabledProperty =
         BindableProperty.Create(nameof(FinishEnabled), typeof(bool), typeof(TechniquePageShell), true, propertyChanged: (b, _, _) => ((TechniquePageShell)b).ApplyActionBar());
 
+    public static readonly BindableProperty HasForwardStepProperty =
+        BindableProperty.Create(nameof(HasForwardStep), typeof(bool), typeof(TechniquePageShell), false, propertyChanged: (b, _, _) => ((TechniquePageShell)b).ApplyActionBar());
+
+    public bool HasForwardStep
+    {
+        get => (bool)GetValue(HasForwardStepProperty);
+        set => SetValue(HasForwardStepProperty, value);
+    }
+
     /// <summary>Controls of the body that belong under the thumb (the step-by-step "Back / Next"): shown in the pinned bar above "Finish".</summary>
     public static readonly BindableProperty FooterContentProperty =
         BindableProperty.Create(nameof(FooterContent), typeof(View), typeof(TechniquePageShell), propertyChanged: OnFooterContentChanged);
@@ -90,11 +99,13 @@ public partial class TechniquePageShell : ContentView
 
         bool footer = FooterContent?.IsVisible == true;
         FooterHost.IsVisible = footer;
-        ActionButtons.ColumnDefinitions[1].Width = footer ? GridLength.Auto : new GridLength(0);
+        ActionButtons.ColumnDefinitions[0].Width = footer && !HasForwardStep ? GridLength.Auto : GridLength.Star;
+        ActionButtons.ColumnDefinitions[1].Width = !footer ? new GridLength(0) : HasForwardStep ? GridLength.Auto : GridLength.Star;
         Grid.SetColumn(FinishButton, footer ? 1 : 0);
         Grid.SetColumnSpan(FinishButton, footer ? 1 : 2);
-        FinishButton.Variant = footer ? "Secondary" : "Primary";
-        FinishButton.IsCompact = footer;
+        bool hasEarlyFinish = footer && HasForwardStep;
+        FinishButton.IsVisible = FinishEnabled && !hasEarlyFinish;
+        EarlyFinishButton.IsVisible = FinishEnabled && hasEarlyFinish;
         ActionBar.IsVisible = footer || FinishEnabled;
     }
 
@@ -250,7 +261,7 @@ public partial class TechniquePageShell : ContentView
         bool folded = AlgorithmFolded && count > 0;
         StepsSummary.IsVisible = folded;
         Steps.IsVisible = !folded || _algorithmOpened;
-        StepsSummaryLabel.Text = AppStrings.TechniqueStepsSummary(count);
+        StepsSummaryLabel.Text = AppStrings.TechniqueInstructions;
         StepsSummaryChevron.IconName = _algorithmOpened ? "ExpandLess" : "ExpandMore";
         SemanticProperties.SetDescription(StepsSummary, StepsSummaryLabel.Text);
     }
@@ -260,22 +271,30 @@ public partial class TechniquePageShell : ContentView
         InitializeComponent();
         ApplyActionBar();
         ApplyLocalization();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object? sender, EventArgs e)
+    {
+        ApplyLocalization();
+        ApplyHero();
+        UserPreferences.Changed -= ApplyLocalization;
         UserPreferences.Changed += ApplyLocalization;
-        Loaded += (_, _) =>
+        if (Microsoft.Maui.Controls.Application.Current is { } app)
         {
-            ApplyHero();
-            if (Microsoft.Maui.Controls.Application.Current is { } app)
-            {
-                app.RequestedThemeChanged += OnThemeChanged;
-            }
-        };
-        Unloaded += (_, _) =>
+            app.RequestedThemeChanged -= OnThemeChanged;
+            app.RequestedThemeChanged += OnThemeChanged;
+        }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        UserPreferences.Changed -= ApplyLocalization;
+        if (Microsoft.Maui.Controls.Application.Current is { } app)
         {
-            if (Microsoft.Maui.Controls.Application.Current is { } app)
-            {
-                app.RequestedThemeChanged -= OnThemeChanged;
-            }
-        };
+            app.RequestedThemeChanged -= OnThemeChanged;
+        }
     }
 
     private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e) => Dispatcher.Dispatch(ApplyHero);

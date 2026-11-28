@@ -12,6 +12,8 @@ public class TestNavigationService(INavigation navigation) : INavigationService
     public virtual Task GoToRootAsync() => navigation.PopToRootAsync(true);
 
     public virtual Task GoToTechniqueAsync(TechniqueId techniqueId) => Task.CompletedTask;
+    public virtual Task<NavigationRunStatus> OpenNextPracticeAsync(TechniqueId techniqueId) =>
+        Task.FromResult(NavigationRunStatus.Completed);
 
     public Task GoToCreatedAsync(long techniqueId) => Task.CompletedTask;
 

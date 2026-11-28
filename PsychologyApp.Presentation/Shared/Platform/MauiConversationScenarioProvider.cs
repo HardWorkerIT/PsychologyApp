@@ -15,7 +15,7 @@ public sealed class MauiConversationScenarioProvider(
 {
     private static readonly HashSet<TechniqueId> DialogueTechniques = [TechniqueId.Grounding, TechniqueId.Extend, TechniqueId.Flashback];
 
-    private readonly ConcurrentDictionary<string, ConversationScenario> _cache = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<(TechniqueId Technique, string Language), ConversationScenario> _cache = new();
 
     public bool HasScenario(TechniqueId techniqueId) => DialogueTechniques.Contains(techniqueId);
 
@@ -26,7 +26,7 @@ public sealed class MauiConversationScenarioProvider(
             return null;
         }
 
-        string cacheKey = $"{techniqueId}:{AppStrings.Language}";
+        var cacheKey = (techniqueId, AppStrings.Language);
         if (_cache.TryGetValue(cacheKey, out ConversationScenario? cached))
         {
             return cached;
@@ -37,10 +37,8 @@ public sealed class MauiConversationScenarioProvider(
             await using Stream stream = await assetReader
                 .OpenAsync($"conversations/{techniqueId}.json", cancellationToken)
                 .ConfigureAwait(false);
-            using StreamReader reader = new(stream);
-            string json = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-
-            ParseResult<ConversationScenario> parsed = ConversationScenarioParser.Parse(json);
+            ParseResult<ConversationScenario> parsed = await ConversationScenarioParser
+                .ParseUtf8Async(stream, cancellationToken).ConfigureAwait(false);
             if (!parsed.IsSuccess)
             {
                 logger.LogError("Dialogue scenario for {TechniqueId} is invalid: {Error}", techniqueId, parsed.Error);

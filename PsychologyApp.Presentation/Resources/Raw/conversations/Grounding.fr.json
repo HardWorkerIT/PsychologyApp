@@ -8,8 +8,8 @@
       "id": "intro",
       "kind": "say",
       "text": [
-        "Je suis là. Nous allons revenir au moment présent par vos sens. Cela prend environ trois minutes.",
-        "Revenons ensemble, calmement, au présent. Trois minutes, pas à pas."
+        "Prenez environ trois minutes pour observer ce qui vous entoure.",
+        "Commencez par ce que vous voyez. Puis passez aux autres sens."
       ],
       "next": "intro_breath"
     },
@@ -17,7 +17,7 @@
       "id": "intro_breath",
       "kind": "say",
       "text": [
-        "D'abord, faites une expiration lente, plus longue que l'inspiration. Rien d'autre n'est nécessaire."
+        "Avancez à votre rythme. Si vous ne percevez ni odeur ni goût, vous pouvez le dire."
       ],
       "next": "ask_before"
     },
@@ -75,8 +75,8 @@
       "id": "react_see",
       "kind": "say",
       "text": [
-        "Vous voyez : {see}. Très bien. Expirez.",
-        "{see}. Bien, vous voyez tout cela en ce moment. Expirez."
+        "Vous avez remarqué : {see}.",
+        "{see}. Remarquez maintenant ce qui touche votre corps."
       ],
       "next": "ask_touch"
     },
@@ -152,7 +152,7 @@
       "id": "ask_smell",
       "kind": "askText",
       "text": [
-        "Maintenant, 2 odeurs. Si vous ne sentez rien en ce moment, rappelez-vous vos odeurs préférées."
+        "Remarquez jusqu’à deux odeurs. Si vous n’en percevez aucune, vous pouvez le dire."
       ],
       "hint": "Par exemple : café, air frais",
       "capture": "smell",
@@ -198,8 +198,8 @@
       "id": "wrap",
       "kind": "say",
       "text": [
-        "Vous avez parcouru les cinq sens. Encore une inspiration et une expiration lentes.",
-        "Terminé : les cinq sens sont passés. Encore une inspiration et une expiration calmes."
+        "L’exercice se termine ici. Remarquez comment vous vous sentez maintenant.",
+        "Regardez encore une fois autour de vous et remarquez comment vous vous sentez."
       ],
       "next": "ask_after"
     },

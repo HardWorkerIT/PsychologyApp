@@ -2,12 +2,11 @@ using PsychologyApp.Application.DataBackup;
 
 namespace PsychologyApp.Application.Abstractions.Persistence;
 
-/// <summary>What a backup needs that no other port exposes, plus the atomic restore.</summary>
+/// <summary>Reads and restores consistent snapshots of the data included in a backup.</summary>
 public interface IBackupRepository
 {
-    Task<BackupExportMetrics> GetExportMetricsAsync(CancellationToken cancellationToken = default);
-
-    Task<IReadOnlyList<BackupTechniqueDTO>> GetTechniquesAsync(int limit, CancellationToken cancellationToken = default);
+    Task<AppBackupDTO> ReadExportSnapshotAsync(
+        int rowLimit, int escalationLimit, long payloadLimit, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds the backup's rows in one transaction: either all of them or none. A row the database already has (same moment and

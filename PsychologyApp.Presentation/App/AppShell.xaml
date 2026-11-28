@@ -142,7 +142,7 @@
         <ShellContent
             x:Name="ChatTab"
             Route="ChatTab"
-            Title="{x:Static common:AppStrings.ShellTabChatShort}" />
+            Title="{x:Static common:AppStrings.ShellBottomChat}" />
 
         <ShellContent
             x:Name="DetectorTab"

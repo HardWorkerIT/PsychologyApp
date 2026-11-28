@@ -501,6 +501,19 @@ public class ChatServiceTests
     }
 
     [Fact]
+    public async Task LegacyPracticeCountAliasesDoNotBlockChatOrUrgentHelp()
+    {
+        await _repository.SetMemoryAsync(ChatMemoryKeys.Tried(TechniqueId.Breathing), "2");
+        await _repository.SetMemoryAsync(ChatMemoryKeys.TriedPrefix + TechniqueId.Breathing.ToString("D"), "3");
+        ChatService service = CreateService();
+
+        long id = (await service.StartNewChatAsync()).Session.Id;
+        ChatTurnResult result = await service.SendTextAsync(id, "Я не хочу больше жить");
+
+        Assert.Equal(DialogueActionKind.OpenCrisisHub, result.Action!.Kind);
+    }
+
+    [Fact]
     public async Task Crisis_text_is_stored_and_returns_the_hub_action()
     {
         ChatService service = CreateService();

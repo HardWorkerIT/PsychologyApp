@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using PsychologyApp.Application.Abstractions.Analytics;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
@@ -30,6 +31,11 @@ public partial class TechniqueSessionPage : ContentPage
     private bool _initializing;
     private bool _bodyLoaded;
     private CancellationTokenSource? _zoomLifetime;
+    private TechniqueSessionViewModel? _stepVisibilityViewModel;
+    private PropertyChangedEventHandler? _stepVisibilityHandler;
+    private Action? _applyStepVisibility;
+    private bool _stepVisibilitySubscribed;
+    private bool _pageIsVisible;
     private readonly KeyboardResize _keyboard = new();
 
     public TechniqueSessionPage(
@@ -45,6 +51,8 @@ public partial class TechniqueSessionPage : ContentPage
         _techniqueId = techniqueId;
         _hostNavigation = hostNavigation;
         InitializeComponent();
+        InitializationNavigation.BackCommand = new AsyncCommand(LeaveFailedSessionAsync);
+        InitializationRetry.RetryCommand = new AsyncCommand(InitializeSessionAsync);
 
         // Hidden until the zoom from the tapped card is ready, so the full screen does not flash first.
         _zoomPending = !ReduceMotion.IsEnabled && TapOrigin.HasRecentTap;
@@ -59,6 +67,8 @@ public partial class TechniqueSessionPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _pageIsVisible = true;
+        AttachStepVisibilityHandler();
         _keyboard.Enable();
         if (_zoomPending)
         {
@@ -138,16 +148,40 @@ public partial class TechniqueSessionPage : ContentPage
         _initializing = true;
         try
         {
-            BaseViewModel viewModel = await _techniqueViewModelFactory.CreateAsync(_techniqueId, _hostNavigation);
+            BaseViewModel viewModel = await _techniqueViewModelFactory.CreateAsync(_techniqueId, new NavigationContext(_hostNavigation, this));
             BindingContext = viewModel;
             await EnsureBodyLoadedAsync();
             _initialized = true;
+            InitializationError.IsVisible = false;
+            SessionShell.IsVisible = true;
+        }
+        catch (Exception ex)
+        {
+            BestEffort.Report(ex);
+            if (_pageIsVisible)
+            {
+                InitializationNavigation.TitleText = AppStrings.TechniqueTitle;
+                InitializationNavigation.BackText = AppStrings.Back;
+                InitializationRetry.FailedText = AppStrings.LoadFailed;
+                InitializationRetry.RetryText = AppStrings.RetryQuestion;
+                SessionShell.IsVisible = false;
+                InitializationError.IsVisible = true;
+            }
         }
         finally
         {
             _initializing = false;
         }
     }
+
+    private Task LeaveFailedSessionAsync() => NavigationCoordinator.RunAsync(async () =>
+    {
+        INavigation navigation = Navigation;
+        if (ReferenceEquals(navigation.NavigationStack.LastOrDefault(), this))
+        {
+            await navigation.PopAsync();
+        }
+    });
 
     private async Task EnsureBodyLoadedAsync()
     {
@@ -216,8 +250,10 @@ public partial class TechniqueSessionPage : ContentPage
         // The steps may arrive after the body is built (a saved draft is read first), so this follows them rather than looking once.
         void Apply() => exercise.IsVisible = !session.IsWizardMode
             || session.CurrentEntry?.Kind is not (EntryFieldKind.Rating0To10 or EntryFieldKind.RatingNeg10To10);
-        Apply();
-        session.PropertyChanged += (_, e) =>
+        DetachStepVisibilityHandler();
+        _stepVisibilityViewModel = session;
+        _applyStepVisibility = Apply;
+        _stepVisibilityHandler = (_, e) =>
         {
             if (e.PropertyName is nameof(TechniqueSessionViewModel.CurrentStepIndex) or nameof(TechniqueSessionViewModel.CurrentEntry)
                 or nameof(TechniqueSessionViewModel.IsWizardMode))
@@ -225,6 +261,27 @@ public partial class TechniqueSessionPage : ContentPage
                 Apply();
             }
         };
+        AttachStepVisibilityHandler();
+    }
+
+    private void AttachStepVisibilityHandler()
+    {
+        if (_pageIsVisible && !_stepVisibilitySubscribed && _stepVisibilityViewModel is not null && _stepVisibilityHandler is not null)
+        {
+            _stepVisibilityViewModel.PropertyChanged += _stepVisibilityHandler;
+            _stepVisibilitySubscribed = true;
+        }
+
+        _applyStepVisibility?.Invoke();
+    }
+
+    private void DetachStepVisibilityHandler()
+    {
+        if (_stepVisibilitySubscribed && _stepVisibilityViewModel is not null && _stepVisibilityHandler is not null)
+        {
+            _stepVisibilityViewModel.PropertyChanged -= _stepVisibilityHandler;
+            _stepVisibilitySubscribed = false;
+        }
     }
 
     // Through the coordinator, so a quick second tap does not stack a second full-screen pacer over the first.
@@ -233,6 +290,8 @@ public partial class TechniqueSessionPage : ContentPage
 
     protected override void OnDisappearing()
     {
+        _pageIsVisible = false;
+        DetachStepVisibilityHandler();
         base.OnDisappearing();
         CancellationTokenSource? zoomLifetime = _zoomLifetime;
         _zoomLifetime = null;

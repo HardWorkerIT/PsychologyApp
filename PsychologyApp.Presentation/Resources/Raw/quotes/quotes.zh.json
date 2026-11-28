@@ -335,7 +335,7 @@
     "theme": "relationships"
   },
   {
-    "author": "玛雅·安吉罗",
+    "author": "Carl W. Buehner",
     "text": "人们会忘记你说过的话，但永远不会忘记你带给他们的感受。",
     "theme": "relationships"
   },
@@ -365,7 +365,7 @@
     "theme": "relationships"
   },
   {
-    "author": "威尔·杜兰特",
+    "author": "威尔·杜兰特（概述亚里士多德的思想）",
     "text": "我们反复做的事造就了我们。因此，卓越不是一种行为，而是一种习惯。",
     "theme": "habits"
   },
@@ -425,7 +425,7 @@
     "theme": "acceptance"
   },
   {
-    "author": "鲁米",
+    "author": "改写自鲁米",
     "text": "伤口是光进入你内心的地方。",
     "theme": "healing"
   },
@@ -1177,6 +1177,21 @@
   {
     "author": "PsychologyApp",
     "text": "联系可以从适合自己生活的小步骤开始。",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp 团队",
+    "text": "计划留出应对意外的余地，会更切合实际。",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp 团队",
+    "text": "答应之前，可以先请求一点时间考虑。",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp 团队",
+    "text": "开始之前先确认双方对约定的理解，更容易避免误会。",
     "theme": "relationships"
   }
 ]

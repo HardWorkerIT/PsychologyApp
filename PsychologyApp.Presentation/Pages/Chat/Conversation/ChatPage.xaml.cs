@@ -25,6 +25,7 @@ public partial class ChatPage : ContentPage
         _viewModel = viewModelFactory.CreateConversation(sessionId, hostNavigation, topic, opener);
         BindingContext = _viewModel;
         _viewModel.Messages.CollectionChanged += OnMessagesChanged;
+        _viewModel.TechniqueNavigationStarting += OnTechniqueNavigationStarting;
 
         // Real messenger typing: capital letter at the start of each sentence, spell check and suggestions.
         InputBar.Input.Keyboard = Keyboard.Create(KeyboardFlags.CapitalizeSentence | KeyboardFlags.Spellcheck | KeyboardFlags.Suggestions);
@@ -32,7 +33,12 @@ public partial class ChatPage : ContentPage
         InputBar.Input.Unfocused += (_, _) => _viewModel.SetComposerFocused(false);
 
         // Unloaded (page popped), not Disappearing: the latter also fires when the app is merely backgrounded.
-        Unloaded += (_, _) => _viewModel.Close();
+        Unloaded += (_, _) =>
+        {
+            _viewModel.Messages.CollectionChanged -= OnMessagesChanged;
+            _viewModel.TechniqueNavigationStarting -= OnTechniqueNavigationStarting;
+            _viewModel.Close();
+        };
     }
 
     protected override void OnAppearing()
@@ -45,9 +51,37 @@ public partial class ChatPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        DismissKeyboard();
+        _keyboard.Restore();
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (_viewModel.BackCommand.CanExecute(null))
+        {
+            _viewModel.BackCommand.Execute(null);
+        }
+
+        return true;
+    }
+
+    private void OnTechniqueNavigationStarting(object? sender, EventArgs e) => DismissKeyboard();
+
+    private void DismissKeyboard()
+    {
+#if ANDROID
+        var windowToken = (InputBar.Input.Handler?.PlatformView as Android.Views.View)?.WindowToken;
+#endif
         InputBar.Input.Unfocus();
         _viewModel.SetComposerFocused(false);
-        _keyboard.Restore();
+#if ANDROID
+        if (windowToken is not null
+            && Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.GetSystemService(Android.Content.Context.InputMethodService)
+                is Android.Views.InputMethods.InputMethodManager inputMethodManager)
+        {
+            inputMethodManager.HideSoftInputFromWindow(windowToken, Android.Views.InputMethods.HideSoftInputFlags.None);
+        }
+#endif
     }
 
     private void OnReplyOptionsTapped(object? sender, TappedEventArgs e)

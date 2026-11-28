@@ -13,9 +13,9 @@ public static partial class AnchorThoughtContent
         ["exp-two-minute-start-counts"] = ("Starting for two minutes still counts", "I can decide whether to continue afterward."),
         ["exp-checking-has-a-limit"] = ("I can stop checking when I planned to", "Repeating a check does not add new facts."),
         ["exp-i-can-leave"] = ("I can leave or ask someone for help", "Orienting myself does not mean I must stay."),
-        ["exp-not-whole-week"] = ("Today, I can focus on today", "I do not have to solve the whole week this morning."),
+        ["exp-not-whole-week"] = ("I can choose one thing for today", "I can decide what needs my attention now and write down the rest for later."),
         ["exp-less-input-is-okay"] = ("I can reduce what is coming in", "A pause lets me choose what to keep around me."),
-        ["exp-evening-not-decision-time"] = ("I do not have to decide everything tonight", "Tiredness can narrow my view; tomorrow brings new energy."),
+        ["exp-evening-not-decision-time"] = ("I can leave the decision until tomorrow", "If it can wait, I can write it down and pick a time to come back to it."),
         ["exp-after-anxiety-rest"] = ("I am allowed to recover after anxiety", "Strong tension can tire my body and attention."),
         ["exp-practice-with-choice"] = ("I can choose an exercise or stop", "A practice should feel suitable and safe for me."),
 
@@ -99,7 +99,7 @@ public static partial class AnchorThoughtContent
         ["exp-movement-as-anchor"] = ("Movement can be a gentle anchor", "I can choose a comfortable range or stay still."),
         ["exp-senses-can-be-chosen"] = ("I can choose one comfortable sensory cue", "Smells, sounds, and touch do not suit everyone."),
         ["exp-early-signs-are-info"] = ("Early signs of tension are information", "I can notice them without criticizing myself."),
-        ["exp-relaxation-not-performance"] = ("I do not have to relax the right way", "A practice should not become one more task."),
+        ["exp-relaxation-not-performance"] = ("I can stop an exercise", "If it feels uncomfortable, I can pause or do something else."),
         ["exp-basic-care-no-rules"] = ("Self-care does not have to be perfect", "One small available option can beat a long checklist."),
         ["exp-new-symptoms-deserve-care"] = ("I can discuss new symptoms with a professional", "An app cannot assess their medical cause."),
         ["exp-therapist-fit-can-be-discussed"] = ("I can discuss whether a professional feels right for me", "Trust and clear expectations matter in care."),
@@ -110,6 +110,9 @@ public static partial class AnchorThoughtContent
         ["exp-screen-not-diagnosis"] = ("A screening result is not a diagnosis", "Assessment considers the whole picture."),
         ["exp-support-plan-simple"] = ("A support plan can be brief", "A short plan is easier to find in a hard moment."),
         ["exp-immediate-safety-first"] = ("Immediate danger calls for urgent help", "Contact local emergency services or someone you trust."),
-        ["exp-medication-with-clinician"] = ("Medication changes belong with a clinician", "A prescriber can weigh the treatment and its risks.")
+        ["exp-medication-with-clinician"] = ("Medication changes belong with a clinician", "A prescriber can weigh the treatment and its risks."),
+        ["exp-deadline-update-is-responsible"] = ("Giving early notice about a delay is responsible", "A new estimate helps others adjust their plans."),
+        ["exp-confirming-agreement-is-care"] = ("Clarifying an agreement is not an argument", "It can reveal different expectations before work begins."),
+        ["exp-new-facts-can-change-agreement"] = ("New circumstances can change a previous decision", "You can revisit an agreement and explain the change clearly.")
     };
 }

@@ -7,15 +7,23 @@ namespace PsychologyApp.Application.Common;
 /// </summary>
 public static class SearchText
 {
+    private const int StackBufferLimit = 256;
+    private static readonly char[] Separators = [' ', ',', '.', ';', ':', '!', '?', '-', '—', '"', '«', '»', '(', ')'];
+
     public static string Normalize(string? text) =>
         string.IsNullOrEmpty(text) ? string.Empty : text.ToLowerInvariant().Replace('ё', 'е');
 
     /// <summary>The parts of the query that must all occur in the text.</summary>
-    public static IReadOnlyList<string> Stems(string query) =>
-        Normalize(query)
-            .Split([' ', ',', '.', ';', ':', '!', '?', '-', '—', '"', '«', '»', '(', ')'], StringSplitOptions.RemoveEmptyEntries)
-            .Select(Stem)
-            .ToList();
+    public static IReadOnlyList<string> Stems(string query)
+    {
+        string[] words = Normalize(query).Split(Separators, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < words.Length; i++)
+        {
+            words[i] = Stem(words[i]);
+        }
+
+        return words;
+    }
 
     public static bool Matches(string? text, IReadOnlyList<string> stems)
     {
@@ -24,8 +32,28 @@ public static class SearchText
             return false;
         }
 
-        string normalized = Normalize(text);
-        return stems.All(stem => normalized.Contains(stem, StringComparison.Ordinal));
+        if (text.Length > StackBufferLimit)
+        {
+            return ContainsAll(Normalize(text), stems);
+        }
+
+        Span<char> normalized = stackalloc char[text.Length];
+        text.AsSpan().ToLowerInvariant(normalized);
+        normalized.Replace('ё', 'е');
+        return ContainsAll(normalized, stems);
+    }
+
+    private static bool ContainsAll(ReadOnlySpan<char> text, IReadOnlyList<string> stems)
+    {
+        for (int i = 0; i < stems.Count; i++)
+        {
+            if (!text.Contains(stems[i], StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static string Stem(string word) => word.Length switch

@@ -13,9 +13,9 @@ public static partial class AnchorThoughtContent
         ["exp-two-minute-start-counts"] = ("Começar por dois minutos já conta", "Depois posso decidir se continuo."),
         ["exp-checking-has-a-limit"] = ("Posso parar de conferir como planejei", "Repetir a conferência não acrescenta fatos novos."),
         ["exp-i-can-leave"] = ("Posso sair ou pedir ajuda", "Me orientar não significa que preciso ficar."),
-        ["exp-not-whole-week"] = ("Hoje posso cuidar do que é de hoje", "Não preciso resolver a semana inteira pela manhã."),
+        ["exp-not-whole-week"] = ("Posso escolher uma coisa para hoje", "Posso decidir o que precisa da minha atenção agora e anotar o resto para mais tarde."),
         ["exp-less-input-is-okay"] = ("Posso reduzir os estímulos ao meu redor", "Uma pausa ajuda a escolher o que manter por perto."),
-        ["exp-evening-not-decision-time"] = ("Não preciso decidir tudo esta noite", "O cansaço pode limitar minha perspectiva; amanhã virá nova energia."),
+        ["exp-evening-not-decision-time"] = ("Posso deixar a decisão para amanhã", "Se puder esperar, posso anotar a questão e escolher quando voltar a ela."),
         ["exp-after-anxiety-rest"] = ("Posso me recuperar depois da ansiedade", "A tensão intensa pode cansar o corpo e a atenção."),
         ["exp-practice-with-choice"] = ("Posso escolher um exercício ou parar", "A prática deve ser adequada e segura para mim."),
 
@@ -99,7 +99,7 @@ public static partial class AnchorThoughtContent
         ["exp-movement-as-anchor"] = ("O movimento pode ser um apoio suave", "Posso escolher um movimento confortável ou ficar parado."),
         ["exp-senses-can-be-chosen"] = ("Posso escolher um estímulo sensorial confortável", "Cheiros, sons e toque não servem para todo mundo."),
         ["exp-early-signs-are-info"] = ("Os primeiros sinais de tensão são informações", "Posso percebê-los sem me criticar."),
-        ["exp-relaxation-not-performance"] = ("Não preciso relaxar do jeito certo", "A prática não deve virar mais uma tarefa."),
+        ["exp-relaxation-not-performance"] = ("Posso parar um exercício", "Se eu sentir desconforto, posso fazer uma pausa ou escolher outra atividade."),
         ["exp-basic-care-no-rules"] = ("Cuidar de mim não precisa ser perfeito", "Uma opção pequena e possível pode valer mais que uma lista."),
         ["exp-new-symptoms-deserve-care"] = ("Posso conversar com um profissional sobre sintomas novos", "Um aplicativo não consegue avaliar a causa médica."),
         ["exp-therapist-fit-can-be-discussed"] = ("Posso conversar sobre a relação com o profissional", "Confiança e expectativas claras são importantes."),
@@ -110,6 +110,9 @@ public static partial class AnchorThoughtContent
         ["exp-screen-not-diagnosis"] = ("Um resultado de triagem não é um diagnóstico", "A avaliação considera o quadro completo."),
         ["exp-support-plan-simple"] = ("Um plano de apoio pode ser breve", "Um plano curto é mais fácil de encontrar num momento difícil."),
         ["exp-immediate-safety-first"] = ("Diante de perigo imediato, é preciso buscar ajuda urgente", "Procure os serviços de emergência locais ou alguém de confiança."),
-        ["exp-medication-with-clinician"] = ("Mudanças na medicação devem ser feitas com um profissional", "Quem prescreveu pode avaliar o tratamento e os riscos.")
+        ["exp-medication-with-clinician"] = ("Mudanças na medicação devem ser feitas com um profissional", "Quem prescreveu pode avaliar o tratamento e os riscos."),
+        ["exp-deadline-update-is-responsible"] = ("Avisar cedo sobre um atraso é agir com responsabilidade", "Um novo prazo ajuda as outras pessoas a reorganizar os planos."),
+        ["exp-confirming-agreement-is-care"] = ("Esclarecer um acordo não é discutir", "Isso pode revelar expectativas diferentes antes de começar."),
+        ["exp-new-facts-can-change-agreement"] = ("Novas circunstâncias podem mudar uma decisão anterior", "Você pode rever um acordo e explicar a mudança com clareza.")
     };
 }

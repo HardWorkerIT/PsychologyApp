@@ -20,6 +20,7 @@ public interface ITechniqueSessionScreen
     string PreIntensityText { get; set; }
 
     bool CanFinish => true;
+    bool CanGoToNextStep => false;
 
     /// <summary>False when the practice asks the tension itself as one of its steps, so the page does not ask it twice.</summary>
     bool AsksPreIntensity => true;

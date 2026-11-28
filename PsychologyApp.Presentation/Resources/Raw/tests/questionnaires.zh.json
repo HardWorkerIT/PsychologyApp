@@ -1,17 +1,17 @@
 [
   {
-    "title": "赫克与赫斯问卷",
-    "subtitle": "神经质筛查",
+    "title": "情绪反应自我反思",
+    "subtitle": "用于自我反思，不作诊断",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "神经质",
-    "betterWhen": "lower",
-    "description": "40 条关于情绪反应的陈述。根据你自己的情况回答“是”或“否”。",
+    "construct": "自我反思",
+    "betterWhen": "none",
+    "description": "40 条陈述帮助你思考自己的情绪反应。得分不是临床评估结果。",
     "algorithm": [
       "1. 你会看到一份陈述清单。",
       "2. 对每条陈述，如果你同意（认为符合你），回答“是”；不同意则回答“否”。"
     ],
-    "comment": "如有任何担心，请咨询有资质的专业人士。",
+    "comment": "把回答当作思考的起点，而不是给自己贴标签。如有担忧，可以和合格的专业人士讨论。",
     "analyzerId": "heck_hess",
     "answers": [
       "是",
@@ -66,18 +66,18 @@
     "singleAnswer": true
   },
   {
-    "title": "黑尔测试",
-    "subtitle": "精神病态筛查",
+    "title": "行为与关系",
+    "subtitle": "用于自我反思，不作诊断",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "精神病态",
-    "betterWhen": "lower",
-    "description": "筛查人际和行为模式。请如实回答——答案没有对错。",
+    "construct": "自我反思",
+    "betterWhen": "none",
+    "description": "这组 40 条陈述用于反思行为与人际关系，不是罗伯特·黑尔的 PCL-R，也不是精神病态特征评估工具；回答不能用于诊断或给自己、他人贴标签。",
     "algorithm": [
       "1. 你会看到一份陈述清单。",
       "2. 对每条陈述，选择一个给出的答案。"
     ],
-    "comment": "如有任何担心，请咨询有资质的专业人士。",
+    "comment": "把回答当作思考的起点，而不是给自己贴标签。如有担忧，可以和合格的专业人士讨论。",
     "analyzerId": "haer",
     "answers": [
       "是",

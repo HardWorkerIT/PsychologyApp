@@ -1,7 +1,6 @@
 namespace PsychologyApp.Domain.Tests;
 
 public enum BeckBand { None, Mild, Moderate, Marked, Severe }
-public enum BinarySeverityBand { Low, High }
 public enum PochebutBand { Low, Moderate, High }
 public enum Gad7Band { Minimal, Mild, Moderate, Severe }
 public enum K10Band { Low, Mild, Moderate, High }
@@ -45,12 +44,6 @@ public static class TestScoreBandClassifier
         <= 29 => BeckBand.Marked,
         _ => BeckBand.Severe
     };
-
-    public static BinarySeverityBand ClassifyHeckHess(int score) =>
-        score <= 24 ? BinarySeverityBand.Low : BinarySeverityBand.High;
-
-    public static BinarySeverityBand ClassifyHaer(int score) =>
-        score <= 28 ? BinarySeverityBand.Low : BinarySeverityBand.High;
 
     public static PochebutBand ClassifyPochebut(int score) => score switch
     {
@@ -169,12 +162,6 @@ public static class TestScoreBandClassifier
 
     public static RecommendationLane RecommendBeck(int score) =>
         score >= 10 ? RecommendationLane.High : RecommendationLane.Low;
-
-    public static RecommendationLane RecommendHeckHess(int score) =>
-        score >= 25 ? RecommendationLane.High : RecommendationLane.Low;
-
-    public static RecommendationLane RecommendHaer(int score) =>
-        score >= 29 ? RecommendationLane.High : RecommendationLane.Low;
 
     public static RecommendationLane RecommendPochebut(int score) =>
         score >= 25 ? RecommendationLane.High : RecommendationLane.Low;

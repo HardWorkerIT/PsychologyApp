@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using PsychologyApp.Presentation.Features.RunTests;
 using PsychologyApp.Presentation.Shared.Common;
-using PsychologyApp.Presentation.Shared.Navigation;
 
 namespace PsychologyApp.Presentation.Pages.RunTests.Question;
 
@@ -38,7 +37,8 @@ public partial class QuestionViewModel
 
             _savedResult ??= await _runCoordinator.SaveQuestionnaireAsync(
                 request,
-                _userProgressService);
+                _userProgressService,
+                openHelpOnSaveFailure: _navigationService.GoToCrisisHubAsync);
 
             await UiThread.RunAsync(async () =>
             {
@@ -49,14 +49,13 @@ public partial class QuestionViewModel
 
             _savedResult = null;
         }
-        catch (TestCompletionNavigationException ex)
+        catch (Exception ex) when (_savedResult is not null)
         {
             _logger.LogWarning(ex, "Questionnaire result saved but navigation to result screen failed for {TestId}.", _session.TestId);
             _toastService.LongToast(AppStrings.TestsResultNavigationFailedMessage);
         }
         catch (Exception ex)
         {
-            _savedResult = null;
             _logger.LogError(ex, "Failed to complete questionnaire for {TestId}.", _session.TestId);
             _toastService.LongToast(AppStrings.TestsResultSaveFailedMessage);
         }

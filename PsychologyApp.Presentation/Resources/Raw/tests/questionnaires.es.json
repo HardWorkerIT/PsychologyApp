@@ -1,17 +1,17 @@
 [
   {
-    "title": "Cuestionario de Heck y Hess",
-    "subtitle": "Cribado de neuroticismo",
+    "title": "Reflexión sobre las reacciones emocionales",
+    "subtitle": "Auto-reflexión · no es un diagnóstico",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Neuroticismo",
-    "betterWhen": "lower",
-    "description": "40 afirmaciones sobre la reactividad emocional. Responde Sí o No sobre ti.",
+    "construct": "Auto-reflexión",
+    "betterWhen": "none",
+    "description": "40 afirmaciones invitan a reflexionar sobre las reacciones emocionales. La puntuación no es una evaluación clínica.",
     "algorithm": [
       "1. Se te presenta una lista de afirmaciones.",
       "2. En cada afirmación, responde Sí si estás de acuerdo (si es cierta para ti) o No si no lo estás."
     ],
-    "comment": "Si algo te preocupa, consulta a un especialista cualificado.",
+    "comment": "Usa tus respuestas como punto de reflexión, no como una etiqueta. Si te preocupan, coméntalas con un profesional cualificado.",
     "analyzerId": "heck_hess",
     "answers": [
       "Sí",
@@ -66,18 +66,18 @@
     "singleAnswer": true
   },
   {
-    "title": "Test de Hare",
-    "subtitle": "Cribado de psicopatía",
+    "title": "Conducta y relaciones",
+    "subtitle": "Auto-reflexión · no es un diagnóstico",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Psicopatía",
-    "betterWhen": "lower",
-    "description": "Explora patrones interpersonales y de conducta. Responde con sinceridad: no hay respuestas correctas.",
+    "construct": "Auto-reflexión",
+    "betterWhen": "none",
+    "description": "40 afirmaciones para reflexionar sobre la conducta y las relaciones. No es el PCL-R de Robert Hare ni evalúa la psicopatía; las respuestas no permiten diagnosticar ni etiquetar a nadie.",
     "algorithm": [
       "1. Se te presenta una lista de afirmaciones.",
       "2. En cada afirmación, elige una de las respuestas propuestas."
     ],
-    "comment": "Si algo te preocupa, consulta a un especialista cualificado.",
+    "comment": "Usa tus respuestas como punto de reflexión, no como una etiqueta. Si te preocupan, coméntalas con un profesional cualificado.",
     "analyzerId": "haer",
     "answers": [
       "Sí",

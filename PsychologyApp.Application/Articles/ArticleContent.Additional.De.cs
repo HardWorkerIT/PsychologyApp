@@ -601,10 +601,58 @@ public static partial class ArticleContent
                 H("Passen Sie den Plan im Tagesverlauf an"),
                 P("Ändern sich die Umstände oder Ihre Kraft, verkleinern Sie einen Schritt, verschieben einen Punkt oder bitten um Hilfe. Fragen Sie sich am Tagesende, ob der Plan Orientierung gegeben hat — nicht, wie viele Häkchen Sie gesetzt haben. Ein Plan ist eine veränderbare Unterstützung, kein Versprechen, alles zu schaffen.")
             ]),
-        MiniArticle(ArticleIds.AskForHelpTask, "Bitten Sie um Hilfe bei einem konkreten Teil", "Eine klare Bitte lässt weniger Raum für Vermutungen", "Nennen Sie Ergebnis, Umfang und Frist, etwa: «Kannst du diese zwei Seiten bitte bis Mittag Korrektur lesen?» Sagen Sie, was schon fertig ist und wie lange es ungefähr dauert. Fragen Sie, ob der Umfang passt. Wenn nicht, schlagen Sie einen kleineren Teil oder eine andere Frist vor oder fragen Sie, wer sonst helfen kann."),
-        MiniArticle(ArticleIds.MeaningfulActivity, "Eine Tätigkeit, die Ihnen wichtig ist", "Verbinden Sie einen kleinen Schritt mit einem Wert", "Fragen Sie, was hier zählt: Fürsorge, Neugier, Verlässlichkeit oder Ruhe. Wählen Sie eine kleine Handlung in diese Richtung. Sie muss nicht sofort die ganze Situation verändern, um sinnvoll zu sein. Sinn kann auch Fürsorge für Ihr zukünftiges Ich bedeuten."),
-        MiniArticle(ArticleIds.FlexibleGoals, "Den Plan ändern, ohne das Ziel aufzugeben", "Passen Sie den Schritt an die heutige Kraft an", "Ist der ursprüngliche Plan zu groß, entscheiden Sie, was am wichtigsten ist: Ziel, Frist oder Vorgehensweise. Behalten Sie einen machbaren nächsten Schritt bei, etwa einen Entwurf statt eines perfekten Ergebnisses oder zehn Minuten statt einer Stunde. Ist die Frist nicht mehr realistisch, informieren Sie Betroffene und nennen Sie einen neuen Zeitrahmen. Einen Plan anzupassen berücksichtigt die aktuelle Lage; das Ziel muss dadurch nicht verschwinden."),
-        MiniArticle(ArticleIds.CelebrateCompletion, "Nehmen Sie wahr, was Sie geschafft haben", "Der Kopf springt oft gleich zur nächsten Aufgabe", "Nennen Sie nach dem Abschluss kurz, was Sie getan und welche Mühe Sie investiert haben. Eine Belohnung ist nicht nötig; das Bemerken genügt. So sehen Sie auch Erledigtes und nicht nur offene Punkte. Wenn es hilfreich ist, halten Sie fest, was den Abschluss erleichtert hat: ein guter Zeitpunkt, Unterstützung oder eine Pause."),
+        new(
+            ArticleIds.AskForHelpTask,
+            "Bitten Sie um Hilfe bei einem konkreten Teil",
+            "Beschreiben Sie die Aufgabe so, dass eine Antwort leichtfällt",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Um Hilfe zu bitten kann unangenehm sein, besonders wenn Sie gewohnt sind, alles allein zu schaffen oder niemandem zur Last fallen möchten. Eine konkrete Bitte verringert Unklarheit und macht verständlich, was gebraucht wird. Sie müssen nicht erst beweisen, dass Sie erschöpft genug sind oder Hilfe verdient haben."),
+                H("Grenzen Sie die Bitte ein"),
+                P("Nennen Sie eine Aufgabe, ihren Umfang und eine passende Frist: „Kannst du heute den ersten Absatz dieser E-Mail ansehen?“ Sagen Sie, was Sie bereits erledigt haben, und fragen Sie, ob es zeitlich passt. Lassen Sie ein Nein oder einen kleineren Vorschlag zu. Brauchen Sie gemeinsames Nachdenken, nennen Sie ungefähr den Zeitaufwand."),
+                H("Überlegen Sie eine weitere Möglichkeit"),
+                P("Kann die Person nicht helfen, ist das nicht automatisch ein Urteil über Sie oder die Beziehung. Vielleicht lässt sich die Aufgabe verkleinern, die Frist verschieben oder jemand anderes fragen. Geht es um Sicherheit oder einen dringenden Bedarf, suchen Sie nach einer Absage passende weitere Unterstützung.")
+            ]),
+        new(
+            ArticleIds.MeaningfulActivity,
+            "Wählen Sie eine kleine Tätigkeit, die Ihnen wichtig ist",
+            "Verbinden Sie einen Schritt mit einem persönlichen Wert",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Bei wenig Kraft kann der Sinn einer größeren Aufgabe aus dem Blick geraten. Fragen Sie nicht nur: «Was muss ich heute schaffen?», sondern auch: «Was ist mir in dieser Situation wichtig?» Vielleicht sind es Fürsorge, Verbundenheit, Neugier, Verlässlichkeit oder Ruhe. Ein Wert ist kein Listenpunkt und keine Messung Ihrer Produktivität, sondern eine Richtung für die nächste Entscheidung."),
+                H("Machen Sie den Wert konkret"),
+                P("Wählen Sie eine Handlung für fünf bis zehn Minuten: einer nahestehenden Person eine freundliche Nachricht schreiben, das nötige Dokument öffnen, eine Pflanze gießen oder früher schlafen gehen. Machen Sie den Schritt so klein, dass Sie anfangen können, ohne erst auf Motivation zu warten. Ist Erholung gerade wichtig, kann auch Ruhe eine sinnvolle Handlung sein."),
+                H("Achten Sie auf die Erfahrung, nicht nur auf das Ergebnis"),
+                P("Nehmen Sie danach wahr, was da war: Interesse, Müdigkeit, Erleichterung oder nichts Besonderes. Sie müssen kein Zufriedenheitsgefühl erzwingen. War die Handlung unpassend oder nicht möglich, passen Sie sie an oder verschieben Sie sie. Sinn verlangt kein großes Ergebnis und hebt reale Grenzen nicht auf.")
+            ]),
+        new(
+            ArticleIds.FlexibleGoals,
+            "Behalten Sie die Richtung und ändern Sie den Weg",
+            "Ein Ziel darf sich an neue Bedingungen anpassen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Ein Plan entsteht oft unter anderen Bedingungen, als denen, unter denen Sie ihn umsetzen. Ist er nicht mehr zu bewältigen, ist das ein Anlass zur Überprüfung und kein Grund, sich Vorwürfe zu machen. Unterscheiden Sie die Richtung, die Ihnen wichtig ist, das konkrete Ziel und den Weg dorthin. Der Sinn kann bleiben, auch wenn Frist oder Arbeitsumfang sich ändern."),
+                H("Legen Sie einen machbaren Umfang fest"),
+                P("Bestimmen Sie am besten drei Varianten: ein Minimum für schwierige Tage, einen üblichen Schritt und eine Erweiterung, wenn Sie Kraft haben. Für eine Prüfung könnte das heißen: Unterlagen öffnen und eine Seite lesen, ein Thema wiederholen oder den ganzen Abschnitt durcharbeiten. Wählen Sie ein Minimum, das noch weiterhilft und nicht zur Strafe wird."),
+                H("Prüfen Sie Fristen und Absprachen"),
+                P("Sind andere von Ihrem Ziel abhängig, informieren Sie früh über eine Verzögerung und schlagen Sie einen realistischen neuen Zeitpunkt vor. Achten Sie auf wiederkehrende Hindernisse: ein unklarer nächster Schritt, zu wenig Zeit, Erschöpfung oder fehlende Mittel. Einen Plan anzupassen hilft, mit Bedingungen umzugehen; manchmal ist es auch sinnvoll, das Ziel zu ändern oder um Hilfe zu bitten.")
+            ]),
+        new(
+            ArticleIds.CelebrateCompletion,
+            "Nehmen Sie einen fertigen Schritt wahr, bevor Sie weitermachen",
+            "Eine kurze Pause macht die eigene Mühe sichtbar",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Nach einer erledigten Aufgabe springt die Aufmerksamkeit oft sofort zum Nächsten. Der Tag kann sich dann wie eine ununterbrochene Reihe unerledigter Dinge anfühlen. Halten Sie kurz inne und benennen Sie eine Tatsache, ohne sie zu übertreiben: «Ich habe die E-Mail abgeschickt», «Ich habe um Hilfe gebeten» oder «Ich habe mich ausgeruht, als ich müde war». Das ist weder ein Pflicht-Ritual noch der Versuch, alles schönzureden."),
+                H("Achten Sie darauf, was geholfen hat"),
+                P("Wenn es nützlich ist, notieren Sie eine Beobachtung: Welcher Schritt hat funktioniert, was kostete Mühe und welche Unterstützung half? So wird die Anerkennung zu einer Information für das nächste Mal statt zu einem Urteil über Ihren Wert. Vergleichen Sie Ihr Tempo nicht mit dem anderer und werten Sie Erledigtes nicht ab, weil noch etwas offen ist."),
+                H("Wählen Sie den nächsten Übergang"),
+                P("Entscheiden Sie nach der Pause, was jetzt passt: weitermachen, die Aufgabe wechseln, Unterstützung holen oder für heute aufhören. Fertig zu sein heißt nicht immer, alles perfekt abzuschließen; manchmal ist es genug, an einem vereinbarten und sicheren Punkt zu stoppen. An einem schwierigen Tag dürfen Sie die Mühe anerkennen, ohne sich dafür freuen zu müssen.")
+            ]),
 
         new(
             ArticleIds.NameEmotion,
@@ -645,7 +693,22 @@ public static partial class ArticleContent
                 H("Sicherheit ist wichtiger als das Gespräch"),
                 P("Besteht Gefahr durch Gewalt, Drohungen oder Verfolgung, versuchen Sie nicht, den Konflikt allein zu lösen. Gehen Sie an einen sicheren Ort, wenden Sie sich an eine vertraute Person oder an den Notruf. Eine Pause verpflichtet Sie nicht zur Fortsetzung; Sie dürfen das Gespräch beenden, wenn es unsicher wäre.")
             ]),
-        MiniArticle(ArticleIds.ShameKindness, "Scham begegnen, ohne sich zu erniedrigen", "Ein Fehler lässt sich ohne Selbstbestrafung angehen", "Sagen Sie sich: «Ich schäme mich gerade, aber dieses Gefühl beschreibt mich nicht ganz». Trennen Sie Handlung und Person: Was ist passiert, lässt sich etwas reparieren? Wählen Sie die Antwort, die Sie einem nahen Menschen geben würden. Haben Sie jemandem geschadet, benennen Sie die Wirkung und fragen Sie, was helfen würde."),
+        new(
+            ArticleIds.ShameKindness,
+            "Scham begegnen, ohne sich zu erniedrigen",
+            "Ein Fehler lässt sich ohne Selbstbestrafung angehen",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Gefühl und Fakten unterscheiden"),
+                P("Scham macht aus einer einzelnen Handlung oft ein Urteil über die ganze Person: Aus „Ich habe einen Fehler gemacht“ wird „Ich bin schlecht“. Beschreiben Sie die Situation konkret und ohne Etiketten: Was haben Sie gesagt oder getan, was geschah danach und wer war betroffen? Das hebt Verantwortung nicht auf, zeigt aber, was sich angehen lässt."),
+                H("Die Wirkung anerkennen, ohne zu raten"),
+                P("Wenn Ihre Worte oder Handlungen jemanden getroffen haben, erkennen Sie das direkt und knapp an. Zum Beispiel: „Ich habe dich unterbrochen und verstehe, dass das abweisend gewirkt haben kann.“ Sie müssen nicht zuerst Ihre Absicht erklären oder um Vergebung bitten. Fragen Sie, ob die Person besprechen möchte, was zur Wiedergutmachung beitragen könnte, und respektieren Sie die Antwort."),
+                H("Einen realistischen Schritt wählen"),
+                P("Eine Entschuldigung, die Korrektur eines Fehlers oder eine konkrete Verhaltensänderung kann passend sein. Manche Folgen lassen sich nicht schnell rückgängig machen; dann zählt Veränderung über längere Zeit. Wählen Sie einen machbaren Schritt und versprechen Sie nichts Unmögliches. Selbstbestrafung baut kein Vertrauen wieder auf und ersetzt keine Wiedergutmachung."),
+                H("Die eigene Würde bewahren"),
+                P("Versuchen Sie, mit sich selbst so zu sprechen wie mit einem verantwortlichen Menschen, der weiterhin Respekt verdient: „Ich bedauere mein Verhalten. Ich kann es anerkennen und überlegen, was als Nächstes zu tun ist.“ Freundlichkeit zu sich selbst ist keine Rechtfertigung. Sie richtet den Blick auf Verantwortung und Handlung statt auf endlose Selbstbeschimpfung."),
+            ]),
         new(
             ArticleIds.GuiltRepair,
             "Schuldgefühl: etwas wiedergutmachen oder loslassen",
@@ -763,17 +826,140 @@ public static partial class ArticleContent
                 H("Achten Sie auf Ihre Kräfte und Sicherheit"),
                 P("Sie dürfen zugewandt sein und trotzdem sagen: «Im Moment kann ich nicht». Versprechen Sie keine Geheimhaltung bei einer unmittelbaren Bedrohung. Ist die Person oder jemand in ihrer Nähe in Gefahr, holen Sie eine Vertrauensperson, Fachkraft oder den Notdienst dazu; bleiben Sie nicht die einzige Unterstützung.")
             ]),
-        MiniArticle(ArticleIds.AfterCrying, "Nach dem Weinen", "Kümmern Sie sich um die nächste Minute", "Sie müssen nach dem Weinen nicht sofort nach der Ursache suchen. Wählen Sie eine einfache Sache: Wasser trinken, das Gesicht waschen oder sich bequem hinsetzen; Sie können auch jemanden um Gesellschaft bitten. Verlangen Sie nicht, sofort ruhig zu sein. Eine größere Aufgabe darf warten. Sind Sie in Gefahr oder können nicht sicher bleiben, holen Sie sofort dringend Hilfe."),
+        new(
+            ArticleIds.AfterCrying,
+            "Nach dem Weinen: Geben Sie sich Zeit",
+            "Kümmern Sie sich zuerst um einfache Bedürfnisse",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Nach starkem Weinen können Sie müde, zittrig, wie taub oder erleichtert sein; Menschen reagieren unterschiedlich. Sie müssen die Tränen nicht sofort erklären und sich nicht zum Beruhigen zwingen. Prüfen Sie die unmittelbare Situation: Sind Sie gerade sicher? Brauchen Sie Wasser, Wärme, eine bequeme Position oder die Nähe einer anderen Person? Wählen Sie nur, was Ihnen entspricht."),
+                H("Halten Sie den nächsten Schritt klein"),
+                P("Sie können sich das Gesicht waschen, etwas trinken, sich zudecken oder einfach sitzen bleiben. Helfen diese Dinge nicht oder fühlen sie sich unangenehm an, müssen Sie sie nicht «richtig» machen. Verschieben Sie große Entscheidungen, bis Sie wieder mehr Kraft haben. Wenn Sie möchten, schreiben Sie einer vertrauten Person: «Mir geht es gerade schwer. Kannst du eine Weile erreichbar sein?»"),
+                H("Kehren Sie schrittweise zum Alltag zurück"),
+                P("Wenn Sie bereit sind, wählen Sie eine kleine Aufgabe oder Ruhe. Weinen bedeutet nicht, dass Sie schwach sind oder wieder am Anfang stehen. Beeinträchtigt es häufig Ihren Alltag, verschlechtert sich Ihr Befinden oder können Sie sich nicht sicher halten, wenden Sie sich an eine Fachperson; bei unmittelbarer Gefahr holen Sie akute Hilfe.")
+            ]),
 
-        MiniArticle(ArticleIds.SpecificRequest, "Bitten Sie um etwas Konkretes", "Eine klare Bitte lässt eine Antwort zu", "Formulieren Sie die Bitte in einem Satz: kurzer Kontext, gewünschte Handlung und Zeitpunkt. Zum Beispiel: «Ich möchte das gern besprechen; hast du nach dem Abendessen zehn Minuten?» Eine lange Rechtfertigung ist nicht nötig. Lassen Sie Raum für eine Antwort und nennen Sie bei Bedarf eine Alternative."),
-        MiniArticle(ArticleIds.ListenReflect, "Erst verstehen, dann antworten", "Eine kurze Rückfrage kann Spannung senken", "Fassen Sie den Hauptpunkt in eigenen Worten zusammen und fragen Sie: «Habe ich Sie richtig verstanden?» Warten Sie auf eine Korrektur, bevor Sie beraten oder inhaltlich antworten. Fragen Sie, ob ein Rat gerade willkommen ist. Zuhören zu zeigen bedeutet nicht, zustimmen zu müssen. Wird das Gespräch zu angespannt, schlagen Sie eine Pause vor und vereinbaren Sie, wann Sie das Thema wieder aufnehmen."),
-        MiniArticle(ArticleIds.BoundarySentence, "Ein Satz, um eine Grenze zu setzen", "Kurz ist oft klarer als eine lange Rechtfertigung", "Sagen Sie, was für Sie passt und was Sie tun werden: «Ich möchte ruhig sprechen; wenn der Ton so bleibt, beende ich das Gespräch und komme später darauf zurück.» Beschreiben Sie Ihr eigenes Handeln, statt die andere Person zu steuern. Könnte eine direkte Aussage die Gefahr erhöhen, gehen Sie weg und holen Hilfe, anstatt sie auszusprechen."),
-        MiniArticle(ArticleIds.NoWithoutEssay, "Sie dürfen ohne lange Erklärung Nein sagen", "Wählen Sie eine höfliche klare Formulierung", "Wenn ein Nein sicher ist, sagen Sie kurz: «Danke, aber ich kann nicht» oder «Das passt für mich nicht». Sie müssen weder eine Alternative noch persönliche Gründe anbieten. Drängt die andere Person, wiederholen Sie die Antwort einmal und beenden das Gespräch, wenn es sicher ist. Bei Gefahr wählen Sie zuerst einen sicheren Weg oder holen Unterstützung."),
-        MiniArticle(ArticleIds.DifficultTalkOpening, "Beginnen Sie ein schwieriges Gespräch mit einem Ziel", "Sprechen Sie über einen Vorfall und eine Bitte", "Notieren Sie vorab ein Gesprächsziel und eine Bitte. Beschreiben Sie in einem ruhigen Moment die konkrete Situation und ihre Wirkung, ohne den Charakter zu bewerten: «Wenn Pläne kurzfristig wechseln, kann ich schlecht planen; können wir früher Bescheid geben?» Ist es unsicher, beginnen Sie nicht. Steigt die Spannung, pausieren Sie und vereinbaren eine Rückkehr nur, wenn das sicher ist."),
-        MiniArticle(ArticleIds.RepairAfterConflict, "Nach einem Streit wieder ins Gespräch kommen", "Machen Sie einen kleinen Schritt zur Klärung", "Fragen Sie zuerst, ob die andere Person bereit ist. Bleiben Sie bei einem Vorfall: Benennen Sie Ihren Anteil und fragen Sie nach ihrer Sicht. Wählen Sie ein Thema, das Sie klären möchten; Sie müssen nicht den ganzen Konflikt lösen. Entstehen Angst oder Drohungen, beenden Sie das Gespräch und holen Unterstützung."),
-        MiniArticle(ArticleIds.ApologyResponsibility, "Sich entschuldigen, ohne Grenzen aufzugeben", "Benennen Sie die Handlung und was Sie ändern", "Nennen Sie Handlung und Wirkung: «Ich habe dich unterbrochen; dadurch konntest du nicht zu Ende sprechen. Das tut mir leid.» Sagen Sie, was Sie künftig anders machen, und fragen Sie, ob eine Wiedergutmachung erwünscht ist. Ein konkretes Eingeständnis bedeutet nicht, jede Anschuldigung anzunehmen oder die Sicherheit aufzugeben. Die andere Person darf Zeit brauchen."),
-        MiniArticle(ArticleIds.FeedbackAsInformation, "Rückmeldung von Ihrem Wert trennen", "Klären Sie, was Sie nutzen können", "Bitten Sie bei unklarer Rückmeldung um ein konkretes Beispiel und eine beobachtbare Änderung. Wählen Sie höchstens einen Punkt zum Ausprobieren. Eine Rückmeldung zu einem Ergebnis bewertet nicht Sie als ganze Person. Abwertungen oder Beleidigungen müssen Sie nicht als hilfreiche Kritik übernehmen. Trennen Sie Beobachtung und Schlussfolgerung: Ein fehlendes Beispiel im Bericht ist konkret; «Ich kann nichts» ist ein pauschales Urteil. Wenn es gerade schwerfällt, lesen Sie die Rückmeldung später noch einmal."),
-        MiniArticle(ArticleIds.ReceiveNo, "Wenn jemand Nein sagt", "Eine Ablehnung der Bitte ist nicht immer eine Ablehnung Ihrer Person", "Fragen Sie sich, wozu genau das Nein gilt: zu dieser Bitte, diesem Zeitpunkt oder dieser Möglichkeit. Wenn es hilft, fragen Sie einmal nach einer Alternative; danach entscheiden Sie, wen Sie sonst ansprechen oder was Sie selbst tun können. Enttäuschung ist erlaubt, ohne daraus ein Urteil über Ihren Wert abzuleiten."),
+        new(
+            ArticleIds.SpecificRequest,
+            "Formulieren Sie eine konkrete Bitte",
+            "Kurzer Kontext, gewünschte Handlung und passender Zeitpunkt",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Andeutungen und lange Erklärungen können verbergen, worum Sie bitten. Versuchen Sie eine einfache Struktur: kurzer Kontext, konkrete Handlung und Zeitpunkt. Zum Beispiel: „Ich möchte über den Zeitplan sprechen. Hast du heute nach dem Abendessen zehn Minuten?“ Das garantiert keine Zustimmung, gibt der anderen Person aber eine klare Möglichkeit zu antworten."),
+                H("Lassen Sie eine Wahl zu"),
+                P("Fragen Sie, ob es gerade passt, und rechnen Sie mit einem Nein oder einem anderen Zeitpunkt. Ist es nicht dringend, können Sie zwei Möglichkeiten nennen. Nutzen Sie weder Drohungen noch Schuldgefühle, um Zustimmung zu bekommen. Bei einer Grenze sagen Sie auch, was Sie selbst tun werden."),
+                H("Klären Sie, was die Antwort bedeutet"),
+                P("Ist eine Zusage ungenau, vereinbaren Sie eine Uhrzeit oder den nächsten Schritt. Bleibt die Antwort aus, legen Sie fest, wann Sie erneut fragen, oder überlegen Sie, was Sie selbst tun können. Bei Gefahr reicht ein gewöhnliches Gespräch möglicherweise nicht aus; wählen Sie einen sichereren Weg zu Unterstützung.")
+            ]),
+        new(
+            ArticleIds.ListenReflect,
+            "Erst verstehen, dann antworten",
+            "Prüfen Sie den Sinn, bevor Sie einen Rat geben",
+            "TipsAndUpdates",
+            2,
+            [
+                P("In einem angespannten Gespräch bereitet man die Antwort leicht schon vor, während die andere Person noch spricht. Das Gehörte kurz in eigenen Worten wiederzugeben, prüft Ihr Verständnis und gibt dem Gegenüber Gelegenheit zur Korrektur. Es ist keine Technik, um einen Streit zu gewinnen, sondern hilft, nicht auf etwas zu antworten, das gar nicht gesagt wurde."),
+                H("Fassen Sie einen Hauptpunkt zusammen"),
+                P("Wählen Sie einen Gedanken: „Wenn ich dich richtig verstehe, hat dich geärgert, dass sich die Pläne ohne Vorwarnung geändert haben?“ Halten Sie dann inne und lassen Sie die Person ergänzen. Fügen Sie nicht sofort eine Verteidigung, Diagnose oder Lösung hinzu. Sind Sie unsicher, fragen Sie, was Sie übersehen haben."),
+                H("Fragen Sie, was jetzt helfen würde"),
+                P("Sie können fragen: „Möchtest du, dass ich einfach zuhöre, oder sollen wir gemeinsam überlegen, was zu tun ist?“ Einen Gedanken wiederzugeben heißt nicht, jeder Bewertung zuzustimmen oder die eigenen Grenzen aufzugeben. Wird das Gespräch unsicher oder zu angespannt, machen Sie eine Pause und setzen Sie es nur unter passenden Bedingungen fort.")
+            ]),
+        new(
+            ArticleIds.BoundarySentence,
+            "Eine Grenze wird klarer, wenn sie von Ihnen handelt",
+            "Sagen Sie, was für Sie passt und was Sie tun werden",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Eine Grenze soll niemanden zu einem bestimmten Verhalten zwingen. Sie beschreibt klar, was für Sie akzeptabel ist und wie Sie handeln, wenn eine Situation weitergeht. Wählen Sie einen konkreten Vorfall, statt die ganze Beziehung zu erklären. Könnte ein direktes Gespräch zu Drohungen oder Gewalt führen, üben Sie es nicht allein; denken Sie zuerst an Sicherheit und Unterstützung."),
+                H("Formulieren Sie kurz und in Ich-Sätzen"),
+                P("Eine einfache Struktur lautet: «Wenn X passiert, ist Y für mich schwierig. Ich bitte um Z; wenn es weitergeht, werde ich W tun.» Zum Beispiel: «Ich bin bereit, ohne Beleidigungen zu sprechen. Wenn sie weitergehen, beende ich das Telefonat.» Kündigen Sie nur an, was Sie selbst wirklich tun können. Sie müssen nicht beweisen, dass Ihre Grenze berechtigt ist, oder Zustimmung erreichen."),
+                H("Wiederholen Sie sich einmal und handeln Sie"),
+                P("Werden Sie in eine Diskussion darüber gezogen, ob Sie eine Grenze setzen dürfen, wiederholen Sie sie ruhig und ohne neue Rechtfertigungen. Tun Sie dann, was Sie angekündigt haben, sofern es sicher ist. Eine Grenze kann jemanden verärgern und trotzdem wichtig sein. Ändern sich die Umstände, dürfen Sie sie anpassen oder sich Unterstützung holen.")
+            ]),
+        new(
+            ArticleIds.NoWithoutEssay,
+            "Sie dürfen Nein sagen, ohne sich lange zu rechtfertigen",
+            "Klar bleiben, ohne Ihre Gründe beweisen zu müssen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Ein Nein kann jemanden enttäuschen oder Nachfragen auslösen. Vielleicht befürchten Sie auch, dass die Beziehung darunter leidet. Wenn eine Ablehnung sicher ist, genügt ein klarer Satz. Sie können Verständnis zeigen und trotzdem ablehnen. Entscheiden Sie zuerst, was Sie wirklich anbieten können; versprechen Sie unter Druck nichts, was Sie nicht leisten können oder möchten."),
+                H("Wählen Sie eine passende Formulierung"),
+                P("Sie können sagen: «Danke, dass du an mich gedacht hast, aber diesmal kann ich nicht», «Dafür habe ich gerade keine Kapazität» oder «Der Zeitpunkt passt mir nicht». Wenn Sie möchten, können Sie eine Alternative anbieten; nötig ist sie nicht. Auch persönliche Gründe müssen Sie nicht vollständig erklären. Freundlich zu sein heißt nicht, unklar zu bleiben."),
+                H("Gehen Sie mit weiterem Druck um"),
+                P("Fragt die Person weiter nach, wiederholen Sie Ihre Antwort kurz, statt jedes Mal einen neuen Grund zu liefern. Sie können das Gespräch beenden oder später antworten. Könnte ein direktes Nein Drohungen, Kontrolle oder Schaden auslösen, hat Sicherheit Vorrang: Beziehen Sie eine Vertrauensperson ein, wählen Sie einen sichereren Kommunikationsweg oder gehen Sie, wenn möglich.")
+            ]),
+        new(
+            ArticleIds.DifficultTalkOpening,
+            "Geben Sie einem schwierigen Gespräch ein kleines Ziel",
+            "Beginnen Sie mit einem konkreten Vorfall und einer Bitte",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Ein schwieriges Thema wird leicht zu einem Urteil über die ganze Beziehung. Notieren Sie vorher ein Ziel: Was möchten Sie klären, lösen oder der anderen Person einfach mitteilen? Wählen Sie dann einen konkreten Vorfall und eine Bitte. Sind Sie wütend, erschöpft oder haben Angst, dürfen Sie pausieren; das Gespräch muss nicht sofort stattfinden."),
+                H("Beschreiben Sie den Vorfall und seine Wirkung"),
+                P("Wählen Sie einen Zeitpunkt, an dem beide etwas Ruhe und Zeit haben. Sagen Sie, was Sie beobachtet haben, wie es sich auswirkte und welche Änderung Sie ausprobieren möchten. Zum Beispiel: «Wenn sich Pläne kurzfristig ändern, kann ich die Betreuung schwer organisieren. Können wir uns früher Bescheid geben?» Vermeiden Sie Vermutungen über Motive wie «Du immer» oder «Dir ist alles egal»."),
+                H("Lassen Sie Raum für eine Antwort"),
+                P("Hören Sie, wie die andere Person Sie verstanden hat, klären Sie ein Missverständnis oder vereinbaren Sie einen machbaren nächsten Schritt. Wird das Gespräch zu hitzig, legen Sie eine Pause und einen Zeitpunkt zur Fortsetzung fest. Könnte direkte Kommunikation Gewalt oder Vergeltung auslösen, verlassen Sie sich nicht auf Gesprächstechniken als Schutz, sondern holen Sie Hilfe.")
+            ]),
+        new(
+            ArticleIds.RepairAfterConflict,
+            "Nach einem Streit wieder ins Gespräch kommen",
+            "Klären Sie die Gesprächsbereitschaft und wählen Sie einen Punkt",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Nach einem Streit möchten Sie vielleicht sofort alles erklären oder nie wieder darüber sprechen. Fragen Sie vor einer Klärung, ob die andere Person reden möchte, und prüfen Sie auch Ihre eigene Bereitschaft. Das erste Gespräch kann ein kleiner Schritt sein: einen Vorfall verstehen, nicht die ganze Beziehung lösen."),
+                H("Bleiben Sie bei einem konkreten Moment"),
+                P("Beschreiben Sie, was passiert ist, ohne Etiketten oder Vermutungen über Absichten. Benennen Sie Ihren Anteil, falls es einen gibt, und fragen Sie nach der Sicht der anderen Person. Ihr zuzuhören bedeutet nicht, automatisch zuzustimmen. Weichen die Wahrnehmungen ab, klären Sie zunächst eine Tatsache oder die Bedeutung einer Aussage."),
+                H("Beenden Sie das Gespräch umsichtig"),
+                P("Sagen Sie, was klarer geworden ist und was folgen könnte: eine kleine Vereinbarung, ein weiteres Gespräch oder Bedenkzeit. Steigt die Spannung, vereinbaren Sie eine Pause. Bei Drohungen, Einschüchterung oder Angst müssen Sie keine Versöhnung um jeden Preis suchen: Beenden Sie das Gespräch, gehen Sie an einen sicheren Ort und holen Sie Unterstützung.")
+            ]),
+        new(
+            ArticleIds.ApologyResponsibility,
+            "Entschuldigen mit Verantwortung und Grenzen",
+            "Benennen Sie die Handlung, ohne ihre Wirkung zu rechtfertigen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Eine hilfreiche Entschuldigung richtet sich auf die Handlung und ihre Wirkung, nicht darauf, zu beweisen, dass Sie ein guter Mensch sind. Werden Sie konkret: „Ich habe dich unterbrochen, deshalb konntest du nicht ausreden.“ Erkennen Sie die Wirkung an und sagen Sie, dass es Ihnen leidtut, ohne ein „aber du hast auch …“ anzufügen. Ihre Absicht können Sie getrennt erläutern, wenn die andere Person das möchte."),
+                H("Bieten Sie eine realistische Wiedergutmachung an"),
+                P("Sagen Sie, was Sie beim nächsten Mal anders versuchen, und fragen Sie, ob jetzt eine kleine Wiedergutmachung helfen würde. Versprechen Sie nichts, was Sie nicht halten können. Die andere Person muss weder sofort verzeihen noch Sie beruhigen; geben Sie ihr Zeit und akzeptieren Sie ihre Antwort."),
+                H("Verantwortung bedeutet nicht, Sicherheit aufzugeben"),
+                P("Sie können einen konkreten Fehler anerkennen und zugleich Beleidigungen, Druck oder aus Ihrer Sicht falsche Vorwürfe zurückweisen. Nutzen Sie eine Entschuldigung nicht, um Vergebung oder erneuten Kontakt zu erzwingen. Wird das Gespräch unsicher, beenden Sie es und schaffen Sie sicheren Abstand.")
+            ]),
+        new(
+            ArticleIds.FeedbackAsInformation,
+            "Rückmeldung zur Arbeit von Ihrem Wert trennen",
+            "Suchen Sie konkrete Hinweise statt eines Urteils über sich",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Eine Bemerkung zu einem Ergebnis kann wie ein Urteil über die ganze Person klingen, besonders wenn sie unerwartet oder scharf formuliert ist. Halten Sie inne und unterscheiden Sie drei Dinge: die genauen Worte, einen überprüfbaren Sachverhalt und Ihren Schluss über sich selbst. „Im Bericht fehlt ein Beispiel“ beschreibt die Arbeit; „Ich kann gar nichts“ ist ein pauschales Urteil."),
+                H("Klären Sie die Rückmeldung"),
+                P("Ist sie unklar, bitten Sie um ein Beispiel und fragen Sie, welche Veränderung sichtbar wäre. Wählen Sie einen realistischen Punkt zum Ausprobieren bei der nächsten Aufgabe. Nicht jede Formulierung ist hilfreich: Beleidigungen und Demütigungen werden nicht dadurch konstruktiv, dass man sie Feedback nennt."),
+                H("Entscheiden Sie über den nächsten Schritt"),
+                P("Sie müssen nicht sofort antworten. Notieren Sie den hilfreichen Teil, denken Sie später darüber nach oder fragen Sie eine Person, die den Zusammenhang kennt. Widerspricht die Rückmeldung Fakten oder Absprachen, klären Sie das ruhig. Eine Aufgabe und eine Bewertung bestimmen nicht Ihre gesamten Fähigkeiten.")
+            ]),
+        new(
+            ArticleIds.ReceiveNo,
+            "Wenn jemand Nein sagt",
+            "Eine Ablehnung der Bitte ist nicht immer eine Ablehnung Ihrer Person",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Klären, worauf sich die Antwort bezieht"),
+                P("Ein Nein kann sich auf eine konkrete Bitte, den Zeitpunkt oder eine bestimmte Möglichkeit beziehen. Ziehen Sie nicht vorschnell einen Schluss über die Beziehung oder Ihren Wert, wenn die Person das nicht gesagt hat. Wenn es passt, können Sie ruhig nachfragen: „Meinst du, dass es gerade nicht geht?“"),
+                H("Die Grenze respektieren"),
+                P("Ist die Ablehnung eindeutig, sollte eine Nachfrage nicht zu Überredungsversuchen werden. Die andere Person darf ablehnen oder den Grund für sich behalten. Sie dürfen enttäuscht sein, eine Pause machen und dann weitersehen. Die Antwort anzunehmen heißt nicht, sie in jeder Hinsicht fair zu finden; es heißt, keine Zustimmung durch Druck zu erzwingen."),
+                H("Eine andere Möglichkeit suchen"),
+                P("Bleibt das Bedürfnis bestehen, trennen Sie es von dieser einen Unterstützung. Wenn die Person offen dafür wirkt, können Sie einmal nach einem anderen Zeitpunkt oder einer Alternative fragen. Sonst überlegen Sie, wen Sie noch ansprechen können, was Sie selbst übernehmen oder ob die Aufgabe warten kann."),
+                H("Enttäuschung zulassen"),
+                P("Benennen Sie das Gefühl schlicht: „Ich bin enttäuscht, ich hatte mit Hilfe gerechnet.“ Sie müssen sich nicht einreden, die Absage sei unwichtig, oder sofort ruhig sein. Wenn die erste Reaktion nachlässt, prüfen Sie Ihre Möglichkeiten und wählen einen nächsten Schritt. Eine abgelehnte Bitte bestimmt nicht Ihren Wert."),
+            ]),
         new(
             ArticleIds.CheckAssumption,
             "Prüfen Sie eine Vermutung mit einer Frage",
@@ -787,8 +973,19 @@ public static partial class ArticleContent
                 H("Prüfen Sie, ob weitere Klarheit nötig ist"),
                 P("Ändert eine Klärung nichts an Ihrem Handeln, können Sie die Frage offenlassen. Ist sie wichtig, warten Sie auf eine Antwort oder sagen Sie, was Sie bis wann wissen müssen. Ist das Gespräch unsicher, wählen Sie einen anderen Weg oder holen Unterstützung. Ziel ist hilfreiche Klarheit, nicht absolute Gewissheit.")
             ]),
-        MiniArticle(ArticleIds.AskSupport, "Unterstützung zu erbitten ist eine Fähigkeit", "Sagen Sie, was Ihnen helfen würde", "Sagen Sie, welche Unterstützung Sie möchten: zuhören, gemeinsam Möglichkeiten überlegen oder etwas zusammen tun. Zum Beispiel: «Der Tag war schwer. Kannst du mir zehn Minuten ohne Ratschläge zuhören?» Fragen Sie, ob es gerade passt. Wenn nicht, vereinbaren Sie eine andere Zeit oder wenden Sie sich an eine andere vertraute Person."),
-        MiniArticle(ArticleIds.SupportWithoutFixing, "Da sein, ohne alles zu lösen", "Fragen Sie, welche Unterstützung gebraucht wird", "Versuchen Sie: «Soll ich zuhören, bei dir bleiben oder mit dir über den nächsten Schritt nachdenken?» Versprechen Sie nichts, was Sie nicht halten können. Unterstützung achtet die Wahl der anderen Person und Ihre Grenzen. Bei unmittelbarer Gefahr reicht Zuhören allein möglicherweise nicht."),
+        new(
+            ArticleIds.AskSupport,
+            "Bitten Sie um Unterstützung und sagen Sie, was hilft",
+            "Eine konkrete Bitte erleichtert den Anfang",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Um Hilfe zu bitten kann schwer sein, wenn es einem ohnehin nicht gut geht. Vielleicht fürchten Sie Ablehnung, Bewertung oder anderen zur Last zu fallen. Überlegen Sie zuerst, was gerade helfen würde: zuhören, gemeinsam Möglichkeiten überlegen, praktische Hilfe oder einfach nicht allein zu sein. Die Bitte darf klein und zeitlich begrenzt sein."),
+                H("Benennen Sie Hilfe und Zeitrahmen"),
+                P("Fragen Sie konkret: «Der Tag war schwer. Kannst du mir zehn Minuten ohne Ratschläge zuhören?» oder «Kannst du mir helfen, einen Termin zu vereinbaren? Ich komme gerade schwer ins Tun.» Fragen Sie, ob es jetzt passt. Die andere Person kann zustimmen, ablehnen oder eine Alternative vorschlagen. Sie müssen nicht erst die ganze Geschichte erzählen, um fragen zu dürfen."),
+                H("Wenn es diesmal nicht klappt"),
+                P("Ein Nein oder ein ungünstiger Zeitpunkt bedeutet nicht immer, dass Sie der Person unwichtig sind. Vielleicht können Sie eine andere Vertrauensperson fragen, eine andere Form der Unterstützung wählen oder den Schritt verkleinern. Sind Sie unmittelbar in Gefahr oder können Sie sich nicht schützen, verlassen Sie sich nicht nur auf eine nahestehende Person, sondern holen Sie professionelle oder akute Hilfe.")
+            ]),
         new(
             ArticleIds.ConflictNotFailure,
             "Ein Konflikt bedeutet nicht immer das Ende einer Beziehung",
@@ -854,13 +1051,94 @@ public static partial class ArticleContent
                 H("Lassen Sie jede Antwort zu"),
                 P("Warten Sie nach der Einladung, statt mehrere Nachrichten hinterherzuschicken. Kann die Person nicht, schlagen Sie bei erkennbarem Interesse einen anderen Termin vor oder überlassen Sie ihr den nächsten Schritt. Kommt keine Antwort, wenden Sie sich Ihren eigenen Plänen zu und entscheiden Sie später, ob Sie es erneut versuchen möchten.")
             ]),
-        MiniArticle(ArticleIds.SmallConnection, "Auch ein kleiner Kontakt zählt", "Sie müssen nicht mit einem tiefen Gespräch anfangen", "Wenn Sie sich einsam fühlen, wählen Sie einen einfachen Kontakt: kurze Nachricht, vertrauter Ort oder neutrales Gespräch. Hören Sie auf, wenn es reicht. Ziel ist Verbindung auszuprobieren, nicht sofort gesellig zu werden. Ein kurzer Onlinekontakt oder ein gemeinsamer Ort kann genügen."),
+        new(
+            ArticleIds.SmallConnection,
+            "Beginnen Sie mit einem kleinen Kontakt",
+            "Kontakt muss kein tiefes Gespräch sein",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Einsamkeit kann den ersten Schritt besonders schwer machen. Sie müssen nicht sofort gesellig werden oder gleich eine enge Freundschaft finden. Wählen Sie einen Kontakt mit wenig Druck: einer bekannten Person eine kurze Nachricht schreiben, eine Nachbarin grüßen, sich an einem vertrauten Ort in die Nähe anderer setzen oder über ein neutrales Thema sprechen. Ein kleiner Schritt ist ein Versuch, keine Prüfung."),
+                H("Passen Sie den Kontakt an Ihre Kraft an"),
+                P("Überlegen Sie, was sich meist leichter anfühlt: eine Nachricht, ein kurzes Telefonat, eine Gruppenaktivität oder einfach ein vertrauter öffentlicher Ort. Sie können die Zeit vorher begrenzen und überlegen, wie Sie gehen, wenn Sie müde werden. Wählen Sie eine Person und Umgebung mit wenig Druck. Kommt keine Antwort, ziehen Sie aus einem Moment keinen Schluss über Ihren Wert; versuchen Sie es später oder anders."),
+                H("Achten Sie darauf, was zu Ihnen passt"),
+                P("Nehmen Sie danach wahr, was angenehm war, was Kraft gekostet hat und wie lange Sie Erholung brauchten. Es geht weder um die Zahl der Gespräche noch darum, eine unangenehme Umgebung auszuhalten. Beeinträchtigt Einsamkeit lange Ihren Alltag oder verschlechtert sich Ihr Befinden, kann Unterstützung durch eine Vertrauensperson oder Fachkraft helfen.")
+            ]),
 
-        MiniArticle(ArticleIds.OrientNow, "Prüfen Sie, wo Sie gerade sind", "Eine sanfte Orientierung im Jetzt", "Schauen Sie sich um und nennen Sie Ihren Ort, die Tageszeit sowie einige neutrale Details wie Gegenstände oder Geräusche. Lassen Sie die Augen offen und gehen Sie in Ihrem Tempo. Sie müssen sich nicht an Ereignisdetails erinnern. Wird die Angst stärker, hören Sie auf; Sie können einen neutralen Gegenstand wählen oder eine vertraute Person bitten, bei Ihnen zu bleiben."),
-        MiniArticle(ArticleIds.GroundingChoice, "Wählen Sie einen passenden Anker", "Nicht alle fühlen sich mit Körperfokus wohl", "Benennen Sie Farben, beschreiben einen Gegenstand, spüren den Stuhl oder hören ein gleichmäßiges Geräusch. Wählen Sie etwas, das gerade erträglich ist. Wird es unangenehm, hören Sie auf und probieren etwas anderes. Wenn es neutral bleibt, können Sie den Anker wiederholen; Erleichterung ist kein Muss."),
-        MiniArticle(ArticleIds.AfterNightmare, "Nach einem belastenden Traum", "Erinnern Sie sich daran, dass der Traum vorbei ist", "Schalten Sie ein sanftes Licht ein, schauen Sie sich um und nennen Zeichen, dass Sie jetzt in Ihrem Zimmer sind. Sie müssen sich nicht an Details erinnern. Bei wiederkehrenden Albträumen oder Schlafproblemen sprechen Sie mit einer medizinischen Fachperson. Wenn Sie wieder orientiert sind, hilft oft eine vertraute ruhige Tätigkeit mehr als die Suche nach einer Deutung. Wenn Sie sich allein fürchten, wecken oder kontaktieren Sie eine vertraute Person."),
-        MiniArticle(ArticleIds.AnniversaryReaction, "Schwierige Daten und Jahrestage", "Eine Reaktion kann vorher oder später kommen", "Erinnert ein Datum an ein belastendes Ereignis, planen Sie weniger Aufgaben und Unterstützung im Voraus. Sie können den Tag auf Ihre Art begehen oder gar nicht. Starke Gefühle bedeuten nicht, dass Sie wieder am Anfang stehen. Beginnt die Anspannung oft schon vorher, planen Sie auch nach dem Datum Zeit zur Erholung ein."),
-        MiniArticle(ArticleIds.PaceRecovery, "Erholen Sie sich in Ihrem Tempo", "Machen Sie aus Selbstfürsorge keinen Marathon", "Wählen Sie eine Übung und setzen Sie vorher eine Grenze, etwa drei Minuten oder einen Schritt. Steigt die Anspannung, hören Sie auf und wählen etwas Angenehmeres. Halten Sie danach kurz fest: leichter, gleich oder schwerer? Richten Sie den nächsten Schritt daran aus, nicht am Tempo anderer."),
+        new(
+            ArticleIds.OrientNow,
+            "Prüfen Sie, wo Sie gerade sind",
+            "Eine sanfte Orientierung im Jetzt",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Ohne Eile orientieren"),
+                P("Wenn die Aufmerksamkeit in die Vergangenheit oder in eine sorgenvolle Zukunft gezogen wird, kann es manchmal helfen, die Umgebung wahrzunehmen. Das soll Sie weder zur Ruhe zwingen noch Ihre Konzentration prüfen. Das bescheidene Ziel: einige neutrale Tatsachen über den Moment bemerken und danach selbst entscheiden, worauf Sie achten möchten."),
+                H("Einfache Fakten benennen"),
+                P("Lassen Sie die Augen offen, wenn sich das angenehmer anfühlt. Schauen Sie sich um und nennen Sie Ihren Ort, ungefähr die Tageszeit und einen Gegenstand in der Nähe. Sie können seine Farbe, Form oder Funktion beschreiben. Nehmen Sie danach einen weiteren neutralen Hinweis wahr: ein Geräusch draußen, eine Linie an der Wand oder Licht auf einer Fläche. Sie müssen darin nichts Besonderes erkennen."),
+                H("Machen Sie die Übung passend"),
+                P("Wählen Sie nur Beobachtungen, die Sie nicht überfordern. Sie müssen keine vielen Einzelheiten aufzählen, sich bewegen, etwas berühren oder auf den Atem achten. Ein Satz kann reichen: „Ich bin hier, es ist Vormittag, vor mir steht ein Tisch.“ Wenn Ihnen keine Worte einfallen, genügt es, einen Gegenstand anzusehen."),
+                H("Prüfen, ob es Ihnen guttut"),
+                P("Fragen Sie nach einigen Sekunden: Ist es etwas klarer, unverändert oder unangenehmer? Jede Antwort ist in Ordnung. Verstärkt sich das Unbehagen, beenden Sie die Übung und wählen Sie etwas, das sich sicherer anfühlt; Sie können eine vertraute Person um Gesellschaft bitten. Ruhe ist kein Pflichtziel."),
+            ]),
+        new(
+            ArticleIds.GroundingChoice,
+            "Wählen Sie einen passenden Anker",
+            "Nicht alle fühlen sich mit Körperfokus wohl",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Erdung ist eine Wahl, keine Regel"),
+                P("Mit Erdung ist oft eine kurze Übung gemeint, die den Blick auf den gegenwärtigen Moment lenkt. Eine Methode passt jedoch nicht allen. Manche betrachten lieber Gegenstände oder lauschen einem Geräusch; auf den Atem oder den Körper zu achten, kann sich für andere unangenehm anfühlen. Sie dürfen jede Methode auslassen und jederzeit aufhören."),
+                H("Beginnen Sie mit etwas Äußerem"),
+                P("Wählen Sie ein einfaches Detail in Ihrer Nähe: Benennen Sie eine Farbe, suchen Sie einen Gegenstand mit geraden Linien oder beschreiben Sie seinen Zweck. Sie können auch ein gleichmäßiges Hintergrundgeräusch wahrnehmen, ohne seine Quelle herauszufinden. Bleiben Sie einige Sekunden bei einem Anker und prüfen Sie dann, wie es Ihnen geht."),
+                H("Körperempfindungen nur auf Wunsch"),
+                P("Wenn es angenehm ist, bemerken Sie die Unterstützung des Stuhls, die Stellung Ihrer Füße oder den Stoff am Ärmel. Sie müssen nicht den ganzen Körper absuchen, die Haltung verändern oder die Augen schließen. Bei Schmerzen, Taubheit, starker Anspannung oder unerwünschten Erinnerungen wählen Sie lieber einen Gegenstand außerhalb des Körpers."),
+                H("Sie dürfen den Weg ändern"),
+                P("Fragen Sie sich: Ist das gerade erträglich, neutral oder belastend? Ist es erträglich, können Sie noch kurz weitermachen. Bleibt alles gleich, ist das eine Information und kein Scheitern. Wird es schlimmer, hören Sie auf. Ziel ist nicht garantierte Erleichterung, sondern eine passende Unterstützung ohne Druck."),
+            ]),
+        new(
+            ArticleIds.AfterNightmare,
+            "Nach einem Albtraum: Finden Sie sanft ins Hier und Jetzt",
+            "Sie müssen den Traum weder deuten noch wiederholen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Nach einem Albtraum kann der Körper noch reagieren, als bestünde die Gefahr weiter. Verlangen Sie nicht von sich, sofort einzuschlafen oder die Bedeutung des Traums zu verstehen. Wenn es sich gut anfühlt, schalten Sie ein Licht ein, schauen Sie sich um und erinnern Sie sich: «Das war ein Traum; ich bin jetzt wach.» Sie können den Ort, das heutige Datum oder einen vertrauten Gegenstand benennen. Verstärkt die Aufmerksamkeit auf Umgebung oder Körper die Angst, hören Sie auf und wählen etwas anderes."),
+                H("Wählen Sie einen ruhigen nächsten Schritt"),
+                P("Setzen Sie sich bequem hin, trinken Sie Wasser oder machen Sie etwas Vertrautes und Ruhiges. Wenn es hilft, schreiben Sie einer Vertrauensperson; möchten Sie niemanden wecken, lassen Sie ein Licht an. Sie müssen den Traum nachts weder aufschreiben noch besprechen. Gehen Sie erst wieder ins Bett, wenn Sie bereit sind, nicht nach einem strengen Plan."),
+                H("Wenn Albträume wiederkehren"),
+                P("Achten Sie nur auf Angaben, die für ein Gespräch hilfreich sein könnten, etwa Häufigkeit und Auswirkungen auf Schlaf und Alltag. Sie müssen nicht selbst nach einer symbolischen Erklärung suchen. Stören Albträume regelmäßig die Erholung oder hängen sie mit einem belastenden Erlebnis zusammen, besprechen Sie das mit einer medizinischen Fachperson oder psychologischen Beratung. Bei unmittelbarer Gefahr kümmern Sie sich zuerst um Sicherheit und akute Hilfe.")
+            ]),
+        new(
+            ArticleIds.AnniversaryReaction,
+            "Ein schwieriges Datum darf einen sanfteren Plan haben",
+            "Die Reaktion kann vorher, an dem Tag oder danach auftreten",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Daten, die mit Verlust, Veränderung oder einem schmerzhaften Ereignis verbunden sind, können unterschiedliche Reaktionen auslösen. Die Belastung kann vorher, am Tag selbst oder danach auftreten; manche Menschen bemerken kaum eine Reaktion. Keine dieser Möglichkeiten bedeutet, dass Sie «falsch» trauern oder damit umgehen. Sie müssen niemandem erklären, warum das Datum für Sie wichtig ist."),
+                H("Entscheiden Sie, wie Sie den Tag verbringen möchten"),
+                P("Wenn möglich, planen Sie weniger Verpflichtungen und überlegen Sie vorher, wen Sie anschreiben oder anrufen können. Sie können sich auf eigene Weise erinnern, den Tag wie üblich verbringen oder auf Rituale verzichten. Überlegen Sie eine Alternative, falls es zu viel wird: früher gehen, eine Pause machen oder jemanden um Gesellschaft bitten."),
+                H("Planen Sie auch Erholung ein"),
+                P("Überlegen Sie, was danach hilfreich wäre: ein einfaches Essen, Schlaf, ein freier Abend oder ein Gespräch mit einer nahestehenden Person. Vergleichen Sie Ihre Gefühle nicht mit denen anderer und zwingen Sie sich nicht zu einem Gedenken. Beeinträchtigt die Belastung länger den Alltag, besprechen Sie Unterstützung mit einer Fachperson; bei unmittelbarer Gefahr für Ihre Sicherheit holen Sie akut Hilfe.")
+            ]),
+        new(
+            ArticleIds.PaceRecovery,
+            "Erholen Sie sich in Ihrem Tempo",
+            "Machen Sie aus Selbstfürsorge keinen Marathon",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Ruhe ist keine weitere Aufgabe"),
+                P("Wenn vieles schwerfällt, kann Selbstfürsorge leicht zu einer langen Liste von Pflichten werden. Bei wenig Kraft fühlt sich selbst eine hilfreiche Übung womöglich wie eine weitere Forderung an. Erholung muss weder schnell sein noch jeden Tag gleich aussehen. Sie können eine kleine Unterstützung wählen oder heute nichts hinzufügen."),
+                H("Ein machbares Minimum wählen"),
+                P("Fragen Sie sich, was gerade möglich ist: etwas Wasser trinken, essen, das Handy kurz weglegen, ein Fenster öffnen oder einer vertrauten Person schreiben. Wählen Sie etwas, das zu Ihren tatsächlichen Umständen passt. Ein Timer oder eine Vorgabe ist nicht nötig, wenn dadurch Druck entsteht; Grenzen helfen nur, wenn sie das Aufhören erleichtern."),
+                H("Die Wirkung wahrnehmen, ohne sich zu bewerten"),
+                P("Achten Sie danach kurz darauf, was sich verändert hat: etwas leichter, gleich oder schwieriger? Das ist keine Bewertung Ihrer Disziplin. Passt eine Übung nicht, beenden Sie sie oder wählen eine andere Unterstützung. Vielleicht ist die hilfreiche Erkenntnis, dass Sie Ruhe, Essen, Schlaf, praktische Hilfe oder die Nähe eines Menschen brauchen."),
+                H("Rechtzeitig Unterstützung annehmen"),
+                P("Bleiben Alltagsaufgaben längere Zeit kaum zu bewältigen, müssen Sie nicht warten, bis Sie alles allein schaffen. Erzählen Sie einer nahestehenden Person, was schwierig geworden ist, oder besprechen Sie Ihr Befinden mit einer Fachperson. Um Hilfe zu bitten ist ein praktischer Schritt wie Ausruhen; Sie müssen nicht erst beweisen, dass Sie alles versucht haben."),
+            ]),
         MiniArticle(ArticleIds.SafetyFirst, "Sicherheit ist wichtiger als eine Übung", "Selbsthilfe verlangt nicht, in Gefahr zu bleiben", "Bei einer nahen Bedrohung versuchen Sie zuerst, einen sichereren Ort zu erreichen und jemanden zu kontaktieren. Atmung und Erdung ersetzen weder Schutz noch medizinische Versorgung oder den Notruf. Wenn Sie nicht allein wegkommen, bitten Sie eine konkrete Person, Hilfe zu rufen."),
         new(
             ArticleIds.ChooseTrustedPerson,
@@ -903,25 +1181,202 @@ public static partial class ArticleContent
                 P("Wächst die Belastung, beeinträchtigt sie den Alltag oder ist sie allein schwer zu bewältigen, kontaktieren Sie eine Vertrauensperson oder Fachkraft. Erneut um Hilfe zu bitten gehört zur Selbstfürsorge und macht Fortschritte nicht ungeschehen. Bei unmittelbarer Gefahr holen Sie dringend Hilfe.")
             ]),
 
-        MiniArticle(ArticleIds.BreathIsOptional, "Atemübungen sind freiwillig", "Zwingen Sie Ihren Atem nicht zu einer Änderung", "Ist der Fokus auf den Atem unangenehm, lassen Sie ihn natürlich und wählen einen äußeren Anker: Farbe, Geräusch oder Gegenstand. Atemübungen passen nicht allen und ersetzen keine Hilfe bei deutlicher Atemnot oder neuen Beschwerden. Wenn Atemzählen belastet, wählen Sie einen äußeren Klang als Anker."),
-        MiniArticle(ArticleIds.GroundingCanChange, "Wenn Erdung nicht hilft", "Wechseln Sie die Methode oder hören Sie auf", "Hilft die Übung nicht oder verstärkt sie das Unbehagen, beenden Sie sie. Wenn Sie möchten, probieren Sie einmal einen einfachen äußeren Anker, etwa einen Gegenstand anzusehen. Hilft auch das nicht, wenden Sie sich an eine Person oder Unterstützung, die weniger Konzentration verlangt."),
-        MiniArticle(ArticleIds.MovementAnchor, "Bewegung als Anker nutzen", "Eine kleine Bewegung kann Wahlmöglichkeiten zurückbringen", "Wenn es angenehm und sicher ist, öffnen und schließen Sie langsam die Hände oder verlagern das Gewicht. Sie können auch ein bewegtes Objekt beobachten. Gehen Sie nicht durch Schmerz; wenn besser, wählen Sie einen ruhigen Gegenstand. Im Sitzen können Sie die Füße sanft auf den Boden drücken."),
-        MiniArticle(ArticleIds.SensesAnchor, "Ein Anker über die Sinne", "Wählen Sie ein neutrales Signal in Ihrer Nähe", "Nennen Sie eine Farbe, die Lufttemperatur oder ein gleichmäßiges Geräusch, das nicht stört. Sie müssen nicht fünf Dinge finden oder die Augen schließen. Ein neutrales Signal kann reichen; wechseln Sie, wenn es unangenehm ist. Lenkt ein Geräusch ab, wählen Sie eine Farbe; ist das Umsehen anstrengend, spüren Sie den Boden unter den Füßen."),
+        new(
+            ArticleIds.BreathIsOptional,
+            "Atemübungen sind freiwillig",
+            "Zwingen Sie Ihren Atem nicht zu einer Änderung",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Sie müssen den Atem nicht beobachten"),
+                P("Atemübungen passen nicht allen und sind nicht in jeder schwierigen Situation nötig. Die Aufmerksamkeit auf jeden Atemzug kann Anspannung oder unangenehme Empfindungen verstärken. Sie dürfen die Übung auslassen, natürlich weiteratmen und einen anderen Anker wählen. Das bedeutet nicht, dass Sie etwas falsch machen."),
+                H("Wenn Sie es ausprobieren möchten"),
+                P("Machen Sie es sich bequem und nehmen Sie einige Sekunden lang Ihren gewöhnlichen Atem wahr, ohne zu zählen, anzuhalten oder tiefer atmen zu wollen. Sie können die Bewegung eines Kleidungsstücks auf der Brust beachten, aber nur, wenn sich das angenehm anfühlt. Ein kurzer Versuch genügt; Rhythmus und Dauer sind nicht vorgeschrieben."),
+                H("Bei Unbehagen aufhören"),
+                P("Wird Ihnen schwindelig, steigt die Angst, bekommen Sie schlechter Luft oder ist der Atemfokus unangenehm, beenden Sie die Übung und atmen Sie wie gewohnt. Wechseln Sie zu einem äußeren Hinweis, etwa einer Farbe oder einem Gegenstand. Versuchen Sie nicht, das Gefühl mit tieferen Atemzügen oder Luftanhalten zu „korrigieren“."),
+                H("Wann medizinische Abklärung wichtig ist"),
+                P("Diese Übung kann die Ursache von Atemnot nicht feststellen und ersetzt keine Behandlung. Neue, deutliche oder rasch zunehmende Atemnot sollte medizinisch abgeklärt werden; bei plötzlicher schwerer Verschlechterung oder unmittelbarer Gefahr wenden Sie sich an den örtlichen Notdienst. Hat medizinisches Fachpersonal eine Atemtechnik empfohlen, folgen Sie den individuellen Anweisungen."),
+            ]),
+        new(
+            ArticleIds.GroundingCanChange,
+            "Wenn Erdung nicht hilft",
+            "Wechseln Sie die Methode oder hören Sie auf",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Keine Wirkung ist kein persönlicher Fehler"),
+                P("Eine Erdungsübung passt vielleicht gerade nicht. Sie muss Ihre Stimmung nicht sofort verändern, und ausbleibende Erleichterung bedeutet nicht, dass Sie etwas falsch gemacht haben. Die Konzentration auf Empfindungen, Atmung oder Erinnerungen kann Angst manchmal verstärken. Dann ist es wichtiger, Ihre Reaktion wahrzunehmen, als weiterzumachen."),
+                H("Unterbrechen und neu entscheiden"),
+                P("Hören Sie auf, wenn es Ihnen schlechter oder schwindelig wird, Sie sich abgetrennt fühlen oder einfach aufhören möchten. Öffnen Sie geschlossene Augen und schauen Sie auf einen neutralen Gegenstand, sofern das angenehm ist. Sie müssen weder tief atmen noch Empfindungen zählen oder Schritte wiederholen, bis ein „richtiges“ Ergebnis kommt."),
+                H("Eine weniger anstrengende Möglichkeit"),
+                P("Wenn Sie fortfahren möchten, wählen Sie einen einfacheren äußeren Hinweis: Lesen Sie ein Schild, nennen Sie eine Farbe oder bemerken Sie, wo die Tür ist. Sie können Übungen auch beiseitelegen und einer vertrauten ruhigen Tätigkeit nachgehen. Probieren Sie nicht mehrere Methoden nacheinander aus, wenn das zusätzlichen Druck erzeugt."),
+                H("Wann eine andere Person helfen kann"),
+                P("Fällt es Ihnen schwer, allein sicher zu bleiben, wenden Sie sich an eine vertraute Person und sagen Sie konkret, was helfen würde: Gesellschaft, Unterstützung bei einer praktischen Aufgabe oder Hilfe beim Kontakt zu einer Fachperson. Bei unmittelbarer Gefahr wenden Sie sich an den örtlichen Notdienst. Sie dürfen eine Übung ablehnen und haben trotzdem Anspruch auf Unterstützung."),
+            ]),
+        new(
+            ArticleIds.MovementAnchor,
+            "Bewegung als Anker nutzen",
+            "Eine kleine Bewegung kann Wahlmöglichkeiten zurückbringen",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Bewegung ist nur eine Möglichkeit"),
+                P("Eine kleine Bewegung kann ein Anker sein, wenn sie sich für Ihren Körper gerade angenehm anfühlt. Sie muss weder die Stimmung verbessern noch wie Sport aussehen. Sie können eine sehr kleine Bewegung wählen, eine Bewegung in der Umgebung beobachten oder einen ruhigen Gegenstand nutzen; alle Möglichkeiten sind gleichwertig."),
+                H("Eine sichere Position wählen"),
+                P("Achten Sie zuerst darauf, sicher zu sitzen oder zu stehen und nicht das Gleichgewicht zu verlieren. Wenn es angenehm ist, öffnen und schließen Sie langsam die Finger, drehen sanft die Handgelenke oder bemerken die Unterstützung unter den Füßen. Eine Bewegung im angenehmen Bereich genügt; Sie müssen sich nicht strecken, aufstehen oder eine feste Anzahl wiederholen."),
+                H("Auf die eigene Reaktion achten"),
+                P("Nehmen Sie wahr, was während der Bewegung geschieht. Fühlt es sich neutral oder angenehm an, können Sie einige Sekunden weitermachen. Bei Schmerzen, Schwindel, Schwäche oder zunehmender Angst hören Sie auf. Gehen Sie für eine Übung nicht über Beschwerden hinweg; Sie können zu einem sichtbaren Anker wechseln oder Hilfe holen."),
+                H("Ohne Bewertung beenden"),
+                P("Wenn Sie möchten, beenden Sie die Bewegung und wählen, was als Nächstes passt: sitzen bleiben, einer gewohnten Tätigkeit nachgehen oder jemanden kontaktieren. Vergleichen Sie nicht, wie Sie sich heute bewegen, mit früher. Erschweren neue oder deutliche körperliche Beschwerden die Bewegung, besprechen Sie das mit medizinischem Fachpersonal."),
+            ]),
+        new(
+            ArticleIds.SensesAnchor,
+            "Ein Anker über die Sinne",
+            "Wählen Sie ein neutrales Signal in Ihrer Nähe",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Ein Signal genügt"),
+                P("Wenn die Umgebung viele Eindrücke bietet, wählen Sie nur ein neutrales Signal statt einer langen Liste. Sie können eine Farbe, die Form eines Gegenstands, ein gleichmäßiges Geräusch oder die Lufttemperatur wahrnehmen. Sie müssen weder fünf Dinge finden noch die Augen schließen oder alle Sinne einsetzen."),
+                H("Wählen Sie etwas Erträgliches"),
+                P("Der Anker sollte für Sie neutral genug sein. Helles Licht, Lärm, Gerüche oder Berührungen können ablenken oder reizen. Ist ein Signal unangenehm, müssen Sie nicht dabei bleiben. Gehen Sie an einen ruhigeren Ort, schauen Sie einen vertrauten Gegenstand an oder lassen Sie die Übung aus."),
+                H("An Zugänglichkeit anpassen"),
+                P("Ist Umsehen schwierig, können Sie einen vertrauten Gegenstand in Gedanken benennen oder auf ein leises Geräusch achten. Lenken Geräusche ab, wählen Sie eine Form oder Farbe. Bei Einschränkungen von Sehen, Hören oder Bewegung verwenden Sie einen zugänglichen Hinweis; ein bestimmter Sinn ist nicht erforderlich."),
+                H("Prüfen, ob es jetzt passt"),
+                P("Bleiben Sie einige Sekunden beim gewählten Signal und fragen Sie sich, ob es angenehmer, gleich oder schwieriger geworden ist. Sie müssen keinen bestimmten Zustand erreichen. Verstärkt sich das Unbehagen, wechseln Sie oder hören auf. Ein anderer Anker ist kein Fehler, sondern achtet Ihre Grenzen."),
+            ]),
         MiniArticle(ArticleIds.EarlyStressSigns, "Frühe Zeichen von Überlastung erkennen", "Frühes Bemerken eröffnet mehr Möglichkeiten", "Wählen Sie ein frühes Zeichen, das Sie wiederholt bemerken, etwa Anspannung oder kürzere Aufmerksamkeit. Notieren Sie kurz, in welcher Situation es auftritt, und wählen Sie eine Reaktion: pausieren, die Aufgabe klären oder Hilfe holen. Das hilft bei der Planung, ist aber keine Diagnose."),
         MiniArticle(ArticleIds.RelaxWithoutForce, "Entspannen ohne Anstrengung", "Sie müssen nicht vollkommen ruhig werden", "Wählen Sie etwas, das wenig Konzentration braucht: Schultern senken, bequemer sitzen oder die Hände lockern. Lassen Sie den Atem natürlich. Ein wenig Komfort reicht; zwingen Sie den Körper nicht zur völligen Entspannung. Wenn die Aufmerksamkeit auf den Körper unangenehm wird, richten Sie sie auf etwas im Raum."),
         MiniArticle(ArticleIds.BasicCareWithoutRules, "Grundversorgung ohne strenge Regeln", "Wählen Sie, was Sie gerade brauchen", "Wählen Sie eine Sache, die Ihnen in der nächsten Stunde fehlt, und machen Sie sie klein: ein Glas Wasser, ein Snack, eine warme Schicht oder eine Nachricht. Ist das gerade nicht möglich, benennen Sie das Hindernis und bitten Sie um konkrete Hilfe. Nicht alles allein schaffen zu können, ist kein persönliches Versagen."),
-        MiniArticle(ArticleIds.NewSymptomsCare, "Neue oder ungewöhnliche Beschwerden", "Stellen Sie keine Diagnose anhand eines Artikels", "Sind körperliche Beschwerden neu, stark oder verändern sie sich rasch, wenden Sie sich an medizinisches Fachpersonal. Bei Notfallzeichen rufen Sie den örtlichen Notdienst. Eine Selbsthilfeübung darf eine medizinische Abklärung nicht verzögern. Notieren Sie Beginn und Verlauf, aber warten Sie bei starken Beschwerden nicht ab."),
-        MiniArticle(ArticleIds.FindTherapist, "Eine Fachperson finden", "Suchen Sie eine passende Zusammenarbeit, keine perfekte Beschreibung", "Fragen Sie nach Ausbildung, Erfahrung mit Ihrem Thema, Format, Kosten und Vertraulichkeit. Erkundigen Sie sich beim ersten Termin nach dem Ablauf und daran, woran Sie Nutzen erkennen. Passt der Kontakt nicht, dürfen Sie jemand anderen suchen. Fragen Sie auch nach den Absageregeln und was Sie tun können, wenn es zwischen den Terminen deutlich schlechter geht."),
-        MiniArticle(ArticleIds.FirstAppointment, "Der erste Termin", "Sie brauchen keine perfekte Geschichte vorzubereiten", "Bringen Sie ein aktuelles Beispiel und drei Fragen mit: Wie laufen die Gespräche ab? Was bleibt vertraulich? Woran arbeiten wir zuerst? Sie dürfen sagen, dass Erklären schwerfällt, um eine Pause bitten oder eine Frage offenlassen. Sie müssen nicht sofort entscheiden, ob Sie weitermachen."),
-        MiniArticle(ArticleIds.DescribeSymptoms, "Beschreiben, was gerade passiert", "Ein Beispiel aus dem Alltag hilft mehr als perfekte Begriffe", "Sagen Sie, wann es begonnen hat, wie oft es vorkommt und was sich im Alltag verändert. Ist Sprechen schwer, bringen Sie eine Notiz mit. Sie müssen keine Diagnose erraten, bevor Sie um Hilfe bitten. Ein konkretes Beispiel aus dem Alltag kann die Beschreibung erleichtern."),
-        MiniArticle(ArticleIds.SelfHelpLimits, "Wenn Selbsthilfe nicht ausreicht", "Professionelle Unterstützung ist ein sinnvoller nächster Schritt", "Stört Ihr Zustand dauerhaft Schlaf, Arbeit, Lernen oder Selbstfürsorge, wird er schlimmer oder helfen Übungen nicht, wenden Sie sich an medizinisches Fachpersonal oder psychologische Hilfe. Sie müssen nicht erst beweisen, dass Sie es allein versucht haben. Sie können Unterstützung anfragen, bevor die Lage unerträglich wird."),
+        new(
+            ArticleIds.NewSymptomsCare,
+            "Neue oder ungewöhnliche Beschwerden",
+            "Stellen Sie keine Diagnose anhand eines Artikels",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Zuerst die Dringlichkeit einschätzen"),
+                P("Neue körperliche Beschwerden können viele Ursachen haben; ein Artikel kann sie nicht zuverlässig bestimmen. Sind sie stark, verschlimmern sie sich rasch oder wirken sie gefährlich, verzögern Sie medizinische Hilfe nicht wegen einer Übung oder einer Internetsuche. Bei unmittelbarer Gefahr oder plötzlicher schwerer Verschlechterung wenden Sie sich an den örtlichen Notdienst."),
+                H("Beobachtungen notieren, wenn es möglich ist"),
+                P("Für ein Gespräch mit medizinischem Fachpersonal kann eine kurze Notiz hilfreich sein: Wann begann es, was hat sich verändert, wie oft tritt es auf und was ist Ihnen sonst aufgefallen? Erwähnen Sie Medikamente und jüngste Änderungen, wenn das relevant ist. Sie müssen weder selbst eine Diagnose suchen noch ausführliche Aufzeichnungen führen."),
+                H("Die Auswirkungen auf den Alltag beschreiben"),
+                P("Achten Sie darauf, ob die Beschwerden Schlaf, Bewegung, Essen, Arbeit oder gewohnte Tätigkeiten beeinträchtigen. Sagen Sie, was Ihnen am meisten Sorgen macht und wovor Sie sich fürchten. Sie können Fragen vorbereiten oder eine vertraute Person bitten, Sie zu begleiten."),
+                H("Selbsthilfe ersetzt keine medizinische Abklärung"),
+                P("Eine beruhigende Aktivität kann Sie während der Organisation von Hilfe unterstützen, sofern sie angenehm ist; sie klärt jedoch nicht die Ursache. Bei plötzlicher Verschlechterung, starken Schmerzen, Atemnot, Bewusstlosigkeit oder anderen dringenden Warnzeichen suchen Sie nach den örtlichen Empfehlungen sofort Hilfe. Sind Sie unsicher, wenden Sie sich an einen medizinischen Dienst und schildern Sie die Situation."),
+            ]),
+        new(
+            ArticleIds.FindTherapist,
+            "Eine passende Fachperson für ein Erstgespräch finden",
+            "Achten Sie auf eine klare und sichere Zusammenarbeit",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Die Suche kann schwerfallen: Profile klingen ähnlich, und vorab lässt sich nicht wissen, ob Vertrauen entsteht. Sie müssen nicht gleich beim ersten Versuch die perfekte Person finden. Prüfen Sie zunächst praktische Punkte: passende Ausbildung und Zulassung, Erfahrung mit Ihrem Anliegen, Gesprächsformat, Kosten und Verfügbarkeit. Geht es um körperliche Gesundheit oder Medikamente, fragen Sie, welche medizinische Fachperson dies beurteilen kann."),
+                H("Stellen Sie praktische Fragen"),
+                P("Fragen Sie vor der Buchung oder beim ersten Termin, wie die Zusammenarbeit abläuft, wie Ziele besprochen werden und wie Sie sagen können, dass das Format nicht passt. Klären Sie Kosten und Absagen, Kontakt zwischen den Terminen sowie Vertraulichkeit und ihre Grenzen. Für organisatorische Fragen müssen Sie am Telefon keine persönlichen Details nennen."),
+                H("Beurteilen Sie die Zusammenarbeit mit der Zeit"),
+                P("Überlegen Sie nach dem Gespräch, ob der Ablauf verständlich war, Sie Fragen stellen konnten und Ihre Grenzen respektiert wurden. Eine gewisse Unsicherheit beim ersten Termin bedeutet nicht automatisch, dass die Fachperson ungeeignet ist; Klarheit und Sicherheit zählen ebenfalls. Verbessert sich der Kontakt nicht, können Sie es ansprechen oder sich neu orientieren. Bei unmittelbarer Gefahr warten Sie nicht auf einen regulären Termin, sondern holen akute Hilfe.")
+            ]),
+        new(
+            ArticleIds.FirstAppointment,
+            "Für das Erstgespräch genügt ein Beispiel",
+            "Sie müssen nicht die ganze Geschichte perfekt erzählen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Vor einem ersten Gespräch versucht man leicht, die ganze Vorgeschichte vorzubereiten und die perfekten Worte zu finden. Das ist nicht nötig. Notieren Sie, wenn es hilft, eine aktuelle Situation, die Ihre Sorge zeigt, und was Sie gern verändern würden. Sie können die Notiz mitbringen, vorlesen oder darum bitten, dass die Fachperson jeweils eine Frage stellt."),
+                H("Nehmen Sie Ihre wichtigsten Fragen mit"),
+                P("Sie können fragen, wie Gespräche ablaufen, was vertraulich bleibt und wann Informationen weitergegeben werden können, wie Ziele vereinbart werden und was Sie bei einer Verschlechterung zwischen Terminen tun sollen. Auch Kosten, Dauer und Absagen können Sie ansprechen. Sie müssen nicht alles sofort fragen; beginnen Sie mit dem Wichtigsten."),
+                H("Lassen Sie sich eine Pause offen"),
+                P("Sie dürfen sagen, dass Sie über ein Thema noch nicht sprechen möchten, eine Frage erklären lassen oder eine Pause machen. Das erste Gespräch dient dazu, das Format kennenzulernen; es ist keine Prüfung, wie gut Sie erzählen. Überlegen Sie danach, ob es sich ausreichend sicher und verständlich angefühlt hat. Sie können später entscheiden, ob Sie weitermachen.")
+            ]),
+        new(
+            ArticleIds.DescribeSymptoms,
+            "Beschreiben Sie Ihre Erfahrung mit Beispielen aus dem Alltag",
+            "Beginn, Wiederholung und Auswirkungen helfen bei der Einordnung",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Für ein schwieriges Erleben brauchen Sie keine Fachbegriffe oder fertige Erklärung. Beginnen Sie mit einem aktuellen Beispiel: Was geschah, was haben Sie bemerkt und was fiel Ihnen schwerer? Sie dürfen sagen: «Ich bin nicht sicher» oder «Ich kann es noch nicht genauer beschreiben». Es geht darum, gemeinsam zu verstehen, nicht vorab eine Diagnose zu erraten."),
+                H("Sammeln Sie einige hilfreiche Eckpunkte"),
+                P("Notieren Sie, wenn Sie sich erinnern, wann es begann, wie oft es auftritt, wie lange es anhält und in welchen Situationen es sich verändert. Beschreiben Sie Auswirkungen auf Schlaf, Lernen, Arbeit, Beziehungen oder Selbstfürsorge. Ergänzen Sie, was Sie versucht haben und was etwas half oder es verschlimmerte. Ein ausführliches Tagebuch ist nicht nötig, wenn es Sie belastet."),
+                H("Bereiten Sie Fragen und wichtige Angaben vor"),
+                P("Sie können Medikamente, gesundheitliche Veränderungen oder andere möglicherweise relevante Einzelheiten notieren; fragen Sie bei Unsicherheit, was wichtig ist. Ändern Sie eine Behandlung nicht aufgrund eines Artikels oder Fragebogens. Neue oder starke körperliche Beschwerden sollten medizinisch beurteilt werden; bei unmittelbarer Gefahr holen Sie sofort Hilfe.")
+            ]),
+        new(
+            ArticleIds.SelfHelpLimits,
+            "Wenn Selbsthilfe nicht ausreicht",
+            "Professionelle Unterstützung ist ein sinnvoller nächster Schritt",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Bemerken, wenn die Belastung anhält"),
+                P("Selbsthilfe kann bei alltäglichen Schwierigkeiten unterstützen, muss aber nicht alles lösen. Fachliche Unterstützung kann sinnvoll sein, wenn die Lage länger Schlaf, Arbeit, Lernen, Beziehungen oder Selbstfürsorge beeinträchtigt, sich verschlechtert oder Sie wichtige Tätigkeiten zunehmend aufgeben. Sie müssen nicht warten, bis es unerträglich wird."),
+                H("Sie brauchen keine fertige Diagnose"),
+                P("Es reicht zu beschreiben, was sich verändert hat und seit wann. Je nach Ihren Möglichkeiten können Sie bei einer Hausarztpraxis, psychologischen Fachperson oder einer anderen qualifizierten Stelle beginnen. Wissen Sie nicht, wohin Sie sich wenden sollen, fragen Sie einen medizinischen Dienst nach einem ersten Schritt."),
+                H("Eine kurze Übersicht vorbereiten"),
+                P("Notieren Sie vor dem Gespräch einige Punkte: Was belastet Sie am meisten, wann begann es, wie wirkt es sich im Alltag aus und was haben Sie bereits versucht? Ergänzen Sie Fragen zu möglicher Unterstützung. Sie müssen nicht alles auf einmal erzählen; bitten Sie um Erklärung unbekannter Begriffe und vereinbaren Sie einen nächsten Schritt."),
+                H("Um Hilfe zu bitten ist bereits ein Schritt"),
+                P("Sie müssen nicht beweisen, dass Sie allein genug versucht haben. Ist ein Termin oder Gespräch schwer zu beginnen, bitten Sie eine nahestehende Person, einen Kontakt zu finden oder bei Ihnen zu bleiben. Bei unmittelbarer Gefahr für Sie oder andere wenden Sie sich an den örtlichen Notdienst."),
+            ]),
 
-        MiniArticle(ArticleIds.ScreeningNotDiagnosis, "Ein Fragebogen ist keine Diagnose", "Ein Ergebnis kann ein Gespräch beginnen, kein Etikett sein", "Antworten beziehen sich auf einen bestimmten Zeitraum und hängen von den Umständen ab. Zeigen Sie ein Ergebnis einer Fachperson, wenn es Sie beunruhigt. Ändern Sie Behandlung oder wichtige Entscheidungen nicht allein aufgrund eines Testwerts. Ein Fragebogen hilft beim Formulieren von Fragen, ersetzt aber keine Einschätzung."),
+        new(
+            ArticleIds.ScreeningNotDiagnosis,
+            "Ein Fragebogen ist keine Diagnose",
+            "Ein Ergebnis kann ein Gespräch beginnen, kein Etikett sein",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Was ein Ergebnis zeigen kann"),
+                P("Ein Fragebogen sammelt Antworten zu Erlebnissen in einem bestimmten Zeitraum und zu konkreten Fragen. Ein Wert kann Themen für ein Gespräch sichtbar machen, erklärt aber nicht allein die Ursache Ihres Befindens. Aktuelle Ereignisse, Gesundheit, Schlaf und das Verständnis der Fragen können die Antworten beeinflussen."),
+                H("Was ein Wert nicht feststellen kann"),
+                P("Ein Ergebnis bestätigt oder widerlegt keine Diagnose und ersetzt kein Gespräch mit einer Fachperson. Grenzwerte oder Farbbereiche gehören zum jeweiligen Instrument und sind kein abschließendes Urteil über Sie. Ein hoher Wert sagt nicht, was mit Ihnen „nicht stimmt“; ein niedriger macht Ihre Belastung nicht unwichtig."),
+                H("Als Gesprächsnotiz verwenden"),
+                P("Wenn Sie das Ergebnis beunruhigt, speichern Sie es mit Datum und überlegen Sie, was in diesem Zeitraum los war. Notieren Sie, welche Fragen besonders zutrafen und was Sie mit einer Fachperson klären möchten. Sie müssen den Fragebogen nicht immer wieder ausfüllen, um einen bestimmten Wert zu erhalten."),
+                H("Behandlung nicht aufgrund eines Werts ändern"),
+                P("Beginnen, beenden oder ändern Sie eine Behandlung nicht allein wegen eines App-Ergebnisses. Besprechen Sie Ihre Fragen mit einer qualifizierten Fachperson, die die Antworten im Zusammenhang betrachten kann. Hat sich Ihr Zustand plötzlich verschlechtert oder besteht unmittelbare Gefahr, warten Sie nicht auf einen erneuten Test, sondern holen Sie dringend Hilfe."),
+            ]),
         MiniArticle(ArticleIds.SupportPlan, "Einen kurzen Unterstützungsplan machen", "Notieren Sie Anzeichen, Schritte und Kontakte", "Schreiben Sie auf, woran Sie eine Verschlechterung merken, was meist hilft und wem Sie Bescheid sagen können. Ergänzen Sie professionelle Kontakte und lokale Notdienste. Ein Plan ersetzt keine Hilfe, zeigt aber, wen Sie kontaktieren können. Prüfen Sie vorab, ob die Kontakte in Ihrer Region erreichbar sind."),
         MiniArticle(ArticleIds.CrisisSteps, "Wenn Sie gerade nicht sicher sind", "Verbinden Sie sich mit direkter Hilfe", "Gehen Sie wenn möglich an einen sichereren Ort und kontaktieren Sie den örtlichen Notdienst oder eine vertraute Person. Sagen Sie kurz, was passiert und wo Sie sind. Bleiben Sie bei unmittelbarer Gefahr nicht allein. Wenn ein Anruf schwerfällt, bitten Sie jemanden, mit Ihnen zu telefonieren."),
         MiniArticle(ArticleIds.MedicationWithClinician, "Fragen zu Medikamenten mit Fachpersonal klären", "Ändern Sie eine Verordnung nicht selbst", "Notieren Sie bei Fragen den Namen, Ihre Sorge und mögliche Nebenwirkungen und sprechen Sie mit der verschreibenden Person oder einer Apotheke. Beginnen, beenden oder ändern Sie keine Dosis aufgrund eines Artikels oder einer App. Prüfen Sie die Packungsbeilage oder fragen Sie eine Apotheke; Regeln unterscheiden sich."),
-        MiniArticle(ArticleIds.DeadlineConversation, "Wenn Sie eine Frist nicht schaffen", "Sprechen Sie darüber, solange es Optionen gibt", "Prüfen Sie, was fertig ist und wie viel noch fehlt. Informieren Sie Betroffene so früh wie möglich über den Stand und einen realistischen Termin. Bieten Sie Optionen an: Frist verschieben, Umfang reduzieren oder einen fertigen Teil schon jetzt schicken. Zum Beispiel: „Abschnitte 1–2 schaffe ich bis Freitag, den Rest bis Dienstag. Was passt besser?“ Versprechen Sie keinen Termin, der nur mit Überlastung möglich wäre, und halten Sie die Vereinbarung fest."),
-        MiniArticle(ArticleIds.DifficultMessageReply, "Vor einer Antwort auf eine schwierige Nachricht", "Bestimmen Sie zuerst, was Ihre Antwort erreichen soll", "Ist die Frage nicht dringend, warten Sie, bis die erste Welle der Gefühle abgeklungen ist. Trennen Sie die genauen Worte von Ihrer Deutung. Wählen Sie ein Ziel: nachfragen, eine Grenze setzen, eine Entscheidung mitteilen oder das Gespräch verschieben. Sie können schreiben: „Ich komme heute Abend darauf zurück.“ Muss die Antwort sofort raus, nennen Sie nur das Nötige und klären Sie den Rest später."),
-        MiniArticle(ArticleIds.CancelPlans, "Wenn Sie ein Treffen absagen müssen", "Seien Sie klar und schlagen Sie bei echtem Wunsch einen neuen Termin vor", "Sagen Sie so früh wie möglich Bescheid, dass sich Ihre Pläne geändert haben. Teilen Sie nur den Grund mit, den Sie nennen möchten; eine lange Rechtfertigung ist nicht nötig. Möchten Sie sich weiterhin treffen, schlagen Sie einen konkreten anderen Tag oder eine Uhrzeit vor. Erkennen Sie an, wenn die Absage die andere Person betrifft, und lassen Sie ihr die Möglichkeit, abzulehnen. Geht es um Sicherheit oder Ihr Wohlbefinden, kümmern Sie sich zuerst darum."),
+        new(
+            ArticleIds.DeadlineConversation,
+            "Wenn Sie eine Frist nicht schaffen, sagen Sie früh Bescheid",
+            "Nennen Sie Fakten, eine realistische Einschätzung und Optionen",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Ist eine Frist gefährdet, verleitet die Sorge oft dazu, zu schweigen oder mehr zu versprechen, als machbar ist. Eine kurze Rückmeldung hilft, solange noch Entscheidungen möglich sind. Prüfen Sie vorher, was fertig ist, was noch fehlt und was von Ihnen beziehungsweise von äußeren Umständen abhängt. Sie müssen die Verzögerung weder verschweigen noch mit einer langen Geschichte rechtfertigen."),
+                H("Bieten Sie umsetzbare Möglichkeiten an"),
+                P("Nennen Sie den Stand und Ihre realistische Einschätzung: «Der Entwurf ist fertig, für die Prüfung brauche ich noch zwei Tage.» Schlagen Sie Optionen vor: Frist verschieben, Umfang verkleinern, einen fertigen Teil schon schicken oder einen Zwischenstand vereinbaren. Ist die Einschätzung unsicher, sagen Sie das und nennen Sie einen Zeitpunkt für die nächste Rückmeldung."),
+                H("Halten Sie die Vereinbarung fest"),
+                P("Klären Sie, welche Option gilt, wer informiert werden muss und wann Sie den Fortschritt mitteilen. Versprechen Sie keine Frist, die nur mit Verzicht auf Schlaf oder andere notwendige Dinge möglich wäre. Wiederholen sich Verzögerungen, prüfen Sie separat die Ursache: Umfang, Ressourcen oder unklare Prioritäten. So lässt sich planen, ohne sich Vorwürfe zu machen.")
+            ]),
+        new(
+            ArticleIds.DifficultMessageReply,
+            "Machen Sie vor einer schwierigen Antwort eine Pause",
+            "Legen Sie zuerst fest, was Ihre Antwort erreichen soll",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Eine scharfe oder mehrdeutige Nachricht kann den Impuls auslösen, sofort zu antworten. Gibt es keinen dringenden praktischen Grund, nehmen Sie sich Zeit. Trennen Sie die tatsächlichen Worte von Ihrer Vermutung über die Absicht: Eine Nachricht kann kühl klingen, aber aus einem Text allein lässt sich der Grund nicht immer erkennen. Antworten Sie erst, wenn Sie wissen, welches Ziel Sie haben."),
+                H("Wählen Sie Ziel und Format"),
+                P("Sie können eine Tatsache klären, eine Grenze nennen, eine Entscheidung mitteilen oder das Gespräch verschieben. Schreiben Sie einen Entwurf und streichen Sie, was den Streit nur verschärft. Zum Beispiel: «Ich habe die Nachricht gesehen. Ich antworte morgen auf die Frage» oder «Ich bespreche das gern ohne Beleidigungen». Bei einem komplexen Thema kann ein Telefonat oder persönliches Gespräch geeigneter sein als Textnachrichten — sofern es sicher ist."),
+                H("Schützen Sie sich und bewahren Sie Wichtiges"),
+                P("Enthält die Nachricht Drohungen, Belästigung oder Zwang, müssen Sie weder antworten noch den Kontakt fortsetzen. Sichern Sie wichtige Informationen, nutzen Sie Sperr- oder Meldefunktionen und holen Sie Unterstützung. Bei unmittelbarer Bedrohung gehen Sie an einen sicheren Ort und kontaktieren Sie den Notruf oder eine Vertrauensperson.")
+            ]),
+        new(
+            ArticleIds.CancelPlans,
+            "Sagen Sie Treffen klar und respektvoll ab",
+            "Informieren Sie früh; teilen Sie nur, was Sie möchten",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Manchmal müssen Pläne wegen der Gesundheit, veränderter Umstände oder fehlender Kraft geändert werden. Informieren Sie die andere Person so früh wie möglich, besonders wenn sie mit dem Treffen rechnet. Ein klarer Satz reicht: «Ich muss heute absagen.» Den Grund dürfen Sie für sich behalten; eine kurze Nachricht ist nicht unhöflich, nur weil sie keine lange Rechtfertigung enthält."),
+                H("Schlagen Sie einen neuen Termin vor, wenn Sie es möchten"),
+                P("Möchten Sie sich wirklich später treffen, schlagen Sie einen konkreten Tag vor oder fragen Sie, wann es passt. Versprechen Sie aus Schuldgefühl keinen neuen Termin, wenn Sie unsicher sind. Erkennen Sie praktische Umstände an, etwa: «Ich weiß, dass du dir den Abend freigehalten hast.» Die andere Person darf enttäuscht sein oder einen neuen Termin ablehnen."),
+                H("Sicherheit und Wohlbefinden gehen vor"),
+                P("Fühlt sich eine Situation unsicher an, müssen Sie den Plan nicht aus Rücksicht auf andere einhalten. Wählen Sie einen Kommunikationsweg, der das Risiko nicht erhöht; eine kurze Nachricht oder Hilfe durch eine Vertrauensperson kann sicherer sein. Sagen Sie oft ab und macht Ihnen das Sorgen, überlegen Sie ohne Selbstvorwürfe, was die Planung erschwert.")
+            ]),
     ];
 }

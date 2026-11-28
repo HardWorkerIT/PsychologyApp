@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1720,33 +1720,6 @@
   <data name="MoodReminderBody" xml:space="preserve">
     <value>Como você está se sentindo hoje? Registre no seu diário.</value>
   </data>
-  <data name="LuscherCoStable" xml:space="preserve">
-    <value>Sem tensão improdutiva; alta estabilidade emocional. As ações são objetivas e eficientes. O humor geral é otimista.</value>
-  </data>
-  <data name="LuscherCoMildTension" xml:space="preserve">
-    <value>Tensão moderada que pode reduzir a eficiência. A estabilidade emocional é, em geral, adequada, com momentos de tensão.</value>
-  </data>
-  <data name="LuscherCoModerateTension" xml:space="preserve">
-    <value>Tensão e carga emocional perceptíveis. A eficiência pode cair; recomenda-se recuperação e descanso.</value>
-  </data>
-  <data name="LuscherCoElevatedTension" xml:space="preserve">
-    <value>Tensão elevada e estabilidade emocional reduzida. O esforço contínuo pode parecer forçado; recomenda-se descanso e apoio.</value>
-  </data>
-  <data name="LuscherCoHighTension" xml:space="preserve">
-    <value>Tensão alta e instabilidade emocional. Carga significativa; apoio profissional pode ajudar.</value>
-  </data>
-  <data name="LuscherBkExhausted" xml:space="preserve">
-    <value>Coeficiente vegetativo baixo: exaustão, passividade e grande necessidade de recuperação.</value>
-  </data>
-  <data name="LuscherBkConserving" xml:space="preserve">
-    <value>Coeficiente vegetativo equilibrado: necessidade moderada de descanso, com energia suficiente para a rotina.</value>
-  </data>
-  <data name="LuscherBkOptimal" xml:space="preserve">
-    <value>Mobilização ideal: os recursos físicos e mentais estão bem alinhados para agir.</value>
-  </data>
-  <data name="LuscherBkOveraroused" xml:space="preserve">
-    <value>Coeficiente vegetativo alto: forte excitação emocional e reatividade autonômica.</value>
-  </data>
   <data name="TherapyProgramTitle" xml:space="preserve">
     <value>Seu programa</value>
   </data>
@@ -1952,10 +1925,10 @@
     <value>Opção de resposta</value>
   </data>
   <data name="TestsCoLabel" xml:space="preserve">
-    <value>Desvio total da norma autógena (DT)</value>
+    <value>Índice do exercício (CO)</value>
   </data>
   <data name="TestsBkLabel" xml:space="preserve">
-    <value>Coeficiente vegetativo (CV)</value>
+    <value>Índice do exercício (BK)</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Sim</value>
@@ -2605,47 +2578,11 @@
   <data name="TodayRecommendationReasonContinueDraft.1" xml:space="preserve">
     <value>Continue de onde parou</value>
   </data>
-  <data name="HeckHessScore.1" xml:space="preserve">
-    <value>0-24 - neuroticismo baixo</value>
-  </data>
-  <data name="HeckHessScore.2" xml:space="preserve">
-    <value>25-40 - neuroticismo alto</value>
-  </data>
-  <data name="HeckHessScoreDetail.1" xml:space="preserve">
-    <value>A reatividade emocional está dentro do normal. Continue atento ao estresse e ao descanso.</value>
-  </data>
-  <data name="HeckHessScoreDetail.2" xml:space="preserve">
-    <value>Neuroticismo elevado. Práticas de polaridades e de comparação de importância podem aliviar a tensão.</value>
-  </data>
-  <data name="HaerScore.1" xml:space="preserve">
-    <value>0-28 - psicopatia baixa</value>
-  </data>
-  <data name="HaerScore.2" xml:space="preserve">
-    <value>29-40 - psicopatia alta</value>
-  </data>
-  <data name="HaerScoreDetail.1" xml:space="preserve">
-    <value>A pontuação está na faixa baixa. Este é um instrumento de rastreio, não um diagnóstico.</value>
-  </data>
-  <data name="HaerScoreDetail.2" xml:space="preserve">
-    <value>Pontuação elevada. Trabalhar com experiências passadas e crenças pode ajudar.</value>
-  </data>
   <data name="TestRecommendationReasonBeck.1" xml:space="preserve">
     <value>Com sintomas depressivos, Spin ajuda a reduzir a carga de lembranças dolorosas.</value>
   </data>
   <data name="TestRecommendationReasonBeck.2" xml:space="preserve">
     <value>Como prevenção, escrever os pensamentos no papel ajuda.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.1" xml:space="preserve">
-    <value>Com neuroticismo alto, as polaridades ajudam a ver os dois lados.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.2" xml:space="preserve">
-    <value>Comparar a importância amplia a perspectiva.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.1" xml:space="preserve">
-    <value>"50 anos depois" leva o problema adiante no tempo.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.2" xml:space="preserve">
-    <value>A modificação da experiência ajuda a rever crenças.</value>
   </data>
   <data name="TestRecommendationReasonPochebut.1" xml:space="preserve">
     <value>"Diminua" reduz visualmente a importância do gatilho.</value>
@@ -3409,6 +3346,9 @@
   </data>
   <data name="ArticleListen" xml:space="preserve">
     <value>Ouvir</value>
+  </data>
+  <data name="ArticleListenUnavailable" xml:space="preserve">
+    <value>Não foi possível iniciar a leitura. Verifique se há uma voz instalada para este idioma.</value>
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Parar</value>
@@ -4220,24 +4160,6 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>Exaustão</value>
   </data>
-  <data name="AdsRewardDescription" xml:space="preserve">
-    <value>Assista ao vídeo completo para pausar anúncios nos catálogos e em tela cheia por {0} minutos.</value>
-  </data>
-  <data name="AdsRewardWatch" xml:space="preserve">
-    <value>Assistir ao vídeo</value>
-  </data>
-  <data name="AdsRewardLoading" xml:space="preserve">
-    <value>Carregando vídeo…</value>
-  </data>
-  <data name="AdsRewardActive" xml:space="preserve">
-    <value>Sua pausa nos anúncios está ativa.</value>
-  </data>
-  <data name="AdsRewardClosedEarly" xml:space="preserve">
-    <value>O vídeo foi fechado antes da recompensa.</value>
-  </data>
-  <data name="AdsRewardUnavailable" xml:space="preserve">
-    <value>O vídeo está indisponível. Tente novamente mais tarde.</value>
-  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>Solidão</value>
   </data>
@@ -4297,6 +4219,24 @@
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Os anúncios futuros estão desativados neste dispositivo.</value>
+  </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Assista ao vídeo completo para pausar anúncios nos catálogos e em tela cheia por {0} minutos.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Assistir ao vídeo</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Carregando vídeo…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Sua pausa nos anúncios está ativa.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>O vídeo foi fechado antes da recompensa.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>O vídeo está indisponível. Tente novamente mais tarde.</value>
   </data>
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>O código é inválido.</value>
@@ -4710,4 +4650,18 @@
     <value>Toque para selecionar</value>
   </data>
   <data name="SettingsPickerDone" xml:space="preserve"><value>Concluído</value></data>
+  <data name="ReflectiveQuestionnaireScoreSummary" xml:space="preserve"><value>Para autorreflexão</value></data>
+  <data name="ReflectiveQuestionnaireScoreDetail" xml:space="preserve"><value>Esta pontuação não é um diagnóstico nem confirma um traço ou condição. Use suas respostas como convite para refletir sobre sua experiência. Se algo preocupar você, converse com um profissional qualificado.</value></data>
+  <data name="LuscherSelfReflectionNote" xml:space="preserve"><value>A escolha das cores é um exercício de auto-observação. Não avalia o humor nem a personalidade.</value></data>
+  <data name="TechniqueInstructions" xml:space="preserve"><value>Como fazer</value></data>
+  <data name="PracticeCompletionDone" xml:space="preserve"><value>Concluir</value></data>
+  <data name="PracticeReflectionSaved" xml:space="preserve"><value>Nota guardada</value></data>
+  <data name="PracticeReflectionSaveError" xml:space="preserve"><value>Não foi possível guardar a nota. Tente novamente.</value></data>
+  <data name="PracticeIntensitySummary" xml:space="preserve"><value>Tensão antes e depois</value></data>
+  <data name="RatingNotSelected" xml:space="preserve"><value>Sem avaliação</value></data>
+  <data name="ChatDiscardDraftTitle" xml:space="preserve"><value>Sair da conversa?</value></data>
+  <data name="ChatDiscardDraftBody" xml:space="preserve"><value>A mensagem não enviada será descartada.</value></data>
+  <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Descartar e sair</value></data>
+  <data name="CrisisDialUnavailable" xml:space="preserve"><value>Não foi possível abrir o marcador. Marque {0} manualmente ou copie o número.</value></data>
+  <data name="ShellBottomChat" xml:space="preserve"><value>Chat IA</value></data>
 </root>

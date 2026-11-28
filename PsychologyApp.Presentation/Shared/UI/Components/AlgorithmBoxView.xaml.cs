@@ -1,3 +1,5 @@
+using PsychologyApp.Presentation.Shared.Common;
+
 namespace PsychologyApp.Presentation.Shared.UI.Components;
 
 public partial class AlgorithmBoxView : ContentView
@@ -5,7 +7,7 @@ public partial class AlgorithmBoxView : ContentView
     public AlgorithmBoxView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         ApplyBadgeColours();
         Loaded += (_, _) =>
         {

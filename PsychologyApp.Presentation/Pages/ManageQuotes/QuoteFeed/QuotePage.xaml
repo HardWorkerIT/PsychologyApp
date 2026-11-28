@@ -4,6 +4,7 @@
              x:Class="PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed.QuotePage"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ManageQuotes.QuoteFeed"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:filterTabs="clr-namespace:PsychologyApp.Presentation.Widgets.FilterChipTabs"
              xmlns:quoteCard="clr-namespace:PsychologyApp.Presentation.Widgets.QuoteCard"
              xmlns:features="clr-namespace:PsychologyApp.Presentation.Features.ManageQuotes"
              xmlns:dailyHero="clr-namespace:PsychologyApp.Presentation.Widgets.DailyQuoteHero"
@@ -30,15 +31,18 @@
                 </quoteCard:QuoteCardView>
             </DataTemplate>
             <DataTemplate x:Key="QuoteAdRowTemplate" x:DataType="features:QuoteFeedDisplayItem">
-                <VerticalStackLayout IsVisible="False"
-                                     BindingContextChanged="OnQuoteAdRowBindingContextChanged">
-                    <ContentView />
-                </VerticalStackLayout>
+                <ContentView IsVisible="False"
+                                     BindingContextChanged="OnQuoteAdRowBindingContextChanged" />
+            </DataTemplate>
+            <DataTemplate x:Key="QuoteBannerRowTemplate" x:DataType="features:QuoteFeedDisplayItem">
+                <ContentView IsVisible="False" Margin="0,8,0,8"
+                                     BindingContextChanged="OnQuoteAdRowBindingContextChanged" />
             </DataTemplate>
             <vm:QuoteFeedDisplayTemplateSelector
                 x:Key="QuoteFeedDisplayTemplateSelector"
                 QuoteTemplate="{StaticResource QuoteCardRowTemplate}"
-                AdTemplate="{StaticResource QuoteAdRowTemplate}" />
+                AdTemplate="{StaticResource QuoteAdRowTemplate}"
+                BannerTemplate="{StaticResource QuoteBannerRowTemplate}" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -111,14 +115,14 @@
                         VerticalOptions="Center"
                         HorizontalOptions="Center" />
 
-                    <ui:FilterChipTabBarView
+                    <filterTabs:FilterChipTabBarView
                         x:Name="FeedFilterBar"
                         IsVisible="{Binding IsFeedFiltersVisible}"
                         ItemsSource="{Binding FeedFilters}"
                         TapCommand="{Binding SelectFeedCommand}"
                         SemanticProperties.Description="{Binding FeedAllLabel}" />
 
-                    <ui:FilterChipTabBarView
+                    <filterTabs:FilterChipTabBarView
                         x:Name="ThemeFilterBar"
                         IsVisible="{Binding IsThemeFiltersVisible}"
                         ItemsSource="{Binding ThemeFilters}"

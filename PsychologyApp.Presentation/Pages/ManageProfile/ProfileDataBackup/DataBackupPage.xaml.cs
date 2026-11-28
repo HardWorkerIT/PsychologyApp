@@ -1,3 +1,4 @@
+using CommunityToolkit.Maui.Extensions;
 using PsychologyApp.Presentation.Features.ManageProfile.DependencyInjection;
 
 namespace PsychologyApp.Presentation.Pages.ManageProfile.ProfileDataBackup;
@@ -10,10 +11,11 @@ public partial class DataBackupPage : ContentPage
         BindingContext = viewModelFactory.Create(this);
     }
 
-    protected override void OnDisappearing()
+    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
-        base.OnDisappearing();
-        if (BindingContext is DataBackupViewModel viewModel)
+        base.OnNavigatedFrom(args);
+        // The backup dialogs cover this page while the same operation is waiting for their result.
+        if (!args.IsDestinationPageACommunityToolkitPopupPage() && BindingContext is DataBackupViewModel viewModel)
         {
             viewModel.CancelPendingOperations();
         }

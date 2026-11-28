@@ -10,6 +10,7 @@ public static partial class AppStrings
     public static string ArticleSave => R(nameof(ArticleSave));
     public static string ArticleSaved => R(nameof(ArticleSaved));
     public static string ArticleListen => R(nameof(ArticleListen));
+    public static string ArticleListenUnavailable => R(nameof(ArticleListenUnavailable));
     public static string ArticleStopListening => R(nameof(ArticleStopListening));
     public static string ArticleReadMark => R(nameof(ArticleReadMark));
     public static string ArticleRight => R(nameof(ArticleRight));

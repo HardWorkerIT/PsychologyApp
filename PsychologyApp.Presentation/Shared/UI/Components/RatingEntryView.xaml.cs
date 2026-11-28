@@ -11,7 +11,7 @@ public partial class RatingEntryView : ContentView
     public RatingEntryView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
 
         // The default kind does not raise a change, so the scale captions are set once here as well.
         OnKindChanged(this, Kind, Kind);
@@ -151,7 +151,7 @@ public partial class RatingEntryView : ContentView
     }
 
     /// <summary>Re-syncs the visual state for a freshly bound entry, even when its text happens to equal the previous entry's text (e.g. both empty).</summary>
-    public void ForceSync() => SyncFromBodyText(force: true);
+    public void ForceSync() => SyncFromBodyText();
 
     private static void OnKindChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -172,7 +172,7 @@ public partial class RatingEntryView : ContentView
             view.MaximumCaption = AppStrings.RatingScaleMax;
         }
 
-        view.SyncFromBodyText(force: true);
+        view.SyncFromBodyText();
     }
 
     private static void OnBodyTextChanged(BindableObject bindable, object oldValue, object newValue)
@@ -184,7 +184,7 @@ public partial class RatingEntryView : ContentView
         }
     }
 
-    private void SyncFromBodyText(bool force = false)
+    private void SyncFromBodyText()
     {
         _lastHapticStep = null;
 
@@ -196,7 +196,7 @@ public partial class RatingEntryView : ContentView
             _suppressSliderCallback = false;
             HasValue = true;
         }
-        else if (force)
+        else
         {
             // Nothing answered yet for this question: rest the thumb at the low end instead of
             // silently keeping whatever position the previous question left it in.
@@ -216,15 +216,15 @@ public partial class RatingEntryView : ContentView
             return;
         }
 
-        int rounded = (int)Math.Round(e.NewValue);
-        if (Math.Abs(e.NewValue - rounded) > 0.001)
-        {
-            // Whole steps only: the thumb jumps to the nearest one, which calls this handler again with the snapped value.
-            RatingSlider.Value = rounded;
-            return;
-        }
+        SelectValue((int)Math.Round(e.NewValue));
+    }
 
+    private void OnMinimumClicked(object? sender, EventArgs e) => SelectValue((int)Minimum);
+
+    private void SelectValue(int rounded)
+    {
         _suppressSliderCallback = true;
+        SliderValue = rounded;
         BodyText = rounded.ToString();
         _suppressSliderCallback = false;
         HasValue = true;
@@ -246,9 +246,9 @@ public partial class RatingEntryView : ContentView
     {
         if (!HasValue || !int.TryParse(BodyText, out int value))
         {
-            ValueDisplay = string.Empty;
-            NumberText = string.Empty;
-            AccentColor = AppResources.ThemedColor("NeutralBorder", "Gray600", Colors.Gray);
+            ValueDisplay = AppStrings.RatingNotSelected;
+            NumberText = "—";
+            AccentColor = AppResources.ThemedColor("TextSecondaryLight", "TextSecondaryDark", Colors.Gray);
             return;
         }
 

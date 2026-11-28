@@ -1,32 +1,32 @@
 [
   {
-    "title": "Kurzer Lüscher-Test",
-    "subtitle": "Alternative Version",
+    "title": "Farbauswahl zur Selbstbeobachtung",
+    "subtitle": "Kurze Übung · keine Diagnose",
     "estimatedMinutes": 2,
     "questionCount": 2,
-    "construct": "Emotionaler Zustand",
-    "betterWhen": "lower",
-    "description": "Wähle die gerade angenehmste und unangenehmste Farbe — nicht deine Lieblingsfarben im Allgemeinen.",
+    "construct": "Selbstreflexion",
+    "betterWhen": "none",
+    "description": "Wähle die Farben, die dir gerade am angenehmsten und am wenigsten angenehm erscheinen. Die Übung hilft, eigene Vorlieben wahrzunehmen.",
     "algorithm": [
       "1. Wähle die angenehmste Farbe",
       "2. Wähle die unangenehmste Farbe"
     ],
-    "comment": "Wähle nicht deine Lieblingsfarben. Der Test misst deinen aktuellen emotionalen Zustand.",
+    "comment": "Die Farbauswahl wird nicht zur Beurteilung von Stimmung oder Persönlichkeit verwendet.",
     "navigationTarget": "brief"
   },
   {
-    "title": "Vollständiger Lüscher-Test",
-    "subtitle": "Standardversion",
+    "title": "Farbauswahl: zwei Durchgänge",
+    "subtitle": "Übung · keine Diagnose",
     "estimatedMinutes": 7,
     "questionCount": 8,
-    "construct": "Emotionaler Zustand",
-    "betterWhen": "lower",
-    "description": "Ordne 8 Farben zweimal von der angenehmsten zur unangenehmsten — so, wie du dich hier und jetzt fühlst.",
+    "construct": "Selbstreflexion",
+    "betterWhen": "none",
+    "description": "Ordne acht Farben zweimal von am angenehmsten bis am wenigsten angenehm. Du kannst einfach bemerken, ob sich deine Auswahl verändert hat.",
     "algorithm": [
       "1. Ordne 8 Farben von der angenehmsten zur unangenehmsten",
       "2. Wiederhole Schritt 1, ohne auf dein erstes Ergebnis zu schauen"
     ],
-    "comment": "Wähle nicht deine Lieblingsfarben. Der Test misst deinen aktuellen emotionalen Zustand.",
+    "comment": "Die Farbauswahl wird nicht zur Beurteilung von Stimmung oder Persönlichkeit verwendet.",
     "navigationTarget": "standard"
   }
 ]

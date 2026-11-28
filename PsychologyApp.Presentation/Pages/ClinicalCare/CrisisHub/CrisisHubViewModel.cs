@@ -3,6 +3,7 @@ using PsychologyApp.Application.Models;
 using PsychologyApp.Domain.Practice;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
 
@@ -12,18 +13,25 @@ public sealed class CrisisHubViewModel : BaseViewModel
 {
     private readonly INavigationService _navigationService;
     private readonly IClinicalCareService _clinicalCareService;
+    private readonly IAppClipboardService _clipboard;
+    private string? _numberToCopy;
 
     public CrisisHubViewModel(
         INavigationService navigationService,
-        IClinicalCareService clinicalCareService)
+        IClinicalCareService clinicalCareService,
+        IAppClipboardService clipboard)
     {
         BindNavigation(navigationService);
         _navigationService = navigationService;
         _clinicalCareService = clinicalCareService;
+        _clipboard = clipboard;
         BackCommand = new AsyncCommand(() => navigationService.GoBackAsync());
         OpenHelplineCommand = new AsyncCommand(OpenHelplineAsync);
-        CallHotlineCommand = new AsyncCommand(() => Lines.LineNumber is { } number ? PhoneCall.DialAsync(number) : Task.CompletedTask);
-        CallEmergencyCommand = new AsyncCommand(() => PhoneCall.DialAsync(Lines.Emergency));
+        CallHotlineCommand = new AsyncCommand(() => Lines.LineNumber is { } number ? DialAsync(number) : Task.CompletedTask);
+        CallEmergencyCommand = new AsyncCommand(() => DialAsync(Lines.Emergency));
+        CopyNumberCommand = new AsyncCommand(() => _numberToCopy is { } number
+            ? _clipboard.CopyWithFeedbackAsync(number, AppStrings.QuoteCopied)
+            : Task.CompletedTask);
         RecheckCommand = new AsyncCommand(() => _navigationService.GoToRiskCheckAsync(AppStrings.RiskCheckSourceManual));
         ContinueSoftCommand = new AsyncCommand(ContinueSoftAsync);
         OpenSafetyPlanCommand = new AsyncCommand(() => _navigationService.GoToSafetyPlanAsync());
@@ -32,6 +40,16 @@ public sealed class CrisisHubViewModel : BaseViewModel
     }
 
     public string PageTitle => AppStrings.CrisisHubTitle;
+    public ICommand CopyNumberCommand { get; }
+    public bool ShowDialFailure => _numberToCopy is not null;
+    public string DialFailureText => _numberToCopy is { } number ? AppStrings.CrisisDialUnavailable(number) : string.Empty;
+    public string CopyNumberText => AppStrings.DonateCopyNumber;
+
+    private async Task DialAsync(string number)
+    {
+        _numberToCopy = await PhoneCall.TryDialAsync(number) ? null : number;
+        Notify(nameof(ShowDialFailure), nameof(DialFailureText));
+    }
     public string LeadText => AppStrings.CrisisHubLead;
     public string EmergencySectionTitle => AppStrings.CrisisHubEmergencyTitle;
     public string SafetyPlanTitle => AppStrings.CrisisHubSafetyPlanTitle;
@@ -103,6 +121,8 @@ public sealed class CrisisHubViewModel : BaseViewModel
             nameof(HotlineName),
             nameof(HotlineNumber),
             nameof(CallEmergencyText),
+            nameof(DialFailureText),
+            nameof(CopyNumberText),
             nameof(OpenHelplineText),
             nameof(OpenHelplineSubtitle),
             nameof(OtherActionsTitle),

@@ -152,6 +152,9 @@ public static partial class AppStrings
     public static string TestsRemainingDuration(int minutes) => F(nameof(TestsRemainingDuration), minutes);
     public static string TestsCoLabel => R(nameof(TestsCoLabel));
     public static string TestsBkLabel => R(nameof(TestsBkLabel));
+    public static string ReflectiveQuestionnaireScoreSummary => R(nameof(ReflectiveQuestionnaireScoreSummary));
+    public static string ReflectiveQuestionnaireScoreDetail => R(nameof(ReflectiveQuestionnaireScoreDetail));
+    public static string LuscherSelfReflectionNote => R(nameof(LuscherSelfReflectionNote));
     public static string TestsScoreOutOf(int value, string total) => F(nameof(TestsScoreOutOf), value, total);
     public static string TestsDecimalScoreOutOf(double value, string total) => F(nameof(TestsDecimalScoreOutOf), value, total);
     public static string Yes => R(nameof(Yes));

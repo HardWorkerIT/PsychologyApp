@@ -1,6 +1,6 @@
 [
   {
-    "author": "Seneca",
+    "author": "Cleanthes (as rendered by Seneca)",
     "text": "Fate leads the willing and drags the unwilling.",
     "theme": "wisdom"
   },
@@ -20,12 +20,12 @@
     "theme": "self-esteem"
   },
   {
-    "author": "Albert Einstein",
+    "author": "Attributed to John Archibald Wheeler",
     "text": "In the middle of difficulty lies opportunity.",
     "theme": "hope"
   },
   {
-    "author": "Maya Angelou",
+    "author": "Carl W. Buehner",
     "text": "People will forget what you said, but they will never forget how you made them feel.",
     "theme": "empathy"
   },
@@ -45,7 +45,7 @@
     "theme": "self-awareness"
   },
   {
-    "author": "Will Durant",
+    "author": "Will Durant (summarizing Aristotle)",
     "text": "We are what we repeatedly do. Excellence is not an act, but a habit.",
     "theme": "habits"
   },
@@ -65,7 +65,7 @@
     "theme": "responsibility"
   },
   {
-    "author": "Rumi",
+    "author": "Inspired by Rumi",
     "text": "The wound is the place where the light enters you.",
     "theme": "healing"
   },
@@ -3072,6 +3072,21 @@
   {
     "author": "PsychologyApp",
     "text": "Connection can grow through steps that fit your life.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp team",
+    "text": "A plan is more realistic when it leaves room for the unexpected.",
+    "theme": "motivation"
+  },
+  {
+    "author": "PsychologyApp team",
+    "text": "You can ask for time to think before making a promise.",
+    "theme": "relationships"
+  },
+  {
+    "author": "PsychologyApp team",
+    "text": "Checking that you both understand an agreement is easier before work begins.",
     "theme": "relationships"
   }
 ]

@@ -11,11 +11,11 @@ public class TechniqueCatalogTests
         new TechniqueCatalogService(new BuiltInTechniqueCatalogProvider(() => "ru"));
 
     [Theory]
-    [InlineData(TechniqueId.Spin, TechniqueUiKind.Entry, "Крутилка")]
+    [InlineData(TechniqueId.Spin, TechniqueUiKind.Entry, "Назвать переживание")]
     [InlineData(TechniqueId.Polarity, TechniqueUiKind.Polarity, "Полярности")]
-    [InlineData(TechniqueId.Paper, TechniqueUiKind.Paper, "Лист бумаги")]
-    [InlineData(TechniqueId.Hack, TechniqueUiKind.Entry, "Белое пятно")]
-    [InlineData(TechniqueId.Copied, TechniqueUiKind.Copied, "Повтори это")]
+    [InlineData(TechniqueId.Paper, TechniqueUiKind.Paper, "Мысль на бумаге")]
+    [InlineData(TechniqueId.Hack, TechniqueUiKind.Entry, "Пауза на деталях")]
+    [InlineData(TechniqueId.Copied, TechniqueUiKind.Copied, "Заметьте мысль")]
     [InlineData(TechniqueId.Observer, TechniqueUiKind.Entry, "Разговор с собой со стороны")]
     [InlineData(TechniqueId.Anchor, TechniqueUiKind.Entry, "Воспоминание об опоре")]
     [InlineData(TechniqueId.Grounding, TechniqueUiKind.Entry, "Заземление 5-4-3-2-1")]
@@ -130,7 +130,10 @@ public class TechniqueCatalogTests
     public async Task Comparison_includes_reflection_field()
     {
         BuiltInTechniqueDefinition definition = await CreateCatalog().GetAsync(TechniqueId.Comparison);
-        Assert.Contains(definition.Entries!, entry => entry.Title.Contains("изменилось", StringComparison.OrdinalIgnoreCase));
+        TechniqueEntrySeed reflection = definition.Entries![^1];
+        Assert.Equal(EntryFieldKind.Text, reflection.Kind);
+        Assert.Equal("Что вы замечаете", reflection.Title);
+        Assert.Empty(reflection.Suggestions ?? []);
     }
 
     [Fact]
@@ -140,7 +143,7 @@ public class TechniqueCatalogTests
 
         Assert.Contains(definition.Entries!, entry => entry.Title.Contains("Ситуация", StringComparison.OrdinalIgnoreCase));
         Assert.Contains(definition.Entries!, entry => entry.Title.Contains("Автоматическая мысль", StringComparison.OrdinalIgnoreCase));
-        Assert.Contains(definition.Entries!, entry => entry.Title.Contains("Альтернативная мысль", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(definition.Entries!, entry => entry.Kind == EntryFieldKind.Text && entry.Role == EntryFieldRole.Reframe);
     }
 
     [Fact]
@@ -268,17 +271,16 @@ public class TechniqueCatalogTests
     }
 
     [Fact]
-    public async Task Every_text_field_offers_some_help_besides_the_keyboard()
+    public async Task Every_text_field_offers_suggestions_or_guidance()
     {
         ITechniqueCatalogService catalog = CreateCatalog();
-        string[] free = ["Негативный опыт"];
-
         foreach (BuiltInTechniqueDefinition definition in await catalog.GetAllAsync())
         {
-            foreach (TechniqueEntrySeed entry in (definition.Entries ?? []).Where(e => e.Kind == EntryFieldKind.Text && !free.Contains(e.Title)))
+            foreach (TechniqueEntrySeed entry in (definition.Entries ?? []).Where(e => e.Kind == EntryFieldKind.Text))
             {
-                bool helped = entry.Suggestions is { Count: > 0 } || entry.Role is not EntryFieldRole.None;
-                Assert.True(helped, $"{definition.PageName}: \"{entry.Title}\" has neither chips nor a role");
+                bool helped = entry.Suggestions is { Count: > 0 } || entry.Role is not EntryFieldRole.None
+                    || !string.IsNullOrWhiteSpace(entry.Placeholder);
+                Assert.True(helped, $"{definition.PageName}: \"{entry.Title}\" has no guidance");
             }
         }
     }
@@ -286,11 +288,18 @@ public class TechniqueCatalogTests
     [Fact]
     public async Task Problem_fields_come_first_so_stages_and_dialogues_can_find_the_problem()
     {
-        foreach (TechniqueId id in new[] { TechniqueId.Resize, TechniqueId.Hack, TechniqueId.Check, TechniqueId.Future, TechniqueId.Spin, TechniqueId.Extend })
+        foreach (TechniqueId id in new[] { TechniqueId.Resize, TechniqueId.Check, TechniqueId.Future, TechniqueId.Spin, TechniqueId.Extend })
         {
             BuiltInTechniqueDefinition definition = await CreateCatalog().GetAsync(id);
             Assert.Equal(EntryFieldRole.Problem, definition.Entries![0].Role);
         }
+    }
+
+    [Fact]
+    public async Task NearbyObjectFieldIsNotPrefilledWithThePreviousProblem()
+    {
+        BuiltInTechniqueDefinition definition = await CreateCatalog().GetAsync(TechniqueId.Hack);
+        Assert.DoesNotContain(definition.Entries!, entry => entry.Role == EntryFieldRole.Problem);
     }
 
     [Fact]

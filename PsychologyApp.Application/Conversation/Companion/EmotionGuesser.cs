@@ -82,7 +82,7 @@ public sealed class EmotionGuesser : IEmotionGuesser
                 counts = _counts[emotion] = [];
             }
 
-            foreach (string feature in Features(text))
+            foreach (string feature in Features(UtteranceText.Normalize(text)))
             {
                 counts[feature] = counts.GetValueOrDefault(feature) + 1;
                 _totals[emotion] = _totals.GetValueOrDefault(emotion) + 1;
@@ -94,23 +94,27 @@ public sealed class EmotionGuesser : IEmotionGuesser
     /// <summary>A feeling to propose, or null when the message is too short, names no feeling, or two feelings are too close to call.</summary>
     public EmotionGuess? Guess(string text)
     {
-        if (string.IsNullOrWhiteSpace(text) || WordCount(text) < MinWords)
+        if (_counts.Count < 2 || string.IsNullOrWhiteSpace(text))
         {
             return null;
         }
 
-        return Rank(text) is { Emotion: not CompanionEmotion.Unknown, Margin: >= MinMargin } guess ? guess : null;
+        string normalized = UtteranceText.Normalize(text);
+        if (1 + normalized.AsSpan().Count(' ') < MinWords)
+        {
+            return null;
+        }
+
+        return RankNormalized(normalized) is { Emotion: not CompanionEmotion.Unknown, Margin: >= MinMargin } guess ? guess : null;
     }
 
     /// <summary>The best class with its margin, without the gate (it can be <see cref="CompanionEmotion.Unknown"/>); used by the evaluation tests.</summary>
-    public EmotionGuess? Rank(string text)
-    {
-        if (_counts.Count < 2)
-        {
-            return null;
-        }
+    public EmotionGuess? Rank(string text) =>
+        _counts.Count < 2 ? null : RankNormalized(UtteranceText.Normalize(text));
 
-        string[] features = [.. Features(text)];
+    private EmotionGuess? RankNormalized(string normalized)
+    {
+        string[] features = [.. Features(normalized)];
         if (features.Length == 0)
         {
             return null;
@@ -143,11 +147,8 @@ public sealed class EmotionGuesser : IEmotionGuesser
         return new EmotionGuess(best, first - second);
     }
 
-    private static int WordCount(string text) => UtteranceText.Normalize(text).Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
-
-    private static IEnumerable<string> Features(string text)
+    private static IEnumerable<string> Features(string normalized)
     {
-        string normalized = UtteranceText.Normalize(text);
         string[] words = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         string padded = " " + normalized + " ";
@@ -155,22 +156,22 @@ public sealed class EmotionGuesser : IEmotionGuesser
         {
             for (int i = 0; i + n <= padded.Length; i++)
             {
-                yield return "c" + padded.Substring(i, n);
+                yield return string.Concat("c", padded.AsSpan(i, n));
             }
         }
 
         foreach (string word in words)
         {
-            yield return "w" + Stem(word, WordStemLength);
+            yield return string.Concat("w", Stem(word, WordStemLength));
         }
 
         for (int i = 0; i + 1 < words.Length; i++)
         {
-            yield return "b" + Stem(words[i], PairStemLength) + "_" + Stem(words[i + 1], PairStemLength);
+            yield return string.Concat("b", Stem(words[i], PairStemLength), "_", Stem(words[i + 1], PairStemLength));
         }
     }
 
-    private static string Stem(string word, int length) => word.Length > length ? word[..length] : word;
+    private static ReadOnlySpan<char> Stem(string word, int length) => word.AsSpan(0, Math.Min(word.Length, length));
 
     private static string ReadBundledTrainingSet()
     {

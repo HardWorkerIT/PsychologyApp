@@ -76,7 +76,7 @@ public sealed class MusicPlayerViewModelTests
             new MusicPlaylistPresenter());
         Audio track = CreateViewModel(playback).AllItems[0];
 
-        Assert.False(await presenter.PlayTrackAsync(playback.Object, track));
+        Assert.False(await presenter.PlayTrackAsync(playback.Object, track, CancellationToken.None));
         Assert.False(await presenter.TogglePlayPauseAsync(playback.Object, isPlaying: false));
     }
 
@@ -93,5 +93,40 @@ public sealed class MusicPlayerViewModelTests
 
         Assert.True(track.IsActive);
         playback.Verify(p => p.PlayAsync(track.URL!, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Leaving_music_cancels_a_pending_track_without_restoring_playback_state()
+    {
+        Mock<IAudioPlaybackService> playback = new();
+        MusicPlayerViewModel viewModel = CreateViewModel(playback);
+        TaskCompletionSource buffering = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationToken playbackToken = default;
+        playback.Setup(p => p.PlayAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns((string _, CancellationToken cancellationToken) =>
+            {
+                playbackToken = cancellationToken;
+                return buffering.Task.WaitAsync(cancellationToken);
+            });
+        Audio track = viewModel.AllItems[0];
+        System.Windows.Input.ICommand play = Assert.IsAssignableFrom<System.Windows.Input.ICommand>(track.ClickCommand);
+        TaskCompletionSource commandFinished = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        play.CanExecuteChanged += (_, _) =>
+        {
+            if (play.CanExecute(null))
+            {
+                commandFinished.TrySetResult();
+            }
+        };
+
+        play.Execute(null);
+        Assert.True(viewModel.IsBuffering);
+        viewModel.OnPageLeaving();
+        buffering.SetResult();
+        await commandFinished.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        Assert.True(playbackToken.IsCancellationRequested);
+        Assert.False(viewModel.IsBuffering);
+        Assert.False(viewModel.IsPlaying);
     }
 }

@@ -197,26 +197,47 @@ public sealed class MauiNavigationService : INavigationService
     /// and its "Finish" recorded the same session a second time.
     /// </summary>
     public Task<NavigationRunStatus> GoToPracticeCompletionAsync(int activeDays, string? completedItemKey = null, long? sessionResultId = null) =>
+        ReplaceOwnerPageAsync(
+            _ => _pageFactory.CreatePracticeCompletionPage(activeDays, completedItemKey, sessionResultId),
+            $"{nameof(GoToPracticeCompletionAsync)}:{sessionResultId}");
+
+    public Task<NavigationRunStatus> OpenNextPracticeAsync(TechniqueId techniqueId) =>
+        ReplaceOwnerPageAsync(navigation => _pageFactory.CreateTechniquePage(techniqueId, navigation), nameof(OpenNextPracticeAsync));
+
+    private Task<NavigationRunStatus> ReplaceOwnerPageAsync(Func<INavigation, ContentPage> createPage, string destination) =>
         NavigationCoordinator.RunCompletionPushAsync(async () =>
         {
-            INavigation navigation = ResolveNavigation();
-            Page? finishedPractice = navigation.NavigationStack.Count > 1 ? navigation.NavigationStack[^1] : null;
+            if (_ownerPage is null || !_ownerPage.TryGetTarget(out ContentPage? owner))
+            {
+                return NavigationRunStatus.DroppedInactiveSource;
+            }
+
+            INavigation navigation = _navigation ?? owner.Navigation;
+            if (navigation.NavigationStack.Count <= 1
+                || !ReferenceEquals(navigation.NavigationStack[^1], owner)
+                || navigation.ModalStack.Count != 0
+                || (Shell.Current?.CurrentPage is { } current && !ReferenceEquals(current, owner)))
+            {
+                return NavigationRunStatus.DroppedInactiveSource;
+            }
+
             await navigation.PushAsync(
-                PrepareSecondaryPage(_pageFactory.CreatePracticeCompletionPage(activeDays, completedItemKey, sessionResultId)),
+                PrepareSecondaryPage(createPage(navigation)),
                 true);
-            if (finishedPractice is not null && navigation.NavigationStack.Contains(finishedPractice))
+            if (navigation.NavigationStack.Contains(owner))
             {
                 try
                 {
-                    navigation.RemovePage(finishedPractice);
+                    navigation.RemovePage(owner);
                 }
                 catch (Exception error)
                 {
-                    // The result is already on screen, so a failure to remove the old page must not open it twice.
+                    // The destination is already on screen. Retrying could open it twice.
                     BestEffort.Report(error);
                 }
             }
-        }, destination: $"{nameof(GoToPracticeCompletionAsync)}:{sessionResultId}");
+            return NavigationRunStatus.Completed;
+        }, destination);
 
     public Task GoToTestsTabAsync() =>
         NavigationCoordinator.RunAsync(() =>

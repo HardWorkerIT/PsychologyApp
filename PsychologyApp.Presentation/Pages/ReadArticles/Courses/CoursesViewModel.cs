@@ -9,15 +9,17 @@ using PsychologyApp.Presentation.Widgets.LibraryCard;
 namespace PsychologyApp.Presentation.Pages.ReadArticles.Courses;
 
 /// <summary>One virtualized course section, with an optional ad slot after it.</summary>
-public sealed class CourseSectionItem(IEnumerable<LibraryCardItem> courses, bool hasAdPlacement = false) : List<LibraryCardItem>(courses)
+public sealed class CourseSectionItem(IEnumerable<LibraryCardItem> courses, bool hasAdPlacement = false, bool hasBannerPlacement = false) : List<LibraryCardItem>(courses)
 {
     public bool HasAdPlacement { get; } = hasAdPlacement;
+    public bool HasBannerPlacement { get; } = hasBannerPlacement;
 }
 
 /// <summary>The "Courses" top tab of the Library: what guided self-help is, and the courses with their progress.</summary>
 public sealed class CoursesViewModel : BaseViewModel
 {
     private const int CoursesBeforeAdCount = 3;
+    private const int CoursesBeforeBannerCount = 1;
 
     /// <summary>The same back arrow as on every other pushed page (the page hides the system bar).</summary>
     public ICommand BackCommand { get; }
@@ -42,8 +44,11 @@ public sealed class CoursesViewModel : BaseViewModel
     public string PageTitle => AppStrings.ArticlesCourses;
     public string LeadText => AppStrings.ArticlesCoursesLead;
     public bool IsCourseAdEligible => OperatingSystem.IsAndroid()
-        && Courses.Count >= CoursesBeforeAdCount + 2
+        && Courses.Count > CoursesBeforeAdCount
         && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
+    public bool IsCourseBannerEligible => OperatingSystem.IsAndroid()
+        && Courses.Count > CoursesBeforeBannerCount
+        && AdvertisingConfiguration.CanRequestBannerAd(UserPreferencesStore.Load());
 
     public IReadOnlyList<CourseSectionItem> Sections
     {
@@ -53,13 +58,16 @@ public sealed class CoursesViewModel : BaseViewModel
 
     public void RefreshAdEligibility()
     {
-        bool showAd = IsCourseAdEligible;
-        if (showAd != (Sections.Count > 0 && Sections[0].HasAdPlacement))
+        bool showNative = IsCourseAdEligible;
+        bool showBanner = IsCourseBannerEligible;
+        if (showNative != Sections.Any(section => section.HasAdPlacement)
+            || showBanner != Sections.Any(section => section.HasBannerPlacement))
         {
-            UpdateSections(showAd);
+            UpdateSections(showBanner, showNative);
         }
 
         OnPropertyChanged(nameof(IsCourseAdEligible));
+        OnPropertyChanged(nameof(IsCourseBannerEligible));
     }
 
     public IReadOnlyList<LibraryCardItem> Courses
@@ -72,8 +80,9 @@ public sealed class CoursesViewModel : BaseViewModel
                 return;
             }
 
-            UpdateSections(IsCourseAdEligible);
+            UpdateSections(IsCourseBannerEligible, IsCourseAdEligible);
             OnPropertyChanged(nameof(IsCourseAdEligible));
+            OnPropertyChanged(nameof(IsCourseBannerEligible));
         }
     }
 
@@ -125,9 +134,30 @@ public sealed class CoursesViewModel : BaseViewModel
         return false;
     }
 
-    private void UpdateSections(bool showAd) => Sections = showAd
-        ? [new(Courses.Take(CoursesBeforeAdCount), hasAdPlacement: true), new(Courses.Skip(CoursesBeforeAdCount))]
-        : [new(Courses)];
+    private void UpdateSections(bool showBanner, bool showNative)
+    {
+        List<CourseSectionItem> sections = [];
+        int offset = 0;
+        if (showBanner)
+        {
+            sections.Add(new(Courses.Take(CoursesBeforeBannerCount), hasBannerPlacement: true));
+            offset = CoursesBeforeBannerCount;
+        }
+
+        if (showNative)
+        {
+            int nativeCount = CoursesBeforeAdCount - offset;
+            sections.Add(new(Courses.Skip(offset).Take(nativeCount), hasAdPlacement: true));
+            offset += nativeCount;
+        }
+
+        if (offset < Courses.Count || sections.Count == 0)
+        {
+            sections.Add(new(Courses.Skip(offset)));
+        }
+
+        Sections = sections;
+    }
 
     private void Load() => Load(ArticleContent.Courses(AppStrings.Language));
 
@@ -137,6 +167,6 @@ public sealed class CoursesViewModel : BaseViewModel
     protected override void RefreshLocalizedProperties()
     {
         Load();
-        Notify(nameof(PageTitle), nameof(LeadText), nameof(IsCourseAdEligible));
+        Notify(nameof(PageTitle), nameof(LeadText), nameof(IsCourseAdEligible), nameof(IsCourseBannerEligible));
     }
 }

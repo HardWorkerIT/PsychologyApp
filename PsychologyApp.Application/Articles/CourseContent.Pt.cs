@@ -203,12 +203,12 @@ public static partial class ArticleContent
                     "Muletas e evitação",
                     4,
                     [
-                        P("O que mais mantém a ansiedade é a evitação. Ela pode ser aberta (não vou, não ligo) ou escondida: muletas que ajudam a atravessar uma situação."),
-                        Check("Eu tenho muletas?", 2, "Você tem várias muletas. Elas mantêm o medo: o cérebro acha que tudo deu certo só graças a elas. Tente abrir mão de uma numa situação fácil.", "Você tem poucas muletas. Repare também no que você evita por completo.", "Levo um remédio, água ou o celular carregado «por via das dúvidas»", "Só vou acompanhado a lugares difíceis", "Sento perto da saída", "Me distraio para não perceber a ansiedade", "Confiro ou pergunto de novo muitas vezes"),
-                        P("A saída é encontrar aos poucos o que você teme e dispensar as muletas. Assim o cérebro aprende pela experiência que o temido não acontece ou é suportável.")
+                        P("A evitação pode contribuir para a ansiedade, sobretudo quando começa a atrapalhar atividades importantes. Ela pode ser evidente (não ir ou não ligar) ou menos visível, como conferir repetidamente, pedir confirmação ou planejar cada detalhe."),
+                        Check("Quais formas de lidar com a situação eu percebo?", 2, "Você reconheceu várias formas de lidar com a situação. Isso não é nota nem diagnóstico. Se elas limitam sua vida, converse com um profissional sobre mudanças graduais e seguras. Mantenha os medicamentos prescritos e as medidas de segurança necessárias.", "Reconhecer poucas ou nenhuma também é normal. Esses hábitos dependem da situação e não indicam diagnóstico.", "Confiro várias vezes ou peço que me tranquilizem", "Ensaio frases por muito tempo ou tento prever todos os resultados", "Me distraio para não perceber a ansiedade", "Numa situação que considero segura, vou embora assim que a ansiedade aumenta"),
+                        P("Se uma situação do dia a dia é segura e você quer tentar, escolha um passo pequeno e voluntário. Vá no seu ritmo e pare se precisar. Não interrompa medicamentos prescritos nem abra mão de medidas de segurança necessárias. Se a ansiedade limita muito sua vida, converse com um profissional para planejar.")
                     ],
-                    "Faça uma lista de três a cinco situações que você evita, da mais fácil à mais difícil.",
-                    "Que situação da lista você está pronto para tentar primeiro?"),
+                    "Anote até cinco situações do dia a dia que você costuma evitar. Não inclua perigos reais nem lembranças traumáticas; você pode pular esta etapa.",
+                    "Se houver uma situação segura, que pequeno passo você gostaria de considerar ou conversar com um profissional?"),
                 new(
                     "O primeiro passo e um plano",
                     4,

@@ -52,6 +52,7 @@ public interface IUserProgressService
     Task<string?> GetLastSessionNoteAsync(string itemKey, CancellationToken cancellationToken = default);
     Task<SessionResultDTO?> GetSessionResultAsync(long sessionResultId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<SessionResultDTO>> GetRecentSessionResultsAsync(int limit = 20, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<PracticeIntensitySample>> GetRecentPracticeIntensityAsync(int limit, CancellationToken cancellationToken = default);
     Task<int> CountDistinctTechniqueCompletionsForItemsBetweenAsync(
         IReadOnlyList<string> itemKeys,
         DateTime sinceUtc,

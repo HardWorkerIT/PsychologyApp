@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1720,39 +1720,6 @@
   <data name="MoodReminderBody" xml:space="preserve">
     <value>Как настроение сегодня? Отметьте в дневнике.</value>
   </data>
-  <data name="LuscherCoStable" xml:space="preserve">
-    <value>Отсутствие непродуктивной (не связанной с какой-либо полезной деятельностью) напряженности, высокая нервно-психическая устойчивость.
-Действия обследуемого целесообразны, экономичны, имеют высокий коэффициент полезного действия. Общий эмоциональный настрой – оптимистичный. Обследуемый верит в свои силы и в целом готов преодолевать препятствия и трудности. Высок уровень волевого самоконтроля, предопределяющего поступки и способствующего развитию личности.
-При наличии соответствующей мотивации обследуемый способен интенсивно работать длительное время. В экстремальных ситуациях эффективно мобилизуется, сосредотачивается на выполнении задачи.</value>
-  </data>
-  <data name="LuscherCoMildTension" xml:space="preserve">
-    <value>Незначительный уровень непродуктивной напряженности, нервно-психическая устойчивость хорошая.
-Преобладает установка на активность и действие. Энергоресурсов достаточно для более или менее регулярных «подвигов» в работе, вспышек активности и напряжения, недоступных большинству других людей. Способен свободно управлять своим вниманием. В условиях мотивированной (интересной) деятельности не испытывает трудностей с оперативным и долговременным запоминанием и последующим воспроизведением. К острым ощущениям, в общем, не стремится. Из стрессовых ситуаций, как правило, выходит с достоинством.</value>
-  </data>
-  <data name="LuscherCoModerateTension" xml:space="preserve">
-    <value>Средний уровень непродуктивной напряженности.
-Обследуемый справляется со своими обязанностями в пределах сложившихся в обществе требований. В привычной для него обстановке, имея достаточно времени для переключения, переходит от работы к отдыху и обратно, от одного вида деятельности к другому без существенных затруднений. В случае необходимости способен преодолевать усталость волевым усилием, однако после этого работоспособность надолго снижается. Необходимо относительно четко субъективно разделять время работы и время отдыха.</value>
-  </data>
-  <data name="LuscherCoElevatedTension" xml:space="preserve">
-    <value>Повышенный уровень непродуктивной напряженности, сниженная нервно-психическая устойчивость.
-Потенциал целесообразной активности снижен, что побуждает насильно заставлять себя делать те или иные необходимые дела. Постоянно действующий волевой самоконтроль, с одной стороны, и сам регулярно истощается. А с другой – не будучи связанным с непосредственным удовлетворением от процесса и результатов деятельности. Дополнительно усиливает психическое переутомление. Интенсивная длительная работа, скорее всего, потребует слишком большого напряжения от нервной системы и психики. При этом производительность работы и качество ее выполнения будут неравноценными в разные периоды времени. Общий эмоциональный тонус: повышенная возбудимость, тревожность, неуверенность. В стрессовой ситуации вероятно нарушение деятельности.</value>
-  </data>
-  <data name="LuscherCoHighTension" xml:space="preserve">
-    <value>Выраженная непродуктивная напряженность, низкая нервно-психическая устойчивость.
-Высокая утомляемость. Внимание легко отвлекается посторонними вещами, надолго может «застрять» на эмоциональном переживании. В связи с этим поведение непрогнозируемо и субъективно. Отсутствие устойчивой иерархии мотивов делает деятельность испытуемого реактивной и нецеленаправленной. Коммуникативность снижена, ограничена рамками формального общения. Эмоциональный фон может быстро колебаться между восторженно-возбужденным состоянием и подавленностью, раздражительностью и бессилием. Часто испытывает тревогу, предчувствие неприятностей, бессилие и отсутствие желания что-либо делать. В экстремальных ситуациях очень низкая надежность.</value>
-  </data>
-  <data name="LuscherBkExhausted" xml:space="preserve">
-    <value>Истощенность, установка на бездействие. Хроническое переутомление. В связи с этим характерно пассивное реагирование на трудности, неготовность к напряжению и адекватным действиям в стрессовых ситуациях. Необходимы разноплановые и объемные восстановительные мероприятия.</value>
-  </data>
-  <data name="LuscherBkConserving" xml:space="preserve">
-    <value>Установка на оптимизацию расходования сил. Умеренная потребность в восстановлении и отдыхе. Энергетический потенциал невысок, но вполне достаточен для успешной деятельности в привычных спокойных условиях. В экстремальной ситуации вероятно запаздывание с ориентировкой и принятием решений.</value>
-  </data>
-  <data name="LuscherBkOptimal" xml:space="preserve">
-    <value>Мобилизованность, установка на активное действие. Оптимальная мобилизованность физических и психических ресурсов. В экстремальной ситуации наиболее вероятна высокая скорость ориентировки и принятия решений, целесообразность и успешность действий.</value>
-  </data>
-  <data name="LuscherBkOveraroused" xml:space="preserve">
-    <value>Избыточное возбуждение, суетливость. Уровень возбуждения избыточно высок. Нередки случаи, когда испытуемый что-либо делает не ради самого дела, а лишь для того, чтобы разрядиться. В сложных ситуациях легко формируются лихорадочные реакции: импульсивность, нетерпеливость, снижение эмоционального самоконтроля, необдуманные поступки. В экстремальных ситуациях наиболее вероятна низкая эффективность действий, панические реакции. Необходимы разноплановые релаксирующие и успокаивающие процедуры.</value>
-  </data>
   <data name="TherapyProgramTitle" xml:space="preserve">
     <value>Ваш протокол</value>
   </data>
@@ -1958,10 +1925,10 @@
     <value>Вариант ответа</value>
   </data>
   <data name="TestsCoLabel" xml:space="preserve">
-    <value>Суммарное отклонение от аутогенной нормы (СО)</value>
+    <value>Показатель CO упражнения</value>
   </data>
   <data name="TestsBkLabel" xml:space="preserve">
-    <value>Вегетативный коэффициент (ВК)</value>
+    <value>Показатель BK упражнения</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
@@ -2611,47 +2578,11 @@
   <data name="TodayRecommendationReasonContinueDraft.1" xml:space="preserve">
     <value>Продолжите с того места, где остановились</value>
   </data>
-  <data name="HeckHessScore.1" xml:space="preserve">
-    <value>0-24 - невысокий уровень невротизации</value>
-  </data>
-  <data name="HeckHessScore.2" xml:space="preserve">
-    <value>25-40 - высокий уровень невротизации</value>
-  </data>
-  <data name="HeckHessScoreDetail.1" xml:space="preserve">
-    <value>Эмоциональная реактивность в пределах нормы. Продолжайте отслеживать стресс и отдых.</value>
-  </data>
-  <data name="HeckHessScoreDetail.2" xml:space="preserve">
-    <value>Повышенная невротизация. Практики на баланс противоположностей и сравнение важностей могут снизить напряжение.</value>
-  </data>
-  <data name="HaerScore.1" xml:space="preserve">
-    <value>0-28 - невысокий уровень психопатии</value>
-  </data>
-  <data name="HaerScore.2" xml:space="preserve">
-    <value>29-40 - высокий уровень психопатии</value>
-  </data>
-  <data name="HaerScoreDetail.1" xml:space="preserve">
-    <value>Показатель в низком диапазоне. Это скрининг, а не диагноз — ориентируйтесь на самочувствие.</value>
-  </data>
-  <data name="HaerScoreDetail.2" xml:space="preserve">
-    <value>Повышенные показатели. Полезно работать с прошлым опытом и переосмыслением убеждений.</value>
-  </data>
   <data name="TestRecommendationReasonBeck.1" xml:space="preserve">
     <value>При депрессивных симптомах «Крутилка» помогает снизить заряд болезненных воспоминаний.</value>
   </data>
   <data name="TestRecommendationReasonBeck.2" xml:space="preserve">
     <value>Для профилактики полезно выгружать мысли на бумагу.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.1" xml:space="preserve">
-    <value>При высокой невротизации полярности помогают увидеть обе стороны ситуации.</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.2" xml:space="preserve">
-    <value>Сравнение важностей укрепляет ощущение перспективы.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.1" xml:space="preserve">
-    <value>«50 лет спустя» отдаляет проблему во времени.</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.2" xml:space="preserve">
-    <value>Модификация опыта помогает пересмотреть убеждения.</value>
   </data>
   <data name="TestRecommendationReasonPochebut.1" xml:space="preserve">
     <value>«Уменьши это» визуально снижает значимость триггера.</value>
@@ -3415,6 +3346,9 @@
   </data>
   <data name="ArticleListen" xml:space="preserve">
     <value>Слушать</value>
+  </data>
+  <data name="ArticleListenUnavailable" xml:space="preserve">
+    <value>Не удалось включить озвучивание. Проверьте, установлен ли голос для этого языка.</value>
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Остановить</value>
@@ -4220,24 +4154,6 @@
   <data name="ChatEmotionGuilt" xml:space="preserve">
     <value>Вина</value>
   </data>
-  <data name="AdsRewardDescription" xml:space="preserve">
-    <value>Полный просмотр даст {0} минут без рекламы в каталогах и полноэкранных вставок.</value>
-  </data>
-  <data name="AdsRewardWatch" xml:space="preserve">
-    <value>Смотреть видео</value>
-  </data>
-  <data name="AdsRewardLoading" xml:space="preserve">
-    <value>Загружаем видео…</value>
-  </data>
-  <data name="AdsRewardActive" xml:space="preserve">
-    <value>Пауза рекламы действует.</value>
-  </data>
-  <data name="AdsRewardClosedEarly" xml:space="preserve">
-    <value>Видео закрыто до начисления награды.</value>
-  </data>
-  <data name="AdsRewardUnavailable" xml:space="preserve">
-    <value>Видео сейчас недоступно. Попробуйте позже.</value>
-  </data>
   <data name="ChatEmotionSadness" xml:space="preserve">
     <value>Грусть</value>
   </data>
@@ -4303,6 +4219,24 @@
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>Будущая реклама отключена на этом устройстве.</value>
+  </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>Полный просмотр даст {0} минут без рекламы в каталогах и полноэкранных вставок.</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>Смотреть видео</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>Загружаем видео…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>Пауза рекламы действует.</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>Видео закрыто до начисления награды.</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>Видео сейчас недоступно. Попробуйте позже.</value>
   </data>
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>Неверное кодовое слово.</value>
@@ -4716,4 +4650,18 @@
     <value>Нажмите, чтобы выбрать</value>
   </data>
   <data name="SettingsPickerDone" xml:space="preserve"><value>Готово</value></data>
+  <data name="ReflectiveQuestionnaireScoreSummary" xml:space="preserve"><value>Для саморефлексии</value></data>
+  <data name="ReflectiveQuestionnaireScoreDetail" xml:space="preserve"><value>Этот балл не является диагнозом и не подтверждает наличие черты или состояния. Используйте ответы как повод обдумать свой опыт. Если ответы беспокоят, обсудите их с квалифицированным специалистом.</value></data>
+  <data name="LuscherSelfReflectionNote" xml:space="preserve"><value>Выбор цветов — упражнение для самонаблюдения. Он не оценивает эмоциональное состояние или черты личности.</value></data>
+  <data name="TechniqueInstructions" xml:space="preserve"><value>Как выполнять</value></data>
+  <data name="PracticeCompletionDone" xml:space="preserve"><value>Готово</value></data>
+  <data name="PracticeReflectionSaved" xml:space="preserve"><value>Заметка сохранена</value></data>
+  <data name="PracticeReflectionSaveError" xml:space="preserve"><value>Не удалось сохранить заметку. Попробуйте ещё раз.</value></data>
+  <data name="PracticeIntensitySummary" xml:space="preserve"><value>Напряжение до и после</value></data>
+  <data name="RatingNotSelected" xml:space="preserve"><value>Без оценки</value></data>
+  <data name="ChatDiscardDraftTitle" xml:space="preserve"><value>Выйти из чата?</value></data>
+  <data name="ChatDiscardDraftBody" xml:space="preserve"><value>Неотправленный текст будет удалён.</value></data>
+  <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Удалить и выйти</value></data>
+  <data name="CrisisDialUnavailable" xml:space="preserve"><value>Не удалось открыть звонилку. Наберите {0} вручную или скопируйте номер.</value></data>
+  <data name="ShellBottomChat" xml:space="preserve"><value>ИИ-чат</value></data>
 </root>

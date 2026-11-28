@@ -13,9 +13,9 @@ public static partial class AnchorThoughtContent
         ["exp-two-minute-start-counts"] = ("Zwei Minuten anzufangen zählt schon", "Danach kann ich entscheiden, ob ich weitermache."),
         ["exp-checking-has-a-limit"] = ("Ich kann mit dem Prüfen wie geplant aufhören", "Wiederholen bringt nicht automatisch neue Fakten."),
         ["exp-i-can-leave"] = ("Ich kann gehen oder um Hilfe bitten", "Mich zu orientieren verpflichtet mich nicht zu bleiben."),
-        ["exp-not-whole-week"] = ("Heute darf mein Blick bei heute bleiben", "Ich muss nicht morgens die ganze Woche lösen."),
+        ["exp-not-whole-week"] = ("Für heute kann ich eine Sache auswählen", "Ich kann entscheiden, was jetzt Aufmerksamkeit braucht, und den Rest für später aufschreiben."),
         ["exp-less-input-is-okay"] = ("Ich darf Reize um mich herum verringern", "Eine Pause hilft mir zu wählen, was gerade passt."),
-        ["exp-evening-not-decision-time"] = ("Ich muss heute Abend nicht alles entscheiden", "Müdigkeit kann den Blick verengen; morgen kommt neue Kraft."),
+        ["exp-evening-not-decision-time"] = ("Ich kann die Entscheidung auf morgen verschieben", "Wenn die Frage warten kann, schreibe ich sie auf und wähle einen Zeitpunkt dafür."),
         ["exp-after-anxiety-rest"] = ("Nach Angst darf ich mich erholen", "Starke Anspannung kann Körper und Aufmerksamkeit ermüden."),
         ["exp-practice-with-choice"] = ("Ich kann eine Übung wählen oder abbrechen", "Eine Übung sollte sich passend und sicher anfühlen."),
 
@@ -99,7 +99,7 @@ public static partial class AnchorThoughtContent
         ["exp-movement-as-anchor"] = ("Bewegung kann ein sanfter Anker sein", "Ich kann einen angenehmen Umfang wählen oder still bleiben."),
         ["exp-senses-can-be-chosen"] = ("Ich kann einen angenehmen Sinnesreiz wählen", "Gerüche, Geräusche und Berührung passen nicht allen."),
         ["exp-early-signs-are-info"] = ("Frühe Anzeichen von Anspannung sind Informationen", "Ich kann sie ohne Selbstkritik bemerken."),
-        ["exp-relaxation-not-performance"] = ("Ich muss Entspannung nicht richtig machen", "Eine Übung soll nicht zur nächsten Aufgabe werden."),
+        ["exp-relaxation-not-performance"] = ("Ich kann eine Übung beenden", "Wenn sie sich unangenehm anfühlt, kann ich eine Pause machen oder etwas anderes tun."),
         ["exp-basic-care-no-rules"] = ("Selbstfürsorge muss nicht perfekt sein", "Eine kleine machbare Möglichkeit kann besser sein als eine Liste."),
         ["exp-new-symptoms-deserve-care"] = ("Neue Beschwerden kann ich fachlich abklären lassen", "Eine App kann ihre medizinische Ursache nicht beurteilen."),
         ["exp-therapist-fit-can-be-discussed"] = ("Ich kann ansprechen, ob die Fachperson zu mir passt", "Vertrauen und klare Absprachen sind wichtig."),
@@ -110,6 +110,9 @@ public static partial class AnchorThoughtContent
         ["exp-screen-not-diagnosis"] = ("Ein Screening-Ergebnis ist keine Diagnose", "Eine Einschätzung bezieht die ganze Situation ein."),
         ["exp-support-plan-simple"] = ("Ein Unterstützungsplan darf kurz sein", "Ein kurzer Plan ist in schweren Momenten leichter zu finden."),
         ["exp-immediate-safety-first"] = ("Bei unmittelbarer Gefahr ist schnelle Hilfe wichtig", "Wenden Sie sich an den örtlichen Notdienst oder eine Vertrauensperson."),
-        ["exp-medication-with-clinician"] = ("Medikamente ändere ich nur mit Fachpersonal", "Die verschreibende Person kann Behandlung und Risiken abwägen.")
+        ["exp-medication-with-clinician"] = ("Medikamente ändere ich nur mit Fachpersonal", "Die verschreibende Person kann Behandlung und Risiken abwägen."),
+        ["exp-deadline-update-is-responsible"] = ("Eine Verzögerung früh mitzuteilen ist verantwortungsvoll", "Ein neuer Zeitrahmen hilft anderen, ihre Planung anzupassen."),
+        ["exp-confirming-agreement-is-care"] = ("Eine Vereinbarung zu klären ist kein Streit", "So werden unterschiedliche Erwartungen sichtbar, bevor die Arbeit beginnt."),
+        ["exp-new-facts-can-change-agreement"] = ("Neue Umstände können eine frühere Entscheidung ändern", "Sie können eine Vereinbarung neu besprechen und die Änderung klar erklären.")
     };
 }

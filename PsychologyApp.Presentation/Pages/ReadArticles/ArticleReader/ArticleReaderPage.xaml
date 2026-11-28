@@ -50,6 +50,11 @@
                 </HorizontalStackLayout>
             </FlexLayout>
 
+            <Label Text="{Binding ListenError}"
+                   IsVisible="{Binding HasListenError}"
+                   Style="{StaticResource CaptionStyle}"
+                   TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
+
             <blocks:ArticleBlocksView Blocks="{Binding Blocks}" />
         </VerticalStackLayout>
     </ScrollView>

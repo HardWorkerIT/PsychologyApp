@@ -13,9 +13,9 @@ public static partial class AnchorThoughtContent
         ["exp-two-minute-start-counts"] = ("Commencer deux minutes, c'est déjà agir", "Je pourrai décider ensuite si je continue."),
         ["exp-checking-has-a-limit"] = ("Je peux arrêter de vérifier comme prévu", "Répéter un contrôle n'ajoute pas de faits."),
         ["exp-i-can-leave"] = ("Je peux partir ou demander de l'aide", "M'orienter ne m'oblige pas à rester."),
-        ["exp-not-whole-week"] = ("Aujourd'hui, je peux penser à aujourd'hui", "Je n'ai pas à régler toute la semaine dès le matin."),
+        ["exp-not-whole-week"] = ("Je peux choisir une chose à faire aujourd’hui", "Je peux voir ce qui demande mon attention maintenant et noter le reste pour plus tard."),
         ["exp-less-input-is-okay"] = ("Je peux réduire les stimulations autour de moi", "Une pause m'aide à choisir ce que je garde."),
-        ["exp-evening-not-decision-time"] = ("Je n'ai pas à tout décider ce soir", "La fatigue peut rétrécir mon horizon; demain apportera de l'énergie."),
+        ["exp-evening-not-decision-time"] = ("Je peux remettre cette décision à demain", "Si la question peut attendre, je peux la noter et choisir quand y revenir."),
         ["exp-after-anxiety-rest"] = ("J'ai le droit de récupérer après l'anxiété", "Une forte tension peut fatiguer le corps et l'attention."),
         ["exp-practice-with-choice"] = ("Je peux choisir un exercice ou l'arrêter", "Une pratique doit me convenir et rester sûre."),
 
@@ -99,7 +99,7 @@ public static partial class AnchorThoughtContent
         ["exp-movement-as-anchor"] = ("Le mouvement peut être un ancrage doux", "Je peux choisir une amplitude confortable ou rester immobile."),
         ["exp-senses-can-be-chosen"] = ("Je peux choisir un signal sensoriel confortable", "Les odeurs, les sons et le toucher ne conviennent pas à tous."),
         ["exp-early-signs-are-info"] = ("Les premiers signes de tension sont une information", "Je peux les remarquer sans me critiquer."),
-        ["exp-relaxation-not-performance"] = ("Je n'ai pas à réussir la détente", "Une pratique ne doit pas devenir une tâche de plus."),
+        ["exp-relaxation-not-performance"] = ("Je peux arrêter un exercice", "Si je me sens mal à l’aise, je peux faire une pause ou choisir une autre activité."),
         ["exp-basic-care-no-rules"] = ("Prendre soin de moi n'a pas à être parfait", "Une petite option possible vaut parfois mieux qu'une liste."),
         ["exp-new-symptoms-deserve-care"] = ("Je peux parler de nouveaux symptômes à un professionnel", "Une application ne peut pas en évaluer la cause médicale."),
         ["exp-therapist-fit-can-be-discussed"] = ("Je peux parler de la relation avec mon professionnel", "La confiance et des attentes claires comptent."),
@@ -110,6 +110,9 @@ public static partial class AnchorThoughtContent
         ["exp-screen-not-diagnosis"] = ("Un résultat de dépistage n'est pas un diagnostic", "L'évaluation tient compte de l'ensemble de la situation."),
         ["exp-support-plan-simple"] = ("Un plan de soutien peut être bref", "Un plan court est plus facile à retrouver dans un moment difficile."),
         ["exp-immediate-safety-first"] = ("Un danger immédiat demande une aide urgente", "Contactez les urgences locales ou une personne de confiance."),
-        ["exp-medication-with-clinician"] = ("Les changements de traitement se discutent avec un médecin", "Le prescripteur peut évaluer le traitement et ses risques.")
+        ["exp-medication-with-clinician"] = ("Les changements de traitement se discutent avec un médecin", "Le prescripteur peut évaluer le traitement et ses risques."),
+        ["exp-deadline-update-is-responsible"] = ("Prévenir tôt d’un retard, c’est prendre ses responsabilités", "Un nouveau délai aide les autres à réorganiser leurs plans."),
+        ["exp-confirming-agreement-is-care"] = ("Clarifier un accord ne signifie pas chercher la dispute", "Cela permet de repérer des attentes différentes avant de commencer."),
+        ["exp-new-facts-can-change-agreement"] = ("De nouvelles circonstances peuvent changer une décision", "Vous pouvez réexaminer un accord et expliquer clairement ce changement.")
     };
 }

@@ -214,6 +214,9 @@ public sealed class UserProgressService(IUserProgressRepository repository) : IU
     public Task<IReadOnlyList<SessionResultDTO>> GetRecentSessionResultsAsync(int limit = 20, CancellationToken cancellationToken = default) =>
         repository.GetRecentSessionResultsAsync(limit, cancellationToken);
 
+    public Task<IReadOnlyList<PracticeIntensitySample>> GetRecentPracticeIntensityAsync(int limit, CancellationToken cancellationToken = default) =>
+        repository.GetRecentPracticeIntensityAsync(limit, cancellationToken);
+
     public Task<int> CountDistinctTechniqueCompletionsForItemsBetweenAsync(
         IReadOnlyList<string> itemKeys,
         DateTime sinceUtc,

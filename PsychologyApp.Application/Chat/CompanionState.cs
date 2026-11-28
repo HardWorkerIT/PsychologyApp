@@ -13,7 +13,10 @@ namespace PsychologyApp.Application.Chat;
 public sealed record CompanionState
 {
     private const int MaxRecentTexts = 3;
-    private const int MaxAsked = 40;
+    private const int MaxAsked = 128;
+    private const int MaxContextNotes = 8;
+    private const int MaxNotesPerContext = 2;
+    private const int ContextNoteRefreshTurns = 4;
 
     /// <summary>Number of free-text messages the person has sent.</summary>
     public int Turns { get; init; }
@@ -47,8 +50,15 @@ public sealed record CompanionState
     /// <summary>The next 0..10 answer is the tension after a practice, not before it.</summary>
     public bool AwaitingPostPracticeRating { get; init; }
 
+    /// <summary>Distinct ids of questions already asked; retained long enough to avoid restarting the question cycle in long chats.</summary>
     public IReadOnlyList<string> AskedQuestions { get; init; } = [];
     public IReadOnlyList<string> RecentTexts { get; init; } = [];
+
+    /// <summary>Short excerpts, optionally tagged with a theme, person or event, beyond the rolling recent-text window.</summary>
+    internal IReadOnlyList<CompanionContextNote> ContextNotes { get; init; } = [];
+
+    /// <summary>Turn of the last earlier excerpt explicitly recalled to the person.</summary>
+    internal int LastRecalledContextTurn { get; init; }
 
     /// <summary>Technique started from this chat whose result the companion still wants to ask about.</summary>
     public string? PendingPractice { get; init; }
@@ -63,7 +73,7 @@ public sealed record CompanionState
     /// <summary>The second state of a mixed feeling (a <c>CompanionEmotion</c> name), or Unknown.</summary>
     public string Secondary { get; init; } = "Unknown";
 
-    /// <summary>The first thing the person said, quoted back later ("at the start you said...").</summary>
+    /// <summary>The first eligible non-trauma excerpt, used for at most one later callback when the conversation allows it.</summary>
     public string? FirstQuote { get; init; }
 
     /// <summary>User turn at which the last summary was offered.</summary>
@@ -183,10 +193,121 @@ public sealed record CompanionState
         RecentTexts = [.. RecentTexts.TakeLast(MaxRecentTexts - 1), text]
     };
 
-    public CompanionState WithAsked(string questionId) => this with
+    public CompanionState WithAsked(string questionId)
     {
-        AskedQuestions = [.. AskedQuestions.TakeLast(MaxAsked - 1), questionId]
-    };
+        List<string> asked = AskedQuestions
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.Ordinal)
+            .TakeLast(MaxAsked)
+            .ToList();
+        if (!asked.Contains(questionId, StringComparer.Ordinal))
+        {
+            asked.Add(questionId);
+            if (asked.Count > MaxAsked)
+            {
+                asked.RemoveAt(0);
+            }
+        }
+
+        return asked.SequenceEqual(AskedQuestions, StringComparer.Ordinal) ? this : this with { AskedQuestions = asked };
+    }
+
+    internal CompanionState RememberContextNote(string? text, string? theme, string? person, string? contextEvent)
+    {
+        string excerpt = text?.Trim() ?? string.Empty;
+        if (excerpt.Length < 8)
+        {
+            return this;
+        }
+
+        List<CompanionContextNote> notes = ContextNotes.OrderBy(note => note.Turn).ToList();
+        if (notes.Any(note => string.Equals(note.Text, excerpt, StringComparison.OrdinalIgnoreCase)
+            && SameContext(note, theme, person, contextEvent)))
+        {
+            return this;
+        }
+
+        List<int> matchingIndexes = notes
+            .Select((note, index) => (note, index))
+            .Where(item => SameContext(item.note, theme, person, contextEvent))
+            .Select(item => item.index)
+            .ToList();
+
+        if (matchingIndexes.Count > 0 && Turns - notes[matchingIndexes[^1]].Turn < ContextNoteRefreshTurns)
+        {
+            return this;
+        }
+
+        if (matchingIndexes.Count >= MaxNotesPerContext)
+        {
+            notes.RemoveAt(matchingIndexes[^1]);
+        }
+
+        CompanionContextNote note = new(Turns, excerpt[..Math.Min(excerpt.Length, 110)], theme, person, contextEvent);
+        notes.Add(note);
+        return this with { ContextNotes = KeepContextNotes(notes) };
+    }
+
+    private static CompanionContextNote[] KeepContextNotes(IReadOnlyList<CompanionContextNote> notes)
+    {
+        List<CompanionContextNote> kept = [];
+        foreach (CompanionContextNote candidate in notes.OrderBy(note => note.Turn))
+        {
+            if (!kept.Any(anchor => SameContext(candidate, anchor.Theme, anchor.Person, anchor.Event)))
+            {
+                kept.Add(candidate);
+            }
+        }
+
+        // Rank context anchors by latest activity so a returning topic keeps its early reference even after other topics appear.
+        kept = kept
+            .Select(anchor => (
+                Anchor: anchor,
+                LastTurn: notes
+                    .Where(candidate => SameContext(candidate, anchor.Theme, anchor.Person, anchor.Event))
+                    .Max(candidate => candidate.Turn)))
+            .OrderBy(item => item.LastTurn)
+            .ThenBy(item => item.Anchor.Turn)
+            .TakeLast(MaxContextNotes)
+            .Select(item => item.Anchor)
+            .ToList();
+        foreach (CompanionContextNote candidate in notes.OrderByDescending(note => note.Turn))
+        {
+            if (kept.Count >= MaxContextNotes)
+            {
+                break;
+            }
+
+            if (!kept.Any(existing => existing.Turn == candidate.Turn))
+            {
+                kept.Add(candidate);
+            }
+        }
+
+        return kept.OrderBy(note => note.Turn).ToArray();
+    }
+
+    private static bool SameContext(CompanionContextNote note, string? theme, string? person, string? contextEvent)
+    {
+        if (theme is null && person is null && contextEvent is null)
+        {
+            return note.Theme is null && note.Person is null && note.Event is null;
+        }
+
+        if (contextEvent is not null)
+        {
+            return note.Event == contextEvent
+                && (person is null || note.Person is null || note.Person == person)
+                && (theme is null || note.Theme is null || note.Theme == theme);
+        }
+
+        if (person is not null)
+        {
+            return note.Event is null && note.Person == person && (theme is null || note.Theme is null || note.Theme == theme);
+        }
+
+        return theme is not null && note.Event is null && note.Person is null && note.Theme == theme;
+    }
 
     public string Serialize()
     {
@@ -208,6 +329,8 @@ public sealed record CompanionState
             w.WriteBoolean("awaitingPost", AwaitingPostPracticeRating);
             WriteArray(w, "asked", AskedQuestions);
             WriteArray(w, "recent", RecentTexts);
+            WriteContextNotes(w, ContextNotes);
+            w.WriteNumber("lastContextRecall", LastRecalledContextTurn);
             WriteOptional(w, "pending", PendingPractice);
             WriteOptional(w, "pendingAt", PendingPracticeStartedUtc?.ToUniversalTime().ToString("O"));
             WriteOptional(w, "primary", OfferedPrimary);
@@ -282,8 +405,10 @@ public sealed record CompanionState
                 UnclearStreak = Int(r, "unclearStreak") ?? 0,
                 ScaleAsked = Bool(r, "scaleAsked"),
                 AwaitingPostPracticeRating = Bool(r, "awaitingPost"),
-                AskedQuestions = Array(r, "asked"),
+                AskedQuestions = Array(r, "asked").Distinct(StringComparer.Ordinal).TakeLast(MaxAsked).ToArray(),
                 RecentTexts = Array(r, "recent"),
+                ContextNotes = ReadContextNotes(r),
+                LastRecalledContextTurn = Int(r, "lastContextRecall") ?? 0,
                 PendingPractice = EnumName<TechniqueId>(r, "pending"),
                 PendingPracticeStartedUtc = Str(r, "pendingAt") is { } at
                     && DateTime.TryParse(at, null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime parsed)
@@ -371,6 +496,59 @@ public sealed record CompanionState
         w.WriteEndArray();
     }
 
+    private static void WriteContextNotes(Utf8JsonWriter w, IReadOnlyList<CompanionContextNote> notes)
+    {
+        w.WriteStartArray("contextNotes");
+        foreach (CompanionContextNote note in notes.TakeLast(MaxContextNotes))
+        {
+            w.WriteStartObject();
+            w.WriteNumber("turn", note.Turn);
+            w.WriteString("text", note.Text);
+            WriteOptional(w, "theme", note.Theme);
+            WriteOptional(w, "person", note.Person);
+            WriteOptional(w, "event", note.Event);
+            w.WriteEndObject();
+        }
+
+        w.WriteEndArray();
+    }
+
+    private static CompanionContextNote[] ReadContextNotes(JsonElement e)
+    {
+        if (!e.TryGetProperty("contextNotes", out JsonElement notes) || notes.ValueKind != JsonValueKind.Array)
+        {
+            return [];
+        }
+
+        List<CompanionContextNote> result = [];
+        foreach (JsonElement item in notes.EnumerateArray().TakeLast(MaxContextNotes))
+        {
+            if (item.ValueKind != JsonValueKind.Object || Int(item, "turn") is not { } turn || turn <= 0)
+            {
+                continue;
+            }
+
+            string? storedText = Str(item, "text");
+            if (string.IsNullOrWhiteSpace(storedText))
+            {
+                continue;
+            }
+
+            string excerpt = storedText.Trim();
+            if (excerpt.Length >= 8)
+            {
+                result.Add(new CompanionContextNote(
+                    turn,
+                    excerpt[..Math.Min(excerpt.Length, 110)],
+                    EnumName<CompanionTheme>(item, "theme"),
+                    EnumName<CompanionPerson>(item, "person"),
+                    EnumName<CompanionEvent>(item, "event")));
+            }
+        }
+
+        return result.ToArray();
+    }
+
     private static string? Str(JsonElement e, string name) =>
         e.TryGetProperty(name, out JsonElement p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null;
 
@@ -401,3 +579,5 @@ public sealed record CompanionState
             ? p.EnumerateArray().Where(x => x.ValueKind == JsonValueKind.String).Select(x => x.GetString()!).ToArray()
             : [];
 }
+
+internal sealed record CompanionContextNote(int Turn, string Text, string? Theme, string? Person, string? Event);

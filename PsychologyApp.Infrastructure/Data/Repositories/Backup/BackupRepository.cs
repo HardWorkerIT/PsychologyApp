@@ -9,6 +9,7 @@ using PsychologyApp.Application.Configuration;
 using PsychologyApp.Application.DataBackup;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Infrastructure.Data.Repositories.Base;
+using PsychologyApp.Infrastructure.Data.Repositories.Chat;
 using PsychologyApp.Infrastructure.Data.Repositories.Quots;
 using PsychologyApp.Infrastructure.Data.Sql;
 using PsychologyApp.Application.Body;
@@ -25,24 +26,133 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
     private const int ChatMessageCountBatchSize = 50;
     private const string FavouriteTextsKey = "FavoriteQuoteTexts";
 
-    public async Task<BackupExportMetrics> GetExportMetricsAsync(CancellationToken cancellationToken = default)
+    public async Task<AppBackupDTO> ReadExportSnapshotAsync(
+        int rowLimit, int escalationLimit, long payloadLimit, CancellationToken cancellationToken = default)
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
-        return await connection.QuerySingleAsync<BackupExportMetrics>(DapperCommandFactory.Create(
-            BackupSql.SelectExportMetrics,
-            commandTimeout: CommandTimeoutSeconds,
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
-    }
+        await using SqliteTransaction transaction = connection.BeginTransaction(deferred: true);
 
-    public async Task<IReadOnlyList<BackupTechniqueDTO>> GetTechniquesAsync(int limit, CancellationToken cancellationToken = default)
-    {
-        await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
-        IEnumerable<BackupTechniqueDTO> rows = await connection.QueryAsync<BackupTechniqueDTO>(DapperCommandFactory.Create(
-            BackupSql.SelectTechniques,
-            new { Limit = Math.Max(1, limit) },
-            commandTimeout: CommandTimeoutSeconds,
-            cancellationToken: cancellationToken)).ConfigureAwait(false);
-        return rows.AsList();
+        var metrics = await connection.QuerySingleAsync<BackupExportMetrics>(Command(BackupSql.SelectExportMetrics)).ConfigureAwait(false);
+        var chatMetrics = await connection.QuerySingleAsync<ChatExportMetrics>(Command(ChatSql.SelectExportMetrics)).ConfigureAwait(false);
+        if (metrics.MoodEntryCount > rowLimit
+            || metrics.TestResultCount > rowLimit
+            || metrics.CompletionCount > rowLimit
+            || metrics.SessionResultCount > rowLimit
+            || metrics.TechniqueCount > rowLimit
+            || metrics.EscalationCount > escalationLimit
+            || metrics.Utf8PayloadBytes > payloadLimit
+            || chatMetrics.SessionCount > rowLimit
+            || chatMetrics.MessageCount > rowLimit
+            || chatMetrics.MemoryCount > rowLimit
+            || chatMetrics.Utf8PayloadBytes > payloadLimit)
+        {
+            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
+        }
+
+        DateTime exportedAt = DateTime.UtcNow;
+        int limit = rowLimit + 1;
+        string beforeUtc = SqliteTime.ToIso(exportedAt.AddTicks(1));
+        var favourites = FavoriteQuoteTextsCodec.Decode(await ReadMetadataAsync(FavouriteTextsKey).ConfigureAwait(false));
+        if (favourites.Count > rowLimit)
+        {
+            throw new BackupFormatException("The saved data is too large to export and restore on this device.");
+        }
+
+        ChatExportSnapshot chat = await ChatRepository.ReadExportSnapshotAsync(
+            connection, transaction, CommandTimeoutSeconds, limit, cancellationToken).ConfigureAwait(false);
+
+        Dictionary<long, List<ChatMessageDTO>> messagesBySession = new();
+        foreach (ChatMessageDTO message in chat.Messages)
+        {
+            if (!messagesBySession.TryGetValue(message.SessionId, out List<ChatMessageDTO>? sessionMessages))
+            {
+                sessionMessages = [];
+                messagesBySession.Add(message.SessionId, sessionMessages);
+            }
+
+            sessionMessages.Add(message);
+        }
+
+        List<BackupChatSessionDTO> chatSessions = new(chat.Sessions.Count);
+        foreach (ChatSessionDTO session in chat.Sessions)
+        {
+            messagesBySession.Remove(session.Id, out List<ChatMessageDTO>? messages);
+            chatSessions.Add(new BackupChatSessionDTO
+            {
+                Session = new BackupChatSessionInfoDTO
+                {
+                    Id = session.Id,
+                    Title = session.Title,
+                    CreatedAt = session.CreatedAt,
+                    UpdatedAt = session.UpdatedAt,
+                    Emotion = session.Emotion,
+                    Theme = session.Theme,
+                    FirstIntensity = session.FirstIntensity,
+                    LastIntensity = session.LastIntensity,
+                    StateJson = session.StateJson,
+                    BackupKey = session.BackupKey
+                },
+                Messages = messages is null ? Array.Empty<ChatMessageDTO>() : messages
+            });
+        }
+
+        SafetyPlanDTO? safetyPlan = await ClinicalCareRepository.GetSafetyPlanAsync(
+            connection, transaction, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false);
+        AppBackupDTO snapshot = new()
+        {
+            ExportedAtUtc = exportedAt,
+            MoodEntries = await ReadRowsAsync<MoodEntryDTO>(UserProgressSql.SelectMoodsInRange,
+                new { fromUtc = (string?)null, toUtc = (string?)null, limit }).ConfigureAwait(false),
+            TestResults = await ReadRowsAsync<TestResultDTO>(UserProgressSql.SelectAllTestResults, new { limit }).ConfigureAwait(false),
+            Completions = await ReadRowsAsync<CompletionDTO>(UserProgressSql.SelectRecentTechniqueCompletions, new { limit, beforeUtc }).ConfigureAwait(false),
+            SessionResults = await ReadRowsAsync<SessionResultDTO>(UserProgressSql.SelectRecentSessionResults, new { limit, beforeUtc }).ConfigureAwait(false),
+            ChatSessions = chatSessions,
+            SafetyPlan = safetyPlan is null || safetyPlan.IsEmpty ? null : safetyPlan,
+            ChatMemory = chat.Memory,
+            FavoriteQuoteTexts = favourites.OrderBy(text => text, StringComparer.Ordinal).ToList(),
+            Techniques = await ReadRowsAsync<BackupTechniqueDTO>(BackupSql.SelectTechniques, new { Limit = limit }).ConfigureAwait(false),
+            LatestRiskAssessment = await ClinicalCareRepository.GetLatestRiskAssessmentAsync(
+                connection, transaction, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false),
+            TherapyProgram = await ClinicalCareRepository.GetActiveProgramAsync(
+                connection, transaction, CommandTimeoutSeconds, cancellationToken).ConfigureAwait(false),
+            Escalations = await ClinicalCareRepository.GetRecentEscalationsAsync(
+                connection, transaction, CommandTimeoutSeconds, escalationLimit + 1, cancellationToken).ConfigureAwait(false),
+            ExposurePlan = await ReadExportDocumentAsync(ExposureRepository.MetadataKey, ExposureJsonContext.Default.ExposurePlan).ConfigureAwait(false),
+            Reading = await ReadExportDocumentAsync(ReadingRepository.MetadataKey, ReadingJsonContext.Default.ReadingState).ConfigureAwait(false),
+            Body = await ReadExportDocumentAsync(BodyRepository.MetadataKey, BodyJsonContext.Default.BodyLog).ConfigureAwait(false),
+            SavedNextStep = SavedNextStepCollection.Serialize(
+                SavedNextStepCollection.Parse(await ReadMetadataAsync(UserProgressSql.SavedNextStepMetadataKey).ConfigureAwait(false)))
+        };
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return snapshot;
+
+        CommandDefinition Command(string sql, object? args = null) =>
+            DapperCommandFactory.Create(sql, args, transaction, CommandTimeoutSeconds, cancellationToken);
+
+        async Task<IReadOnlyList<T>> ReadRowsAsync<T>(string sql, object args) =>
+            (await connection.QueryAsync<T>(Command(sql, args)).ConfigureAwait(false)).AsList();
+
+        Task<string?> ReadMetadataAsync(string key) =>
+            connection.ExecuteScalarAsync<string?>(Command("SELECT Value FROM AppMetadata WHERE Key = @key;", new { key }));
+
+        async Task<T?> ReadExportDocumentAsync<T>(string key, JsonTypeInfo<T> type) where T : class
+        {
+            string? json = await ReadMetadataAsync(key).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return null;
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize(json, type);
+            }
+            catch (JsonException)
+            {
+                // Export is read-only. The original document is kept for recovery.
+                return null;
+            }
+        }
     }
 
     public async Task<BackupImportResult> ImportAsync(AppBackupDTO backup, CancellationToken cancellationToken = default)
@@ -462,12 +572,14 @@ public sealed class BackupRepository(IDbConnectionFactory connectionFactory, IOp
 
         if (backup.SavedNextStep is { } savedNextStep)
         {
-            await connection.ExecuteAsync(DapperCommandFactory.Create(
-                UserProgressSql.UpsertSavedNextStep,
-                new { key = UserProgressSql.SavedNextStepMetadataKey, value = savedNextStep },
-                transaction,
-                CommandTimeoutSeconds,
-                cancellationToken)).ConfigureAwait(false);
+            const string key = UserProgressSql.SavedNextStepMetadataKey;
+            string? local = await connection.QuerySingleOrDefaultAsync<string>(DapperCommandFactory.Create(
+                UserProgressSql.SelectSavedNextStep, new { key }, transaction, CommandTimeoutSeconds, cancellationToken))
+                .ConfigureAwait(false);
+            if (SavedNextStepCollection.Parse(local).Count == 0)
+            {
+                await run(UserProgressSql.UpsertSavedNextStep, new { key, value = savedNextStep }).ConfigureAwait(false);
+            }
         }
 
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);

@@ -16,6 +16,7 @@ public partial class PolarityViewModel : BaseViewModel, ITechniqueSessionScreen
     private readonly ListTechniqueSessionHelper _sessionHelper;
     private readonly PolarityListDraftCoordinator _draftCoordinator;
     private readonly DateTime _sessionStartedAt = DateTime.UtcNow;
+    private Task _draftLoadTask = Task.CompletedTask;
 
     public ICommand Add { get; private set; } = default!;
     public Command<Models.Practice.Techniques.Polarity> Delete { get; private set; } = default!;
@@ -42,6 +43,9 @@ public partial class PolarityViewModel : BaseViewModel, ITechniqueSessionScreen
         BackCommand = new AsyncCommand(GoBackAsync);
         CompleteCommand = new AsyncCommand(CompleteSessionAsync);
         Finish = CompleteCommand;
-        LoadDraftAsync().FireAndForget();
+        _draftLoadTask = LoadDraftAsync();
+        _draftLoadTask.FireAndForget();
     }
+
+    internal Task WaitForDraftLoadAsync() => _draftLoadTask;
 }

@@ -126,7 +126,13 @@ public partial class DonationSupportPopup : Popup
         }
 
         _isClosing = true;
-        await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
-        await CloseAsync();
+        try
+        {
+            await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
+        }
+        finally
+        {
+            await CloseAsync();
+        }
     }
 }

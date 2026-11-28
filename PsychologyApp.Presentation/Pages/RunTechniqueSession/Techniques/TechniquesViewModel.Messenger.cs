@@ -6,25 +6,23 @@ namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.Techniques;
 
 public partial class TechniquesViewModel
 {
-    // The singleton messenger keeps handlers weakly, so retain this delegate only while this page is subscribed.
-    private Action<TechniqueMessage>? _techniqueMessageHandler;
+    private bool _subscribedToTechniqueChanges;
 
-    private void SubscribeToTechniqueChanges()
+    internal void SubscribeToTechniqueChanges()
     {
-        if (_techniqueMessageHandler is not null)
+        if (_subscribedToTechniqueChanges)
         {
             return;
         }
 
-        Action<TechniqueMessage> handler = OnTechniqueMessage;
-        _techniqueMessageHandler = handler;
-        _techniqueMessenger.Subscribe(this, handler);
+        _techniqueMessenger.Subscribe(this, OnTechniqueMessage);
+        _subscribedToTechniqueChanges = true;
     }
 
     internal void UnsubscribeFromTechniqueChanges()
     {
         _techniqueMessenger.Unsubscribe(this);
-        _techniqueMessageHandler = null;
+        _subscribedToTechniqueChanges = false;
     }
 
     private void OnTechniqueMessage(TechniqueMessage message) =>

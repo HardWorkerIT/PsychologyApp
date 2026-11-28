@@ -106,6 +106,22 @@ public class EmotionGuesserTests(ITestOutputHelper output)
         Assert.Null(new EmotionGuesser().Guess("I keep worrying about tomorrow and cannot relax at all"));
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(32)]
+    public void Contractions_and_separators_do_not_change_the_score(int repeats)
+    {
+        EmotionGuesser guesser = EmotionGuesser.Bundled;
+        string canonical = string.Concat(Enumerable.Repeat("i will try to rest but i cant stop worrying ", repeats));
+        string contractions = string.Concat(Enumerable.Repeat("  I'LL try to rest... but I can't stop worrying! ", repeats));
+        string curly = contractions.Replace('\'', '’');
+
+        EmotionGuess? expected = guesser.Rank(canonical);
+        Assert.NotNull(expected);
+        Assert.Equal(expected, guesser.Rank(contractions));
+        Assert.Equal(expected, guesser.Rank(curly));
+    }
+
     [Fact]
     public void ABlankOrSingleClassGuesserNeverThrows()
     {

@@ -8,15 +8,15 @@
       "id": "intro",
       "kind": "say",
       "text": [
-        "I'm here. We'll come back to the present moment through your senses. It takes about three minutes.",
-        "Let's calmly return to the present together. Three minutes, step by step."
+        "Take about three minutes to notice what is around you.",
+        "Start with what you can see. Then we'll move through the other senses."
       ],
       "next": "intro_breath"
     },
     {
       "id": "intro_breath",
       "kind": "say",
-      "text": [ "First, take one slow breath out, longer than the breath in. Nothing else is needed." ],
+      "text": [ "Go at your own pace. If you notice no smell or taste, you can say so." ],
       "next": "ask_before"
     },
     {
@@ -48,8 +48,8 @@
       "id": "react_see",
       "kind": "say",
       "text": [
-        "You see: {see}. Great. Breathe out.",
-        "{see}. Good, you can see all of that right now. Breathe out."
+        "You noticed: {see}.",
+        "{see}. Now notice what is touching your body."
       ],
       "next": "ask_touch"
     },
@@ -86,7 +86,7 @@
     {
       "id": "ask_smell",
       "kind": "askText",
-      "text": [ "Now 2 smells. If you can't smell anything right now, recall your favourites." ],
+      "text": [ "Notice up to two smells. If you cannot smell anything, you can say so." ],
       "hint": "For example: coffee, fresh air",
       "capture": "smell",
       "suggestions": [ "Coffee", "Fresh air", "Soap", "Food", "Perfume", "Almost nothing", "Tea", "Bread", "Books", "Flowers", "Hand cream", "Wood" ],
@@ -105,8 +105,8 @@
       "id": "wrap",
       "kind": "say",
       "text": [
-        "You went through all five channels. Take one more slow breath in and out.",
-        "Done: five channels complete. One more calm breath in and out."
+        "This is the end of the exercise. Notice how you feel now.",
+        "Look around once more and notice how you feel."
       ],
       "next": "ask_after"
     },

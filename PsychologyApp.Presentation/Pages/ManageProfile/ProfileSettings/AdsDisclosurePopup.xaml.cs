@@ -88,8 +88,14 @@ public partial class AdsDisclosurePopup : Popup
         _isClosing = true;
         SafeAsync.Run(async () =>
         {
-            await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
-            await CloseAsync();
+            try
+            {
+                await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
+            }
+            finally
+            {
+                await CloseAsync();
+            }
         });
     }
 }

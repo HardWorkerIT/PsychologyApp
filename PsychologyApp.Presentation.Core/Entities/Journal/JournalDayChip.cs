@@ -1,11 +1,13 @@
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using PsychologyApp.Presentation.Common;
 
 namespace PsychologyApp.Presentation.Entities.Journal;
 
 public sealed class JournalDayChip : INotifyPropertyChanged
 {
+    private static readonly PropertyChangedEventArgs SelectionChanged = new(nameof(IsSelected));
+    private static readonly PropertyChangedEventArgs DescriptionChanged = new(nameof(AccessibilityDescription));
+
     private bool _isSelected;
 
     public DateOnly Date { get; init; }
@@ -27,13 +29,10 @@ public sealed class JournalDayChip : INotifyPropertyChanged
             }
 
             _isSelected = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(AccessibilityDescription));
+            PropertyChanged?.Invoke(this, SelectionChanged);
+            PropertyChanged?.Invoke(this, DescriptionChanged);
         }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

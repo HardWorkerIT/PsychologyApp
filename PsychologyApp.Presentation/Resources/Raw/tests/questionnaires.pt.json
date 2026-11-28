@@ -1,17 +1,17 @@
 [
   {
-    "title": "Questionário de Heck e Hess",
-    "subtitle": "Rastreio de neuroticismo",
+    "title": "Reflexão sobre reações emocionais",
+    "subtitle": "Autorreflexão · não é diagnóstico",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Neuroticismo",
-    "betterWhen": "lower",
-    "description": "40 afirmações sobre reatividade emocional. Responda Sim ou Não sobre você.",
+    "construct": "Autorreflexão",
+    "betterWhen": "none",
+    "description": "40 afirmações convidam à reflexão sobre reações emocionais. A pontuação não é uma avaliação clínica.",
     "algorithm": [
       "1. Você recebe uma lista de afirmações.",
       "2. Para cada afirmação, responda Sim se concordar (se for verdade para você) ou Não se discordar."
     ],
-    "comment": "Se algo preocupar você, procure um especialista qualificado.",
+    "comment": "Use as respostas como ponto de reflexão, não como rótulo. Se algo preocupar você, converse com um profissional qualificado.",
     "analyzerId": "heck_hess",
     "answers": [
       "Sim",
@@ -66,18 +66,18 @@
     "singleAnswer": true
   },
   {
-    "title": "Teste de Hare",
-    "subtitle": "Rastreio de psicopatia",
+    "title": "Comportamento e relacionamentos",
+    "subtitle": "Autorreflexão · não é diagnóstico",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Psicopatia",
-    "betterWhen": "lower",
-    "description": "Rastreia padrões interpessoais e de comportamento. Responda com sinceridade — não há respostas certas.",
+    "construct": "Autorreflexão",
+    "betterWhen": "none",
+    "description": "40 afirmações para refletir sobre comportamento e relacionamentos. Não é o PCL-R de Robert Hare nem avalia psicopatia; as respostas não permitem diagnosticar nem rotular ninguém.",
     "algorithm": [
       "1. Você recebe uma lista de afirmações.",
       "2. Para cada afirmação, escolha uma das respostas sugeridas."
     ],
-    "comment": "Se algo preocupar você, procure um especialista qualificado.",
+    "comment": "Use as respostas como ponto de reflexão, não como rótulo. Se algo preocupar você, converse com um profissional qualificado.",
     "analyzerId": "haer",
     "answers": [
       "Sim",

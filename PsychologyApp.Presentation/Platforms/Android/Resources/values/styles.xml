@@ -7,5 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorWhite</item>
         <item name="android:navigationBarColor">@color/colorWhite</item>
+        <item name="bottomNavigationViewStyle">@style/PsychologyBottomNavigation</item>
+    </style>
+    <style name="PsychologyBottomNavigation" parent="Widget.Design.BottomNavigationView">
+        <item name="labelMaxLines">2</item>
     </style>
 </resources>

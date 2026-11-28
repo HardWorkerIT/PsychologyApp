@@ -88,4 +88,13 @@ public sealed class AnswerTextTests
         Assert.EndsWith("…", shortened);
         Assert.StartsWith("Коллега", shortened);
     }
+
+    [Theory]
+    [InlineData("  АБВГ,\u00A0\tдальше", 6, "АБВГ…")]
+    [InlineData(" слово\t\u00A0слово ", 1, "слово слово")]
+    [InlineData("АБВГ   ", 4, "АБВГ")]
+    public void Shorten_preserves_separator_and_length_rules(string text, int limit, string expected)
+    {
+        Assert.Equal(expected, AnswerText.Shorten(text, limit));
+    }
 }

@@ -146,6 +146,25 @@ public sealed class QuestionViewModelTests
     }
 
     [Fact]
+    public async Task AGuidanceScreenNavigationFailureDoesNotMakeFinishSaveTheResultAgain()
+    {
+        QuestionViewModel viewModel = Create(1);
+        _scoring.Setup(s => s.Calculate(It.IsAny<IEnumerable<TestQuestion>>(), "gad7"))
+            .Returns(new QuestionnaireScoringResult(7, 1, null, "gad7", true));
+        _navigation.SetupSequence(n => n.GoToCrisisHubAsync())
+            .ThrowsAsync(new InvalidOperationException("Navigation unavailable"))
+            .Returns(Task.CompletedTask);
+        Pick(viewModel, 1);
+
+        await VmTestHelpers.RunAsync(viewModel.NextCommand);
+        await VmTestHelpers.RunAsync(viewModel.NextCommand);
+
+        _progress.Verify(p => p.SaveTestResultAsync("gad7", 7, It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Once);
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Exactly(2));
+        _toasts.Verify(t => t.LongToast(AppStrings.TestsResultNavigationFailedMessage, AppToastKind.Info), Times.Once);
+    }
+
+    [Fact]
     public async Task ThePracticeTheScoreRecommendsIsOfferedOnTheResultPage()
     {
         QuestionViewModel viewModel = Create(1);

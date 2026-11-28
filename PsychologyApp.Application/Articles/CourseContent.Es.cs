@@ -203,12 +203,12 @@ public static partial class ArticleContent
                     "Muletas y evitación",
                     4,
                     [
-                        P("Lo que más mantiene la ansiedad es la evitación. Puede ser abierta (no voy, no llamo) u oculta: muletas que ayudan a atravesar una situación."),
-                        Check("¿Tengo muletas?", 2, "Tienes varias muletas. Mantienen el miedo: el cerebro cree que todo salió bien solo gracias a ellas. Intenta renunciar a una en una situación fácil.", "Tienes pocas muletas. Fíjate también en lo que evitas por completo.", "Llevo una pastilla, agua o el móvil cargado «por si acaso»", "Solo voy acompañado a los lugares difíciles", "Me siento cerca de la salida", "Me distraigo para no notar la ansiedad", "Compruebo o vuelvo a preguntar muchas veces"),
-                        P("La salida es encontrarse poco a poco con lo que temes y prescindir de las muletas. Así el cerebro aprende por experiencia que lo temido no ocurre o se puede soportar.")
+                        P("La evitación puede contribuir a la ansiedad, sobre todo cuando cada vez te impide hacer cosas importantes. Puede ser evidente (no ir o no llamar) o menos visible, como comprobar repetidamente, pedir confirmación o planificar cada detalle."),
+                        Check("¿Qué formas de afrontamiento reconozco?", 2, "Has reconocido varias formas de afrontamiento. No es una puntuación ni un diagnóstico. Si te limitan, habla con un profesional sobre cambios graduales y seguros. Mantén la medicación prescrita y las medidas de seguridad necesarias.", "Reconocer pocas o ninguna también es normal. Estos hábitos dependen de la situación y no indican un diagnóstico.", "Compruebo varias veces o pido que me aseguren que todo está bien", "Ensayo mucho lo que diré o intento prever todos los resultados", "Me distraigo para no notar la ansiedad", "En una situación que considero segura, me voy cuando aumenta la ansiedad"),
+                        P("Si una situación cotidiana es segura y quieres probar, elige un paso pequeño y voluntario. Ve a tu ritmo y para si lo necesitas. No dejes la medicación prescrita ni renuncies a medidas de seguridad necesarias. Si la ansiedad limita mucho tu vida, prepara el plan con un profesional.")
                     ],
-                    "Haz una lista de tres a cinco situaciones que evitas, de la más fácil a la más difícil.",
-                    "¿Qué situación de la lista estás dispuesto a probar primero?"),
+                    "Anota hasta cinco situaciones cotidianas que sueles evitar. No incluyas peligros reales ni recuerdos traumáticos; puedes saltarte este paso.",
+                    "Si hay una situación segura, ¿qué pequeño paso te gustaría considerar o comentar con un profesional?"),
                 new(
                     "El primer paso y un plan",
                     4,

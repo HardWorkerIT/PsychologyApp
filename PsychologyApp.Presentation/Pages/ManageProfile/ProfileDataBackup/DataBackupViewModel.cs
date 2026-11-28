@@ -393,7 +393,7 @@ public sealed class DataBackupViewModel : BaseViewModel
             BackupImportResult? imported = isEncrypted
                 ? await ImportProtectedAsync(json, cancellationToken)
                 : await _backupService.ImportAsync(json, cancellationToken);
-            cancellationToken.ThrowIfCancellationRequested();
+            // A returned result means the import committed. A later cancellation cannot undo it.
             if (imported is not BackupImportResult result)
             {
                 return;

@@ -1,4 +1,4 @@
-﻿using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Entities.Technique;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
 using PsychologyApp.Application.Models;
@@ -106,10 +106,14 @@ public partial class TechniquesViewModel
     public bool IsPracticeAdEligible => IsPracticeAdPlacementAvailable
         && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
+    public bool IsPracticeBannerEligible => IsPracticeAdPlacementAvailable
+        && AdvertisingConfiguration.CanRequestBannerAd(UserPreferencesStore.Load());
+
     private void NotifyPracticeAdProperties()
     {
         OnPropertyChanged(nameof(IsPracticeAdPlacementAvailable));
         OnPropertyChanged(nameof(IsPracticeAdEligible));
+        OnPropertyChanged(nameof(IsPracticeBannerEligible));
     }
 
     public void RefreshPracticeAdEligibility()

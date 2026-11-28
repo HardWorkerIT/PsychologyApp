@@ -31,7 +31,18 @@ public sealed partial class TestScoreLabelCompletenessTests
             {
                 for (int score = 0; score <= 120; score++)
                 {
-                    foreach (string? text in new[] { TestScoreLabelMapper.GetSummary(id, score), TestScoreLabelMapper.GetDetail(id, score), TestScoreLabelMapper.GetRecommendationReason(id, score) })
+                    string? reason = TestScoreLabelMapper.GetRecommendationReason(id, score);
+                    string?[] labels = [TestScoreLabelMapper.GetSummary(id, score), TestScoreLabelMapper.GetDetail(id, score)];
+                    if (id is "heck_hess" or "haer")
+                    {
+                        Assert.Null(reason);
+                    }
+                    else
+                    {
+                        labels = [.. labels, reason];
+                    }
+
+                    foreach (string? text in labels)
                     {
                         Assert.False(string.IsNullOrWhiteSpace(text), $"{id} {score} {language}: empty");
                         Assert.False(LooksLikeAKey().IsMatch(text!), $"{id} {score} {language}: shows a resource key: {text}");

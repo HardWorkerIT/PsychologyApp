@@ -601,10 +601,58 @@ public static partial class ArticleContent
                 H("Revisa el plan durante el día"),
                 P("Si cambian las circunstancias o baja tu energía, ajusta el plan: reduce un paso, aplaza una tarea o pide ayuda. Al final, pregúntate si el plan te orientó, no cuántas casillas marcaste. Es un apoyo que puedes cambiar, no una promesa de hacerlo todo.")
             ]),
-        MiniArticle(ArticleIds.AskForHelpTask, "Pide ayuda con una parte concreta", "Una petición clara deja menos lugar a las suposiciones", "Di qué resultado necesitas, qué parte y para cuándo; por ejemplo: «¿Puedes revisar estas dos páginas antes del almuerzo?» Explica qué está hecho y cuánto tiempo puede llevar. Pregunta si ese volumen le viene bien. Si no, propone una parte menor, otro plazo o pregunta quién más podría ayudar."),
-        MiniArticle(ArticleIds.MeaningfulActivity, "Una actividad que te importa", "Conecta un paso pequeño con un valor", "Pregúntate qué importa aquí: cuidar, tener curiosidad, cumplir o descansar. Elige una acción pequeña en esa dirección. No necesita cambiar toda la situación para tener sentido. El sentido también puede estar en cuidar de tu yo futuro."),
-        MiniArticle(ArticleIds.FlexibleGoals, "Cambia el plan sin abandonar el objetivo", "Adapta el paso a la energía de hoy", "Si el plan original es demasiado grande, decide qué importa más: el objetivo, el plazo o el método. Conserva un siguiente paso manejable; por ejemplo, prepara un borrador en vez de buscar la perfección, o trabaja diez minutos en lugar de una hora. Si el plazo ya no es realista, avisa a quienes afecta y propone una nueva fecha. Revisar el plan responde a las condiciones actuales; no significa renunciar al objetivo."),
-        MiniArticle(ArticleIds.CelebrateCompletion, "Reconoce lo que ya hiciste", "La mente suele saltar a la siguiente tarea", "Al terminar, nombra brevemente qué hiciste y cuánto esfuerzo te llevó. No necesitas una recompensa; basta con reconocerlo. Así ves también lo terminado, no solo lo pendiente. Si te ayuda, anota qué facilitó terminar: el momento, el apoyo o una pausa."),
+        new(
+            ArticleIds.AskForHelpTask,
+            "Pide ayuda con una parte concreta",
+            "Describe la tarea para que sea fácil responder",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Pedir ayuda puede resultar incómodo, sobre todo si estás acostumbrado a arreglártelas por tu cuenta o temes ser una carga. Una petición concreta reduce la incertidumbre y ayuda a entender qué necesitas. No tienes que demostrar que estás lo bastante cansado ni que te has ganado el apoyo."),
+                H("Acota la petición"),
+                P("Nombra una tarea, su alcance y un plazo útil: «¿Puedes revisar hoy el primer párrafo de este correo?». Di qué has hecho ya y pregunta si le viene bien. Deja espacio para que la persona diga que no o proponga algo más pequeño. Si necesitas pensar juntos una situación, explica cuánto tiempo pides aproximadamente."),
+                H("Piensa en otra opción"),
+                P("Si esa persona no puede ayudar, no significa necesariamente que te juzgue a ti o a la relación. Puedes reducir la tarea, aplazar el plazo o preguntar a alguien más. Si se trata de seguridad o una necesidad urgente, no te detengas ante una sola negativa: busca el apoyo adecuado.")
+            ]),
+        new(
+            ArticleIds.MeaningfulActivity,
+            "Elige una acción pequeña que te importe",
+            "Conecta un paso con algo que valoras",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Cuando tienes poca energía, puede desaparecer el sentido de una tarea grande. En vez de preguntarte solo «¿qué debería terminar?», prueba con «¿qué me importa en esta situación?». Puede ser cuidar, conectar con alguien, tener curiosidad, cumplir o descansar. Un valor no es una casilla ni una medida de productividad, sino una dirección para elegir qué hacer."),
+                H("Haz visible ese valor"),
+                P("Elige una acción de cinco o diez minutos relacionada: enviar un mensaje amable, abrir el documento necesario, regar una planta o acostarte antes. Reduce el paso lo suficiente para empezar sin esperar a sentir motivación. Si ahora lo más importante es recuperarte, descansar también puede ser una acción con sentido."),
+                H("Observa la experiencia, no solo el resultado"),
+                P("Después, fíjate en qué apareció: interés, cansancio, alivio o nada en particular. No tienes que forzar una sensación de satisfacción. Si la acción no era adecuada o no estaba disponible, ajústala o déjala para más tarde. El sentido no exige un gran resultado ni elimina las limitaciones reales.")
+            ]),
+        new(
+            ArticleIds.FlexibleGoals,
+            "Conserva la dirección y cambia el método",
+            "Un objetivo puede adaptarse cuando cambian las circunstancias",
+            "TipsAndUpdates",
+            2,
+            [
+                P("A menudo hacemos un plan en unas condiciones y tenemos que llevarlo a cabo en otras. Si se ha vuelto inabarcable, es motivo para revisarlo, no para culparte. Separa tres cosas: la dirección que te importa, el objetivo concreto y el método para alcanzarlo. El sentido puede mantenerse aunque cambien el plazo o la cantidad de trabajo."),
+                H("Elige un nivel viable"),
+                P("Puedes definir tres versiones: un mínimo para los días difíciles, el paso habitual y algo más si tienes energía. Para preparar un examen, por ejemplo: abrir los apuntes y leer una página, repasar un tema o estudiar toda la sección. Elige un mínimo que te ayude a avanzar y no se convierta en un castigo."),
+                H("Revisa plazos y acuerdos"),
+                P("Si otras personas dependen del objetivo, avisa pronto del retraso y propón una fecha realista. Observa qué obstáculos se repiten: no saber cuál es el siguiente paso, falta de tiempo, cansancio o recursos insuficientes. Revisar el plan ayuda a responder a las condiciones; a veces también es razonable cambiar el objetivo o pedir ayuda.")
+            ]),
+        new(
+            ArticleIds.CelebrateCompletion,
+            "Reconoce un paso terminado antes de seguir",
+            "Una pausa breve hace visible el esfuerzo",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Al terminar algo, la atención suele saltar enseguida a lo que queda pendiente. Así, el día puede parecer una cadena continua de tareas sin acabar. Haz una pausa y nombra un hecho sin exagerarlo: «Envié el correo», «Pedí ayuda» o «Descansé cuando estaba cansado». No es un ritual obligatorio de gratitud ni una forma de fingir que todo va bien."),
+                H("Observa qué te ayudó"),
+                P("Si te sirve, añade una observación: qué paso funcionó, qué requirió esfuerzo o qué apoyo fue útil. Así, reconocer lo hecho aporta información para otra ocasión, en vez de convertirse en un juicio sobre tu valor. No compares tu ritmo con el de otras personas ni desprecies lo que hiciste porque aún quede más."),
+                H("Elige la siguiente transición"),
+                P("Después de la pausa, decide qué encaja ahora: continuar, cambiar de tarea, pedir apoyo o terminar por hoy. Acabar no siempre significa hacerlo todo a la perfección; a veces basta con detenerse en un punto acordado y seguro. En un día difícil, puedes reconocer el esfuerzo sin tener que sentir alegría.")
+            ]),
 
         new(
             ArticleIds.NameEmotion,
@@ -645,7 +693,22 @@ public static partial class ArticleContent
                 H("La seguridad importa más que la conversación"),
                 P("Si hay riesgo de violencia, amenazas o persecución, no intentes resolver el conflicto a solas. Ve a un lugar seguro, contacta con alguien de confianza o con los servicios de emergencia. Hacer una pausa no te obliga a retomar la conversación; puedes terminarla si continuar no es seguro.")
             ]),
-        MiniArticle(ArticleIds.ShameKindness, "Responde a la vergüenza sin humillarte", "Puedes reparar un error sin castigarte", "Dite: «Ahora siento vergüenza, pero este sentimiento no me describe por completo». Separa la acción de tu identidad: qué pasó y si algo puede repararse. Elige la respuesta que ofrecerías a alguien cercano. Si tu conducta afectó a alguien, reconoce el impacto y pregunta qué ayudaría a repararlo."),
+        new(
+            ArticleIds.ShameKindness,
+            "Responde a la vergüenza sin humillarte",
+            "Puedes reparar un error sin castigarte",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Separa el sentimiento de los hechos"),
+                P("La vergüenza puede convertir una acción concreta en un juicio sobre toda tu persona: «Me equivoqué» pasa a ser «Soy una mala persona». Describe la situación con precisión y sin etiquetas: qué dijiste o hiciste, qué ocurrió después y quién se vio afectado. Esto no elimina la responsabilidad; ayuda a ver qué se puede abordar."),
+                H("Reconoce el impacto sin adivinar"),
+                P("Si tus palabras o acciones afectaron a alguien, reconócelo de forma directa y breve. Puedes decir: «Te interrumpí y entiendo que pudo parecer que no te escuchaba». No hace falta empezar explicando tus intenciones ni pedir perdón de inmediato. Pregunta si quiere hablar de qué podría ayudar a reparar la situación y respeta su respuesta."),
+                H("Elige una reparación realista"),
+                P("Puede ser adecuado disculparte, corregir un error o cambiar una conducta concreta. Algunas consecuencias no pueden deshacerse enseguida; en ese caso, los cambios sostenidos importan. Elige un paso posible y no prometas lo que no puedes garantizar. Castigarte no recupera la confianza ni repara el daño."),
+                H("Mantén el respeto por ti"),
+                P("Prueba a hablarte como a una persona responsable que también merece respeto: «Lamento lo que hice. Puedo reconocerlo y decidir qué hacer ahora». Tratarte con amabilidad no es justificarte. Puede ayudarte a mantener la atención en la responsabilidad y en una acción concreta, en vez de repetir insultos contra ti."),
+            ]),
         new(
             ArticleIds.GuiltRepair,
             "Culpa: reparar algo o dejarla ir",
@@ -763,17 +826,140 @@ public static partial class ArticleContent
                 H("Cuida tu capacidad y la seguridad"),
                 P("Puedes preocuparte y decir «ahora no puedo». No prometas guardar en secreto una amenaza inmediata. Si la persona u otra está en peligro, contacta con un adulto de confianza, un profesional o emergencias; no te conviertas en la única fuente de apoyo.")
             ]),
-        MiniArticle(ArticleIds.AfterCrying, "Después de llorar", "Cuida el próximo minuto", "No tienes que explicar las lágrimas enseguida. Elige algo sencillo: beber agua, lavarte la cara o sentarte en un lugar cómodo; también puedes pedir a alguien que te acompañe. No te exijas calmarte al instante. Puedes aplazar una tarea grande. Si estás en peligro o no puedes mantenerte a salvo, busca ayuda urgente ahora."),
+        new(
+            ArticleIds.AfterCrying,
+            "Después de llorar, date tiempo",
+            "Empieza por lo básico, no por buscar una explicación",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Después de llorar intensamente, puedes sentir cansancio, temblor, vacío o alivio; cada persona reacciona de forma distinta. No tienes que explicar las lágrimas ni obligarte a calmarte. Comprueba lo inmediato: ¿estás en un lugar seguro? ¿Necesitas agua, abrigo, una postura cómoda o que alguien te acompañe? Elige solo lo que te venga bien."),
+                H("Haz muy pequeño el siguiente paso"),
+                P("Puedes lavarte la cara, beber agua, taparte con algo o simplemente sentarte. Si esas acciones no ayudan o te resultan incómodas, no tienes que hacerlas «bien». Aplaza las decisiones importantes hasta tener más energía. Si quieres, escribe a alguien de confianza: «Lo estoy pasando mal. ¿Puedes estar pendiente un rato?»"),
+                H("Vuelve poco a poco a las actividades"),
+                P("Cuando estés preparado, elige una tarea pequeña o descansa. Llorar no significa que seas débil ni que hayas vuelto al principio. Si llorar interfiere a menudo en tu vida, tu estado empeora o no puedes mantenerte a salvo, pide apoyo profesional; si el peligro es inmediato, busca ayuda urgente.")
+            ]),
 
-        MiniArticle(ArticleIds.SpecificRequest, "Pide algo concreto", "Una petición clara deja espacio para responder", "Formula la petición en una frase: contexto breve, acción y momento. Por ejemplo: «Quiero hablar de esto; ¿tienes diez minutos después de cenar?» No necesitas justificarte durante mucho tiempo; deja claro qué pides. Da espacio para responder y, si ayuda, ofrece otra opción."),
-        MiniArticle(ArticleIds.ListenReflect, "Primero comprende y después responde", "Una breve comprobación puede reducir la tensión", "Resume la idea principal con tus palabras y pregunta: «¿Te he entendido bien?» Espera a que te corrijan antes de aconsejar o responder al fondo. Pregunta si le viene bien escuchar un consejo. Mostrar que has escuchado no significa estar de acuerdo. Si la conversación se tensa demasiado, propón una pausa y acuerden cuándo retomarla."),
-        MiniArticle(ArticleIds.BoundarySentence, "Una frase para marcar un límite", "Una respuesta breve suele ser más clara que una defensa larga", "Di qué te parece bien y qué harás: «Quiero hablar con calma; si seguimos en este tono, terminaré la conversación y la retomaremos más tarde». Habla de tu propia acción, no de controlar a la otra persona. Si decirlo directamente puede aumentar el peligro, aléjate y busca ayuda."),
-        MiniArticle(ArticleIds.NoWithoutEssay, "Puedes decir que no sin dar una explicación larga", "Elige una frase amable y clara", "Si es seguro negarte, responde brevemente: «Gracias, pero no puedo» o «No me viene bien». No tienes que ofrecer alternativas ni explicar motivos personales. Si la otra persona insiste, repite la respuesta una vez y termina la conversación si es seguro. Si negarte puede ponerte en riesgo, prioriza alejarte y buscar apoyo."),
-        MiniArticle(ArticleIds.DifficultTalkOpening, "Empieza una conversación difícil con un objetivo", "Habla de un episodio y una petición", "Antes de hablar, anota un objetivo y una petición. En un momento tranquilo, describe lo ocurrido y cómo te afectó, sin juzgar el carácter de la otra persona: «Me cuesta planificar cuando los planes cambian sin avisar; ¿podemos avisarnos antes?» No empieces si no es seguro. Si aumenta la tensión, pausa y acuerda cuándo retomarlo solo si es seguro."),
-        MiniArticle(ArticleIds.RepairAfterConflict, "Retoma la conversación después de una discusión", "Da un pequeño paso hacia la claridad", "Primero pregunta si la otra persona está preparada para hablar. Céntrate en un episodio: reconoce tu parte y pregunta cómo lo vivió. Elige un punto que aclarar; no hace falta resolver todo el conflicto ahora. Si aparecen amenazas o miedo, termina la conversación y busca apoyo."),
-        MiniArticle(ArticleIds.ApologyResponsibility, "Discúlpate sin renunciar a tus límites", "Nombra la acción y lo que cambiarás", "Nombra la acción y su efecto: «Te interrumpí y no pudiste terminar. Lo siento». Di qué harás distinto y pregunta si ayudaría reparar algo. Reconocer una acción no significa aceptar todas las acusaciones ni renunciar a tu seguridad. La otra persona puede necesitar tiempo."),
-        MiniArticle(ArticleIds.FeedbackAsInformation, "Separa una crítica de tu valor", "Aclara qué puedes aprovechar", "Si el comentario es vago, pide un ejemplo concreto y un cambio observable. Elige como máximo un punto para probar. Una valoración sobre un resultado no juzga toda tu persona. No tienes que aceptar insultos o humillaciones como críticas útiles. Separa el hecho de la conclusión: «al informe le falta un ejemplo» es concreto; «no valgo para nada» es una generalización. Si ahora te cuesta, vuelve al comentario más tarde."),
-        MiniArticle(ArticleIds.ReceiveNo, "Cuando alguien te dice que no", "Rechazar una petición no siempre es rechazarte", "Pregúntate a qué se refiere el no: a esta petición, a este momento o a esta opción. Si te sirve, pregunta una vez por una alternativa; después decide a quién más acudir o qué puedes hacer tú. Puedes sentir decepción sin convertir la respuesta en un juicio sobre tu valor."),
+        new(
+            ArticleIds.SpecificRequest,
+            "Formula una petición concreta",
+            "Contexto breve, una acción y un momento adecuado",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Las indirectas y las explicaciones largas pueden ocultar qué estás pidiendo. Prueba una estructura sencilla: contexto breve, acción concreta y momento. Por ejemplo: «Quiero hablar del horario. ¿Tienes diez minutos hoy después de cenar?». No garantiza que acepten, pero permite responder con claridad."),
+                H("Deja espacio para elegir"),
+                P("Pregunta si ahora viene bien y acepta que te digan que no o propongan otro momento. Si no es urgente, ofrece dos opciones. No añadas amenazas ni culpa para obtener un sí. Si estás marcando un límite, explica también qué harás tú."),
+                H("Aclara qué significa la respuesta"),
+                P("Si la respuesta afirmativa es vaga, concreta la hora o el siguiente paso. Si aún no hay respuesta, acuerda cuándo volver a preguntarlo o decide qué puedes hacer por tu cuenta. Ante una situación insegura, una conversación normal puede no bastar: elige una vía más segura para conseguir apoyo.")
+            ]),
+        new(
+            ArticleIds.ListenReflect,
+            "Comprende primero y responde después",
+            "Comprueba el sentido antes de aconsejar",
+            "TipsAndUpdates",
+            2,
+            [
+                P("En una conversación tensa es fácil preparar la respuesta mientras la otra persona sigue hablando. Reflejar brevemente lo que has oído ayuda a comprobar si entendiste y permite que te corrijan. No es una técnica para ganar una discusión, sino una forma de no responder a algo que la persona no dijo."),
+                H("Resume una idea principal"),
+                P("Elige una idea: «Si te he entendido bien, te molestó que los planes cambiaran sin avisarte». Luego para y deja que la otra persona aclare. No añadas enseguida una defensa, un diagnóstico o una solución. Si no estás seguro, pregunta qué se te ha escapado."),
+                H("Pregunta qué ayudaría ahora"),
+                P("Puedes preguntar: «¿Quieres que te escuche o pensamos juntos qué hacer?». Reflejar una idea no significa aceptar todas las valoraciones ni renunciar a tus límites. Si la conversación se vuelve insegura o demasiado intensa, haz una pausa y retómala solo en condiciones adecuadas.")
+            ]),
+        new(
+            ArticleIds.BoundarySentence,
+            "Un límite habla de lo que tú harás",
+            "Di qué te parece aceptable y cómo actuarás",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Un límite no sirve para obligar a otra persona a comportarse de cierta manera. Explica con claridad qué es aceptable para ti y qué harás si la situación continúa. Elige un episodio concreto en vez de explicar toda la relación. Si hablar directamente podría provocar amenazas o violencia, no ensayes a solas: piensa primero en tu seguridad y en el apoyo disponible."),
+                H("Exprésalo brevemente y en primera persona"),
+                P("Prueba esta estructura: «Cuando pasa X, me cuesta Y. Te pido Z; si continúa, haré W». Por ejemplo: «Puedo hablar de esto sin insultos. Si siguen, terminaré la llamada». Comprométete solo con una acción que dependa de ti y que puedas cumplir. No necesitas demostrar que tienes derecho a poner un límite ni conseguir que la otra persona esté de acuerdo."),
+                H("Repítelo una vez y actúa"),
+                P("Si te llevan a discutir si puedes poner un límite, repítelo con calma, sin añadir nuevas justificaciones. Después haz lo que dijiste, si es seguro. Puede que a alguien le moleste el límite y aun así sea importante. Si cambian las circunstancias, puedes revisarlo o pedir apoyo para mantenerlo.")
+            ]),
+        new(
+            ArticleIds.NoWithoutEssay,
+            "Puedes decir que no sin dar largas explicaciones",
+            "Sé claro sin demostrar que tus motivos son suficientes",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Decir que no puede decepcionar a alguien o provocar preguntas, y quizá temas que la relación empeore. Si negarte es seguro, basta con una frase clara. Puedes tener en cuenta a la otra persona y aun así rechazar la petición. Decide qué puedes ofrecer de verdad; no prometas algo que no quieres o no puedes hacer solo para aliviar la presión."),
+                H("Elige una frase que te encaje"),
+                P("Puedes decir: «Gracias por contar conmigo, pero esta vez no puedo», «Ahora mismo no tengo capacidad para esto» o «Ese momento no me viene bien». Si quieres, puedes proponer otra opción, pero no es obligatorio. Tampoco tienes que compartir todos tus motivos personales. Ser amable no significa ser ambiguo."),
+                H("Responde a la insistencia"),
+                P("Si la persona sigue preguntando, repite brevemente tu respuesta en vez de buscar un motivo nuevo cada vez. También puedes terminar la conversación o contestar más tarde. Si negarte directamente puede provocar amenazas, control o daño, prioriza tu seguridad: pide apoyo a alguien de confianza, elige una forma más segura de comunicarlo o aléjate si puedes.")
+            ]),
+        new(
+            ArticleIds.DifficultTalkOpening,
+            "Pon un objetivo pequeño a una conversación difícil",
+            "Empieza por un hecho concreto y una petición",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Un tema difícil puede convertirse enseguida en un juicio sobre toda la relación. Antes de hablar, anota un objetivo: ¿qué quieres aclarar, resolver o simplemente hacer saber? Después elige un episodio concreto y una petición. Si estás enfadado, agotado o tienes miedo, puedes esperar; no hace falta hablar de inmediato."),
+                H("Describe lo ocurrido y su efecto"),
+                P("Busca un momento en que ambos estén algo tranquilos y tengan tiempo. Explica qué observaste, cómo te afectó y qué cambio te gustaría probar. Por ejemplo: «Cuando los planes cambian a última hora, me cuesta organizar quién recoge a los niños. ¿Podemos avisarnos antes?». Evita atribuir intenciones con frases como «Siempre haces» o «No te importa»."),
+                H("Deja espacio para responder"),
+                P("Escucha cómo lo ha entendido la otra persona, aclara un malentendido o acuerden un siguiente paso posible. Si la conversación se calienta, pacta una pausa y cuándo retomarla. Si hablar directamente puede provocar violencia o represalias, no confíes en las técnicas de comunicación como protección: busca ayuda de alguien de confianza o de un servicio profesional.")
+            ]),
+        new(
+            ArticleIds.RepairAfterConflict,
+            "Retoma la conversación después de una discusión",
+            "Comprueba si hay disposición y elige un punto para aclarar",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Después de una discusión quizá quieras explicarlo todo enseguida o no volver a hablar del tema. Antes de intentar aclararlo, pregunta si la otra persona está dispuesta a hablar y comprueba también si tú te sientes preparado. La primera conversación puede tener un objetivo modesto: entender un episodio, no resolver toda la relación."),
+                H("Céntrate en un momento concreto"),
+                P("Describe lo ocurrido sin etiquetas ni suposiciones sobre las intenciones. Reconoce tu parte, si la hay, y pregunta cómo lo vio la otra persona. Escuchar su versión no significa estar de acuerdo automáticamente. Si las versiones difieren, aclara primero un hecho o el sentido de una frase, en vez de discutirlo todo a la vez."),
+                H("Termina con cuidado"),
+                P("Di qué ha quedado más claro y qué podría venir después: un pequeño acuerdo, otra conversación o tiempo para pensarlo. Si aumenta la tensión, acuerden una pausa. Si hay amenazas, intimidación o miedo, no busques reconciliarte a cualquier precio: termina la conversación, ve a un lugar seguro y pide apoyo.")
+            ]),
+        new(
+            ArticleIds.ApologyResponsibility,
+            "Discúlpate con responsabilidad y límites",
+            "Nombra la acción concreta sin justificar su efecto",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Una disculpa útil se centra en la acción y su efecto, no en demostrar que eres buena persona. Sé concreto: «Te interrumpí y no pudiste terminar». Reconoce el impacto y di que lo sientes sin añadir «pero tú también…». Puedes explicar tus intenciones aparte si la otra persona quiere escucharlo."),
+                H("Propón una reparación realista"),
+                P("Di qué intentarás hacer distinto la próxima vez y pregunta si alguna reparación pequeña serviría ahora. No prometas algo que no puedas cumplir. La otra persona no tiene que perdonarte ni tranquilizarte enseguida; dale tiempo y acepta su respuesta."),
+                H("Responsabilizarte no exige renunciar a tu seguridad"),
+                P("Puedes reconocer un error concreto y, a la vez, no aceptar insultos, presiones o acusaciones que consideras falsas. No uses la disculpa para conseguir perdón o retomar el contacto. Si la conversación deja de ser segura, termínala y guarda una distancia segura.")
+            ]),
+        new(
+            ArticleIds.FeedbackAsInformation,
+            "Separa los comentarios sobre tu trabajo de tu valor",
+            "Busca información concreta, no una sentencia sobre ti",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Un comentario sobre un resultado puede sonar como un juicio sobre toda tu persona, sobre todo si es inesperado o se expresa con dureza. Para y separa tres cosas: las palabras exactas, un hecho comprobable y la conclusión que sacaste sobre ti. «Al informe le falta un ejemplo» describe el trabajo; «no hago nada bien» es una generalización."),
+                H("Aclara el comentario"),
+                P("Si es vago, pide un ejemplo y pregunta qué cambio se podría observar. Elige un punto realista para probar en el próximo trabajo. No todas las formas de comunicar sirven: los insultos y la humillación no se vuelven constructivos por llamarlos comentarios."),
+                H("Decide qué hacer después"),
+                P("No tienes que responder de inmediato. Puedes anotar la parte útil, pensarla más tarde o consultar con alguien que conozca el contexto. Si el comentario contradice los hechos o un acuerdo, acláralo con calma. Un trabajo y una valoración no definen todas tus capacidades.")
+            ]),
+        new(
+            ArticleIds.ReceiveNo,
+            "Cuando alguien te dice que no",
+            "Rechazar una petición no siempre es rechazarte",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Aclara a qué se refiere la respuesta"),
+                P("Un «no» puede referirse a una petición concreta, al momento o a una opción. No saques enseguida conclusiones sobre la relación o sobre tu valor si la persona no ha dicho eso. Si es apropiado, puedes preguntar con calma: «¿Quieres decir que ahora no te viene bien?»"),
+                H("Respeta el límite"),
+                P("Si la respuesta es clara, no conviertas la aclaración en presión. La otra persona puede negarse o no explicar el motivo. Tú puedes sentir decepción, hacer una pausa y decidir qué hacer después. Aceptar la respuesta no significa considerarla justa en todos los sentidos; significa no intentar conseguir el acuerdo presionando."),
+                H("Busca otra opción"),
+                P("Si la necesidad continúa, sepárala de esta fuente concreta de ayuda. Si la otra persona parece abierta, puedes preguntar una vez por otro momento o alternativa. Si no, piensa a quién más puedes acudir, qué parte puedes resolver por tu cuenta o si la tarea puede esperar."),
+                H("Deja espacio a la decepción"),
+                P("Nombra lo que sientes sin complicarlo: «Me decepciona; contaba con esa ayuda». No tienes que convencerte de que no importa ni calmarte enseguida. Cuando baje la primera reacción, revisa tus opciones y elige un paso. Que rechacen una petición no define tu valor."),
+            ]),
         new(
             ArticleIds.CheckAssumption,
             "Comprueba una suposición con una pregunta",
@@ -787,8 +973,19 @@ public static partial class ArticleContent
                 H("Decide si necesitas más claridad"),
                 P("Si aclararlo no cambiaría lo que vas a hacer, puedes dejar la duda abierta. Si sí cambia algo, espera la respuesta o explica qué necesitas saber y para cuándo. Si la conversación no es segura, elige otra vía o busca apoyo. El objetivo es obtener claridad útil, no certeza absoluta.")
             ]),
-        MiniArticle(ArticleIds.AskSupport, "Pedir apoyo es una habilidad", "Di qué te ayudaría", "Di qué tipo de apoyo necesitas: que te escuchen, pensar juntos en opciones o hacer algo en compañía. Por ejemplo: «Hoy ha sido difícil. ¿Puedes escucharme diez minutos sin dar consejos?» Pregunta si le viene bien ahora. Si no, acuerda otro momento o contacta con otra persona de confianza."),
-        MiniArticle(ArticleIds.SupportWithoutFixing, "Acompaña sin arreglarlo todo", "Pregunta qué tipo de apoyo hace falta", "Prueba: «¿Quieres que te escuche, que me quede contigo o que pensemos en el siguiente paso?» No prometas lo que no puedes cumplir. El apoyo respeta las decisiones de la otra persona y tus límites. Ante un peligro inmediato, escuchar quizá no sea suficiente."),
+        new(
+            ArticleIds.AskSupport,
+            "Pide apoyo diciendo qué te ayudaría",
+            "Una petición concreta puede facilitar el comienzo",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Pedir ayuda puede costar cuando ya lo estás pasando mal. Quizá temes que te rechacen, te juzguen o piensen que eres una carga. Empieza por identificar qué necesitas ahora: que te escuchen, pensar opciones juntos, ayuda práctica o simplemente no estar a solas. La petición puede ser pequeña y tener un límite de tiempo."),
+                H("Di qué apoyo necesitas y cuándo"),
+                P("Sé concreto: «Hoy ha sido difícil. ¿Puedes escucharme diez minutos sin dar consejos?» o «¿Me ayudas a pedir una cita? Me cuesta empezar». Pregunta si ahora le viene bien a la otra persona. Puede aceptar, decir que no o proponer otra opción. No necesitas contar toda la historia para justificar que pidas ayuda."),
+                H("Si esta vez no puede"),
+                P("Un no o un mal momento no siempre significa que no te valoren. Puedes preguntar a otra persona de confianza, buscar otro tipo de apoyo o hacer la petición más pequeña. Si hay peligro inmediato o no puedes mantenerte a salvo, no dependas de una sola persona cercana: recurre a servicios profesionales o de emergencia.")
+            ]),
         new(
             ArticleIds.ConflictNotFailure,
             "Un desacuerdo no siempre significa que la relación terminó",
@@ -854,13 +1051,94 @@ public static partial class ArticleContent
                 H("Deja espacio para cualquier respuesta"),
                 P("Después de enviarla, espera en vez de mandar varios mensajes seguidos. Si no puede, puedes proponer una alternativa si muestra interés o dejar que la iniciativa pase a esa persona. Si no responde, vuelve a tus planes y decide más adelante si quieres intentarlo otra vez.")
             ]),
-        MiniArticle(ArticleIds.SmallConnection, "Un contacto pequeño también cuenta", "No tienes que empezar con una conversación profunda", "Si te sientes solo, elige una forma fácil de estar con gente: un mensaje breve, un sitio conocido o una charla neutral. Para cuando sea suficiente. El objetivo es probar conexión, no obligarte a socializar. Un mensaje breve o estar en un lugar compartido puede bastar."),
+        new(
+            ArticleIds.SmallConnection,
+            "Empieza por un contacto pequeño",
+            "No hace falta empezar con una conversación profunda",
+            "TipsAndUpdates",
+            2,
+            [
+                P("La soledad puede hacer que el primer paso parezca especialmente difícil. No tienes que volverte sociable de golpe ni encontrar enseguida una amistad íntima. Elige un contacto de poca presión: enviar una frase a alguien conocido, saludar a un vecino, estar cerca de otras personas en un lugar familiar o hablar de un tema neutral. Un paso pequeño es un intento, no un examen."),
+                H("Adapta el contacto a tu energía"),
+                P("Piensa qué suele resultarte más llevadero: un mensaje, una llamada breve, una actividad en grupo o simplemente un lugar público conocido. Puedes limitar el tiempo y pensar cómo irte si te cansas. Elige una persona y un entorno con menos presión. Si no recibes respuesta, no uses un solo momento para juzgar tu valor; prueba en otro momento o formato."),
+                H("Observa qué te sienta bien"),
+                P("Después, fíjate en qué fue cómodo, qué te quitó energía y cuánto tardaste en recuperarte. El objetivo no es contar conversaciones ni aguantar un entorno desagradable. Si la soledad interfiere durante mucho tiempo en tu vida o empeora tu bienestar, considera pedir apoyo a alguien de confianza o a un profesional.")
+            ]),
 
-        MiniArticle(ArticleIds.OrientNow, "Comprueba dónde estás ahora", "Una forma suave de orientarte al presente", "Mira alrededor y nombra el lugar, el momento del día y algunos detalles neutros, como objetos o sonidos. Mantén los ojos abiertos y ve a tu ritmo. No necesitas recordar detalles del suceso. Si aumenta la ansiedad, para; puedes elegir un objeto neutro o pedir a alguien de confianza que se quede contigo."),
-        MiniArticle(ArticleIds.GroundingChoice, "Elige un anclaje que te venga bien", "No a todo el mundo le resulta cómodo enfocarse en el cuerpo", "Puedes nombrar colores, describir un objeto, notar la silla o escuchar un sonido constante. Elige algo tolerable ahora. Si te hace sentir peor, para y prueba otra cosa. Si resulta neutral, repite el ancla; no exijas alivio inmediato."),
-        MiniArticle(ArticleIds.AfterNightmare, "Después de una pesadilla", "Recuerda que el sueño ya terminó", "Enciende una luz suave, mira alrededor y nombra señales de que estás en tu habitación. No tienes que recordar el sueño en detalle. Si las pesadillas se repiten o alteran el sueño, coméntalo con un profesional sanitario. Cuando te hayas orientado, elige una actividad tranquila y conocida en vez de intentar interpretar el sueño. Si te asusta quedarte a solas, despierta o contacta con alguien de confianza."),
-        MiniArticle(ArticleIds.AnniversaryReaction, "Fechas difíciles y aniversarios", "La reacción puede llegar antes o después", "Si una fecha te recuerda un hecho difícil, deja menos tareas y elige apoyo con antelación. Puedes conmemorarla a tu manera o no hacerlo. Sentir mucho no significa volver al principio. Si el malestar suele empezar antes, reserva también tiempo para recuperarte después de la fecha."),
-        MiniArticle(ArticleIds.PaceRecovery, "Recupérate a tu propio ritmo", "No conviertas el autocuidado en una maratón", "Elige una práctica y pon un límite antes de empezar, como tres minutos o un solo paso. Si aumenta la tensión, para y elige algo más cómodo. Después, anota brevemente: ¿más fácil, igual o más difícil? Deja que eso guíe el siguiente paso, no el ritmo de otras personas."),
+        new(
+            ArticleIds.OrientNow,
+            "Comprueba dónde estás ahora",
+            "Una forma suave de orientarte al presente",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Oriéntate sin prisa"),
+                P("Cuando la atención se va al pasado o a un futuro que preocupa, a veces ayuda notar lo que hay alrededor. No es una forma de obligarte a calmarte ni una prueba de concentración. El objetivo es más sencillo: observar algunos datos neutros del presente y después elegir dónde poner la atención."),
+                H("Nombra datos sencillos"),
+                P("Mantén los ojos abiertos si te resulta más cómodo. Mira alrededor y nombra el lugar donde estás, aproximadamente qué momento del día es y un objeto cercano. Puedes describir su color, forma o función. Después, observa otra referencia neutra: un sonido de fuera, una línea de la pared o la luz sobre una superficie. No hace falta buscarle un significado."),
+                H("Adapta el ejercicio"),
+                P("Elige solo observaciones que no te sobrecarguen. No tienes que enumerar muchos detalles, moverte, tocar nada ni prestar atención a la respiración. Puede bastar una frase: «Estoy aquí, es por la mañana y tengo una mesa delante». Si no te salen palabras, basta con mirar un objeto."),
+                H("Comprueba si te viene bien"),
+                P("Al cabo de unos segundos, pregúntate si todo se siente algo más claro, igual o más incómodo. Cualquier respuesta está bien. Si aumenta el malestar, para y elige algo que te resulte más seguro; puedes pedir a alguien de confianza que te acompañe. No tienes que conseguir calma ni continuar a la fuerza."),
+            ]),
+        new(
+            ArticleIds.GroundingChoice,
+            "Elige un anclaje que te venga bien",
+            "No a todo el mundo le resulta cómodo enfocarse en el cuerpo",
+            "TipsAndUpdates",
+            2,
+            [
+                H("El anclaje es una opción, no una regla"),
+                P("A menudo se llama anclaje a un ejercicio breve para notar el presente, pero no hay una única versión adecuada para todo el mundo. Algunas personas prefieren mirar objetos o escuchar un sonido; a otras les resulta incómodo centrarse en la respiración o el cuerpo. Puedes omitir cualquier método y parar cuando quieras."),
+                H("Empieza por algo externo"),
+                P("Elige un detalle sencillo cercano: nombra un color, busca un objeto con líneas rectas o describe para qué sirve. También puedes notar un sonido de fondo constante sin intentar averiguar de dónde viene. Quédate unos segundos con una sola referencia y después comprueba cómo te sientes."),
+                H("Atiende al cuerpo solo si quieres"),
+                P("Si te resulta cómodo, nota el apoyo de la silla, la posición de los pies o la tela de una manga. No hace falta recorrer todo el cuerpo, cambiar de postura ni cerrar los ojos. Si prestar atención al cuerpo trae dolor, entumecimiento, mucha tensión o recuerdos no deseados, déjalo y elige un objeto externo."),
+                H("Conserva el derecho a cambiar"),
+                P("Pregúntate: ¿esto es tolerable, neutro o me hace sentir peor? Si es tolerable, puedes seguir un poco. Si nada cambia, es información, no un fracaso. Si empeora, para. La meta no es garantizar alivio, sino elegir un apoyo adecuado sin presionarte."),
+            ]),
+        new(
+            ArticleIds.AfterNightmare,
+            "Después de una pesadilla, vuelve con calma al presente",
+            "No tienes que interpretar ni repetir el sueño",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Después de una pesadilla, el cuerpo puede seguir reaccionando como si el peligro continuara. No te exijas dormirte de inmediato ni entender el significado del sueño. Si te resulta cómodo, enciende una luz, mira alrededor y recuérdate: «Era un sueño; ahora estoy despierto». Puedes nombrar el lugar, la fecha de hoy o un objeto conocido. Si centrarte en el entorno o en el cuerpo aumenta el malestar, para y elige otra cosa."),
+                H("Elige un paso tranquilo"),
+                P("Siéntate cómodamente, bebe agua o haz algo tranquilo y conocido. Si ayuda, escribe a alguien de confianza; si no quieres despertar a nadie, puedes dejar una luz encendida. No tienes que anotar ni hablar del sueño durante la noche. Vuelve a la cama cuando te sientas preparado, sin seguir un horario rígido."),
+                H("Si las pesadillas se repiten"),
+                P("Observa solo lo que pueda servirte para hablar con un profesional, como la frecuencia y el efecto en el sueño y el día. No necesitas buscar por tu cuenta una explicación simbólica. Si las pesadillas alteran el descanso con frecuencia o se relacionan con una experiencia difícil, coméntalo con un profesional sanitario o de salud mental. Ante un peligro inmediato, prioriza la seguridad y la ayuda urgente.")
+            ]),
+        new(
+            ArticleIds.AnniversaryReaction,
+            "Una fecha difícil puede necesitar un plan más amable",
+            "La reacción puede llegar antes, durante o después",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Las fechas relacionadas con una pérdida, un cambio o un hecho doloroso pueden despertar reacciones distintas. El malestar puede aparecer antes, ese mismo día o después; algunas personas apenas notan una reacción. Ninguna de estas respuestas significa que estés afrontándolo «mal». No tienes que explicar a nadie por qué esa fecha es importante para ti."),
+                H("Decide cómo quieres pasar el día"),
+                P("Si puedes, deja menos compromisos y piensa de antemano a quién podrías escribir o llamar. Puedes recordar a alguien o algo a tu manera, hacer vida normal o no seguir ningún ritual. Prepara una alternativa por si el día se hace demasiado difícil: irte antes, hacer una pausa o pedir compañía."),
+                H("Reserva tiempo para recuperarte"),
+                P("Piensa qué te ayudaría después: una comida sencilla, dormir, una tarde libre o hablar con alguien cercano. No compares tus sentimientos con los de otras personas ni te obligues a conmemorar la fecha. Si el malestar afecta durante mucho tiempo a tu vida diaria, consulta con un profesional; si tu seguridad corre peligro inmediato, pide ayuda urgente.")
+            ]),
+        new(
+            ArticleIds.PaceRecovery,
+            "Recupérate a tu propio ritmo",
+            "No conviertas el autocuidado en una maratón",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Descansar no es otra tarea que completar"),
+                P("Cuando las cosas cuestan, los consejos de autocuidado pueden convertirse en una larga lista de obligaciones. Si tienes poca energía, incluso una práctica útil puede sentirse como otra exigencia. Recuperarse no tiene que ser rápido ni igual cada día. Puedes elegir un apoyo pequeño o no añadir nada hoy."),
+                H("Elige un mínimo posible"),
+                P("Pregúntate qué está a tu alcance: beber agua, comer algo, apartar el móvil un momento, abrir una ventana o escribir a alguien de confianza. Elige una acción que encaje con tus circunstancias reales. No necesitas un temporizador ni una cuota si eso añade presión; los límites solo sirven si te ayudan a parar."),
+                H("Observa el efecto sin ponerte nota"),
+                P("Después, fíjate en qué cambió: ¿algo más fácil, igual o más difícil? No es una puntuación de tu disciplina. Si una práctica no te viene bien, déjala o elige otro tipo de apoyo. A veces lo útil es descubrir que necesitas silencio, comida, sueño, ayuda práctica o compañía."),
+                H("Pide apoyo antes de agotarte"),
+                P("Si durante un tiempo las tareas cotidianas siguen siendo muy difíciles, no hace falta esperar a poder con todo a solas. Cuéntale a alguien cercano qué se ha complicado o habla con un profesional sobre cómo te sientes. Pedir ayuda es un paso práctico, como descansar; no tienes que demostrar antes que lo intentaste todo."),
+            ]),
         MiniArticle(ArticleIds.SafetyFirst, "La seguridad importa más que el ejercicio", "La autoayuda no exige quedarse en peligro", "Si hay una amenaza cerca, intenta llegar primero a un lugar más seguro y contactar con alguien que pueda ayudarte. Respirar o anclarte no sustituye la protección, la atención médica ni los servicios de emergencia. Si no puedes alejarte por tu cuenta, pide a alguien cercano que llame a emergencias."),
         new(
             ArticleIds.ChooseTrustedPerson,
@@ -903,25 +1181,202 @@ public static partial class ArticleContent
                 P("Si la carga aumenta, interfiere en tu vida diaria o cuesta manejarla a solas, contacta con alguien de confianza o un profesional. Pedir apoyo otra vez forma parte del cuidado, no borra tus avances. Si hay peligro inmediato, busca ayuda urgente.")
             ]),
 
-        MiniArticle(ArticleIds.BreathIsOptional, "La práctica de respiración es opcional", "No te obligues a cambiar la respiración", "Si enfocarte en la respiración resulta desagradable, deja que siga natural y elige un apoyo externo: color, sonido u objeto. Estas prácticas no son adecuadas para todo el mundo y no sustituyen la atención ante falta de aire importante o síntomas nuevos. Si contar respiraciones te inquieta, elige un sonido externo."),
-        MiniArticle(ArticleIds.GroundingCanChange, "Si el anclaje no ayuda", "Cambia de método o para", "Si el ejercicio no ayuda o te hace sentir peor, para. Si quieres, prueba una vez con un apoyo externo sencillo, como mirar un objeto. Si tampoco sirve, contacta con alguien o elige un apoyo que requiera menos concentración."),
-        MiniArticle(ArticleIds.MovementAnchor, "Usa el movimiento como apoyo", "Un movimiento pequeño puede devolverte opciones", "Si es cómodo y seguro, abre y cierra las manos despacio o cambia el peso de un pie a otro. También puedes observar un objeto en movimiento. No fuerces si duele; elige un objeto quieto si te conviene más. Si estás sentado, puedes apoyar suavemente los pies en el suelo."),
-        MiniArticle(ArticleIds.SensesAnchor, "Un apoyo a través de los sentidos", "Elige una señal neutral de tu entorno", "Nombra un color, la temperatura del aire o un sonido constante que no te moleste. No hace falta encontrar cinco cosas ni cerrar los ojos. Una señal neutral puede bastar; cambia si resulta desagradable. Si el sonido distrae, elige un color; si mirar alrededor cansa, nota el apoyo bajo tus pies."),
+        new(
+            ArticleIds.BreathIsOptional,
+            "La práctica de respiración es opcional",
+            "No te obligues a cambiar la respiración",
+            "TipsAndUpdates",
+            2,
+            [
+                H("No tienes que centrarte en respirar"),
+                P("Los ejercicios de respiración no son adecuados para todo el mundo ni hacen falta en cada momento difícil. Prestar atención a cada respiración puede aumentar la tensión o generar sensaciones desagradables. Puedes omitir la práctica, dejar que la respiración siga natural y elegir otro apoyo. Eso no significa que lo estés haciendo mal."),
+                H("Si quieres probar"),
+                P("Ponte cómodo y observa durante unos segundos tu respiración habitual, sin contar, retener el aire ni intentar inspirar más profundamente. Puedes fijarte en el movimiento de la ropa sobre el pecho solo si te resulta cómodo. Basta con probar un momento; no hay un ritmo ni una duración obligatorios."),
+                H("Para si aparece malestar"),
+                P("Si te mareas, aumenta la ansiedad, te falta el aire o te incomoda centrarte en respirar, detén el ejercicio y vuelve a tu respiración habitual. Cambia a una referencia externa, como un color u objeto. No intentes «corregir» la sensación respirando más hondo o reteniendo el aire."),
+                H("Cuándo importa una valoración médica"),
+                P("Esta práctica no identifica la causa de la falta de aire ni sustituye la atención médica. Una dificultad respiratoria nueva, importante o que empeora rápidamente requiere valoración; ante un empeoramiento grave y repentino o peligro inmediato, contacta con los servicios locales de emergencia. Si un profesional te indicó una técnica por motivos médicos, sigue sus instrucciones personalizadas."),
+            ]),
+        new(
+            ArticleIds.GroundingCanChange,
+            "Si el anclaje no ayuda",
+            "Cambia de método o para",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Que no funcione no es culpa tuya"),
+                P("Puede que un ejercicio de anclaje no te venga bien ahora. No tiene por qué cambiar tu estado de ánimo enseguida, y no sentir alivio no significa que lo hayas hecho mal. A veces centrarse en sensaciones, respiración o recuerdos aumenta la ansiedad. Si ocurre, presta atención a tu respuesta en lugar de insistir."),
+                H("Haz una pausa y vuelve a elegir"),
+                P("Para si te sientes peor, mareado, desconectado o simplemente quieres parar. Abre los ojos si los tenías cerrados y mira un objeto neutro, solo si te resulta cómodo. No tienes que respirar hondo, contar sensaciones ni repetir pasos hasta obtener un resultado «correcto»."),
+                H("Prueba una opción que requiera menos"),
+                P("Si quieres continuar, elige una referencia externa más sencilla: lee un letrero, nombra un color o fíjate en dónde está la puerta. También puedes dejar los ejercicios y hacer una actividad cotidiana y tranquila. Evita probar varias técnicas seguidas si eso añade presión."),
+                H("Cuándo puede ayudar otra persona"),
+                P("Si te cuesta mantenerte a salvo por tu cuenta, contacta con alguien de confianza y dile qué necesitas: compañía, ayuda con algo práctico o apoyo para contactar con un profesional. Si hay peligro inmediato, llama a los servicios de emergencia locales. Puedes rechazar un ejercicio y seguir mereciendo apoyo."),
+            ]),
+        new(
+            ArticleIds.MovementAnchor,
+            "Usa el movimiento como apoyo",
+            "Un movimiento pequeño puede devolverte opciones",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Moverte es solo una opción"),
+                P("Un movimiento pequeño puede servirte de apoyo si ahora resulta cómodo para tu cuerpo. No tiene que mejorar tu estado de ánimo ni parecer ejercicio. Puedes elegir una acción mínima, observar algo que se mueve o preferir un objeto quieto; todas son opciones válidas."),
+                H("Elige una posición estable"),
+                P("Primero asegúrate de estar sentado o de pie con seguridad, sin riesgo de perder el equilibrio. Si te resulta cómodo, abre y cierra los dedos despacio, gira suavemente las muñecas o nota el apoyo bajo los pies. Basta con un movimiento dentro de un rango cómodo; no necesitas estirarte, levantarte ni repetir un número concreto."),
+                H("Observa cómo respondes"),
+                P("Fíjate en lo que ocurre mientras te mueves. Si resulta neutro o agradable, puedes continuar unos segundos. Para si aparece dolor, mareo, debilidad o más ansiedad. No fuerces un síntoma por seguir una práctica; puedes cambiar a una referencia visual o pedir ayuda."),
+                H("Termina sin juzgar el resultado"),
+                P("Cuando quieras, deja de moverte y elige qué hacer después: descansar sentado, volver a una actividad habitual o contactar con alguien. No necesitas comparar tus movimientos actuales con los de antes. Si síntomas físicos nuevos o importantes dificultan el movimiento, consúltalo con un profesional sanitario."),
+            ]),
+        new(
+            ArticleIds.SensesAnchor,
+            "Un apoyo a través de los sentidos",
+            "Elige una señal neutral de tu entorno",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Una sola señal basta"),
+                P("Cuando el entorno está lleno de estímulos, puedes elegir una sola señal neutral en vez de seguir una lista larga. Por ejemplo, observar un color, la forma de un objeto, un sonido constante o la temperatura del aire. No hace falta encontrar cinco cosas, cerrar los ojos ni usar todos los sentidos."),
+                H("Elige algo tolerable"),
+                P("La referencia debe resultarte suficientemente neutra. La luz intensa, el ruido, los olores o el contacto pueden distraerte o molestarte. Si una señal resulta desagradable, no te obligues a mantenerla. Puedes ir a un lugar más tranquilo, mirar un objeto familiar o dejar la práctica."),
+                H("Adáptalo a lo que te resulta accesible"),
+                P("Si mirar alrededor te cuesta, puedes nombrar mentalmente un objeto conocido o notar un sonido suave. Si el sonido distrae, elige una forma o un color. Si tienes limitaciones de visión, audición o movilidad, usa cualquier referencia accesible; no tienes que depender de la vista, el oído o el tacto en particular."),
+                H("Comprueba si te viene bien ahora"),
+                P("Quédate unos segundos con la referencia y pregúntate si te resulta más cómodo, igual o más difícil. No necesitas alcanzar un estado concreto. Si aumenta el malestar, cambia o para. Elegir otra señal no es un error: es una forma de respetar tus límites."),
+            ]),
         MiniArticle(ArticleIds.EarlyStressSigns, "Observa las primeras señales de sobrecarga", "Notarlas antes te da más opciones", "Elige una señal temprana que hayas notado más de una vez, como tensión o menor atención. Anota brevemente cuándo suele aparecer y elige una respuesta: hacer una pausa, aclarar la tarea o pedir ayuda. Esto puede orientar tu planificación, pero no es un diagnóstico."),
         MiniArticle(ArticleIds.RelaxWithoutForce, "Relájate sin forzarte", "No tienes que alcanzar una calma total", "Elige una acción que requiera poca concentración: bajar los hombros, acomodarte o aflojar las manos. Deja la respiración natural. Un poco de comodidad basta; no fuerces al cuerpo a relajarse por completo. Si prestar atención al cuerpo aumenta el malestar, dirige la atención a algo del entorno."),
         MiniArticle(ArticleIds.BasicCareWithoutRules, "Cuidados básicos sin reglas estrictas", "Elige lo que necesitas ahora", "Elige una cosa que necesites durante la próxima hora y hazla pequeña: un vaso de agua, algo de comer, una prenda de abrigo o escribir a alguien. Si no está a tu alcance, nombra el obstáculo y pide ayuda concreta. No poder con todo a solas no es un fracaso personal."),
-        MiniArticle(ArticleIds.NewSymptomsCare, "Síntomas nuevos o poco habituales", "No te diagnostiques con un artículo", "Si los síntomas físicos son nuevos, intensos o cambian rápidamente, consulta con un profesional sanitario. Ante señales de emergencia, llama a los servicios locales. Una práctica de autoayuda no debe retrasar una valoración médica. Anota cuándo empezó, pero no esperes si el síntoma es intenso."),
-        MiniArticle(ArticleIds.FindTherapist, "Cómo buscar un profesional", "Busca una relación de trabajo adecuada, no una descripción perfecta", "Pregunta por la formación, la experiencia con tu tema, el formato, el coste y la confidencialidad. En la primera cita, pregunta cómo se trabajará y cómo sabrás si ayuda. Puedes buscar a otra persona si no encaja. Confirma también cómo se manejan las cancelaciones y qué hacer si tu estado empeora entre sesiones."),
-        MiniArticle(ArticleIds.FirstAppointment, "La primera cita", "No necesitas preparar una historia perfecta", "Lleva un ejemplo reciente y tres preguntas: ¿Cómo serán las sesiones? ¿Qué será confidencial? ¿Por dónde podríamos empezar? Puedes decir que te cuesta explicarlo, pedir una pausa o dejar una pregunta sin responder. No tienes que decidir de inmediato si continuar."),
-        MiniArticle(ArticleIds.DescribeSymptoms, "Cómo describir lo que te pasa", "Un ejemplo real ayuda más que los términos perfectos", "Cuenta cuándo empezó, con qué frecuencia sucede y qué cambia en tu vida diaria. Si cuesta hablar, lleva una nota o enséñala. No tienes que adivinar un diagnóstico para pedir ayuda. Un ejemplo reciente de tu día puede facilitar la explicación."),
-        MiniArticle(ArticleIds.SelfHelpLimits, "Cuando la autoayuda no basta", "El apoyo profesional es un siguiente paso válido", "Si tu estado altera durante mucho tiempo el sueño, el trabajo, el estudio o el autocuidado, empeora o los ejercicios no ayudan, contacta con un profesional sanitario o psicólogo. No tienes que demostrar que ya lo resolviste por tu cuenta. Puedes pedir ayuda antes de que la situación sea insoportable."),
+        new(
+            ArticleIds.NewSymptomsCare,
+            "Síntomas nuevos o poco habituales",
+            "No te diagnostiques con un artículo",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Valora primero la urgencia"),
+                P("Un síntoma físico nuevo puede tener muchas causas y un artículo no puede determinar la tuya con fiabilidad. Si es intenso, empeora rápidamente o parece peligroso, no retrases la atención médica para hacer un ejercicio o buscar explicaciones en internet. Ante un peligro inmediato o un empeoramiento grave y repentino, contacta con los servicios de emergencia locales."),
+                H("Anota lo que observas, si puedes hacerlo"),
+                P("Para hablar con un profesional puede servir una nota breve: cuándo empezó, qué ha cambiado, con qué frecuencia ocurre y qué más has observado. Menciona los medicamentos y los cambios recientes si son relevantes. No tienes que buscar un diagnóstico por tu cuenta ni llevar un registro detallado si te supone demasiado esfuerzo."),
+                H("Describe cómo afecta a tu día"),
+                P("Fíjate en si el síntoma afecta al sueño, el movimiento, la alimentación, el trabajo o las actividades habituales. Explica qué te preocupa más y qué temes que pueda significar. Puedes preparar preguntas o pedir a alguien de confianza que te acompañe."),
+                H("La autoayuda no sustituye una valoración médica"),
+                P("Una actividad relajante puede acompañarte mientras organizas la atención, si te resulta cómoda, pero no identifica la causa del síntoma. Ante un empeoramiento repentino, dolor intenso, dificultad para respirar, pérdida del conocimiento u otra señal urgente, busca ayuda según las pautas locales. Si no sabes cuánta urgencia hay, contacta con un servicio sanitario y describe lo que ocurre."),
+            ]),
+        new(
+            ArticleIds.FindTherapist,
+            "Cómo elegir a un profesional para una primera cita",
+            "Busca una forma de trabajo clara y segura",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Empezar la búsqueda puede costar: los perfiles se parecen y no puedes saber de antemano si surgirá confianza. No hace falta encontrar a la persona perfecta a la primera. Comprueba primero aspectos prácticos: formación y habilitación pertinentes, experiencia con tu motivo de consulta, formato, coste y disponibilidad. Si la duda tiene que ver con la salud física o la medicación, pregunta qué profesional sanitario puede valorarla."),
+                H("Haz preguntas prácticas"),
+                P("Antes de reservar o en la primera cita, pregunta cómo suele organizarse el trabajo, cómo se acuerdan los objetivos y cómo puedes decir que el formato no te está ayudando. Confirma el coste, las cancelaciones, el contacto entre sesiones y cómo funciona la confidencialidad y cuáles son sus límites. No tienes que contar detalles personales por teléfono para conocer las condiciones."),
+                H("Valora la colaboración con el tiempo"),
+                P("Después de la cita, piensa si entendiste el proceso, pudiste preguntar y se respetaron tus límites. Sentirte incómodo al principio no demuestra por sí solo que el profesional no encaje; también importan la claridad y la seguridad. Si la relación de trabajo no mejora, puedes hablarlo o buscar a otra persona. Si hay peligro inmediato, no esperes a una cita ordinaria: pide ayuda urgente.")
+            ]),
+        new(
+            ArticleIds.FirstAppointment,
+            "En la primera cita basta con un ejemplo",
+            "No tienes que contar toda tu historia perfectamente",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Antes de la primera cita es fácil intentar preparar toda la historia y encontrar las palabras exactas. No es necesario. Si te ayuda, anota una situación reciente que muestre qué te preocupa y qué te gustaría cambiar. Puedes llevar la nota, leerla o pedir al profesional que te haga una pregunta cada vez."),
+                H("Lleva las preguntas que te importan"),
+                P("Puedes preguntar cómo serán las sesiones, qué es confidencial y en qué casos podrían compartir información, cómo se acuerdan los objetivos y qué hacer si empeoras entre citas. También puedes consultar el coste, la duración y las cancelaciones. No hace falta preguntarlo todo de una vez; empieza por lo más importante para ti."),
+                H("Conserva la opción de parar"),
+                P("Puedes decir que aún no quieres hablar de un tema, pedir que te expliquen una pregunta o hacer una pausa. La primera cita sirve para conocer el formato, no es una prueba de lo bien que cuentas tu historia. Después, piensa si te sentiste suficientemente seguro y si entendiste cómo se trabajaría. Puedes decidir más adelante si continúas.")
+            ]),
+        new(
+            ArticleIds.DescribeSymptoms,
+            "Describe lo que te ocurre con ejemplos reales",
+            "Cuándo empezó, cómo se repite y cómo afecta tu día a día",
+            "TipsAndUpdates",
+            2,
+            [
+                P("No necesitas términos técnicos ni una explicación preparada para hablar de algo difícil. Empieza con un ejemplo reciente: qué pasaba, qué notaste y qué se volvió más difícil. Puedes decir «no estoy seguro» o «todavía no sé explicarlo mejor». La idea es comprenderlo juntos, no adivinar un diagnóstico de antemano."),
+                H("Reúne algunos datos útiles"),
+                P("Si lo recuerdas, anota cuándo empezó, con qué frecuencia ocurre, cuánto dura y en qué situaciones cambia. Cuenta cómo afecta al sueño, los estudios, el trabajo, las relaciones o el cuidado personal. Añade qué has probado y qué ayudó un poco o empeoró las cosas. No hace falta llevar un diario detallado si resulta agotador."),
+                H("Prepara preguntas e información relevante"),
+                P("Puedes anotar medicamentos, cambios de salud u otros detalles que quizá estén relacionados; si no lo sabes, pregunta al profesional qué información sirve. No cambies un tratamiento por lo que diga un artículo o cuestionario. Los síntomas físicos nuevos o intensos requieren valoración sanitaria; ante un peligro inmediato, busca ayuda urgente.")
+            ]),
+        new(
+            ArticleIds.SelfHelpLimits,
+            "Cuando la autoayuda no basta",
+            "El apoyo profesional es un siguiente paso válido",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Observa si la dificultad se mantiene"),
+                P("La autoayuda puede servir para dificultades cotidianas, pero no tiene que resolverlo todo. El apoyo profesional puede ser útil si la situación afecta durante bastante tiempo al sueño, el trabajo, los estudios, las relaciones o el autocuidado; si empeora; o si cada vez dejas más actividades importantes. No hace falta esperar a que sea insoportable."),
+                H("No necesitas tener un diagnóstico"),
+                P("Basta con explicar qué ha cambiado y desde cuándo. Según lo que tengas disponible, puedes empezar por un profesional de atención primaria, un psicólogo u otro profesional cualificado. Si no sabes a quién acudir, pregunta a un servicio sanitario cuál podría ser el primer paso."),
+                H("Prepara un resumen breve"),
+                P("Antes de hablar, apunta algunos datos: qué te preocupa más, cuándo empezó, cómo afecta a tu vida diaria y qué has probado. Añade preguntas sobre las opciones de apoyo. No tienes que contarlo todo de una vez; puedes pedir que te expliquen los términos y acordar un siguiente paso."),
+                H("Pedir ayuda ya es una acción"),
+                P("No tienes que demostrar que te has esforzado bastante por tu cuenta. Si te cuesta pedir cita o iniciar la conversación, pide a alguien cercano que te ayude a encontrar un contacto o que te acompañe. Si hay peligro inmediato para ti o para otra persona, contacta con los servicios de emergencia locales."),
+            ]),
 
-        MiniArticle(ArticleIds.ScreeningNotDiagnosis, "Un cuestionario no es un diagnóstico", "El resultado puede iniciar una conversación, no ponerte una etiqueta", "Las respuestas reflejan un periodo concreto y dependen de las circunstancias. Enseña el resultado a un profesional si te preocupa. No cambies un tratamiento ni tomes decisiones importantes basándote solo en una puntuación. El cuestionario ayuda a preparar preguntas, pero no sustituye una evaluación."),
+        new(
+            ArticleIds.ScreeningNotDiagnosis,
+            "Un cuestionario no es un diagnóstico",
+            "El resultado puede iniciar una conversación, no ponerte una etiqueta",
+            "TipsAndUpdates",
+            2,
+            [
+                H("Qué puede mostrar un resultado"),
+                P("Un cuestionario reúne respuestas sobre cómo te has sentido durante un periodo concreto y ante unas preguntas determinadas. La puntuación puede sugerir temas para conversar, pero por sí sola no explica la causa de lo que sientes. Los acontecimientos recientes, la salud, el sueño y la interpretación de las preguntas pueden influir en las respuestas."),
+                H("Qué no puede establecer una puntuación"),
+                P("El resultado no confirma ni descarta un diagnóstico y no sustituye una conversación con un profesional. Los umbrales o colores pertenecen a esa herramienta; no son un juicio definitivo sobre ti. Una puntuación alta no define qué «te pasa», y una baja no invalida dificultades que afectan a tu vida."),
+                H("Úsalo como nota para hablar"),
+                P("Si el resultado te preocupa, guárdalo con la fecha y piensa qué ocurría durante ese periodo. Puedes anotar qué preguntas te llamaron la atención y qué quieres consultar con un profesional. No hace falta repetir el cuestionario muchas veces para obtener una cifra concreta."),
+                H("No cambies la atención por una puntuación"),
+                P("No empieces, suspendas ni cambies un tratamiento basándote solo en una puntuación de la aplicación. Consulta tus dudas con un profesional cualificado que pueda considerar las respuestas en contexto. Si tu estado empeora de repente o hay peligro inmediato, no esperes a repetir el cuestionario: busca ayuda urgente."),
+            ]),
         MiniArticle(ArticleIds.SupportPlan, "Prepara un plan breve de apoyo", "Anota señales, pasos y contactos", "Escribe cómo notas que empeoras, qué suele ayudarte y a quién puedes avisar. Añade contactos profesionales y servicios locales de emergencia. El plan no sustituye la ayuda; indica a quién llamar cuando cuesta pensar. Comprueba antes si los contactos están disponibles en tu zona."),
         MiniArticle(ArticleIds.CrisisSteps, "Si ahora mismo no estás a salvo", "Conecta con ayuda en tiempo real", "Ve a un lugar más seguro si es posible y contacta con emergencias locales o alguien de confianza. Di brevemente qué ocurre y dónde estás. No te quedes a solas si hay peligro inmediato. Si te cuesta llamar, pide a alguien que te acompañe en la llamada."),
         MiniArticle(ArticleIds.MedicationWithClinician, "Consulta con un profesional las dudas sobre medicación", "No cambies una receta por tu cuenta", "Si te preocupa una medicación, anota el nombre, la pregunta y cualquier efecto no deseado y coméntalo con quien la recetó o con un farmacéutico. No empieces, suspendas ni cambies dosis basándote en una app o artículo. Revisa el prospecto o consulta a una farmacia; las indicaciones varían."),
-        MiniArticle(ArticleIds.DeadlineConversation, "Si no llegas a la fecha límite", "Habla del plazo mientras haya opciones", "Revisa qué está terminado y cuánto falta de verdad. Avisa cuanto antes a quienes afecte, con los datos y una fecha realista. Propón opciones: ampliar el plazo, reducir el alcance o entregar ahora una parte terminada. Por ejemplo: «Los apartados 1 y 2 estarán el viernes; el resto, el martes. ¿Qué opción te viene mejor?». No prometas una fecha que dependa de exigirte más de la cuenta y confirma lo acordado."),
-        MiniArticle(ArticleIds.DifficultMessageReply, "Antes de responder a un mensaje difícil", "Elige primero el objetivo de tu respuesta", "Si no es urgente, espera a que baje la primera ola de emoción. Separa las palabras exactas del significado que les has atribuido. Elige un objetivo: aclarar, marcar un límite, comunicar una decisión o aplazar la conversación. Puedes escribir: «Volveré a este tema esta tarde». Si hace falta responder ya, comparte solo la información necesaria y deja lo demás para después."),
-        MiniArticle(ArticleIds.CancelPlans, "Si tienes que cancelar un plan", "Sé claro y propone otra fecha si quieres", "Avisa cuanto antes de que los planes han cambiado. Comparte solo la razón que quieras contar; no hace falta dar una explicación larga. Si te apetece veros, propón un día o una hora concretos. Reconoce el efecto que puede tener la cancelación y deja que la otra persona diga que no. Si cancelas por seguridad o por cómo te encuentras, atiende eso primero."),
+        new(
+            ArticleIds.DeadlineConversation,
+            "Si no llegarás al plazo, avisa pronto",
+            "Comparte los hechos, una estimación realista y opciones",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Cuando un plazo corre peligro, la preocupación puede llevarte a callar hasta el final o a prometer más de lo que puedes cumplir. Un aviso breve resulta más útil cuando aún hay opciones. Antes de escribir, comprueba qué está terminado, qué falta y qué depende de ti o de circunstancias externas. No hace falta ocultar el retraso ni justificarte con una historia larga."),
+                H("Propón opciones viables"),
+                P("Explica la situación y una fecha realista: «El borrador está listo; revisaré todo en dos días». Propón alternativas: ampliar el plazo, reducir el alcance, entregar ahora una parte terminada o acordar una revisión intermedia. Si aún no puedes calcularlo bien, dilo y fija cuándo podrás dar una estimación mejor."),
+                H("Confirma lo acordado"),
+                P("Aclara qué opción se eligió, quién debe saberlo y cuándo informarás del avance. No prometas una fecha que dependa de dejar de dormir o abandonar otras necesidades importantes. Si los retrasos se repiten, revisa por separado la causa: el tamaño de la tarea, los recursos o prioridades poco claras. Así puedes ajustar la planificación sin culparte.")
+            ]),
+        new(
+            ArticleIds.DifficultMessageReply,
+            "Haz una pausa antes de responder a un mensaje difícil",
+            "Decide primero qué quieres conseguir con tu respuesta",
+            "TipsAndUpdates",
+            2,
+            [
+                P("Un mensaje brusco o ambiguo puede hacer que quieras contestar de inmediato. Si no hay una necesidad práctica urgente, date tiempo. Separa las palabras exactas de lo que has supuesto sobre la intención: un texto puede sonar frío, pero por sí solo no siempre explica el motivo. Espera a saber qué quieres conseguir con la respuesta."),
+                H("Elige el objetivo y el formato"),
+                P("Puedes querer aclarar un hecho, marcar un límite, comunicar una decisión o aplazar la conversación. Escribe un borrador y quita lo que solo vaya a aumentar la discusión. Por ejemplo: «He visto tu mensaje. Mañana te respondo a esa pregunta» o «Puedo hablar de esto sin insultos». Para un tema complejo, quizá sea mejor llamar o hablar en persona que seguir escribiendo, si es seguro."),
+                H("Cuídate y guarda lo importante"),
+                P("Si el mensaje incluye amenazas, acoso o coacción, no tienes que responder ni mantener el contacto. Guarda la información que puedas necesitar, usa las opciones para bloquear o denunciar y pide apoyo. Si hay una amenaza inmediata, ve a un lugar más seguro y contacta con emergencias o con alguien de confianza.")
+            ]),
+        new(
+            ArticleIds.CancelPlans,
+            "Cancela los planes con claridad y cuidado",
+            "Avisa pronto y comparte solo lo que quieras",
+            "TipsAndUpdates",
+            2,
+            [
+                P("A veces hay que cambiar los planes por salud, circunstancias o falta de energía. Avísale a la otra persona en cuanto puedas, sobre todo si ya cuenta con el encuentro. Basta una frase clara: «Hoy tengo que cancelar». Puedes reservarte el motivo; un mensaje breve no es descortés por no incluir una larga explicación."),
+                H("Propón otra fecha si de verdad quieres"),
+                P("Si realmente quieres veros más adelante, sugiere un día concreto o pregunta cuándo le viene bien. No prometas otra fecha por culpa si no sabes si podrás cumplirla. Reconoce el inconveniente práctico, si lo hay: «Sé que te habías reservado la tarde». La otra persona puede sentirse decepcionada o no querer cambiar la fecha."),
+                H("Prioriza la seguridad y el bienestar"),
+                P("Si cancelas porque la situación no es segura, no tienes que mantener el plan por comodidad de otra persona. Elige una forma de avisar que no aumente el riesgo; a veces es más seguro enviar un mensaje breve o pedir ayuda a alguien de confianza. Si cancelas a menudo y te preocupa, piensa sin reproches qué lo está dificultando.")
+            ]),
     ];
 }

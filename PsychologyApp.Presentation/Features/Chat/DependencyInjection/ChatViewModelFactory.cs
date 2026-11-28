@@ -29,7 +29,7 @@ public sealed class ChatViewModelFactory(
     ITechniqueCatalogService? techniqueCatalog = null) : IChatViewModelFactory
 {
     public ChatViewModel CreateConversation(long? sessionId, INavigation navigation, string? topic = null, string? opener = null) =>
-        new(chat, Resolve(navigation), language, time, sessionId, topic, opener);
+        new(chat, Resolve(navigation), language, time, sessionId, dialogs, topic, opener);
 
     public ChatListViewModel CreateList(INavigation navigation) =>
         new(chat, Resolve(navigation), language, dialogs, time);

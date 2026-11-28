@@ -6,6 +6,10 @@ namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueSession;
 
 public partial class TechniqueSessionViewModel
 {
+    private Task _draftLoadTask = Task.CompletedTask;
+
+    internal Task WaitForDraftLoadAsync() => _draftLoadTask;
+
     /// <summary>The practice has its own "tension before" step (breathing, thought record): the separate scale above is not shown.</summary>
     public bool AsksPreIntensity => !Entries.Any(e => e.Role == EntryFieldRole.IntensityBefore);
 
@@ -31,16 +35,29 @@ public partial class TechniqueSessionViewModel
         if (AppliedUiKind == TechniqueUiKind.Entry)
         {
             _entryDraftCoordinator.WireHandlers();
-            _entryDraftCoordinator.LoadAsync(() =>
-            {
-                OnPropertyChanged(nameof(Entries));
-                ResumeWhereLeft();
-                Notify(nameof(NextStepText), nameof(CanFinish), nameof(IsCurrentEmpty), nameof(NextStepVariant));
-            }).FireAndForget();
+            _draftLoadTask = LoadEntryDraftAsync();
+            _draftLoadTask.FireAndForget();
         }
 
         LoadLastNoteAsync();
         OfferRecentProblemAsync().FireAndForget();
+    }
+
+    private async Task LoadEntryDraftAsync()
+    {
+        try
+        {
+            await _entryDraftCoordinator.LoadAsync(() =>
+            {
+                OnPropertyChanged(nameof(Entries));
+                ResumeWhereLeft();
+                Notify(nameof(NextStepText), nameof(CanFinish), nameof(IsCurrentEmpty), nameof(NextStepVariant));
+            });
+        }
+        catch (Exception error)
+        {
+            BestEffort.Report(error);
+        }
     }
 
     public void SaveEntryDraftIfNeeded() => _entryDraftCoordinator.SaveIfNeeded();

@@ -9,9 +9,9 @@ namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.PracticeCompletio
 public partial class PracticeCompletionPage : ContentPage
 {
     private PracticeCompletionViewModel? _viewModel;
+    private readonly KeyboardResize _keyboard = new();
     private bool _motionSynced;
     private bool _hadMoodDelta;
-    private bool _hadSudsDelta;
 
     public PracticeCompletionPage(
         IPracticeCompletionViewModelFactory factory,
@@ -28,6 +28,7 @@ public partial class PracticeCompletionPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _keyboard.Enable();
         if (_viewModel is null)
         {
             return;
@@ -35,11 +36,16 @@ public partial class PracticeCompletionPage : ContentPage
 
         if (!_motionSynced)
         {
-            SyncMotionVisibility(animate: false);
+            MoodDeltaLabel.IsVisible = _viewModel.HasMoodDelta;
             _motionSynced = true;
             _hadMoodDelta = _viewModel.HasMoodDelta;
-            _hadSudsDelta = _viewModel.HasSudsDelta;
         }
+    }
+
+    protected override void OnDisappearing()
+    {
+        _keyboard.Restore();
+        base.OnDisappearing();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -49,23 +55,11 @@ public partial class PracticeCompletionPage : ContentPage
             return;
         }
 
-        if (e.PropertyName == nameof(PracticeCompletionViewModel.HasNextPractice))
-        {
-            UiStateAnimator.AnimateVisibilityAsync(NextPracticeRow, _viewModel.HasNextPractice).FireAndForget();
-        }
-
         if (e.PropertyName is nameof(PracticeCompletionViewModel.HasMoodDelta)
             or nameof(PracticeCompletionViewModel.SelectedMoodLevel)
             or nameof(PracticeCompletionViewModel.BeforeMoodLevel))
         {
             HandleMoodDeltaMotionAsync().FireAndForget();
-        }
-
-        if (e.PropertyName is nameof(PracticeCompletionViewModel.HasSudsDelta)
-            or nameof(PracticeCompletionViewModel.SudsDeltaText)
-            or nameof(PracticeCompletionViewModel.PostIntensityText))
-        {
-            HandleSudsDeltaMotionAsync().FireAndForget();
         }
     }
 
@@ -88,57 +82,19 @@ public partial class PracticeCompletionPage : ContentPage
         _hadMoodDelta = hasMoodDelta;
     }
 
-    private async Task HandleSudsDeltaMotionAsync()
+    protected override bool OnBackButtonPressed()
     {
         if (_viewModel is null)
         {
-            return;
+            return base.OnBackButtonPressed();
         }
 
-        bool hasSudsDelta = _viewModel.HasSudsDelta;
-        await UiStateAnimator.AnimateVisibilityAsync(SudsDeltaPill, hasSudsDelta);
-
-        if (hasSudsDelta && !_hadSudsDelta)
+        if (_viewModel.FinishCommand.CanExecute(null))
         {
-            await UiAnimations.SafePulseAsync(SudsDeltaPill);
+            _viewModel.FinishCommand.Execute(null);
         }
 
-        _hadSudsDelta = hasSudsDelta;
-    }
-
-    private void SyncMotionVisibility(bool animate)
-    {
-        if (_viewModel is null)
-        {
-            return;
-        }
-
-        if (animate)
-        {
-            UiStateAnimator.AnimateVisibilityAsync(NextPracticeRow, _viewModel.HasNextPractice).FireAndForget();
-            UiStateAnimator.AnimateVisibilityAsync(MoodDeltaLabel, _viewModel.HasMoodDelta).FireAndForget();
-            UiStateAnimator.AnimateVisibilityAsync(SudsDeltaPill, _viewModel.HasSudsDelta).FireAndForget();
-            return;
-        }
-
-        NextPracticeRow.IsVisible = _viewModel.HasNextPractice;
-        MoodDeltaLabel.IsVisible = _viewModel.HasMoodDelta;
-        SudsDeltaPill.IsVisible = _viewModel.HasSudsDelta;
-
-        if (!_viewModel.HasNextPractice)
-        {
-            UiAnimations.ResetVisualState(NextPracticeRow);
-        }
-
-        if (!_viewModel.HasMoodDelta)
-        {
-            UiAnimations.ResetVisualState(MoodDeltaLabel);
-        }
-
-        if (!_viewModel.HasSudsDelta)
-        {
-            UiAnimations.ResetVisualState(SudsDeltaPill);
-        }
+        return true;
     }
 
     protected override void OnHandlerChanged()

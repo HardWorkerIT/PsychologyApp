@@ -8,8 +8,8 @@
       "id": "intro",
       "kind": "say",
       "text": [
-        "Estoy aquí. Vamos a volver al momento presente a través de tus sentidos. Lleva unos tres minutos.",
-        "Volvamos juntos y con calma al presente. Tres minutos, paso a paso."
+        "Tómate unos tres minutos para prestar atención a lo que te rodea.",
+        "Empieza por lo que ves. Luego pasaremos a los demás sentidos."
       ],
       "next": "intro_breath"
     },
@@ -17,7 +17,7 @@
       "id": "intro_breath",
       "kind": "say",
       "text": [
-        "Primero, haz una exhalación lenta, más larga que la inhalación. No hace falta nada más."
+        "Ve a tu ritmo. Si no percibes ningún olor o sabor, puedes decirlo."
       ],
       "next": "ask_before"
     },
@@ -75,8 +75,8 @@
       "id": "react_see",
       "kind": "say",
       "text": [
-        "Ves: {see}. Muy bien. Exhala.",
-        "{see}. Bien, puedes ver todo eso ahora mismo. Exhala."
+        "Has notado esto: {see}.",
+        "{see}. Ahora fíjate en lo que toca tu cuerpo."
       ],
       "next": "ask_touch"
     },
@@ -152,7 +152,7 @@
       "id": "ask_smell",
       "kind": "askText",
       "text": [
-        "Ahora 2 olores. Si ahora no hueles nada, recuerda tus favoritos."
+        "Fíjate en hasta dos olores. Si no percibes ninguno, puedes decirlo."
       ],
       "hint": "Por ejemplo: café, aire fresco",
       "capture": "smell",
@@ -198,8 +198,8 @@
       "id": "wrap",
       "kind": "say",
       "text": [
-        "Has recorrido los cinco sentidos. Haz una inhalación y una exhalación lentas más.",
-        "Listo: los cinco sentidos completos. Una respiración tranquila más."
+        "Aquí termina el ejercicio. Fíjate en cómo te sientes ahora.",
+        "Mira a tu alrededor una vez más y observa cómo te sientes."
       ],
       "next": "ask_after"
     },
