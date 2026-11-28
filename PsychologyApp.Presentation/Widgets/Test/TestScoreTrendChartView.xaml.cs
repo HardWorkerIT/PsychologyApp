@@ -12,7 +12,7 @@ public partial class TestScoreTrendChartView : ContentView
     public TestScoreTrendChartView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         Title = AppStrings.TestHistoryTrendTitle;
         ChartView.Drawable = _drawable;
     }

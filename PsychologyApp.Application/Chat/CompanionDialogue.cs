@@ -48,7 +48,8 @@ public sealed partial class CompanionDialogue(
     IEmotionGuesser? emotionGuesser = null,
     int recentHeavyChats = 0,
     IReadOnlySet<string>? recentlyTakenTests = null,
-    IReadOnlyDictionary<string, int>? earlierTopicChats = null)
+    IReadOnlyDictionary<string, int>? earlierTopicChats = null,
+    IReadOnlyDictionary<TechniqueId, int>? techniqueTryCounts = null)
 {
     /// <summary>For each topic, how many earlier chats of the last month it came up in (<see cref="RecurringTopics"/>).</summary>
     private readonly IReadOnlyDictionary<string, int> _earlierTopicChats = earlierTopicChats ?? new Dictionary<string, int>();
@@ -58,6 +59,9 @@ public sealed partial class CompanionDialogue(
 
     /// <summary>Questionnaires taken in the last two weeks: these are not suggested again.</summary>
     private readonly IReadOnlySet<string> _recentlyTakenTests = recentlyTakenTests ?? new HashSet<string>();
+
+    /// <summary>How often each practice was started from a chat; used only to balance equally suitable suggestions.</summary>
+    private readonly IReadOnlyDictionary<TechniqueId, int> _techniqueTryCounts = techniqueTryCounts ?? new Dictionary<TechniqueId, int>();
 
     private const int HeavyChatsForTest = 2;
     private readonly Random _random = random ?? Random.Shared;
@@ -77,6 +81,23 @@ public sealed partial class CompanionDialogue(
     private const int MaxRedraws = 4;
     private const int RememberedReplies = 8;
     private const int RememberedPrefixLength = 80;
+    private static readonly HashSet<string> ReplyStopWords = new(StringComparer.Ordinal)
+    {
+        "a", "an", "the", "i", "me", "my", "you", "your", "we", "us", "our",
+        "he", "him", "his", "she", "her", "they", "them", "their", "it", "its",
+        "is", "are", "was", "were", "be", "been", "being", "do", "does", "did",
+        "я", "ты", "вы", "он", "она", "оно", "мы", "они", "мне", "меня", "тебе",
+        "тебя", "вам", "вас", "ему", "его", "ее", "её", "им", "их", "нас", "наш",
+        "наша", "наше", "наши", "ваш", "ваша", "ваше", "ваши", "себя", "свой"
+    };
+    private static readonly HashSet<string> ReplyNegations = new(StringComparer.Ordinal)
+    {
+        "no", "not", "never", "neither", "nor", "without", "nobody", "nothing", "none",
+        "don't", "doesn't", "didn't", "can't", "cannot", "couldn't", "shouldn't", "wouldn't",
+        "won't", "isn't", "aren't", "wasn't", "weren't", "haven't", "hasn't", "hadn't",
+        "не", "нет", "ни", "никогда", "никто", "ничего", "ничем", "ничему", "никак",
+        "нигде", "никуда", "никакой", "никакого", "никакая", "никакие", "никаких", "нечего"
+    };
     private const int LongMessageWords = 30;
 
     /// <summary>First messages of a new chat. With a previous chat on record the companion remembers it and asks how things are now.
@@ -165,7 +186,93 @@ public sealed partial class CompanionDialogue(
     private static string Prefix(string message) => message.Length <= RememberedPrefixLength ? message : message[..RememberedPrefixLength];
 
     private static bool RepeatsRecent(CompanionReply reply, CompanionState state) =>
-        reply.Messages.Any(m => state.RecentReplies.Contains(Prefix(m)));
+        reply.Messages.Any(candidate =>
+            state.RecentReplies.Any(recent => IsNearDuplicate(candidate, recent)));
+
+    private static bool IsNearDuplicate(string candidate, string recent)
+    {
+        string left = Prefix(candidate);
+        string right = Prefix(recent);
+        if (string.Equals(left, right, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        if (HasNegation(left) != HasNegation(right))
+        {
+            return false;
+        }
+
+        if (left.TrimEnd().EndsWith('?') != right.TrimEnd().EndsWith('?'))
+        {
+            return false;
+        }
+
+        string[] candidateWords = MeaningfulReplyWords(left);
+        string[] recentWords = MeaningfulReplyWords(right);
+        if (candidateWords.SequenceEqual(recentWords, StringComparer.Ordinal))
+        {
+            return true;
+        }
+
+        if (candidateWords.Length < 3 || recentWords.Length < 3)
+        {
+            return false;
+        }
+
+        int sharedWords = OrderedSharedWords(candidateWords, recentWords);
+        int shorterLength = Math.Min(candidateWords.Length, recentWords.Length);
+        int longerLength = Math.Max(candidateWords.Length, recentWords.Length);
+
+        return sharedWords >= 3
+            && sharedWords / (double)shorterLength >= 0.8
+            && sharedWords / (double)longerLength >= 0.65;
+    }
+
+    private static bool HasNegation(string text)
+    {
+        string normalized = new(text.ToLowerInvariant()
+            .Replace('’', (char)39)
+            .Select(character => char.IsLetterOrDigit(character) || character == (char)39 ? character : ' ')
+            .ToArray());
+
+        return normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Any(word => ReplyNegations.Contains(word));
+    }
+
+    private static int OrderedSharedWords(string[] first, string[] second)
+    {
+        int[] previous = new int[second.Length + 1];
+        int[] current = new int[second.Length + 1];
+
+        foreach (string word in first)
+        {
+            for (int index = 0; index < second.Length; index++)
+            {
+                current[index + 1] = string.Equals(word, second[index], StringComparison.Ordinal)
+                    ? previous[index] + 1
+                    : Math.Max(previous[index + 1], current[index]);
+            }
+
+            (previous, current) = (current, previous);
+            Array.Clear(current, 0, current.Length);
+        }
+
+        return previous[^1];
+    }
+
+
+    private static string[] MeaningfulReplyWords(string text)
+    {
+        string normalized = new(text.ToLowerInvariant()
+            .Select(character => char.IsLetterOrDigit(character) ? character : ' ')
+            .ToArray());
+
+        return normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Where(word => !ReplyStopWords.Contains(word))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+    }
 
     private static IReadOnlyList<string> Remember(IReadOnlyList<string> recent, IReadOnlyList<string> messages) =>
         [.. recent.Concat(messages.Select(Prefix)).TakeLast(RememberedReplies)];
@@ -296,6 +403,17 @@ public sealed partial class CompanionDialogue(
 
         single = single with { AvoidsBodyFocus = previous.AvoidsBodyFocus };
 
+        if (previous.OpenPlan is not null && CompanionCaseContent.ReadPlanOutcome(text) is { } planOutcome)
+        {
+            CompanionState answeredPlan = previous with { OpenPlan = null, PlanResolved = true };
+            if (WordCount(text) <= 3 && single.Emotion == CompanionEmotion.Unknown && !HasSpecificSituationContext(single))
+            {
+                return AnswerPlan(answeredPlan, planOutcome, ParseEmotion(answeredPlan.Emotion), ParseTheme(answeredPlan.Theme));
+            }
+
+            return RespondToStatement(answeredPlan, text, single);
+        }
+
         // A support preference can be part of a story: retain both instead of discarding the disclosure.
         if (CompanionCaseContent.ParseGoal(text, asked: previous.LastQuestionId == CompanionCaseContent.GoalQuestionId) is { } typedGoal
             && (WordCount(text) <= 12 || typedGoal == CompanionCaseContent.GoalVent)
@@ -315,7 +433,7 @@ public sealed partial class CompanionDialogue(
             && CompanionCaseContent.FollowUp(previous.LastQuestionId, choice, english, force: true) is { } followUp)
         {
             CompanionState answered = UpdateCurrentContext(previous, single).WithText(text) with { TurnsSinceOffer = Math.Min(previous.TurnsSinceOffer + 1, 99) };
-            return Reply([followUp], [], answered, ParseEmotion(answered.Emotion), ParseTheme(answered.Theme));
+            return Reply([followUp], [], ClearAnsweredContextRecall(answered, previous.LastQuestionId), ParseEmotion(answered.Emotion), ParseTheme(answered.Theme));
         }
 
         Utterance act = UtteranceClassifier.Classify(text, single.Emotion != CompanionEmotion.Unknown);
@@ -545,8 +663,11 @@ public sealed partial class CompanionDialogue(
             Utterance.AsksToExplain => explanation is not null
                 ? Reply([explanation], [], state, emotion, theme)
                 : Reply([CompanionKnowledge.ExplainFallback(english)], CompanionKnowledge.TopicChips(english), state, emotion, theme),
-            Utterance.AsksWhy => Reply([CompanionKnowledge.Why(emotion, english)], [], RememberMeaningfulContext(state, previous, text, single, emotion), emotion, theme),
+            Utterance.AsksWhy => Reply([CompanionKnowledge.Why(emotion, english, HasRememberedSituation(state))], [], RememberMeaningfulContext(state, previous, text, single, emotion), emotion, theme),
             Utterance.AsksIfNormal => Reply([CompanionKnowledge.Normal(emotion, english)], [], RememberMeaningfulContext(state, previous, text, single, emotion), emotion, theme),
+            Utterance.AsksForAdvice when (single.EmotionAttributedToOther || UtteranceClassifier.IsExplicitSupportOtherRequest(text))
+                && !single.HasLoss && !single.MentionsTrauma && !state.GriefShared
+                => RespondToSupportOtherPerson(state, previous, text, single, emotion, theme),
             Utterance.AsksForAdvice when emotion != CompanionEmotion.Unknown
                 && (state.Goal != CompanionCaseContent.GoalVent || UtteranceClassifier.IsExplicitAdviceRequest(text))
                 => RespondToAdvice(state, previous, text, single, emotion, theme),
@@ -579,12 +700,13 @@ public sealed partial class CompanionDialogue(
                 [CompanionActContent.Continue(english), CompanionActContent.Enough(english), .. JournalChipIfFitting(state, emotion)],
                 state, emotion, theme),
             Utterance.Goodbye => Reply([CompanionSmallTalk.Goodbye(state.UserName, english)], JournalChipIfFitting(state, emotion), state, emotion, theme),
-            Utterance.DontKnow => Reply(
-                [SoftenDontKnowAfterSpecificQuestion(previous) ? CompanionActContent.DontKnowAfterQuestion(english) : CompanionActContent.DontKnow(english)],
-                SoftenDontKnowAfterSpecificQuestion(previous) ? [] : EmotionReplies(),
-                state with { UnknownStreak = 0 },
+            Utterance.UnsureAboutFeelings => Reply(
+                [CompanionActContent.UnsureAboutFeelings(english)],
+                [],
+                RememberMeaningfulContext(state, previous, text, single, emotion),
                 emotion,
                 theme),
+            Utterance.DontKnow => RespondToDontKnow(state, previous, emotion, theme),
             Utterance.RefusesToTalk => Reply(
                 [CompanionActContent.Refuses(english)],
                 [CompanionActContent.BodyPractice(english), CompanionActContent.TalkOther(english), CompanionActContent.Enough(english)],
@@ -593,7 +715,14 @@ public sealed partial class CompanionDialogue(
                 theme),
             Utterance.AsksForAdvice => HasUserContext(single)
                 ? RespondToStatement(previous, text, single)
-                : Reply([CompanionActContent.Advice(english)], [], state, emotion, theme),
+                : HasRememberedSituation(previous)
+                    ? Reply(
+                        [CompanionCaseContent.AdviceDecisionQuestion(english)],
+                        [],
+                        state with { LastQuestionId = null },
+                        emotion,
+                        theme)
+                    : Reply([CompanionActContent.Advice(english)], [], state, emotion, theme),
             Utterance.AsksAboutCompanion => Reply([CompanionActContent.AboutCompanion(english)], [], state, emotion, theme),
             Utterance.ComplainsAboutCompanion => RespondToComplaint(state, previous, text, single, emotion, theme),
             Utterance.ProvokesOrInsultsCompanion => Reply(
@@ -602,10 +731,26 @@ public sealed partial class CompanionDialogue(
                 state,
                 emotion,
                 theme),
-            Utterance.Yes => Reply([CompanionCaseContent.FollowUp(previous.LastQuestionId, yes: true, english) ?? CompanionActContent.YesProbe(english, _random)], [], state, emotion, theme),
-            Utterance.No => Reply([CompanionCaseContent.FollowUp(previous.LastQuestionId, yes: false, english) ?? CompanionActContent.NoProbe(english, _random)], [], state, emotion, theme),
+            Utterance.Yes => Reply([CompanionCaseContent.FollowUp(previous.LastQuestionId, yes: true, english) ?? CompanionActContent.YesProbe(english, _random)], [], ClearAnsweredContextRecall(state, previous.LastQuestionId), emotion, theme),
+            Utterance.No => Reply([CompanionCaseContent.FollowUp(previous.LastQuestionId, yes: false, english) ?? CompanionActContent.NoProbe(english, _random)], [], ClearAnsweredContextRecall(state, previous.LastQuestionId), emotion, theme),
             _ => CompanionReply.Empty(state)
         };
+    }
+
+    private CompanionReply RespondToDontKnow(CompanionState state, CompanionState previous, CompanionEmotion emotion, CompanionTheme? theme)
+    {
+        if (previous.Goal == CompanionCaseContent.GoalVent)
+        {
+            return Reply([CompanionActContent.DontKnowWhileListening(english)], [], state with { UnknownStreak = 0 }, emotion, theme);
+        }
+
+        bool soften = SoftenDontKnowAfterSpecificQuestion(previous);
+        return Reply(
+            [soften ? CompanionActContent.DontKnowAfterQuestion(english) : CompanionActContent.DontKnow(english)],
+            soften ? [] : EmotionReplies(),
+            state with { UnknownStreak = 0 },
+            emotion,
+            theme);
     }
 
     private CompanionReply RespondToAdvice(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion, CompanionTheme? theme)
@@ -632,7 +777,13 @@ public sealed partial class CompanionDialogue(
             messages.Add(CompanionDialogueContent.QuoteLine(quote, english, _random));
         }
 
-        string reflection = CompanionContent.Reflection(analysis with { Emotion = emotion }, english, _random);
+        SituationAnalysis reflectionAnalysis = analysis;
+        if (!HasSpecificSituationContext(reflectionAnalysis) && ParseTheme(state.Theme) is { } rememberedTheme)
+        {
+            reflectionAnalysis = reflectionAnalysis with { Themes = [rememberedTheme] };
+        }
+
+        string reflection = CompanionContent.Reflection(reflectionAnalysis with { Emotion = emotion }, english, _random);
         if (newEvent && emotion != CompanionEmotion.Guilt
             && CompanionCaseContent.EventLine(analysis.Event, english, ParsePerson(state.Person)) is { } eventLine)
         {
@@ -640,7 +791,21 @@ public sealed partial class CompanionDialogue(
         }
 
         messages.Add(reflection);
-        messages.Add(CompanionKnowledge.WhatHelps(emotion, english));
+        messages.Add(CompanionKnowledge.WhatHelps(emotion, english, state.AvoidsBodyFocus));
+
+        CompanionEvent eventToClarify = analysis.Event != CompanionEvent.None
+            ? analysis.Event
+            : !HasSpecificSituationContext(analysis)
+                ? CompanionCaseContent.ParseEvent(state.Event)
+                : CompanionEvent.None;
+        string? eventQuestionId = explicitRequest
+            ? CompanionCaseContent.EventQuestionIdIfNew(eventToClarify, state.AskedQuestions)
+            : null;
+        if (eventQuestionId is not null && CompanionCaseContent.EventQuestion(eventQuestionId, english) is { } eventQuestion)
+        {
+            messages.Add(eventQuestion);
+            state = state.WithAsked(eventQuestionId) with { LastQuestionId = eventQuestionId };
+        }
 
         return Reply(
             messages,
@@ -650,9 +815,16 @@ public sealed partial class CompanionDialogue(
             theme);
     }
 
+    private CompanionReply RespondToSupportOtherPerson(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion, CompanionTheme? theme)
+    {
+        state = RememberMeaningfulContext(state, previous, text, analysis, emotion);
+        return Reply([CompanionKnowledge.SupportOtherPerson(english)], [], state, emotion, theme);
+    }
+
     private CompanionReply RespondToComplaint(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion, CompanionTheme? theme)
     {
         bool correcting = UtteranceClassifier.IsUnderstandingCorrection(text);
+        bool correctingRecalledContext = correcting && previous.LastQuestionId == "context_recall";
         if (correcting)
         {
             // Do not infer a rejected feeling again from recent text or leave the old offer ready to accept.
@@ -660,6 +832,11 @@ public sealed partial class CompanionDialogue(
             {
                 Emotion = nameof(CompanionEmotion.Unknown),
                 EmotionExplicitlyCleared = true,
+                FirstIntensity = null,
+                LastIntensity = null,
+                Theme = correctingRecalledContext ? null : previous.Theme,
+                Person = correctingRecalledContext ? null : previous.Person,
+                Event = correctingRecalledContext ? null : previous.Event,
                 Secondary = nameof(CompanionEmotion.Unknown),
                 RecentTexts = [],
                 FirstQuote = null,
@@ -668,7 +845,11 @@ public sealed partial class CompanionDialogue(
                 AwaitingPostPracticeRating = false,
                 QuestionPending = false,
                 LastQuestionId = null,
-                LastQuestion = null
+                LastQuestion = null,
+                ContextNotes = correctingRecalledContext
+                    ? previous.ContextNotes.Where(note => note.Turn != previous.LastRecalledContextTurn).ToArray()
+                    : previous.ContextNotes,
+                LastRecalledContextTurn = correctingRecalledContext ? 0 : previous.LastRecalledContextTurn
             };
             if (CompanionCaseContent.ParseGoal(text, asked: false) is { } correctedGoal)
             {
@@ -705,7 +886,8 @@ public sealed partial class CompanionDialogue(
     private CompanionState RememberMeaningfulContext(CompanionState state, CompanionState previous, string text, SituationAnalysis analysis, CompanionEmotion emotion)
     {
         // A personal question can also tell us what happened; keep that context for a relevant follow-up.
-        return state with
+        string? quote = QuoteExtractor.Pick(text, analyzer, emotion);
+        CompanionState updated = state with
         {
             RecentTexts = previous.WithText(text).RecentTexts,
             Emotion = emotion.ToString(),
@@ -714,13 +896,32 @@ public sealed partial class CompanionDialogue(
             Person = analysis.Persons is { Count: > 0 } persons ? persons[0].ToString() : state.Person,
             Secondary = analysis.Secondary == CompanionEmotion.Unknown ? state.Secondary : analysis.Secondary.ToString(),
             Event = analysis.Event == CompanionEvent.None ? state.Event : analysis.Event.ToString(),
-            FirstQuote = state.FirstQuote ?? QuoteExtractor.Pick(text, analyzer, emotion)
+            FirstQuote = state.FirstQuote ?? (analysis.MentionsTrauma || analysis.HasLoss ? null : quote)
         };
+
+        return HasUserContext(analysis) && quote is not null && !analysis.MentionsTrauma && !analysis.HasLoss
+            && (HasSpecificSituationContext(analysis) || (updated.Theme is null && updated.Person is null && updated.Event is null))
+            ? updated.RememberContextNote(
+                quote,
+                analysis.Themes.Count > 0 ? analysis.Themes[0].ToString() : null,
+                analysis.Persons is { Count: > 0 } contextPersons ? contextPersons[0].ToString() : null,
+                analysis.Event == CompanionEvent.None ? null : analysis.Event.ToString())
+            : updated;
     }
 
     private static bool HasUserContext(SituationAnalysis analysis) =>
         analysis.Emotion != CompanionEmotion.Unknown
         || analysis.Themes.Count > 0
+        || analysis.Event != CompanionEvent.None
+        || analysis.Persons is { Count: > 0 };
+
+    private static bool HasRememberedSituation(CompanionState state) =>
+        state.Theme is not null
+        || state.Person is not null
+        || state.Event is not null;
+
+    private static bool HasSpecificSituationContext(SituationAnalysis analysis) =>
+        analysis.Themes.Count > 0
         || analysis.Event != CompanionEvent.None
         || analysis.Persons is { Count: > 0 };
 
@@ -750,9 +951,81 @@ public sealed partial class CompanionDialogue(
 
     private static int WordCount(string text) => text.Split([' ', '-'], StringSplitOptions.RemoveEmptyEntries).Length;
 
+    private static bool IsReturningReference(string text)
+    {
+        if (WordCount(text) > 8)
+        {
+            return false;
+        }
+
+        string normalized = text.Trim().ToLowerInvariant().Replace('ё', 'е');
+        string[] markers = ["опять", "снова", "как раньше", "как тогда", "то же самое", "все так же", "ничего не изменилось", "до сих пор", "все еще", "так же",
+            "again", "still", "same thing", "same as before", "as before", "nothing changed", "it happened again", "it's happening again", "it's back again"];
+        return markers.Any(marker => normalized == marker
+            || normalized.StartsWith($"{marker} ", StringComparison.Ordinal)
+            || normalized.StartsWith($"{marker},", StringComparison.Ordinal));
+    }
+
+    private static CompanionContextNote? FindEarlierContextNote(CompanionState state) => state.ContextNotes
+        .Select(note => (Note: note, Score: ContextMatchScore(note, state)))
+        .Where(match => match.Note.Turn <= state.Turns - 2
+            && match.Note.Turn != state.LastRecalledContextTurn
+            && match.Score > 0)
+        .OrderByDescending(match => match.Score)
+        .ThenByDescending(match => match.Note.Turn)
+        .Select(match => match.Note)
+        .FirstOrDefault();
+
+    private static CompanionContextNote? FindContextNoteForRecap(CompanionState state) => state.ContextNotes
+        .Select(note => (Note: note, Score: ContextMatchScore(note, state)))
+        .Where(match => match.Note.Turn < state.Turns
+            && match.Note.Turn != state.LastRecalledContextTurn
+            && match.Score > 0)
+        .OrderByDescending(match => match.Score)
+        .ThenBy(match => match.Note.Turn)
+        .Select(match => match.Note)
+        .FirstOrDefault();
+
+    private static int ContextMatchScore(CompanionContextNote note, CompanionState state)
+    {
+        if ((note.Event is not null && state.Event is not null && note.Event != state.Event)
+            || (note.Person is not null && state.Person is not null && note.Person != state.Person)
+            || (note.Theme is not null && state.Theme is not null && note.Theme != state.Theme))
+        {
+            return -1;
+        }
+
+        int score = 0;
+        if (note.Event is not null && note.Event == state.Event)
+        {
+            score += 4;
+        }
+
+        if (note.Person is not null && note.Person == state.Person)
+        {
+            score += 2;
+        }
+
+        if (note.Theme is not null && note.Theme == state.Theme)
+        {
+            score++;
+        }
+
+        return score == 0
+            && note.Event is null && note.Person is null && note.Theme is null
+            && state.Event is null && state.Person is null && state.Theme is null
+                ? 1
+                : score;
+    }
+
+    private static CompanionState ClearAnsweredContextRecall(CompanionState state, string? questionId) =>
+        questionId == "context_recall" ? state with { LastQuestionId = null } : state;
+
     private CompanionReply RespondToStatement(CompanionState previous, string text, SituationAnalysis analysis, bool repairing = false)
     {
         bool firstStatement = previous.RecentTexts.Count == 0;
+        bool messageProvidesContext = HasUserContext(analysis);
+        bool namesSpecificSituation = HasSpecificSituationContext(analysis);
         CompanionState state = previous.WithText(text) with
         {
             TurnsSinceOffer = Math.Min(previous.TurnsSinceOffer + 1, 99),
@@ -783,8 +1056,18 @@ public sealed partial class CompanionDialogue(
             Person = person?.ToString(),
             Secondary = analysis.Secondary.ToString(),
             UnknownStreak = emotion == CompanionEmotion.Unknown ? state.UnknownStreak + 1 : 0,
-            FirstQuote = state.FirstQuote ?? quote
+            FirstQuote = state.FirstQuote ?? (analysis.MentionsTrauma || analysis.HasLoss ? null : quote)
         };
+        if (messageProvidesContext && quote is not null && !analysis.MentionsTrauma && !analysis.HasLoss
+            && (namesSpecificSituation || (state.Theme is null && state.Person is null && state.Event is null)))
+        {
+            state = state.RememberContextNote(
+                quote,
+                analysis.Themes.Count > 0 ? analysis.Themes[0].ToString() : null,
+                analysis.Persons is { Count: > 0 } currentPersons ? currentPersons[0].ToString() : null,
+                analysis.Event == CompanionEvent.None ? null : analysis.Event.ToString());
+        }
+
         analysis = analysis with { Emotion = emotion };
 
         // The case card: what happened is kept, and "when did this start?" is not asked of someone who has just said when.
@@ -903,8 +1186,31 @@ public sealed partial class CompanionDialogue(
             return Reply([CompanionCaseContent.PlanReply(english)], [], (state with { TurnsSinceOffer = 0, NewPlan = ClipPlan(text) }).WithAsked("plan"), emotion, theme);
         }
 
+        // Do not infer the user's emotion from a feeling explicitly attributed to someone else.
+        if (emotion == CompanionEmotion.Unknown && analysis.EmotionAttributedToOther && state.Goal != CompanionCaseContent.GoalVent)
+        {
+            if (state.AskedQuestions.Contains("other_feeling"))
+            {
+                return AskNextQuestion(state, messages, emotion, theme);
+            }
+
+            messages.Add(CompanionDialogueContent.OtherEmotionPrompt(english));
+            return Reply(messages, [], state.WithAsked("other_feeling") with { LastQuestionId = "other_feeling" }, emotion, theme);
+        }
+
+        if (!namesSpecificSituation && IsReturningReference(text) && FindEarlierContextNote(state) is { } contextRecallNote)
+        {
+            return Reply(
+                [CompanionActContent.ContextRecall(contextRecallNote.Text, english)],
+                [],
+                state with { LastRecalledContextTurn = contextRecallNote.Turn, LastQuestionId = "context_recall" },
+                emotion,
+                theme);
+        }
+
         // A proposal needs only enough words for the guesser to judge; the open choice waits for a real story or a second unclear message.
         if (emotion == CompanionEmotion.Unknown
+            && !analysis.EmotionAttributedToOther
             && emotionGuesser?.Guess(text) is { } guess
             && !analysis.NegatedEmotions.Contains(guess.Emotion))
         {
@@ -912,7 +1218,7 @@ public sealed partial class CompanionDialogue(
             return Reply(messages, EmotionReplies(guess.Emotion), state with { UnknownStreak = 0 }, emotion, theme);
         }
 
-        if (emotion == CompanionEmotion.Unknown && (state.UnknownStreak >= 2 || WordCount(text) >= TellingWords))
+        if (emotion == CompanionEmotion.Unknown && !analysis.EmotionAttributedToOther && (state.UnknownStreak >= 2 || WordCount(text) >= TellingWords))
         {
             messages.Add(CompanionDialogueContent.EmotionPrompt(english));
             return Reply(messages, EmotionReplies(), state with { UnknownStreak = 0 }, emotion, theme);
@@ -920,6 +1226,7 @@ public sealed partial class CompanionDialogue(
 
         bool known = emotion != CompanionEmotion.Unknown;
         bool venting = state.Goal == CompanionCaseContent.GoalVent;
+
         if (!state.ScaleAsked && state.ContentTurns >= 2 && known && !venting)
         {
             messages.Add(CompanionDialogueContent.ScaleQuestion(english));
@@ -941,8 +1248,22 @@ public sealed partial class CompanionDialogue(
 
         if (known && state.ContentTurns >= 4 && state.Turns - state.LastRecapTurn >= (state.Goal == CompanionCaseContent.GoalUnderstand ? 3 : RecapEveryTurns))
         {
-            messages.Add(CompanionActContent.Recap(emotion, theme, person, state.FirstIntensity, state.LastIntensity, english));
-            return Reply(messages, CompanionActContent.RecapReplies(english), state with { LastRecapTurn = state.Turns, LastQuestionId = "recap" }, emotion, theme);
+            CompanionContextNote? recapContextNote = FindContextNoteForRecap(state);
+            messages.Add(CompanionActContent.Recap(
+                emotion,
+                theme,
+                person,
+                state.FirstIntensity,
+                state.LastIntensity,
+                english,
+                recapContextNote?.Text,
+                state.Goal));
+            return Reply(messages, CompanionActContent.RecapReplies(english), state with
+            {
+                LastRecapTurn = state.Turns,
+                LastQuestionId = "recap",
+                LastRecalledContextTurn = recapContextNote?.Turn ?? state.LastRecalledContextTurn
+            }, emotion, theme);
         }
 
         if (known && state.ContentTurns >= 3 && state.TurnsSinceOffer >= 3)
@@ -950,7 +1271,8 @@ public sealed partial class CompanionDialogue(
             return Offer(state, messages, analysis, emotion, theme, calming: false);
         }
 
-        if (known && state.ContentTurns >= 5 && !state.CallbackAsked && state.FirstQuote is { } first)
+        // A callback must not resurface a trauma or loss disclosure, even if FirstQuote was already set earlier in this chat.
+        if (known && state.ContentTurns >= 5 && !state.CallbackAsked && !state.TraumaAcknowledged && !state.GriefShared && state.FirstQuote is { } first)
         {
             messages.Add(CompanionActContent.Callback(first, english));
             return Reply(messages, [], state with { CallbackAsked = true }, emotion, theme);
@@ -1191,7 +1513,12 @@ public sealed partial class CompanionDialogue(
                     theme);
             }
 
-            return Reply([CompanionDialogueContent.PostPracticeWorse(reference, rating, english)], [], state, emotion, theme);
+            return Reply(
+                [CompanionDialogueContent.PostPracticeWorse(reference, rating, english)],
+                [CompanionActContent.Vent(english), CompanionActContent.Enough(english)],
+                state,
+                emotion,
+                theme);
         }
 
         string? compared = previous.FirstIntensity is null && previous.PreviousIntensity is { } lastTime
@@ -1242,7 +1569,16 @@ public sealed partial class CompanionDialogue(
     /// <summary>For someone who wants to be heard: an open invitation, never an interrogation.</summary>
     private CompanionReply AskOpen(CompanionState state, List<string> messages, CompanionEmotion emotion, CompanionTheme? theme)
     {
-        string id = state.AskedQuestions.Contains("more") ? "open2" : "more";
+        string? id = !state.AskedQuestions.Contains("more") ? "more"
+            : !state.AskedQuestions.Contains("open1") ? "open1"
+            : !state.AskedQuestions.Contains("open2") ? "open2"
+            : !state.AskedQuestions.Contains("open3") ? "open3"
+            : null;
+        if (id is null)
+        {
+            return Reply(messages, [], state with { LastQuestionId = null }, emotion, theme);
+        }
+
         messages.Add(CompanionDialogueContent.Question(id, english));
         return Reply(messages, [], state.WithAsked(id) with { LastQuestionId = id }, emotion, theme);
     }
@@ -1298,6 +1634,16 @@ public sealed partial class CompanionDialogue(
                 [CompanionDialogueContent.OtherOption(english), CompanionContent.OfferLine(alternative, english)],
                 chips,
                 state with { OfferedPrimary = alternative.ToString(), OfferedAlternative = null, TurnsSinceOffer = 0 },
+                emotion,
+                theme);
+        }
+
+        if (state.OfferedPrimary is not null)
+        {
+            return Reply(
+                [CompanionDialogueContent.PracticeFitQuestion(english)],
+                [],
+                state with { OfferedPrimary = null, OfferedAlternative = null, TurnsSinceOffer = 0 },
                 emotion,
                 theme);
         }
@@ -1358,13 +1704,21 @@ public sealed partial class CompanionDialogue(
             }
         }
 
-        // What has helped this person before comes first, mentioned once per chat. A panic attack gets the standard help, not an experiment.
+        suggestions = BalancePracticeSuggestions(suggestions);
+
+        TechniqueId? preferredPractice = null;
         if (!state.PreferredMentioned && emotion != CompanionEmotion.Panic
             && Enum.TryParse(state.PreferredPractice, out TechniqueId preferred) && Enum.IsDefined(preferred)
             && (!(analysis.HasBodySymptoms || analysis.AvoidsBodyFocus) || !IsBodyFocusedPractice(preferred)))
         {
             suggestions = [preferred, .. suggestions.Where(s => s != preferred).Take(1)];
-            messages.Add($"{CompanionSmallTalk.PreferredNote(preferred, english)} {CompanionContent.OfferLine(preferred, english)}");
+            preferredPractice = preferred;
+        }
+
+        suggestions = AvoidRepeatingPrimary(suggestions, state);
+        if (preferredPractice is { } previouslyHelpful && suggestions[0] == previouslyHelpful)
+        {
+            messages.Add($"{CompanionSmallTalk.PreferredNote(previouslyHelpful, english)} {CompanionContent.OfferLine(previouslyHelpful, english)}");
             state = state with { PreferredMentioned = true };
         }
         else
@@ -1434,6 +1788,39 @@ public sealed partial class CompanionDialogue(
             emotion,
             theme);
     }
+
+    private IReadOnlyList<TechniqueId> BalancePracticeSuggestions(IReadOnlyList<TechniqueId> suggestions)
+    {
+        if (suggestions.Count < 2)
+        {
+            return suggestions;
+        }
+
+        // Keep the reviewed relevance order on ties; a less-used equivalent only moves forward after the person has tried the first.
+        return suggestions
+            .Select((technique, index) => (Technique: technique, Index: index))
+            .OrderBy(item => PracticeTryCount(item.Technique))
+            .ThenBy(item => item.Index)
+            .Select(item => item.Technique)
+            .ToArray();
+    }
+
+    private static IReadOnlyList<TechniqueId> AvoidRepeatingPrimary(IReadOnlyList<TechniqueId> suggestions, CompanionState state)
+    {
+        if (suggestions.Count < 2
+            || !Enum.TryParse(state.OfferedPrimary, out TechniqueId previousPrimary)
+            || !Enum.TryParse(state.OfferedAlternative, out TechniqueId previousAlternative)
+            || suggestions[0] != previousPrimary
+            || !suggestions.Contains(previousAlternative))
+        {
+            return suggestions;
+        }
+
+        return [previousAlternative, .. suggestions.Where(technique => technique != previousAlternative)];
+    }
+
+    private int PracticeTryCount(TechniqueId technique) =>
+        _techniqueTryCounts.TryGetValue(technique, out int count) ? Math.Max(0, count) : 0;
 
     private static bool IsBodyFocusedPractice(TechniqueId technique) =>
         technique is TechniqueId.Breathing or TechniqueId.CyclicSigh or TechniqueId.MuscleRelax

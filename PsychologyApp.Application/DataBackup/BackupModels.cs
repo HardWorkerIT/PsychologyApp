@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Application.Chat;
 using PsychologyApp.Application.Models;
@@ -12,6 +13,7 @@ public sealed class AppBackupDTO
 
     public const int OldestSupportedFormatVersion = 1;
 
+    [JsonRequired]
     public int FormatVersion { get; init; } = CurrentFormatVersion;
     public DateTime ExportedAtUtc { get; init; }
     public IReadOnlyList<MoodEntryDTO> MoodEntries { get; init; } = [];

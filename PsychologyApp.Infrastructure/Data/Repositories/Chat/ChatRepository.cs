@@ -289,25 +289,33 @@ public sealed class ChatRepository(IDbConnectionFactory connectionFactory, IOpti
     {
         await using SqliteConnection connection = await OpenReadConnectionAsync(cancellationToken);
         await using SqliteTransaction transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        ChatExportSnapshot snapshot = await ReadExportSnapshotAsync(connection, transaction, CommandTimeoutSeconds, limit, cancellationToken)
+            .ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return snapshot;
+    }
+
+    internal static async Task<ChatExportSnapshot> ReadExportSnapshotAsync(
+        SqliteConnection connection, SqliteTransaction transaction, int commandTimeout, int limit, CancellationToken cancellationToken)
+    {
         int cap = Math.Max(1, limit);
         IEnumerable<SessionRow> sessionRows = await connection.QueryAsync<SessionRow>(DapperCommandFactory.Create(
             ChatSql.SelectExportSessions,
             new { Limit = cap },
             transaction,
-            CommandTimeoutSeconds,
+            commandTimeout,
             cancellationToken)).ConfigureAwait(false);
         IEnumerable<MessageRow> messageRows = await connection.QueryAsync<MessageRow>(DapperCommandFactory.Create(
             ChatSql.SelectMessagesForExport,
             new { Limit = cap },
             transaction,
-            CommandTimeoutSeconds,
+            commandTimeout,
             cancellationToken)).ConfigureAwait(false);
         IEnumerable<MemoryRow> memoryRows = await connection.QueryAsync<MemoryRow>(DapperCommandFactory.Create(
             ChatSql.SelectMemory,
             transaction: transaction,
-            commandTimeout: CommandTimeoutSeconds,
+            commandTimeout: commandTimeout,
             cancellationToken: cancellationToken)).ConfigureAwait(false);
-        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         Dictionary<string, string> memory = memoryRows.ToDictionary(row => row.Key, row => row.Value, StringComparer.Ordinal);
         return new ChatExportSnapshot(sessionRows.Select(ToDto).ToList(), messageRows.Select(ToMessageDto).ToList(), memory);
     }

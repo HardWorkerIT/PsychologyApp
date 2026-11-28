@@ -11,7 +11,13 @@ public static class CompanionContent
 
     public static string Reflection(SituationAnalysis analysis, bool english, Random random)
     {
-        string line = Pick(random, ReflectionLines(analysis.Emotion, english));
+        string line = analysis.Emotion != CompanionEmotion.Unknown
+            && analysis.Secondary != CompanionEmotion.Unknown
+            && analysis.Secondary != analysis.Emotion
+                ? english
+                    ? $"It sounds like both {EmotionName(analysis.Emotion, true)} and {EmotionName(analysis.Secondary, true)} may be present."
+                    : $"Похоже, здесь могут одновременно быть и {EmotionName(analysis.Emotion, false)}, и {EmotionName(analysis.Secondary, false)}."
+                : Pick(random, ReflectionLines(analysis.Emotion, english));
         if (analysis.Themes.Count > 0)
         {
             line += english

@@ -3,6 +3,8 @@ using Moq;
 using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Presentation.Pages.ClinicalCare.CrisisHub;
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
+using PsychologyApp.Presentation.Shared.UI.Overlays;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
@@ -13,6 +15,7 @@ public sealed class CrisisHubViewModelTests
 {
     private readonly Mock<INavigationService> _navigation = new();
     private readonly Mock<IClinicalCareService> _care = new();
+    private readonly Mock<IAppClipboardService> _clipboard = new();
 
     public CrisisHubViewModelTests()
     {
@@ -28,7 +31,7 @@ public sealed class CrisisHubViewModelTests
     private async Task<CrisisHubViewModel> CreateAsync(bool red)
     {
         _care.Setup(c => c.ShouldRouteToCrisisHubAsync(It.IsAny<CancellationToken>())).ReturnsAsync(red);
-        CrisisHubViewModel viewModel = new(_navigation.Object, _care.Object);
+        CrisisHubViewModel viewModel = new(_navigation.Object, _care.Object, _clipboard.Object);
         await VmTestHelpers.WaitUntilAsync(() => _care.Invocations.Count > 0);
         await Task.Delay(30);
         return viewModel;
@@ -56,7 +59,7 @@ public sealed class CrisisHubViewModelTests
     public async Task WhenTheRiskStateCannotBeReadTheScreenFailsClosed()
     {
         _care.Setup(c => c.ShouldRouteToCrisisHubAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new InvalidOperationException("db"));
-        CrisisHubViewModel viewModel = new(_navigation.Object, _care.Object);
+        CrisisHubViewModel viewModel = new(_navigation.Object, _care.Object, _clipboard.Object);
 
         await VmTestHelpers.WaitUntilAsync(() => viewModel.IsRed);
 
@@ -109,14 +112,18 @@ public sealed class CrisisHubViewModelTests
     }
 
     [Fact]
-    public async Task ADialIntentThatFailsDoesNotCrashTheScreen()
+    public async Task ADialIntentThatFailsOffersToCopyTheNumber()
     {
         CrisisHubViewModel viewModel = await CreateAsync(red: true);
         Launcher.FailWith = new InvalidOperationException("no dialer");
 
         await VmTestHelpers.RunAsync(viewModel.CallEmergencyCommand);
 
-        Assert.True(viewModel.CallEmergencyCommand.CanExecute(null));
+        Assert.True(viewModel.ShowDialFailure);
+        Assert.False(string.IsNullOrWhiteSpace(viewModel.DialFailureText));
+        await VmTestHelpers.RunAsync(viewModel.CopyNumberCommand);
+        _clipboard.Verify(s => s.CopyWithFeedbackAsync(It.Is<string>(number => viewModel.DialFailureText.Contains(number)),
+            It.IsAny<string>(), AppToastKind.Success), Times.Once);
     }
 
     [Fact]

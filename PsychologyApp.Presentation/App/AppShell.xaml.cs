@@ -43,7 +43,8 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
     private readonly LanguageContentReloader _languageContentReloader;
     private readonly Func<INavigationService> _navigationServiceFactory;
     private readonly PsychologyApp.Presentation.Features.ManageProfile.AppLockCoordinator _appLock;
-    private readonly bool[] _tabsMaterialized = new bool[4];
+    private readonly (ShellContent Content, string Icon)[] _bottomTabs;
+    private readonly bool[] _tabsMaterialized;
     private bool _lazyTabsReady;
     private bool _isPreparingDataErase;
 
@@ -75,6 +76,14 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         _logger = logger;
         long stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         InitializeComponent();
+        _bottomTabs =
+        [
+            (PracticeTab, "Spa"),
+            (ChatTab, "Forum"),
+            (DetectorTab, "Psychology"),
+            (JournalTab, "AutoStories")
+        ];
+        _tabsMaterialized = new bool[_bottomTabs.Length];
         PerfTrace.Measure("AppShell.InitializeComponent", stepStarted);
         stepStarted = System.Diagnostics.Stopwatch.GetTimestamp();
         ApplyLocalization();
@@ -186,7 +195,7 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         ApplyTabBarChrome();
         ApplyStatusBarChrome(IsDarkRequestedTheme());
         PracticeTab.Title = AppStrings.ShellTabPracticeShort;
-        ChatTab.Title = AppStrings.ShellTabChatShort;
+        ChatTab.Title = AppStrings.ShellBottomChat;
         DetectorTab.Title = AppStrings.ShellTabDetectorShort;
         JournalTab.Title = AppStrings.ShellTabJournalShort;
         BuildMenu();
@@ -364,31 +373,32 @@ public partial class AppShell : Shell, PsychologyApp.Presentation.Features.Manag
         return false;
     }
 
-    /// <summary>The bottom tabs and their icon names; the selected one is drawn filled, the others outlined (see <see cref="TabIcons"/>).</summary>
-    private (BaseShellItem Item, string Filled, string Outlined)[] BottomTabs =>
-    [
-        (PracticeTab, "Spa", "Spa"),
-        (ChatTab, "Forum", "Forum"),
-        (DetectorTab, "Psychology", "Psychology"),
-        (JournalTab, "AutoStories", "AutoStories")
-    ];
-
     private void UpdateTabIcons()
     {
         ShellSection? current = (CurrentItem ?? Items.FirstOrDefault())?.CurrentItem;
-        foreach ((BaseShellItem item, string filled, string outlined) in BottomTabs)
+        foreach ((ShellContent content, string icon) in _bottomTabs)
         {
             // A ShellContent placed straight in the tab bar sits in an implicit section.
-            bool selected = ReferenceEquals(item.Parent, current);
-            item.Icon = selected ? TabIcons.Get(filled, filled: true) : TabIcons.Get(outlined, filled: false);
+            bool selected = ReferenceEquals(content.Parent, current);
+            content.Icon = TabIcons.Get(icon, filled: selected);
         }
     }
 
-    private ShellContent[] TabContents => [PracticeTab, ChatTab, DetectorTab, JournalTab];
+    private int GetTabIndex(ShellContent shellContent)
+    {
+        for (int i = 0; i < _bottomTabs.Length; i++)
+        {
+            if (ReferenceEquals(_bottomTabs[i].Content, shellContent))
+            {
+                return i;
+            }
+        }
 
-    private int GetTabIndex(ShellContent shellContent) => Array.FindIndex(TabContents, tab => ReferenceEquals(tab, shellContent));
+        return -1;
+    }
 
-    private ShellContent GetTabShellContent(int index) => index >= 0 && index < TabContents.Length ? TabContents[index] : PracticeTab;
+    private ShellContent GetTabShellContent(int index) =>
+        index >= 0 && index < _bottomTabs.Length ? _bottomTabs[index].Content : PracticeTab;
 
     /// <summary>Shows a bottom tab: the content is selected in its section and the section in the tab bar.</summary>
     public void ShowTab(ShellContent shellContent)

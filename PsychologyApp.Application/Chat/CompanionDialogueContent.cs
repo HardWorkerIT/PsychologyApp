@@ -115,6 +115,10 @@ public static class CompanionDialogueContent
         ? "We can try something different."
         : "Можно попробовать что-то другое.";
 
+    public static string PracticeFitQuestion(bool english) => english
+        ? "It sounds like neither option fit. What did not work for you?"
+        : "Похоже, оба варианта не подошли. Что в них было не так?";
+
     /// <summary>A topic came up again: named once per chat, as an observation and a question, never as a conclusion about the person.</summary>
     public static string PatternNoticed(string topic, int chats, bool english) => english
         ? $"I notice that “{topic}” has come up in {chats} of our conversations this month. Sometimes what keeps returning points to something important. Would you like to look at what repeats in it?"
@@ -155,6 +159,10 @@ public static class CompanionDialogueContent
         ? "I want to understand you better. Which of these is closest?"
         : "Хочу понять вас точнее. Что из этого ближе всего?";
 
+    public static string OtherEmotionPrompt(bool english) => english
+        ? "It sounds like you're sharing how someone else feels. I won't assume you feel the same way. How is it affecting you?"
+        : "Похоже, вы рассказываете о чувствах другого человека. Я не буду считать, что вы чувствуете то же самое. Как эта ситуация влияет на вас?";
+
     public static string FollowUpAfterPractice(bool english) => english
         ? "Welcome back. How are you now? Rate the tension from 0 to 10."
         : "С возвращением. Как вы сейчас? Оцените напряжение от 0 до 10.";
@@ -168,8 +176,8 @@ public static class CompanionDialogueContent
         : $"Напряжение всё ещё около {now}. Иногда одной практики мало. Хотите попробовать другую или поговорить?";
 
     public static string PostPracticeWorse(int before, int after, bool english) => english
-        ? $"It went up, from {before} to {after}. That happens when a hard topic is touched, and it is not your fault. If it stays heavy, please reach out to someone close or a professional."
-        : $"Стало сильнее: было {before}, сейчас {after}. Так бывает, когда касаешься трудной темы, и это не ваша ошибка. Если тяжесть не уходит, обратитесь к близкому человеку или специалисту.";
+        ? $"Your tension is stronger now: it was {before}, and it is {after}. Thanks for telling me. We can stop this practice here. Would you rather talk, or end here for today?"
+        : $"Сейчас напряжение сильнее: было {before}, стало {after}. Спасибо, что сказали. Эту практику можно остановить. Хотите выговориться или на сегодня закончить?";
 
     public static string TalkLabel(bool english) => english ? "Let's talk" : "Поговорить";
 

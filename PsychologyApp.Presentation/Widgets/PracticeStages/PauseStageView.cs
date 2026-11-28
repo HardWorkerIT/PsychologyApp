@@ -53,6 +53,14 @@ public sealed class PauseStageView : PracticeStageView
         Unloaded += (_, _) => _running?.Cancel();
     }
 
+    protected override void OnStageVisibilityChanged(bool isVisible)
+    {
+        if (!isVisible)
+        {
+            _running?.Cancel();
+        }
+    }
+
     protected override void OnSourceTextChanged()
     {
         _thought.Text = SourceText;
@@ -128,6 +136,7 @@ public sealed class PauseStageView : PracticeStageView
         ShowStatus(string.Empty);
         _glow.Radius = RestRadius;
         _light.Invalidate();
+        _thought.CancelAnimations();
         _thought.Opacity = 1;
         SetStartAction();
     }

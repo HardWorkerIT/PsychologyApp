@@ -8,7 +8,7 @@ internal static class TechniqueCatalogContentPt
     internal static TheorySection[] Theory(string what, string when, string how, string example) =>
     [
         new("O que é", what),
-        new("Quando ajuda", when),
+        new("Quando experimentar", when),
         new("Como é a prática", how),
         new("Exemplo", example)
     ];
@@ -24,49 +24,49 @@ internal static class TechniqueCatalogContentPt
         ["\"Vou estragar tudo\"", "\"Vão me julgar\"", "\"Não dou conta\"", "\"Ninguém precisa de mim\"", "\"É um desastre\"", "\"Nada vai dar certo\"", "\"Sou pior que os outros\"", "\"Tudo sempre dá errado\"", "\"A culpa é minha\"", "\"Tem algo errado comigo\"", "\"Isso nunca vai acabar\"", "\"Tenho que ser perfeito\""];
 
     internal static readonly BuiltInTechniqueDefinition Spin = new(
-        "Prática", "Spin",
+        "Prática", "Nomear o que estou sentindo",
         [
-            "1. Descreva o episódio que incomoda você",
+            "1. Escolha uma situação cotidiana recente que tenha incomodado um pouco",
             "2. Dê nome ao sentimento principal",
-            "3. Avalie o sentimento de 0 a 10"
+            "3. Avalie a intensidade agora, de 0 a 10"
         ],
-        "O Spin de Zivorad Slavinski ajuda a reduzir a carga emocional de uma lembrança dolorosa.",
-        TechniqueUiKind.Entry, "Técnica nº 1", "26.01.2023", "Spin", "Reduzir a carga emocional em 3 passos", "Momento difícil", "Zivorad Slavinski", 5, "Autorenew",
+        "Anote brevemente a situação e o sentimento, sem esperar alívio imediato.",
+        TechniqueUiKind.Entry, "Técnica nº 1", "26.01.2023", "Nomear o que estou sentindo", "Perceba o que acontece agora", "Momento difícil", "Equipe PsychologyApp", 5, "Autorenew",
         [
-            new TechniqueEntrySeed("Episódio", "Ex.: a conversa de ontem que não sai da cabeça", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Sentimento principal", "Mágoa, medo, raiva…", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("Intensidade do sentimento", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situação", "Por exemplo: um pequeno problema no trabalho. Evite detalhes dolorosos.", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Sentimento principal", "Mágoa, preocupação, raiva…", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("Intensidade agora", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Uma técnica simples de neutralização: você nomeia o episódio, o sentimento e a intensidade. Muitas vezes, só perceber já reduz a carga.",
-            "Quando uma cena ou um pensamento fica girando e não solta a ansiedade ou o ressentimento.",
-            "Escreva o episódio e o sentimento e avalie a intensidade com sinceridade. Repita outro dia se precisar.",
-            "Episódio: \"Um colega ignorou minha ideia\". Sentimento: mágoa. Nota: 8 → depois 5."),
+            "Anote a situação, o sentimento e a intensidade agora. É uma observação pessoal, não um tratamento nem uma promessa de mudança imediata.",
+            "Para uma situação cotidiana moderadamente incômoda, se você se sentir à vontade para escrever sobre ela. Não escolha uma lembrança traumática nem uma crise aguda.",
+            "Descreva apenas o necessário e avalie o sentimento agora. Se o desconforto aumentar, pare, olhe ao redor e escolha uma prática mais neutra. Não é preciso repetir.",
+            "Situação: um colega me interrompeu. Sentimento: irritação. Intensidade agora: 5 de 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Comparison = new(
-        "Prática", "Comparar a importância",
+        "Prática", "Ampliar a perspectiva",
         [
-            "1. Diga qual é o problema",
-            "2. O que era importante antes nessa área?",
-            "3. O que é importante agora?",
-            "4. O que vai ser importante no futuro?",
-            "5. Compare as três respostas e anote o que mudou"
+            "1. Nomeie o que está difícil agora, sem minimizar",
+            "2. Quais áreas da sua vida isso afeta?",
+            "3. O que mais importa ou também precisa de atenção?",
+            "4. De quem ou do que você gostaria de cuidar hoje?",
+            "5. Anote o que percebeu, sem classificar o problema como pequeno ou grande"
         ],
-        "Comparar a importância ao longo do tempo ajuda a colocar um problema no contexto da sua vida.",
-        TechniqueUiKind.Entry, "Técnica nº 2", "26.01.2023", "Comparar a importância", "Quando o problema parece grande demais", "Tamanho do problema", "PNL", 7, "CompareArrows",
+        "Este exercício ajuda a nomear diferentes áreas da vida; não determina a gravidade de um problema.",
+        TechniqueUiKind.Entry, "Técnica nº 2", "26.01.2023", "Ampliar a perspectiva", "Quando uma dificuldade ocupa toda a sua atenção", "Tamanho do problema", string.Empty, 7, "CompareArrows",
         [
-            new TechniqueEntrySeed("Problema", "O que parece insuportável agora?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Era importante antes", "Ex.: estudos, relacionamentos, carreira", Suggestions: ["Os estudos", "A família", "Os amigos", "A saúde", "A carreira", "Os hobbies", "O esporte", "O amor", "Viagens", "A liberdade", "O reconhecimento", "O lar"]),
-            new TechniqueEntrySeed("É importante agora", "O que mais ocupa sua atenção?", Suggestions: ["O trabalho", "A família", "A saúde", "Dinheiro", "Os relacionamentos", "O descanso", "Os filhos", "Os amigos", "Os estudos", "O sono", "Paz de espírito", "Crescimento pessoal"]),
-            new TechniqueEntrySeed("Vai ser importante no futuro", "Para onde você quer ir?", Suggestions: ["Estabilidade", "A família", "A liberdade", "A saúde", "Crescer", "As pessoas que eu amo", "Uma casa própria", "Um trabalho que eu ame", "Viagens", "Calma", "Os filhos", "Uma reserva de dinheiro"]),
-            new TechniqueEntrySeed("O que mudou?", "O problema ainda domina tudo?", Suggestions: ["O problema é só uma parte da vida", "Há mais coisas importantes do que parecia", "É uma fase passageira", "Ficou menos intenso", "Estou mais calmo", "Vejo que já dei conta antes", "Surgiu esperança", "Nada mudou ainda"])
+            new TechniqueEntrySeed("O que está acontecendo", "O que está difícil agora?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Áreas afetadas", "Ex.: trabalho, saúde, relacionamentos", Suggestions: ["O trabalho", "A família", "Os amigos", "A saúde", "Os estudos", "Dinheiro", "Os relacionamentos", "O sono", "A casa", "Os hobbies", "O descanso", "Os planos"]),
+            new TechniqueEntrySeed("O que mais importa", "O que também precisa de atenção?", Suggestions: ["O trabalho", "A família", "A saúde", "Os relacionamentos", "O descanso", "Os filhos", "Os amigos", "Os estudos", "O sono", "Paz de espírito", "Crescimento pessoal", "Tarefas do dia a dia"]),
+            new TechniqueEntrySeed("Do que cuidar", "Quem ou o que precisa da sua atenção hoje?", Suggestions: ["A saúde", "Pessoas próximas", "O sono", "O descanso", "Uma questão de trabalho", "Uma conversa", "Uma tarefa diária", "Meus limites", "Ainda não sei"]),
+            new TechniqueEntrySeed("O que você percebe", "Não é preciso chegar a uma conclusão positiva")
         ],
         Theory(
-            "A técnica mostra que o peso de um problema muda com o tempo e raramente fica no centro para sempre.",
-            "Quando uma dificuldade ocupa a tela inteira e parece permanente.",
-            "Preencha os quatro campos e compare: outros valores costumam diminuir o problema.",
-            "Problema: \"Estou sem emprego\". Antes: os estudos. Agora: procurar emprego. Futuro: estabilidade. Percepção: uma fase, não a vida inteira."),
+            "O exercício ajuda a nomear outras necessidades e tarefas sem diminuir a importância da dificuldade.",
+            "Quando um assunto ocupa quase toda a sua atenção e você quer reconhecer outras necessidades ou tarefas.",
+            "Escreva com suas palavras e não procure uma conclusão positiva obrigatória. Se houver uma ação prática ou questão de segurança, priorize-a. Você pode deixar campos em branco.",
+            "Procurar trabalho afeta o dinheiro e o sono; hoje também quero cuidar de alguém próximo. Talvez eu escolha uma etapa da busca e peça apoio. Isso não torna a preocupação menos séria."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Polarity = new(
@@ -87,56 +87,56 @@ internal static class TechniqueCatalogContentPt
         "O que você não gosta", "O que você gosta");
 
     internal static readonly BuiltInTechniqueDefinition Paper = new(
-        "Prática", "Folha de papel",
+        "Prática", "Um pensamento no papel",
         [
-            "1. Escreva o pensamento no papel (ou no campo abaixo)",
-            "2. Leia em voz alta uma vez",
-            "3. Dobre, rasgue ou solte simbolicamente a folha"
+            "1. Escreva um pensamento abaixo ou em uma folha",
+            "2. Leia uma vez e nomeie o sentimento, se quiser",
+            "3. Escolha o que fazer com a folha: guardar, dobrar ou rasgar. Também pode não fazer nada"
         ],
-        "Escrever os pensamentos no papel reduz a carga emocional deles.",
-        TechniqueUiKind.Paper, "Técnica nº 4", "26.01.2023", "Folha de papel", "Quando os pensamentos ficam girando", "Pensamentos", "Psique", 3, "Description",
-        [new TechniqueEntrySeed("Pensamento", "Ex.: \"Vou estragar a apresentação\"", Suggestions: HarshThoughts)],
+        "Escrever ajuda a notar como o pensamento está formulado; não é preciso destruir a folha nem esperar alívio.",
+        TechniqueUiKind.Paper, "Técnica nº 4", "26.01.2023", "Um pensamento no papel", "Quando um pensamento volta sempre", "Pensamentos", "Equipe PsychologyApp", 3, "Description",
+        [new TechniqueEntrySeed("Pensamento", "Por exemplo: “Vou estragar a apresentação.”", Suggestions: HarshThoughts)],
         Theory(
-            "Escrever tira o pensamento da cabeça. Destruir a folha simboliza deixar ir.",
-            "Quando a mesma frase gira por horas e atrapalha o sono ou a concentração.",
-            "Descarregue o pensamento, leia e depois destrua a folha — de verdade ou na imaginação.",
-            "Pensamento: \"Vão me achar incompetente\". Depois de escrever e queimar a folha, a ansiedade costuma diminuir."),
+            "Você escreve um pensamento para observar como ele está formulado. É auto-observação, não tratamento nem garantia de mudança no sentimento.",
+            "Quando um pensamento se repete e você se sente à vontade para escrevê-lo. Pare se isso piorar seu desconforto.",
+            "Escreva uma frase e leia uma vez. Guardar, deixar de lado ou rasgar a folha é uma escolha sua. Você não precisa se obrigar a ficar calmo.",
+            "Pensamento: “Vou estragar a apresentação.” Você pode guardar a anotação e conferir um slide."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Future = new(
-        "Prática", "50 anos depois",
+        "Prática", "Olhar a partir do futuro",
         [
-            "1. Diga qual é o problema",
-            "2. Avalie a importância dele daqui a 50 anos, de 0 a 10"
+            "1. Escolha uma dificuldade cotidiana que você consiga manejar",
+            "2. Imagine olhar para ela a partir do prazo que escolher — por exemplo, daqui a um ou cinco anos"
         ],
-        "Levar um problema para frente no tempo reduz a importância que ele parece ter.",
-        TechniqueUiKind.Entry, "Técnica nº 5", "30.01.2023", "50 anos depois", "Levar o problema para o futuro", "Tamanho do problema", "PNL", 2, "Schedule",
+        "Avalie a situação com uma distância no tempo. Ela pode continuar importante; não é preciso diminuí-la.",
+        TechniqueUiKind.Entry, "Técnica nº 5", "30.01.2023", "Olhar a partir do futuro", "Teste outra perspectiva sem desvalorizar a situação", "Tamanho do problema", "Equipe PsychologyApp", 2, "Schedule",
         [
-            new TechniqueEntrySeed("Problema", "O que parece um desastre hoje?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Importância daqui a 50 anos", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situação", "Por exemplo: uma dificuldade administrável no trabalho.", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Qual a importância vista dessa distância?", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Imaginar um acontecimento lá no futuro costuma tirar a força dele — você o vê com mais distância.",
-            "Quando um contratempo parece o fim do mundo, mesmo sendo passageiro.",
-            "Diga qual é o problema e avalie quanto ele vai importar daqui a cinquenta anos. A nota costuma ser menor.",
-            "Problema: \"Não me chamaram para a reunião\". Daqui a 50 anos: 1–2 de 10."),
+            "A perspectiva temporal é uma forma imaginada de olhar para uma situação. A importância pode continuar igual, e tudo bem.",
+            "Para uma dificuldade cotidiana administrável. Não escolha uma lembrança traumática ou um problema urgente que exija ação.",
+            "Escolha um prazo, como um ou cinco anos. Imagine olhar a situação a partir dali e dê uma nota. Não há resposta certa; pare se o exercício não fizer sentido.",
+            "Não receber resposta a um convite ainda pode importar daqui a um ano. Hoje, você pode perguntar ou escolher outro próximo passo."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Hack = new(
-        "Prática", "Mancha branca",
+        "Prática", "Pausa com detalhes ao redor",
         [
-            "1. Lembre o episódio que incomoda",
-            "2. Imagine-o como uma mancha branca sem detalhes",
-            "3. Mantenha a mancha até a tensão diminuir"
+            "1. Escolha um objeto neutro próximo, sem voltar a uma lembrança dolorosa",
+            "2. Nomeie três detalhes: cor, forma e superfície",
+            "3. Decida se quer continuar ou parar"
         ],
-        "Tirar os detalhes de uma lembrança costuma reduzir a carga emocional dela.",
-        TechniqueUiKind.Entry, "Técnica nº 6", "30.01.2023", "Mancha branca", "Suavizar uma lembrança dolorosa", "Momento difícil", "PNL", 3, "BlurOn",
-        [new TechniqueEntrySeed("Episódio", "Em poucas palavras: o que aconteceu e o que mais dói", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
+        "Uma breve orientação para um objeto próximo, sem reviver um acontecimento doloroso.",
+        TechniqueUiKind.Entry, "Técnica nº 6", "30.01.2023", "Pausa com detalhes ao redor", "Volte a atenção para o ambiente", "Momento difícil", "Equipe PsychologyApp", 3, "BlurOn",
+        [new TechniqueEntrySeed("Objeto próximo", "Por exemplo: uma xícara, uma janela ou um livro.", Role: EntryFieldRole.None)],
         Theory(
-            "Os detalhes alimentam o sentimento. A mancha branca tira os gatilhos e dá uma pausa ao sistema nervoso.",
-            "Quando uma imagem vívida do passado vem carregada de emoção.",
-            "Lembre o episódio e troque a imagem por uma simples mancha branca por 30–60 segundos.",
-            "No lugar do rosto de quem magoou você — uma mancha branca. A respiração se acalma e a mente volta ao agora."),
+            "Volte a atenção para um objeto neutro, aqui e agora. É um breve exercício de orientação, não um tratamento nem um substituto para apoio profissional.",
+            "Quando quiser se concentrar por um instante no que está ao redor. Não use a prática no lugar de ajuda urgente.",
+            "Nomeie três detalhes do objeto. Se você se sentir pior ou desconfortável, pare, olhe ao redor e escolha outra ação.",
+            "Por exemplo: uma xícara — branca, redonda e fria ao toque."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Experience = new(
@@ -173,76 +173,76 @@ internal static class TechniqueCatalogContentPt
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Copied = new(
-        "Prática", "Repita isso",
+        "Prática", "Observe o pensamento",
         [
-            "1. Escreva a frase que incomoda você",
-            "2. Repita em voz alta como se a ouvisse pela primeira vez",
-            "3. Continue repetindo até a emoção diminuir"
+            "1. Escreva uma frase curta que volta sempre",
+            "2. Leia uma vez e pergunte: é um fato, uma previsão ou uma avaliação?",
+            "3. Se for confortável, confira um fato. Pare se o desconforto aumentar"
         ],
-        "Repetir a frase de um problema \"como se fosse a primeira vez\" reduz a intensidade emocional.",
-        TechniqueUiKind.Copied, "Técnica nº 8", "21.01.2025", "Repita isso", "Ouvir o problema como se fosse a primeira vez", "Tamanho do problema", "PNL", 2, "Repeat",
+        "Este exercício ajuda a observar como um pensamento é formulado; repetir não garante que a ansiedade diminua.",
+        TechniqueUiKind.Copied, "Técnica nº 8", "21.01.2025", "Observe o pensamento", "Nomeie uma frase ansiosa sem discutir consigo", "Tamanho do problema", string.Empty, 2, "Repeat",
         [new TechniqueEntrySeed("Frase", "Tenho medo de perder meu emprego", Suggestions: HarshThoughts)],
         Theory(
-            "Uma frase conhecida perde a carga quando é dita devagar e em tom neutro, sem drama.",
-            "Quando um pensamento soa como uma sentença na sua cabeça.",
-            "Escreva a frase e repita 5–10 vezes com pausas, percebendo as sensações do corpo.",
-            "\"Ninguém precisa de mim\" — depois de sete repetições, costuma soar absurdo e mais leve."),
+            "Esta é uma forma breve de observar as palavras de um pensamento e verificar em que ele se baseia. Você não precisa dizê-lo em voz alta nem repeti-lo.",
+            "Quando uma frase volta com frequência e você quer observá-la por um momento. Pule o exercício se o pensamento parecer pesado demais agora.",
+            "Escreva o pensamento em poucas palavras. Pergunte-se o que você sabe com certeza e o que é previsão. Não se obrigue a acreditar em uma resposta. Pare se o desconforto aumentar.",
+            "Pensamento: \"Vou fracassar na reunião, com certeza.\" Fato: \"Tenho uma reunião amanhã.\" O resultado ainda é desconhecido."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Extend = new(
-        "Prática", "Plano B",
+        "Prática", "Planejar para lidar com a incerteza",
         [
-            "1. Diga qual é o problema",
-            "2. Escreva três alternativas realistas",
-            "3. Perceba como a ansiedade muda quando existem saídas"
+            "1. Nomeie a situação para a qual você quer uma alternativa",
+            "2. Anote uma opção realista e os recursos disponíveis",
+            "3. Escolha o próximo passo ou quando retomar o plano"
         ],
-        "Ter alternativas reduz a importância exagerada de um único resultado.",
-        TechniqueUiKind.Entry, "Técnica nº 9", "21.01.2025", "Plano B", "Diminuir a pressão com um plano B", "Tamanho do problema", "PNL", 3, "Backup",
+        "Planejar pode esclarecer ações disponíveis; não garante um resultado nem alívio imediato.",
+        TechniqueUiKind.Entry, "Técnica nº 9", "21.01.2025", "Planejar para lidar com a incerteza", "Encontrar um próximo passo prático", "Tamanho do problema", string.Empty, 3, "Backup",
         [
-            new TechniqueEntrySeed("Problema", "E se o plano principal falhar?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Alternativa 1", "Ex.: pegar um projeto como freelancer", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("Alternativa 2", "Ex.: me capacitar para uma função parecida", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("Alternativa 3", "Ex.: cortar gastos por um tempo", Suggestions: BackupOptions)
+            new TechniqueEntrySeed("Situação", "O que pode não sair como planejado?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Opção prática", "Ex.: confirmar um prazo ou pedir ajuda", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("Recurso ou apoio", "A quem ou a que você pode recorrer?", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("Próximo passo", "O que pode fazer agora ou quando retomar o assunto?", Suggestions: BackupOptions)
         ],
         Theory(
-            "Quando tudo parece tudo ou nada, a mente trava. Alternativas devolvem a sensação de escolha.",
-            "Antes de entrevistas, provas ou situações em que falhar parece uma catástrofe.",
-            "Diga qual é o problema e três planos B possíveis — mesmo que modestos.",
-            "Problema: \"Não vou conseguir a vaga\". Plano B: estágio, indicações, outra cidade."),
+            "Planejar pode esclarecer ações possíveis, mas não controla as decisões de outras pessoas nem garante calma.",
+            "Quando há uma incerteza prática específica e você quer considerar uma opção possível.",
+            "Separe fatos conhecidos de preocupações. Identifique um passo realista, um recurso ou um momento para voltar ao assunto. Se o planejamento virar uma revisão repetida de todos os cenários e aumentar o desconforto, pare.",
+            "Se não houver resposta após uma entrevista, você pode escolher um momento razoável para perguntar e se dedicar a outras tarefas enquanto isso. Isso não prevê a decisão da empresa."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Resize = new(
-        "Prática", "Diminua",
+        "Prática", "Observe a imagem à distância",
         [
-            "1. Descreva o que incomoda você",
-            "2. Imagine isso como um objeto à sua frente",
-            "3. Diminua e afaste o objeto até o interesse sumir"
+            "1. Nomeie brevemente uma situação cotidiana; não precisa usar lembranças dolorosas",
+            "2. Se for confortável, imagine-a como uma imagem parada",
+            "3. Você pode mudar o tamanho ou a distância, sem forçar a imagem a mudar"
         ],
-        "Diminuir e afastar visualmente um problema reduz o interesse emocional por ele.",
-        TechniqueUiKind.Entry, "Técnica nº 10", "22.01.2025", "Diminua", "Deixar o problema pequeno e distante", "Tamanho do problema", "PNL", 2, "ZoomOutMap",
+        "Uma visualização opcional para observar a atenção; ela não muda a situação nem promete alívio.",
+        TechniqueUiKind.Entry, "Técnica nº 10", "22.01.2025", "Observe a imagem à distância", "Experimente a distância apenas se for confortável", "Tamanho do problema", string.Empty, 2, "ZoomOutMap",
         [new TechniqueEntrySeed("O que incomoda você", "Ex.: um conflito que tira seu sono", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "O tamanho e a distância de uma imagem afetam a importância dela. Um objeto pequeno e distante dificilmente mexe com os nervos.",
-            "Quando um problema parece enorme e bem na sua frente.",
-            "Crie uma imagem, diminua aos poucos e empurre até o horizonte por 10–20 segundos.",
-            "Uma briga vira um pontinho. A respiração fica mais leve e os pensamentos clareiam."),
+            "Este é um breve exercício de imaginação: você pode observar uma imagem à distância. Cada pessoa reage de um jeito, e a situação em si não muda por isso.",
+            "Apenas para uma preocupação cotidiana manejável. Não escolha uma lembrança dolorosa; você pode pular o exercício.",
+            "Imagine a situação sem acrescentar detalhes. Mude o tamanho ou a distância apenas se for confortável. Se o desconforto aumentar, pare e observe o ambiente ao redor.",
+            "Você pode imaginar uma tarefa como um bilhete sobre a mesa e decidir quando voltar a ela. A imagem não precisa ficar menor ou mais calma."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Check = new(
-        "Prática", "Teste",
+        "Prática", "Redirecione a atenção",
         [
-            "1. Descreva aquilo em que você fica girando",
-            "2. Pare de pensar nisso de propósito por 1–2 minutos",
-            "3. Perceba o que mudou no corpo e no humor"
+            "1. Nomeie o pensamento recorrente em poucas palavras, sem detalhes",
+            "2. Perceba: \"Estou tendo o pensamento de que…\"",
+            "3. Se quiser, leve a atenção a um som ou objeto neutro; o pensamento pode continuar"
         ],
-        "Atenção demais infla a importância. Uma pausa curta testa o quanto o pensamento controla você.",
-        TechniqueUiKind.Entry, "Técnica nº 11", "22.01.2025", "Teste", "Ver o que acontece se você soltar", "Tamanho do problema", "PNL", 2, "FactCheck",
+        "O exercício ajuda a escolher onde colocar a atenção; não exige que os pensamentos desapareçam.",
+        TechniqueUiKind.Entry, "Técnica nº 11", "22.01.2025", "Redirecione a atenção", "Observe o pensamento e escolha um foco neutro", "Tamanho do problema", string.Empty, 2, "FactCheck",
         [new TechniqueEntrySeed("Aquilo em que você fica girando", "Que pensamento volta sempre?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "Se um pensamento fosse vital para sobreviver, soltá-lo pareceria perigoso. O experimento costuma mostrar que nada catastrófico acontece.",
-            "Quando você não consegue parar de remoer o mesmo assunto.",
-            "Dê nome ao pensamento e leve a atenção com calma para a respiração ou para os sons ao seu redor.",
-            "Pensamento: \"E se eu estiver doente\". Depois de uma pausa, a ansiedade costuma cair de 7 para 4."),
+            "Esta é uma forma breve de notar um pensamento recorrente e dar outra tarefa à atenção. Você não precisa suprimi-lo nem ficar calmo.",
+            "Quando você fica revendo o mesmo assunto e se sente confortável para experimentar uma mudança breve. Se o pensamento se refere a perigo real, cuide primeiro da segurança.",
+            "Nomeie o pensamento em uma frase e escolha um som ou objeto neutro ao redor. Pare se o desconforto aumentar. Não use isso no lugar de uma ação médica ou prática necessária.",
+            "Pensamento: \"E se eu estiver doente?\" Você pode notá-lo como pensamento e decidir se precisa dar um passo real, como consultar um profissional sobre um sintoma."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
@@ -310,10 +310,10 @@ internal static class TechniqueCatalogContentPt
             new TechniqueEntrySeed("1 sabor ou sensação agradável", "Ex.: água na boca, um tecido macio", Suggestions: ["Água", "Chá", "Um tecido macio", "As palmas quentes", "A boca fresca", "Café", "Um chiclete de menta", "Chocolate", "Uma maçã", "Um cobertor quentinho"])
         ],
         Theory(
-            "A ansiedade costuma puxar você para o passado ou para o futuro. Contar pelos sentidos traz você de volta ao aqui e agora.",
-            "Em momentos de pânico, ansiedade forte, tontura ou sensação de estar desligado da realidade.",
-            "Passe pelas etapas devagar, dizendo sensações concretas. Respire com calma entre um item e outro.",
-            "5 vejo → 4 sinto → 3 ouço → a respiração se acalma, os pensamentos desaceleram."),
+            "Preste atenção ao que vê, ouve e sente à sua volta.",
+            "Quando a preocupação toma sua atenção e você quer se concentrar no que está ao redor.",
+            "Comece pelo que você vê. Se não perceber um cheiro ou um sabor, siga em frente. Respire como de costume.",
+            "Vejo uma xícara e uma luminária. Sinto o chão sob os pés. Ouço o trânsito lá fora."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
@@ -366,26 +366,26 @@ internal static class TechniqueCatalogContentPt
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
         "Prática", "Registro de pensamentos",
         [
-            "1. Descreva a situação",
+            "1. Descreva a situação sem julgá-la",
             "2. Escreva o pensamento automático",
-            "3. Avalie a emoção",
-            "4. Formule um pensamento alternativo mais equilibrado",
-            "5. Avalie a emoção de novo"
+            "3. Nomeie o sentimento e avalie a intensidade agora",
+            "4. Separe fatos de suposições e encontre outra possibilidade",
+            "5. Avalie o sentimento de novo; ele pode continuar igual"
         ],
-        "Um registro estruturado da TCC ajuda a ver a ligação entre situação, pensamento e emoção.",
-        TechniqueUiKind.Entry, "Técnica nº 17", "04.07.2026", "Registro de pensamentos", "Desmontar um pensamento e reduzir a carga emocional", "Momento difícil", "TCC", 7, "EditNote",
+        "Separe situação, pensamento e sentimento; depois confira a conclusão diante dos fatos. O sentimento não precisa diminuir.",
+        TechniqueUiKind.Entry, "Técnica nº 17", "04.07.2026", "Registro de pensamentos", "Separe um fato de uma interpretação", "Momento difícil", "TCC", 7, "EditNote",
         [
-            new TechniqueEntrySeed("Situação", "O que aconteceu? Onde e quando?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Situação", "O que aconteceu? Onde e quando? Apenas o essencial.", Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("Pensamento automático", "O que você pensou naquele momento?", Suggestions: HarshThoughts),
-            new TechniqueEntrySeed("Emoção", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Pensamento alternativo", "O que mais pode ser verdade? Um olhar mais equilibrado", Role: EntryFieldRole.Reframe),
-            new TechniqueEntrySeed("Emoção agora", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
+            new TechniqueEntrySeed("Sentimento antes", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
+            new TechniqueEntrySeed("Uma visão mais precisa", "Que fatos apoiam ou contradizem isso? O que mais é possível?", Role: EntryFieldRole.Reframe),
+            new TechniqueEntrySeed("Sentimento depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Pensamentos automáticos muitas vezes soam como fatos, embora sejam interpretações. Escrever torna esses pensamentos visíveis e possíveis de testar.",
-            "Depois de um conflito, uma crítica, um fracasso, ou quando um pensamento fica girando.",
-            "Descreva a situação e o pensamento, avalie a emoção e depois encontre uma alternativa — não positividade forçada, mas algo mais preciso.",
-            "Situação: não responderam à mensagem. Pensamento: ninguém precisa de mim. Alternativa: a pessoa está ocupada. Emoção: 8 → 5."),
+            "O exercício separa um acontecimento da sua interpretação. Não é diagnóstico nem tratamento.",
+            "Para uma situação moderadamente incômoda, se você tiver disposição para escrever agora. Não escolha uma lembrança traumática nem uma crise aguda.",
+            "Anote fatos observáveis e depois o pensamento. Procure uma explicação que considere o que sabe e o que ainda não sabe; não force positividade. Se a avaliação não mudar, isso não significa que você fez algo errado.",
+            "Situação: ainda não responderam à mensagem. Pensamento: “Ninguém precisa de mim.” Fato: ainda não há resposta. Outra possibilidade: o motivo é desconhecido; a pessoa pode estar ocupada."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SelfCompassion = new(
@@ -419,10 +419,10 @@ internal static class TechniqueCatalogContentPt
             "3. Encontre o lugar onde a sensação é mais forte",
             "4. Descreva: como é, grande ou pequena, quente ou fria",
             "5. Dê nome ao sentimento que vem junto",
-            "6. Faça 5 expirações lentas como se cada uma passasse por esse lugar e avalie a tensão de novo"
+            "6. Se quiser, observe o que mudou ou permaneceu igual. Você pode parar ou voltar a atenção para o ambiente a qualquer momento."
         ],
-        "Escaneamento corporal: perceba onde um sentimento mora, dê nome a ele e deixe o corpo suavizar sem lutar contra a sensação.",
-        TechniqueUiKind.Entry, "Técnica nº 19", "16.10.2026", "Onde está no corpo?", "Perceber onde um sentimento mora no corpo e suavizar a tensão", "Momento difícil", "Mindfulness", 4, "Accessibility",
+        "O escaneamento corporal convida você a observar sensações e sentimentos sem precisar mudá-los.",
+        TechniqueUiKind.Entry, "Técnica nº 19", "16.10.2026", "Onde está no corpo?", "Observar as sensações sem tentar mudá-las", "Momento difícil", "Mindfulness", 4, "Accessibility",
         [
             new TechniqueEntrySeed("Tensão agora", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Em que parte do corpo você sente?", "Por exemplo: peito, garganta, ombros", Suggestions: ["Cabeça", "Testa", "Olhos", "Mandíbula", "Garganta", "Pescoço", "Ombros", "Peito", "Coração", "Barriga", "Costas", "Lombar", "Braços", "Mãos", "Pernas", "O corpo todo"]),
@@ -431,10 +431,10 @@ internal static class TechniqueCatalogContentPt
             new TechniqueEntrySeed("Tensão depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Os sentimentos ecoam no corpo: a ansiedade como aperto no peito, a mágoa como um nó na garganta, o cansaço como ombros pesados. Quando percebemos a sensação e damos nome ao sentimento, a tensão costuma diminuir. Essa é a base do escaneamento corporal nos programas de mindfulness.",
+            "O escaneamento corporal pode ajudar a notar sensações e sentimentos que talvez venham junto. Percebê-los não precisa reduzir a tensão; ela pode continuar igual. Essa prática aparece em alguns programas de mindfulness.",
             "Quando você se sente ansioso ou pesado, mas não sabe dizer exatamente o que sente; quando o corpo fica tenso depois de uma conversa ou um dia difícil. A prática não explica doenças nem substitui o médico: se uma sensação for nova, forte ou não passar, procure um médico.",
-            "Sente-se confortavelmente e leve a atenção devagar do alto da cabeça até os pés. Pare onde a sensação for mais intensa. Não tente mudá-la nem lutar contra ela: descreva e dê nome ao sentimento. Depois faça algumas expirações lentas como se cada uma passasse por esse lugar.",
-            "Tensão 6. Onde: peito. Sensação: aperto, como um punho. Sentimento: ansiedade antes de uma conversa. Depois de 5 expirações o aperto está mais suave, tensão 4."),
+            "Sente-se confortavelmente, se isso for bom para você, e leve a atenção aos poucos para diferentes partes do corpo. Descreva uma sensação com o máximo de precisão que conseguir; se fizer sentido, nomeie também um sentimento. Você não precisa mudar nada. Se voltar a atenção para dentro for desconfortável, abra os olhos, observe objetos ao seu redor ou encerre a prática. Respire normalmente.",
+            "Tensão 6/10. Local: peito. Sensação: aperto. Sentimento: ansiedade antes de uma conversa. Depois, a tensão continuou em 6/10. Abri os olhos e nomeei objetos no ambiente. Esse também é um resultado válido."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Flashback = new(
@@ -521,18 +521,18 @@ internal static class TechniqueCatalogContentPt
             "4. Respire no ritmo do círculo por cerca de três minutos",
             "5. Avalie sua tensão depois"
         ],
-        "Uma inspiração dupla e uma expiração longa acalmam o corpo rápido, sem prender a respiração.",
+        "Duas inspirações suaves seguidas de uma expiração mais longa criam um ritmo respiratório. Não é preciso prender a respiração nem inspirar mais fundo do que o habitual.",
         TechniqueUiKind.Entry, "Técnica nº 23", "26.10.2026", "Suspiro cíclico", "Uma inspiração dupla e uma expiração longa para acalmar o corpo", "Momento difícil", "Psique", 3, "Air",
         [
             new TechniqueEntrySeed("Tensão antes", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notas", "O que mudou depois da respiração?", Suggestions: ["Meu corpo está mais calmo", "Meus ombros relaxaram", "Meu coração desacelerou", "Meus pensamentos desaceleraram", "Fiquei um pouco tonto", "Nada mudou", "Quero repetir"]),
+            new TechniqueEntrySeed("Notas", "O que você percebeu?", Suggestions: ["Um pouco mais calmo", "Sem mudança perceptível", "Mais desconfortável", "Fiquei tonto", "Prefiro não avaliar", "Outra coisa"]),
             new TechniqueEntrySeed("Tensão depois", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "A segunda inspiração curta abre mais os pulmões, e a expiração longa aciona o freio do sistema nervoso: o coração desacelera e o corpo se acalma. Num estudo de 2023, cinco minutos por dia dessa respiração melhoraram o humor mais do que a meditação de atenção plena. Não é um tratamento, mas um jeito rápido de baixar a tensão.",
-            "Quando a ansiedade, a raiva ou a tensão tomam conta e você precisa acalmar o corpo em poucos minutos. Também serve antes de uma conversa difícil ou antes de dormir.",
-            "Respire com suavidade, sem forçar: a segunda inspiração é curta, a expiração lenta e sem esforço. Se ficar tonto, volte à respiração normal; isso passa. O círculo termina sozinho depois de três minutos.",
-            "Tensão 6/10 antes de uma ligação. Três minutos de inspiração dupla e expiração longa. Tensão 3/10, e minha voz ficou mais firme."),
+            "Em um estudo randomizado com 111 participantes, o suspiro cíclico foi praticado por cinco minutos ao dia durante um mês. As pontuações de humor positivo melhoraram mais do que no grupo de atenção plena. Isso não demonstra que uma sessão curta reduza a tensão rapidamente nem que todos respondam da mesma forma.",
+            "Experimente se prestar atenção à respiração for confortável, por exemplo antes de uma conversa ou durante uma pausa. Se isso aumentar o desconforto, escolha uma prática voltada ao ambiente.",
+            "Respire com suavidade, sem tentar inspirar o máximo possível. Repita o ritmo apenas enquanto for confortável. Se sentir tontura ou mal-estar, pare, sente-se em um lugar estável e volte à respiração habitual. Procure orientação médica se os sintomas forem intensos ou persistirem.",
+            "Antes de uma ligação, percebo a tensão e experimento alguns ciclos suaves. Se nada mudar ou eu me sentir pior, paro e volto a respirar normalmente."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition MuscleRelax = new(

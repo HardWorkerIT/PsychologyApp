@@ -1,17 +1,17 @@
 [
   {
-    "title": "Questionnaire de Heck et Hess",
-    "subtitle": "Dépistage du névrosisme",
+    "title": "Réflexion sur les réactions émotionnelles",
+    "subtitle": "Auto-réflexion · pas un diagnostic",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Névrosisme",
-    "betterWhen": "lower",
-    "description": "40 énoncés sur la réactivité émotionnelle. Répondez Oui ou Non à votre sujet.",
+    "construct": "Auto-réflexion",
+    "betterWhen": "none",
+    "description": "40 affirmations invitent à réfléchir aux réactions émotionnelles. Le score ne constitue pas une évaluation clinique.",
     "algorithm": [
       "1. Une liste d'énoncés vous est proposée.",
       "2. Pour chaque énoncé, répondez Oui si vous êtes d'accord (s'il est vrai pour vous) ou Non si vous n'êtes pas d'accord."
     ],
-    "comment": "En cas d'inquiétude, consultez un spécialiste qualifié.",
+    "comment": "Utilisez vos réponses comme pistes de réflexion, pas comme une étiquette. Si elles vous inquiètent, parlez-en à un professionnel qualifié.",
     "analyzerId": "heck_hess",
     "answers": [
       "Oui",
@@ -66,18 +66,18 @@
     "singleAnswer": true
   },
   {
-    "title": "Test de Hare",
-    "subtitle": "Dépistage de la psychopathie",
+    "title": "Comportements et relations",
+    "subtitle": "Auto-réflexion · pas un diagnostic",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Psychopathie",
-    "betterWhen": "lower",
-    "description": "Dépiste des schémas relationnels et comportementaux. Répondez honnêtement : il n'y a pas de bonnes réponses.",
+    "construct": "Auto-réflexion",
+    "betterWhen": "none",
+    "description": "40 énoncés pour réfléchir aux comportements et aux relations. Ce n’est pas le PCL-R de Robert Hare et il n’évalue pas la psychopathie ; les réponses ne permettent ni de diagnostiquer ni d’étiqueter qui que ce soit.",
     "algorithm": [
       "1. Une liste d'énoncés vous est proposée.",
       "2. Pour chaque énoncé, choisissez l'une des réponses proposées."
     ],
-    "comment": "En cas d'inquiétude, consultez un spécialiste qualifié.",
+    "comment": "Utilisez vos réponses comme pistes de réflexion, pas comme une étiquette. Si elles vous inquiètent, parlez-en à un professionnel qualifié.",
     "analyzerId": "haer",
     "answers": [
       "Oui",

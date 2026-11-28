@@ -24,7 +24,7 @@ public static class PracticeCompletionNavigator
 
         bool opened = await NavigationRetry.TryExecuteWithRetryAsync(
             () => navigation.GoToPracticeCompletionAsync(activeDays, completedItemKey, sessionResultId),
-            status => status is NavigationRunStatus.Completed or NavigationRunStatus.DroppedDuplicate);
+            status => status is NavigationRunStatus.Completed or NavigationRunStatus.DroppedDuplicate or NavigationRunStatus.DroppedInactiveSource);
 
         if (!opened)
         {

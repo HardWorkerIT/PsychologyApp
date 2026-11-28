@@ -1,4 +1,5 @@
 using PsychologyApp.Domain.Practice;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Services.Preferences;
 
@@ -53,7 +54,7 @@ public partial class TechniqueTextFieldView : ContentView
     public TechniqueTextFieldView()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         _dictation = new VoiceDictation(() => Text ?? string.Empty, value => Text = value);
         _dictation.Changed += (_, _) => RefreshVoice();
         _dictation.Attach(MicButton, InputEditor.Unfocus);

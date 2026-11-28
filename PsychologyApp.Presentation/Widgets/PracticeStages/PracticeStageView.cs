@@ -64,6 +64,21 @@ public abstract class PracticeStageView : ContentView
                 }
             }
         };
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(IsVisible))
+            {
+                if (!IsVisible)
+                {
+                    StatusLabel.CancelAnimations();
+                    StatusLabel.Opacity = 1;
+                    StatusLabel.TranslationY = 0;
+                }
+
+                OnStageVisibilityChanged(IsVisible);
+            }
+        };
+
     }
 
     public string SourceText
@@ -92,6 +107,7 @@ public abstract class PracticeStageView : ContentView
     protected static bool IsDark => Microsoft.Maui.Controls.Application.Current?.RequestedTheme == AppTheme.Dark;
 
     protected abstract void OnSourceTextChanged();
+    protected virtual void OnStageVisibilityChanged(bool isVisible) { }
 
     /// <summary>Paints the canvas: a background brush, optional scenery views behind everything else, and the colour of the empty hint.</summary>
     protected void SetScene(Brush background, bool darkScene, params View[] scenery)

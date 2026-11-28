@@ -33,7 +33,7 @@
                 ShowStepLabel="True" />
         </VerticalStackLayout>
 
-        <ScrollView Grid.Row="1">
+        <ScrollView x:Name="QuestionScroll" Grid.Row="1">
             <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}">
                 <!-- The question's own text, when it has one, on a card; the reminder that there are no wrong answers is a quiet line. The
                      "Question 1" pill repeated the progress line, and a test whose questions are only their answers (Beck) showed an empty card. -->

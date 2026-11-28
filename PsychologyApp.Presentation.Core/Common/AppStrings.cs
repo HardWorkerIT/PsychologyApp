@@ -898,6 +898,7 @@ public static partial class AppStrings
     public static string SafetyPlanContactNamePlaceholder => R(nameof(SafetyPlanContactNamePlaceholder));
     public static string SafetyPlanContactPhonePlaceholder => R(nameof(SafetyPlanContactPhonePlaceholder));
     public static string SafetyPlanCallAction => R(nameof(SafetyPlanCallAction));
+    public static string CrisisDialUnavailable(string number) => F(nameof(CrisisDialUnavailable), number);
 
     public static string RiskCheckTitle => R(nameof(RiskCheckTitle));
     public static string RiskCheckLead => R(nameof(RiskCheckLead));
@@ -990,17 +991,6 @@ public static partial class AppStrings
     public static string MoodReminderTitle => R(nameof(MoodReminderTitle));
     public static string MoodReminderBody => R(nameof(MoodReminderBody));
 
-
-    public static string LuscherCoStable => R(nameof(LuscherCoStable));
-    public static string LuscherCoMildTension => R(nameof(LuscherCoMildTension));
-    public static string LuscherCoModerateTension => R(nameof(LuscherCoModerateTension));
-    public static string LuscherCoElevatedTension => R(nameof(LuscherCoElevatedTension));
-    public static string LuscherCoHighTension => R(nameof(LuscherCoHighTension));
-
-    public static string LuscherBkExhausted => R(nameof(LuscherBkExhausted));
-    public static string LuscherBkConserving => R(nameof(LuscherBkConserving));
-    public static string LuscherBkOptimal => R(nameof(LuscherBkOptimal));
-    public static string LuscherBkOveraroused => R(nameof(LuscherBkOveraroused));
 
     public static string TherapyProgramTitle => R(nameof(TherapyProgramTitle));
     public static string TherapyProgramAnxiety => R(nameof(TherapyProgramAnxiety));

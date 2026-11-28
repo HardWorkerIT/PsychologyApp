@@ -18,7 +18,14 @@ public partial class MuscleRelaxView : ContentView
     {
         InitializeComponent();
         ToggleButton.TapCommand = new Command(Toggle);
-        Unloaded += (_, _) => StopTimer();
+        PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(IsVisible) && !IsVisible)
+            {
+                ResetSession();
+            }
+        };
+        Unloaded += (_, _) => ResetSession();
         ShowIdle(AppStrings.MuscleIntro, AppStrings.MuscleStart);
     }
 
@@ -90,6 +97,13 @@ public partial class MuscleRelaxView : ContentView
             _timer.Stop();
             _timer.Tick -= OnTick;
         }
+    }
+
+    private void ResetSession()
+    {
+        StopTimer();
+        _lastStep = null;
+        ShowIdle(AppStrings.MuscleIntro, AppStrings.MuscleStart);
     }
 
     private static string GroupText(MuscleGroup group) => group switch

@@ -103,6 +103,10 @@
                             VerticalOptions="Center"
                             IconColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
                     </Grid>
+                    <VerticalStackLayout IsVisible="{Binding ShowDialFailure}" Spacing="8">
+                        <Label Text="{Binding DialFailureText}" Style="{StaticResource BodyStyle}" />
+                        <ui:ButtonView Variant="Secondary" BodyText="{Binding CopyNumberText}" TapCommand="{Binding CopyNumberCommand}" />
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </Border>
 

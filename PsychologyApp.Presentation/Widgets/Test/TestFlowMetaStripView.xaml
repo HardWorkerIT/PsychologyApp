@@ -7,10 +7,12 @@
              x:Class="PsychologyApp.Presentation.Widgets.Test.TestFlowMetaStripView"
              x:Name="Root">
 
-    <HorizontalStackLayout
-        Spacing="8"
+    <FlexLayout
+        Wrap="Wrap"
         IsVisible="{Binding HasMeta, Source={x:Reference Root}}">
         <Border
+            FlexLayout.Shrink="0"
+            Margin="0,0,8,4"
             IsVisible="{Binding HasDuration, Source={x:Reference Root}}"
             Style="{StaticResource MetaPillStyle}">
             <HorizontalStackLayout Spacing="6">
@@ -27,6 +29,8 @@
         </Border>
 
         <Border
+            FlexLayout.Shrink="0"
+            Margin="0,0,0,4"
             IsVisible="{Binding HasQuestionCount, Source={x:Reference Root}}"
             Style="{StaticResource MetaPillStyle}">
             <HorizontalStackLayout Spacing="6">
@@ -41,6 +45,6 @@
                     VerticalOptions="Center" />
             </HorizontalStackLayout>
         </Border>
-    </HorizontalStackLayout>
+    </FlexLayout>
 
 </ContentView>

@@ -31,11 +31,10 @@ public class ConversationScenarioParserTests
 
     [Theory]
     [MemberData(nameof(ShippedScenarioFiles))]
-    public void Shipped_scenarios_are_valid_and_match_their_file_name(string fileName)
+    public async Task Shipped_scenarios_are_valid_and_match_their_file_name(string fileName)
     {
-        string json = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "conversations", fileName));
-
-        ParseResult<ConversationScenario> result = ConversationScenarioParser.Parse(json);
+        await using Stream stream = File.OpenRead(Path.Combine(AppContext.BaseDirectory, "conversations", fileName));
+        ParseResult<ConversationScenario> result = await ConversationScenarioParser.ParseUtf8Async(stream);
 
         Assert.True(result.IsSuccess, result.Error);
         Assert.Equal(fileName.Split('.')[0], result.Value!.Id);

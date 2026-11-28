@@ -33,7 +33,7 @@ public partial class ChatInputBar : ContentView
     public ChatInputBar()
     {
         InitializeComponent();
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         CenterInputText();
         _dictation = new VoiceDictation(() => Text ?? string.Empty, value => Text = value);
         _dictation.Changed += (_, _) => RefreshVoice();

@@ -32,6 +32,8 @@ public sealed class SafetyPlanViewModel : BaseViewModel
     private readonly IClinicalCareService _clinicalCareService;
     private readonly SemaphoreSlim _editGate = new(1, 1);
     private Task? _loadTask;
+    private bool _isLoading = true;
+    private bool _loadFailed;
 
     public RangeObservableCollection<SafetyPlanTextItem> WarningSigns { get; } = [];
     public RangeObservableCollection<SafetyPlanTextItem> CopingStrategies { get; } = [];
@@ -49,6 +51,13 @@ public sealed class SafetyPlanViewModel : BaseViewModel
     public ICommand AddCopingStrategyCommand { get; }
     public ICommand AddReasonCommand { get; }
     public ICommand AddContactCommand { get; }
+    public ICommand RetryLoadCommand { get; }
+    public bool IsPlanLoading => _isLoading;
+    public bool IsPlanLoadFailed => _loadFailed;
+    public bool IsPlanReady => !_isLoading && !_loadFailed;
+    public string LoadingText => AppStrings.SkeletonLoadingLabel;
+    public string LoadFailedText => AppStrings.LoadFailed;
+    public string RetryText => AppStrings.RetryQuestion;
 
     public string PageTitle => AppStrings.SafetyPlanPageTitle;
     public string LeadText => AppStrings.SafetyPlanLead;
@@ -76,7 +85,8 @@ public sealed class SafetyPlanViewModel : BaseViewModel
         AddReasonCommand = new AsyncCommand(() => AddTextAsync(Reasons, () => NewReasonText, value => NewReasonText = value, nameof(NewReasonText)));
         AddContactCommand = new AsyncCommand(AddContactAsync);
 
-        EnsureLoadedAsync().FireAndForget();
+        RetryLoadCommand = new AsyncCommand(TryLoadAsync);
+        TryLoadAsync().FireAndForget();
     }
 
     protected override void RefreshLocalizedProperties()
@@ -93,7 +103,8 @@ public sealed class SafetyPlanViewModel : BaseViewModel
             nameof(ContactsTitle),
             nameof(ContactNamePlaceholder),
             nameof(ContactPhonePlaceholder),
-            nameof(AddButtonText));
+            nameof(AddButtonText),
+            nameof(LoadingText), nameof(LoadFailedText), nameof(RetryText));
     }
 
     private Task EnsureLoadedAsync() =>
@@ -101,12 +112,41 @@ public sealed class SafetyPlanViewModel : BaseViewModel
 
     private async Task LoadAsync()
     {
-        SafetyPlanDTO plan = await _clinicalCareService.GetSafetyPlanAsync();
+        SetPlanLoadState(isLoading: true, failed: false);
+        try
+        {
+            SafetyPlanDTO plan = await _clinicalCareService.GetSafetyPlanAsync();
 
-        WarningSigns.ReplaceAll(plan.WarningSigns.Select(text => BuildTextItem(WarningSigns, text)).ToList());
-        CopingStrategies.ReplaceAll(plan.CopingStrategies.Select(text => BuildTextItem(CopingStrategies, text)).ToList());
-        Reasons.ReplaceAll(plan.Reasons.Select(text => BuildTextItem(Reasons, text)).ToList());
-        Contacts.ReplaceAll(plan.Contacts.Select(contact => BuildContactItem(contact.Name, contact.Phone)).ToList());
+            WarningSigns.ReplaceAll(plan.WarningSigns.Select(text => BuildTextItem(WarningSigns, text)).ToList());
+            CopingStrategies.ReplaceAll(plan.CopingStrategies.Select(text => BuildTextItem(CopingStrategies, text)).ToList());
+            Reasons.ReplaceAll(plan.Reasons.Select(text => BuildTextItem(Reasons, text)).ToList());
+            Contacts.ReplaceAll(plan.Contacts.Select(contact => BuildContactItem(contact.Name, contact.Phone)).ToList());
+            SetPlanLoadState(isLoading: false, failed: false);
+        }
+        catch
+        {
+            SetPlanLoadState(isLoading: false, failed: true);
+            throw;
+        }
+    }
+
+    private async Task TryLoadAsync()
+    {
+        try
+        {
+            await EnsureLoadedAsync();
+        }
+        catch (Exception error)
+        {
+            BestEffort.Report(error);
+        }
+    }
+
+    private void SetPlanLoadState(bool isLoading, bool failed)
+    {
+        _isLoading = isLoading;
+        _loadFailed = failed;
+        Notify(nameof(IsPlanLoading), nameof(IsPlanLoadFailed), nameof(IsPlanReady));
     }
 
     private SafetyPlanTextItem BuildTextItem(ObservableCollection<SafetyPlanTextItem> collection, string text)

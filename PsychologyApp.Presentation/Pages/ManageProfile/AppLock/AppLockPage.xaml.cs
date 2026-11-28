@@ -19,7 +19,7 @@ public partial class AppLockPage : ContentPage
 
     public Task Unlocked => _viewModel.Unlocked;
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
@@ -30,7 +30,7 @@ public partial class AppLockPage : ContentPage
         }
 
         _initialized = true;
-        await _viewModel.InitializeAsync();
+        SafeAsync.Run(_viewModel.InitializeAsync);
     }
 
     protected override void OnDisappearing()

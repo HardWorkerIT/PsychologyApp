@@ -2,6 +2,7 @@
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Models.Tests;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Navigation;
 
 namespace PsychologyApp.Presentation.Features.RunTests;
@@ -55,7 +56,8 @@ public sealed class TestRunCoordinator(
         QuestionnaireSavedResult saved = await SaveQuestionnaireAsync(
             request,
             userProgressService,
-            cancellationToken);
+            cancellationToken,
+            openHelpOnSaveFailure: navigationService.GoToCrisisHubAsync);
 
         await NavigateQuestionnaireResultAsync(saved, navigationService, cancellationToken);
     }
@@ -63,27 +65,33 @@ public sealed class TestRunCoordinator(
     public async Task<QuestionnaireSavedResult> SaveQuestionnaireAsync(
         QuestionnaireCompletionRequest request,
         IUserProgressService userProgressService,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        Func<Task>? openHelpOnSaveFailure = null)
     {
         QuestionnaireSubmission submission = submissionService.Calculate(
             request.Questions,
             request.Session.AnalyzerId);
 
-        QuestionnaireResultDetail? detail = await detailBuilder.BuildAsync(
-            request.Questions,
-            request.Session,
-            request.StartedAtUtc,
-            cancellationToken);
+        QuestionnaireResultDetail? detail;
+        try
+        {
+            detail = await detailBuilder.BuildAsync(request.Questions, request.Session, request.StartedAtUtc, cancellationToken);
+            await submissionService.SaveAsync(userProgressService, request.Session, submission.Score, submission.Interpretation,
+                cancellationToken, detailBuilder.Serialize(detail));
+        }
+        catch when (submission.SelfHarmItemEndorsed && openHelpOnSaveFailure is not null)
+        {
+            try
+            {
+                await openHelpOnSaveFailure();
+            }
+            catch (Exception error)
+            {
+                BestEffort.Report(error);
+            }
 
-        string? detailJson = detailBuilder.Serialize(detail);
-
-        await submissionService.SaveAsync(
-            userProgressService,
-            request.Session,
-            submission.Score,
-            submission.Interpretation,
-            cancellationToken,
-            detailJson);
+            throw;
+        }
 
         // An answer other than "never" to the question about suicidal thoughts is a risk signal in its own right, whatever the total:
         // it is recorded exactly like the risk check, so the startup gate and the dashboard treat it the same way.
@@ -97,7 +105,7 @@ public sealed class TestRunCoordinator(
                     new RiskAssessmentInput { HasSelfHarmThoughts = true, Source = $"test:{request.Session.AnalyzerId}" },
                     cancellationToken);
             }
-            catch (Exception ex) when (ex is not OperationCanceledException)
+            catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError($"Could not record the risk signal from a questionnaire ({ex.GetType().Name}).");
             }
@@ -114,31 +122,34 @@ public sealed class TestRunCoordinator(
         QuestionnaireSubmission submission = saved.Submission;
         QuestionnaireCompletionRequest request = saved.Request;
 
-        bool completed = await NavigationRetry.TryExecuteWithRetryAsync(
-            () => navigationService.GoToTestResultAsync(
-                submission.Score,
-                submission.Interpretation,
-                submission.RecommendedTechnique,
-                request.Session.TestId,
-                submission.InterpretationDetail,
-                request.Session.AnalyzerId,
-                saved.Detail,
-                cancellationToken),
-            // A repeated tap on "finish" is dropped as a duplicate: the page is already opening, which is not a failure to retry.
-            status => status is NavigationRunStatus.Completed or NavigationRunStatus.DroppedDuplicate,
-            maxAttempts: 3,
-            delay: TimeSpan.FromMilliseconds(150),
-            cancellationToken);
-
-        if (!completed)
+        try
         {
-            throw new TestCompletionNavigationException();
+            bool completed = await NavigationRetry.TryExecuteWithRetryAsync(
+                () => navigationService.GoToTestResultAsync(
+                    submission.Score,
+                    submission.Interpretation,
+                    submission.RecommendedTechnique,
+                    request.Session.TestId,
+                    submission.InterpretationDetail,
+                    request.Session.AnalyzerId,
+                    saved.Detail,
+                    cancellationToken),
+                status => status is NavigationRunStatus.Completed or NavigationRunStatus.DroppedDuplicate,
+                maxAttempts: submission.SelfHarmItemEndorsed ? 1 : 3,
+                cancellationToken: cancellationToken);
+
+            if (!completed)
+            {
+                throw new TestCompletionNavigationException();
+            }
         }
-
-        // After the result is on screen: help first, then the numbers. Back from the crisis screen returns to the result.
-        if (submission.SelfHarmItemEndorsed)
+        finally
         {
-            await navigationService.GoToCrisisHubAsync();
+            // Help must be reachable even if the result page could not open. On success, Back returns to the result.
+            if (submission.SelfHarmItemEndorsed)
+            {
+                await navigationService.GoToCrisisHubAsync();
+            }
         }
     }
 

@@ -15,8 +15,6 @@ public sealed class RecommendationLaneBoundaryTests
     private static RecommendationLane Recommend(string test, int score) => test switch
     {
         "beck" => TestScoreBandClassifier.RecommendBeck(score),
-        "heckhess" => TestScoreBandClassifier.RecommendHeckHess(score),
-        "haer" => TestScoreBandClassifier.RecommendHaer(score),
         "pochebut" => TestScoreBandClassifier.RecommendPochebut(score),
         "gad7" => TestScoreBandClassifier.RecommendGad7(score),
         "k10" => TestScoreBandClassifier.RecommendK10(score),
@@ -39,10 +37,6 @@ public sealed class RecommendationLaneBoundaryTests
     [Theory]
     [InlineData("beck", 9, Low)]
     [InlineData("beck", 10, High)]
-    [InlineData("heckhess", 24, Low)]
-    [InlineData("heckhess", 25, High)]
-    [InlineData("haer", 28, Low)]
-    [InlineData("haer", 29, High)]
     [InlineData("pochebut", 24, Low)]
     [InlineData("pochebut", 25, High)]
     [InlineData("gad7", 9, Low)]

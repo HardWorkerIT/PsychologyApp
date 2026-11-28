@@ -8,7 +8,7 @@ internal static class TechniqueCatalogContentEn
     internal static TheorySection[] Theory(string what, string when, string how, string example) =>
     [
         new("What it is", what),
-        new("When it helps", when),
+        new("When to try it", when),
         new("How the practice goes", how),
         new("Example", example)
     ];
@@ -24,49 +24,49 @@ internal static class TechniqueCatalogContentEn
         ["\"I'll ruin everything\"", "\"They'll judge me\"", "\"I can't cope\"", "\"Nobody needs me\"", "\"It's a disaster\"", "\"Nothing will work out\"", "\"I'm worse than others\"", "\"Everything always goes wrong\"", "\"It's my fault\"", "\"Something is wrong with me\"", "\"This will never end\"", "\"I have to be perfect\""];
 
     internal static readonly BuiltInTechniqueDefinition Spin = new(
-        "Practice", "Spin",
+        "Practice", "Name the feeling",
         [
-            "1. Describe the episode that bothers you",
+            "1. Choose a recent, mildly upsetting everyday situation",
             "2. Name the main feeling",
-            "3. Rate the feeling from 0 to 10"
+            "3. Rate how strong it feels now (0–10)"
         ],
-        "Zivorad Slavinski's Spin helps lower the emotional charge of a painful memory.",
-        TechniqueUiKind.Entry, "Technique #1", "26.01.2023", "Spin", "Lower emotional charge in 3 steps", "Hard moment", "Zivorad Slavinski", 5, "Autorenew",
+        "Briefly notice the situation and feeling without expecting immediate relief.",
+        TechniqueUiKind.Entry, "Technique #1", "26.01.2023", "Name the feeling", "Notice what is happening now", "Hard moment", "PsychologyApp team", 5, "Autorenew",
         [
-            new TechniqueEntrySeed("Episode", "E.g. yesterday's conversation you can't let go", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Key feeling", "Hurt, fear, anger…", Role: EntryFieldRole.Emotion),
-            new TechniqueEntrySeed("Feeling intensity", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situation", "For example: a minor issue at work. Skip distressing details.", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Main feeling", "Hurt, worry, anger…", Role: EntryFieldRole.Emotion),
+            new TechniqueEntrySeed("How strong it feels now", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "A simple neutralization technique: you name the episode, the feeling, and its intensity. Often awareness alone reduces the charge.",
-            "When a scene or thought loops and won't release anxiety or resentment.",
-            "Write the episode and feeling, then rate intensity honestly. Repeat another day if needed.",
-            "Episode: \"A colleague ignored my idea\". Feeling: hurt. Rating: 8 → later 5."),
+            "Note the situation, feeling, and how strong it feels now. This is self-observation, not treatment or a promise that the feeling will change right away.",
+            "For a mildly upsetting everyday situation, if writing about it feels comfortable. Do not choose a traumatic memory or an acute crisis.",
+            "Write only what is needed and rate the feeling now. If distress rises, stop, look around, and choose a more neutral practice. There is no need to repeat it.",
+            "Situation: a colleague interrupted me. Feeling: irritation. Intensity now: 5 out of 10."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Comparison = new(
-        "Practice", "Importance comparison",
+        "Practice", "See the wider context",
         [
-            "1. State the problem",
-            "2. What mattered in the past in this area?",
-            "3. What matters now?",
-            "4. What will matter in the future?",
-            "5. Compare the three answers and note what shifted"
+            "1. Name what feels difficult without minimizing it",
+            "2. Which areas of life does it affect?",
+            "3. What else matters or needs attention too?",
+            "4. What or whom would you like to care for today?",
+            "5. Note what you notice without rating the problem as small or large"
         ],
-        "Comparing importance across time helps place a problem in the context of your life.",
-        TechniqueUiKind.Entry, "Technique #2", "26.01.2023", "Importance comparison", "When the problem feels too big", "Scale of the problem", "NLP", 7, "CompareArrows",
+        "This exercise lists different parts of life; it does not determine how serious a problem is.",
+        TechniqueUiKind.Entry, "Technique #2", "26.01.2023", "See the wider context", "When one difficulty takes up all your attention", "Scale of the problem", string.Empty, 7, "CompareArrows",
         [
-            new TechniqueEntrySeed("Problem", "What feels unbearable right now?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Mattered in the past", "E.g. studies, relationships, career", Suggestions: ["Studies", "Family", "Friends", "Health", "Career", "Hobbies", "Sport", "Love", "Travel", "Freedom", "Recognition", "Home"]),
-            new TechniqueEntrySeed("Matters now", "What takes most of your attention?", Suggestions: ["Work", "Family", "Health", "Money", "Relationships", "Rest", "Children", "Friends", "Studies", "Sleep", "Peace of mind", "Self-growth"]),
-            new TechniqueEntrySeed("Will matter in the future", "What are you aiming for?", Suggestions: ["Stability", "Family", "Freedom", "Health", "Growth", "People I love", "A home of my own", "Work I love", "Travel", "Calm", "Children", "Savings"]),
-            new TechniqueEntrySeed("What changed?", "Does the problem still dominate everything?", Suggestions: ["The problem is only part of life", "More matters than it seemed", "It's a passing stage", "It feels less sharp", "I feel calmer", "I see I've coped before", "Hope appeared", "Nothing has changed yet"])
+            new TechniqueEntrySeed("What is happening", "What feels difficult right now?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Areas affected", "E.g. work, health, relationships", Suggestions: ["Work", "Family", "Friends", "Health", "Studies", "Money", "Relationships", "Sleep", "Home", "Hobbies", "Rest", "Plans"]),
+            new TechniqueEntrySeed("What else matters", "What also needs attention?", Suggestions: ["Work", "Family", "Health", "Relationships", "Rest", "Children", "Friends", "Studies", "Sleep", "Peace of mind", "Self-growth", "Daily tasks"]),
+            new TechniqueEntrySeed("What to care for", "What or who needs your attention today?", Suggestions: ["Health", "People close to me", "Sleep", "Rest", "A work issue", "A conversation", "A daily task", "Personal boundaries", "Not sure yet"]),
+            new TechniqueEntrySeed("What do you notice", "There is no need to find a positive conclusion")
         ],
         Theory(
-            "The technique shows that a problem's weight changes over time and rarely stays central forever.",
-            "When one difficulty takes the whole screen and feels permanent.",
-            "Fill four fields, then compare: other values often shrink the problem.",
-            "Problem: \"No job\". Past: studying. Present: job search. Future: stability. Insight: a phase, not all of life."),
+            "This exercise helps list what else has your attention without denying the importance of the difficulty itself.",
+            "When one topic takes up most of your attention and you want to name other needs and tasks too.",
+            "Use your own words and do not search for a positive spin. If a practical step or safety issue needs attention, prioritize it. You can leave any field blank.",
+            "Concern: looking for work. It affects money and sleep; caring for someone close also matters today. You might choose one job-search step and ask for support. That does not make the concern less serious."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Polarity = new(
@@ -87,56 +87,56 @@ internal static class TechniqueCatalogContentEn
         "What you dislike", "What you like");
 
     internal static readonly BuiltInTechniqueDefinition Paper = new(
-        "Practice", "Sheet of paper",
+        "Practice", "A thought on paper",
         [
-            "1. Write the thought on paper (or in the field below)",
-            "2. Read it aloud once",
-            "3. Fold, tear, or symbolically release the sheet"
+            "1. Write one thought below or on a sheet of paper",
+            "2. Read it once and name the feeling, if you wish",
+            "3. Choose what to do with the page: keep, fold, or tear it. Doing nothing is fine too"
         ],
-        "Writing thoughts on paper reduces their emotional charge.",
-        TechniqueUiKind.Paper, "Technique #4", "26.01.2023", "Sheet of paper", "When thoughts keep looping", "Thoughts", "Psyche", 3, "Description",
-        [new TechniqueEntrySeed("Thought", "E.g. \"I'll ruin the presentation\"", Suggestions: HarshThoughts)],
+        "Writing can help you notice how a thought is worded; you do not need to destroy the page or expect relief.",
+        TechniqueUiKind.Paper, "Technique #4", "26.01.2023", "A thought on paper", "When a thought keeps returning", "Thoughts", "PsychologyApp team", 3, "Description",
+        [new TechniqueEntrySeed("Thought", "For example: “I'll ruin the presentation.”", Suggestions: HarshThoughts)],
         Theory(
-            "Writing moves the thought outside your head. Destroying the sheet symbolizes letting go.",
-            "When the same sentence spins for hours and blocks sleep or focus.",
-            "Unload the thought, read it, then destroy the sheet — physically or in imagination.",
-            "Thought: \"They'll think I'm incompetent\". After writing and burning the sheet, anxiety often fades."),
+            "You write down one thought so you can see its wording. This is self-observation, not treatment or a guaranteed way to change a feeling.",
+            "When a thought keeps returning and writing feels okay. Stop if it makes you feel worse.",
+            "Write one sentence and read it once. Keeping, putting away, or tearing the page is your choice. You do not have to make yourself feel calm.",
+            "Thought: “I'll ruin the presentation.” You could keep the note and check one slide."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Future = new(
-        "Practice", "50 years later",
+        "Practice", "A future perspective",
         [
-            "1. State the problem",
-            "2. Rate its importance 50 years from now from 0 to 10"
+            "1. Choose a manageable everyday difficulty",
+            "2. Imagine looking back from a time you choose — for example, one or five years from now"
         ],
-        "Moving a problem forward in time lowers its subjective importance.",
-        TechniqueUiKind.Entry, "Technique #5", "30.01.2023", "50 years later", "Move the problem forward in time", "Scale of the problem", "NLP", 2, "Schedule",
+        "Rate the situation from a future perspective. It may still matter; you do not have to dismiss it.",
+        TechniqueUiKind.Entry, "Technique #5", "30.01.2023", "A future perspective", "Try a wider view without dismissing the issue", "Scale of the problem", "PsychologyApp team", 2, "Schedule",
         [
-            new TechniqueEntrySeed("Problem", "What feels like a disaster today?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Importance in 50 years", "", EntryFieldKind.Rating0To10)
+            new TechniqueEntrySeed("Situation", "For example: a manageable issue at work.", Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("How important does it seem from that distance?", "", EntryFieldKind.Rating0To10)
         ],
         Theory(
-            "Imagining an event far in the future often dulls its edge — you see it from a wider perspective.",
-            "When a setback feels like the end of the world though it's temporary.",
-            "Name the problem and rate how much it will matter in fifty years. The score is usually lower.",
-            "Problem: \"I wasn't invited to the meeting\". In 50 years: 1–2 out of 10."),
+            "A future perspective is an imagined way to look at a situation. Its importance may stay the same, and that is okay.",
+            "For a manageable everyday difficulty. Do not choose a traumatic memory or an urgent problem that needs action.",
+            "Choose a time frame, such as one or five years. Imagine viewing the situation from then and give it a rating. There is no right score; stop if the exercise feels unhelpful.",
+            "A missed invitation may still matter a year from now. Today, you could ask about the plans or choose another next step."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Hack = new(
-        "Practice", "White spot",
+        "Practice", "Pause with nearby details",
         [
-            "1. Recall the bothering episode",
-            "2. Picture it as a white spot without details",
-            "3. Hold the spot until tension eases"
+            "1. Choose a neutral object nearby; do not return to a distressing memory",
+            "2. Name three details: its color, shape, and surface",
+            "3. Decide whether to continue or stop"
         ],
-        "Removing details from a memory often lowers its emotional charge.",
-        TechniqueUiKind.Entry, "Technique #6", "30.01.2023", "White spot", "Soften a painful memory", "Hard moment", "NLP", 3, "BlurOn",
-        [new TechniqueEntrySeed("Episode", "Briefly: what happened and what hurts most", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
+        "A brief way to notice an object nearby without revisiting a painful event.",
+        TechniqueUiKind.Entry, "Technique #6", "30.01.2023", "Pause with nearby details", "Shift attention to your surroundings", "Hard moment", "PsychologyApp team", 3, "BlurOn",
+        [new TechniqueEntrySeed("Object nearby", "For example: a cup, a window, or a book.", Role: EntryFieldRole.None)],
         Theory(
-            "Details fuel the feeling. A white spot removes triggers and gives your nervous system a pause.",
-            "When a vivid image from the past hits you with emotion.",
-            "Recall the episode, then replace the picture with a plain white spot for 30–60 seconds.",
-            "Instead of the offender's face — a white spot. Breathing steadies, mind returns to now."),
+            "Bring your attention to a neutral object here and now. This is a brief orientation exercise, not a way to erase a memory or replace professional support.",
+            "When you want to focus briefly on your surroundings. Do not use this practice instead of urgent help.",
+            "Name three details about the object. If you feel worse or uncomfortable, stop, look around, and choose another action.",
+            "For example: a cup — white, round, cool to the touch."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Experience = new(
@@ -173,76 +173,76 @@ internal static class TechniqueCatalogContentEn
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Copied = new(
-        "Practice", "Repeat it",
+        "Practice", "Notice the thought",
         [
-            "1. Write the wording that bothers you",
-            "2. Repeat it aloud as if hearing it for the first time",
-            "3. Keep repeating until emotion eases"
+            "1. Write a short phrase that keeps returning",
+            "2. Read it once and ask: is it a fact, a prediction or a judgment?",
+            "3. If comfortable, check one fact. Stop if your distress grows"
         ],
-        "Repeating a problem statement \"as for the first time\" lowers emotional intensity.",
-        TechniqueUiKind.Copied, "Technique #8", "21.01.2025", "Repeat it", "Hear the problem as if for the first time", "Scale of the problem", "NLP", 2, "Repeat",
+        "This exercise helps you look at how a thought is worded; repeating it does not guarantee less anxiety.",
+        TechniqueUiKind.Copied, "Technique #8", "21.01.2025", "Notice the thought", "Name an anxious phrase without arguing with yourself", "Scale of the problem", string.Empty, 2, "Repeat",
         [new TechniqueEntrySeed("Wording", "I'm afraid of losing my job", Suggestions: HarshThoughts)],
         Theory(
-            "A familiar phrase loses charge when spoken slowly and neutrally, without drama.",
-            "When one thought sounds like a verdict in your head.",
-            "Write the phrase, then repeat it 5–10 times with pauses, noticing body sensations.",
-            "\"Nobody needs me\" — after seven repeats it often sounds absurd and lighter."),
+            "This is a brief way to notice the words in a thought and check what it is based on. You do not need to say it aloud or repeat it.",
+            "When one phrase keeps returning and you feel ready to look at it briefly. Skip this if the thought feels overwhelming right now.",
+            "Write the thought in a few words. Ask what you know for sure and what is a prediction. Do not force yourself to believe an answer. Stop if distress grows.",
+            "Thought: \"I will definitely fail the meeting.\" Fact: \"I have a meeting tomorrow.\" The outcome is still unknown."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Extend = new(
-        "Practice", "Backup plan",
+        "Practice", "Plan for uncertainty",
         [
-            "1. Name the problem",
-            "2. Write three realistic backup options",
-            "3. Notice how anxiety shifts when exits exist"
+            "1. Name the situation you want a backup for",
+            "2. Write one realistic option and available resources",
+            "3. Choose a next step or decide when to revisit the plan"
         ],
-        "Backup options reduce inflated importance of a single outcome.",
-        TechniqueUiKind.Entry, "Technique #9", "21.01.2025", "Backup plan", "Lower the stakes with a backup", "Scale of the problem", "NLP", 3, "Backup",
+        "Planning can clarify available actions; it cannot guarantee an outcome or immediate relief.",
+        TechniqueUiKind.Entry, "Technique #9", "21.01.2025", "Plan for uncertainty", "Find one practical next step", "Scale of the problem", string.Empty, 3, "Backup",
         [
-            new TechniqueEntrySeed("Problem", "What if the main plan fails?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
-            new TechniqueEntrySeed("Backup option 1", "E.g. take a freelance project", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("Backup option 2", "E.g. train for a related role", Suggestions: BackupOptions),
-            new TechniqueEntrySeed("Backup option 3", "E.g. temporarily cut expenses", Suggestions: BackupOptions)
+            new TechniqueEntrySeed("Situation", "What might not go as planned?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Practical option", "E.g. check a deadline or ask for help", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("Resource or support", "Who or what could you turn to?", Suggestions: BackupOptions),
+            new TechniqueEntrySeed("Next step", "What could you do now, or when will you revisit this?", Suggestions: BackupOptions)
         ],
         Theory(
-            "When stakes feel all-or-nothing, the mind tightens. Alternatives restore a sense of choice.",
-            "Before interviews, exams, or events where failure feels catastrophic.",
-            "State the problem and three plausible plan B options — even modest ones.",
-            "Problem: \"Won't get the job\". Plan B: internship, referrals, another city."),
+            "Planning can clarify available actions, but it cannot control other people's decisions or guarantee calm.",
+            "When there is a specific practical uncertainty and you want to consider one manageable option.",
+            "Separate known facts from worries. Identify one realistic step, resource, or time to return to the question. If planning turns into repeated checking of every scenario and increases distress, stop.",
+            "If there is no reply after an interview, you could choose a reasonable time to follow up and focus on other tasks for now. This does not predict the employer's decision."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Resize = new(
-        "Practice", "Shrink it",
+        "Practice", "View the image from a distance",
         [
-            "1. Describe what bothers you",
-            "2. Picture it as an object in front of you",
-            "3. Shrink and move it away until interest fades"
+            "1. Briefly name an everyday situation; no need to use painful memories",
+            "2. If comfortable, imagine it as a still image",
+            "3. You may change its size or distance, but do not force the image to change"
         ],
-        "Visual shrinking and distance lower emotional interest in a problem.",
-        TechniqueUiKind.Entry, "Technique #10", "22.01.2025", "Shrink it", "Make the problem small and distant", "Scale of the problem", "NLP", 2, "ZoomOutMap",
+        "An optional visualization for noticing attention; it does not change the situation or promise relief.",
+        TechniqueUiKind.Entry, "Technique #10", "22.01.2025", "View the image from a distance", "Try distance only if it feels comfortable", "Scale of the problem", string.Empty, 2, "ZoomOutMap",
         [new TechniqueEntrySeed("What bothers you", "E.g. a conflict that keeps you awake", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "Image size and distance affect significance. A small far object rarely pulls your nerves.",
-            "When a problem feels huge and in your face.",
-            "Create an image, gradually shrink it and push it to the horizon for 10–20 seconds.",
-            "A fight becomes a tiny dot. Breathing eases, thoughts clear."),
+            "This is a brief imagery exercise: you can observe an image from a distance. People respond differently, and the situation itself does not change.",
+            "Only for a manageable everyday concern. Do not choose a painful memory; you can skip the exercise.",
+            "Imagine the situation without adding detail. Change its size or distance only if comfortable. If distress grows, stop and notice the room around you.",
+            "You might picture a task as a note on a desk and decide when to return to it. The image does not have to become smaller or calmer."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Check = new(
-        "Practice", "Check it",
+        "Practice", "Shift your attention",
         [
-            "1. Describe what you're looping on",
-            "2. Deliberately stop thinking about it for 1–2 minutes",
-            "3. Notice what changed in body and mood"
+            "1. Name the recurring thought in a short phrase, without details",
+            "2. Notice: \"I am having the thought that…\"",
+            "3. If you want, shift attention to a neutral sound or object; the thought may stay"
         ],
-        "Too much attention inflates importance. A brief pause tests how much the thought controls you.",
-        TechniqueUiKind.Entry, "Technique #11", "22.01.2025", "Check it", "See what happens if you let go", "Scale of the problem", "NLP", 2, "FactCheck",
+        "This exercise helps you choose where to place your attention; it does not require thoughts to disappear.",
+        TechniqueUiKind.Entry, "Technique #11", "22.01.2025", "Shift your attention", "Notice the thought and choose a neutral focus", "Scale of the problem", string.Empty, 2, "FactCheck",
         [new TechniqueEntrySeed("What you're looping on", "Which thought keeps returning?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem)],
         Theory(
-            "If a thought were vital for survival, letting go would feel dangerous. The experiment usually shows nothing catastrophic happens.",
-            "When you can't stop replaying the same topic.",
-            "Name the thought, then gently shift attention to breath or sounds around you.",
-            "Thought: \"What if I'm ill\". After a pause, anxiety often drops from 7 to 4."),
+            "This is a brief way to notice a recurring thought and give attention another task. You do not need to suppress it or become calm.",
+            "When you are replaying one topic and feel comfortable trying a brief shift. If the thought concerns real danger, address safety first.",
+            "Name the thought in one phrase, then choose a neutral sound or object around you. Stop if distress grows. Do not use this instead of needed medical or practical action.",
+            "Thought: \"What if I am ill?\" You can notice it as a thought and decide whether a real step is needed, such as asking a clinician about a symptom."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Observer = new(
@@ -310,20 +310,20 @@ internal static class TechniqueCatalogContentEn
             new TechniqueEntrySeed("1 taste or pleasant sensation", "E.g. water in mouth, soft fabric", Suggestions: ["Water", "Tea", "Soft fabric", "Warm palms", "Fresh mouth", "Coffee", "Mint gum", "Chocolate", "An apple", "A warm blanket"])
         ],
         Theory(
-            "Anxiety often pulls you into past or future. Counting through senses brings you back to here and now.",
-            "During panic, strong anxiety, dizziness, or feeling detached from reality.",
-            "Go through the steps slowly, naming concrete sensations. Breathe evenly between items.",
-            "5 see → 4 feel → 3 hear → breathing steadies, thoughts slow down."),
+            "Shift your attention to what you can see, hear and feel around you.",
+            "When worry takes up your attention and you want to focus on your surroundings.",
+            "Start with what you can see. If you cannot notice a smell or a taste, move on. Breathe as usual.",
+            "I see a cup and a lamp. I feel the floor under my feet. I hear traffic outside."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Breathing = new(
         "Practice", "Gentle paced breathing",
         [
             "1. Rate your tension.",
-            "2. Sit comfortably and breathe gently, no deeper than usual.",
-            "3. If comfortable, inhale for 4 counts and exhale for 6. Do not hold your breath.",
-            "4. If the pace does not suit you, drop the count or stop. If dizzy or short of breath, return to normal breathing.",
-            "5. Rate your tension again. If it has not changed, that is useful to know."
+            "2. Sit comfortably. Breathe gently, no deeper than usual.",
+            "3. If it feels comfortable, breathe in for 4 counts and out for 6, without holding your breath.",
+            "4. Drop the count or stop if the pace feels uncomfortable. If you feel dizzy or short of breath, return to your usual breathing.",
+            "5. Rate your tension again. It may be the same."
         ],
         "A brief, gentle rhythm without breath holds can be tried when tense. It does not suit everyone: counting or focusing on the breath may increase discomfort.",
         TechniqueUiKind.Entry, "Technique #15", "04.07.2026", "Gentle paced breathing", "Gently lengthen your exhale", "Hard moment", "Psyche", 3, "Air",
@@ -343,10 +343,10 @@ internal static class TechniqueCatalogContentEn
     internal static readonly BuiltInTechniqueDefinition SmallStep = new(
         "Practice", "One small step",
         [
-            "1. Choose a small activity for self-care, interest, connection, or a sense of completion.",
-            "2. Make it a safe 2–5 minute start. You do not have to finish the whole task.",
-            "3. Set a time within 24 hours. If now is not right, choose rest, support, or a smaller step.",
-            "4. Rate your confidence from 0 to 10. If unsure, make the step smaller."
+            "1. Pick one manageable activity. For example, drink some water or message someone close to you.",
+            "2. Set aside 2–5 minutes for a safe start. You can stop there.",
+            "3. Choose a time within the next 24 hours. If rest or support fits better right now, choose that.",
+            "4. Rate your confidence from 0 to 10. If starting feels hard, make the step smaller."
         ],
         "A brief activity plan informed by behavioral activation. A small step can help with getting started, but it does not guarantee a better mood or more energy.",
         TechniqueUiKind.Entry, "Technique #16", "04.07.2026", "One small step", "Choose one activity and start small", "Hard moment", "CBT", 5, "DirectionsWalk",
@@ -366,26 +366,26 @@ internal static class TechniqueCatalogContentEn
     internal static readonly BuiltInTechniqueDefinition ThoughtRecord = new(
         "Practice", "Thought record",
         [
-            "1. Describe the situation",
+            "1. Describe the situation without judging it",
             "2. Write the automatic thought",
-            "3. Rate the emotion",
-            "4. Formulate a more balanced alternative thought",
-            "5. Rate the emotion again"
+            "3. Name the emotion and rate it now",
+            "4. Separate facts from assumptions and find another possibility",
+            "5. Rate the emotion again; it may stay the same"
         ],
-        "A structured CBT record helps you see the link between situation, thought, and emotion.",
-        TechniqueUiKind.Entry, "Technique #17", "04.07.2026", "Thought record", "Unpack the thought; ease its impact", "Hard moment", "CBT", 7, "EditNote",
+        "Separate the situation, thought, and feeling, then check the conclusion against the facts. The feeling does not have to ease.",
+        TechniqueUiKind.Entry, "Technique #17", "04.07.2026", "Thought record", "Separate a fact from an interpretation", "Hard moment", "CBT", 7, "EditNote",
         [
-            new TechniqueEntrySeed("Situation", "What happened? Where and when?", Suggestions: ProblemTopics, Role: EntryFieldRole.Problem),
+            new TechniqueEntrySeed("Situation", "What happened? Where and when? Just the essentials.", Role: EntryFieldRole.Problem),
             new TechniqueEntrySeed("Automatic thought", "What did you think in that moment?", Suggestions: HarshThoughts),
-            new TechniqueEntrySeed("Emotion", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Alternative thought", "What else might be true? A more balanced view", Role: EntryFieldRole.Reframe),
-            new TechniqueEntrySeed("Emotion now", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
+            new TechniqueEntrySeed("Emotion before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
+            new TechniqueEntrySeed("A more accurate view", "What facts support or challenge it? What else is possible?", Role: EntryFieldRole.Reframe),
+            new TechniqueEntrySeed("Emotion after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Automatic thoughts often sound like facts though they are interpretations. Writing them down makes them visible and testable.",
-            "After conflict, criticism, failure, or when one thought keeps looping.",
-            "Describe situation and thought, rate emotion, then find an alternative — not toxic positivity, but something more accurate.",
-            "Situation: no reply to message. Thought: nobody needs me. Alternative: they are busy. Emotion: 8 → 5."),
+            "This exercise separates an event from your interpretation of it. It is not a diagnosis or treatment.",
+            "For a moderately upsetting situation, if you have the capacity to write about it now. Do not choose a traumatic memory or an acute crisis.",
+            "Write down observable facts, then the thought. Look for an explanation that accounts for the facts and the unknowns; do not force a positive view. An unchanged rating does not mean you did anything wrong.",
+            "Situation: no reply to a message yet. Thought: “Nobody needs me.” Fact: there is no reply yet. Another possibility: the reason is unknown; the person may be busy."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition SelfCompassion = new(
@@ -419,10 +419,10 @@ internal static class TechniqueCatalogContentEn
             "3. Find where the sensation is strongest.",
             "4. Describe it: for example, small or large, warm or cold.",
             "5. Name the feeling linked to it.",
-            "6. Take 5 slow out-breaths, imagining them passing through that place. Rate your tension again."
+            "6. If you like, notice what changed—or stayed the same. You can stop or shift your attention to your surroundings at any time."
         ],
-        "Body scan: notice where a feeling lives, name it, and let the body soften without fighting the sensation.",
-        TechniqueUiKind.Entry, "Technique #19", "16.10.2026", "Where is it in the body?", "Notice a feeling in your body", "Hard moment", "Mindfulness", 4, "Accessibility",
+        "A body scan invites you to notice sensations and feelings without needing to change them.",
+        TechniqueUiKind.Entry, "Technique #19", "16.10.2026", "Where is it in the body?", "Notice sensations and feelings without needing to change them", "Hard moment", "Mindfulness", 4, "Accessibility",
         [
             new TechniqueEntrySeed("Tension now", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
             new TechniqueEntrySeed("Where in the body do you feel it?", "For example: chest, throat, shoulders", Suggestions: ["Head", "Forehead", "Eyes", "Jaw", "Throat", "Neck", "Shoulders", "Chest", "Heart", "Stomach", "Back", "Lower back", "Arms", "Hands", "Legs", "The whole body"]),
@@ -431,10 +431,10 @@ internal static class TechniqueCatalogContentEn
             new TechniqueEntrySeed("Tension after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "Feelings echo in the body: anxiety as tightness in the chest, hurt as a lump in the throat, tiredness as heavy shoulders. When we notice the sensation and name the feeling, tension usually eases. This is the core of the body scan in mindfulness programmes.",
+            "A body scan can be a way to notice sensations and feelings that may go with them. Tension does not have to change; it may stay the same. Body scans are used in some mindfulness programmes.",
             "When you feel anxious or heavy but cannot tell what exactly you feel; when the body is tense after a hard conversation or day. The practice does not explain illnesses and does not replace a doctor: if a sensation is new, strong or does not go away, see a doctor.",
-            "Sit comfortably and slowly move your attention from the top of your head to your feet. Stop where the sensation is brightest. Do not change it or fight it: describe it and name the feeling. Then take a few slow out-breaths as if each one passes through that place.",
-            "Tension 6. Where: chest. Sensation: tightness, like a fist. Feeling: anxiety before a conversation. After 5 out-breaths the tightness is softer, tension 4."),
+            "Sit comfortably if that feels okay, and gradually bring your attention to different parts of your body. Describe a sensation as specifically as you can; name a feeling too, if that fits. You do not need to change anything. If turning inward feels uncomfortable, open your eyes, focus on things around you, or stop. Breathe normally.",
+            "Tension 6/10. Place: chest. Sensation: tightness. Feeling: worry before a conversation. Afterwards, tension was still 6/10. I opened my eyes and named things in the room. That is a valid result too."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition Flashback = new(
@@ -521,18 +521,18 @@ internal static class TechniqueCatalogContentEn
             "4. Follow the circle's rhythm for about 3 minutes.",
             "5. Rate your tension again."
         ],
-        "A double breath in and a long breath out calm the body quickly, with no breath holding.",
+        "Two gentle breaths in followed by a longer breath out create a breathing rhythm. You do not need to hold your breath or inhale more deeply than usual.",
         TechniqueUiKind.Entry, "Technique #23", "26.10.2026", "Cyclic sigh", "Double inhale, long exhale", "Hard moment", "Psyche", 3, "Air",
         [
             new TechniqueEntrySeed("Tension before", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityBefore),
-            new TechniqueEntrySeed("Notes", "What changed after the breathing?", Suggestions: ["My body is calmer", "My shoulders dropped", "My heart slowed down", "My thoughts slowed down", "I felt a little dizzy", "Nothing changed", "I want to do it again"]),
+            new TechniqueEntrySeed("Notes", "What did you notice?", Suggestions: ["A little calmer", "No noticeable change", "More uncomfortable", "I felt dizzy", "I don't want to rate it", "Something else"]),
             new TechniqueEntrySeed("Tension after", "", EntryFieldKind.Rating0To10, Role: EntryFieldRole.IntensityAfter)
         ],
         Theory(
-            "The second short breath in opens the lungs more fully, and the long breath out applies the nervous system's brake: the heart slows and the body calms down. In a 2023 study, five minutes a day of this breathing improved mood more than mindfulness meditation. It is not a treatment but a quick way to bring tension down.",
-            "When anxiety, anger or tension takes over and you need to calm your body within a couple of minutes. It also suits the moment before a difficult conversation or before sleep.",
-            "Breathe gently, not as hard as you can: the second breath in is short, the breath out slow and without strain. If you feel dizzy, go back to normal breathing; it will pass. The circle stops by itself after three minutes.",
-            "Tension 6/10 before a phone call. Three minutes of a double breath in and a long breath out. Tension 3/10, and my voice was steadier."),
+            "A randomized study of 111 participants examined cyclic sighing practiced for five minutes daily over one month. Positive mood ratings improved more in that group than in the mindfulness group. This does not show that one short session will quickly lower tension, or that everyone will respond the same way.",
+            "Try it if focusing on your breath feels comfortable—for example, before a conversation or during a short pause. If breath focus makes you more uncomfortable, choose an exercise that focuses on your surroundings.",
+            "Breathe gently; do not try to inhale as deeply as possible. Repeat the rhythm only while it feels comfortable. If you feel dizzy or uneasy, stop, sit somewhere stable, and return to your usual breathing. Seek medical advice if symptoms are severe or do not ease.",
+            "Before a call, I notice tension and try a few gentle cycles. If nothing changes or I feel more uncomfortable, I stop and breathe normally."),
         null, null);
 
     internal static readonly BuiltInTechniqueDefinition MuscleRelax = new(

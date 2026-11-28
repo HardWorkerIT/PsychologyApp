@@ -40,19 +40,6 @@ public sealed class TestScoreBandClassifierTests
         Assert.Equal(expected, TestScoreBandClassifier.ClassifyPhq9(score));
 
     [Theory]
-    [InlineData(24, BinarySeverityBand.Low)]
-    [InlineData(25, BinarySeverityBand.High)]
-    public void ClassifyHeckHess_Boundaries(int score, BinarySeverityBand expected) =>
-        Assert.Equal(expected, TestScoreBandClassifier.ClassifyHeckHess(score));
-
-    [Theory]
-    // As the result texts read: "0-28 — low", "29-40 — high".
-    [InlineData(28, BinarySeverityBand.Low)]
-    [InlineData(29, BinarySeverityBand.High)]
-    public void ClassifyHaer_Boundaries(int score, BinarySeverityBand expected) =>
-        Assert.Equal(expected, TestScoreBandClassifier.ClassifyHaer(score));
-
-    [Theory]
     [InlineData(10, PochebutBand.Low)]
     [InlineData(11, PochebutBand.Moderate)]
     [InlineData(24, PochebutBand.Moderate)]

@@ -1,15 +1,23 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using PsychologyApp.Application.ClinicalCare;
+using PsychologyApp.Application.Conversation;
 using PsychologyApp.Application.Models;
+using PsychologyApp.Application.Models.Practice;
+using PsychologyApp.Application.Practice;
+using PsychologyApp.Application.Recommendations;
 using PsychologyApp.Application.Technique;
 using PsychologyApp.Application.UserProgress;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Models.Practice.Techniques;
 using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
+using PsychologyApp.Presentation.Features.RunTechniqueSession.Index;
+using PsychologyApp.Presentation.Pages.RunTechniqueSession.PracticeCompletion;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
+using PsychologyApp.Presentation.Shared.Services.Donations;
 using PsychologyApp.Presentation.Shared.Services.Notifications;
+using PsychologyApp.Presentation.Shared.Services.Preferences;
 using System.Text.Json;
 using Xunit;
 
@@ -95,6 +103,24 @@ public sealed class TechniqueSessionCompletionServiceTests
     }
 
     [Fact]
+    public async Task CompletingAPracticeAfterLeavingTheScreenKeepsTheSaveAndDoesNotRetryNavigation()
+    {
+        var progress = new Mock<IUserProgressService>();
+        var navigation = new Mock<INavigationService>();
+        progress.Setup(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(42L);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(0, "Paper", 42L))
+            .ReturnsAsync(NavigationRunStatus.DroppedInactiveSource);
+        PracticeSessionCompletionState completion = new();
+
+        await CreateService().CompleteStandardSessionAsync(
+            progress.Object, navigation.Object, "Paper", "Practice", "Paper", DateTime.UtcNow, completion);
+
+        Assert.True(completion.HasSavedResult);
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(0, "Paper", 42L), Times.Once);
+    }
+
+    [Fact]
     public async Task TryingToOpenASavedPracticeAgainDoesNotRecordASecondCompletion()
     {
         var progress = new Mock<IUserProgressService>();
@@ -144,6 +170,111 @@ public sealed class TechniqueSessionCompletionServiceTests
                 It.IsAny<CancellationToken>()),
             Times.Once);
         navigation.Verify(n => n.GoToPracticeCompletionAsync(1, "custom_5", 7L), Times.Once);
+    }
+}
+
+public sealed class PracticeCompletionViewModelSafetyTests
+{
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task FinishingSavesReflectionAndKeepsPageOpenIfSavingFails(bool moodAlreadySaved)
+    {
+        var progress = new Mock<IUserProgressService>();
+        progress.Setup(p => p.GetRecentMoodsAsync(3, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<MoodEntryDTO>());
+        progress.Setup(p => p.RecordMoodAsync(3, null, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(7L);
+        progress.SetupSequence(p => p.UpdateSessionResultNoteAsync(42, "A short reflection", It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Storage unavailable"))
+            .Returns(Task.CompletedTask);
+        var navigation = new Mock<INavigationService>();
+        var catalog = Mock.Of<ITechniqueCatalogService>();
+        var resolver = new NextPracticeResolver(progress.Object, Mock.Of<IUserPreferencesStore>(),
+            Mock.Of<ITechniqueRecommendationService>(), new TechniqueCatalogGateway(catalog),
+            Mock.Of<IClinicalCareService>());
+        var viewModel = new PracticeCompletionViewModel(navigation.Object, progress.Object, resolver,
+            Mock.Of<ICrisisDetector>(), Mock.Of<IDonationSupportService>(), 1, sessionResultId: 42);
+
+        if (moodAlreadySaved)
+        {
+            var moodSaved = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            viewModel.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(viewModel.SelectedMoodLevel))
+                {
+                    moodSaved.TrySetResult();
+                }
+            };
+            viewModel.RecordMoodCommand.Execute(3);
+            await moodSaved.Task.WaitAsync(TimeSpan.FromSeconds(3));
+        }
+
+        viewModel.ReflectionNote = "A short reflection";
+        await viewModel.FinishAsync();
+
+        Assert.Equal("A short reflection", viewModel.ReflectionNote);
+        Assert.False(string.IsNullOrWhiteSpace(viewModel.ReflectionSaveStatus));
+        navigation.Verify(n => n.GoBackAsync(), Times.Never);
+
+        await viewModel.FinishAsync();
+
+        progress.Verify(p => p.UpdateSessionResultNoteAsync(42, "A short reflection", It.IsAny<CancellationToken>()), Times.Exactly(2));
+        progress.Verify(p => p.UpdateMoodEntryAsync(7, 3, "A short reflection", It.IsAny<CancellationToken>()),
+            moodAlreadySaved ? Times.Once() : Times.Never());
+        navigation.Verify(n => n.GoBackAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task CompletionWaitsForSavedAnswersAndDoesNotOfferAnotherPracticeOnCrisis()
+    {
+        const string answer = "Crisis in the saved answer";
+        var result = new TaskCompletionSource<SessionResultDTO?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var progress = new Mock<IUserProgressService>();
+        progress.Setup(p => p.GetSessionResultAsync(42, It.IsAny<CancellationToken>()))
+            .Returns(result.Task);
+        progress.Setup(p => p.GetRecentMoodsAsync(3, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<MoodEntryDTO>());
+
+        var catalog = new Mock<ITechniqueCatalogService>();
+        var paper = new BuiltInTechniqueDefinition(
+            "Practice", "Paper", [], "", PsychologyApp.Domain.Practice.TechniqueUiKind.Entry,
+            "", "", "Paper", "", "", "", 3, "");
+        catalog.Setup(c => c.GetAsync(PsychologyApp.Domain.Practice.TechniqueId.Paper, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paper);
+
+        var detector = new Mock<ICrisisDetector>();
+        detector.Setup(d => d.IsCrisis(answer)).Returns(true);
+        var preferences = new Mock<IUserPreferencesStore>();
+        var resolver = new NextPracticeResolver(progress.Object, preferences.Object,
+            Mock.Of<ITechniqueRecommendationService>(),
+            new TechniqueCatalogGateway(catalog.Object),
+            Mock.Of<IClinicalCareService>());
+        var viewModel = new PracticeCompletionViewModel(
+            Mock.Of<INavigationService>(), progress.Object, resolver, detector.Object,
+            Mock.Of<IDonationSupportService>(),
+            1, "Paper", 42, catalog.Object);
+
+        Assert.False(viewModel.HasNextPractice);
+        preferences.Verify(p => p.Load(), Times.Never);
+
+        var crisisShown = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        viewModel.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(viewModel.IsCrisis) && viewModel.IsCrisis)
+            {
+                crisisShown.TrySetResult();
+            }
+        };
+        result.SetResult(new SessionResultDTO
+        {
+            ItemKey = "Paper",
+            PayloadJson = """{"Items":[{"Text":"Crisis in the saved answer"}]}"""
+        });
+        await crisisShown.Task.WaitAsync(TimeSpan.FromSeconds(3));
+
+        Assert.False(viewModel.HasNextPractice);
+        preferences.Verify(p => p.Load(), Times.Never);
     }
 }
 

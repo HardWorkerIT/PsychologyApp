@@ -75,7 +75,7 @@
                             Binding="{TemplateBinding Variant}"
                             TargetType="Label"
                             Value="Tonal">
-                            <Setter Property="Style" Value="{StaticResource OutlinedActionLabelStyle}" />
+                            <Setter Property="Style" Value="{StaticResource TonalActionLabelStyle}" />
                         </DataTrigger>
                         <DataTrigger
                             Binding="{TemplateBinding Variant}"

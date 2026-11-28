@@ -203,12 +203,12 @@ public static partial class ArticleContent
                     "Sicherheitsnetze und Vermeidung",
                     4,
                     [
-                        P("Am stärksten hält die Vermeidung die Angst am Leben. Sie kann offen sein (ich gehe nicht hin, ich rufe nicht an) oder versteckt: Sicherheitsnetze, mit denen man eine Situation übersteht."),
-                        Check("Habe ich Sicherheitsnetze?", 2, "Du hast mehrere Sicherheitsnetze. Sie halten die Angst am Leben: Das Gehirn glaubt, alles sei nur dank ihnen gut gegangen. Versuch, in einer leichten Situation auf eines zu verzichten.", "Du hast wenige Sicherheitsnetze. Achte auch darauf, was du ganz meidest.", "Ich habe „für alle Fälle“ eine Tablette, Wasser oder ein geladenes Handy dabei", "Ich gehe nur in Begleitung an schwierige Orte", "Ich setze mich in die Nähe des Ausgangs", "Ich lenke mich ab, um die Angst nicht zu bemerken", "Ich prüfe oder frage viele Male nach"),
-                        P("Der Ausweg ist, dem Gefürchteten schrittweise zu begegnen und auf Sicherheitsnetze zu verzichten. Dann lernt das Gehirn aus Erfahrung, dass das Befürchtete nicht eintritt oder erträglich ist.")
+                        P("Vermeidung kann zu Angst beitragen, besonders wenn sie dich zunehmend von wichtigen Dingen abhält. Sie kann offensichtlich sein (nicht hingehen oder anrufen) oder weniger auffallen, etwa durch wiederholtes Kontrollieren, Rückversicherung oder langes Vorausplanen."),
+                        Check("Welche Bewältigungsweisen bemerke ich?", 2, "Du hast mehrere Bewältigungsweisen erkannt. Das ist weder Bewertung noch Diagnose. Wenn sie dich einschränken, besprich sichere, schrittweise Veränderungen mit einer Fachperson. Setz verordnete Medikamente nicht ab und verzichte nicht auf nötige Sicherheitsmaßnahmen.", "Wenige oder keine Antworten sind ebenfalls normal. Diese Gewohnheiten hängen von der Situation ab und sind keine Diagnose.", "Ich kontrolliere wiederholt oder bitte um Rückversicherung", "Ich übe Sätze lange ein oder plane möglichst jeden Ausgang", "Ich lenke mich ab, um die Angst nicht wahrzunehmen", "In einer sicheren Situation gehe ich sofort, wenn die Angst steigt"),
+                        P("Wenn eine Alltagssituation sicher ist und du es versuchen möchtest, wähle einen kleinen, freiwilligen Schritt. Geh in deinem Tempo vor und pausiere bei Bedarf. Setz verordnete Medikamente nicht ab und verzichte nicht auf notwendige Sicherheitsmaßnahmen. Wenn Angst deinen Alltag stark einschränkt, besprich einen Plan mit einer Fachperson.")
                     ],
-                    "Mach eine Liste von drei bis fünf Situationen, die du meidest, von der leichtesten bis zur schwierigsten.",
-                    "Welche Situation von der Liste bist du bereit, als Erstes zu versuchen?"),
+                    "Notiere bis zu fünf Alltagssituationen, die du meidest. Lass reale Gefahren und traumatische Erinnerungen aus; du kannst diesen Schritt überspringen.",
+                    "Wenn es eine sichere Situation gibt: Welchen kleinen Schritt möchtest du überlegen oder mit einer Fachperson besprechen?"),
                 new(
                     "Der erste Schritt und ein Plan",
                     4,

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.ReadArticles.AnchorThoughts.AnchorThoughtsPage"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:filterTabs="clr-namespace:PsychologyApp.Presentation.Widgets.FilterChipTabs"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ReadArticles.AnchorThoughts"
              x:DataType="vm:AnchorThoughtsViewModel"
@@ -31,7 +32,7 @@
             <CollectionView.Header>
                 <VerticalStackLayout Padding="0,12,0,4" Spacing="{StaticResource ListItemSpacing}">
                     <Label Text="{Binding IntroText}" Style="{StaticResource BodyStyle}" />
-                    <ui:FilterChipTabBarView ItemsSource="{Binding Filters}" TapCommand="{Binding SelectThemeCommand}" />
+                    <filterTabs:FilterChipTabBarView ItemsSource="{Binding Filters}" TapCommand="{Binding SelectThemeCommand}" />
                 </VerticalStackLayout>
             </CollectionView.Header>
 

@@ -57,7 +57,9 @@ public enum Utterance
     /// ("sdfsdf") or a string with no vowels. There is nothing to understand, so the dialogue must not pretend there is.</summary>
     Noise,
     /// <summary>Only exclamation marks ("!!!", "!!!!"): strong emotion with no words.</summary>
-    Exclaims
+    Exclaims,
+    /// <summary>"I don't know what I feel": uncertainty about a feeling, not a request to guess one.</summary>
+    UnsureAboutFeelings
 }
 
 /// <summary>
@@ -73,6 +75,14 @@ public static class UtteranceClassifier
     private static readonly string[] GoodbyeTerms = ["до свидания", "до встречи", "всего доброго", "спокойной ночи", "до завтра", "давай завтра", "поговорим завтра", "поговорим позже", "давай позже", "bye", "goodbye", "good night", "see you", "talk later"];
     private static readonly string[] ByeWordTerms = ["пока "];
     private static readonly string[] DontKnowTerms = ["не знаю", "хз", "сложно сказать", "затрудняюсь", "не уверен", "не уверена", "трудно сказать", "dont know", "do not know", "no idea", "not sure", "hard to say"];
+    private static readonly string[] UnsureAboutFeelingsTerms =
+    [
+        "не знаю что чувствую", "не знаю как себя чувствую", "не понимаю что чувствую", "не понимаю как себя чувствую",
+        "не могу понять что чувствую", "не могу назвать чувство", "не понимаю свои чувства", "не уверен что чувствую", "не уверена что чувствую",
+        "затрудняюсь назвать чувство", "сложно понять что чувствую",
+        "i dont know what i feel", "i dont know what im feeling", "i dont know how i feel", "i cant tell how i feel", "i cant name what i feel",
+        "im not sure what i feel", "im not sure how i feel", "im not sure what im feeling", "i am not sure what i feel", "i am not sure how i feel"
+    ];
     private static readonly string[] RefuseTerms =
     [
         "не хочу об этом", "не хочу говорить", "не хочу рассказывать", "не буду об этом", "не хочется об этом", "не хочу про это", "не хочу это обсуждать", "не хочу ничего обсуждать", "не хочу ничего рассказывать", "не хочу ничего говорить", "не хочу обсуждать", "не хочу разговаривать", "не хочу ни о чем говорить", "давай не будем об этом", "не буду ничего рассказывать", "оставь меня в покое", "оставьте меня в покое", "не хочу больше говорить",
@@ -198,9 +208,15 @@ public static class UtteranceClassifier
         "не знаю что делать", "не знаю как быть", "i dont know what to do", "i do not know what to do"
     ];
 
+    private static readonly string[] SupportOtherRequestTerms =
+    [
+        "как помочь", "как я могу помочь", "чем я могу помочь", "как поддержать",
+        "how can i help", "how can i support", "what can i do to help", "how do i support", "how do i comfort", "what should i say to"
+    ];
+
     private static readonly string[] DirectAdviceOverrides =
     [
-        "посоветуй", "посоветуйте", "подскажи", "подскажите", "скажи что мне делать", "скажи что делать", "дай совет", "дайте совет", "мне нужен совет", "нужен совет", "что посоветуешь", "что посоветуете", "помоги", "помогите", "give me advice", "can you give me advice", "can you give me some advice", "could you give me advice", "could you give me some advice", "can you advise me", "could you advise me", "can i get advice", "can i get some advice", "could i get advice", "could i get some advice", "i need advice", "i need some advice", "any advice", "what do you suggest", "what would you recommend", "help me", "need help"
+        "посоветуй", "посоветуйте", "подскажи", "подскажите", "скажи что мне делать", "скажи что делать", "дай совет", "дайте совет", "мне нужен совет", "нужен совет", "что посоветуешь", "что посоветуете", "помоги", "помогите", .. SupportOtherRequestTerms, "give me advice", "can you give me advice", "can you give me some advice", "could you give me advice", "could you give me some advice", "can you advise me", "could you advise me", "can i get advice", "can i get some advice", "could i get advice", "could i get some advice", "i need advice", "i need some advice", "any advice", "what do you suggest", "what would you recommend", "help me", "need help"
     ];
 
     private static readonly string[] EntertainTerms = ["расскажи анекдот", "знаешь анекдот", "анекдот", "пошути", "умеешь шутить", "расскажи шутку", "мне скучно", "скучно", "нечем заняться", "tell me a joke", "know any jokes", "i am bored", "im bored", "tell a joke"];
@@ -392,12 +408,20 @@ public static class UtteranceClassifier
         }
 
         bool asksAdviceDirectly = ContainsAny(padded, DirectAdviceOverrides);
-        bool asksAdviceInQuestion = HasQuestionEnding(text) && (ContainsAny(padded, AdviceTerms) || ContainsAny(padded, AdviceQuestionTerms));
+        bool asksAdviceInQuestion = HasAdviceQuestionAtEnd(text);
         bool expressesUncertaintyAboutWhatToDo = !hasFeeling && ContainsAny(padded, AdviceTerms);
-        if (words <= 16 && !IsNegatedAdviceRequest(normalized)
-            && (asksAdviceDirectly || asksAdviceInQuestion || expressesUncertaintyAboutWhatToDo))
+        bool asksHowToSupportSomeone = IsExplicitSupportOtherRequest(text);
+        if (!IsNegatedAdviceRequest(normalized)
+            && (asksAdviceInQuestion
+                || asksHowToSupportSomeone
+                || (words <= 16 && (asksAdviceDirectly || expressesUncertaintyAboutWhatToDo))))
         {
             return Utterance.AsksForAdvice;
+        }
+
+        if (!hasFeeling && words <= 8 && ContainsAny(padded, UnsureAboutFeelingsTerms))
+        {
+            return Utterance.UnsureAboutFeelings;
         }
 
         if (hasFeeling)
@@ -484,7 +508,7 @@ public static class UtteranceClassifier
         string normalized = Normalize(text);
         string padded = normalized + " ";
         bool directRequest = ContainsAny(padded, DirectAdviceOverrides);
-        bool explicitQuestion = HasQuestionEnding(text) && (ContainsAny(padded, AdviceTerms) || ContainsAny(padded, AdviceQuestionTerms));
+        bool explicitQuestion = HasAdviceQuestionAtEnd(text);
         if (IsNegatedAdviceRequest(normalized))
         {
             return false;
@@ -493,16 +517,82 @@ public static class UtteranceClassifier
         return directRequest || (explicitQuestion && (!ContainsAny(padded, NonExplicitAdviceTerms) || ContainsAny(padded, AdviceQuestionTerms)));
     }
 
+    internal static bool IsExplicitSupportOtherRequest(string text)
+    {
+        string normalized = Normalize(text);
+        if (StartsWithAny(normalized, SupportOtherRequestTerms))
+        {
+            return true;
+        }
+
+        return ContainsAny(Normalize(FinalQuestionSentence(text)) + " ", SupportOtherRequestTerms);
+    }
+
     private static bool HasQuestionEnding(string text)
     {
+        string ending = QuestionEnding(text);
+        return ending.EndsWith('?') || ending.EndsWith('？');
+    }
+
+    private static bool HasAdviceQuestionAtEnd(string text)
+    {
+        string question = Normalize(FinalQuestionSentence(text));
+        string paddedQuestion = question + " ";
+        return ContainsAny(paddedQuestion, AdviceTerms) || ContainsAny(paddedQuestion, AdviceQuestionTerms);
+    }
+
+    private static string FinalQuestionSentence(string text)
+    {
+        if (!HasQuestionEnding(text))
+        {
+            return string.Empty;
+        }
+
+        string ending = QuestionEnding(text);
+
+        int cursor = ending.Length - 1;
+        while (cursor > 0 && ending[cursor - 1] is '?' or '？')
+        {
+            cursor--;
+        }
+
+        int start = 0;
+        for (int i = cursor - 1; i >= 0; i--)
+        {
+            if (ending[i] is '.' or '!' or '?' or '…' or '。' or '！' or '？' || ending[i] == 0x0A || ending[i] == 0x0D)
+            {
+                start = i + 1;
+                break;
+            }
+        }
+
+        return ending[start..];
+    }
+
+    private static string QuestionEnding(string text)
+    {
         string ending = text.TrimEnd();
-        while (ending.Length > 0 && ending[^1] is '"' or '”' or '»' or '\'' or ')')
+        while (ending.Length > 0 && IsClosingQuestionQuote(ending[^1]))
         {
             ending = ending[..^1].TrimEnd();
         }
 
-        return ending.EndsWith('?');
+        while (ending.Length > 0 && (ending[^1] is '!' or '…'))
+        {
+            string before = ending[..^1].TrimEnd();
+            if (!before.EndsWith('?') && !before.EndsWith('？'))
+            {
+                break;
+            }
+
+            ending = before;
+        }
+
+        return ending;
     }
+
+    private static bool IsClosingQuestionQuote(char value) =>
+        value is '"' or '”' or '»' or ')' or '’' || value == 0x27;
 
     private static bool IsNegatedAdviceRequest(string normalized)
     {

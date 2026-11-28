@@ -1,17 +1,17 @@
 [
   {
-    "title": "Fragebogen nach Heck und Hess",
-    "subtitle": "Neurotizismus-Screening",
+    "title": "Fragen zu emotionalen Reaktionen",
+    "subtitle": "Selbstreflexion · keine Diagnose",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Neurotizismus",
-    "betterWhen": "lower",
-    "description": "40 Aussagen zur emotionalen Reaktivität. Antworte mit Ja oder Nein über dich.",
+    "construct": "Selbstreflexion",
+    "betterWhen": "none",
+    "description": "40 Aussagen laden dazu ein, über eigene emotionale Reaktionen nachzudenken. Der Punktwert ist keine diagnostische Einschätzung.",
     "algorithm": [
       "1. Du erhältst eine Liste von Aussagen.",
       "2. Antworte bei jeder Aussage mit Ja, wenn du zustimmst (sie auf dich zutrifft), oder mit Nein, wenn nicht."
     ],
-    "comment": "Wenn du dir Sorgen machst, wende dich an eine qualifizierte Fachperson.",
+    "comment": "Nutze die Antworten als Denkanstoß, nicht als Etikett. Wenn dich etwas beunruhigt, besprich es mit einer qualifizierten Fachperson.",
     "analyzerId": "heck_hess",
     "answers": [
       "Ja",
@@ -66,18 +66,18 @@
     "singleAnswer": true
   },
   {
-    "title": "Hare-Test",
-    "subtitle": "Psychopathie-Screening",
+    "title": "Verhalten und Beziehungen",
+    "subtitle": "Selbstreflexion · keine Diagnose",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Psychopathie",
-    "betterWhen": "lower",
-    "description": "Erfasst zwischenmenschliche Muster und Verhaltensmuster. Antworte ehrlich — es gibt keine richtigen Antworten.",
+    "construct": "Selbstreflexion",
+    "betterWhen": "none",
+    "description": "40 Aussagen zur Selbstreflexion über Verhalten und Beziehungen. Dies ist weder Robert Hares PCL-R noch eine Einschätzung von Psychopathie; aus den Antworten lassen sich keine Diagnosen oder Etiketten ableiten.",
     "algorithm": [
       "1. Du erhältst eine Liste von Aussagen.",
       "2. Gib bei jeder Aussage eine der vorgeschlagenen Antworten."
     ],
-    "comment": "Wenn du dir Sorgen machst, wende dich an eine qualifizierte Fachperson.",
+    "comment": "Nutze die Antworten als Denkanstoß, nicht als Etikett. Wenn dich etwas beunruhigt, besprich es mit einer qualifizierten Fachperson.",
     "analyzerId": "haer",
     "answers": [
       "Ja",

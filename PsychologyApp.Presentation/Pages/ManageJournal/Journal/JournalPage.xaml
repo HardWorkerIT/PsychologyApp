@@ -108,50 +108,7 @@
                 <behaviors:StaggerChildrenBehavior />
             </VerticalStackLayout.Behaviors>
 
-            <!-- Nothing this week yet: one welcome instead of empty cards, drawn like the empty chat list. The faces are on the card
-                 under it, so the first check-in is still one tap. -->
             <VerticalStackLayout IsVisible="{Binding ShowEmptyState}" Spacing="16" Padding="12,8,12,0">
-                <Border
-                    WidthRequest="264"
-                    HorizontalOptions="Center"
-                    Padding="20,18"
-                    StrokeThickness="0"
-                    AutomationProperties.IsInAccessibleTree="False"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="20" />
-                    </Border.StrokeShape>
-                    <VerticalStackLayout Spacing="16">
-                        <Grid ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="64">
-                            <Ellipse Grid.Column="0" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,20"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
-                            <Ellipse Grid.Column="1" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,10"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill2Light}, Dark={StaticResource MoodFill2Dark}}" />
-                            <Ellipse Grid.Column="2" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,20"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
-                            <Ellipse Grid.Column="3" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,30"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill4Light}, Dark={StaticResource MoodFill4Dark}}" />
-                            <Ellipse Grid.Column="4" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,20"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
-                            <Ellipse Grid.Column="5" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,40"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill5Light}, Dark={StaticResource MoodFill5Dark}}" />
-                            <Ellipse Grid.Column="6" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
-                                     Margin="0,0,0,30"
-                                     Fill="{AppThemeBinding Light={StaticResource MoodFill4Light}, Dark={StaticResource MoodFill4Dark}}" />
-                        </Grid>
-                        <VerticalStackLayout Spacing="7">
-                            <BoxView WidthRequest="180" HeightRequest="8" CornerRadius="4" HorizontalOptions="Start" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
-                            <BoxView WidthRequest="120" HeightRequest="8" CornerRadius="4" HorizontalOptions="Start" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
-
                 <VerticalStackLayout Spacing="8">
                     <Label Text="{Binding EmptyTitle}" Style="{StaticResource PageTitleStyle}" HorizontalTextAlignment="Center" />
                     <Label
@@ -171,31 +128,6 @@
                         Margin="0,2,0,0" />
                     <Label Grid.Column="1" Text="{Binding EmptyPrivacy}" Style="{StaticResource CaptionStyle}" LineBreakMode="WordWrap" />
                 </Grid>
-
-                <!-- A quiet week has no week line to open the overview from; someone with older check-ins still gets there. -->
-                <Grid
-                    IsVisible="{Binding ShowEarlierWeeks}"
-                    ColumnDefinitions="Auto,Auto"
-                    ColumnSpacing="4"
-                    HorizontalOptions="Center"
-                    MinimumHeightRequest="44"
-                    SemanticProperties.Description="{Binding EarlierWeeksText}">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenOverviewCommand}" />
-                    </Grid.GestureRecognizers>
-                    <Label
-                        Text="{Binding EarlierWeeksText}"
-                        Style="{StaticResource BodyStyle}"
-                        FontFamily="{StaticResource MediumFontFamily}"
-                        VerticalOptions="Center"
-                        TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-                    <ui:MaterialIconView
-                        Grid.Column="1"
-                        IconName="ChevronRight"
-                        IconSize="20"
-                        VerticalOptions="Center"
-                        IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-                </Grid>
             </VerticalStackLayout>
 
             <!-- The last seven days, a dot of the mood under each date; a tap opens that day in the card below. The month is in the
@@ -207,17 +139,23 @@
                         ItemsSource="{Binding WeekDays}"
                         SelectDayCommand="{Binding SelectDayCommand}"
                         IsInteractive="True" />
-                    <!-- The chevron says the line opens something: it is the way to the overview and its month. -->
                     <Grid
                         IsVisible="{Binding HasWeekStats}"
                         ColumnDefinitions="*,Auto"
                         Margin="6,0,0,0"
-                        SemanticProperties.Description="{Binding WeekSummaryText}"
-                        SemanticProperties.Hint="{Binding OpenOverviewLabel}">
+                        MinimumHeightRequest="44"
+                        SemanticProperties.Description="{Binding OpenOverviewLabel}"
+                        SemanticProperties.Hint="{Binding WeekSummaryText}">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding OpenOverviewCommand}" />
                         </Grid.GestureRecognizers>
-                        <Label Text="{Binding WeekSummaryText}" Style="{StaticResource CaptionStyle}" VerticalOptions="Center" />
+                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                            <Label Text="{Binding OpenOverviewLabel}"
+                                   Style="{StaticResource CaptionStyle}"
+                                   FontFamily="{StaticResource SemiBoldFontFamily}"
+                                   TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                            <Label Text="{Binding WeekSummaryText}" Style="{StaticResource CaptionStyle}" />
+                        </VerticalStackLayout>
                         <ui:MaterialIconView
                             Grid.Column="1"
                             IconName="ChevronRight"
@@ -432,6 +370,74 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+
+            <VerticalStackLayout IsVisible="{Binding ShowEmptyState}" Spacing="16" Padding="12,8,12,0">
+                <Border
+                    WidthRequest="264"
+                    HorizontalOptions="Center"
+                    Padding="20,18"
+                    StrokeThickness="0"
+                    AutomationProperties.IsInAccessibleTree="False"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevatedLight}, Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="16">
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="64">
+                            <Ellipse Grid.Column="0" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,20"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
+                            <Ellipse Grid.Column="1" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,10"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill2Light}, Dark={StaticResource MoodFill2Dark}}" />
+                            <Ellipse Grid.Column="2" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,20"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
+                            <Ellipse Grid.Column="3" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,30"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill4Light}, Dark={StaticResource MoodFill4Dark}}" />
+                            <Ellipse Grid.Column="4" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,20"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill3Light}, Dark={StaticResource MoodFill3Dark}}" />
+                            <Ellipse Grid.Column="5" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,40"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill5Light}, Dark={StaticResource MoodFill5Dark}}" />
+                            <Ellipse Grid.Column="6" WidthRequest="24" HeightRequest="24" HorizontalOptions="Center" VerticalOptions="End"
+                                     Margin="0,0,0,30"
+                                     Fill="{AppThemeBinding Light={StaticResource MoodFill4Light}, Dark={StaticResource MoodFill4Dark}}" />
+                        </Grid>
+                        <VerticalStackLayout Spacing="7">
+                            <BoxView WidthRequest="180" HeightRequest="8" CornerRadius="4" HorizontalOptions="Start" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
+                            <BoxView WidthRequest="120" HeightRequest="8" CornerRadius="4" HorizontalOptions="Start" Color="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- A quiet week has no week line to open the overview from; someone with older check-ins still gets there. -->
+                <Grid
+                    IsVisible="{Binding ShowEarlierWeeks}"
+                    ColumnDefinitions="Auto,Auto"
+                    ColumnSpacing="4"
+                    HorizontalOptions="Center"
+                    MinimumHeightRequest="44"
+                    SemanticProperties.Description="{Binding EarlierWeeksText}">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenOverviewCommand}" />
+                    </Grid.GestureRecognizers>
+                    <Label
+                        Text="{Binding EarlierWeeksText}"
+                        Style="{StaticResource BodyStyle}"
+                        FontFamily="{StaticResource MediumFontFamily}"
+                        VerticalOptions="Center"
+                        TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                    <ui:MaterialIconView
+                        Grid.Column="1"
+                        IconName="ChevronRight"
+                        IconSize="20"
+                        VerticalOptions="Center"
+                        IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                </Grid>
+            </VerticalStackLayout>
 
             <Label
                 IsVisible="{Binding HasOnThisDay}"

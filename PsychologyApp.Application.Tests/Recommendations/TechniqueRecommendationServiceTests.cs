@@ -84,7 +84,7 @@ public sealed class TechniqueRecommendationServiceTests
     }
 
     [Fact]
-    public void ResolveTodayTechnique_UsesLuscherCoWhenRecentStandardTest()
+    public void ResolveTodayTechnique_DoesNotUseLuscherScoreAsARecommendation()
     {
         TodayRecommendationDecision decision = _service.ResolveTodayTechnique(new TodayRecommendationContext(
             OnboardingConcernKeys.Explore,
@@ -96,8 +96,8 @@ public sealed class TechniqueRecommendationServiceTests
             }));
 
         Assert.Equal(TechniqueId.Grounding, decision.TechniqueId);
-        Assert.Equal(TodayRecommendationSource.RecentTest, decision.Source);
-        Assert.Equal(TestIds.LuscherStandard, decision.TestId);
+        Assert.Equal(TodayRecommendationSource.Explore, decision.Source);
+        Assert.Null(decision.TestId);
     }
 
     [Fact]
@@ -219,6 +219,21 @@ public sealed class TechniqueRecommendationServiceTests
             effectiveness: null);
 
         Assert.Equal(TechniqueId.SmallStep, picked);
+    }
+
+    [Fact]
+    public void PickFromPool_UsesSecondInCatalogOrderWhenAllRecentPracticesTie()
+    {
+        DateTime today = DateTime.Today.AddHours(12).ToUniversalTime();
+        Dictionary<string, DateTime> dates = new()
+        {
+            [nameof(TechniqueId.Breathing)] = today,
+            [nameof(TechniqueId.Grounding)] = today,
+            [nameof(TechniqueId.SmallStep)] = today
+        };
+
+        Assert.Equal(TechniqueId.Grounding, TechniqueRecommendationService.PickFromPool(
+            [TechniqueId.Breathing, TechniqueId.Grounding, TechniqueId.SmallStep], dates));
     }
 
     [Fact]

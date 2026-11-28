@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="2000" viewBox="0 0 450 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Предложение нового экрана профиля</title>
+  <desc id="desc">Мобильный экран профиля приложения: краткая статистика, проверка состояния, история практик, одна рекомендация и избранные мысли.</desc>
+  <defs>
+    <style>
+      .text { font-family: Roboto, "Arial", sans-serif; fill: #30343a; }
+      .muted { fill: #73777c; }
+      .blue { fill: #0787f9; }
+      .section { font-size: 18px; font-weight: 600; }
+      .body { font-size: 15px; }
+      .caption { font-size: 13px; }
+    </style>
+  </defs>
+
+  <!-- Android status and app bars -->
+  <rect width="450" height="1000" fill="#f2f3f5"/>
+  <rect width="450" height="54" fill="#ffffff"/>
+  <text class="text muted" x="20" y="34" font-size="15">9:41</text>
+  <path d="M71 24l8-5 8 5v6c0 6-4 10-8 12-4-2-8-6-8-12z" fill="none" stroke="#72767b" stroke-width="2"/>
+  <path d="M73 23l11 13" stroke="#72767b" stroke-width="1.5"/>
+  <path d="M378 27c7-8 16-8 23 0l-11 13z" fill="#6f7479"/>
+  <path d="M405 39l12-15v15z" fill="#6f7479"/>
+  <rect x="426" y="20" width="11" height="20" rx="2" fill="#6f7479"/>
+  <rect x="429" y="17" width="5" height="3" rx="1" fill="#6f7479"/>
+  <rect y="54" width="450" height="58" fill="#ffffff"/>
+  <path d="M34 82h-12m0 0 9-9m-9 9 9 9" fill="none" stroke="#0875cf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="text" x="225" y="89" text-anchor="middle" font-size="21" font-weight="600">Профиль</text>
+  <line x1="20" y1="111.5" x2="430" y2="111.5" stroke="#e9eaec"/>
+
+  <!-- Short, welcoming intro -->
+  <text class="text" x="24" y="151" font-size="23" font-weight="700">Ваш путь</text>
+  <text class="text muted" x="24" y="176" font-size="14">Небольшие шаги тоже важны</text>
+
+  <!-- Progress summary -->
+  <rect x="20" y="194" width="410" height="119" rx="20" fill="#ffffff" stroke="#e8eaed"/>
+  <text class="text muted" x="40" y="219" font-size="12" font-weight="600" letter-spacing=".5">АКТИВНОСТЬ</text>
+  <line x1="157" y1="232" x2="157" y2="291" stroke="#eceef0"/>
+  <line x1="293" y1="232" x2="293" y2="291" stroke="#eceef0"/>
+  <text class="text" x="89" y="260" text-anchor="middle" font-size="25" font-weight="700">0</text>
+  <text class="text muted" x="89" y="284" text-anchor="middle" font-size="13">практик</text>
+  <text class="text" x="225" y="260" text-anchor="middle" font-size="25" font-weight="700">0</text>
+  <text class="text muted" x="225" y="284" text-anchor="middle" font-size="13">тестов</text>
+  <text class="text" x="361" y="260" text-anchor="middle" font-size="25" font-weight="700">0/7</text>
+  <text class="text muted" x="361" y="284" text-anchor="middle" font-size="13">дней на неделе</text>
+
+  <!-- One clear personal action -->
+  <rect x="20" y="329" width="410" height="88" rx="18" fill="#ffffff" stroke="#e8eaed"/>
+  <rect x="36" y="345" width="56" height="56" rx="17" fill="#dceeff"/>
+  <rect x="52" y="359" width="24" height="27" rx="4" fill="none" stroke="#0787f9" stroke-width="2.3"/>
+  <path d="M57 367l3 3 6-6m-9 14 3 3 6-6" fill="none" stroke="#0787f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="text" x="108" y="367" font-size="17" font-weight="600">Как я сейчас?</text>
+  <text class="text muted" x="108" y="391" font-size="13">Короткая проверка состояния</text>
+  <path d="M407 365l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Recent activity: compact empty state instead of a large blank panel -->
+  <text class="text section" x="24" y="457">Недавние практики</text>
+  <rect x="20" y="473" width="410" height="86" rx="16" fill="#ffffff" stroke="#e8eaed"/>
+  <circle cx="58" cy="516" r="23" fill="#eef5ff"/>
+  <circle cx="58" cy="516" r="10" fill="none" stroke="#1788ee" stroke-width="2"/>
+  <path d="M58 510v7l5 3" fill="none" stroke="#1788ee" stroke-width="2" stroke-linecap="round"/>
+  <text class="text" x="94" y="509" font-size="15" font-weight="600">Здесь появятся завершённые практики</text>
+  <text class="text muted" x="94" y="533" font-size="13">Можно вернуться к тому, что помогло.</text>
+
+  <!-- A single full-width recommendation, no awkward horizontal carousel -->
+  <text class="text section" x="24" y="604">Можно начать с малого</text>
+  <rect x="20" y="620" width="410" height="112" rx="18" fill="#ffffff" stroke="#e8eaed"/>
+  <rect x="36" y="644" width="62" height="62" rx="18" fill="#daf1ec"/>
+  <circle cx="67" cy="670" r="10" fill="#188879"/>
+  <path d="M67 680v12m-9 0h18" stroke="#188879" stroke-width="3" stroke-linecap="round"/>
+  <text class="text" x="112" y="653" font-size="16" font-weight="700">Заземление 5–4–3–2–1</text>
+  <text class="text muted" x="112" y="678" font-size="13">Опора через пять чувств</text>
+  <text class="text muted" x="112" y="705" font-size="12">~3 мин  ·  Тяжёлый момент</text>
+  <path d="M407 665l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Saved content: simple, helpful empty state -->
+  <text class="text section" x="24" y="778">Избранные цитаты</text>
+  <rect x="20" y="794" width="410" height="112" rx="18" fill="#ffffff" stroke="#e8eaed"/>
+  <circle cx="58" cy="850" r="23" fill="#eef5ff"/>
+  <path d="M58 862s-13-8-13-17a7 7 0 0 1 13-4 7 7 0 0 1 13 4c0 9-13 17-13 17z" fill="none" stroke="#0787f9" stroke-width="2.2" stroke-linejoin="round"/>
+  <text class="text" x="94" y="840" font-size="15" font-weight="600">Сохраняйте важные мысли</text>
+  <text class="text muted" x="94" y="864" font-size="13">Отмеченные цитаты будут рядом.</text>
+  <text class="text blue" x="94" y="888" font-size="13" font-weight="600">Открыть цитаты</text>
+  <path d="M407 842l6 7-6 7" fill="none" stroke="#92979c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Android gesture navigation -->
+  <rect y="963" width="450" height="37" fill="#ffffff"/>
+  <rect x="165" y="980" width="120" height="4" rx="2" fill="#5e6064"/>
+</svg>

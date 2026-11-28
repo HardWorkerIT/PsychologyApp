@@ -18,44 +18,37 @@ public sealed class LuscherTestViewModelTests
         AppStrings.LanguageOverride = UserPreferences.DefaultLanguage;
     }
 
-    // A colour missing from a translation would show another colour's meaning, or the English one, as the person's result.
+    // A missing name translation must not fall back to an untranslated code in the self-reflection result.
     [Theory]
+    [InlineData("ru")]
+    [InlineData("en")]
     [InlineData("fr")]
     [InlineData("de")]
     [InlineData("es")]
     [InlineData("pt")]
     [InlineData("zh")]
-    public void Every_colour_is_explained_in_the_interface_language(string language)
+    public void Every_colour_has_a_localized_name(string language)
     {
         ColourValue[] colours = [ColourValue.Black, ColourValue.Red, ColourValue.Blue, ColourValue.Purple, ColourValue.Yellow, ColourValue.Brown, ColourValue.Green, ColourValue.Gray];
-        Domain.Colour.Enums.ColourMeaningType[] types = [Domain.Colour.Enums.ColourMeaningType.Wanted, Domain.Colour.Enums.ColourMeaningType.Unwanted];
-
-        AppStrings.LanguageOverride = "en";
-        List<string> english = [.. types.SelectMany(type => colours.Select(colour => ColourStrings.GetExplanation(colour, type)))];
         AppStrings.LanguageOverride = language;
-        List<string> translated = [.. types.SelectMany(type => colours.Select(colour => ColourStrings.GetExplanation(colour, type)))];
+        List<string?> names = [.. colours.Select(colour => ColourStrings.NameOfCode(colour.Code))];
         AppStrings.LanguageOverride = UserPreferences.DefaultLanguage;
 
-        Assert.Equal(translated.Count, translated.Distinct().Count());
-        Assert.All(translated.Zip(english), pair => Assert.NotEqual(pair.Second, pair.First));
+        Assert.All(names, name => Assert.False(string.IsNullOrWhiteSpace(name)));
+        Assert.Equal(colours.Length, names.Distinct().Count());
     }
 
     [Theory]
     [InlineData("ru")]
     [InlineData("en")]
-    public void Each_colour_has_its_own_explanation_and_name(string language)
+    public void Brief_summary_reports_selected_colours_without_interpreting_them(string language)
     {
-        ColourValue[] colours = [ColourValue.Black, ColourValue.Red, ColourValue.Blue, ColourValue.Purple, ColourValue.Yellow, ColourValue.Brown, ColourValue.Green, ColourValue.Gray];
         AppStrings.LanguageOverride = language;
-        List<string> wanted = [.. colours.Select(colour => ColourStrings.GetExplanation(colour, Domain.Colour.Enums.ColourMeaningType.Wanted))];
-        List<string> unwanted = [.. colours.Select(colour => ColourStrings.GetExplanation(colour, Domain.Colour.Enums.ColourMeaningType.Unwanted))];
-        List<string> names = [.. colours.Select(ColourStrings.GetColorName)];
+        string expected = $"{ColourStrings.GetColorName(ColourValue.Blue)} / {ColourStrings.GetColorName(ColourValue.Red)}";
+        string? summary = ColourStrings.BriefSummary(ColourValue.Blue.Code, ColourValue.Red.Code);
         AppStrings.LanguageOverride = UserPreferences.DefaultLanguage;
 
-        Assert.DoesNotContain(names, name => name.StartsWith('#'));
-        Assert.Equal(colours.Length, wanted.Distinct().Count());
-        Assert.Equal(colours.Length, unwanted.Distinct().Count());
-        Assert.Equal(colours.Length, names.Distinct().Count());
+        Assert.Equal(expected, summary);
     }
 
     [Fact]

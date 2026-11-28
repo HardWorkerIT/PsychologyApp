@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.ReadArticles.Articles.ArticlesPage"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:filterTabs="clr-namespace:PsychologyApp.Presentation.Widgets.FilterChipTabs"
              xmlns:card="clr-namespace:PsychologyApp.Presentation.Widgets.LibraryCard"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.ReadArticles.Articles"
              x:DataType="vm:ArticlesViewModel"
@@ -32,7 +33,12 @@
         <CollectionView.Header>
             <VerticalStackLayout Padding="0,20,0,0" Spacing="{StaticResource ListItemSpacing}">
                 <ui:TextEntryView PlaceholderText="{Binding SearchPlaceholder}" BodyText="{Binding Query, Mode=TwoWay}" />
-                <ui:FilterChipTabBarView ItemsSource="{Binding Filters}" TapCommand="{Binding SelectFilterCommand}" />
+                <filterTabs:FilterChipTabBarView ItemsSource="{Binding Filters}" TapCommand="{Binding SelectFilterCommand}" />
+                <Label Text="{Binding SavedLoadingText}" IsVisible="{Binding ShowSavedLoading}" Style="{StaticResource BodyStyle}" />
+                <ui:RetryView IsVisible="{Binding ShowSavedLoadFailure}"
+                              FailedText="{Binding SavedLoadFailedText}"
+                              RetryText="{Binding RetrySavedText}"
+                              RetryCommand="{Binding RetrySavedCommand}" />
                 <Label Text="{Binding EmptyText}" IsVisible="{Binding HasEmptyText}" Style="{StaticResource BodyStyle}" Margin="4,12,4,0" />
             </VerticalStackLayout>
         </CollectionView.Header>
@@ -51,10 +57,8 @@
 
         <CollectionView.GroupFooterTemplate>
             <DataTemplate x:DataType="vm:ArticleSectionItem">
-                <VerticalStackLayout IsVisible="False"
-                                     BindingContextChanged="OnArticleAdFooterBindingContextChanged">
-                    <ContentView />
-                </VerticalStackLayout>
+                <ContentView IsVisible="False"
+                                     BindingContextChanged="OnArticleAdFooterBindingContextChanged" />
             </DataTemplate>
         </CollectionView.GroupFooterTemplate>
 

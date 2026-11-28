@@ -78,6 +78,7 @@
     <Compile Include="AppStringsResourceTests.cs" />
     <Compile Include="TestScoreLabelCompletenessTests.cs" />
     <Compile Include="WeakActionEventTests.cs" />
+    <Compile Include="TechniqueSubscriptionTests.cs" />
     <Compile Include="EntryDraftTests.cs" />
     <Compile Include="UserQuotesRefreshPolicyTests.cs" />
     <Compile Include="PracticeClinicalDashboardEnricherTests.cs" />
@@ -178,7 +179,6 @@
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Init.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Init.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Labels.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Labels.cs" />
-    <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Recommendation.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Recommendation.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Display.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Display.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Labels.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Labels.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Scoring.cs" Link="Linked/Pages/RunTests/LuscherTest/LuscherTestViewModel.Results.Scoring.cs" />
@@ -315,6 +315,10 @@
     <Compile Include="../PsychologyApp.Presentation/Features/ManageJournal/JournalEditorContext.cs" Link="Linked/Features/ManageJournal/JournalEditorContext.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/ListTechniqueSessionHelper.cs" Link="Linked/Features/RunTechniqueSession/ListTechniqueSessionHelper.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/TechniqueSessionCompletionService.cs" Link="Linked/Features/RunTechniqueSession/TechniqueSessionCompletionService.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/NextPracticeResolver.cs" Link="Linked/Features/RunTechniqueSession/NextPracticeResolver.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/RunTechniqueSession/PracticeCompletion/PracticeCompletionViewModel.cs" Link="Linked/Pages/RunTechniqueSession/PracticeCompletion/PracticeCompletionViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Shared/Common/DonationConfiguration.cs" Link="Linked/Shared/Common/DonationConfiguration.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Shared/Services/Donations/IDonationSupportService.cs" Link="Linked/Shared/Services/Donations/IDonationSupportService.cs" />
     <Compile Include="../PsychologyApp.Presentation/Shared/Common/PracticeCompletionNavigator.cs" Link="Linked/Shared/Common/PracticeCompletionNavigator.cs" />
     <Compile Include="../PsychologyApp.Presentation/Shared/Abstractions/ITestAssetReader.cs" Link="Linked/Shared/Abstractions/ITestAssetReader.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/Index/TechniqueCatalogGateway.cs" Link="Linked/Features/RunTechniqueSession/Index/TechniqueCatalogGateway.cs" />
@@ -337,6 +341,7 @@
     <Compile Include="TestDatabaseReady.cs" />
     <Compile Include="TestTrendComparerTests.cs" />
     <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/ITechniqueMessenger.cs" Link="Linked/Features/RunTechniqueSession/ITechniqueMessenger.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Features/RunTechniqueSession/WeakReferenceManager.cs" Link="Linked/Features/RunTechniqueSession/WeakReferenceManager.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.cs" Link="Linked/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.Fields.cs" Link="Linked/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.Fields.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.Init.cs" Link="Linked/Pages/RunTechniqueSession/TechniqueDesigner/DesignerViewModel.Init.cs" />

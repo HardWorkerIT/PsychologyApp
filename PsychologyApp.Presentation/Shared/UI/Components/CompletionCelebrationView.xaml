@@ -13,7 +13,7 @@
     <ContentView.ControlTemplate>
         <ControlTemplate x:DataType="self:CompletionCelebrationView">
             <Grid
-                Padding="{StaticResource LayoutPageMarginThickness}"
+                Padding="20,0,20,12"
                 RowDefinitions="Auto,Auto"
                 VerticalOptions="Start">
                 <VerticalStackLayout
@@ -21,7 +21,7 @@
                     Padding="0,12,0,0"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
-                    Spacing="{StaticResource SectionSpacing}"
+                    Spacing="{StaticResource CompactSpacing}"
                     MaximumWidthRequest="320">
                     <Border
                         x:Name="IconHalo"
@@ -41,35 +41,35 @@
                         Text="{TemplateBinding BodyText}"
                         Style="{StaticResource BodyStyle}"
                         HorizontalTextAlignment="Center" />
-                    <VerticalStackLayout
+                    <FlexLayout
                         IsVisible="{TemplateBinding HasStreak}"
-                        Spacing="2"
+                        Wrap="Wrap"
+                        JustifyContent="Center"
+                        AlignItems="Center"
                         HorizontalOptions="Center">
                         <Label
-                            Text="{TemplateBinding StreakValueText}"
-                            Style="{StaticResource SectionTitleStyle}"
-                            HorizontalTextAlignment="Center"
-                            TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-                        <Label
                             Text="{TemplateBinding StreakLabelText}"
+                            Margin="0,0,6,0"
                             Style="{StaticResource CaptionStyle}"
                             HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
+                        <Label
+                            Text="{TemplateBinding StreakValueText}"
+                            Style="{StaticResource CaptionStyle}"
+                            FontFamily="{StaticResource SemiBoldFontFamily}"
+                            HorizontalTextAlignment="Center" />
+                    </FlexLayout>
                 </VerticalStackLayout>
                 <ui:ConfettiBurstView
                     x:Name="Confetti"
                     Grid.Row="0"
                     HorizontalOptions="Center"
                     VerticalOptions="Start" />
-                <VerticalStackLayout
+                <ui:ButtonView
                     Grid.Row="1"
-                    Spacing="{StaticResource CompactSpacing}"
-                    Padding="0,6,0,0">
-                    <ui:ButtonView
-                        IsVisible="{TemplateBinding IsPrimaryActionVisible}"
-                        BodyText="{TemplateBinding PrimaryActionText}"
-                        TapCommand="{TemplateBinding PrimaryCommand}" />
-                </VerticalStackLayout>
+                    Margin="0,8,0,0"
+                    IsVisible="{TemplateBinding IsPrimaryActionVisible}"
+                    BodyText="{TemplateBinding PrimaryActionText}"
+                    TapCommand="{TemplateBinding PrimaryCommand}" />
             </Grid>
         </ControlTemplate>
     </ContentView.ControlTemplate>

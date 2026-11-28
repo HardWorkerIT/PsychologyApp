@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using PsychologyApp.Application.Body;
 using PsychologyApp.Presentation.Body;
+using PsychologyApp.Presentation.Shared.Common;
 
 namespace PsychologyApp.Presentation.Widgets.BodyMap;
 
@@ -32,7 +33,7 @@ public sealed class BodyMapView : GraphicsView
 
     public BodyMapView()
     {
-        UserPreferences.Changed += OnPreferencesChanged;
+        LocalizedContentView.SubscribePreferences(this, OnPreferencesChanged);
         Drawable = _drawable;
         BackgroundColor = Colors.Transparent;
         AutomationProperties.SetIsInAccessibleTree(this, false);

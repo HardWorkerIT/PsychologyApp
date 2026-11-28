@@ -9,6 +9,7 @@ public interface INavigationService
     Task GoBackAsync();
     Task GoToRootAsync();
     Task GoToTechniqueAsync(TechniqueId techniqueId);
+    Task<NavigationRunStatus> OpenNextPracticeAsync(TechniqueId techniqueId);
     Task GoToCreatedAsync(long techniqueId);
     Task GoToDesignerAsync(long techniqueId);
     Task GoToUserProfileAsync();

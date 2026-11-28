@@ -37,7 +37,6 @@ public partial class LuscherTestViewModel
 
     public string BackToListButtonText => AppStrings.TestsBackToList;
 
-    public string TryTechniqueButtonText => AppStrings.TestTryTechnique;
 
     public string FirstColorLabel => AppStrings.TestsFirstColor;
 
@@ -78,7 +77,6 @@ public partial class LuscherTestViewModel
             nameof(MoreInfoBody),
             nameof(RestartButtonText),
             nameof(BackToListButtonText),
-            nameof(TryTechniqueButtonText),
             nameof(FirstColorLabel),
             nameof(SecondColorLabel),
             nameof(BriefStepLabel),

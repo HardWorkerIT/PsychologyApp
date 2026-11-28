@@ -35,6 +35,26 @@ public sealed class SafetyPlanViewModelTests
     }
 
     [Fact]
+    public async Task AFailedReadOffersRetryBeforeDisplayingContacts()
+    {
+        var initialRead = new TaskCompletionSource<SafetyPlanDTO>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _care.SetupSequence(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>()))
+            .Returns(initialRead.Task)
+            .ReturnsAsync(new SafetyPlanDTO { Contacts = [new SafetyPlanContactDTO { Name = "Anna", Phone = "1" }] });
+        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object);
+        Assert.True(viewModel.IsPlanLoading);
+        Assert.False(viewModel.IsPlanReady);
+
+        initialRead.SetException(new IOException("Plan unreadable"));
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.IsPlanLoadFailed);
+        Assert.False(viewModel.IsPlanReady);
+
+        await VmTestHelpers.RunAsync(viewModel.RetryLoadCommand);
+        Assert.True(viewModel.IsPlanReady);
+        Assert.Equal("Anna", Assert.Single(viewModel.Contacts).Name);
+    }
+
+    [Fact]
     public async Task TheSavedPlanIsShownWhenTheScreenOpens()
     {
         SafetyPlanViewModel viewModel = await CreateAsync(new SafetyPlanDTO

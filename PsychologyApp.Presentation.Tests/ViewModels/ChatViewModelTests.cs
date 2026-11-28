@@ -2,6 +2,7 @@ using Moq;
 using PsychologyApp.Application.Chat;
 using PsychologyApp.Application.Conversation;
 using PsychologyApp.Presentation.Pages.Chat.Conversation;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
@@ -20,6 +21,7 @@ public sealed class ChatViewModelTests
 
     private readonly Mock<IChatService> _chat = new();
     private readonly Mock<INavigationService> _navigation = new();
+    private readonly Mock<IDialogService> _dialogs = new();
 
     private ChatViewModel Create(long? sessionId = 5)
     {
@@ -28,7 +30,25 @@ public sealed class ChatViewModelTests
         _navigation.Setup(n => n.GoToCrisisHubAsync()).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoToTechniqueAsync(It.IsAny<TechniqueId>())).Returns(Task.CompletedTask);
         _navigation.Setup(n => n.GoToTestsTabAsync()).Returns(Task.CompletedTask);
-        return new ChatViewModel(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId);
+        return new ChatViewModel(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId, _dialogs.Object);
+    }
+
+    [Fact]
+    public async Task CancellingExitKeepsTheUnsentDraft()
+    {
+        _dialogs.SetupSequence(d => d.AskSheetAsync(It.IsAny<string?>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true))
+            .ReturnsAsync(false).ReturnsAsync(true);
+        ChatViewModel viewModel = Create();
+        viewModel.DraftText = "Unsent draft";
+
+        await viewModel.ConfirmBackAsync(_dialogs.Object);
+
+        Assert.Equal("Unsent draft", viewModel.DraftText);
+        _navigation.Verify(n => n.GoBackAsync(), Times.Never);
+
+        await viewModel.ConfirmBackAsync(_dialogs.Object);
+
+        _navigation.Verify(n => n.GoBackAsync(), Times.Once);
     }
 
     private void History(params ChatMessageDTO[] messages)
@@ -150,7 +170,7 @@ public sealed class ChatViewModelTests
         History(Message(ChatRole.Companion, "hi", Now));
         _chat.Setup(c => c.SendTextAsync(5, "I can't fall asleep", It.IsAny<CancellationToken>())).ReturnsAsync(Turn(null, "Let's look at it"));
         Mock<IChatLanguageProvider> language = new();
-        ChatViewModel viewModel = new(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId: null, opener: "I can't fall asleep");
+        ChatViewModel viewModel = new(_chat.Object, _navigation.Object, language.Object, new FixedTime(), sessionId: null, dialogs: _dialogs.Object, opener: "I can't fall asleep");
 
         await viewModel.OnAppearedAsync();
         await viewModel.OnAppearedAsync();

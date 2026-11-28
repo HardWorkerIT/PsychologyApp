@@ -39,6 +39,10 @@ public static partial class AppStrings
     public static string ChatStatusPractice => R(nameof(ChatStatusPractice));
     public static string ChatError => R(nameof(ChatError));
     public static string ChatLoadingText => R(nameof(ChatLoadingText));
+    public static string ChatDiscardDraftTitle => R(nameof(ChatDiscardDraftTitle));
+    public static string ChatDiscardDraftBody => R(nameof(ChatDiscardDraftBody));
+    public static string ChatDiscardDraftAccept => R(nameof(ChatDiscardDraftAccept));
+    public static string ShellBottomChat => R(nameof(ShellBottomChat));
     public static string ChatScrollToNewest => R(nameof(ChatScrollToNewest));
     public static string ChatScrollToOldest => R(nameof(ChatScrollToOldest));
     public static string ChatShowReplyOptions => R(nameof(ChatShowReplyOptions));

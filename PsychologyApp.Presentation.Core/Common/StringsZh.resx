@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -1720,33 +1720,6 @@
   <data name="MoodReminderBody" xml:space="preserve">
     <value>你今天感觉怎么样？在日记里记一下吧。</value>
   </data>
-  <data name="LuscherCoStable" xml:space="preserve">
-    <value>没有无效的紧张；情绪稳定性高。行动目标明确、效率高。整体心情乐观。</value>
-  </data>
-  <data name="LuscherCoMildTension" xml:space="preserve">
-    <value>中等程度的紧张，可能降低效率。情绪稳定性总体尚可，偶有压力。</value>
-  </data>
-  <data name="LuscherCoModerateTension" xml:space="preserve">
-    <value>有明显的紧张和情绪负担。效率可能下降；建议恢复和休息。</value>
-  </data>
-  <data name="LuscherCoElevatedTension" xml:space="preserve">
-    <value>紧张程度偏高，情绪稳定性下降。持续努力可能显得勉强；建议休息并寻求支持。</value>
-  </data>
-  <data name="LuscherCoHighTension" xml:space="preserve">
-    <value>高度紧张，情绪不稳定。负担明显；专业支持可能会有帮助。</value>
-  </data>
-  <data name="LuscherBkExhausted" xml:space="preserve">
-    <value>植物神经系数低：疲惫、被动，需要充分恢复。</value>
-  </data>
-  <data name="LuscherBkConserving" xml:space="preserve">
-    <value>植物神经系数平衡：需要适度休息，精力足以应对日常事务。</value>
-  </data>
-  <data name="LuscherBkOptimal" xml:space="preserve">
-    <value>最佳调动状态：身体和心理资源都很好地准备好去行动。</value>
-  </data>
-  <data name="LuscherBkOveraroused" xml:space="preserve">
-    <value>植物神经系数高：情绪高度唤起，自主神经反应强烈。</value>
-  </data>
   <data name="TherapyProgramTitle" xml:space="preserve">
     <value>你的计划</value>
   </data>
@@ -1952,10 +1925,10 @@
     <value>答案选项</value>
   </data>
   <data name="TestsCoLabel" xml:space="preserve">
-    <value>与自主常态的总偏差（CO）</value>
+    <value>练习计算值（CO）</value>
   </data>
   <data name="TestsBkLabel" xml:space="preserve">
-    <value>植物神经系数（VC）</value>
+    <value>练习计算值（BK）</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
@@ -2605,47 +2578,11 @@
   <data name="TodayRecommendationReasonContinueDraft.1" xml:space="preserve">
     <value>从上次停下的地方继续</value>
   </data>
-  <data name="HeckHessScore.1" xml:space="preserve">
-    <value>0-24 - 神经质低</value>
-  </data>
-  <data name="HeckHessScore.2" xml:space="preserve">
-    <value>25-40 - 神经质高</value>
-  </data>
-  <data name="HeckHessScoreDetail.1" xml:space="preserve">
-    <value>情绪反应在正常范围内。继续留意压力和休息。</value>
-  </data>
-  <data name="HeckHessScoreDetail.2" xml:space="preserve">
-    <value>神经质偏高。两极练习和重要性比较练习可以缓解紧张。</value>
-  </data>
-  <data name="HaerScore.1" xml:space="preserve">
-    <value>0-28 - 精神病态倾向低</value>
-  </data>
-  <data name="HaerScore.2" xml:space="preserve">
-    <value>29-40 - 精神病态倾向高</value>
-  </data>
-  <data name="HaerScoreDetail.1" xml:space="preserve">
-    <value>分数处于低区间。这是筛查工具，不是诊断。</value>
-  </data>
-  <data name="HaerScoreDetail.2" xml:space="preserve">
-    <value>分数偏高。处理过去的经历和信念可能会有帮助。</value>
-  </data>
   <data name="TestRecommendationReasonBeck.1" xml:space="preserve">
     <value>有抑郁症状时，“旋转”有助于减轻痛苦记忆带来的情绪负荷。</value>
   </data>
   <data name="TestRecommendationReasonBeck.2" xml:space="preserve">
     <value>作为预防，把想法写在纸上会有帮助。</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.1" xml:space="preserve">
-    <value>神经质高时，两极练习帮助你看到事情的两面。</value>
-  </data>
-  <data name="TestRecommendationReasonHeckHess.2" xml:space="preserve">
-    <value>比较重要性能帮助你拉开距离、看得更全面。</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.1" xml:space="preserve">
-    <value>“50 年后”把问题放到更远的未来去看。</value>
-  </data>
-  <data name="TestRecommendationReasonHaer.2" xml:space="preserve">
-    <value>经历调整练习有助于重新审视信念。</value>
   </data>
   <data name="TestRecommendationReasonPochebut.1" xml:space="preserve">
     <value>“缩小它”在视觉上降低诱因的重要性。</value>
@@ -3409,6 +3346,9 @@
   </data>
   <data name="ArticleListen" xml:space="preserve">
     <value>收听</value>
+  </data>
+  <data name="ArticleListenUnavailable" xml:space="preserve">
+    <value>无法开始朗读。请检查设备是否已安装此语言的语音。</value>
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>停止</value>
@@ -4220,24 +4160,6 @@
   <data name="ChatEmotionExhaustion" xml:space="preserve">
     <value>疲惫</value>
   </data>
-  <data name="AdsRewardDescription" xml:space="preserve">
-    <value>完整观看视频后，目录中的广告和全屏广告将暂停 {0} 分钟。</value>
-  </data>
-  <data name="AdsRewardWatch" xml:space="preserve">
-    <value>观看视频</value>
-  </data>
-  <data name="AdsRewardLoading" xml:space="preserve">
-    <value>正在加载视频…</value>
-  </data>
-  <data name="AdsRewardActive" xml:space="preserve">
-    <value>广告暂停已生效。</value>
-  </data>
-  <data name="AdsRewardClosedEarly" xml:space="preserve">
-    <value>视频在获得奖励前已关闭。</value>
-  </data>
-  <data name="AdsRewardUnavailable" xml:space="preserve">
-    <value>暂时没有可播放的视频，请稍后再试。</value>
-  </data>
   <data name="ChatEmotionLoneliness" xml:space="preserve">
     <value>孤独</value>
   </data>
@@ -4297,6 +4219,24 @@
   </data>
   <data name="AdsDisabledStatus" xml:space="preserve">
     <value>此设备上的未来广告已关闭。</value>
+  </data>
+  <data name="AdsRewardDescription" xml:space="preserve">
+    <value>完整观看视频后，目录中的广告和全屏广告将暂停 {0} 分钟。</value>
+  </data>
+  <data name="AdsRewardWatch" xml:space="preserve">
+    <value>观看视频</value>
+  </data>
+  <data name="AdsRewardLoading" xml:space="preserve">
+    <value>正在加载视频…</value>
+  </data>
+  <data name="AdsRewardActive" xml:space="preserve">
+    <value>广告暂停已生效。</value>
+  </data>
+  <data name="AdsRewardClosedEarly" xml:space="preserve">
+    <value>视频在获得奖励前已关闭。</value>
+  </data>
+  <data name="AdsRewardUnavailable" xml:space="preserve">
+    <value>暂时没有可播放的视频，请稍后再试。</value>
   </data>
   <data name="AdsInvalidCode" xml:space="preserve">
     <value>代码无效。</value>
@@ -4710,4 +4650,18 @@
     <value>点按以选择</value>
   </data>
   <data name="SettingsPickerDone" xml:space="preserve"><value>完成</value></data>
+  <data name="ReflectiveQuestionnaireScoreSummary" xml:space="preserve"><value>用于自我反思</value></data>
+  <data name="ReflectiveQuestionnaireScoreDetail" xml:space="preserve"><value>这个分数不是诊断，也不能证明你具有某种特质或状况。请把回答当作反思自身经历的提示。如有担忧，可以和合格的专业人士讨论。</value></data>
+  <data name="LuscherSelfReflectionNote" xml:space="preserve"><value>选色只是自我观察练习，不用于评估情绪状态或人格特征。</value></data>
+  <data name="TechniqueInstructions" xml:space="preserve"><value>练习方法</value></data>
+  <data name="PracticeCompletionDone" xml:space="preserve"><value>完成</value></data>
+  <data name="PracticeReflectionSaved" xml:space="preserve"><value>笔记已保存</value></data>
+  <data name="PracticeReflectionSaveError" xml:space="preserve"><value>无法保存笔记，请重试。</value></data>
+  <data name="PracticeIntensitySummary" xml:space="preserve"><value>练习前后的紧张程度</value></data>
+  <data name="RatingNotSelected" xml:space="preserve"><value>未评分</value></data>
+  <data name="ChatDiscardDraftTitle" xml:space="preserve"><value>退出聊天？</value></data>
+  <data name="ChatDiscardDraftBody" xml:space="preserve"><value>未发送的消息将被丢弃。</value></data>
+  <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>丢弃并退出</value></data>
+  <data name="CrisisDialUnavailable" xml:space="preserve"><value>无法打开拨号界面。请手动拨打 {0}，或复制号码。</value></data>
+  <data name="ShellBottomChat" xml:space="preserve"><value>AI 聊天</value></data>
 </root>

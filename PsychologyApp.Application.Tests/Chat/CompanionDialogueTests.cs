@@ -417,7 +417,7 @@ public class CompanionDialogueTests
         Assert.Contains("Было 8, стало 4", better.Messages[0]);
         Assert.Contains("около 8", same.Messages[0]);
         Assert.Equal(2, same.QuickReplies.Count);
-        Assert.Contains("Стало сильнее", worse.Messages[0]);
+        Assert.Contains("напряжение сильнее", worse.Messages[0]);
         Assert.False(better.State.AwaitingPostPracticeRating);
     }
 

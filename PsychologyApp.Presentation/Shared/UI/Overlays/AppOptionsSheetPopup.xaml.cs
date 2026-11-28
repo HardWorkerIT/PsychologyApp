@@ -89,7 +89,6 @@ public partial class AppOptionsSheetPopup : Popup
                 Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["InputTextStyle"]
             };
             entry.Completed += OnInputCompleted;
-            SemanticProperties.SetDescription(entry, input.Placeholder);
             _dialogInputEntry = entry;
             OptionsStack.Add(new Border
             {
@@ -740,8 +739,14 @@ public partial class AppOptionsSheetPopup : Popup
         _isClosing = true;
         SafeAsync.Run(async () =>
         {
-            await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
-            await CloseAsync();
+            try
+            {
+                await UiAnimations.AnimateToastPopOutAsync(SheetCardHost, slideOffset: 12);
+            }
+            finally
+            {
+                await CloseAsync();
+            }
         });
     }
 }

@@ -144,15 +144,35 @@ internal static class UtteranceText
 
     public static string Normalize(string text)
     {
-        char[] chars = text.ToLowerInvariant()
+        string lower = text.ToLowerInvariant()
             .Replace("i'll", "i will", StringComparison.Ordinal)
-            .Replace("i’ll", "i will", StringComparison.Ordinal)
-            .Replace('ё', 'е')
-            .Replace("'", string.Empty)
-            .Replace("’", string.Empty)
-            .Select(c => char.IsLetterOrDigit(c) ? c : ' ')
-            .ToArray();
-        return string.Join(' ', new string(chars).Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            .Replace("i’ll", "i will", StringComparison.Ordinal);
+        Span<char> buffer = lower.Length <= 512 ? stackalloc char[lower.Length] : new char[lower.Length];
+        int length = 0;
+        bool pendingSpace = false;
+        foreach (char character in lower)
+        {
+            if (character is '\'' or '’')
+            {
+                continue;
+            }
+
+            if (!char.IsLetterOrDigit(character))
+            {
+                pendingSpace = true;
+                continue;
+            }
+
+            if (pendingSpace && length > 0)
+            {
+                buffer[length++] = ' ';
+            }
+
+            buffer[length++] = character == 'ё' ? 'е' : character;
+            pendingSpace = false;
+        }
+
+        return new string(buffer[..length]);
     }
 
     /// <summary>Finds a harm verb with a nearby human or animal object; this is a conservative safety cue, not intent assessment.</summary>

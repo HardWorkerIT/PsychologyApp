@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.PlayMusic.MusicPlayer"
              xmlns:clean="clr-namespace:PsychologyApp.Presentation.Entities.Audio"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
+             xmlns:filterTabs="clr-namespace:PsychologyApp.Presentation.Widgets.FilterChipTabs"
              xmlns:cleanUi="clr-namespace:PsychologyApp.Presentation.Widgets.MusicListCard"
              xmlns:audioUi="clr-namespace:PsychologyApp.Presentation.Widgets.Audio"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
@@ -36,7 +37,7 @@
                     PlaceholderText="{Binding SearchPlaceholder}"
                     BodyText="{Binding SearchText, Mode=TwoWay}" />
 
-                <ui:FilterChipTabBarView
+                <filterTabs:FilterChipTabBarView
                     ItemsSource="{Binding CategoryFilters}"
                     TapCommand="{Binding SelectCategoryCommand}" />
             </VerticalStackLayout>

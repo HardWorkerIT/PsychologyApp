@@ -17,6 +17,7 @@ public partial class QuoteViewModel
             {
                 NotifyEmptyStateProperties();
                 OnPropertyChanged(nameof(IsQuoteAdEligible));
+                OnPropertyChanged(nameof(IsQuoteBannerEligible));
             }
         }
     }
@@ -29,7 +30,19 @@ public partial class QuoteViewModel
         && DisplayItems.Count >= 8
         && AdvertisingConfiguration.CanRequestNativeAd(UserPreferencesStore.Load());
 
-    public void RefreshQuoteAdEligibility() => OnPropertyChanged(nameof(IsQuoteAdEligible));
+    public bool IsQuoteBannerEligible => OperatingSystem.IsAndroid()
+        && IsDone
+        && FeedMode == QuoteFeedMode.All
+        && !IsSearching
+        && !ShowAllReadEmpty
+        && DisplayItems.Count >= 3
+        && AdvertisingConfiguration.CanRequestBannerAd(UserPreferencesStore.Load());
+
+    public void RefreshQuoteAdEligibility()
+    {
+        OnPropertyChanged(nameof(IsQuoteAdEligible));
+        OnPropertyChanged(nameof(IsQuoteBannerEligible));
+    }
 
     private QuoteItem? _dailyQuote;
     public QuoteItem? DailyQuote

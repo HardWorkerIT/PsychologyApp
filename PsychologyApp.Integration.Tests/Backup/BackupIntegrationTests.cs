@@ -6,6 +6,7 @@ using PsychologyApp.Application.Models;
 using PsychologyApp.Application.UserProgress;
 using PsychologyApp.Testing.Data;
 using System.Text.Json;
+using System.Data.Common;
 using Xunit;
 
 namespace PsychologyApp.Integration.Tests.Backup;
@@ -24,6 +25,67 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
         _source = IntegrationTestServiceCollection.BuildCoreProvider(_sourceFactory);
         _target = IntegrationTestServiceCollection.BuildCoreProvider(_targetFactory);
         return Task.CompletedTask;
+    }
+
+    [Fact]
+    public async Task ExportExcludesAPracticeSavedAfterTheSnapshotWasRequested()
+    {
+        var gated = new GatedExportConnectionFactory(_sourceFactory);
+        await using ServiceProvider services = IntegrationTestServiceCollection.BuildCoreProvider(
+            _sourceFactory, registrations => IntegrationTestServiceCollection.ReplaceSingleton<IDbConnectionFactory>(registrations, gated));
+        IBackupService backup = services.GetRequiredService<IBackupService>();
+        IUserProgressService progress = services.GetRequiredService<IUserProgressService>();
+
+        Task<string> export = backup.ExportAsync();
+        Task<long> save;
+        try
+        {
+            await gated.ExportOpened.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            save = progress.RecordSessionOutcomeAsync(new SessionOutcomeRequest
+            {
+                ItemKey = "Breathing",
+                ModuleName = "Practice",
+                PageName = "Breathing",
+                PreIntensity = 8,
+                PostIntensity = 4
+            });
+        }
+        finally
+        {
+            gated.ContinueExport.TrySetResult();
+        }
+
+        AppBackupDTO first = JsonSerializer.Deserialize(await export, BackupJsonContext.Default.AppBackupDTO)!;
+        Assert.Empty(first.Completions);
+        Assert.Empty(first.SessionResults);
+        await save;
+
+        AppBackupDTO second = JsonSerializer.Deserialize(await backup.ExportAsync(), BackupJsonContext.Default.AppBackupDTO)!;
+        Assert.Equal("Breathing", Assert.Single(second.Completions).ItemKey);
+        Assert.Equal("Breathing", Assert.Single(second.SessionResults).ItemKey);
+        PracticeIntensitySample sample = Assert.Single(await progress.GetRecentPracticeIntensityAsync(300));
+        Assert.Equal("Breathing", sample.ItemKey);
+        Assert.Equal(8, sample.PreIntensity);
+        Assert.Equal(4, sample.PostIntensity);
+    }
+
+    private sealed class GatedExportConnectionFactory(SharedMemoryConnectionFactory inner) : IDbConnectionFactory
+    {
+        private int _opened;
+        public TaskCompletionSource ExportOpened { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public TaskCompletionSource ContinueExport { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        public string DatabasePath => inner.DatabasePath;
+
+        public async Task<DbConnection> CreateOpenConnectionAsync(CancellationToken cancellationToken = default)
+        {
+            if (Interlocked.Increment(ref _opened) == 1)
+            {
+                ExportOpened.TrySetResult();
+                await ContinueExport.Task.WaitAsync(cancellationToken);
+            }
+
+            return await inner.CreateOpenConnectionAsync(cancellationToken);
+        }
     }
 
     [Fact]
@@ -104,6 +166,56 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
         Assert.True(second.SkippedDuplicates >= 2);
         Assert.Equal(1, await _target.GetRequiredService<IUserProgressService>().CountTestResultsAsync());
         Assert.Single(await _target.GetRequiredService<IUserProgressService>().GetMoodsAsync());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Import_RestoresQuickActionsOnlyWhenThereIsNoLocalSelection(bool hasLocalSelection)
+    {
+        IUserProgressService source = _source.GetRequiredService<IUserProgressService>();
+        IUserProgressService target = _target.GetRequiredService<IUserProgressService>();
+        SavedNextStep[] sourceActions = [SavedNextStep.MuscleRelax, SavedNextStep.ThoughtRecord];
+        SavedNextStep[] localActions = [SavedNextStep.Breathing, SavedNextStep.Grounding];
+        await source.SetSavedNextStepsAsync(sourceActions);
+        if (hasLocalSelection)
+        {
+            await target.SetSavedNextStepsAsync(localActions);
+        }
+
+        string json = await _source.GetRequiredService<IBackupService>().ExportAsync();
+        await _target.GetRequiredService<IBackupService>().ImportAsync(json);
+
+        Assert.Equal(hasLocalSelection ? localActions : sourceActions, await target.GetSavedNextStepsAsync());
+    }
+
+    [Fact]
+    public async Task Import_PreservesDifferentResultsAtTheSameTimestampWithoutDuplicatingThem()
+    {
+        AppBackupDTO backup = new()
+        {
+            TestResults =
+            [
+                new TestResultDTO { TestId = "gad7", CompletedAt = LongAgo, Score = 5, Summary = "mild" },
+                new TestResultDTO { TestId = "gad7", CompletedAt = LongAgo, Score = 12, Summary = "moderate" }
+            ],
+            SessionResults =
+            [
+                new SessionResultDTO { ItemKey = "breathing", CompletedAt = LongAgo, Note = "first" },
+                new SessionResultDTO { ItemKey = "breathing", CompletedAt = LongAgo, Note = "second" }
+            ]
+        };
+        string json = JsonSerializer.Serialize(backup, BackupJsonContext.Default.AppBackupDTO);
+        IBackupService service = _target.GetRequiredService<IBackupService>();
+        IUserProgressService progress = _target.GetRequiredService<IUserProgressService>();
+
+        await service.ImportAsync(json);
+        BackupImportResult repeat = await service.ImportAsync(json);
+
+        Assert.Equal(0, repeat.TestResults);
+        Assert.Equal(0, repeat.SessionResults);
+        Assert.Equal(new int?[] { 5, 12 }, (await progress.GetAllTestResultsAsync()).Select(result => result.Score).Order());
+        Assert.Equal(new[] { "first", "second" }, (await progress.GetRecentSessionResultsAsync()).Select(result => result.Note).Order());
     }
 
     [Fact]
@@ -291,6 +403,8 @@ public sealed class BackupIntegrationTests : IAsyncLifetime
     [Theory]
     [InlineData("")]
     [InlineData("not json")]
+    [InlineData("{}")]
+    [InlineData("{\"MoodEntries\":[{\"MoodLevel\":3,\"RecordedAt\":\"2020-01-02T03:04:05Z\"}]}")]
     [InlineData("{\"FormatVersion\": 99}")]
     [InlineData("{\"FormatVersion\": 0}")]
     public async Task Import_UnreadableOrUnsupportedFile_ThrowsBackupFormatException(string json)

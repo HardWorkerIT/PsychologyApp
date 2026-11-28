@@ -97,6 +97,30 @@ public sealed class PracticeAnswersTests
         Assert.Empty(PracticeAnswers.FromPayload(payload, ThoughtRecord));
     }
 
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData("{\"Fields\":{}}", true)]
+    [InlineData("{\"Items\":[]}", true)]
+    [InlineData("not json", false)]
+    [InlineData("{\"Other\":1}", false)]
+    [InlineData("{\"Items\":[{\"Unknown\":\"unreadable answer\"}]}", false)]
+    [InlineData("{\"Fields\":{\"9\":\"unmapped answer\"}}", false)]
+    public void PracticeReviewDistinguishesEmptyAnswersFromUnreadableAnswers(string? payload, bool readable)
+    {
+        Assert.Equal(readable, PracticeAnswers.TryFromPayload(payload, ThoughtRecord, out var answers));
+        Assert.Empty(answers);
+    }
+
+    [Fact]
+    public void PracticeReviewReadsBothSidesOfPolarityAnswers()
+    {
+        const string payload = """{"Items":[{"Positive":"Утром было легче","Negative":"лучше бы меня не было"}]}""";
+
+        Assert.True(PracticeAnswers.TryFromPayload(payload, [], out var answers));
+        Assert.Equal(new[] { "Утром было легче", "лучше бы меня не было" }, answers.Select(answer => answer.Answer));
+        Assert.True(PracticeAnswers.ReadLikeCrisis(answers, new KeywordCrisisDetector()));
+    }
+
     [Fact]
     public void TypedParts_splits_the_answer_and_leaves_out_offered_chips_and_sentences()
     {

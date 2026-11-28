@@ -79,6 +79,7 @@ public partial class MusicPlayerPage : ContentPage
         _playbackService.AttachLazily(CreatePlayer);
 #endif
         _animationHelper?.TryRevealAsync();
+        CancelPrefetch();
         _prefetchCts = new CancellationTokenSource();
         PrefetchPlaylistAsync(_prefetchCts.Token).FireAndForget();
         StartPositionTimer();
@@ -87,16 +88,29 @@ public partial class MusicPlayerPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        CancelPrefetch();
+        StopPositionTimer();
+        _viewModel.OnPageLeaving();
+        _playbackService.PauseAsync().FireAndForget();
+    }
+
+    private void CancelPrefetch()
+    {
         // Cancel() runs the token callbacks on this (UI) thread, and those tear down an in-flight HTTPS download
         // through SslStream/JNI: leaving the tab froze the app for ~2 s. CancelAsync runs them on the pool.
         if (_prefetchCts is { } prefetch)
         {
             _prefetchCts = null;
-            prefetch.CancelAsync().ContinueWith(_ => prefetch.Dispose(), TaskScheduler.Default);
+            CancelPrefetchAsync(prefetch).FireAndForget();
         }
-        StopPositionTimer();
-        _playbackService.PauseAsync().FireAndForget();
-        _viewModel.SetPlaybackState(false);
+    }
+
+    private static async Task CancelPrefetchAsync(CancellationTokenSource prefetch)
+    {
+        using (prefetch)
+        {
+            await prefetch.CancelAsync();
+        }
     }
 
     protected override void OnHandlerChanged()
@@ -104,11 +118,19 @@ public partial class MusicPlayerPage : ContentPage
         base.OnHandlerChanged();
         if (Handler is null)
         {
+            CancelPrefetch();
             StopPositionTimer();
+            _viewModel.OnPageLeaving();
 #if ANDROID
             _playbackService.Release();
 #else
             _playbackService.Detach();
+            if (_player is { } player)
+            {
+                _player = null;
+                MainContentGrid.Children.Remove(player);
+                player.Dispose();
+            }
 #endif
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _animationHelper?.Dispose();

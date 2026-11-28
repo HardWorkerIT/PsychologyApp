@@ -40,10 +40,8 @@
 
             <CollectionView.GroupFooterTemplate>
                 <DataTemplate x:DataType="vm:CourseSectionItem">
-                    <VerticalStackLayout IsVisible="False"
-                                         BindingContextChanged="OnCourseAdFooterBindingContextChanged">
-                        <ContentView />
-                    </VerticalStackLayout>
+                    <ContentView IsVisible="False"
+                                         BindingContextChanged="OnCourseAdFooterBindingContextChanged" />
                 </DataTemplate>
             </CollectionView.GroupFooterTemplate>
 

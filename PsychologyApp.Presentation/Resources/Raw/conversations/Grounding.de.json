@@ -8,8 +8,8 @@
       "id": "intro",
       "kind": "say",
       "text": [
-        "Ich bin da. Wir kommen über deine Sinne in den gegenwärtigen Moment zurück. Das dauert etwa drei Minuten.",
-        "Lass uns gemeinsam ruhig in die Gegenwart zurückkehren. Drei Minuten, Schritt für Schritt."
+        "Nimm dir etwa drei Minuten, um deine Umgebung wahrzunehmen.",
+        "Beginne mit dem, was du siehst. Danach sind die anderen Sinne dran."
       ],
       "next": "intro_breath"
     },
@@ -17,7 +17,7 @@
       "id": "intro_breath",
       "kind": "say",
       "text": [
-        "Atme zuerst einmal langsam aus, länger als du einatmest. Mehr braucht es nicht."
+        "Geh in deinem Tempo vor. Wenn du nichts riechst oder schmeckst, kannst du das angeben."
       ],
       "next": "ask_before"
     },
@@ -75,8 +75,8 @@
       "id": "react_see",
       "kind": "say",
       "text": [
-        "Du siehst: {see}. Gut so. Atme aus.",
-        "{see}. Gut, das alles siehst du gerade. Atme aus."
+        "Du hast Folgendes wahrgenommen: {see}.",
+        "{see}. Achte jetzt darauf, was deinen Körper berührt."
       ],
       "next": "ask_touch"
     },
@@ -152,7 +152,7 @@
       "id": "ask_smell",
       "kind": "askText",
       "text": [
-        "Jetzt 2 Gerüche. Wenn du gerade nichts riechst, erinnere dich an deine Lieblingsgerüche."
+        "Achte auf bis zu zwei Gerüche. Wenn du nichts riechst, kannst du das angeben."
       ],
       "hint": "Zum Beispiel: Kaffee, frische Luft",
       "capture": "smell",
@@ -198,8 +198,8 @@
       "id": "wrap",
       "kind": "say",
       "text": [
-        "Du bist alle fünf Sinne durchgegangen. Atme noch einmal langsam ein und aus.",
-        "Geschafft: alle fünf Sinne. Noch ein ruhiger Atemzug ein und aus."
+        "Hier endet die Übung. Nimm wahr, wie du dich jetzt fühlst.",
+        "Schau dich noch einmal um und achte darauf, wie du dich fühlst."
       ],
       "next": "ask_after"
     },

@@ -1,11 +1,16 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace PsychologyApp.Presentation.Shared.Common;
 
 /// <summary>An <see cref="ObservableCollection{T}"/> that can take many items with a single change notification, so the UI lays out once instead of once per item.</summary>
 public sealed class RangeObservableCollection<T> : ObservableCollection<T>
 {
+    private static readonly PropertyChangedEventArgs CountChanged = new(nameof(Count));
+    private static readonly PropertyChangedEventArgs IndexerChanged = new("Item[]");
+    private static readonly NotifyCollectionChangedEventArgs Reset = new(NotifyCollectionChangedAction.Reset);
+
     public void AddRange(IReadOnlyCollection<T> items)
     {
         if (items.Count == 0)
@@ -18,9 +23,7 @@ public sealed class RangeObservableCollection<T> : ObservableCollection<T>
             Items.Add(item);
         }
 
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        NotifyReset();
     }
 
     public void InsertRange(int index, IReadOnlyCollection<T> items)
@@ -64,9 +67,7 @@ public sealed class RangeObservableCollection<T> : ObservableCollection<T>
             Items[replaceIndex] = replacement!;
         }
 
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        NotifyReset();
     }
 
     /// <summary>Swaps the whole contents with one Reset, instead of a Clear plus one Add notification per item.</summary>
@@ -78,8 +79,13 @@ public sealed class RangeObservableCollection<T> : ObservableCollection<T>
             Items.Add(item);
         }
 
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(Count)));
-        OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("Item[]"));
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        NotifyReset();
+    }
+
+    private void NotifyReset()
+    {
+        OnPropertyChanged(CountChanged);
+        OnPropertyChanged(IndexerChanged);
+        OnCollectionChanged(Reset);
     }
 }

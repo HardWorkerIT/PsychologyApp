@@ -37,7 +37,7 @@ public sealed class TechniqueListBuilder(
     {
         IReadOnlyList<TechniqueListEntry> entries =
             await techniqueCatalog.GetBuiltInListEntriesAsync(cancellationToken);
-        IReadOnlyList<string> keys = entries.Select(entry => entry.TechniqueId.ToString()).ToList();
+        string[] keys = entries.Select(entry => Enum.GetName(entry.TechniqueId) ?? entry.TechniqueId.ToString()).ToArray();
 
         Task<IReadOnlyDictionary<string, DateTime>> lastPracticeDatesTask =
             userProgressService.GetLastPracticeDatesAsync(keys, cancellationToken);
@@ -49,11 +49,12 @@ public sealed class TechniqueListBuilder(
         IReadOnlyDictionary<string, DateTime> lastPracticeDates = await lastPracticeDatesTask;
         IReadOnlySet<string> draftKeys = await draftKeysTask;
 
-        List<TechniqueItem> items = [];
+        List<TechniqueItem> items = new(entries.Count);
 
-        foreach (TechniqueListEntry entry in entries)
+        for (int i = 0; i < entries.Count; i++)
         {
-            string key = entry.TechniqueId.ToString();
+            TechniqueListEntry entry = entries[i];
+            string key = keys[i];
             DateTime? lastPracticeDate = lastPracticeDates.TryGetValue(key, out DateTime lastPractice)
                 ? lastPractice
                 : null;

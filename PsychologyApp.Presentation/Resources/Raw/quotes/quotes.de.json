@@ -335,7 +335,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Maya Angelou",
+    "author": "Carl W. Buehner",
     "text": "Die Menschen vergessen, was du gesagt hast, aber nie, wie du sie hast fühlen lassen.",
     "theme": "relationships"
   },
@@ -365,7 +365,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Will Durant",
+    "author": "Will Durant (fasst Aristoteles’ Gedanken zusammen)",
     "text": "Wir sind, was wir wiederholt tun. Vortrefflichkeit ist daher keine Handlung, sondern eine Gewohnheit.",
     "theme": "habits"
   },
@@ -425,7 +425,7 @@
     "theme": "acceptance"
   },
   {
-    "author": "Rumi",
+    "author": "Nach Rumi",
     "text": "Die Wunde ist der Ort, an dem das Licht in dich eintritt.",
     "theme": "healing"
   },
@@ -1177,6 +1177,21 @@
   {
     "author": "PsychologyApp",
     "text": "Verbindung kann durch Schritte wachsen, die in Ihr Leben passen.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Ein Plan ist realistischer, wenn er Raum für Unvorhergesehenes lässt.",
+    "theme": "motivation"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Sie können um Bedenkzeit bitten, bevor Sie etwas zusagen.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Team PsychologyApp",
+    "text": "Am einfachsten klärt man ein gemeinsames Verständnis, bevor die Arbeit beginnt.",
     "theme": "relationships"
   }
 ]

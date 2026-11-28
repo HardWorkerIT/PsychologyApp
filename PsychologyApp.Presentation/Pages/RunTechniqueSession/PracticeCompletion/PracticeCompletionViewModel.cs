@@ -21,10 +21,15 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private readonly ICrisisDetector _crisisDetector;
     private readonly IDonationSupportService _donationSupportService;
     private TechniqueId? _nextTechniqueId;
-    private long? _sessionResultId;
+    private readonly long? _sessionResultId;
     private int? _preIntensity;
     private long? _lifetimeCount;
     private bool _sessionOutcomeReviewed;
+    private readonly SemaphoreSlim _reflectionGate = new(1, 1);
+    private string _savedReflectionNote = string.Empty;
+    private string _journalReflectionNote = string.Empty;
+    private bool _reflectionSaveFailed;
+    private bool _leaving;
     private bool _showSupportPrompt;
     private const long SupportPromptAfterCompletions = 5;
     private readonly PracticeMoodCheckIn _moodCheckIn;
@@ -61,18 +66,16 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
                 await RecordMoodAsync(parsed);
             }
         });
-        MorePracticeCommand = new AsyncCommand(MorePracticeAsync);
-        NextPracticeCommand = new AsyncCommand(StartNextPracticeAsync);
-        ChooseAnotherPracticeCommand = new AsyncCommand(() => _navigationService.GoBackAsync());
-        GoHomeCommand = new AsyncCommand(() => _navigationService.GoToRootAsync());
+        NextPracticeCommand = new AsyncCommand(() => LeaveAsync(StartNextPracticeAsync));
+        FinishCommand = new AsyncCommand(FinishAsync);
+        SaveReflectionCommand = new AsyncCommand(SaveReflectionNoteAsync);
         SupportProjectCommand = new AsyncCommand(_donationSupportService.ShowTransferInstructionsAsync);
         DismissSupportPromptCommand = new Command(() => ShowSupportPrompt = false);
         CrisisCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
         ToggleAnswersCommand = new Command(() => IsAnswersExpanded = !IsAnswersExpanded);
         ToggleCheckInCommand = new Command(() => IsCheckInExpanded = !IsCheckInExpanded);
         LoadBeforeMoodAsync().FireAndForget();
-        LoadSessionOutcomeAsync().FireAndForget();
-        LoadNextPracticeAsync(completedItemKey).FireAndForget();
+        LoadSessionOutcomeAsync(completedItemKey).FireAndForget();
         LoadLifetimeCountAsync().FireAndForget();
     }
 
@@ -105,9 +108,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public string ActiveDaysValueText => ActiveDays > 0 ? AppStrings.ProfileActiveDaysValue(ActiveDays) : string.Empty;
     public string ActiveDaysLabelText => AppStrings.ProfileActiveDaysLabel;
     public bool HasActiveDays => ActiveDays > 0;
-    public string MorePracticeText => AppStrings.PracticeMoreButton;
-    public string ChooseAnotherPracticeText => AppStrings.PracticeChooseAnother;
-    public string GoHomeText => AppStrings.PracticeGoHomeButton;
+    public string FinishText => AppStrings.PracticeCompletionDone;
+    public string FinishVariant => IsCrisis ? "Secondary" : "Primary";
+    public string SaveReflectionText => AppStrings.JournalSaveLabel;
+    public string IntensitySummaryText => AppStrings.PracticeIntensitySummary;
     public string DonationPromptTitle => AppStrings.DonatePromptTitle;
     public string DonationPromptBody => AppStrings.DonateBody;
     public string DonationButtonText => AppStrings.DonateButton;
@@ -139,10 +143,6 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
     }
 
-    public int PreIntensityValue => _preIntensity ?? -1;
-
-    public int PostIntensityValue => int.TryParse(_postIntensityText, out int post) ? post : -1;
-
     public bool HasSudsDelta =>
         _preIntensity is >= 0 and <= 10
         && int.TryParse(_postIntensityText, out int post)
@@ -156,17 +156,9 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private bool _hasNextPractice;
     public bool HasNextPractice
     {
-        get => _hasNextPractice && !_isCrisis;
-        private set
-        {
-            if (SetProperty(ref _hasNextPractice, value))
-            {
-                OnPropertyChanged(nameof(ShowMorePracticeAction));
-            }
-        }
+        get => _sessionOutcomeReviewed && !_isCrisis && _hasNextPractice;
+        private set => SetProperty(ref _hasNextPractice, value);
     }
-
-    public bool ShowMorePracticeAction => !HasNextPractice;
 
     private bool _isAnswersExpanded;
     public bool IsAnswersExpanded
@@ -181,9 +173,9 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
     }
 
-    public string AnswersToggleGlyph => IsAnswersExpanded ? "−" : "+";
+    public string AnswersToggleGlyph => IsAnswersExpanded ? "ExpandLess" : "ExpandMore";
 
-    private bool _isCheckInExpanded = true;
+    private bool _isCheckInExpanded;
     public bool IsCheckInExpanded
     {
         get => _isCheckInExpanded;
@@ -196,7 +188,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
     }
 
-    public string CheckInToggleGlyph => IsCheckInExpanded ? "−" : "+";
+    public string CheckInToggleGlyph => IsCheckInExpanded ? "ExpandLess" : "ExpandMore";
 
     /// <summary>
     /// Practice answers and the note are where people write what they would not say in the chat; they get the same local
@@ -211,7 +203,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             if (SetProperty(ref _isCrisis, value))
             {
                 OnPropertyChanged(nameof(HasNextPractice));
-                OnPropertyChanged(nameof(ShowMorePracticeAction));
+                OnPropertyChanged(nameof(FinishVariant));
                 ShowSupportPrompt = false;
             }
         }
@@ -289,25 +281,35 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         : string.Empty;
 
     private string _reflectionNote = string.Empty;
+    public bool CanWriteReflection => _sessionResultId.HasValue;
+    public bool CanSaveReflection => CanWriteReflection && HasUnsavedReflection(ReflectionNote.Trim());
+    public bool HasReflectionSaveError => _reflectionSaveFailed;
+    public bool HasSavedReflection => !_reflectionSaveFailed && !CanSaveReflection && _savedReflectionNote.Length > 0;
+    public string ReflectionSaveStatus => _reflectionSaveFailed
+        ? AppStrings.PracticeReflectionSaveError
+        : HasSavedReflection ? AppStrings.PracticeReflectionSaved : string.Empty;
+
     public string ReflectionNote
     {
         get => _reflectionNote;
         set
         {
-            if (SetProperty(ref _reflectionNote, value)
-                && _showSupportPrompt
-                && _crisisDetector.IsCrisis(value))
+            if (SetProperty(ref _reflectionNote, value ?? string.Empty))
             {
-                ShowSupportPrompt = false;
+                if (!IsCrisis && _crisisDetector.IsCrisis(_reflectionNote))
+                {
+                    IsCrisis = true;
+                }
+                _reflectionSaveFailed = false;
+                NotifyReflectionStatus();
             }
         }
     }
 
     public ICommand RecordMoodCommand { get; }
-    public ICommand MorePracticeCommand { get; }
     public ICommand NextPracticeCommand { get; }
-    public ICommand ChooseAnotherPracticeCommand { get; }
-    public ICommand GoHomeCommand { get; }
+    public ICommand FinishCommand { get; }
+    public ICommand SaveReflectionCommand { get; }
     public ICommand CrisisCommand { get; }
     public ICommand ToggleAnswersCommand { get; }
     public ICommand ToggleCheckInCommand { get; }
@@ -325,9 +327,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             nameof(ActiveDaysValueText),
             nameof(ActiveDaysLabelText),
             nameof(HasActiveDays),
-            nameof(MorePracticeText),
-            nameof(ChooseAnotherPracticeText),
-            nameof(GoHomeText),
+            nameof(FinishText),
+            nameof(SaveReflectionText),
+            nameof(IntensitySummaryText),
+            nameof(ReflectionSaveStatus),
             nameof(DonationPromptTitle),
             nameof(DonationPromptBody),
             nameof(DonationButtonText),
@@ -356,8 +359,6 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private void NotifySudsDelta()
     {
         OnPropertyChanged(nameof(HasSudsDelta));
-        OnPropertyChanged(nameof(PreIntensityValue));
-        OnPropertyChanged(nameof(PostIntensityValue));
         OnPropertyChanged(nameof(SudsDeltaText));
     }
 
@@ -376,7 +377,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
 
         PsychologyApp.Application.Models.Practice.BuiltInTechniqueDefinition definition = await _techniqueCatalog.GetAsync(techniqueId);
-        IReadOnlyList<PracticeAnswer> answers = PracticeAnswers.FromPayload(result.PayloadJson, definition.Entries ?? []);
+        bool answersReadable = PracticeAnswers.TryFromPayload(result.PayloadJson, definition.Entries ?? [], out IReadOnlyList<PracticeAnswer> answers);
         bool crisis = PracticeAnswers.ReadLikeCrisis(answers, _crisisDetector);
         await UiThread.RunAsync(() =>
         {
@@ -389,10 +390,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             IsCrisis |= crisis;
         });
 
-        return true;
+        return answersReadable;
     }
 
-    private async Task LoadSessionOutcomeAsync()
+    private async Task LoadSessionOutcomeAsync(string? completedItemKey)
     {
         if (_sessionResultId is null)
         {
@@ -402,6 +403,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         try
         {
             SessionResultDTO? result = await _userProgressService.GetSessionResultAsync(_sessionResultId.Value);
+            if (_crisisDetector.IsCrisis(result?.Note))
+            {
+                await UiThread.RunAsync(() => IsCrisis = true);
+            }
             bool outcomeReviewed = await ShowAnswersAsync(result);
             if (result?.PreIntensity is >= 0 and <= 10)
             {
@@ -421,8 +426,13 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
                 await UiThread.RunAsync(() =>
                 {
                     _sessionOutcomeReviewed = true;
+                    OnPropertyChanged(nameof(HasNextPractice));
                     TryShowSupportPrompt();
                 });
+                if (!IsCrisis)
+                {
+                    await LoadNextPracticeAsync(completedItemKey);
+                }
             }
         }
         catch (Exception bestEffortError)
@@ -543,28 +553,96 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
 
     private async Task RecordMoodAsync(int moodLevel)
     {
-        SelectedMoodLevel = moodLevel;
-        string? note = string.IsNullOrWhiteSpace(ReflectionNote) ? null : ReflectionNote.Trim();
-        IsCrisis |= _crisisDetector.IsCrisis(note);
-
-        await _moodCheckIn.SaveAsync(moodLevel, note);
-
-        if (note is not null && _sessionResultId is long sessionResultId)
+        await _reflectionGate.WaitAsync();
+        try
         {
-            await _userProgressService.UpdateSessionResultNoteAsync(sessionResultId, note);
+            string note = ReflectionNote.Trim();
+            await _moodCheckIn.SaveAsync(moodLevel, note.Length > 0 ? note : null);
+            _journalReflectionNote = note;
+            SelectedMoodLevel = moodLevel;
+            await SaveReflectionNoteCoreAsync();
+        }
+        finally
+        {
+            _reflectionGate.Release();
         }
     }
 
-    private async Task MorePracticeAsync()
+    private async Task<bool> SaveReflectionNoteAsync()
     {
-        if (HasNextPractice && _nextTechniqueId is not null)
+        await _reflectionGate.WaitAsync();
+        try
         {
-            await StartNextPracticeAsync();
+            return await SaveReflectionNoteCoreAsync();
+        }
+        finally
+        {
+            _reflectionGate.Release();
+        }
+    }
+
+    private bool HasUnsavedReflection(string note) =>
+        !string.Equals(note, _savedReflectionNote, StringComparison.Ordinal)
+        || (SelectedMoodLevel >= 1 && !string.Equals(note, _journalReflectionNote, StringComparison.Ordinal));
+
+    private async Task<bool> SaveReflectionNoteCoreAsync()
+    {
+        try
+        {
+            if (_sessionResultId is long resultId)
+            {
+                string note = ReflectionNote.Trim();
+                while (HasUnsavedReflection(note))
+                {
+                    if (!string.Equals(note, _savedReflectionNote, StringComparison.Ordinal))
+                    {
+                        await _userProgressService.UpdateSessionResultNoteAsync(resultId, note);
+                        _savedReflectionNote = note;
+                    }
+                    if (SelectedMoodLevel >= 1 && !string.Equals(note, _journalReflectionNote, StringComparison.Ordinal))
+                    {
+                        await _moodCheckIn.SaveAsync(SelectedMoodLevel, note.Length > 0 ? note : null);
+                        _journalReflectionNote = note;
+                    }
+                    note = ReflectionNote.Trim();
+                }
+            }
+
+            _reflectionSaveFailed = false;
+        }
+        catch (Exception error)
+        {
+            _reflectionSaveFailed = true;
+            BestEffort.Report(error);
+        }
+        NotifyReflectionStatus();
+        return !_reflectionSaveFailed;
+    }
+
+    private void NotifyReflectionStatus() =>
+        Notify(nameof(CanSaveReflection), nameof(HasReflectionSaveError), nameof(HasSavedReflection), nameof(ReflectionSaveStatus));
+
+    internal Task FinishAsync() => LeaveAsync(_navigationService.GoBackAsync);
+
+    private async Task LeaveAsync(Func<Task> navigate)
+    {
+        if (_leaving)
+        {
             return;
         }
 
-        // One step: the finished practice is no longer under this page (see GoToPracticeCompletionAsync).
-        await _navigationService.GoBackAsync();
+        _leaving = true;
+        try
+        {
+            if (await SaveReflectionNoteAsync())
+            {
+                await navigate();
+            }
+        }
+        finally
+        {
+            _leaving = false;
+        }
     }
 
     private async Task StartNextPracticeAsync()
@@ -574,7 +652,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             return;
         }
 
-        await _navigationService.GoBackAsync();
-        await _navigationService.GoToTechniqueAsync(_nextTechniqueId.Value);
+        NavigationRunStatus status = await _navigationService.OpenNextPracticeAsync(_nextTechniqueId.Value);
+        if (status is NavigationRunStatus.Failed or NavigationRunStatus.DroppedTimeout or NavigationRunStatus.DroppedBusy)
+        {
+            throw new InvalidOperationException("The next practice could not be opened.");
+        }
     }
 }

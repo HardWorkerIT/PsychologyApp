@@ -78,6 +78,7 @@ public sealed class ChatViewModel : BaseViewModel
         IChatLanguageProvider language,
         TimeProvider time,
         long? sessionId,
+        PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService dialogs,
         string? topic = null,
         string? opener = null)
     {
@@ -92,7 +93,7 @@ public sealed class ChatViewModel : BaseViewModel
         _title = AppStrings.ChatProfileTitle;
 
         BindNavigation(navigationService);
-        BackCommand = new AsyncCommand(GoBackAsync);
+        BackCommand = new AsyncCommand(() => ConfirmBackAsync(dialogs));
         // The header of an open chat leads to that chat's page; before the chat exists there is only the companion to show.
         OpenProfileCommand = new AsyncCommand(() => _sessionId is { } id
             ? NavigationService!.GoToChatInfoAsync(id)
@@ -113,6 +114,8 @@ public sealed class ChatViewModel : BaseViewModel
     public ICommand QuickReplyCommand { get; }
     public ICommand LoadOlderMessagesCommand { get; }
     public ICommand RetryInitialLoadCommand { get; }
+
+    internal event EventHandler? TechniqueNavigationStarting;
 
     public string Title
     {
@@ -135,6 +138,16 @@ public sealed class ChatViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(CanSend));
             }
+        }
+    }
+
+    internal async Task ConfirmBackAsync(PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService dialogs)
+    {
+        if (string.IsNullOrWhiteSpace(DraftText)
+            || await dialogs.AskSheetAsync(AppStrings.ChatDiscardDraftTitle, AppStrings.ChatDiscardDraftBody,
+                AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, isDestructive: true))
+        {
+            await GoBackAsync();
         }
     }
 
@@ -625,6 +638,7 @@ public sealed class ChatViewModel : BaseViewModel
         {
             case { Kind: DialogueActionKind.StartTechnique, TechniqueId: { } technique }:
                 await Task.Delay(HandOverDelayMs, _lifetime.Token);
+                TechniqueNavigationStarting?.Invoke(this, EventArgs.Empty);
                 await NavigationService!.GoToTechniqueAsync(technique);
                 break;
 

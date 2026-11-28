@@ -51,8 +51,14 @@
                 BackCommand="{Binding BackCommand}" />
 
             <Label Text="{Binding LeadText}" Style="{StaticResource BodyStyle}" />
+            <Label IsVisible="{Binding IsPlanLoading}" Text="{Binding LoadingText}" Style="{StaticResource BodyStyle}" />
+            <ui:RetryView IsVisible="{Binding IsPlanLoadFailed}"
+                          FailedText="{Binding LoadFailedText}"
+                          RetryText="{Binding RetryText}"
+                          RetryCommand="{Binding RetryLoadCommand}" />
 
             <!-- Headings sit outside the cards like the rest of Settings; the plan remains user-authored and local. -->
+            <VerticalStackLayout IsVisible="{Binding IsPlanReady}" Spacing="{StaticResource LayoutSpacing}">
             <VerticalStackLayout Spacing="6">
                 <Label Text="{Binding WarningSignsTitle}" Style="{StaticResource CaptionStyle}" FontFamily="{StaticResource SemiBoldFontFamily}" Margin="4,0" />
             <Border Style="{StaticResource SettingsSectionCardStyle}" Margin="0">
@@ -192,6 +198,7 @@
                     </Grid>
                 </VerticalStackLayout>
             </Border>
+            </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

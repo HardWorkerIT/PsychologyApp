@@ -270,6 +270,7 @@ public sealed class InsightsViewModel : BaseViewModel
         // A bare "Result: 0" says nothing: the scale it is on and what it means, in the words the test list and history use.
         string analyzerId = definition.AnalyzerId ?? definition.TestId;
         string? meaning = TestScoreLabelMapper.GetSummary(analyzerId, test.Latest);
+        bool hasInterpretableTrend = analyzerId is not ("heck_hess" or "haer");
         if (analyzerId == PreferenceProfile16.AnalyzerId)
         {
             return new InsightItem(
@@ -283,7 +284,7 @@ public sealed class InsightsViewModel : BaseViewModel
         string score = TestScoreInterpreter.GetScoreRange(analyzerId) is { } range
             ? AppStrings.InsightsTestScoreOf(test.Latest, range.Max)
             : AppStrings.InsightsTestSingle(test.Latest);
-        string detail = test.Results > 1
+        string detail = hasInterpretableTrend && test.Results > 1
             ? $"{AppStrings.InsightsTestChange(test.First, test.Latest)} · {Trend(test.Trend)}"
             : string.IsNullOrWhiteSpace(meaning) ? score : $"{score} · {meaning}";
         return new InsightItem(

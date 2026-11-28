@@ -26,8 +26,14 @@ public partial class AppToastPopup : Popup
 
     public async Task DismissAsync()
     {
-        await AnimateOutAsync();
-        await CloseAsync();
+        try
+        {
+            await AnimateOutAsync();
+        }
+        finally
+        {
+            await CloseAsync();
+        }
     }
 
     private void OnLoaded(object? sender, EventArgs e) => SafeAsync.Run(LoadedAsync);

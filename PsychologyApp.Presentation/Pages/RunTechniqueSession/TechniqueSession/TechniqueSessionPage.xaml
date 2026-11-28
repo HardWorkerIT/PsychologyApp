@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueSession.TechniqueSessionPage"
+             xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
              xmlns:controls="clr-namespace:PsychologyApp.Presentation.Widgets.TechniqueSessionShell"
              xmlns:shellBehaviors="clr-namespace:PsychologyApp.Presentation.Widgets.TechniqueSessionShell"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
@@ -22,10 +23,17 @@
         BackCommand="{Binding BackCommand}"
         TheoryCommand="{Binding Theory}"
         FinishCommand="{Binding CompleteCommand}"
-        FinishEnabled="{Binding CanFinish}">
+        FinishEnabled="{Binding CanFinish}"
+        HasForwardStep="{Binding CanGoToNextStep}">
         <controls:TechniquePageShell.Behaviors>
             <behaviors:RevealOnAppearingBehavior />
         </controls:TechniquePageShell.Behaviors>
     </controls:TechniquePageShell>
+    <Grid x:Name="InitializationError" IsVisible="False" RowDefinitions="Auto,*"
+          Margin="{StaticResource LayoutPageMarginThickness}">
+        <ui:NavigationBarSimpleView x:Name="InitializationNavigation" />
+        <ui:RetryView x:Name="InitializationRetry" Grid.Row="1"
+                      HorizontalOptions="Center" VerticalOptions="Center" />
+    </Grid>
     </Grid>
 </ContentPage>

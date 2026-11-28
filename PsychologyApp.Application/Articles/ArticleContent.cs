@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace PsychologyApp.Application.Articles;
 
 /// <summary>
@@ -43,8 +45,21 @@ public static partial class ArticleContent
         internal static readonly IReadOnlyList<Article> Chinese = [.. ArticlesZh, .. AdditionalArticlesZh];
     }
 
-    private static Article MiniArticle(string id, string title, string summary, string text) =>
-        new(id, title, summary, "TipsAndUpdates", 2, [P(text)]);
+    private static Article MiniArticle(string id, string title, string summary, string text)
+    {
+        // Keep mini articles to two readable paragraphs, including scripts that do not use spaces between sentences.
+        string[] sentences = Regex.Matches(text.Trim(), @"[^.!?。！？…]+[.!?。！？…]+[”’»""')\]]*|[^.!?。！？…]+$")
+            .Cast<Match>()
+            .Select(match => match.Value.Trim())
+            .Where(part => !string.IsNullOrWhiteSpace(part))
+            .ToArray();
+        int split = (sentences.Length + 1) / 2;
+        ArticleBlock[] paragraphs = sentences.Length > 1
+            ? [P(string.Join(" ", sentences.Take(split))), P(string.Join(" ", sentences.Skip(split)))]
+            : sentences.Select(P).ToArray();
+        IReadOnlyList<ArticleBlock> blocks = paragraphs.Length == 0 ? new[] { P(text) } : paragraphs;
+        return new(id, title, summary, "TipsAndUpdates", 1, blocks);
+    }
 
     private static ArticleBlock P(string text) => new(ArticleBlockKind.Paragraph, text);
 
@@ -80,9 +95,16 @@ public static partial class ArticleContent
 /// <summary>What is read aloud: the text a person reads, in order, without the links and buttons around it.</summary>
 public static class ArticleSpeech
 {
-    public static IReadOnlyList<string> Parts(string title, IEnumerable<ArticleBlock> blocks)
+    public static IReadOnlyList<string> Parts(string title, IEnumerable<ArticleBlock> blocks) => Parts(title, null, blocks);
+
+    public static IReadOnlyList<string> Parts(string title, string? summary, IEnumerable<ArticleBlock> blocks)
     {
         List<string> parts = [title];
+        if (!string.IsNullOrWhiteSpace(summary))
+        {
+            parts.Add(summary);
+        }
+
         foreach (ArticleBlock block in blocks)
         {
             switch (block.Kind)
@@ -121,11 +143,35 @@ public static class ArticleSearch
 
         string languageKey = NormalizeLanguage(language);
         return SearchIndex.GetOrAdd(languageKey, BuildSearchIndex)
-            .Where(entry => words.All(word => entry.Head.Contains(word, StringComparison.Ordinal) || entry.Body.Contains(word, StringComparison.Ordinal)))
-            .OrderByDescending(entry => words.Count(word => entry.Title.Contains(word, StringComparison.Ordinal)))
-            .ThenByDescending(entry => words.Count(word => entry.Head.Contains(word, StringComparison.Ordinal)))
-            .Select(entry => entry.Article)
+            .Select(entry => Score(entry, words))
+            .Where(match => match.HeadHits >= 0)
+            .OrderByDescending(match => match.TitleHits)
+            .ThenByDescending(match => match.HeadHits)
+            .Select(match => match.Article)
             .ToList();
+    }
+
+    private static (Article Article, int TitleHits, int HeadHits) Score(SearchEntry entry, string[] words)
+    {
+        int titleHits = 0;
+        int headHits = 0;
+        foreach (string word in words)
+        {
+            if (entry.Head.Contains(word, StringComparison.Ordinal))
+            {
+                headHits++;
+                if (entry.Title.Contains(word, StringComparison.Ordinal))
+                {
+                    titleHits++;
+                }
+            }
+            else if (!entry.Body.Contains(word, StringComparison.Ordinal))
+            {
+                return (entry.Article, 0, -1);
+            }
+        }
+
+        return (entry.Article, titleHits, headHits);
     }
 
     private static SearchEntry[] BuildSearchIndex(string language) =>

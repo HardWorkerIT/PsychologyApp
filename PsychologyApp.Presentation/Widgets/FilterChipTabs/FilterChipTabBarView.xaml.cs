@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Windows.Input;
 
-namespace PsychologyApp.Presentation.Shared.UI.Components;
+namespace PsychologyApp.Presentation.Widgets.FilterChipTabs;
 
 public partial class FilterChipTabBarView : ContentView
 {

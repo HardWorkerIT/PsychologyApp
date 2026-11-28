@@ -115,53 +115,77 @@ public static class CompanionKnowledge
         ? "I can briefly explain some things: panic, anxiety, CBT, mindfulness, burnout and more. Which one interests you?"
         : "Я могу коротко объяснить некоторые вещи: панику, тревогу, КПТ, осознанность, выгорание и другое. Что вас интересует?";
 
-    public static string Why(CompanionEmotion emotion, bool english) => emotion switch
+    public static string Why(CompanionEmotion emotion, bool english, bool hasRememberedSituation = false)
     {
-        CompanionEmotion.Panic or CompanionEmotion.Anxiety => english
-            ? "Anxiety usually comes when the mind sees a possible threat and the body prepares to defend itself: heart rate goes up, muscles tense. Often it is fed by tiredness, lack of sleep, uncertainty and long stress. It does not mean something is wrong with you."
-            : "Тревога обычно появляется, когда мозг видит возможную угрозу, а тело готовится защищаться: учащается пульс, напрягаются мышцы. Часто её подпитывают усталость, недосып, неопределённость и долгий стресс. Это не значит, что с вами что-то не так.",
-        CompanionEmotion.Overthinking => english
-            ? "The mind circles around a problem because it is trying to solve it or to be ready for everything. But rumination rarely leads to a solution; it only adds tension. Writing thoughts down or naming a next step helps to break the circle."
-            : "Ум ходит по кругу, потому что пытается решить проблему или подготовиться ко всему. Но «пережёвывание» редко приводит к решению, зато добавляет напряжения. Помогает записать мысли или назвать один следующий шаг.",
-        CompanionEmotion.Anger or CompanionEmotion.Resentment => english
-            ? "Anger and resentment usually point to something important that was crossed: a boundary, a need, fairness. It is a signal, not a flaw. It becomes heavy when it has no outlet, so it helps to name what exactly mattered."
-            : "Злость и обида обычно указывают, что задето что-то важное: граница, потребность, справедливость. Это сигнал, а не изъян. Тяжело становится, когда ему нет выхода, поэтому помогает назвать, что именно для вас важно.",
-        CompanionEmotion.Guilt => english
-            ? "Guilt appears when our actions clash with our values. In moderation it helps to make amends, but it often grows out of proportion and turns into self-blame. It is worth separating what was really in your control from what was not."
-            : "Вина возникает, когда поступок расходится с нашими ценностями. В меру она помогает исправить ситуацию, но часто разрастается и превращается в самобичевание. Стоит отделить то, что действительно было в вашей власти, от того, что нет.",
-        CompanionEmotion.Sadness or CompanionEmotion.Loneliness => english
-            ? "Sadness and loneliness often follow losses, changes or a lack of close contact. They tell us that something valuable is missing. Feelings like this need time and warmth rather than being pushed away."
-            : "Грусть и одиночество часто приходят после потерь, перемен или при нехватке близкого контакта. Они говорят, что не хватает чего-то ценного. Таким чувствам нужны время и тепло, а не подавление.",
-        CompanionEmotion.Exhaustion => english
-            ? "Exhaustion builds up when demands exceed resources for too long: little sleep, constant tension, no time to recover. The body simply asks for a pause. That is not laziness."
-            : "Истощение накапливается, когда требования долго превышают ресурсы: мало сна, постоянное напряжение, нет времени восстановиться. Тело просто просит паузы. Это не лень.",
-        CompanionEmotion.Procrastination => english
-            ? "Putting things off is usually about avoiding an unpleasant feeling — fear of failing, of criticism or of a huge task — not about laziness. When the first step shrinks, the resistance often shrinks with it."
-            : "Откладывание чаще всего связано с желанием избежать неприятного чувства — страха не справиться, критики или огромной задачи, — а не с ленью. Когда первый шаг становится совсем маленьким, сопротивление тоже уменьшается.",
-        _ => english
-            ? "There is rarely a single reason: feelings come from a mix of events, thoughts, tiredness and the body's state. If you tell me what has been happening lately, we can look for what may lie behind it."
-            : "Единственной причины обычно нет: чувства складываются из событий, мыслей, усталости и состояния тела. Если расскажете, что происходило в последнее время, вместе поищем, что за этим стоит."
-    };
+        string explanation = emotion switch
+        {
+            CompanionEmotion.Panic or CompanionEmotion.Anxiety => english
+                ? "Anxiety often appears when the mind sees a possible threat and the body prepares to defend itself: the heart may race and muscles tense. Tiredness, lack of sleep, uncertainty and prolonged stress can add to it. It does not mean something is wrong with you."
+                : "Тревога часто появляется, когда мозг видит возможную угрозу, а тело готовится защищаться: может учащаться пульс, напрягаться мышцы. Её могут усиливать усталость, недосып, неопределённость и долгий стресс. Это не значит, что с вами что-то не так.",
+            CompanionEmotion.Overthinking => english
+                ? "The mind can circle around a problem while trying to solve it or prepare for every outcome. Rumination rarely brings a solution and can add tension."
+                : "Ум может ходить по кругу, пытаясь решить проблему или подготовиться ко всему. Такие размышления редко приводят к решению и могут усиливать напряжение.",
+            CompanionEmotion.Anger or CompanionEmotion.Resentment => english
+                ? "Anger and hurt can point to something important that was crossed: a boundary, a need or a sense of fairness. They are signals, not flaws."
+                : "Злость и обида могут указывать, что задето что-то важное: граница, потребность или чувство справедливости. Это сигналы, а не изъян.",
+            CompanionEmotion.Guilt => english
+                ? "Guilt can appear when an action clashes with our values. It may help to make amends, but can also grow into self-blame; it helps to separate what was in your control from what was not."
+                : "Вина может появиться, когда поступок расходится с нашими ценностями. Она помогает исправить сделанное, но может превратиться в самобичевание; полезно отделить то, что было в вашей власти, от того, что нет.",
+            CompanionEmotion.Sadness or CompanionEmotion.Loneliness => english
+                ? "Sadness and loneliness can follow loss, change or a lack of close contact. They may signal that something valuable is missing and need time rather than pressure to go away."
+                : "Грусть и одиночество могут приходить после потерь, перемен или нехватки близкого контакта. Они могут говорить, что не хватает чего-то ценного; таким чувствам нужны время, а не давление.",
+            CompanionEmotion.Exhaustion => english
+                ? "Exhaustion can build when demands exceed your resources for too long: little sleep, constant tension or no time to recover. It is not laziness."
+                : "Истощение может накапливаться, когда требования долго превышают ресурсы: мало сна, постоянное напряжение, нет времени восстановиться. Это не лень.",
+            CompanionEmotion.Procrastination => english
+                ? "Putting things off can be a way to avoid an unpleasant feeling — fear of failing, criticism or a task that feels too big — rather than laziness. A smaller first step can make starting easier."
+                : "Откладывание может быть способом избежать неприятного чувства — страха не справиться, критики или слишком большой задачи, — а не ленью. С маленького шага начать бывает легче.",
+            _ => english
+                ? "There is not always one clear reason: events, thoughts, tiredness and the body's state can all play a part."
+                : "У чувства не всегда есть одна причина: на него могут влиять события, мысли, усталость и состояние тела."
+        };
+
+        string followUp = hasRememberedSituation
+            ? english
+                ? "Thinking about what you described, which part of the situation feels most connected to this feeling?"
+                : "Если вспомнить то, что вы описали, какая часть ситуации кажется связанной с этим чувством?"
+            : english
+                ? "When did you first notice this feeling, and what was happening then?"
+                : "Когда вы впервые заметили это чувство и что тогда происходило?";
+
+        return $"{explanation} {followUp}";
+    }
 
     public static string Normal(CompanionEmotion emotion, bool english)
     {
-        string feeling = emotion == CompanionEmotion.Unknown
-            ? (english ? "What you describe" : "То, что вы описываете")
-            : Capitalize(CompanionContent.EmotionName(emotion, english));
+        if (emotion == CompanionEmotion.Unknown)
+        {
+            return english
+                ? "Many people have experiences like this, but one message alone can't tell me what's happening for you. If they last for weeks, worsen or interfere with daily life, it may help to talk with a professional. What worries you most?"
+                : "С похожими переживаниями сталкиваются многие, но по одному сообщению нельзя понять, что происходит именно у вас. Если они длятся неделями, усиливаются или мешают повседневной жизни, можно обсудить это со специалистом. Что беспокоит вас больше всего?";
+        }
+
+        string feeling = Capitalize(CompanionContent.EmotionName(emotion, english));
         return english
-            ? $"{feeling} is a common human reaction, and many people go through it. Feeling this does not mean you are “broken”. If it lasts for weeks, gets stronger or gets in the way of daily life, it is worth talking to a specialist. I can't diagnose, but I can be with you meanwhile."
-            : $"{feeling} — обычная человеческая реакция, через неё проходят многие. Это не значит, что вы «сломаны». Если это длится неделями, усиливается или мешает жить, стоит обсудить это со специалистом. Диагнозов я не ставлю, но могу быть рядом в это время.";
+            ? $"{feeling} is something many people experience, but that alone doesn't tell me what's happening in your situation. If it lasts for weeks, gets stronger or interferes with daily life, it may help to talk with a professional. What worries you most about it?"
+            : "Многим знакомо это переживание, но по одному сообщению нельзя понять, что происходит именно у вас. Если оно длится неделями, усиливается или мешает повседневной жизни, можно обсудить это со специалистом. Что в этом беспокоит вас больше всего?";
     }
 
     /// <summary>What usually helps with the feeling. Used when the person asks for advice.</summary>
-    public static string WhatHelps(CompanionEmotion emotion, bool english) => emotion switch
+    public static string WhatHelps(CompanionEmotion emotion, bool english, bool avoidBodyFocus = false) => emotion switch
     {
+        CompanionEmotion.Panic or CompanionEmotion.Anxiety when avoidBodyFocus => english
+            ? "I'll avoid body-focused steps. With anxiety, try naming one thing you know for sure and choosing a small step within your control."
+            : "Учту, что телесный фокус вам не подходит. При тревоге можно назвать один факт, который вы знаете точно, и выбрать небольшой шаг, который сейчас в вашей власти.",
         CompanionEmotion.Panic or CompanionEmotion.Anxiety => english
             ? "With anxiety it often helps to slow the exhale, name five things you see around you and let yourself do one small next step instead of solving everything at once."
             : "При тревоге часто помогает замедлить выдох, назвать пять вещей, которые вы видите вокруг, и сделать один маленький следующий шаг вместо того, чтобы решать всё сразу.",
         CompanionEmotion.Overthinking => english
             ? "With rumination it often helps to write the thought down, ask “what is the evidence?” and choose one action for today."
             : "Когда мысли ходят по кругу, часто помогает записать мысль, спросить себя «какие есть факты?» и выбрать одно действие на сегодня.",
+        CompanionEmotion.Anger or CompanionEmotion.Resentment when avoidBodyFocus => english
+            ? "I'll avoid body-focused steps. If you can, pause before replying; then decide what matters to you and how you want to say it."
+            : "Учту, что телесный фокус вам не подходит. Если можно, отложите ответ; позже решите, что для вас важно и как вы хотите об этом сказать.",
         CompanionEmotion.Anger or CompanionEmotion.Resentment => english
             ? "With anger it often helps to give the body a release first (a walk, a long exhale), and only then to name what mattered and decide whether to say it."
             : "При злости часто помогает сначала дать телу разрядку (прогулка, долгий выдох), а потом назвать, что было важно, и решить, стоит ли это сказать.",
@@ -181,6 +205,10 @@ public static class CompanionKnowledge
             ? "It often helps to slow down, name what you feel and pick one small step."
             : "Часто помогает притормозить, назвать, что вы чувствуете, и выбрать один маленький шаг."
     };
+
+    public static string SupportOtherPerson(bool english) => english
+        ? "A simple first step is to ask what kind of support would help right now: being heard, thinking through options together, or simply having company. You do not have to solve it for them straight away."
+        : "Можно начать с простого: спросить, какая поддержка сейчас нужна — выслушать, вместе подумать о вариантах или просто побыть рядом. Не обязательно сразу искать решение за другого человека.";
 
     public static ChatQuickReply PracticeChip(bool english) => new(ChatQuickReplyKinds.Act, english ? "Yes, suggest one" : "Да, предложи", "practice");
 

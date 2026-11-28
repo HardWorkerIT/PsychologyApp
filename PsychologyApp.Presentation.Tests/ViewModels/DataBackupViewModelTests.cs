@@ -255,6 +255,20 @@ public sealed class DataBackupViewModelTests : IDisposable
     }
 
     [Fact]
+    public async Task CancellationAfterImportCommitsStillReportsWhatWasRestored()
+    {
+        WriteFile("{}");
+        DataBackupViewModel viewModel = Create();
+        _backup.Setup(b => b.ImportAsync("{}", It.IsAny<CancellationToken>()))
+            .Callback(viewModel.CancelPendingOperations)
+            .ReturnsAsync(new BackupImportResult(1, 2, 3, 4, 5, false));
+
+        await VmTestHelpers.RunAsync(viewModel.ImportBackupCommand);
+
+        _toasts.Verify(t => t.LongToast(AppStrings.DataBackupImportedToast(1, 2, 7, 5, 0), AppToastKind.Info), Times.Once);
+    }
+
+    [Fact]
     public async Task ABackupFromADocumentProviderIsImportedWithoutAFilePath()
     {
         FilePicker.Next = new FileResult("content://documents/backup.json")

@@ -4,9 +4,7 @@
              x:Class="PsychologyApp.Presentation.Pages.RunTechniqueSession.PracticeCompletion.PracticeCompletionPage"
              SafeAreaEdges="All"
              xmlns:ui="clr-namespace:PsychologyApp.Presentation.Shared.UI.Components"
-             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:mood="clr-namespace:PsychologyApp.Presentation.Widgets.MoodStrip"
-             xmlns:tension="clr-namespace:PsychologyApp.Presentation.Widgets.TensionSlider"
              xmlns:today="clr-namespace:PsychologyApp.Presentation.Widgets.TodayPracticeRow"
              xmlns:behaviors="clr-namespace:PsychologyApp.Presentation.Shared.Common.Behaviors"
              xmlns:vm="clr-namespace:PsychologyApp.Presentation.Pages.RunTechniqueSession.PracticeCompletion"
@@ -15,197 +13,205 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
-    <ScrollView>
-        <Grid RowDefinitions="Auto,Auto">
-            <Grid.Behaviors>
-                <behaviors:RevealOnAppearingBehavior />
-            </Grid.Behaviors>
-            <ui:CompletionCelebrationView
-                Grid.Row="0"
-                TitleText="{Binding TitleText}"
-                BodyText="{Binding BodyText}"
-                IconName="{Binding CelebrationIconName}"
-                IsMilestone="{Binding IsMilestone}"
-                StreakValueText="{Binding ActiveDaysValueText}"
-                StreakLabelText="{Binding ActiveDaysLabelText}"
-                HasStreak="{Binding HasActiveDays}"
-                IsPrimaryActionVisible="{Binding ShowMorePracticeAction}"
-                PrimaryActionText="{Binding MorePracticeText}"
-                PrimaryCommand="{Binding MorePracticeCommand}" />
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <Grid RowDefinitions="Auto,Auto">
+                <Grid.Behaviors>
+                    <behaviors:RevealOnAppearingBehavior />
+                </Grid.Behaviors>
+                <ui:CompletionCelebrationView
+                    Grid.Row="0"
+                    TitleText="{Binding TitleText}"
+                    BodyText="{Binding BodyText}"
+                    IconName="{Binding CelebrationIconName}"
+                    IsMilestone="{Binding IsMilestone}"
+                    StreakValueText="{Binding ActiveDaysValueText}"
+                    StreakLabelText="{Binding ActiveDaysLabelText}"
+                    HasStreak="{Binding HasActiveDays}"
+                    IsPrimaryActionVisible="False" />
 
-            <VerticalStackLayout
-                Grid.Row="1"
-                Padding="{StaticResource LayoutPageMarginThickness}"
-                Spacing="{StaticResource LayoutSpacing}">
-                <VerticalStackLayout.Behaviors>
-                    <behaviors:StaggerChildrenBehavior />
-                </VerticalStackLayout.Behaviors>
-                <Border
-                    Style="{StaticResource BrandCardStyle}"
-                    IsVisible="{Binding IsCrisis}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource DangerSurface}, Dark={StaticResource DangerSurfaceDark}}">
-                    <VerticalStackLayout Spacing="12">
+                <VerticalStackLayout
+                    Grid.Row="1"
+                    Padding="{StaticResource LayoutPageMarginThickness}"
+                    Spacing="{StaticResource SectionSpacing}">
+                    <VerticalStackLayout.Behaviors>
+                        <behaviors:StaggerChildrenBehavior />
+                    </VerticalStackLayout.Behaviors>
+                    <Border
+                        Style="{StaticResource BrandCardStyle}"
+                        IsVisible="{Binding IsCrisis}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource DangerSurface}, Dark={StaticResource DangerSurfaceDark}}">
                         <Label Text="{Binding CrisisText}" Style="{StaticResource BodyStyle}" />
-                        <ui:ButtonView BodyText="{Binding CrisisButtonText}" TapCommand="{Binding CrisisCommand}" />
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
 
-                <!-- Answers stay available, but do not add a long block to every completion screen. -->
-                <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding HasAnswers}">
-                    <VerticalStackLayout Spacing="12">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"
-                              SemanticProperties.Description="{Binding AnswersTitle}">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ToggleAnswersCommand}" />
-                            </Grid.GestureRecognizers>
-                            <Label
-                                Grid.Column="0"
-                                Text="{Binding AnswersTitle}"
-                                Style="{StaticResource SectionTitleStyle}"
-                                SemanticProperties.Description="{Binding AnswersTitle}" />
-                            <Label
-                                Grid.Column="1"
-                                Text="{Binding AnswersToggleGlyph}"
-                                Style="{StaticResource SectionTitleStyle}"
-                                SemanticProperties.Description="{Binding AnswersTitle}" />
-                        </Grid>
-                        <VerticalStackLayout
-                            IsVisible="{Binding IsAnswersExpanded}"
-                            Spacing="12"
-                            BindableLayout.ItemsSource="{Binding Answers}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="common:PracticeAnswer">
-                                    <Grid ColumnDefinitions="4,*" ColumnSpacing="12">
-                                        <BoxView
-                                            Grid.Column="0"
-                                            WidthRequest="4"
-                                            CornerRadius="2"
-                                            Color="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
-                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding Title}" Style="{StaticResource CaptionStyle}" />
-                                            <Label Text="{Binding Answer}" Style="{StaticResource BodyStyle}" FontFamily="{StaticResource MediumFontFamily}" />
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                    <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding HasSudsDelta}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding IntensitySummaryText}" Style="{StaticResource CaptionStyle}" />
+                            <Label Text="{Binding SudsDeltaText}" Style="{StaticResource SectionTitleStyle}" />
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
 
-                <today:TodayPracticeRowView
-                    x:Name="NextPracticeRow"
-                    IsVisible="False"
-                    CaptionText="{Binding NextPracticeCaption}"
-                    Title="{Binding NextPracticeTitle}"
-                    Subtitle="{Binding NextPracticeSubtitle}"
-                    ReasonText="{Binding NextPracticeReason}"
-                    IconName="{Binding NextPracticeIcon}"
-                    TapCommand="{Binding NextPracticeCommand}">
-                    <today:TodayPracticeRowView.Behaviors>
-                        <behaviors:ListItemRevealBehavior RevealIndex="0" />
-                    </today:TodayPracticeRowView.Behaviors>
-                </today:TodayPracticeRowView>
-
-                <ui:ButtonView
-                    IsVisible="{Binding HasNextPractice}"
-                    Variant="Secondary"
-                    BodyText="{Binding ChooseAnotherPracticeText}"
-                    TapCommand="{Binding ChooseAnotherPracticeCommand}" />
-
-                <Border Style="{StaticResource BrandCardStyle}">
-                    <Border.Behaviors>
-                        <behaviors:ListItemRevealBehavior RevealIndex="1" />
-                    </Border.Behaviors>
-                    <VerticalStackLayout Spacing="{StaticResource SectionSpacing}">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"
-                              SemanticProperties.Description="{Binding ReflectionQuestion}">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ToggleCheckInCommand}" />
-                            </Grid.GestureRecognizers>
-                            <Label
-                                Grid.Column="0"
-                                Text="{Binding ReflectionQuestion}"
-                                Style="{StaticResource SectionTitleStyle}"
-                                SemanticProperties.Description="{Binding ReflectionQuestion}" />
-                            <Label
-                                Grid.Column="1"
-                                Text="{Binding CheckInToggleGlyph}"
-                                Style="{StaticResource SectionTitleStyle}"
-                                SemanticProperties.Description="{Binding ReflectionQuestion}" />
-                        </Grid>
-                        <VerticalStackLayout IsVisible="{Binding IsCheckInExpanded}" Spacing="{StaticResource SectionSpacing}">
-                            <Label Text="{Binding SudsSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
-                            <ui:RatingEntryView
-                                TitleText="{Binding PostSudsLabel}"
-                                BodyText="{Binding PostIntensityText, Mode=TwoWay}" />
-                            <tension:TensionReliefView
-                                IsVisible="{Binding HasSudsDelta}"
-                                Before="{Binding PreIntensityValue}"
-                                After="{Binding PostIntensityValue}" />
-                            <Border
-                                x:Name="SudsDeltaPill"
-                                Style="{StaticResource MetaPillStyle}"
-                                IsVisible="False"
-                                HorizontalOptions="Center">
+                    <Border Style="{StaticResource BrandCardStyle}">
+                        <Border.Behaviors>
+                            <behaviors:ListItemRevealBehavior RevealIndex="1" />
+                        </Border.Behaviors>
+                        <VerticalStackLayout Spacing="{StaticResource SectionSpacing}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"
+                                  MinimumHeightRequest="44"
+                                  Padding="0,4"
+                                  SemanticProperties.Description="{Binding ReflectionQuestion}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleCheckInCommand}" />
+                                </Grid.GestureRecognizers>
                                 <Label
-                                    Text="{Binding SudsDeltaText}"
-                                    Style="{StaticResource CaptionStyle}"
+                                    Grid.Column="0"
+                                    Text="{Binding ReflectionQuestion}"
+                                    VerticalOptions="Center"
+                                    Style="{StaticResource SectionTitleStyle}" />
+                                <ui:MaterialIconView
+                                    Grid.Column="1"
+                                    IconName="{Binding CheckInToggleGlyph}"
+                                    IconSize="22"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                            <VerticalStackLayout IsVisible="{Binding IsCheckInExpanded}" Spacing="{StaticResource SectionSpacing}">
+                                <Label Text="{Binding SudsSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
+                                <ui:RatingEntryView
+                                    TitleText="{Binding PostSudsLabel}"
+                                    BodyText="{Binding PostIntensityText, Mode=TwoWay}" />
+                                <BoxView Style="{StaticResource SubtleDividerStyle}" Margin="{StaticResource FieldTopMargin}" />
+                                <Label Text="{Binding MoodSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
+                                <mood:MoodStripView
+                                    QuestionText=""
+                                    RecordMoodCommand="{Binding RecordMoodCommand}"
+                                    SelectedMoodLevel="{Binding SelectedMoodLevel}" />
+                                <Label
+                                    x:Name="MoodDeltaLabel"
+                                    IsVisible="False"
+                                    Text="{Binding MoodDeltaText}"
+                                    Style="{StaticResource EmphasisBodyStyle}"
                                     TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                                     FontFamily="{StaticResource SemiBoldFontFamily}"
-                                    HorizontalTextAlignment="Center" />
-                            </Border>
-                            <BoxView Style="{StaticResource SubtleDividerStyle}" Margin="{StaticResource FieldTopMargin}" />
-                            <Label Text="{Binding MoodSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
-                            <mood:MoodStripView
-                                QuestionText=""
-                                RecordMoodCommand="{Binding RecordMoodCommand}"
-                                SelectedMoodLevel="{Binding SelectedMoodLevel}" />
-                            <Label
-                                x:Name="MoodDeltaLabel"
-                                IsVisible="False"
-                                Text="{Binding MoodDeltaText}"
-                                Style="{StaticResource EmphasisBodyStyle}"
-                                TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
-                                FontFamily="{StaticResource SemiBoldFontFamily}"
-                                HorizontalTextAlignment="Center"
-                                Margin="{StaticResource FieldTopMargin}" />
-                            <ui:TextEntryView
-                                TitleText="{Binding ReflectionNotePlaceholder}"
-                                BodyText="{Binding ReflectionNote}"
-                                Margin="{StaticResource FieldTopMargin}" />
+                                    HorizontalTextAlignment="Center"
+                                    Margin="{StaticResource FieldTopMargin}" />
+                                <VerticalStackLayout IsVisible="{Binding CanWriteReflection}"
+                                                     Margin="{StaticResource FieldTopMargin}" Spacing="8">
+                                    <ui:TextEntryView
+                                        TitleText="{Binding ReflectionNotePlaceholder}"
+                                        BodyText="{Binding ReflectionNote}" />
+                                    <ui:ButtonView
+                                        IsVisible="{Binding CanSaveReflection}"
+                                        Variant="Secondary"
+                                        IsCompact="True"
+                                        HorizontalOptions="Start"
+                                        MinimumHeightRequest="44"
+                                        BodyText="{Binding SaveReflectionText}"
+                                        TapCommand="{Binding SaveReflectionCommand}" />
+                                    <Label
+                                        IsVisible="{Binding HasSavedReflection}"
+                                        Text="{Binding ReflectionSaveStatus}"
+                                        Style="{StaticResource CaptionStyle}" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
-                <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding ShowSupportPrompt}">
-                    <VerticalStackLayout Spacing="12">
-                        <Label
-                            Text="{Binding DonationPromptTitle}"
-                            Style="{StaticResource SectionTitleStyle}" />
-                        <Label
-                            Text="{Binding DonationPromptBody}"
-                            Style="{StaticResource BodyStyle}" />
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <ui:ButtonView
-                                IsCompact="True"
-                                Variant="Secondary"
-                                BodyText="{Binding DonationButtonText}"
-                                TapCommand="{Binding SupportProjectCommand}" />
-                            <ui:ButtonView
-                                Grid.Column="1"
-                                IsCompact="True"
-                                Variant="Secondary"
-                                BodyText="{Binding DonationNotNowText}"
-                                TapCommand="{Binding DismissSupportPromptCommand}" />
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
+                    </Border>
 
+                    <!-- Answers remain available without competing with the suggested next step or optional check-in. -->
+                    <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding HasAnswers}">
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"
+                                  MinimumHeightRequest="44"
+                                  Padding="0,4"
+                                  SemanticProperties.Description="{Binding AnswersTitle}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleAnswersCommand}" />
+                                </Grid.GestureRecognizers>
+                                <Label
+                                    Grid.Column="0"
+                                    Text="{Binding AnswersTitle}"
+                                    VerticalOptions="Center"
+                                    Style="{StaticResource SectionTitleStyle}" />
+                                <ui:MaterialIconView
+                                    Grid.Column="1"
+                                    IconName="{Binding AnswersToggleGlyph}"
+                                    IconSize="22"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                            <VerticalStackLayout
+                                IsVisible="{Binding IsAnswersExpanded}"
+                                Spacing="12"
+                                BindableLayout.ItemsSource="{Binding Answers}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="common:PracticeAnswer">
+                                        <Grid ColumnDefinitions="4,*" ColumnSpacing="12">
+                                            <BoxView
+                                                Grid.Column="0"
+                                                WidthRequest="4"
+                                                CornerRadius="2"
+                                                Color="{AppThemeBinding Light={DynamicResource PrimaryTint}, Dark={DynamicResource PrimaryTintDark}}" />
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                <Label Text="{Binding Title}" Style="{StaticResource CaptionStyle}" />
+                                                <Label Text="{Binding Answer}" Style="{StaticResource BodyStyle}" FontFamily="{StaticResource MediumFontFamily}" />
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                    <today:TodayPracticeRowView
+                        IsVisible="{Binding HasNextPractice}"
+                        Margin="-4,0,-4,0"
+                        CaptionText="{Binding NextPracticeCaption}"
+                        Title="{Binding NextPracticeTitle}"
+                        Subtitle="{Binding NextPracticeSubtitle}"
+                        ReasonText="{Binding NextPracticeReason}"
+                        IconName="{Binding NextPracticeIcon}"
+                        TapCommand="{Binding NextPracticeCommand}" />
+
+                    <Border Style="{StaticResource BrandCardStyle}" IsVisible="{Binding ShowSupportPrompt}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label
+                                Text="{Binding DonationPromptTitle}"
+                                Style="{StaticResource SectionTitleStyle}" />
+                            <Label
+                                Text="{Binding DonationPromptBody}"
+                                Style="{StaticResource BodyStyle}" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <ui:ButtonView
+                                    IsCompact="True"
+                                    Variant="Secondary"
+                                    BodyText="{Binding DonationButtonText}"
+                                    TapCommand="{Binding SupportProjectCommand}" />
+                                <ui:ButtonView
+                                    Grid.Column="1"
+                                    IsCompact="True"
+                                    Variant="Secondary"
+                                    BodyText="{Binding DonationNotNowText}"
+                                    TapCommand="{Binding DismissSupportPromptCommand}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+        <VerticalStackLayout Grid.Row="1" Spacing="0">
+            <BoxView Style="{StaticResource SubtleDividerStyle}" />
+            <VerticalStackLayout Padding="20,10,20,14" Spacing="8">
                 <ui:ButtonView
-                    Variant="Secondary"
-                    BodyText="{Binding GoHomeText}"
-                    TapCommand="{Binding GoHomeCommand}" />
+                    IsVisible="{Binding IsCrisis}"
+                    BodyText="{Binding CrisisButtonText}"
+                    TapCommand="{Binding CrisisCommand}" />
+                <Label
+                    IsVisible="{Binding HasReflectionSaveError}"
+                    Text="{Binding ReflectionSaveStatus}"
+                    Style="{StaticResource CaptionStyle}" />
+                <ui:ButtonView
+                    Variant="{Binding FinishVariant}"
+                    BodyText="{Binding FinishText}"
+                    TapCommand="{Binding FinishCommand}" />
             </VerticalStackLayout>
-        </Grid>
-    </ScrollView>
-   
+        </VerticalStackLayout>
+    </Grid>
+
 </ContentPage>

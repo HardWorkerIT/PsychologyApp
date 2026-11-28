@@ -10,7 +10,7 @@ namespace PsychologyApp.Presentation.Features.RunTechniqueSession.DependencyInje
 
 public interface ITechniqueDialogueViewModelFactory
 {
-    TechniqueDialogueViewModel Create(TechniqueId techniqueId, INavigation navigation);
+    TechniqueDialogueViewModel Create(TechniqueId techniqueId, NavigationContext context);
 }
 
 public sealed class TechniqueDialogueViewModelFactory(
@@ -23,10 +23,10 @@ public sealed class TechniqueDialogueViewModelFactory(
     RecentProblemStore recentProblems,
     PsychologyApp.Presentation.Shared.Services.Preferences.ChipUsageStore chipUsage) : ITechniqueDialogueViewModelFactory
 {
-    public TechniqueDialogueViewModel Create(TechniqueId techniqueId, INavigation navigation) =>
+    public TechniqueDialogueViewModel Create(TechniqueId techniqueId, NavigationContext context) =>
         new(
             techniqueId,
-            navigationServiceFactory(NavigationContext.From(navigation)),
+            navigationServiceFactory(context),
             userProgressService,
             techniqueCatalogService,
             scenarioProvider,

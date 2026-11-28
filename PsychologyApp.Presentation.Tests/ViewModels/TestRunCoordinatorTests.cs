@@ -95,6 +95,30 @@ public sealed class TestRunCoordinatorTests
     }
 
     [Fact]
+    public async Task CancellingTheRiskWriteAfterSavingStillOpensUrgentHelp()
+    {
+        TestRunCoordinator coordinator = Create(selfHarm: true);
+        _care.Setup(c => c.AssessRiskAsync(It.IsAny<RiskAssessmentInput>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new OperationCanceledException());
+
+        await coordinator.CompleteQuestionnaireAsync(Request(), _progress.Object, _navigation.Object);
+
+        Assert.Equal(["saved", "result", "crisis"], _calls);
+    }
+
+    [Fact]
+    public async Task UrgentHelpStillOpensWhenTheQuestionnaireCannotBeSaved()
+    {
+        TestRunCoordinator coordinator = Create(selfHarm: true);
+        _progress.Setup(p => p.SaveTestResultAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Database unavailable"));
+
+        await Assert.ThrowsAsync<IOException>(() => coordinator.CompleteQuestionnaireAsync(Request(), _progress.Object, _navigation.Object));
+
+        Assert.Equal(["crisis"], _calls);
+    }
+
+    [Fact]
     public async Task HelpOpensAfterTheResultWhenTheSuicideItemWasEndorsed()
     {
         TestRunCoordinator coordinator = Create(selfHarm: true);
@@ -140,10 +164,12 @@ public sealed class TestRunCoordinatorTests
         _navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Never);
     }
 
-    [Fact]
-    public async Task ANavigationThatKeepsFailingIsReportedAfterThreeTries()
+    [Theory]
+    [InlineData(false, 3)]
+    [InlineData(true, 1)]
+    public async Task UnavailableResultsAreReportedWithoutMakingUrgentHelpWaitForRetries(bool needsUrgentHelp, int resultAttempts)
     {
-        TestRunCoordinator coordinator = Create(selfHarm: true);
+        TestRunCoordinator coordinator = Create(selfHarm: needsUrgentHelp);
         _navigation.Setup(n => n.GoToTestResultAsync(
                 It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
                 It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()))
@@ -154,6 +180,7 @@ public sealed class TestRunCoordinatorTests
 
         _navigation.Verify(n => n.GoToTestResultAsync(
             It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-            It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Exactly(3));
+            It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Exactly(resultAttempts));
+        _navigation.Verify(n => n.GoToCrisisHubAsync(), needsUrgentHelp ? Times.Once() : Times.Never());
     }
 }

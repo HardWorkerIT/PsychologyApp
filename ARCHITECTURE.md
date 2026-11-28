@@ -53,16 +53,20 @@ bar; a page reached from the menu never links back to a tab root with a page of 
 menu tap closes what is open, the menu exists only on tab roots and menu pages: every step page (a practice, a test, a chat, a form)
 goes through `MauiNavigationService.PrepareSecondaryPage`, which hides the tab bar and disables the flyout.
 
+Practice completion saves through the session service, then replaces the originating practice page if it is still active. Leaving the page while the save is in progress keeps the saved result. The completion screen offers another practice only after the saved outcome can be read and the local crisis check has cleared. Opening that practice replaces the completion screen in the same navigation operation.
+
 A list card that is built often while scrolling may be drawn natively on Android: a plain MAUI `View` carries the data and a command
 (`Widgets/TechniqueListCard/TechniqueCardNativeView`), a handler in `Platforms/Android` builds a small Android view tree from the app
 resources (colours, fonts, text size) and takes the click itself; other platforms keep the XAML card through `OnPlatform` in the
 template. Only where a Release measurement shows the XAML card costs frames: the practice card was about 17 native views with a MAUI
 handler each.
 
-The VK Ads Android binding exposes only the banner host; its private Java callback is not a .NET API. MAUI handlers own the native view lifecycle and create ads only for eligible placements in the practices, courses, articles, and non-personal general quotes catalogs when the policy URL and slot are configured and the person has not disabled ads. Banner requests remain automatic; a separate, default-off setting controls only whether the SDK receives affirmative consent for personalized ads. Other platforms do not create the banner.
+The VK Ads Android binding exposes format hosts. MAUI handlers own the native view lifecycle. In the articles, courses, and quotes catalogs, `VkCatalogAdRows` owns the banner and native rows independently, attaches only bound rows while the page is visible, and disconnects them when rebound or when the page closes. Catalogs and handlers apply the placement and preference gates before requesting ads.
 
 Small documents that are read and written whole (the fear ladder, the reading state, the body log) are JSON in `AppMetadata` through
 `AppMetadataDocumentRepository<T>`; a document that cannot be read is copied to `<key>.unreadable` before a save replaces it.
+
+Backup export reads its limits and all included data on one SQLite connection in a single read transaction. The application serializes the snapshot after the connection closes.
 
 ### Page folder layout
 
@@ -92,7 +96,7 @@ Each slice under `Features/{Slice}/` exposes `Index/{Slice}PublicApi.cs` as the 
 ### Dependency rules (enforced by tests)
 
 1. **Features** must not import other feature slices (`Features.*` cross-imports forbidden).
-2. **Shared** must not import `Pages`, `Widgets`, `Features`, `Entities`, or `App` (except `Shared.Lib` navigation ports).
+2. **Shared** must not import `Pages`, `Widgets`, `Features`, `Entities`, or `App` (except `Shared.Lib` navigation ports). This includes CLR namespace declarations in XAML.
 3. **Pages** must live under `Pages/{Slice}/` and must not import other feature slices.
 4. ViewModels use `INavigationService`; no direct `PopAsync` in page code-behind.
 

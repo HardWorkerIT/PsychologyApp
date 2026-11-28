@@ -49,6 +49,27 @@ public sealed class LibraryCatalogRefreshTests
     }
 
     [Fact]
+    public async Task FailedBookmarkReadDoesNotLookLikeAnEmptySavedList()
+    {
+        var reading = new Mock<IReadingService>();
+        reading.SetupSequence(service => service.GetAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Bookmarks unavailable"))
+            .ReturnsAsync(new ReadingState { Saved = [ArticleIds.Sleep] });
+        var viewModel = new ArticlesViewModel(new TestNavigationService(Mock.Of<INavigation>()), reading.Object, ReadyDatabase());
+        viewModel.SelectFilterCommand.Execute("saved");
+        Assert.True(viewModel.ShowSavedLoading);
+        Assert.False(viewModel.HasEmptyText);
+
+        await viewModel.RefreshAsync();
+        Assert.True(viewModel.ShowSavedLoadFailure);
+        Assert.False(viewModel.HasEmptyText);
+
+        await viewModel.RefreshAsync();
+        Assert.False(viewModel.ShowSavedLoadFailure);
+        Assert.Single(Assert.Single(viewModel.Sections));
+    }
+
+    [Fact]
     public void ReselectingAnArticleFilterKeepsItsListInPlace()
     {
         var viewModel = new ArticlesViewModel(new TestNavigationService(Mock.Of<INavigation>()),

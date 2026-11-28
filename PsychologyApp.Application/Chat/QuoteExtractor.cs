@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 using PsychologyApp.Application.Conversation.Companion;
 
@@ -11,13 +12,13 @@ public static partial class QuoteExtractor
 {
     private const int MinLength = 8;
 
-    [GeneratedRegex(@"(?<=[.!?…])\s+|\n+", RegexOptions.CultureInvariant)]
+    [GeneratedRegex(@"(?<=[.!?…][""'’”»)\]])\s+|(?<=[.!?…])\s+|(?<=[。！？][""'’”»」』）)\]])|(?<=[。！？])|\n+", RegexOptions.CultureInvariant)]
     private static partial Regex SentenceSplit();
 
     public static string? Pick(string text, ISituationAnalyzer analyzer, CompanionEmotion emotion, int maxLength = 110)
     {
         List<string> sentences = SentenceSplit().Split(text)
-            .Select(s => s.Trim().TrimEnd('.', '!', '?', '…', ' '))
+            .Select(s => s.Trim().TrimEnd('.', '!', '?', '…', '。', '！', '？', ' '))
             .Where(s => s.Length >= MinLength)
             .ToList();
         if (sentences.Count == 0)
@@ -25,26 +26,68 @@ public static partial class QuoteExtractor
             return null;
         }
 
-        string? chosen = null;
-        if (emotion != CompanionEmotion.Unknown)
+        string? latestMatching = null;
+        string? latestRecognized = null;
+        string longest = sentences[0];
+        foreach (string sentence in sentences)
         {
-            chosen = sentences.FirstOrDefault(s => analyzer.Analyze(s).Emotion == emotion);
+            if (sentence.Length > longest.Length)
+            {
+                longest = sentence;
+            }
+
+            CompanionEmotion sentenceEmotion = analyzer.Analyze(sentence).Emotion;
+            if (emotion != CompanionEmotion.Unknown && sentenceEmotion == emotion)
+            {
+                latestMatching = sentence;
+            }
+
+            if (sentenceEmotion != CompanionEmotion.Unknown)
+            {
+                latestRecognized = sentence;
+            }
         }
 
-        chosen ??= sentences.FirstOrDefault(s => analyzer.Analyze(s).Emotion != CompanionEmotion.Unknown);
-        chosen ??= sentences.OrderByDescending(s => s.Length).First();
-
+        string chosen = (emotion == CompanionEmotion.Unknown ? null : latestMatching) ?? latestRecognized ?? longest;
         return Truncate(chosen, maxLength);
     }
 
-    private static string Truncate(string sentence, int maxLength)
+    private static string? Truncate(string sentence, int maxLength)
     {
         if (sentence.Length <= maxLength)
         {
             return sentence;
         }
 
+        if (maxLength < MinLength)
+        {
+            return null;
+        }
+
         int cut = sentence.LastIndexOf(' ', maxLength);
-        return (cut > maxLength / 2 ? sentence[..cut] : sentence[..maxLength]).TrimEnd(',', ';', ':', ' ') + "…";
+        if (cut < MinLength)
+        {
+            cut = maxLength;
+            if (char.IsHighSurrogate(sentence[cut - 1]) && char.IsLowSurrogate(sentence[cut]))
+            {
+                cut--;
+            }
+
+            if (!ContainsCjk(sentence[..cut]))
+            {
+                return null;
+            }
+
+            // CJK text normally has no spaces between words; cut at a Unicode scalar boundary instead.
+        }
+
+        string excerpt = sentence[..cut].TrimEnd(',', ';', ':', ' ', '，', '；', '：', '、', '　');
+        return excerpt.Length >= MinLength ? excerpt + "…" : null;
     }
+
+    private static bool ContainsCjk(string text) => text.EnumerateRunes().Any(rune =>
+        rune.Value is >= 0x2E80 and <= 0x9FFF
+            or >= 0xAC00 and <= 0xD7AF
+            or >= 0xF900 and <= 0xFAFF
+            or >= 0x20000 and <= 0x323AF);
 }

@@ -50,7 +50,8 @@ public sealed class TestHistoryLoader(
         ScoreDirection direction = definition?.ScoreDirection ?? ScoreDirection.None;
         TestKind kind = definition?.Kind ?? TestKind.Questionnaire;
         string? analyzerId = definition?.AnalyzerId;
-        bool shouldLoadTrend = TestScoreLabelMapper.ShouldLoadTrend(analyzerId);
+        bool shouldLoadTrend = TestScoreLabelMapper.ShouldLoadTrend(analyzerId)
+            && kind is not (TestKind.LuscherBrief or TestKind.LuscherStandard);
         IReadOnlyList<TestResultDTO> history = await historyTask.ConfigureAwait(false);
 
         List<TestHistoryEntryItem> entries = [];
@@ -88,7 +89,9 @@ public sealed class TestHistoryLoader(
                 LuscherFirstPassText = FormatColorPass(standardDetail?.FirstPassColors),
                 LuscherSecondPassTitle = AppStrings.TestsLuscherHistorySecondPass,
                 LuscherSecondPassText = FormatColorPass(standardDetail?.Colors),
-                LuscherBkText = standardDetail is null ? string.Empty : AppStrings.TestsLuscherHistoryBk(standardDetail.Bk),
+                LuscherBkText = standardDetail is null
+                    ? string.Empty
+                    : $"{AppStrings.LuscherSelfReflectionNote}{Environment.NewLine}{AppStrings.TestsLuscherHistoryBk(standardDetail.Bk)}",
                 LuscherBriefFirstTitle = AppStrings.TestsFirstColor,
                 LuscherBriefFirstText = FormatBriefColor(briefDetail?.First, ColourMeaningType.Wanted),
                 LuscherBriefSecondTitle = AppStrings.TestsSecondColor,
@@ -124,7 +127,7 @@ public sealed class TestHistoryLoader(
             ? string.Empty
             : string.Join(" → ", colors.Select(color => ColourStrings.NameOfCode(color.Code) ?? color.Name ?? color.Code));
 
-    // Names and meanings are taken from the stored colour code in today's language; the saved text was in the language of that day.
+    // Old saved colour interpretations were diagnostic in tone; history now shows only the selected colour and the reflection note.
     private static string FormatBriefColor(LuscherBriefColorDetail? color, ColourMeaningType meaningType)
     {
         if (color is null)
@@ -133,7 +136,8 @@ public sealed class TestHistoryLoader(
         }
 
         string name = ColourStrings.NameOfCode(color.Code) ?? color.Name ?? string.Empty;
-        string? text = ColourStrings.ExplanationOfCode(color.Code, meaningType) ?? color.Text;
-        return string.IsNullOrWhiteSpace(text) ? name : $"{name}: {text}";
+        return meaningType == ColourMeaningType.Wanted
+            ? $"{name}: {AppStrings.LuscherSelfReflectionNote}"
+            : name;
     }
 }

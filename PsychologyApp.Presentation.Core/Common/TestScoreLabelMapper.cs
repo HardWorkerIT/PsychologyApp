@@ -16,8 +16,7 @@ public static class TestScoreLabelMapper
         BigFiveProfile.AnalyzerId => AppStrings.BigFiveSummary,
         Asrs6Screening.AnalyzerId => Asrs6Summary(score),
         _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => SelfReflectionSummary(score),
-        "heck_hess" => AppStrings.HeckHessScore(TestScoreBandClassifier.ClassifyHeckHess(score)),
-        "haer" => AppStrings.HaerScore(TestScoreBandClassifier.ClassifyHaer(score)),
+        "heck_hess" or "haer" => AppStrings.ReflectiveQuestionnaireScoreSummary,
         "pochebut" => AppStrings.PochebutScore(TestScoreBandClassifier.ClassifyPochebut(score)),
         "beck" => AppStrings.BeckScore(TestScoreBandClassifier.ClassifyBeck(score)),
         "gad7" => AppStrings.Gad7Score(TestScoreBandClassifier.ClassifyGad7(score)),
@@ -46,8 +45,7 @@ public static class TestScoreLabelMapper
         BigFiveProfile.AnalyzerId => BigFiveDetail(score),
         Asrs6Screening.AnalyzerId => Asrs6Detail(score),
         _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => SelfReflectionDetail(score),
-        "heck_hess" => AppStrings.HeckHessScoreDetail(TestScoreBandClassifier.ClassifyHeckHess(score)),
-        "haer" => AppStrings.HaerScoreDetail(TestScoreBandClassifier.ClassifyHaer(score)),
+        "heck_hess" or "haer" => AppStrings.ReflectiveQuestionnaireScoreDetail,
         "pochebut" => AppStrings.PochebutScoreDetail(TestScoreBandClassifier.ClassifyPochebut(score)),
         "beck" => AppStrings.BeckScoreDetail(TestScoreBandClassifier.ClassifyBeck(score)),
         "gad7" => AppStrings.Gad7ScoreDetail(TestScoreBandClassifier.ClassifyGad7(score)),
@@ -75,8 +73,7 @@ public static class TestScoreLabelMapper
         BigFiveProfile.AnalyzerId => AppStrings.BigFivePracticeHint,
         _ when SelfReflectionProfile.IsAnalyzer(analyzerId) => AppStrings.SelfReflectionPracticeHint,
         "beck" => AppStrings.TestRecommendationReasonBeck(TestScoreBandClassifier.RecommendBeck(score)),
-        "heck_hess" => AppStrings.TestRecommendationReasonHeckHess(TestScoreBandClassifier.RecommendHeckHess(score)),
-        "haer" => AppStrings.TestRecommendationReasonHaer(TestScoreBandClassifier.RecommendHaer(score)),
+        "heck_hess" or "haer" => null,
         "pochebut" => AppStrings.TestRecommendationReasonPochebut(TestScoreBandClassifier.RecommendPochebut(score)),
         "gad7" => AppStrings.TestRecommendationReasonGad7(TestScoreBandClassifier.RecommendGad7(score)),
         "k10" => AppStrings.TestRecommendationReasonK10(TestScoreBandClassifier.RecommendK10(score)),
@@ -117,6 +114,8 @@ public static class TestScoreLabelMapper
         analyzerId != PreferenceProfile16.AnalyzerId
         && analyzerId != BigFiveProfile.AnalyzerId
         && analyzerId != Asrs6Screening.AnalyzerId
+        && analyzerId != "heck_hess"
+        && analyzerId != "haer"
         && !SelfReflectionProfile.IsAnalyzer(analyzerId);
 
     public static string? GetHistoryScore(string? analyzerId, int score) => analyzerId switch

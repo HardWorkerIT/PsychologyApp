@@ -27,6 +27,7 @@ public sealed class RepeatStageView : PracticeStageView
     private readonly Ellipse _ripple;
     private readonly Label _count;
     private CancellationTokenSource? _idlePulseCts;
+    private bool _isLoaded;
 
     public RepeatStageView(TechniqueFlavor flavor)
         : base(flavor, AppStrings.StageRepeatTitle, AppStrings.StageRepeatHint)
@@ -163,16 +164,55 @@ public sealed class RepeatStageView : PracticeStageView
     /// </summary>
     private void OnLoaded(object? sender, EventArgs e)
     {
+        _isLoaded = true;
+        if (IsVisible)
+        {
+            StartIdlePulse();
+        }
+    }
+
+    private void OnUnloaded(object? sender, EventArgs e)
+    {
+        _isLoaded = false;
+        StopIdlePulse();
+        ResetRipple();
+    }
+
+    protected override void OnStageVisibilityChanged(bool isVisible)
+    {
+        if (isVisible && _isLoaded)
+        {
+            StartIdlePulse();
+        }
+        else
+        {
+            StopIdlePulse();
+            ResetRipple();
+        }
+    }
+
+    private void StartIdlePulse()
+    {
         _idlePulseCts?.Cancel();
         CancellationTokenSource pulseCts = new();
         _idlePulseCts = pulseCts;
         IdlePulseAsync(pulseCts).FireAndForget();
     }
 
-    private void OnUnloaded(object? sender, EventArgs e)
+    private void StopIdlePulse()
     {
-        _idlePulseCts?.Cancel();
+        CancellationTokenSource? pulseCts = _idlePulseCts;
+        _idlePulseCts = null;
+        pulseCts?.Cancel();
         _circle.CancelAnimations();
+        _circle.Scale = 1;
+    }
+
+    private void ResetRipple()
+    {
+        _ripple.CancelAnimations();
+        _ripple.Opacity = 0;
+        _ripple.Scale = 1;
     }
 
     private async Task IdlePulseAsync(CancellationTokenSource pulseCts)

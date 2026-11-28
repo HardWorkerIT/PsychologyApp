@@ -154,6 +154,7 @@ public partial class QuoteViewModel
                 if (items.Count > 0)
                 {
                     OnPropertyChanged(nameof(IsQuoteAdEligible));
+                    OnPropertyChanged(nameof(IsQuoteBannerEligible));
                 }
             });
 

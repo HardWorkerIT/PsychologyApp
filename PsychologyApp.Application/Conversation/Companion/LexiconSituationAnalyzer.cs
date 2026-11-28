@@ -58,7 +58,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         ],
         [CompanionEmotion.Anxiety] =
         [
-            new(2, ["тревог", "тревож", "боюсь", "страшно", "dread", "anxi", "afraid", "scared"]),
+            new(2, ["тревог", "тревож", "боюсь", "страшно", "напугал", "dread", "anxi", "afraid", "scared"]),
             new(1, ["волную", "волнов", "беспокой", "страх", "бояться", "боязн", "переживаю", "нервнича", "неуверен", "не по себе", "неопределенн", "worr", "nervous", "fear", "uneasy", "on edge", "stress"])
         ],
         [CompanionEmotion.Overthinking] =
@@ -69,7 +69,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         ],
         [CompanionEmotion.Anger] =
         [
-            new(2, ["злюсь", "злит", "злост", "=зол", "=зла", "=злой", "бесит", "бешу", "ярост", "бешенств", "ненавиж", "взбес", "выбесил", "хочется взорваться", "angry", "anger", "furious", "rage", "pissed", "hate"]),
+            new(2, ["злюсь", "злит", "злост", "разозлил", "=зол", "=зла", "=злой", "бесит", "бешу", "ярост", "бешенств", "ненавиж", "взбес", "выбесил", "хочется взорваться", "angry", "anger", "furious", "rage", "pissed", "hate"]),
             new(1, ["раздража", "достал", "достаёт", "достает", "терпеть не могу", "irritat", "annoy", "=mad", "mad at"])
         ],
         [CompanionEmotion.Resentment] =
@@ -86,7 +86,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
         ],
         [CompanionEmotion.Sadness] =
         [
-            new(2, ["груст", "тоск", "печал", "безнадеж", "депресс", "ничего не радует", "хочется плакать", "не вижу смысла", "sad", "hopeless", "depress", "grief"]),
+            new(2, ["груст", "тоск", "печал", "расстроил", "безнадеж", "депресс", "ничего не радует", "хочется плакать", "не вижу смысла", "sad", "hopeless", "depress", "grief"]),
             new(1, ["плач", "слез", "пустот", "=пусто", "тяжело на душе", "унын", "подавлен", "нет настроения", "cry", "tears", "empty", "=down"])
         ],
         [CompanionEmotion.Exhaustion] =
@@ -231,13 +231,14 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         Dictionary<CompanionEmotion, double> scores = [];
         Dictionary<CompanionEmotion, int> firstMention = [];
+        HashSet<int> countedOffsets = [];
         foreach ((CompanionEmotion emotion, Entry[] entries) in CachedEmotionEntries.Value)
         {
             double score = 0;
             int first = int.MaxValue;
             // One word can be a near-typo of more than one listed stem for the same emotion (e.g. "тревога"
             // exactly matches "тревог" and, with typo tolerance, also "тревож") — count each starting position once.
-            HashSet<int> countedOffsets = [];
+            countedOffsets.Clear();
             foreach (Entry entry in entries)
             {
                 foreach (string term in entry.Terms)
@@ -294,8 +295,25 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
         bool intense = IntensityTerms.Any(term => Matches(term, respectNegation: true));
         // Most hits first; a tie goes to the theme mentioned first ("the kids all day, my husband at work" is about the family, not the job).
+        (CompanionTheme Theme, int Hits, int First) ScoreTheme(KeyValuePair<CompanionTheme, string[]> pair)
+        {
+            int hits = 0;
+            int first = int.MaxValue;
+            foreach (string term in pair.Value)
+            {
+                int at = MatchIndex(term, respectNegation: false);
+                if (at >= 0)
+                {
+                    hits++;
+                    first = Math.Min(first, at);
+                }
+            }
+
+            return (pair.Key, hits, first);
+        }
+
         IReadOnlyList<CompanionTheme> themes = Themes
-            .Select(pair => (Theme: pair.Key, Hits: pair.Value.Count(term => Matches(term, respectNegation: false)), First: pair.Value.Select(term => MatchIndex(term, respectNegation: false)).Where(at => at >= 0).DefaultIfEmpty(int.MaxValue).Min()))
+            .Select(ScoreTheme)
             .Where(x => x.Hits > 0)
             .OrderByDescending(x => x.Hits)
             .ThenBy(x => x.First)
@@ -329,7 +347,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
 
     private static bool HasExplicitOtherEmotion(string normalized)
     {
-        string[] clauses = normalized.Split([" а ", " но ", " and ", " but ", "."], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        string[] clauses = normalized.Split([" а ", " и ", " но ", " and ", " but ", "."], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (string clause in clauses)
         {
             Match subject = OtherEmotionSubject().Match(clause);
@@ -338,7 +356,8 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
                 && predicate.Success
                 && subject.Index < predicate.Index
                 && clause[subject.Index..predicate.Index].Count(char.IsWhiteSpace) <= 4;
-            if (emotionFollowsOtherSubject || OtherCausedEmotion().IsMatch(clause))
+            bool describesUserReactionToOther = CausesUserEmotion().IsMatch(clause);
+            if (emotionFollowsOtherSubject && !describesUserReactionToOther)
             {
                 return true;
             }
@@ -354,7 +373,7 @@ public sealed partial class LexiconSituationAnalyzer : ISituationAnalyzer
     private static partial Regex OtherEmotionPredicate();
 
     [GeneratedRegex(@"\b(?:он|она|они)\s+(?:меня|мне)\s+(?:разозлил\w*|обидел\w*|напугал\w*|расстроил\w*)\b|\b(?:he|she|they)\s+made\s+me\s+(?:angry|sad|afraid|anxious)\b", RegexOptions.CultureInvariant)]
-    private static partial Regex OtherCausedEmotion();
+    private static partial Regex CausesUserEmotion();
 
     private const int PhraseWordGap = 3;
 

@@ -1,17 +1,17 @@
-﻿[
+[
   {
-    "title": "Heck and Hess Questionnaire",
-    "subtitle": "Neuroticism screening",
+    "title": "Emotional reactions",
+    "subtitle": "Self-reflection · not a diagnosis",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Neuroticism",
-    "betterWhen": "lower",
-    "description": "40 statements on emotional reactivity. Answer Yes or No about yourself.",
+    "construct": "Self-reflection",
+    "betterWhen": "none",
+    "description": "Forty statements invite reflection on emotional reactions. The score is not a clinical assessment.",
     "algorithm": [
       "1. You are given a list of statements.",
       "2. For each statement, answer Yes if you agree (consider it true for you) or No if you disagree."
     ],
-    "comment": "If you have any concerns, consult a qualified specialist.",
+    "comment": "Use your answers as prompts for reflection, not as a label. If they concern you, discuss them with a qualified professional.",
     "analyzerId": "heck_hess",
     "answers": ["Yes", "No"],
     "balls": [1, 0],
@@ -60,18 +60,18 @@
     "singleAnswer": true
   },
   {
-    "title": "Hare Test",
-    "subtitle": "Psychopathy screening",
+    "title": "Behavior and relationships",
+    "subtitle": "Self-reflection · not a diagnosis",
     "estimatedMinutes": 8,
     "questionCount": 40,
-    "construct": "Psychopathy",
-    "betterWhen": "lower",
-    "description": "Screens interpersonal and behavioral patterns. Answer honestly—there are no right answers.",
+    "construct": "Self-reflection",
+    "betterWhen": "none",
+    "description": "A 40-item prompt set for reflecting on behavior and relationships. It is not Robert Hare’s PCL-R and does not assess psychopathy; answers cannot diagnose or label you or anyone else.",
     "algorithm": [
       "1. You are given a list of statements.",
       "2. For each statement, give one of the suggested answers."
     ],
-    "comment": "If you have any concerns, consult a qualified specialist.",
+    "comment": "Use your answers as prompts for reflection, not as a label. If they concern you, discuss them with a qualified professional.",
     "analyzerId": "haer",
     "answers": ["Yes", "No"],
     "balls": [1, 0],

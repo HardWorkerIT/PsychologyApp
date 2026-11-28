@@ -107,12 +107,11 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         DateTime nowUtc = DateTime.UtcNow;
         if (context.RecentTestResult is { Score: not null } test
             && test.CompletedAt >= nowUtc.AddDays(-7)
-            && test.CompletedAt <= nowUtc)
+            && test.CompletedAt <= nowUtc
+            && test.TestId is not (TestIds.LuscherStandard or TestIds.LuscherBrief or "heck_hess" or "haer"))
         {
-            TechniqueId fromTest = test.TestId == TestIds.LuscherStandard
-                ? LuscherScoreRecommendation.RecommendTechnique(test.Score.Value)
-                : TestScoreRecommendation.RecommendTechnique(test.TestId, test.Score.Value)
-                    ?? TechniqueId.Grounding;
+            TechniqueId fromTest = TestScoreRecommendation.RecommendTechnique(test.TestId, test.Score.Value)
+                ?? TechniqueId.Grounding;
 
             TechniqueId picked = PickFromPool([fromTest], context.LastPracticeDatesUtc, context.TechniqueEffectiveness);
             return new TodayRecommendationDecision(picked, TodayRecommendationSource.RecentTest, test.TestId);
@@ -196,7 +195,7 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
             return TechniqueId.Grounding;
         }
 
-        if (pool.Count == 1)
+        if (pool.Count == 1 || (lastPracticeDatesUtc is null && effectiveness is null))
         {
             return pool[0];
         }
@@ -204,57 +203,52 @@ public sealed class TechniqueRecommendationService : ITechniqueRecommendationSer
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
         DateOnly yesterday = today.AddDays(-1);
 
-        List<(TechniqueId Id, int Index)> ranked = pool
-            .Select((id, index) => (Id: id, Index: index))
-            .OrderByDescending(item => GetEffectivenessScore(item.Id, effectiveness))
-            .ThenBy(item => GetLastLocalDate(item.Id, lastPracticeDatesUtc) ?? DateOnly.MinValue)
-            .ThenBy(item => item.Index)
-            .ToList();
+        RankedPractice best = ReadRank(pool[0]);
+        RankedPractice? second = null;
+        RankedPractice? bestNotRecent = IsRecent(best) ? null : best;
 
-        TechniqueId best = ranked[0].Id;
-        DateOnly? bestDate = GetLastLocalDate(best, lastPracticeDatesUtc);
-        if (bestDate is null || (bestDate != yesterday && bestDate != today))
+        for (int i = 1; i < pool.Count; i++)
         {
-            return best;
-        }
-
-        foreach ((TechniqueId candidate, _) in ranked.Skip(1))
-        {
-            DateOnly? date = GetLastLocalDate(candidate, lastPracticeDatesUtc);
-            if (date is null || (date != yesterday && date != today))
+            RankedPractice candidate = ReadRank(pool[i]);
+            if (candidate.RanksBefore(best))
             {
-                return candidate;
+                second = best;
+                best = candidate;
+            }
+            else if (second is not { } runnerUp || candidate.RanksBefore(runnerUp))
+            {
+                second = candidate;
+            }
+
+            if (!IsRecent(candidate)
+                && (bestNotRecent is not { } previous || candidate.RanksBefore(previous)))
+            {
+                bestNotRecent = candidate;
             }
         }
 
-        return ranked[1].Id;
+        // When every practice is recent, skip the top pick and use the runner-up.
+        return (bestNotRecent ?? second ?? best).Id;
+
+        bool IsRecent(RankedPractice practice) => practice.LastDate == yesterday || practice.LastDate == today;
+
+        RankedPractice ReadRank(TechniqueId id)
+        {
+            string key = Enum.GetName(id) ?? id.ToString();
+            DateOnly lastDate = lastPracticeDatesUtc?.TryGetValue(key, out DateTime utc) == true
+                ? DateOnly.FromDateTime(utc.ToLocalTime())
+                : DateOnly.MinValue;
+            return new RankedPractice(id, effectiveness?.GetValueOrDefault(key) ?? 0, lastDate);
+        }
     }
 
-    /// <summary>0 (neutral) for techniques with no trustworthy history, so a proven helper (positive average
-    /// SUDS drop) ranks above the unknowns and a proven non-helper (average drop at or below zero) ranks
-    /// below them, without either drowning out the recency-based fallback.</summary>
-    private static double GetEffectivenessScore(
-        TechniqueId techniqueId,
-        IReadOnlyDictionary<string, double>? effectiveness)
+    private readonly record struct RankedPractice(TechniqueId Id, double Effectiveness, DateOnly LastDate)
     {
-        if (effectiveness is null || !effectiveness.TryGetValue(techniqueId.ToString(), out double score))
+        // A strict comparison keeps catalog order when both scores and dates are equal.
+        public bool RanksBefore(RankedPractice other)
         {
-            return 0;
+            int scoreOrder = Effectiveness.CompareTo(other.Effectiveness);
+            return scoreOrder > 0 || (scoreOrder == 0 && LastDate < other.LastDate);
         }
-
-        return score;
-    }
-
-    private static DateOnly? GetLastLocalDate(
-        TechniqueId techniqueId,
-        IReadOnlyDictionary<string, DateTime>? lastPracticeDatesUtc)
-    {
-        if (lastPracticeDatesUtc is null
-            || !lastPracticeDatesUtc.TryGetValue(techniqueId.ToString(), out DateTime utc))
-        {
-            return null;
-        }
-
-        return DateOnly.FromDateTime(utc.ToLocalTime());
     }
 }

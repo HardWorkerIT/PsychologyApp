@@ -78,9 +78,9 @@ public class CompanionKnowledgeTests
     {
         CompanionReply reply = Say(Create(), new CompanionState { Turns = 2, Emotion = "Anxiety" }, "Это нормально?");
 
-        Assert.Contains("обычная человеческая реакция", reply.Messages[0]);
+        Assert.Contains("по одному сообщению нельзя понять", reply.Messages[0]);
         Assert.Contains("специалист", reply.Messages[0]);
-        Assert.Contains("Диагнозов я не ставлю", reply.Messages[0]);
+        Assert.Contains("повседневной жизни", reply.Messages[0]);
     }
 
     [Fact]

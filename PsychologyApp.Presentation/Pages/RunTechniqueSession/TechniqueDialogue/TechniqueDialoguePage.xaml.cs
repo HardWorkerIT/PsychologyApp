@@ -1,4 +1,5 @@
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Navigation;
 using PsychologyApp.Presentation.Features.RunTechniqueSession.DependencyInjection;
 
 namespace PsychologyApp.Presentation.Pages.RunTechniqueSession.TechniqueDialogue;
@@ -14,7 +15,7 @@ public partial class TechniqueDialoguePage : ContentPage
         INavigation hostNavigation)
     {
         InitializeComponent();
-        _viewModel = viewModelFactory.Create(techniqueId, hostNavigation);
+        _viewModel = viewModelFactory.Create(techniqueId, new NavigationContext(hostNavigation, this));
         BindingContext = _viewModel;
 
         // Unloaded (page popped), not Disappearing: the latter also fires when the app is merely backgrounded.

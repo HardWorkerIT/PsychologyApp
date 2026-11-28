@@ -182,8 +182,8 @@ public static class CompanionProtocolContent
             ? "Partly is already movement. What got in the way of the rest?"
             : "Частично — это уже движение. Что помешало сделать остальное?",
         _ => english
-            ? "That happens: the step turned out bigger than it seemed, and it says nothing bad about you. What could be done in just five minutes instead?"
-            : "Так бывает: шаг оказался больше, чем казалось, и это ничего плохого о вас не говорит. Что можно сделать хотя бы за пять минут?"
+            ? "That happens. What got in the way, or does the step no longer fit?"
+            : "Так бывает. Что помешало или этот шаг уже не подходит?"
     };
 
     // ----- a questionnaire when heavy days keep coming back -----

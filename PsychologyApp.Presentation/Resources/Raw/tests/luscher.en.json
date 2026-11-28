@@ -1,32 +1,32 @@
 [
   {
-    "title": "Brief Lüscher Test",
-    "subtitle": "Alternative version",
+    "title": "Color choice for self-reflection",
+    "subtitle": "Short exercise · not a diagnosis",
     "estimatedMinutes": 2,
     "questionCount": 2,
-    "construct": "Emotional state",
-    "betterWhen": "lower",
-    "description": "Pick the most and least pleasant color right now—not your favorite colors in general.",
+    "construct": "Self-reflection",
+    "betterWhen": "none",
+    "description": "Choose the colors that feel most and least pleasant right now. This is an exercise in noticing your preferences.",
     "algorithm": [
       "1. Choose the most pleasant color",
       "2. Choose the least pleasant color"
     ],
-    "comment": "Do not pick favorite colors. The test measures your current emotional state.",
+    "comment": "Color choice is not used to assess mood or personality.",
     "navigationTarget": "brief"
   },
   {
-    "title": "Full Lüscher Test",
-    "subtitle": "Standard version",
+    "title": "Color choice: two rounds",
+    "subtitle": "Exercise · not a diagnosis",
     "estimatedMinutes": 7,
     "questionCount": 8,
-    "construct": "Emotional state",
-    "betterWhen": "lower",
-    "description": "Order 8 colors from most to least pleasant twice—reflecting how you feel here and now.",
+    "construct": "Self-reflection",
+    "betterWhen": "none",
+    "description": "Rank 8 colors from most to least pleasant twice. You can simply notice whether your choices changed.",
     "algorithm": [
       "1. Order 8 colors from most to least pleasant",
       "2. Repeat step 1 without looking at your first result"
     ],
-    "comment": "Do not pick favorite colors. The test measures your current emotional state.",
+    "comment": "Color choice is not used to assess mood or personality.",
     "navigationTarget": "standard"
   }
 ]

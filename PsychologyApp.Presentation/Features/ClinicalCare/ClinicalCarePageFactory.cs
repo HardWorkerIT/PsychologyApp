@@ -51,10 +51,11 @@ public interface IRiskCheckViewModelFactory
 
 public sealed class CrisisHubViewModelFactory(
     IClinicalCareService clinicalCareService,
+    PsychologyApp.Presentation.Shared.Services.Clipboard.IAppClipboardService clipboard,
     Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, ICrisisHubViewModelFactory
 {
     public CrisisHubViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page), clinicalCareService);
+        new(ResolveNavigation(navigationServiceFactory, page), clinicalCareService, clipboard);
 }
 
 public sealed class RiskCheckViewModelFactory(

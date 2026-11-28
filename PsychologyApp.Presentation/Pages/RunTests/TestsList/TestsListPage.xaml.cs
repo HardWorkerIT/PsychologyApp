@@ -23,7 +23,7 @@ public partial class TestsListPage : ContentPage
     {
         base.OnAppearing();
         _animationHelper?.TryRevealAsync();
-        _viewModel?.EnsureInitializedAsync().FireAndForget();
+        _viewModel?.RefreshOnAppearingAsync().FireAndForget();
     }
 
     protected override void OnHandlerChanged()

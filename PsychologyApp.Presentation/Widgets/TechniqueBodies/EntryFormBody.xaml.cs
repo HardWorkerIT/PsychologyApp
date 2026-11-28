@@ -9,12 +9,12 @@ public partial class EntryFormBody : ContentView
 {
     private const double SlideDistance = 36;
 
+    private TechniqueSessionViewModel? _observedViewModel;
     private int _shownStep;
 
     public EntryFormBody()
     {
         InitializeComponent();
-        BindingContextChanged += OnBindingContextChanged;
     }
 
     /// <summary>
@@ -31,11 +31,33 @@ public partial class EntryFormBody : ContentView
         return WizardNav;
     }
 
-    private void OnBindingContextChanged(object? sender, EventArgs e)
+    protected override void OnBindingContextChanged()
     {
-        if (BindingContext is TechniqueSessionViewModel viewModel)
+        base.OnBindingContextChanged();
+        ObserveViewModel(Handler is null ? null : BindingContext as TechniqueSessionViewModel);
+    }
+
+    protected override void OnHandlerChanged()
+    {
+        base.OnHandlerChanged();
+        ObserveViewModel(Handler is null ? null : BindingContext as TechniqueSessionViewModel);
+    }
+
+    private void ObserveViewModel(TechniqueSessionViewModel? viewModel)
+    {
+        if (ReferenceEquals(_observedViewModel, viewModel))
         {
-            viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            return;
+        }
+
+        if (_observedViewModel is not null)
+        {
+            _observedViewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        }
+
+        _observedViewModel = viewModel;
+        if (viewModel is not null)
+        {
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
             _shownStep = viewModel.CurrentStepIndex;
             BuildDots(viewModel);

@@ -1,32 +1,32 @@
 [
   {
-    "title": "简短吕舍尔色彩测试",
-    "subtitle": "替代版本",
+    "title": "颜色选择自我观察",
+    "subtitle": "简短练习 · 不作诊断",
     "estimatedMinutes": 2,
     "questionCount": 2,
-    "construct": "情绪状态",
-    "betterWhen": "lower",
-    "description": "选出此刻最喜欢和最不喜欢的颜色——不是你平时最喜欢的颜色。",
+    "construct": "自我反思",
+    "betterWhen": "none",
+    "description": "选出此刻感觉最喜欢和最不喜欢的颜色。这是观察个人偏好的练习。",
     "algorithm": [
       "1. 选出最喜欢的颜色",
       "2. 选出最不喜欢的颜色"
     ],
-    "comment": "不要选平时喜欢的颜色。这个测试衡量的是你当前的情绪状态。",
+    "comment": "选色结果不用于评估情绪状态或人格特征。",
     "navigationTarget": "brief"
   },
   {
-    "title": "完整吕舍尔色彩测试",
-    "subtitle": "标准版本",
+    "title": "颜色选择：两轮练习",
+    "subtitle": "练习 · 不作诊断",
     "estimatedMinutes": 7,
     "questionCount": 8,
-    "construct": "情绪状态",
-    "betterWhen": "lower",
-    "description": "按你此时此刻的感受，把 8 种颜色从最喜欢到最不喜欢排序两次。",
+    "construct": "自我反思",
+    "betterWhen": "none",
+    "description": "将八种颜色按此刻的喜欢程度排序两次。你可以留意两次选择是否有变化。",
     "algorithm": [
       "1. 把 8 种颜色从最喜欢到最不喜欢排序",
       "2. 不看第一次的结果，重复第 1 步"
     ],
-    "comment": "不要选平时喜欢的颜色。这个测试衡量的是你当前的情绪状态。",
+    "comment": "选色结果不用于评估情绪状态或人格特征。",
     "navigationTarget": "standard"
   }
 ]

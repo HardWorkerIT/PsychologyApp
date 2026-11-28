@@ -203,12 +203,12 @@ public static partial class ArticleContent
                     "Béquilles et évitement",
                     4,
                     [
-                        P("Ce qui entretient le plus l'anxiété, c'est l'évitement. Il peut être ouvert (je n'y vais pas, je n'appelle pas) ou caché : des béquilles qui aident à traverser une situation."),
-                        Check("Ai-je des béquilles ?", 2, "Vous avez plusieurs béquilles. Elles entretiennent la peur : le cerveau croit que tout s'est bien passé uniquement grâce à elles. Essayez d'en abandonner une dans une situation facile.", "Vous avez peu de béquilles. Remarquez aussi ce que vous évitez complètement.", "J'ai sur moi un comprimé, de l'eau ou un téléphone chargé « au cas où »", "Je ne vais dans les endroits difficiles qu'accompagné", "Je m'assois près de la sortie", "Je me distrais pour ne pas remarquer l'anxiété", "Je vérifie ou redemande de nombreuses fois"),
-                        P("La sortie consiste à rencontrer progressivement ce qui fait peur et à se passer des béquilles. Le cerveau apprend alors par l'expérience que ce qu'on redoute n'arrive pas ou est supportable.")
+                        P("L’évitement peut contribuer à l’anxiété, surtout lorsqu’il vous empêche de plus en plus de faire des choses importantes. Il peut être évident (ne pas y aller ou ne pas appeler) ou moins visible : vérifications répétées, recherche de réassurance ou longue préparation."),
+                        Check("Quels moyens de faire face est-ce que je remarque ?", 2, "Vous avez repéré plusieurs moyens de faire face. Ce n’est ni une note ni un diagnostic. S’ils vous limitent, discutez de changements progressifs et sûrs avec un professionnel. Gardez les traitements prescrits et les mesures de sécurité nécessaires.", "En repérer peu ou aucun est également normal. Ces habitudes dépendent de la situation et ne constituent pas un diagnostic.", "Je vérifie plusieurs fois ou demande à être rassuré·e", "Je répète longuement mes phrases ou essaie de prévoir toutes les issues", "Je me distrais pour ne pas remarquer l’anxiété", "Dans une situation que je juge sûre, je pars dès que l’anxiété augmente"),
+                        P("Si une situation du quotidien est sûre et que vous souhaitez essayer, choisissez une petite étape volontaire. Avancez à votre rythme et faites une pause si besoin. N’arrêtez pas un traitement prescrit et ne renoncez pas aux mesures de sécurité nécessaires. Si l’anxiété limite fortement votre vie, préparez un plan avec un professionnel.")
                     ],
-                    "Faites une liste de trois à cinq situations que vous évitez, de la plus facile à la plus difficile.",
-                    "Quelle situation de la liste êtes-vous prêt à essayer en premier ?"),
+                    "Notez jusqu’à cinq situations quotidiennes que vous avez tendance à éviter. Écartez les dangers réels et les souvenirs traumatiques ; vous pouvez passer cette étape.",
+                    "S’il existe une situation sûre, quelle petite étape souhaitez-vous envisager ou discuter avec un professionnel ?"),
                 new(
                     "Le premier pas et un plan",
                     4,

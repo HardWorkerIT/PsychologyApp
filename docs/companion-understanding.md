@@ -14,11 +14,23 @@ the person can confirm or reject it. When confidence is low, the dialogue reflec
 Support preferences are handled separately from emotion recognition. An explicit request to listen can occur inside a longer disclosure;
 the disclosure still updates the conversation context. Listening has no turn-count expiry: ordinary conversation does not automatically
 re-enable practice offers. An explicit request for advice can change the goal, and crisis and acute-distress routes retain priority.
+Open invitations in listening mode advance through distinct questions and stop once those prompts have been used.
+If the person says they do not know while listening is selected, the companion does not switch to emotion-choice chips.
+If the person says they cannot name what they feel, the companion does not guess a feeling or show emotion chips; it invites them to start from what happened or what feels difficult.
+If tension rises after a practice, it acknowledges the change without guessing why and offers to listen or end the conversation.
+
+When a message attributes a feeling to another person, the companion does not use that feeling as the user's own and does not ask the
+classifier to guess from it. It asks once how the situation affects the user, then returns to open questions if the distinction is still unclear.
+Cause phrases such as "he made me angry" are treated as the user's reaction, not as another person's emotion. When the person asks how to support
+someone else, including inside a longer message, the companion answers that request directly with a low-pressure way to ask what kind of support is wanted.
 
 An explicit correction such as "you misunderstood me" clears the previous inferred feeling, recent inference text and unaccepted practice
 offer before processing the correction. A replacement feeling is retained; otherwise the companion asks for clarification rather than
 repeating the previous question. Asking the companion to repeat a question keeps the context. These are deterministic dialogue rules,
 covered by Russian and English multi-turn tests, not new ML training or evidence of clinical effectiveness.
+
+Answers to "is this normal?" do not treat a common experience as a conclusion about the individual. They invite the person to say what worries them; the text remains subject to psychologist review before release.
+Advice respects an explicit request to avoid breathing and body-focused practices; anxiety and anger use practical, non-body-focused alternatives.
 
 ## Measurements (`AnalyzerDatasetTests`, `tools/PsychologyApp.NluEval`)
 

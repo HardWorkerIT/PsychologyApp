@@ -335,7 +335,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Maya Angelou",
+    "author": "Carl W. Buehner",
     "text": "As pessoas vão esquecer o que você disse, mas nunca vão esquecer como você as fez sentir.",
     "theme": "relationships"
   },
@@ -365,7 +365,7 @@
     "theme": "relationships"
   },
   {
-    "author": "Will Durant",
+    "author": "Will Durant (resumindo Aristóteles)",
     "text": "Somos o que fazemos repetidamente. A excelência, portanto, não é um ato, mas um hábito.",
     "theme": "habits"
   },
@@ -425,7 +425,7 @@
     "theme": "acceptance"
   },
   {
-    "author": "Rumi",
+    "author": "Inspirado em Rumi",
     "text": "A ferida é o lugar por onde a luz entra em você.",
     "theme": "healing"
   },
@@ -1177,6 +1177,21 @@
   {
     "author": "PsychologyApp",
     "text": "A conexão pode crescer com passos que cabem na sua vida.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Equipe PsychologyApp",
+    "text": "Um plano é mais realista quando reserva espaço para imprevistos.",
+    "theme": "motivation"
+  },
+  {
+    "author": "Equipe PsychologyApp",
+    "text": "Você pode pedir um tempo para pensar antes de se comprometer.",
+    "theme": "relationships"
+  },
+  {
+    "author": "Equipe PsychologyApp",
+    "text": "É mais simples confirmar se todos entenderam o acordo antes de começar.",
     "theme": "relationships"
   }
 ]

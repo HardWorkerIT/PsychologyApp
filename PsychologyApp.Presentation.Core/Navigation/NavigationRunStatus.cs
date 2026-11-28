@@ -8,5 +8,8 @@ public enum NavigationRunStatus
     Failed,
 
     /// <summary>The same destination was already opening or had only just opened (a double tap), so this call did nothing.</summary>
-    DroppedDuplicate
+    DroppedDuplicate,
+
+    /// <summary>The originating page was no longer at the top of its stack.</summary>
+    DroppedInactiveSource
 }

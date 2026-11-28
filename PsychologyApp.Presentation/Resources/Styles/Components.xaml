@@ -192,6 +192,10 @@
         <Setter Property="LineBreakMode" Value="WordWrap" />
     </Style>
 
+    <Style x:Key="TonalActionLabelStyle" TargetType="Label" BasedOn="{StaticResource OutlinedActionLabelStyle}">
+        <Setter Property="FontSize" Value="{DynamicResource SectionTitleFontSize}" />
+    </Style>
+
     <Style x:Key="CompactPrimaryBorderStyle" TargetType="Border">
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="StrokeShape" Value="{DynamicResource UiCornerRadiusCompactShape}" />

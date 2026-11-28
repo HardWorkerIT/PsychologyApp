@@ -18,10 +18,7 @@ public static class PracticeAnswers
     /// </summary>
     public static IReadOnlyList<string> Rank(IReadOnlyList<string> chips, IReadOnlyDictionary<string, int> usage) =>
         chips
-            .Select((chip, index) => (chip, index, uses: usage.TryGetValue(chip, out int count) ? count : 0))
-            .OrderByDescending(item => item.uses)
-            .ThenBy(item => item.index)
-            .Select(item => item.chip)
+            .OrderByDescending(chip => usage.TryGetValue(chip, out int count) ? count : 0)
             .ToList();
 
     /// <summary>How many times a typed answer has to recur before it becomes a chip of its own.</summary>
@@ -116,9 +113,20 @@ public static class PracticeAnswers
     /// </summary>
     public static IReadOnlyList<PracticeAnswer> FromPayload(string? payloadJson, IReadOnlyList<TechniqueEntrySeed> entries)
     {
+        TryFromPayload(payloadJson, entries, out IReadOnlyList<PracticeAnswer> answers);
+        return answers;
+    }
+
+    /// <summary>Distinguishes a practice without answers from a payload whose answers could not be read.</summary>
+    public static bool TryFromPayload(
+        string? payloadJson,
+        IReadOnlyList<TechniqueEntrySeed> entries,
+        out IReadOnlyList<PracticeAnswer> answers)
+    {
+        answers = [];
         if (string.IsNullOrWhiteSpace(payloadJson))
         {
-            return [];
+            return true;
         }
 
         try
@@ -127,18 +135,17 @@ public static class PracticeAnswers
             JsonElement root = document.RootElement;
             if (TryGet(root, "Fields", out JsonElement fields) && fields.ValueKind == JsonValueKind.Object)
             {
-                return FromFields(fields, entries);
+                answers = FromFields(fields, entries);
+                return fields.EnumerateObject().All(field =>
+                    int.TryParse(field.Name, System.Globalization.NumberStyles.None,
+                        System.Globalization.CultureInfo.InvariantCulture, out int index)
+                    && index < entries.Count
+                    && field.Value.ValueKind is JsonValueKind.String or JsonValueKind.Null);
             }
 
             if (TryGet(root, "Items", out JsonElement items) && items.ValueKind == JsonValueKind.Array)
             {
-                string title = entries.Count > 0 ? entries[0].Title : string.Empty;
-                return items.EnumerateArray()
-                    .Select(item => TryGet(item, "Text", out JsonElement text) && text.ValueKind == JsonValueKind.String ? text.GetString() : null)
-                    .Where(text => !string.IsNullOrWhiteSpace(text))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .Select(text => new PracticeAnswer(title, text!.Trim()))
-                    .ToList();
+                return TryReadListAnswers(items, entries.Count > 0 ? entries[0].Title : string.Empty, out answers);
             }
         }
         catch (JsonException)
@@ -146,7 +153,51 @@ public static class PracticeAnswers
             // An old or foreign payload: the card is simply not shown.
         }
 
-        return [];
+        return false;
+    }
+
+    private static bool TryReadListAnswers(JsonElement items, string title, out IReadOnlyList<PracticeAnswer> answers)
+    {
+        List<PracticeAnswer> result = [];
+        answers = result;
+        HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
+        bool readable = true;
+        foreach (JsonElement item in items.EnumerateArray())
+        {
+            if (TryGet(item, "Text", out JsonElement text))
+            {
+                readable &= AddAnswer(text, title);
+                continue;
+            }
+
+            bool hasPositive = TryGet(item, "Positive", out JsonElement positive);
+            bool hasNegative = TryGet(item, "Negative", out JsonElement negative);
+            readable &= hasPositive || hasNegative;
+            if (hasPositive)
+            {
+                readable &= AddAnswer(positive, AppStrings.PolarityPositivePlaceholder);
+            }
+            if (hasNegative)
+            {
+                readable &= AddAnswer(negative, AppStrings.PolarityNegativePlaceholder);
+            }
+        }
+
+        return readable;
+
+        bool AddAnswer(JsonElement value, string answerTitle)
+        {
+            if (value.ValueKind is not (JsonValueKind.String or JsonValueKind.Null))
+            {
+                return false;
+            }
+
+            if (value.GetString()?.Trim() is { Length: > 0 } answer && seen.Add(answer))
+            {
+                result.Add(new PracticeAnswer(answerTitle, answer));
+            }
+            return true;
+        }
     }
 
     private static List<PracticeAnswer> FromFields(JsonElement fields, IReadOnlyList<TechniqueEntrySeed> entries)
@@ -157,13 +208,16 @@ public static class PracticeAnswers
             TechniqueEntrySeed entry = entries[i];
             if (entry.Role is EntryFieldRole.IntensityBefore or EntryFieldRole.IntensityAfter
                 || !fields.TryGetProperty(i.ToString(System.Globalization.CultureInfo.InvariantCulture), out JsonElement value)
-                || value.ValueKind != JsonValueKind.String
-                || string.IsNullOrWhiteSpace(value.GetString()))
+                || value.ValueKind != JsonValueKind.String)
             {
                 continue;
             }
 
-            string answer = value.GetString()!.Trim();
+            string? answer = value.GetString()?.Trim();
+            if (string.IsNullOrEmpty(answer))
+            {
+                continue;
+            }
             if (entry.Kind == EntryFieldKind.Rating0To10)
             {
                 answer = $"{answer} / 10";

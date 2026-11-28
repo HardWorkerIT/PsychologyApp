@@ -34,7 +34,6 @@ public partial class AppDialogPopup : Popup
             InputEntry.Placeholder = input.Placeholder;
             InputEntry.Text = input.InitialText;
             InputEntry.MaxLength = input.MaxLength;
-            SemanticProperties.SetDescription(InputEntry, input.Placeholder);
             AcceptLabel.LineBreakMode = LineBreakMode.NoWrap;
             CancelLabel.LineBreakMode = LineBreakMode.NoWrap;
         }
@@ -103,7 +102,13 @@ public partial class AppDialogPopup : Popup
 
         _isClosing = true;
         DialogResult = accepted;
-        await UiAnimations.AnimateAlertPopOutAsync(DialogCardHost);
-        await CloseAsync();
+        try
+        {
+            await UiAnimations.AnimateAlertPopOutAsync(DialogCardHost);
+        }
+        finally
+        {
+            await CloseAsync();
+        }
     }
 }

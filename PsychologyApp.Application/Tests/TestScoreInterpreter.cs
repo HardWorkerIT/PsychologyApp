@@ -46,16 +46,14 @@ public static class TestScoreInterpreter
     };
 
     /// <summary>
-    /// The band stored with a result. The cut-offs are the ones the result text is chosen by (TestScoreBandClassifier), so the
-    /// stored band and the words the person reads can never disagree on a border score.
+    /// The band stored with a result. Self-reflection questionnaires without a supported band return -1.
     /// </summary>
-    public static int GetBandIndex(string? analyzerId, int score) => SelfReflectionProfile.IsAnalyzer(analyzerId)
-        ? (int)TestScoreBandClassifier.ClassifySelfReflection(score)
-        : analyzerId switch
-        {
+    public static int GetBandIndex(string? analyzerId, int score) => analyzerId switch
+    {
+        "heck_hess" or "haer" => -1,
+        _ when SelfReflectionProfile.IsAnalyzer(analyzerId) =>
+            (int)TestScoreBandClassifier.ClassifySelfReflection(score),
         "beck" => (int)TestScoreBandClassifier.ClassifyBeck(score),
-        "heck_hess" => (int)TestScoreBandClassifier.ClassifyHeckHess(score),
-        "haer" => (int)TestScoreBandClassifier.ClassifyHaer(score),
         "pochebut" => (int)TestScoreBandClassifier.ClassifyPochebut(score),
         "gad7" => (int)TestScoreBandClassifier.ClassifyGad7(score),
         "k10" => (int)TestScoreBandClassifier.ClassifyK10(score),
@@ -81,5 +79,5 @@ public static class TestScoreInterpreter
         "rses" => (int)TestScoreBandClassifier.ClassifyRses(score),
         "asrs6" => (int)TestScoreBandClassifier.ClassifyAsrs6(score),
         _ => -1
-        };
+    };
 }

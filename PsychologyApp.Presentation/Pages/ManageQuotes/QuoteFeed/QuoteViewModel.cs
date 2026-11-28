@@ -112,6 +112,7 @@ public partial class QuoteViewModel : BaseViewModel
             nameof(SearchQuery),
             nameof(IsSearching),
             nameof(IsQuoteAdEligible),
+            nameof(IsQuoteBannerEligible),
             nameof(IsSearchFilteringVisible),
             nameof(IsQuoteListVisible),
             nameof(IsFeedFiltersVisible),
