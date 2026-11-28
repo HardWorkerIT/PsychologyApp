@@ -318,7 +318,7 @@ public static partial class AnchorThoughtContent
         ("exp-body-check-optional", AnchorTheme.ThoughtsAndFeelings, ArticleIds.BodyNoticingChoice),
         ("exp-pause-before-reaction", AnchorTheme.Relationships, ArticleIds.PauseBeforeReact),
         ("exp-boundary-can-protect", AnchorTheme.Relationships, ArticleIds.EmotionalBoundary),
-        ("exp-feeling-not-action", AnchorTheme.ThoughtsAndFeelings, ArticleIds.FeelingNotAction),
+        ("exp-feeling-not-action", AnchorTheme.ThoughtsAndFeelings, ArticleIds.PauseBeforeReact),
         ("exp-tears-not-failure", AnchorTheme.HardTimes, ArticleIds.AfterCrying),
 
         ("exp-specific-request-helps", AnchorTheme.Relationships, ArticleIds.SpecificRequest),
