@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using PsychologyApp.Presentation.Pages.ManageProfile.AppLock;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
 using PsychologyApp.Presentation.Shared.Services.Security;
 
 namespace PsychologyApp.Presentation.Features.ManageProfile;
@@ -12,6 +13,7 @@ namespace PsychologyApp.Presentation.Features.ManageProfile;
 public sealed class AppLockCoordinator(
     IDeviceAuthenticator authenticator,
     IAppPinCredentialStore pinCredentialStore,
+    IAppClipboardService clipboard,
     ILogger<AppLockCoordinator> logger) : IAppLock
 {
     private const string EnabledKey = "AppLockEnabled";
@@ -112,7 +114,7 @@ public sealed class AppLockCoordinator(
         (Window window, Page root) = await WaitForWindowAsync();
         ApplyRecentsPreview();
 
-        AppLockPage page = new(new AppLockViewModel(authenticator, pinCredentialStore));
+        AppLockPage page = new(new AppLockViewModel(authenticator, pinCredentialStore, clipboard));
         bool useRootFallback = false;
         try
         {
@@ -122,7 +124,7 @@ public sealed class AppLockCoordinator(
         {
             logger.LogWarning(ex, "Could not present the app lock as a modal");
             useRootFallback = true;
-            page = new AppLockPage(new AppLockViewModel(authenticator, pinCredentialStore));
+            page = new AppLockPage(new AppLockViewModel(authenticator, pinCredentialStore, clipboard));
             // The dedicated lock page also works without a modal navigation stack.
             window.Page = page;
         }

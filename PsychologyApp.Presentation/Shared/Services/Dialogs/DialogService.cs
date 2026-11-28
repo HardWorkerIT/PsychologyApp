@@ -162,19 +162,23 @@ public class DialogService(IPageHost pageHost) : IDialogService
         return await PickOptionAsync(title, items, cancel);
     }
 
-    public async Task<string?> PickOptionAsync(string title, IReadOnlyList<DialogOptionItem> options, string cancel)
+    public async Task<string?> PickOptionAsync(string title, IReadOnlyList<DialogOptionItem> options, string cancel) =>
+        (await PickOptionStepAsync(title, options, cancel)).Value;
+
+    public async Task<DialogSelection<string>> PickOptionStepAsync(
+        string title, IReadOnlyList<DialogOptionItem> options, string back)
     {
         if (!TryEnter())
         {
-            return null;
+            return default;
         }
 
         try
         {
             Page page = RequireActivePage();
-            var popup = new AppOptionsSheetPopup(title, options, cancel);
+            var popup = new AppOptionsSheetPopup(title, options, back);
             await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
-            return popup.SelectedValue;
+            return new(popup.SelectedValue, popup.CancelledWithButton);
         }
         finally
         {
@@ -202,7 +206,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
         }
     }
 
-    public async Task<IReadOnlyList<string>?> PickMultipleOptionsAsync(
+    public async Task<DialogSelection<IReadOnlyList<string>>> PickMultipleOptionsAsync(
         string title,
         IReadOnlyList<DialogOptionItem> options,
         IReadOnlyCollection<string> selectedValues,
@@ -216,7 +220,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
     {
         if (!TryEnter())
         {
-            return null;
+            return default;
         }
 
         try
@@ -234,7 +238,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
                 accept,
                 cancel);
             await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
-            return popup.SelectedValues;
+            return new(popup.SelectedValues, popup.CancelledWithButton);
         }
         finally
         {

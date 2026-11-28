@@ -5,6 +5,7 @@ using PsychologyApp.Application.Technique;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Features.RunTechniqueSession;
 using PsychologyApp.Presentation.Shared.Navigation;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
 using PsychologyApp.Presentation.Shared.Services.Toasts;
 using PsychologyApp.Presentation.Shared.ViewModels;
 using System.Windows.Input;
@@ -21,10 +22,12 @@ public partial class DesignerViewModel : BaseViewModel
     private readonly ILogger<DesignerViewModel> _logger;
     private readonly IOptions<AppSettings> _settings;
     private readonly INavigationService _navigationService;
+    private readonly IDialogService _dialogService;
     private readonly SemaphoreSlim _initGate = new(1, 1);
     private bool _initialized;
     private bool _isSaving;
     private CancellationTokenSource? _initCts;
+    private DesignerTechniqueForm? _savedForm;
 
     public bool HasInitialized => _initialized;
 
@@ -51,7 +54,8 @@ public partial class DesignerViewModel : BaseViewModel
         IToastService toastService,
         ILogger<DesignerViewModel> logger,
         IOptions<AppSettings> settings,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        IDialogService dialogService)
     {
         _techniqueService = techniqueService;
         _techniqueMessenger = techniqueMessenger;
@@ -60,6 +64,7 @@ public partial class DesignerViewModel : BaseViewModel
         _logger = logger;
         _settings = settings;
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _techniqueId = techniqueId;
 
         Path = "method.png";
@@ -69,6 +74,7 @@ public partial class DesignerViewModel : BaseViewModel
         PageName = AppStrings.PracticeConstructor;
 
         BindNavigation(_navigationService);
+        Finish = new AsyncCommand(ConfirmExitAsync);
 
         ExecuteTechnique = new AsyncCommand(ExecuteOperationAsync, CanSave);
         Cancel = new Command(CancelInit);
@@ -76,8 +82,27 @@ public partial class DesignerViewModel : BaseViewModel
 
         if (_techniqueId <= 0)
         {
+            _savedForm = CaptureForm();
             SetDone();
             _initialized = true;
+        }
+    }
+
+    private async Task ConfirmExitAsync()
+    {
+        if (IsSaving)
+        {
+            return;
+        }
+
+        if (_savedForm is null || CaptureForm() == _savedForm
+            || await _dialogService.AskSheetAsync(AppStrings.UnsavedExitTitle, AppStrings.DesignerDiscardChanges,
+                AppStrings.ChatDiscardDraftAccept, AppStrings.Cancel, isDestructive: true))
+        {
+            if (!IsSaving)
+            {
+                await GoBackAsync();
+            }
         }
     }
 

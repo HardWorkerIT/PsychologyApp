@@ -90,7 +90,8 @@
             <CollectionView.GroupFooterTemplate>
                 <DataTemplate x:DataType="technique:TechniqueGroup">
                     <VerticalStackLayout IsVisible="False" Margin="0,16,0,16"
-                                         BindingContextChanged="OnPracticeBannerBindingContextChanged">
+                                         BindingContextChanged="OnPracticeBannerFooterReady"
+                                         Loaded="OnPracticeBannerFooterReady">
                         <ContentView />
                     </VerticalStackLayout>
                 </DataTemplate>

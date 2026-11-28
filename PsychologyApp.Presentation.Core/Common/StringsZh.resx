@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>测试结果保存失败，请重试。</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>打开结果</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>结果已保存，但无法打开结果页面。请再次点击“完成”。</value>
+    <value>结果已保存，但无法打开下一页面。</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>无法保存这条记录。你输入的文字还在。</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>无法保存你的回答。请再次点击“完成”。</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>退出本课？</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>本课的笔记将不会保存。</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>未找到该技巧。</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>加载失败</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>不保存就退出吗？</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>你在本问卷中的回答将丢失。</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>你对这项练习的修改将丢失。</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>请输入可以拨打的电话号码。</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>无法播放音频。</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>要重试吗？</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>停止</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>无法保存已读状态。</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>已读</value>

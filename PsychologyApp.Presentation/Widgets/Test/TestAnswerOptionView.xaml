@@ -83,9 +83,13 @@
                         HeightRequest="22"
                         StrokeThickness="1.5"
                         Stroke="{DynamicResource Primary}"
-                        BackgroundColor="Transparent"
-                        VerticalOptions="Center"
-                        IsVisible="False">
+                        VerticalOptions="Center">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="IsVisible" Value="False" />
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </Style>
+                        </Border.Style>
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="4" />
                         </Border.StrokeShape>

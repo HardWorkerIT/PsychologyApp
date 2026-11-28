@@ -20,7 +20,7 @@ public partial class QuestionViewModel
     public ICommand NextCommand => _nextCommand;
     public ICommand PreviousCommand { get; private set; } = default!;
 
-    public bool IsPreviousVisible => !_wizard.IsFirstStep;
+    public bool IsPreviousVisible => _savedResult is null && !_wizard.IsFirstStep;
 
     public bool IsMultiChoiceHintVisible => !IsSingleAnswer;
 
@@ -42,7 +42,9 @@ public partial class QuestionViewModel
 
     public string ValidationHintText => AppStrings.TestsAnswerCurrentToast;
 
-    public bool CanAdvance => !_isCompleting && IsCurrentQuestionAnswered();
+    public bool CanEditAnswers => !_isCompleting && _savedResult is null;
+
+    public bool CanAdvance => !_isCompleting && (_savedResult is not null || IsCurrentQuestionAnswered());
 
     public int CurrentIndex => _wizard.CurrentIndex;
 
@@ -76,13 +78,14 @@ public partial class QuestionViewModel
 
     public bool IsLastStep => _wizard.IsLastStep(TotalCount);
 
-    public string NextButtonText => IsLastStep ? FinishButtonText : AppStrings.TestsNextButton;
+    public string NextButtonText => _savedResult is not null ? AppStrings.TestsOpenSavedResult
+        : IsLastStep ? FinishButtonText : AppStrings.TestsNextButton;
 
     public string PreviousButtonText => AppStrings.TestsPreviousButton;
 
-    public int NextButtonColumn => IsFirstStep ? 0 : 1;
+    public int NextButtonColumn => IsPreviousVisible ? 1 : 0;
 
-    public int NextButtonColumnSpan => IsFirstStep ? 2 : 1;
+    public int NextButtonColumnSpan => IsPreviousVisible ? 1 : 2;
 
     private void InitializeWizard()
     {
@@ -164,7 +167,7 @@ public partial class QuestionViewModel
 
     private void SelectAnswer(Answer answer)
     {
-        if (_isCompleting || CurrentQuestion is null)
+        if (!CanEditAnswers || CurrentQuestion is null)
         {
             return;
         }
@@ -213,6 +216,12 @@ public partial class QuestionViewModel
         {
             _wizard.CancelAutoAdvance();
 
+            if (_savedResult is not null)
+            {
+                await CalculateAnswersAsync();
+                return;
+            }
+
             bool reachedLastStep = _wizard.TryAdvance(TotalCount, IsCurrentQuestionAnswered, out bool showValidationHint);
             if (showValidationHint)
             {
@@ -236,9 +245,14 @@ public partial class QuestionViewModel
 
     private async Task GoPreviousAsync()
     {
+        if (!CanEditAnswers)
+        {
+            return;
+        }
+
         if (_wizard.IsFirstStep)
         {
-            await GoBackAsync();
+            await ConfirmExitAsync();
             return;
         }
 

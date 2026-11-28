@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>Das Testergebnis konnte nicht gespeichert werden. Bitte versuche es erneut.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Ergebnis öffnen</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>Das Ergebnis wurde gespeichert, aber die Ergebnisseite konnte nicht geöffnet werden. Tippe erneut auf Beenden.</value>
+    <value>Das Ergebnis wurde gespeichert, aber der nächste Bildschirm konnte nicht geöffnet werden.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>Der Eintrag konnte nicht gespeichert werden. Dein Text ist noch da.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>Deine Antworten konnten nicht gespeichert werden. Tippe erneut auf „Abschließen“.</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>Lektion verlassen?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Deine Notiz zu dieser Lektion geht verloren.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>Technik nicht gefunden.</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>Laden fehlgeschlagen</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>Ohne Speichern verlassen?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Deine Antworten auf diesen Fragebogen gehen verloren.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>Deine Änderungen an dieser Übung gehen verloren.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Gib eine Telefonnummer ein, die du anrufen kannst.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>Die Audiodatei konnte nicht abgespielt werden.</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>Erneut versuchen?</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Stopp</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>Der Lesestatus konnte nicht gespeichert werden.</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Gelesen</value>

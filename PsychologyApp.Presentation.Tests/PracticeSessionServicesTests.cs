@@ -72,6 +72,35 @@ public sealed class TechniqueSessionCompletionServiceTests
         navigation.Verify(n => n.GoToPracticeCompletionAsync(3, "Paper", 42L), Times.Once);
     }
 
+    [Fact]
+    public async Task AFailedCompletionKeepsTheCurrentAnswersForRetryWithoutReadingAnOlderDraft()
+    {
+        const string currentAnswers = "{\"Fields\":{\"0\":\"current answer\"}}";
+        var progress = new Mock<IUserProgressService>();
+        var navigation = new Mock<INavigationService>();
+        var completion = new PracticeSessionCompletionState();
+        var service = CreateService();
+        progress.SetupSequence(p => p.RecordSessionOutcomeAsync(It.IsAny<SessionOutcomeRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Storage unavailable"))
+            .ReturnsAsync(42L);
+        navigation.Setup(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), "Paper", 42L)).ReturnsAsync(NavigationRunStatus.Completed);
+
+        Task CompleteAsync() => service.CompleteStandardSessionAsync(progress.Object, navigation.Object, "Paper", "Practice",
+            "Paper", DateTime.UtcNow, completion, sessionPayloadJson: currentAnswers);
+
+        await Assert.ThrowsAsync<IOException>(CompleteAsync);
+        Assert.False(completion.HasSavedResult);
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<long?>()), Times.Never);
+
+        await CompleteAsync();
+
+        Assert.True(completion.HasSavedResult);
+        progress.Verify(p => p.GetSessionDraftAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        progress.Verify(p => p.RecordSessionOutcomeAsync(It.Is<SessionOutcomeRequest>(request =>
+            request.PayloadJson == currentAnswers && request.DeleteDraft), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        navigation.Verify(n => n.GoToPracticeCompletionAsync(It.IsAny<int>(), "Paper", 42L), Times.Once);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]

@@ -9,6 +9,7 @@ public partial class AppLockPage : ContentPage
     private bool _initialized;
     private bool _pinPulseInProgress;
     private int _lastPinLength;
+    private IDispatcherTimer? _pinCooldownTimer;
 
     public AppLockPage(AppLockViewModel viewModel)
     {
@@ -24,6 +25,8 @@ public partial class AppLockPage : ContentPage
         base.OnAppearing();
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _viewModel.RefreshPinCooldown();
+        UpdateCooldownTimer();
         if (_initialized)
         {
             return;
@@ -36,11 +39,18 @@ public partial class AppLockPage : ContentPage
     protected override void OnDisappearing()
     {
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        _pinCooldownTimer?.Stop();
         base.OnDisappearing();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(AppLockViewModel.IsPinCoolingDown))
+        {
+            UpdateCooldownTimer();
+            return;
+        }
+
         if (e.PropertyName == nameof(AppLockViewModel.PinInput))
         {
             int length = _viewModel.PinInput.Length;
@@ -55,10 +65,29 @@ public partial class AppLockPage : ContentPage
 
         if (e.PropertyName == nameof(AppLockViewModel.StatusText)
             && _viewModel.HasStatus
+            && !_viewModel.IsPinCoolingDown
             && _viewModel.IsPinEntryVisible)
         {
             UiAnimations.SafeShakeAsync(PinEntryPanel).FireAndForget();
         }
+    }
+
+    private void UpdateCooldownTimer()
+    {
+        if (!_viewModel.IsPinCoolingDown)
+        {
+            _pinCooldownTimer?.Stop();
+            return;
+        }
+
+        if (_pinCooldownTimer is null)
+        {
+            _pinCooldownTimer = Dispatcher.CreateTimer();
+            _pinCooldownTimer.Interval = TimeSpan.FromSeconds(1);
+            _pinCooldownTimer.Tick += (_, _) => _viewModel.RefreshPinCooldown();
+        }
+
+        _pinCooldownTimer.Start();
     }
 
     private async Task PulsePinCellsAsync()

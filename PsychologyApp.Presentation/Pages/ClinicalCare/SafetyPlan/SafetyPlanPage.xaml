@@ -162,19 +162,21 @@
                     <VerticalStackLayout BindableLayout.ItemsSource="{Binding Contacts}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="vm:SafetyPlanContactItem">
-                                <!-- A tap on the row calls; the cross removes the contact. -->
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" MinimumHeightRequest="52" SemanticProperties.Description="{Binding CallText}">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding CallCommand}" />
-                                    </Grid.GestureRecognizers>
-                                    <ui:MaterialIconView IconName="Phone" IconSize="20" VerticalOptions="Center"
-                                                         IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{Binding Name}" Style="{StaticResource BodyStyle}" />
-                                        <Label Text="{Binding Phone}" Style="{StaticResource CaptionStyle}" />
-                                    </VerticalStackLayout>
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" MinimumHeightRequest="52">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12"
+                                          SemanticProperties.Description="{Binding ContactDescription}">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding CallCommand}" />
+                                        </Grid.GestureRecognizers>
+                                        <ui:MaterialIconView IconName="Phone" IconSize="20" VerticalOptions="Center" IsVisible="{Binding CanCall}"
+                                                             IconColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label Text="{Binding Name}" Style="{StaticResource BodyStyle}" />
+                                            <Label Text="{Binding Phone}" Style="{StaticResource CaptionStyle}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
                                     <ImageButton
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Style="{StaticResource SafetyPlanRemoveStyle}"
                                         Command="{Binding DeleteCommand}"
                                         SemanticProperties.Description="{Binding DeleteText}" />

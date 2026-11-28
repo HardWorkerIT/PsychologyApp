@@ -33,6 +33,7 @@ public partial class MusicPlayerViewModel : BaseViewModel
     public ObservableCollection<FilterChipTabItem> CategoryFilters { get; } = [];
 
     public ICommand TogglePlayPauseCommand { get; }
+    public ICommand RetryPlaybackCommand { get; }
     public ICommand PlayNextCommand { get; }
     public ICommand PlayPreviousCommand { get; }
     public ICommand SelectCategoryCommand { get; }
@@ -55,15 +56,25 @@ public partial class MusicPlayerViewModel : BaseViewModel
         {
             SetPlaybackState(false);
             IsBuffering = false;
+            PlaybackFailed = HasActiveTrack;
         };
         ModuleName = AppStrings.ShellTabMusicShort;
         PageName = AppStrings.CleanerPrayersPage;
 
         TogglePlayPauseCommand = new AsyncCommand(async () =>
         {
+            if (PlaybackFailed && ActiveTrack is { } failedTrack)
+            {
+                await PlayTrackAsync(failedTrack);
+                return;
+            }
+
             bool isPlaying = await _playbackPresenter.TogglePlayPauseAsync(_playbackService, IsPlaying);
             SetPlaybackState(isPlaying);
         });
+        RetryPlaybackCommand = new AsyncCommand(() => PlaybackFailed && ActiveTrack is { } track
+            ? PlayTrackAsync(track)
+            : Task.CompletedTask);
         PlayNextCommand = new AsyncCommand(PlayNextAsync);
         PlayPreviousCommand = new AsyncCommand(PlayPreviousAsync);
         SelectCategoryCommand = new Command<string?>(SelectCategory);

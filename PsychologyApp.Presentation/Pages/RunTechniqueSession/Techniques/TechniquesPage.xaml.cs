@@ -59,7 +59,7 @@ public partial class TechniquesPage : ContentPage
         _viewModel.TryOpenPendingJournalAsync().FireAndForget();
     }
 
-    private void OnPracticeBannerBindingContextChanged(object? sender, EventArgs e)
+    private void OnPracticeBannerFooterReady(object? sender, EventArgs e)
     {
 #if ANDROID
         if (sender is not VerticalStackLayout footer || footer.BindingContext is not TechniqueGroup { Key: "Body", Count: > 0 })
@@ -77,7 +77,11 @@ public partial class TechniquesPage : ContentPage
             return;
         }
 
-        _practiceBannerFooter = footer;
+        if (!ReferenceEquals(_practiceBannerFooter, footer))
+        {
+            DisconnectPracticeBannerFooter();
+            _practiceBannerFooter = footer;
+        }
         ReconnectPracticeBannerFooter();
 #endif
     }
@@ -109,7 +113,6 @@ public partial class TechniquesPage : ContentPage
     private void DisconnectPracticeBannerFooter()
     {
         VerticalStackLayout? footer = _practiceBannerFooter;
-        _practiceBannerFooter = null;
         ContentView? host = footer?.Children.OfType<ContentView>().FirstOrDefault();
         host?.Content?.Handler?.DisconnectHandler();
         if (host is not null)
@@ -153,6 +156,7 @@ public partial class TechniquesPage : ContentPage
 #if ANDROID
             _catalogVisible = false;
             DisconnectPracticeBannerFooter();
+            _practiceBannerFooter = null;
 #endif
             _viewModel?.UnsubscribeFromTechniqueChanges();
 

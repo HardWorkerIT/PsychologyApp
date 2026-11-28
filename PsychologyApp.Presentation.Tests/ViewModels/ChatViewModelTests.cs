@@ -242,17 +242,17 @@ public sealed class ChatViewModelTests
         _chat.Setup(c => c.SendTextAsync(5, It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns((long _, string _, CancellationToken _) => response.Task);
         ChatViewModel viewModel = Create();
-        List<bool> sendAvailability = [];
+        await viewModel.LoadAsync();
+        viewModel.DraftText = "first";
+        TaskCompletionSource sendEnabled = new(TaskCreationOptions.RunContinuationsAsynchronously);
         viewModel.PropertyChanged += (_, args) =>
         {
-            if (args.PropertyName == nameof(viewModel.CanSend))
+            if (args.PropertyName == nameof(viewModel.CanSend) && viewModel.CanSend)
             {
-                sendAvailability.Add(viewModel.CanSend);
+                sendEnabled.TrySetResult();
             }
         };
-        await viewModel.LoadAsync();
 
-        viewModel.DraftText = "first";
         viewModel.SendCommand.Execute(null);
         await VmTestHelpers.WaitUntilAsync(() => viewModel.IsTyping, 5000);
         viewModel.DraftText = "second";
@@ -260,12 +260,12 @@ public sealed class ChatViewModelTests
         Assert.False(viewModel.CanSend);
 
         response.SetResult(Turn(null, "I'm listening"));
-        await VmTestHelpers.WaitUntilAsync(() => viewModel.Messages.Any(message => message.Text == "I'm listening") && !viewModel.IsTyping, 5000);
+        await sendEnabled.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
+        Assert.Contains(viewModel.Messages, message => message.Text == "I'm listening");
+        Assert.False(viewModel.IsTyping);
         Assert.Equal("second", viewModel.DraftText);
         Assert.True(viewModel.CanSend);
-        Assert.Contains(false, sendAvailability);
-        Assert.True(sendAvailability[^1]);
     }
 
     [Fact]

@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>Não foi possível salvar o resultado do teste. Tente novamente.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Abrir resultado</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>O resultado foi salvo, mas a tela do resultado não abriu. Toque em Concluir de novo.</value>
+    <value>O resultado foi salvo, mas não foi possível abrir a próxima tela.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>Não foi possível salvar o registro. Seu texto continua aqui.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>Não foi possível salvar suas respostas. Toque em «Concluir» novamente.</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>Sair desta lição?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Sua anotação desta lição será perdida.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>Técnica não encontrada.</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>Falha ao carregar</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>Sair sem salvar?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Suas respostas a este questionário serão perdidas.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>As alterações nesta prática serão perdidas.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Digite um número de telefone para o qual você possa ligar.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>Não foi possível reproduzir o áudio.</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>Tentar de novo?</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Parar</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>Não foi possível salvar o status de leitura.</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Lido</value>

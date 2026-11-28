@@ -7,16 +7,26 @@ namespace PsychologyApp.Presentation.Pages.RunTests.Question;
 public partial class QuestionViewModel
 {
     private bool _isCompleting;
+    private bool _resultOpened;
     private QuestionnaireSavedResult? _savedResult;
+    private bool _resultNavigationFailed;
+
+    public bool ResultNavigationFailed
+    {
+        get => _resultNavigationFailed;
+        private set => SetProperty(ref _resultNavigationFailed, value);
+    }
+
+    public string ResultNavigationFailedText => AppStrings.TestsResultNavigationFailedMessage;
 
     private async Task CalculateAnswersAsync()
     {
-        if (_isCompleting)
+        if (_isCompleting || _resultOpened)
         {
             return;
         }
 
-        if (!_submissionService.TryValidateAllAnswered(Questions))
+        if (_savedResult is null && !_submissionService.TryValidateAllAnswered(Questions))
         {
             _toastService.LongToast(AppStrings.TestsAnswerAllToast);
             return;
@@ -29,7 +39,7 @@ public partial class QuestionViewModel
 
         _isCompleting = true;
         _wizard.CancelAutoAdvance();
-        _nextCommand.RaiseCanExecuteChanged();
+        NotifyCompletionState();
         try
         {
             QuestionnaireCompletionRequest request =
@@ -39,6 +49,7 @@ public partial class QuestionViewModel
                 request,
                 _userProgressService,
                 openHelpOnSaveFailure: _navigationService.GoToCrisisHubAsync);
+            NotifyCompletionState();
 
             await UiThread.RunAsync(async () =>
             {
@@ -47,10 +58,12 @@ public partial class QuestionViewModel
                     _navigationService);
             });
 
-            _savedResult = null;
+            _resultOpened = true;
+            ResultNavigationFailed = false;
         }
         catch (Exception ex) when (_savedResult is not null)
         {
+            ResultNavigationFailed = true;
             _logger.LogWarning(ex, "Questionnaire result saved but navigation to result screen failed for {TestId}.", _session.TestId);
             _toastService.LongToast(AppStrings.TestsResultNavigationFailedMessage);
         }
@@ -62,7 +75,14 @@ public partial class QuestionViewModel
         finally
         {
             _isCompleting = false;
-            _nextCommand.RaiseCanExecuteChanged();
+            NotifyCompletionState();
         }
+    }
+
+    private void NotifyCompletionState()
+    {
+        Notify(nameof(CanEditAnswers), nameof(CanAdvance), nameof(IsPreviousVisible),
+            nameof(NextButtonText), nameof(NextButtonColumn), nameof(NextButtonColumnSpan));
+        _nextCommand.RaiseCanExecuteChanged();
     }
 }

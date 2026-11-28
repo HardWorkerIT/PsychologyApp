@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using PsychologyApp.Presentation.Features.ManageProfile;
 using PsychologyApp.Presentation.Pages.ManageProfile.AppLock;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
 using PsychologyApp.Presentation.Shared.Services.Security;
 using Xunit;
 
@@ -30,7 +31,7 @@ public sealed class AppLockCoordinatorTests
         Mock<IAppPinCredentialStore> pins = new();
         pins.Setup(p => p.HasPinAsync()).ReturnsAsync(true);
         pins.Setup(p => p.VerifyPinAsync("123456")).ReturnsAsync(new AppPinVerificationResult(true, TimeSpan.Zero));
-        AppLockCoordinator coordinator = new(authenticator.Object, pins.Object, NullLogger<AppLockCoordinator>.Instance);
+        AppLockCoordinator coordinator = new(authenticator.Object, pins.Object, Mock.Of<IAppClipboardService>(), NullLogger<AppLockCoordinator>.Instance);
 
         try
         {

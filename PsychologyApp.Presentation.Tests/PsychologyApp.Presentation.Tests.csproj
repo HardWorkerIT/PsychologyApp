@@ -40,8 +40,13 @@
     <Compile Include="Serialization\**\*.cs" />
     <Compile Include="QuoteCatalogContentTests.cs" />
     <Compile Include="LibraryCatalogRefreshTests.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/ArticleReader/ArticleReaderViewModel.cs" Link="Linked/Pages/ReadArticles/ArticleReader/ArticleReaderViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Widgets/ArticleBlocks/ArticleBlockItem.cs" Link="Linked/Widgets/ArticleBlocks/ArticleBlockItem.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Widgets/ArticleBlocks/ArticleBlockItems.cs" Link="Linked/Widgets/ArticleBlocks/ArticleBlockItems.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Widgets/ArticleBlocks/ReadAloud.cs" Link="Linked/Widgets/ArticleBlocks/ReadAloud.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Articles/ArticlesViewModel.cs" Link="Linked/Pages/ReadArticles/Articles/ArticlesViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CoursesViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CoursesViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CourseDayViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CourseDayViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCardItem.cs" Link="Linked/Widgets/LibraryCard/LibraryCardItem.cs" />
     <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCards.cs" Link="Linked/Widgets/LibraryCard/LibraryCards.cs" />
     <Compile Include="NavigationCoordinatorTests.cs" />

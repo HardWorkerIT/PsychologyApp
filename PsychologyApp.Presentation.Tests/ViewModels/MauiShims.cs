@@ -534,3 +534,22 @@ namespace Microsoft.Maui.Devices
         }
     }
 }
+
+namespace Microsoft.Maui.Media
+{
+    public sealed record Locale(string Language);
+
+    public sealed class SpeechOptions
+    {
+        public Locale? Locale { get; set; }
+    }
+
+    public sealed class TextToSpeech
+    {
+        public static TextToSpeech Default { get; } = new();
+
+        public Task<IEnumerable<Locale>> GetLocalesAsync() => Task.FromResult<IEnumerable<Locale>>([]);
+
+        public Task SpeakAsync(string text, SpeechOptions options, CancellationToken cancellationToken) => Task.CompletedTask;
+    }
+}

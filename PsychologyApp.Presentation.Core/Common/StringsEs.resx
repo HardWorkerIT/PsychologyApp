@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>No se pudo guardar el resultado del test. Inténtalo de nuevo.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Abrir resultado</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>El resultado se guardó, pero no se pudo abrir la pantalla del resultado. Vuelve a tocar Terminar.</value>
+    <value>El resultado se guardó, pero no se pudo abrir la siguiente pantalla.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>No se pudo guardar la entrada. Tu texto sigue aquí.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>No se pudieron guardar tus respuestas. Pulsa «Finalizar» de nuevo.</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>¿Salir de la lección?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Se perderá tu nota de esta lección.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>No se encontró la técnica.</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>Error al cargar</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>¿Salir sin guardar?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Se perderán tus respuestas a este cuestionario.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>Se perderán los cambios en esta práctica.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Introduce un número de teléfono al que puedas llamar.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>No se pudo reproducir el audio.</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>¿Intentarlo de nuevo?</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Parar</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>No se pudo guardar el estado de lectura.</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Leído</value>

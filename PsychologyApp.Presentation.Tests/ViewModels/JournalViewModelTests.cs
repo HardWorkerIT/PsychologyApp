@@ -69,13 +69,35 @@ public sealed class JournalViewModelTests
         await Assert.ThrowsAsync<IOException>(() => viewModel.FlushPendingNoteSaveAsync());
 
         Assert.Empty(viewModel.MoodSavedStatus);
+        Assert.True(viewModel.MoodSaveFailed);
         Assert.Equal("My note", viewModel.JournalNote);
 
-        await viewModel.FlushPendingNoteSaveAsync();
+        await VmTestHelpers.RunAsync(viewModel.FlushNoteCommand);
 
         Assert.NotEmpty(viewModel.MoodSavedStatus);
+        Assert.False(viewModel.MoodSaveFailed);
         progress.Verify(p => p.UpdateMoodNoteAsync(1, "My note", It.IsAny<CancellationToken>()), Times.Exactly(2));
         progress.Verify(p => p.UpdateMoodEntryAsync(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<string?>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task RetryingTheJournalEditorLoadsThePreviouslySelectedDay()
+    {
+        var (viewModel, progress, _) = await CreateWithSavedMoodAsync();
+        DateOnly day = DateOnly.FromDateTime(DateTime.Today).AddDays(-1);
+        progress.SetupSequence(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Journal storage unavailable"))
+            .ReturnsAsync(new List<MoodEntryDTO>());
+
+        viewModel.SelectDayCommand.Execute(day);
+        await VmTestHelpers.WaitUntilAsync(() => viewModel.IsEditorLoadFailed);
+        bool wasMorning = viewModel.IsMorningSelected;
+
+        await VmTestHelpers.RunAsync(viewModel.RetryEditorLoadCommand);
+
+        Assert.True(viewModel.IsEditorReady);
+        Assert.Equal(AppStrings.JournalEditorDayTitle(day), viewModel.DayHeaderText);
+        Assert.Equal(wasMorning, viewModel.IsMorningSelected);
     }
 
     private static async Task<(JournalViewModel ViewModel, Mock<IUserProgressService> Progress, Mock<INavigationService> Navigation)>

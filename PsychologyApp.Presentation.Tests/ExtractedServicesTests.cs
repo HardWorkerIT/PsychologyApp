@@ -56,7 +56,7 @@ public sealed class PracticeDashboardLoaderTests
             .ReturnsAsync(new Dictionary<string, DateTime>(StringComparer.Ordinal));
         progress.Setup(p => p.GetSessionDraftKeysAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new HashSet<string>(StringComparer.Ordinal));
-        progress.Setup(p => p.GetRecentSessionResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        progress.Setup(p => p.GetRecentPracticeIntensityAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
         Mock<IUserPreferencesStore> preferences = new();
         preferences.Setup(p => p.Load()).Returns(new UserPreferencesState { OnboardingConcern = OnboardingConcernKeys.Mood });

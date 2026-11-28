@@ -265,6 +265,7 @@ public partial class AppOptionsSheetPopup : Popup
 
     public string? SelectedValue { get; private set; }
     public IReadOnlyList<string>? SelectedValues { get; private set; }
+    public bool CancelledWithButton { get; private set; }
     public bool? DialogResult => _dialogResult;
     public string InputText => _dialogInputEntry?.Text ?? string.Empty;
 
@@ -319,7 +320,7 @@ public partial class AppOptionsSheetPopup : Popup
             BackgroundColor = Colors.Transparent,
             Stroke = Colors.Transparent,
             MinimumHeightRequest = _isMultiSelect ? (hasSupportingText ? 68 : 56) : (hasSupportingText ? 68 : 48),
-            Padding = _isMultiSelect || hasSupportingText ? new Thickness(12, 8) : new Thickness(0, 4),
+            Padding = new Thickness(12, _isMultiSelect || hasSupportingText ? 8 : 4),
         };
 
         if (_isSingleSelectionConfirmation)
@@ -475,8 +476,10 @@ public partial class AppOptionsSheetPopup : Popup
                 Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["AppDialogActionLabelStyle"],
                 InputTransparent = true,
                 HorizontalTextAlignment = TextAlignment.Center,
+                HorizontalOptions = LayoutOptions.Fill,
                 VerticalTextAlignment = TextAlignment.Center,
                 VerticalOptions = LayoutOptions.Center,
+                LineBreakMode = LineBreakMode.WordWrap,
             };
         }
         else
@@ -711,6 +714,12 @@ public partial class AppOptionsSheetPopup : Popup
 
     private void OnCancelTapped(object? sender, TappedEventArgs e)
     {
+        if (_isClosing)
+        {
+            return;
+        }
+
+        CancelledWithButton = true;
         if (_isDecisionSheet)
         {
             _dialogResult = false;

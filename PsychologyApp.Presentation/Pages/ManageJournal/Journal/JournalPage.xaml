@@ -31,6 +31,11 @@
                     <Label Grid.Column="1" Text="{Binding MoodSavedStatus}" Style="{StaticResource CaptionStyle}" VerticalOptions="Center" />
                 </Grid>
 
+                <ui:RetryView IsVisible="{Binding MoodSaveFailed}"
+                              FailedText="{Binding MoodSaveFailedText}"
+                              RetryText="{Binding EditorRetryText}"
+                              RetryCommand="{Binding FlushNoteCommand}" />
+
                 <!-- The question of the day is the field's own hint (an empty note is the hardest thing to fill); it changes daily and
                      is never required. -->
                 <VerticalStackLayout IsVisible="{Binding ShowNoteEditor}" Spacing="{StaticResource CompactSpacing}">
@@ -224,7 +229,7 @@
                             IsVisible="{Binding IsEditorLoadFailed}"
                             FailedText="{Binding EditorLoadFailedText}"
                             RetryText="{Binding EditorRetryText}"
-                            RetryCommand="{Binding ReloadCommand}" />
+                            RetryCommand="{Binding RetryEditorLoadCommand}" />
                         <Label Text="{Binding SlotMorningLabel}" Style="{StaticResource ListRowTitleStyle}" />
                         <mood:MoodStripView
                             UsePlainLayout="True"
@@ -294,7 +299,7 @@
                             IsVisible="{Binding IsEditorLoadFailed}"
                             FailedText="{Binding EditorLoadFailedText}"
                             RetryText="{Binding EditorRetryText}"
-                            RetryCommand="{Binding ReloadCommand}" />
+                            RetryCommand="{Binding RetryEditorLoadCommand}" />
                         <Label Text="{Binding SlotEveningLabel}" Style="{StaticResource ListRowTitleStyle}" />
                         <mood:MoodStripView
                             UsePlainLayout="True"

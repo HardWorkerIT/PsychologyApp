@@ -7,7 +7,7 @@ public partial class TestResultViewModel
 {
     private Task TryTechniqueAsync()
     {
-        if (_result.RecommendedTechnique is not TechniqueId techniqueId)
+        if (NeedsUrgentHelp || _result.RecommendedTechnique is not TechniqueId techniqueId)
         {
             return Task.CompletedTask;
         }
@@ -17,7 +17,7 @@ public partial class TestResultViewModel
 
     private async Task ExplorePracticeAsync()
     {
-        if (NavigationService is null)
+        if (NeedsUrgentHelp || NavigationService is null)
         {
             return;
         }

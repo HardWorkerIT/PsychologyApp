@@ -103,6 +103,10 @@
 
         <VerticalStackLayout Grid.Row="2" Spacing="8" Padding="0,0,0,8">
             <ui:ButtonView
+                IsVisible="{Binding NeedsUrgentHelp}"
+                BodyText="{Binding OpenUrgentHelpText}"
+                TapCommand="{Binding OpenUrgentHelpCommand}" />
+            <ui:ButtonView
                 x:Name="RecommendationPrimaryButton"
                 IsVisible="False"
                 BodyText="{Binding TryTechniqueButtonText}"
@@ -110,6 +114,7 @@
             <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                 <ui:ButtonView
                     Grid.Column="0"
+                    Variant="Secondary"
                     BodyText="{Binding RetakeButtonText}"
                     TapCommand="{Binding RetakeCommand}" />
                 <ui:ButtonView

@@ -1,24 +1,67 @@
 using Moq;
 using PsychologyApp.Presentation.Pages.ManageProfile.AppLock;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
+using PsychologyApp.Presentation.Shared.UI.Overlays;
 using PsychologyApp.Presentation.Shared.Services.Security;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
 
 /// <summary>The lock screen keeps personal content closed until an app PIN is set or verified.</summary>
+[Collection("StaticShims")]
 public sealed class AppLockViewModelTests
 {
     private readonly Mock<IDeviceAuthenticator> _authenticator = new();
     private readonly Mock<IAppPinCredentialStore> _pinStore = new();
+    private readonly Mock<IAppClipboardService> _clipboard = new();
 
-    private AppLockViewModel Create(DeviceUnlockAvailability availability, DeviceUnlockResult result, bool hasPin = true)
+    private AppLockViewModel Create(DeviceUnlockAvailability availability, DeviceUnlockResult result, bool hasPin = true, TimeProvider? clock = null)
     {
         _authenticator.SetupGet(a => a.Availability).Returns(availability);
         _authenticator.Setup(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(result);
         _pinStore.Setup(s => s.HasPinAsync()).ReturnsAsync(hasPin);
         _pinStore.Setup(s => s.VerifyPinAsync(It.IsAny<string>()))
             .ReturnsAsync(new AppPinVerificationResult(true, TimeSpan.Zero));
-        return new AppLockViewModel(_authenticator.Object, _pinStore.Object);
+        return new AppLockViewModel(_authenticator.Object, _pinStore.Object, _clipboard.Object, clock);
+    }
+
+    [Fact]
+    public async Task A_pin_lockout_disables_the_keypad_until_the_wait_expires()
+    {
+        var clock = new PinTestClock();
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed, clock: clock);
+        _pinStore.SetupSequence(store => store.VerifyPinAsync("123456"))
+            .ReturnsAsync(new AppPinVerificationResult(false, TimeSpan.FromSeconds(3)))
+            .ReturnsAsync(new AppPinVerificationResult(true, TimeSpan.Zero));
+        await viewModel.InitializeAsync();
+        viewModel.PinInput = "123456";
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
+
+        viewModel.AddPinDigitCommand.Execute("1");
+        Assert.Empty(viewModel.PinInput);
+        Assert.False(viewModel.CanEnterPin);
+        Assert.True(viewModel.HasSystemRecovery);
+        Assert.Equal(AppStrings.AppLockPinLockedOut(3), viewModel.StatusText);
+
+        clock.Seconds = 2;
+        viewModel.RefreshPinCooldown();
+        Assert.Equal(AppStrings.AppLockPinLockedOut(1), viewModel.StatusText);
+        Assert.False(viewModel.CanEnterPin);
+
+        clock.Seconds = 3;
+        viewModel.RefreshPinCooldown();
+        Assert.True(viewModel.CanEnterPin);
+        Assert.False(viewModel.HasStatus);
+        viewModel.PinInput = "123456";
+        await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
+        Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
+    }
+
+    private sealed class PinTestClock : TimeProvider
+    {
+        public long Seconds { get; set; }
+        public override long TimestampFrequency => TimeSpan.TicksPerSecond;
+        public override long GetTimestamp() => Seconds * TimeSpan.TicksPerSecond;
     }
 
     [Fact]
@@ -79,6 +122,47 @@ public sealed class AppLockViewModelTests
         viewModel.PinInput = "123456";
         await VmTestHelpers.RunAsync(viewModel.SubmitPinCommand);
         Assert.True(viewModel.Unlocked.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task An_unavailable_dialer_leaves_instructions_visible_without_unlocking_the_app()
+    {
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        await viewModel.InitializeAsync();
+        Launcher.FailWith = new InvalidOperationException("No dialer");
+        try
+        {
+            await VmTestHelpers.RunAsync(viewModel.CallEmergencyCommand);
+
+            Assert.True(viewModel.ShowDialFailure);
+            Assert.False(string.IsNullOrWhiteSpace(viewModel.DialFailureText));
+            await VmTestHelpers.RunAsync(viewModel.CopyNumberCommand);
+            _clipboard.Verify(service => service.CopyWithFeedbackAsync(
+                It.Is<string>(number => viewModel.DialFailureText.Contains(number)), AppStrings.QuoteCopied, AppToastKind.Success), Times.Once);
+            Assert.False(viewModel.Unlocked.IsCompleted);
+        }
+        finally
+        {
+            Launcher.FailWith = null;
+        }
+    }
+
+    [Fact]
+    public async Task A_secure_storage_error_keeps_the_app_locked_and_offers_phone_recovery()
+    {
+        AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        _pinStore.Setup(s => s.HasPinAsync()).ThrowsAsync(new IOException("Secure storage unavailable"));
+        await viewModel.InitializeAsync();
+
+        Assert.False(viewModel.IsPinEntryVisible);
+        Assert.True(viewModel.HasSystemRecovery);
+        Assert.False(viewModel.Unlocked.IsCompleted);
+
+        await VmTestHelpers.RunAsync(viewModel.RecoverPinCommand);
+
+        Assert.True(viewModel.IsPinEntryVisible);
+        Assert.False(viewModel.Unlocked.IsCompleted);
+        _authenticator.Verify(a => a.AuthenticateAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]

@@ -143,13 +143,17 @@ public partial class TechniquesViewModel
                     return;
                 }
 
-                string? selectedNeedId = await _dialogService.PickOptionAsync(
+                DialogSelection<string> needSelection = await _dialogService.PickOptionStepAsync(
                     AppStrings.PracticeFinderNeedPrompt,
                     situationOptions,
                     AppStrings.Back);
-                if (selectedNeedId is null)
+                if (needSelection.CancelledWithButton)
                 {
                     break;
+                }
+                if (needSelection.Value is not { } selectedNeedId)
+                {
+                    return;
                 }
 
                 if (await RouteToCrisisHubIfNeededAsync())
@@ -208,7 +212,8 @@ public partial class TechniquesViewModel
                         return;
                     }
 
-                    string? selectedPracticeId = await _dialogService.PickOptionAsync(resultTitle, practiceOptions, AppStrings.Back);
+                    DialogSelection<string> selection = await _dialogService.PickOptionStepAsync(resultTitle, practiceOptions, AppStrings.Back);
+                    string? selectedPracticeId = selection.Value;
                     if (selectedPracticeId == PracticeFinderMoreOptionsOptionId)
                     {
                         if (await RouteToCrisisHubIfNeededAsync())
@@ -221,19 +226,24 @@ public partial class TechniquesViewModel
                             DialogOptionItem.SectionHeader(GetPracticeFinderMatchReason(choice.Need)),
                             .. suggestions.Skip(1).Select(CreatePracticeFinderOption)
                         ];
-                        selectedPracticeId = await _dialogService.PickOptionAsync(
+                        DialogSelection<string> otherSelection = await _dialogService.PickOptionStepAsync(
                             AppStrings.PracticeFinderOtherOptionsTitle,
                             otherPracticeOptions,
                             AppStrings.Back);
-                        if (selectedPracticeId is null)
+                        if (otherSelection.CancelledWithButton)
                         {
                             continue;
                         }
+                        selectedPracticeId = otherSelection.Value;
                     }
 
-                    if (selectedPracticeId is null)
+                    if (selection.CancelledWithButton)
                     {
                         break;
+                    }
+                    if (selectedPracticeId is null)
+                    {
+                        return;
                     }
 
                     TechniqueListEntry? selectedPractice = suggestions.FirstOrDefault(entry =>
@@ -305,7 +315,10 @@ public partial class TechniquesViewModel
             SavedNextStep[] savedInCategory = _savedNextSteps.Where(categorySteps.Contains).ToArray();
             if (savedInCategory.Length == 0)
             {
-                await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle);
+                if (!await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle))
+                {
+                    return true;
+                }
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
                     return false;
@@ -319,10 +332,14 @@ public partial class TechniquesViewModel
                 .. savedInCategory.Select(step => new DialogOptionItem(GetSavedQuickActionOptionId(step), GetNextStepLabel(step))),
                 new DialogOptionItem(ManageQuickActionsOptionId, AppStrings.NextStepChange)
             ];
-            string? selectedOptionId = await _dialogService.PickOptionAsync(quickActionsTitle, options, AppStrings.Back);
-            if (selectedOptionId is null)
+            DialogSelection<string> selection = await _dialogService.PickOptionStepAsync(quickActionsTitle, options, AppStrings.Back);
+            if (selection.CancelledWithButton)
             {
                 return false;
+            }
+            if (selection.Value is not { } selectedOptionId)
+            {
+                return true;
             }
 
             if (selectedOptionId == ManageQuickActionsOptionId)
@@ -332,7 +349,10 @@ public partial class TechniquesViewModel
                     return true;
                 }
 
-                await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle);
+                if (!await ManageQuickActionsForCategoryAsync(categorySteps, setupTitle))
+                {
+                    return true;
+                }
                 if (!_savedNextSteps.Any(categorySteps.Contains))
                 {
                     return false;
@@ -358,7 +378,8 @@ public partial class TechniquesViewModel
         }
     }
 
-    private async Task ManageQuickActionsForCategoryAsync(
+    // False means the whole finder was dismissed, rather than its edit step cancelled.
+    private async Task<bool> ManageQuickActionsForCategoryAsync(
         IReadOnlyList<SavedNextStep> categorySteps,
         string categoryTitle)
     {
@@ -370,13 +391,13 @@ public partial class TechniquesViewModel
             await _dialogService.ShowAsync(
                 AppStrings.NextStepTitle,
                 AppStrings.NextStepLimitReached(SavedNextStepCollection.MaximumCount));
-            return;
+            return true;
         }
 
         DialogOptionItem[] options = categorySteps
             .Select(step => new DialogOptionItem(step.ToString(), GetNextStepLabel(step)))
             .ToArray();
-        IReadOnlyList<string>? selectedValues = await _dialogService.PickMultipleOptionsAsync(
+        DialogSelection<IReadOnlyList<string>> selection = await _dialogService.PickMultipleOptionsAsync(
             categoryTitle,
             options,
             savedInCategory.Select(step => step.ToString()).ToArray(),
@@ -389,9 +410,9 @@ public partial class TechniquesViewModel
             AppStrings.NextStepLimitReached(SavedNextStepCollection.MaximumCount),
             AppStrings.Save,
             AppStrings.Cancel);
-        if (selectedValues is null)
+        if (selection.Value is not { } selectedValues)
         {
-            return;
+            return selection.CancelledWithButton;
         }
 
         List<SavedNextStep> selectedInCategory = [];
@@ -413,7 +434,7 @@ public partial class TechniquesViewModel
         orderedSteps.AddRange(selectedInCategory.Where(step => !orderedSteps.Contains(step)));
         if (orderedSteps.SequenceEqual(_savedNextSteps))
         {
-            return;
+            return true;
         }
 
         try
@@ -424,10 +445,11 @@ public partial class TechniquesViewModel
         {
             _logger.LogWarning("Failed to save quick actions ({ExceptionType}).", exception.GetType().Name);
             await _dialogService.ShowAsync(AppStrings.NextStepTitle, AppStrings.NextStepSaveFailed);
-            return;
+            return true;
         }
 
         ApplySavedNextSteps(orderedSteps);
+        return true;
     }
 
     private async Task OpenNextStepAsync(SavedNextStep nextStep)

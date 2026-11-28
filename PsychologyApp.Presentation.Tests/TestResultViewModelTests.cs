@@ -151,6 +151,36 @@ public sealed class TestResultViewModelTests
     }
 
     [Fact]
+    public async Task UrgentResultOffersHelpAndHidesPracticeActions()
+    {
+        Mock<INavigationService> navigation = new();
+        navigation.Setup(n => n.GoToCrisisHubAsync()).Returns(Task.CompletedTask);
+        var catalog = new Mock<ITestCatalogService>();
+        TestResultViewModel viewModel = new(
+            navigation.Object,
+            catalog.Object,
+            TechniqueCatalogTestHelper.CreateGateway(),
+            TestRunTestHelpers.CreateRetakeOperations(),
+            Mock.Of<IUserProgressService>(),
+            new TestTrendResolver(new TestTrendService(catalog.Object)),
+            new TestResultInfo { NeedsUrgentHelp = true, RecommendedTechnique = TechniqueId.Grounding });
+
+        Assert.True(viewModel.NeedsUrgentHelp);
+        Assert.False(viewModel.HasRecommendation);
+        Assert.False(viewModel.ShowExplorePractice);
+        Assert.False(viewModel.TryTechniqueCommand.CanExecute(null));
+        Assert.False(viewModel.ExplorePracticeCommand.CanExecute(null));
+
+        viewModel.TryTechniqueCommand.Execute(null);
+        viewModel.ExplorePracticeCommand.Execute(null);
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.OpenUrgentHelpCommand);
+
+        navigation.Verify(n => n.GoToTechniqueAsync(It.IsAny<TechniqueId>()), Times.Never);
+        navigation.Verify(n => n.GoToPracticeTabAsync(), Times.Never);
+        navigation.Verify(n => n.GoToCrisisHubAsync(), Times.Once);
+    }
+
+    [Fact]
     public void PreferenceProfileResult_ShowsProfileInsteadOfNumericScoreOrTrend()
     {
         Mock<INavigation> navigation = new();

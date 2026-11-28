@@ -35,6 +35,7 @@ public sealed class JournalViewModel : BaseViewModel
     private bool _suppressNoteAutosave;
     private bool _noteDirty;
     private bool _moodDirty;
+    private bool _moodSaveFailed;
     private string? _crisisOfferedForNote;
     private bool _noteLooksLikeCrisis;
     private bool _factorsOpened;
@@ -84,6 +85,7 @@ public sealed class JournalViewModel : BaseViewModel
         });
         FlushNoteCommand = new AsyncCommand(() => FlushPendingNoteSaveAsync(reload: true));
         ReloadCommand = new AsyncCommand(ReloadAsync);
+        RetryEditorLoadCommand = new AsyncCommand(() => LoadAsync());
         ShowFactorsCommand = new Command(() =>
         {
             _factorsOpened = true;
@@ -273,6 +275,13 @@ public sealed class JournalViewModel : BaseViewModel
     public bool IsMoodSaved => HasMoodSelected && _editorEntryId is > 0 && !_editorStale && !_moodDirty && !_noteDirty;
 
     public string MoodSavedStatus => IsMoodSaved ? AppStrings.TodayMoodSaved : string.Empty;
+    public bool MoodSaveFailed
+    {
+        get => _moodSaveFailed;
+        private set => SetProperty(ref _moodSaveFailed, value);
+    }
+
+    public string MoodSaveFailedText => AppStrings.JournalSaveFailed;
 
     private IReadOnlyList<JournalDayChip> _weekDays = [];
     public IReadOnlyList<JournalDayChip> WeekDays
@@ -289,6 +298,7 @@ public sealed class JournalViewModel : BaseViewModel
     public ICommand SelectSlotCommand { get; }
     public ICommand FlushNoteCommand { get; }
     public ICommand ReloadCommand { get; }
+    public ICommand RetryEditorLoadCommand { get; }
     public ICommand ShowFactorsCommand { get; }
     public ICommand OpenLowMoodBreathCommand { get; }
     public ICommand OpenLowMoodAnchorsCommand { get; }
@@ -368,6 +378,7 @@ public sealed class JournalViewModel : BaseViewModel
             nameof(SlotEveningLabel),
             nameof(DayHeaderText),
             nameof(MoodSavedStatus),
+            nameof(MoodSaveFailedText),
             nameof(HasMoodSelected),
             nameof(ShowNoteEditor),
             nameof(PromptText),
@@ -611,6 +622,7 @@ public sealed class JournalViewModel : BaseViewModel
         CancelNoteAutosave();
         _noteDirty = false;
         _moodDirty = false;
+        MoodSaveFailed = false;
         WeekDays = snapshot.WeekDays;
         _weekStripEnd = snapshot.WeekStripEnd;
         _editorEntryId = snapshot.EditorEntryId;
@@ -704,11 +716,20 @@ public sealed class JournalViewModel : BaseViewModel
 
             _noteDirty = false;
             _moodDirty = false;
+            MoodSaveFailed = false;
             NotifyMoodSaveStatus();
             if (reload)
             {
                 await LoadAsync(keepCurrentEditorReady: true);
             }
+        }
+        catch (Exception error) when (error is not OperationCanceledException)
+        {
+            if (IsCurrentMoodSave(moodLevel, noteRevision, day, slot))
+            {
+                MoodSaveFailed = true;
+            }
+            throw;
         }
         finally
         {

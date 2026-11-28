@@ -96,6 +96,27 @@ public sealed class MusicPlayerViewModelTests
     }
 
     [Fact]
+    public async Task APlaybackFailureOffersToRetryTheSameTrack()
+    {
+        var playback = new Mock<IAudioPlaybackService>();
+        var viewModel = CreateViewModel(playback);
+        Audio track = viewModel.AllItems[0];
+        playback.SetupSequence(service => service.PlayAsync(track.URL!, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new IOException("Audio unavailable"))
+            .Returns(Task.CompletedTask);
+        playback.SetupGet(service => service.IsPlaying).Returns(true);
+
+        await ViewModels.VmTestHelpers.RunAsync(Assert.IsAssignableFrom<System.Windows.Input.ICommand>(track.ClickCommand));
+        Assert.True(viewModel.PlaybackFailed);
+        Assert.False(viewModel.IsPlaying);
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.RetryPlaybackCommand);
+        Assert.True(viewModel.IsPlaying);
+        Assert.False(viewModel.PlaybackFailed);
+        playback.Verify(service => service.PlayAsync(track.URL!, It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
+    [Fact]
     public async Task Leaving_music_cancels_a_pending_track_without_restoring_playback_state()
     {
         Mock<IAudioPlaybackService> playback = new();

@@ -69,6 +69,7 @@
 
                 <VerticalStackLayout
                     x:Name="AnswersPanel"
+                    IsEnabled="{Binding CanEditAnswers}"
                     BindableLayout.ItemsSource="{Binding CurrentAnswers}"
                     Spacing="0">
                     <VerticalStackLayout.Behaviors>
@@ -93,6 +94,10 @@
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="2" Spacing="{StaticResource CompactSpacing}">
+            <Label Text="{Binding ResultNavigationFailedText}"
+                   IsVisible="{Binding ResultNavigationFailed}"
+                   Style="{StaticResource CaptionStyle}"
+                   HorizontalTextAlignment="Center" />
             <Label
                 Text="{Binding MultiChoiceHintText}"
                 IsVisible="{Binding IsMultiChoiceHintVisible}"

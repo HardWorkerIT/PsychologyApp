@@ -43,6 +43,7 @@ public partial class DesignerViewModel
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 ApplyForm(form);
+                _savedForm = CaptureForm();
                 _initialized = true;
                 SetDone();
                 RaiseSaveCanExecuteChanged();

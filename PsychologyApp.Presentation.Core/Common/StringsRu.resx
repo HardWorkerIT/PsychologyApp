@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>Не удалось сохранить результат теста. Попробуйте ещё раз.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Открыть результат</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>Результат сохранён, но не удалось открыть экран результата. Нажмите «Завершить» ещё раз.</value>
+    <value>Результат сохранён, но открыть следующий экран не удалось.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить запись. Текст остался в редакторе.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить ответы. Нажмите «Завершить» ещё раз.</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>Выйти из урока?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Заметка за этот урок не сохранится.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>Техника не найдена.</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>Не удалось загрузить</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>Выйти без сохранения?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Ответы текущего опросника будут удалены.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>Изменения в практике не сохранятся.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Введите номер телефона, по которому можно позвонить.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>Не удалось воспроизвести аудио.</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>Попробовать ещё раз?</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Остановить</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить отметку о прочтении.</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Прочитано</value>

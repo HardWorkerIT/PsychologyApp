@@ -31,13 +31,7 @@ public interface INavigationService
     Task GoToTestHistoryAsync(string testId, string testTitle);
     Task GoToTestsListAsync();
     Task<NavigationRunStatus> GoToTestResultAsync(
-        int score,
-        string interpretation,
-        TechniqueId? recommendedTechnique = null,
-        string? testId = null,
-        string? interpretationDetail = null,
-        string? analyzerId = null,
-        QuestionnaireResultDetail? detail = null,
+        TestResultInfo result,
         CancellationToken cancellationToken = default);
     Task GoToTestsTabAsync();
     Task GoToPracticeTabAsync();

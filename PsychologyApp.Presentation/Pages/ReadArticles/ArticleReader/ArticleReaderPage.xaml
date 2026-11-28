@@ -56,6 +56,10 @@
                    TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
 
             <blocks:ArticleBlocksView Blocks="{Binding Blocks}" />
+            <ui:RetryView IsVisible="{Binding ShowReadSaveFailure}"
+                          FailedText="{Binding ReadSaveFailedText}"
+                          RetryText="{Binding RetryReadSaveText}"
+                          RetryCommand="{Binding RetryReadSaveCommand}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -4,12 +4,13 @@ using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Tests;
 using PsychologyApp.Application.UserProgress;
+using PsychologyApp.Presentation.Entities.Test;
 using PsychologyApp.Presentation.Features.RunTests;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
 
-/// <summary>Finishing a questionnaire: the result is saved once, an answer about suicidal thoughts is recorded as a risk, and help opens before the numbers.</summary>
+/// <summary>Finishing a questionnaire saves the result once and offers urgent help when the risk item is endorsed.</summary>
 public sealed class TestRunCoordinatorTests
 {
     private readonly Mock<IQuestionnaireScoringService> _scoring = new();
@@ -32,8 +33,7 @@ public sealed class TestRunCoordinatorTests
         _care.Setup(c => c.AssessRiskAsync(It.IsAny<RiskAssessmentInput>(), It.IsAny<CancellationToken>()))
             .Callback(() => _calls.Add("risk")).ReturnsAsync(new RiskAssessmentDTO());
         _navigation.Setup(n => n.GoToTestResultAsync(
-                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-                It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()))
+                It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()))
             .Callback(() => _calls.Add("result")).ReturnsAsync(NavigationRunStatus.Completed);
         _navigation.Setup(n => n.GoToCrisisHubAsync()).Callback(() => _calls.Add("crisis")).Returns(Task.CompletedTask);
 
@@ -126,6 +126,9 @@ public sealed class TestRunCoordinatorTests
         await coordinator.CompleteQuestionnaireAsync(Request(), _progress.Object, _navigation.Object);
 
         Assert.Equal(["saved", "risk", "result", "crisis"], _calls);
+        _navigation.Verify(n => n.GoToTestResultAsync(
+            It.Is<TestResultInfo>(result => result.NeedsUrgentHelp && result.RecommendedTechnique == null),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -155,8 +158,7 @@ public sealed class TestRunCoordinatorTests
     {
         TestRunCoordinator coordinator = Create(selfHarm: false);
         _navigation.Setup(n => n.GoToTestResultAsync(
-                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-                It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()))
+                It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NavigationRunStatus.DroppedDuplicate);
 
         await coordinator.CompleteQuestionnaireAsync(Request(), _progress.Object, _navigation.Object);
@@ -171,16 +173,14 @@ public sealed class TestRunCoordinatorTests
     {
         TestRunCoordinator coordinator = Create(selfHarm: needsUrgentHelp);
         _navigation.Setup(n => n.GoToTestResultAsync(
-                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-                It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()))
+                It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NavigationRunStatus.Failed);
 
         await Assert.ThrowsAsync<TestCompletionNavigationException>(() =>
             coordinator.CompleteQuestionnaireAsync(Request(), _progress.Object, _navigation.Object));
 
         _navigation.Verify(n => n.GoToTestResultAsync(
-            It.IsAny<int>(), It.IsAny<string>(), It.IsAny<TechniqueId?>(), It.IsAny<string?>(), It.IsAny<string?>(), It.IsAny<string?>(),
-            It.IsAny<QuestionnaireResultDetail?>(), It.IsAny<CancellationToken>()), Times.Exactly(resultAttempts));
+            It.IsAny<TestResultInfo>(), It.IsAny<CancellationToken>()), Times.Exactly(resultAttempts));
         _navigation.Verify(n => n.GoToCrisisHubAsync(), needsUrgentHelp ? Times.Once() : Times.Never());
     }
 }

@@ -17,7 +17,7 @@
         <behaviors:PageAnalyticsBehavior />
     </ContentPage.Behaviors>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*,Auto">
         <!-- The same header as the main chat: the practice talks with the same companion. -->
         <avatar:CompanionHeaderView
             Grid.Row="0"
@@ -28,5 +28,10 @@
             ProfileCommand="{Binding OpenProfileCommand}" />
 
         <chat:DialogueChatView Grid.Row="1" Margin="12,8,12,12" />
+        <Label Grid.Row="2" Margin="12,0,12,12"
+               IsVisible="{Binding CompletionSaveFailed}"
+               Text="{Binding CompletionSaveFailedText}"
+               Style="{StaticResource CaptionStyle}"
+               TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}" />
     </Grid>
 </ContentPage>

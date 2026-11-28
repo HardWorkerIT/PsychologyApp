@@ -629,8 +629,23 @@
   <data name="TestsResultSaveFailedMessage" xml:space="preserve">
     <value>Le résultat du test n'a pas pu être enregistré. Veuillez réessayer.</value>
   </data>
+  <data name="TestsOpenSavedResult" xml:space="preserve">
+    <value>Ouvrir le résultat</value>
+  </data>
   <data name="TestsResultNavigationFailedMessage" xml:space="preserve">
-    <value>Le résultat a été enregistré, mais l'écran du résultat n'a pas pu s'ouvrir. Touchez Terminer à nouveau.</value>
+    <value>Le résultat a été enregistré, mais l’écran suivant n’a pas pu s’ouvrir.</value>
+  </data>
+  <data name="JournalSaveFailed" xml:space="preserve">
+    <value>Cette entrée n’a pas pu être enregistrée. Votre texte est toujours là.</value>
+  </data>
+  <data name="DialogueAnswersSaveFailed" xml:space="preserve">
+    <value>Vos réponses n’ont pas pu être enregistrées. Appuyez de nouveau sur « Terminer ».</value>
+  </data>
+  <data name="CourseDiscardReflectionTitle" xml:space="preserve">
+    <value>Quitter cette leçon ?</value>
+  </data>
+  <data name="CourseDiscardReflectionBody" xml:space="preserve">
+    <value>Votre note pour cette leçon sera perdue.</value>
   </data>
   <data name="TechniqueNotFound" xml:space="preserve">
     <value>Technique introuvable.</value>
@@ -1153,6 +1168,21 @@
   </data>
   <data name="LoadFailed" xml:space="preserve">
     <value>Échec du chargement</value>
+  </data>
+  <data name="UnsavedExitTitle" xml:space="preserve">
+    <value>Quitter sans enregistrer ?</value>
+  </data>
+  <data name="TestsDiscardAnswers" xml:space="preserve">
+    <value>Vos réponses à ce questionnaire seront perdues.</value>
+  </data>
+  <data name="DesignerDiscardChanges" xml:space="preserve">
+    <value>Vos modifications de cet exercice seront perdues.</value>
+  </data>
+  <data name="SafetyPlanContactPhoneInvalid" xml:space="preserve">
+    <value>Saisissez un numéro de téléphone que vous pouvez appeler.</value>
+  </data>
+  <data name="AudioPlaybackFailed" xml:space="preserve">
+    <value>Impossible de lire le fichier audio.</value>
   </data>
   <data name="RetryQuestion" xml:space="preserve">
     <value>Réessayer ?</value>
@@ -3352,6 +3382,9 @@
   </data>
   <data name="ArticleStopListening" xml:space="preserve">
     <value>Arrêter</value>
+  </data>
+  <data name="ArticleReadSaveFailed" xml:space="preserve">
+    <value>Impossible d’enregistrer le statut de lecture.</value>
   </data>
   <data name="ArticleReadMark" xml:space="preserve">
     <value>Lu</value>

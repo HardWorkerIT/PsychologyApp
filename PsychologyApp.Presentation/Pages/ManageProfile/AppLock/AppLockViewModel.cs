@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using PsychologyApp.Presentation.Shared.Common;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
 using PsychologyApp.Presentation.Shared.Services.Security;
 using PsychologyApp.Presentation.Shared.ViewModels;
 
@@ -14,6 +15,7 @@ public sealed class AppLockViewModel : BaseViewModel
 {
     private readonly IDeviceAuthenticator _authenticator;
     private readonly IAppPinCredentialStore _pinCredentialStore;
+    private readonly TimeProvider _clock;
     private readonly TaskCompletionSource _unlocked = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private Task? _initialization;
     private EntryState _state;
@@ -22,6 +24,10 @@ public sealed class AppLockViewModel : BaseViewModel
     private string? _statusText;
     private bool _isBusy;
     private bool _isResetting;
+    private bool _showDialFailure;
+    private long _cooldownStarted;
+    private TimeSpan _cooldownDuration;
+    private int _cooldownSeconds;
 
     private enum EntryState
     {
@@ -32,15 +38,20 @@ public sealed class AppLockViewModel : BaseViewModel
         RecoveryRequired
     }
 
-    public AppLockViewModel(IDeviceAuthenticator authenticator, IAppPinCredentialStore pinCredentialStore)
+    public AppLockViewModel(IDeviceAuthenticator authenticator, IAppPinCredentialStore pinCredentialStore,
+        IAppClipboardService clipboard, TimeProvider? clock = null)
     {
         _authenticator = authenticator;
         _pinCredentialStore = pinCredentialStore;
+        _clock = clock ?? TimeProvider.System;
         SubmitPinCommand = new AsyncCommand(SubmitPinAsync);
         AddPinDigitCommand = new Command<string?>(AppendPinDigit);
         DeletePinDigitCommand = new Command(DeletePinDigit);
         RecoverPinCommand = new AsyncCommand(RecoverPinAsync);
-        CallEmergencyCommand = new AsyncCommand(() => PhoneCall.DialAsync(Lines.Emergency));
+        CallEmergencyCommand = new AsyncCommand(CallEmergencyAsync);
+        CopyNumberCommand = new AsyncCommand(() => ShowDialFailure
+            ? clipboard.CopyWithFeedbackAsync(Lines.Emergency, AppStrings.QuoteCopied)
+            : Task.CompletedTask);
     }
 
     // The same numbers as the crisis screen: those of the country the phone is in.
@@ -68,17 +79,18 @@ public sealed class AppLockViewModel : BaseViewModel
     public string RecoveryText => AppStrings.AppLockForgotPin;
     public string PinEntryDescription => AppStrings.AppLockPinEntry;
     public string DeletePinDigitText => AppStrings.AppLockDeletePinDigit;
-    public string? StatusText => _statusText;
-    public bool HasStatus => !string.IsNullOrWhiteSpace(_statusText);
+    public string? StatusText => IsPinCoolingDown ? AppStrings.AppLockPinLockedOut(_cooldownSeconds) : _statusText;
+    public bool HasStatus => IsPinCoolingDown || !string.IsNullOrWhiteSpace(_statusText);
+    public bool IsPinCoolingDown => _cooldownSeconds > 0;
     public bool IsInitialized => _state != EntryState.Uninitialized;
     public bool IsPinEntryVisible => _state is EntryState.Create or EntryState.Confirm or EntryState.Unlock;
-    public bool CanEnterPin => IsPinEntryVisible && !_isBusy;
+    public bool CanEnterPin => IsPinEntryVisible && !_isBusy && !IsPinCoolingDown;
     public bool CanDeletePin => CanEnterPin && _pinInput.Length > 0;
     public ObservableCollection<bool> PinCells { get; } = new(Enumerable.Repeat(false, AppPinPolicy.Length));
     public bool HasSystemRecovery =>
         _authenticator.Availability != DeviceUnlockAvailability.Unsupported
         && _state is EntryState.Unlock or EntryState.RecoveryRequired;
-    public bool CanSubmitPin => IsPinEntryVisible && !_isBusy && AppPinPolicy.IsValid(_pinInput);
+    public bool CanSubmitPin => CanEnterPin && AppPinPolicy.IsValid(_pinInput);
 
     public string PinInput
     {
@@ -104,13 +116,17 @@ public sealed class AppLockViewModel : BaseViewModel
         }
     }
 
-    public string CallEmergencyText => AppStrings.AppLockEmergencyCall;
+    public string CallEmergencyText => AppStrings.CrisisHubCallEmergency(Lines.Emergency);
+    public bool ShowDialFailure => _showDialFailure;
+    public string DialFailureText => AppStrings.CrisisDialUnavailable(Lines.Emergency);
+    public string CopyNumberText => AppStrings.DonateCopyNumber;
 
     public ICommand SubmitPinCommand { get; }
     public ICommand AddPinDigitCommand { get; }
     public ICommand DeletePinDigitCommand { get; }
     public ICommand RecoverPinCommand { get; }
     public ICommand CallEmergencyCommand { get; }
+    public ICommand CopyNumberCommand { get; }
 
     public Task InitializeAsync() => _initialization ??= InitializeCoreAsync();
 
@@ -123,7 +139,35 @@ public sealed class AppLockViewModel : BaseViewModel
             nameof(RecoveryText),
             nameof(PinEntryDescription),
             nameof(DeletePinDigitText),
-            nameof(CallEmergencyText));
+            nameof(CallEmergencyText),
+            nameof(DialFailureText),
+            nameof(CopyNumberText),
+            nameof(StatusText));
+
+    internal void RefreshPinCooldown()
+    {
+        int seconds = _state == EntryState.Unlock && _cooldownDuration > TimeSpan.Zero
+            ? (int)Math.Ceiling(Math.Max(0, (_cooldownDuration - _clock.GetElapsedTime(_cooldownStarted)).TotalSeconds))
+            : 0;
+        if (seconds == _cooldownSeconds)
+        {
+            return;
+        }
+
+        bool wasCoolingDown = IsPinCoolingDown;
+        _cooldownSeconds = seconds;
+        Notify(nameof(StatusText), nameof(HasStatus));
+        if (IsPinCoolingDown != wasCoolingDown)
+        {
+            Notify(nameof(IsPinCoolingDown), nameof(CanEnterPin), nameof(CanDeletePin), nameof(CanSubmitPin));
+        }
+    }
+
+    private async Task CallEmergencyAsync()
+    {
+        bool opened = await PhoneCall.TryDialAsync(Lines.Emergency);
+        SetProperty(ref _showDialFailure, !opened, nameof(ShowDialFailure));
+    }
 
     private async Task InitializeCoreAsync()
     {
@@ -135,7 +179,6 @@ public sealed class AppLockViewModel : BaseViewModel
         {
             BestEffort.Report(ex);
             _state = EntryState.RecoveryRequired;
-            _statusText = AppStrings.AppLockPinStorageError;
         }
 
         OnPropertyChanged(nameof(IsInitialized));
@@ -244,18 +287,23 @@ public sealed class AppLockViewModel : BaseViewModel
                     return;
                 }
 
-                _statusText = result.IsLockedOut
-                    ? AppStrings.AppLockPinLockedOut(Math.Max(1, (int)Math.Ceiling(result.RetryAfter.TotalSeconds)))
-                    : AppStrings.AppLockPinIncorrect;
-                OnPropertyChanged(nameof(StatusText));
-                OnPropertyChanged(nameof(HasStatus));
+                if (result.IsLockedOut)
+                {
+                    _cooldownStarted = _clock.GetTimestamp();
+                    _cooldownDuration = result.RetryAfter;
+                    RefreshPinCooldown();
+                }
+                else
+                {
+                    _statusText = AppStrings.AppLockPinIncorrect;
+                    Notify(nameof(StatusText), nameof(HasStatus));
+                }
             }
         }
         catch (Exception ex)
         {
             BestEffort.Report(ex);
             _state = EntryState.RecoveryRequired;
-            _statusText = AppStrings.AppLockPinStorageError;
             Notify(nameof(TitleText), nameof(LeadText), nameof(IsPinEntryVisible), nameof(CanEnterPin), nameof(CanDeletePin), nameof(HasSystemRecovery), nameof(StatusText), nameof(HasStatus));
         }
         finally
@@ -290,6 +338,8 @@ public sealed class AppLockViewModel : BaseViewModel
                 _isResetting = true;
                 _state = EntryState.Create;
                 _statusText = null;
+                _cooldownDuration = TimeSpan.Zero;
+                RefreshPinCooldown();
                 Notify(
                     nameof(TitleText),
                     nameof(LeadText),

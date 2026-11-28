@@ -22,7 +22,8 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     private string _summary = string.Empty;
     private bool _isSaved;
     private bool _isRead;
-    private bool _markedRead;
+    private bool _isMarkingRead;
+    private bool _readSaveFailed;
 
     public ArticleReaderViewModel(INavigationService navigation, IReadingService reading, IDatabaseReadySignal databaseReady, string articleId)
     {
@@ -33,6 +34,11 @@ public sealed class ArticleReaderViewModel : BaseViewModel
         _articleId = articleId;
         BackCommand = new AsyncCommand(() => _navigation.GoBackAsync());
         SaveCommand = new AsyncCommand(ToggleSavedAsync);
+        RetryReadSaveCommand = new AsyncCommand(async () =>
+        {
+            _databaseReady.RequestRetry();
+            await MarkReadAsync();
+        });
         // This command must remain executable during speech so the same control can stop playback.
         ListenCommand = new Command(() => _readAloud.ToggleAsync(_spoken).FireAndForget());
         _readAloud.Changed += () => UiThread.RunAsync(() => Notify(
@@ -44,6 +50,7 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     public ICommand BackCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand ListenCommand { get; }
+    public ICommand RetryReadSaveCommand { get; }
 
     public string Title
     {
@@ -70,6 +77,9 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     public string? ListenError => _readAloud.HasError ? AppStrings.ArticleListenUnavailable : null;
     public bool HasListenError => _readAloud.HasError;
     public string ReadMarkText => AppStrings.ArticleReadMark;
+    public string ReadSaveFailedText => AppStrings.ArticleReadSaveFailed;
+    public string RetryReadSaveText => AppStrings.RetryQuestion;
+    public bool ShowReadSaveFailure => _readSaveFailed && !IsRead;
 
     public bool IsRead
     {
@@ -77,17 +87,34 @@ public sealed class ArticleReaderViewModel : BaseViewModel
         private set => SetProperty(ref _isRead, value);
     }
 
-    /// <summary>The page calls this once the end of the article is on screen.</summary>
-    public void ReachedEnd()
+    /// <summary>The page calls this when the end of the article is on screen.</summary>
+    public Task ReachedEndAsync() => _readSaveFailed ? Task.CompletedTask : MarkReadAsync();
+
+    private async Task MarkReadAsync()
     {
-        if (_markedRead)
+        if (IsRead || _isMarkingRead)
         {
             return;
         }
 
-        _markedRead = true;
-        IsRead = true;
-        _reading.MarkReadAsync(_articleId).FireAndForget();
+        _isMarkingRead = true;
+        try
+        {
+            await _databaseReady.WaitAsync();
+            await _reading.MarkReadAsync(_articleId);
+            IsRead = true;
+            _readSaveFailed = false;
+        }
+        catch (Exception error)
+        {
+            _readSaveFailed = true;
+            BestEffort.Report(error);
+        }
+        finally
+        {
+            _isMarkingRead = false;
+            OnPropertyChanged(nameof(ShowReadSaveFailure));
+        }
     }
 
     public void StopListening() => _readAloud.Stop();
@@ -113,9 +140,8 @@ public sealed class ArticleReaderViewModel : BaseViewModel
         await UiThread.RunAsync(() =>
         {
             _isSaved = state.Saved.Contains(_articleId);
-            _markedRead |= state.Read.Contains(_articleId);
-            IsRead = _markedRead;
-            Notify(nameof(SaveText), nameof(SaveIcon));
+            IsRead |= state.Read.Contains(_articleId);
+            Notify(nameof(SaveText), nameof(SaveIcon), nameof(ShowReadSaveFailure));
         });
     }
 
@@ -129,6 +155,7 @@ public sealed class ArticleReaderViewModel : BaseViewModel
     protected override void RefreshLocalizedProperties()
     {
         Load();
-        Notify(nameof(SaveText), nameof(ListenText), nameof(ListenError), nameof(ReadMarkText));
+        Notify(nameof(SaveText), nameof(ListenText), nameof(ListenError), nameof(ReadMarkText),
+            nameof(ReadSaveFailedText), nameof(RetryReadSaveText));
     }
 }

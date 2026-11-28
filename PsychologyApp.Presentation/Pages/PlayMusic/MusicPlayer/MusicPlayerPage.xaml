@@ -134,6 +134,10 @@
                             TextColor="{AppThemeBinding Light={DynamicResource PrimaryTextLight}, Dark={DynamicResource PrimaryTextDark}}"
                             HorizontalTextAlignment="End" />
                     </Grid>
+                    <ui:RetryView IsVisible="{Binding PlaybackFailed}"
+                                  FailedText="{Binding PlaybackFailedText}"
+                                  RetryText="{Binding RetryText}"
+                                  RetryCommand="{Binding RetryPlaybackCommand}" />
                 </VerticalStackLayout>
             </Border>
         </Grid>

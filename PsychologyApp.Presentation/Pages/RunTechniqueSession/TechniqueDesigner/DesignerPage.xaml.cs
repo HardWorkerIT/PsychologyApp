@@ -34,6 +34,15 @@ public partial class DesignerPage : ContentPage
         _keyboard.Restore();
     }
 
+    protected override bool OnBackButtonPressed()
+    {
+        if (_viewModel.Finish.CanExecute(null))
+        {
+            _viewModel.Finish.Execute(null);
+        }
+        return true;
+    }
+
     protected override void OnHandlerChanged()
     {
         base.OnHandlerChanged();

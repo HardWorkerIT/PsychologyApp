@@ -23,6 +23,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <Grid RowDefinitions="*,Auto">
     <ScrollView VerticalScrollBarVisibility="Never">
         <VerticalStackLayout
             Margin="{StaticResource LayoutPageMarginThickness}"
@@ -100,6 +101,13 @@
                     HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
 
+            <Label
+                Text="{Binding StatusText}"
+                TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
+                FontSize="{DynamicResource CaptionFontSize}"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding HasStatus}" />
+
             <VerticalStackLayout x:Name="PinEntryPanel" Spacing="8" IsVisible="{Binding IsPinEntryVisible}">
                 <HorizontalStackLayout
                     x:Name="PinCellsLayout"
@@ -156,20 +164,33 @@
                     <ui:ButtonView Grid.Row="3" Grid.Column="1" Style="{StaticResource AppLockPinKeyStyle}" BodyText="0" TapCommand="{Binding AddPinDigitCommand}" CommandParameter="0" />
                     <ui:ButtonView Grid.Row="3" Grid.Column="2" Style="{StaticResource AppLockPinKeyStyle}" BodyText="⌫" IsEnabled="{Binding CanDeletePin}" TapCommand="{Binding DeletePinDigitCommand}" AccessibilityLabel="{Binding DeletePinDigitText}" />
                 </Grid>
-
-                <Label
-                    Text="{Binding StatusText}"
-                    TextColor="{AppThemeBinding Light={StaticResource Danger}, Dark={StaticResource DangerDark}}"
-                    FontSize="{DynamicResource CaptionFontSize}"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding HasStatus}" />
-                <ui:ButtonView
-                    Variant="Secondary"
-                    IsCompact="True"
-                    BodyText="{Binding RecoveryText}"
-                    TapCommand="{Binding RecoverPinCommand}"
-                    IsVisible="{Binding HasSystemRecovery}" />
             </VerticalStackLayout>
+
+            <ui:ButtonView
+                Variant="Secondary"
+                IsCompact="True"
+                BodyText="{Binding RecoveryText}"
+                TapCommand="{Binding RecoverPinCommand}"
+                IsVisible="{Binding HasSystemRecovery}" />
         </VerticalStackLayout>
     </ScrollView>
+        <VerticalStackLayout Grid.Row="1"
+                             Margin="{StaticResource LayoutPageMarginThickness}"
+                             Spacing="8">
+            <Label Text="{Binding DialFailureText}"
+                   IsVisible="{Binding ShowDialFailure}"
+                   Style="{StaticResource BodyStyle}"
+                   HorizontalTextAlignment="Center" />
+            <ui:ButtonView Variant="Secondary"
+                           IsCompact="True"
+                           IsVisible="{Binding ShowDialFailure}"
+                           BodyText="{Binding CopyNumberText}"
+                           TapCommand="{Binding CopyNumberCommand}" />
+            <ui:ButtonView Variant="Secondary"
+                           IsCompact="True"
+                           MinimumHeightRequest="48"
+                           BodyText="{Binding CallEmergencyText}"
+                           TapCommand="{Binding CallEmergencyCommand}" />
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>

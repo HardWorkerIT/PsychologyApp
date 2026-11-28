@@ -71,10 +71,12 @@ public sealed class RiskCheckViewModelFactory(
 
 public sealed class SafetyPlanViewModelFactory(
     IClinicalCareService clinicalCareService,
+    IDialogService dialogs,
+    PsychologyApp.Presentation.Shared.Services.Clipboard.IAppClipboardService clipboard,
     Func<NavigationContext, INavigationService> navigationServiceFactory) : ViewModelFactoryBase, ISafetyPlanViewModelFactory
 {
     public SafetyPlanViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page), clinicalCareService);
+        new(ResolveNavigation(navigationServiceFactory, page), clinicalCareService, dialogs, clipboard);
 }
 
 public sealed class ExposureViewModelFactory(

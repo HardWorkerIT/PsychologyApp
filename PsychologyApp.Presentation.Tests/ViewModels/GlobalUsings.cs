@@ -21,3 +21,4 @@ global using Microsoft.Maui.Storage;
 global using Microsoft.Maui.Graphics;
 global using Microsoft.Maui.Dispatching;
 global using Microsoft.Maui.Devices;
+global using Microsoft.Maui.Media;

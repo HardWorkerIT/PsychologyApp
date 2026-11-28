@@ -213,7 +213,7 @@ public sealed class TechniquesViewModelTests
     {
         Mock<IUserProgressService> progress = new();
         progress.Setup(p => p.GetRecentMoodsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
-        progress.Setup(p => p.GetRecentSessionResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        progress.Setup(p => p.GetRecentPracticeIntensityAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
         progress.Setup(p => p.GetStreakDaysAsync(It.IsAny<CancellationToken>())).ReturnsAsync(2);
         progress.Setup(p => p.GetLastTechniqueCompletionDateAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(DateTime.UtcNow);
@@ -264,7 +264,7 @@ public sealed class TechniquesViewModelTests
 
         Mock<IUserProgressService> progress = new();
         progress.Setup(p => p.GetRecentMoodsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
-        progress.Setup(p => p.GetRecentSessionResultsAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        progress.Setup(p => p.GetRecentPracticeIntensityAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync([]);
         progress.Setup(p => p.GetStreakDaysAsync(It.IsAny<CancellationToken>())).ReturnsAsync(0);
         progress.Setup(p => p.GetLastTechniqueCompletionDateAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync((DateTime?)null);
@@ -322,6 +322,28 @@ public sealed class TechniquesViewModelTests
         Assert.Contains(viewModel.TechniqueGroups.SelectMany(g => g), item => item.Id == 42);
     }
 
+    [Theory]
+    [InlineData(false, 1)]
+    [InlineData(true, 2)]
+    public async Task OnlyTheBackButtonReturnsFromFinderSituationsToTheMainPicker(bool usedBackButton, int mainPickerOpenCount)
+    {
+        var dialogs = new Mock<IDialogService>();
+        dialogs.SetupSequence(d => d.PickOptionAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<DialogOptionItem>>(), It.IsAny<string>()))
+            .ReturnsAsync("feature:practice-finder")
+            .ReturnsAsync((string?)null);
+        dialogs.Setup(d => d.PickOptionStepAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<DialogOptionItem>>(), It.IsAny<string>()))
+            .ReturnsAsync(new DialogSelection<string>(null, usedBackButton));
+        IUserProgressService progress = Mock.Of<IUserProgressService>();
+        var viewModel = CreateViewModel(Mock.Of<ITechniqueService>(), Mock.Of<INavigationService>(),
+            CreateDashboardLoader(progress, new InMemoryUserPreferencesStore()), progress, dialogs: dialogs.Object);
+
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.FindPracticeCommand);
+
+        dialogs.Verify(d => d.PickOptionStepAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<DialogOptionItem>>(), It.IsAny<string>()), Times.Once);
+        dialogs.Verify(d => d.PickOptionAsync(It.IsAny<string>(), It.IsAny<IReadOnlyList<DialogOptionItem>>(), It.IsAny<string>()),
+            Times.Exactly(mainPickerOpenCount));
+    }
+
     private static PracticeDashboardLoader CreateDashboardLoader(
         IUserProgressService progress,
         IUserPreferencesStore preferences) =>
@@ -338,12 +360,13 @@ public sealed class TechniquesViewModelTests
         IUserProgressService userProgressService,
         ITechniqueMessenger? techniqueMessenger = null,
         IUserPreferencesStore? preferences = null,
-        IDatabaseReadySignal? databaseReady = null)
+        IDatabaseReadySignal? databaseReady = null,
+        IDialogService? dialogs = null)
     {
         return new TechniquesViewModel(
             techniqueService,
             Mock.Of<IToastService>(),
-            Mock.Of<PsychologyApp.Presentation.Shared.Services.Dialogs.IDialogService>(),
+            dialogs ?? Mock.Of<IDialogService>(),
             techniqueMessenger ?? Mock.Of<ITechniqueMessenger>(),
             navigationService,
             new TechniqueListBuilder(userProgressService, TechniqueCatalogTestHelper.CreateGateway()),

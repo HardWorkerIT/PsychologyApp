@@ -11,5 +11,6 @@ public sealed class TestResultInfo
     public TechniqueId? RecommendedTechnique { get; init; }
     public string? TestId { get; init; }
     public QuestionnaireResultDetail? Detail { get; init; }
+    public bool NeedsUrgentHelp { get; init; }
     public DateTime CompletedAtUtc { get; init; } = DateTime.UtcNow;
 }

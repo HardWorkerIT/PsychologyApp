@@ -9,7 +9,7 @@
 
     <Grid
         x:Name="DialogCardHost"
-        Margin="32"
+        Margin="16,24"
         VerticalOptions="Center"
         HorizontalOptions="Center">
         <Border
@@ -18,27 +18,30 @@
             VerticalOptions="Center"
             HorizontalOptions="Center">
             <VerticalStackLayout Spacing="0">
-                <VerticalStackLayout
-                    Padding="20,20,20,16"
-                    Spacing="8">
-                    <Label
-                        x:Name="TitleLabel"
-                        Style="{StaticResource AppDialogTitleStyle}" />
-                    <Label
-                        x:Name="MessageLabel"
-                        Style="{StaticResource AppDialogMessageStyle}" />
-                    <Border
-                        x:Name="InputBorder"
-                        IsVisible="False"
-                        Style="{StaticResource InputBorderStyle}"
-                        Padding="10,2">
-                        <Entry
-                            x:Name="InputEntry"
-                            ReturnType="Done"
-                            Completed="OnEntryCompleted"
-                            Style="{StaticResource InputTextStyle}" />
-                    </Border>
-                </VerticalStackLayout>
+                <ScrollView x:Name="MessageScroll" MaximumHeightRequest="360">
+                    <VerticalStackLayout
+                        Padding="20,20,20,16"
+                        Spacing="8">
+                        <Label
+                            x:Name="TitleLabel"
+                            Style="{StaticResource AppDialogTitleStyle}" />
+                        <Label
+                            x:Name="MessageLabel"
+                            Style="{StaticResource AppDialogMessageStyle}"
+                            LineBreakMode="WordWrap" />
+                        <Border
+                            x:Name="InputBorder"
+                            IsVisible="False"
+                            Style="{StaticResource InputBorderStyle}"
+                            Padding="10,2">
+                            <Entry
+                                x:Name="InputEntry"
+                                ReturnType="Done"
+                                Completed="OnEntryCompleted"
+                                Style="{StaticResource InputTextStyle}" />
+                        </Border>
+                    </VerticalStackLayout>
+                </ScrollView>
 
                 <BoxView Style="{StaticResource AppDialogDividerStyle}" />
 
@@ -57,6 +60,9 @@
                         <Label
                             x:Name="CancelLabel"
                             Style="{StaticResource AppDialogActionLabelStyle}"
+                            LineBreakMode="WordWrap"
+                            HorizontalOptions="Fill"
+                            Margin="8,6"
                             InputTransparent="True" />
                     </Border>
 
@@ -76,6 +82,9 @@
                         <Label
                             x:Name="AcceptLabel"
                             Style="{StaticResource AppDialogPrimaryActionLabelStyle}"
+                            LineBreakMode="WordWrap"
+                            HorizontalOptions="Fill"
+                            Margin="8,6"
                             InputTransparent="True" />
                     </Border>
                 </Grid>

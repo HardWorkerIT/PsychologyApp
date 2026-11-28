@@ -238,6 +238,7 @@ public static partial class AppStrings
     public static string UnexpectedErrorMessage => R(nameof(UnexpectedErrorMessage));
     public static string TestsResultSaveFailedMessage => R(nameof(TestsResultSaveFailedMessage));
     public static string TestsResultNavigationFailedMessage => R(nameof(TestsResultNavigationFailedMessage));
+    public static string TestsOpenSavedResult => R(nameof(TestsOpenSavedResult));
     public static string TechniqueNotFound => R(nameof(TechniqueNotFound));
     public static string QuoteNotFound => R(nameof(QuoteNotFound));
 
@@ -653,6 +654,13 @@ public static partial class AppStrings
     public static string QuotesSearchError => R(nameof(QuotesSearchError));
     public static string LoadFailed => R(nameof(LoadFailed));
     public static string RetryQuestion => R(nameof(RetryQuestion));
+    public static string UnsavedExitTitle => R(nameof(UnsavedExitTitle));
+    public static string TestsDiscardAnswers => R(nameof(TestsDiscardAnswers));
+    public static string DesignerDiscardChanges => R(nameof(DesignerDiscardChanges));
+    public static string SafetyPlanContactPhoneInvalid => R(nameof(SafetyPlanContactPhoneInvalid));
+    public static string AudioPlaybackFailed => R(nameof(AudioPlaybackFailed));
+    public static string JournalSaveFailed => R(nameof(JournalSaveFailed));
+    public static string DialogueAnswersSaveFailed => R(nameof(DialogueAnswersSaveFailed));
     public static string LoadError => R(nameof(LoadError));
 
     public static string ProfileTitle => R(nameof(ProfileTitle));

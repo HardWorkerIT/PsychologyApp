@@ -3,6 +3,9 @@ using Moq;
 using PsychologyApp.Application.ClinicalCare;
 using PsychologyApp.Application.Models;
 using PsychologyApp.Presentation.Pages.ClinicalCare.SafetyPlan;
+using PsychologyApp.Presentation.Shared.Services.Clipboard;
+using PsychologyApp.Presentation.Shared.Services.Dialogs;
+using PsychologyApp.Presentation.Shared.UI.Overlays;
 using Xunit;
 
 namespace PsychologyApp.Presentation.Tests.ViewModels;
@@ -13,6 +16,8 @@ public sealed class SafetyPlanViewModelTests
 {
     private readonly Mock<INavigationService> _navigation = new();
     private readonly Mock<IClinicalCareService> _care = new();
+    private readonly Mock<IDialogService> _dialogs = new();
+    private readonly Mock<IAppClipboardService> _clipboard = new();
     private readonly List<SafetyPlanDTO> _saved = [];
 
     public SafetyPlanViewModelTests()
@@ -28,7 +33,7 @@ public sealed class SafetyPlanViewModelTests
     private async Task<SafetyPlanViewModel> CreateAsync(SafetyPlanDTO? plan = null)
     {
         _care.Setup(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>())).ReturnsAsync(plan ?? new SafetyPlanDTO());
-        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object);
+        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object, _dialogs.Object, _clipboard.Object);
         await VmTestHelpers.WaitUntilAsync(() => _care.Invocations.Any(i => i.Method.Name == nameof(IClinicalCareService.GetSafetyPlanAsync)));
         await Task.Delay(30);
         return viewModel;
@@ -41,7 +46,7 @@ public sealed class SafetyPlanViewModelTests
         _care.SetupSequence(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>()))
             .Returns(initialRead.Task)
             .ReturnsAsync(new SafetyPlanDTO { Contacts = [new SafetyPlanContactDTO { Name = "Anna", Phone = "1" }] });
-        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object);
+        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object, _dialogs.Object, _clipboard.Object);
         Assert.True(viewModel.IsPlanLoading);
         Assert.False(viewModel.IsPlanReady);
 
@@ -76,7 +81,7 @@ public sealed class SafetyPlanViewModelTests
     {
         TaskCompletionSource<SafetyPlanDTO> load = new(TaskCreationOptions.RunContinuationsAsynchronously);
         _care.Setup(c => c.GetSafetyPlanAsync(It.IsAny<CancellationToken>())).Returns(load.Task);
-        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object)
+        SafetyPlanViewModel viewModel = new(_navigation.Object, _care.Object, _dialogs.Object, _clipboard.Object)
         {
             NewCopingStrategyText = "call a friend"
         };
@@ -150,12 +155,17 @@ public sealed class SafetyPlanViewModelTests
     }
 
     [Fact]
-    public async Task AContactNeedsANameOrAPhone()
+    public async Task AContactNeedsADiallablePhone()
     {
         SafetyPlanViewModel viewModel = await CreateAsync();
 
+        viewModel.NewContactName = "A friend";
+        viewModel.NewContactPhone = "not a phone";
         await VmTestHelpers.RunAsync(viewModel.AddContactCommand);
         Assert.Empty(viewModel.Contacts);
+        Assert.Empty(_saved);
+        Assert.Equal("A friend", viewModel.NewContactName);
+        _dialogs.Verify(dialogs => dialogs.ShowAsync(AppStrings.SafetyPlanContactsTitle, AppStrings.SafetyPlanContactPhoneInvalid), Times.Once);
 
         viewModel.NewContactPhone = " 112 ";
         await VmTestHelpers.RunAsync(viewModel.AddContactCommand);
@@ -174,20 +184,30 @@ public sealed class SafetyPlanViewModelTests
             Contacts = [new SafetyPlanContactDTO { Name = "Anna", Phone = "+7 900" }, new SafetyPlanContactDTO { Name = "No number", Phone = "" }]
         });
 
-        await VmTestHelpers.RunAsync(viewModel.Contacts[0].CallCommand);
-        await VmTestHelpers.RunAsync(viewModel.Contacts[1].CallCommand);
+        await VmTestHelpers.RunAsync(Assert.IsAssignableFrom<System.Windows.Input.ICommand>(viewModel.Contacts[0].CallCommand));
+        Assert.False(viewModel.Contacts[1].CanCall);
+        Assert.Null(viewModel.Contacts[1].CallCommand);
 
         Assert.Equal(["tel:+7 900"], Launcher.Opened);
     }
 
     [Fact]
-    public async Task ADialIntentThatFailsDoesNotCrashTheScreen()
+    public async Task ADialIntentThatFailsOffersToCopyTheContactNumber()
     {
         SafetyPlanViewModel viewModel = await CreateAsync(new SafetyPlanDTO { Contacts = [new SafetyPlanContactDTO { Name = "Anna", Phone = "1" }] });
         Launcher.FailWith = new InvalidOperationException("no dialer");
 
-        await VmTestHelpers.RunAsync(viewModel.Contacts[0].CallCommand);
+        _dialogs.Setup(dialogs => dialogs.AskAsync(null, AppStrings.CrisisDialUnavailable("1"), AppStrings.DonateCopyNumber, AppStrings.Cancel))
+            .ReturnsAsync(true);
+        try
+        {
+            await VmTestHelpers.RunAsync(Assert.IsAssignableFrom<System.Windows.Input.ICommand>(viewModel.Contacts[0].CallCommand));
 
-        Assert.True(viewModel.Contacts[0].CallCommand.CanExecute(null));
+            _clipboard.Verify(service => service.CopyWithFeedbackAsync("1", AppStrings.QuoteCopied, AppToastKind.Success), Times.Once);
+        }
+        finally
+        {
+            Launcher.FailWith = null;
+        }
     }
 }
