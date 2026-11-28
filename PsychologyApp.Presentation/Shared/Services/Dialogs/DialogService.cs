@@ -126,7 +126,13 @@ public class DialogService(IPageHost pageHost) : IDialogService
         }
     }
 
-    public async Task<string?> PromptPasswordSheetAsync(string? title, string message, string placeholder, string accept, string cancel)
+    public Task<string?> PromptPasswordSheetAsync(string? title, string message, string placeholder, string accept, string cancel) =>
+        PromptInputSheetAsync(title, message, accept, cancel, new AppDialogInput(placeholder, IsPassword: true));
+
+    public Task<string?> PromptPinSheetAsync(string? title, string message, string placeholder, string accept, string cancel) =>
+        PromptInputSheetAsync(title, message, accept, cancel, new AppDialogInput(placeholder, IsPassword: true, IsPin: true));
+
+    private async Task<string?> PromptInputSheetAsync(string? title, string message, string accept, string cancel, AppDialogInput input)
     {
         if (!TryEnter())
         {
@@ -141,7 +147,7 @@ public class DialogService(IPageHost pageHost) : IDialogService
                 message,
                 accept,
                 cancel,
-                new AppDialogInput(placeholder, IsPassword: true));
+                input);
             IPopupResult popupResult = await page.ShowPopupAsync(popup, AppPopupOptions.OptionsSheet);
             if (popupResult.WasDismissedByTappingOutsideOfPopup || popup.DialogResult != true)
             {

@@ -7,18 +7,19 @@ namespace PsychologyApp.Presentation.Tests;
 public sealed class JournalScreenCoordinatorTests
 {
     [Fact]
-    public async Task OpenEditorDay_WhenHubBelow_SetsPendingAndGoesBack()
+    public async Task ReturningFromTimelineReopensTheEditorEvenWhenTheStackOmitsItsRoot()
     {
         var editorContext = new JournalEditorContext();
         var coordinator = new JournalScreenCoordinator(editorContext);
         var navigation = new FakeNavigation();
-        navigation.Stack.Add(new HubStubPage());
         navigation.Stack.Add(new ContentPage());
         var navService = new StackNavigationService(navigation);
 
-        await coordinator.OpenEditorDayAsync(new DateOnly(2026, 7, 20), navService);
+        var day = new DateOnly(2026, 7, 20);
+        await coordinator.ReturnToEditorAsync(day, navService, 12);
 
-        Assert.Equal(new DateOnly(2026, 7, 20), editorContext.PendingEditorDay);
+        Assert.Equal((day, (long?)12), editorContext.ConsumePendingTarget());
+        Assert.Null(editorContext.ConsumePendingTarget());
         Assert.Equal(1, navService.GoBackCalls);
         Assert.Equal(0, navService.GoToJournalCalls);
     }
@@ -34,12 +35,11 @@ public sealed class JournalScreenCoordinatorTests
 
         await coordinator.OpenEditorDayAsync(new DateOnly(2026, 7, 21), navService);
 
-        Assert.Equal(new DateOnly(2026, 7, 21), editorContext.PendingEditorDay);
+        Assert.Equal(new DateOnly(2026, 7, 21), editorContext.PendingTarget?.Day);
+        Assert.Null(editorContext.PendingTarget?.EntryId);
         Assert.Equal(0, navService.GoBackCalls);
         Assert.Equal(1, navService.GoToJournalCalls);
     }
-
-    private sealed class HubStubPage : ContentPage, IJournalHubPage;
 
     private sealed class FakeNavigation : INavigation
     {

@@ -131,7 +131,7 @@
                 <Label Text="{Binding NotDiagnosisText}" Style="{StaticResource CaptionStyle}" />
             </VerticalStackLayout>
 
-            <!-- After saving: help when the words read as a crisis, practices otherwise. -->
+            <!-- Help is available even when saving the check-in fails. -->
             <Border
                 Style="{StaticResource BrandCardStyle}"
                 Margin="0"

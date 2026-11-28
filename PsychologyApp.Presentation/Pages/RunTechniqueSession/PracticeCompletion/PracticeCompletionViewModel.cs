@@ -26,6 +26,10 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     private long? _lifetimeCount;
     private bool _sessionOutcomeReviewed;
     private readonly SemaphoreSlim _reflectionGate = new(1, 1);
+    private readonly SemaphoreSlim _postIntensityGate = new(1, 1);
+    private int? _pendingPostIntensity;
+    private bool _postIntensityEdited;
+    private bool _hasPostIntensitySaveError;
     private string _savedReflectionNote = string.Empty;
     private string _journalReflectionNote = string.Empty;
     private bool _reflectionSaveFailed;
@@ -69,6 +73,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         NextPracticeCommand = new AsyncCommand(() => LeaveAsync(StartNextPracticeAsync));
         FinishCommand = new AsyncCommand(FinishAsync);
         SaveReflectionCommand = new AsyncCommand(SaveReflectionNoteAsync);
+        RetryPostIntensityCommand = new AsyncCommand(SavePostIntensityAsync);
         SupportProjectCommand = new AsyncCommand(_donationSupportService.ShowTransferInstructionsAsync);
         DismissSupportPromptCommand = new Command(() => ShowSupportPrompt = false);
         CrisisCommand = new AsyncCommand(() => _navigationService.GoToCrisisHubAsync());
@@ -137,11 +142,23 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
                 && int.TryParse(value, out int parsed)
                 && parsed is >= 0 and <= 10)
             {
-                SavePostIntensityAsync(parsed).FireAndForget();
+                _postIntensityEdited = true;
+                _pendingPostIntensity = parsed;
+                HasPostIntensitySaveError = false;
                 NotifySudsDelta();
+                SavePostIntensityAsync().FireAndForget();
             }
         }
     }
+
+    public bool HasPostIntensitySaveError
+    {
+        get => _hasPostIntensitySaveError;
+        private set => SetProperty(ref _hasPostIntensitySaveError, value);
+    }
+
+    public string PostIntensitySaveErrorText => AppStrings.PracticeIntensitySaveFailed;
+    public string RetryPostIntensityText => AppStrings.RetryQuestion;
 
     public bool HasSudsDelta =>
         _preIntensity is >= 0 and <= 10
@@ -310,6 +327,7 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
     public ICommand NextPracticeCommand { get; }
     public ICommand FinishCommand { get; }
     public ICommand SaveReflectionCommand { get; }
+    public ICommand RetryPostIntensityCommand { get; }
     public ICommand CrisisCommand { get; }
     public ICommand ToggleAnswersCommand { get; }
     public ICommand ToggleCheckInCommand { get; }
@@ -338,6 +356,8 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
             nameof(ReflectionQuestion),
             nameof(ReflectionNotePlaceholder),
             nameof(PostSudsLabel),
+            nameof(PostIntensitySaveErrorText),
+            nameof(RetryPostIntensityText),
             nameof(SudsSectionTitle),
             nameof(MoodSectionTitle),
             nameof(HasSudsDelta),
@@ -408,18 +428,21 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
                 await UiThread.RunAsync(() => IsCrisis = true);
             }
             bool outcomeReviewed = await ShowAnswersAsync(result);
-            if (result?.PreIntensity is >= 0 and <= 10)
+            await UiThread.RunAsync(() =>
             {
-                _preIntensity = result.PreIntensity.Value;
-                NotifySudsDelta();
-            }
+                if (result?.PreIntensity is >= 0 and <= 10)
+                {
+                    _preIntensity = result.PreIntensity.Value;
+                }
 
-            if (result?.PostIntensity is >= 0 and <= 10)
-            {
-                _postIntensityText = result.PostIntensity.Value.ToString();
-                OnPropertyChanged(nameof(PostIntensityText));
+                if (!_postIntensityEdited && result?.PostIntensity is >= 0 and <= 10)
+                {
+                    _postIntensityText = result.PostIntensity.Value.ToString();
+                    OnPropertyChanged(nameof(PostIntensityText));
+                }
+
                 NotifySudsDelta();
-            }
+            });
 
             if (outcomeReviewed)
             {
@@ -442,21 +465,42 @@ public sealed class PracticeCompletionViewModel : BaseViewModel
         }
     }
 
-    private async Task SavePostIntensityAsync(int postIntensity)
+    private async Task SavePostIntensityAsync()
     {
         if (_sessionResultId is null)
         {
             return;
         }
 
+        await _postIntensityGate.WaitAsync();
         try
         {
-            await _userProgressService.UpdateSessionResultPostIntensityAsync(_sessionResultId.Value, postIntensity);
+            if (_pendingPostIntensity is not int value)
+            {
+                return;
+            }
+
+            try
+            {
+                await _userProgressService.UpdateSessionResultPostIntensityAsync(_sessionResultId.Value, value);
+                if (_pendingPostIntensity == value)
+                {
+                    _pendingPostIntensity = null;
+                    HasPostIntensitySaveError = false;
+                }
+            }
+            catch (Exception saveError)
+            {
+                BestEffort.Report(saveError);
+                if (_pendingPostIntensity == value)
+                {
+                    HasPostIntensitySaveError = true;
+                }
+            }
         }
-        catch (Exception bestEffortError)
+        finally
         {
-            // Post-SUDS is optional; completion still works without persistence.
-            BestEffort.Report(bestEffortError);
+            _postIntensityGate.Release();
         }
     }
 

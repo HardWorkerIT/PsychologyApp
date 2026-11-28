@@ -46,6 +46,7 @@ public sealed class JournalViewModel : BaseViewModel
     /// stay disabled until its snapshot arrives.
     /// </summary>
     private bool _editorStale = true;
+    private long? _selectedTimelineEntryId;
 
     public JournalViewModel(
         JournalMoodLoader journalMoodLoader,
@@ -413,12 +414,13 @@ public sealed class JournalViewModel : BaseViewModel
     {
         await FlushPendingNoteSaveAsync();
         DateOnly today = DateOnly.FromDateTime(DateTime.Today);
-        DateOnly day = _editorContext.ConsumePendingEditorDay() ?? today;
+        var target = _editorContext.ConsumePendingTarget();
+        DateOnly day = target?.Day ?? today;
         // The slot stays when the day does (a check-in of today the person was on); back to today it is the current one.
         JournalCheckInSlot slot = day == _editorDay || day != today ? _editorSlot : CurrentSlot();
         // The week ends today unless the day asked for lies before it; then it ends on that day.
         _weekStripEnd = day >= today.AddDays(-6) ? today : day;
-        MoveEditor(day, slot);
+        MoveEditor(day, slot, target?.EntryId);
         await LoadAsync();
     }
 
@@ -426,9 +428,9 @@ public sealed class JournalViewModel : BaseViewModel
         MoodCheckInSlotPolicy.IsMorningLocalHour(DateTime.Now.Hour) ? JournalCheckInSlot.Morning : JournalCheckInSlot.Evening;
 
     /// <summary>Points the editor at another check-in; until it loads, the one on screen is not saved over it.</summary>
-    private void MoveEditor(DateOnly day, JournalCheckInSlot slot)
+    private void MoveEditor(DateOnly day, JournalCheckInSlot slot, long? selectedEntryId = null)
     {
-        if (day == _editorDay && slot == _editorSlot)
+        if (day == _editorDay && slot == _editorSlot && selectedEntryId == _selectedTimelineEntryId)
         {
             return;
         }
@@ -436,6 +438,7 @@ public sealed class JournalViewModel : BaseViewModel
         bool dayChanged = day != _editorDay;
         _editorDay = day;
         _editorSlot = slot;
+        _selectedTimelineEntryId = selectedEntryId;
         _editorStale = true;
         if (dayChanged)
         {
@@ -478,7 +481,7 @@ public sealed class JournalViewModel : BaseViewModel
 
     private async Task SelectSlotAsync(JournalCheckInSlot slot)
     {
-        if (_editorSlot == slot)
+        if (_editorSlot == slot && _selectedTimelineEntryId is null)
         {
             return;
         }
@@ -571,7 +574,8 @@ public sealed class JournalViewModel : BaseViewModel
                 editorDay: _editorDay,
                 weekStripEnd: _weekStripEnd,
                 editorSlot: _editorSlot,
-                calendarScale: JournalCalendarScale.Week);
+                calendarScale: JournalCalendarScale.Week,
+                selectedEntryId: _selectedTimelineEntryId);
             await UiThread.RunAsync(() =>
             {
                 if (generation == Volatile.Read(ref _loadGeneration))

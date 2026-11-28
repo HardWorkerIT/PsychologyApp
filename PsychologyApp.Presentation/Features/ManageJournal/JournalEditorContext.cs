@@ -2,12 +2,12 @@ namespace PsychologyApp.Presentation.Features.ManageJournal;
 
 public sealed class JournalEditorContext
 {
-    public DateOnly? PendingEditorDay { get; set; }
+    public (DateOnly Day, long? EntryId)? PendingTarget { get; set; }
 
-    public DateOnly? ConsumePendingEditorDay()
+    public (DateOnly Day, long? EntryId)? ConsumePendingTarget()
     {
-        DateOnly? day = PendingEditorDay;
-        PendingEditorDay = null;
-        return day;
+        var target = PendingTarget;
+        PendingTarget = null;
+        return target;
     }
 }

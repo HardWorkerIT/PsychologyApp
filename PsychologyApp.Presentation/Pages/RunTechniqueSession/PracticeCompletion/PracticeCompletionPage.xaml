@@ -79,6 +79,13 @@
                                 <ui:RatingEntryView
                                     TitleText="{Binding PostSudsLabel}"
                                     BodyText="{Binding PostIntensityText, Mode=TwoWay}" />
+                                <VerticalStackLayout IsVisible="{Binding HasPostIntensitySaveError}" Spacing="8">
+                                    <Label Text="{Binding PostIntensitySaveErrorText}" Style="{StaticResource CaptionStyle}" />
+                                    <ui:ButtonView
+                                        Variant="Secondary"
+                                        BodyText="{Binding RetryPostIntensityText}"
+                                        TapCommand="{Binding RetryPostIntensityCommand}" />
+                                </VerticalStackLayout>
                                 <BoxView Style="{StaticResource SubtleDividerStyle}" Margin="{StaticResource FieldTopMargin}" />
                                 <Label Text="{Binding MoodSectionTitle}" Style="{StaticResource SectionTitleStyle}" />
                                 <mood:MoodStripView

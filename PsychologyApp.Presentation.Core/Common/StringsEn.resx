@@ -1571,7 +1571,7 @@
     <value>Emergency call</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>Forgot your PIN? Verify your identity</value>
+    <value>Forgot PIN?</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>Create a new app PIN.</value>
@@ -4697,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Discard and leave</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>The dialer could not open. Dial {0} manually or copy the number.</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>AI chat</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>Could not save the tension rating.</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>Could not access the protected PIN. Try again or recover your PIN.</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>The PIN is still unavailable.</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>Open security settings</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>Screen lock recovery is unavailable on this device.</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>Checking your PIN…</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>You can enter your PIN again.</value>
+  </data>
 </root>

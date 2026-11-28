@@ -3,6 +3,7 @@ using PsychologyApp.Application.Models;
 using PsychologyApp.Application.Practice;
 using PsychologyApp.Application.Exposure;
 using PsychologyApp.Application.Body;
+using PsychologyApp.Application.Conversation;
 using PsychologyApp.Presentation.App.Providers;
 using PsychologyApp.Presentation.Pages.ClinicalCare.CrisisHub;
 using PsychologyApp.Presentation.Pages.ClinicalCare.RiskCheck;
@@ -89,13 +90,14 @@ public sealed class ExposureViewModelFactory(
 
 public sealed class BodyCheckViewModelFactory(
     IBodyService bodyService,
+    ICrisisDetector crisisDetector,
     IDialogService dialogs,
     IDatabaseReadySignal databaseReady,
     Func<NavigationContext, INavigationService> navigationServiceFactory,
     ITechniqueCatalogService? techniqueCatalog = null) : ViewModelFactoryBase, IBodyCheckViewModelFactory
 {
     public BodyCheckViewModel Create(ContentPage page) =>
-        new(ResolveNavigation(navigationServiceFactory, page), bodyService, dialogs, databaseReady, techniqueCatalog);
+        new(ResolveNavigation(navigationServiceFactory, page), bodyService, crisisDetector, dialogs, databaseReady, techniqueCatalog);
 }
 
 public sealed class ClinicalCarePageFactory(

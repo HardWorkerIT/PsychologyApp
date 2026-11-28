@@ -47,6 +47,7 @@
     <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Articles/ArticlesViewModel.cs" Link="Linked/Pages/ReadArticles/Articles/ArticlesViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CoursesViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CoursesViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CourseDayViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CourseDayViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ReadArticles/Courses/CourseViewModel.cs" Link="Linked/Pages/ReadArticles/Courses/CourseViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCardItem.cs" Link="Linked/Widgets/LibraryCard/LibraryCardItem.cs" />
     <Compile Include="../PsychologyApp.Presentation/Widgets/LibraryCard/LibraryCards.cs" Link="Linked/Widgets/LibraryCard/LibraryCards.cs" />
     <Compile Include="NavigationCoordinatorTests.cs" />
@@ -141,6 +142,8 @@
     <Compile Include="../PsychologyApp.Presentation/Shared/Common/Infrastructure/RangeObservableCollection.cs" Link="Linked/ViewModels/RangeObservableCollection.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/SafetyPlan/SafetyPlanViewModel.cs" Link="Linked/ViewModels/SafetyPlanViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/RiskCheck/RiskCheckViewModel.cs" Link="Linked/ViewModels/RiskCheckViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/BodyCheck/BodyCheckViewModel.cs" Link="Linked/ViewModels/BodyCheckViewModel.cs" />
+    <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/BodyCheck/BodyCheckItems.cs" Link="Linked/ViewModels/BodyCheckItems.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/Exposure/ExposureViewModel.cs" Link="Linked/ViewModels/ExposureViewModel.cs" />
     <Compile Include="../PsychologyApp.Presentation/Pages/ClinicalCare/Exposure/ExposureItems.cs" Link="Linked/ViewModels/ExposureItems.cs" />
     <Compile Include="../PsychologyApp.Presentation/Shared/Common/Preferences/UserPreferencesState.cs" Link="Linked/ViewModels/UserPreferencesState.cs" />

@@ -22,6 +22,7 @@ public static partial class AppStrings
     public static string PracticeIntensitySummary => R(nameof(PracticeIntensitySummary));
     public static string PracticeReflectionSaved => R(nameof(PracticeReflectionSaved));
     public static string PracticeReflectionSaveError => R(nameof(PracticeReflectionSaveError));
+    public static string PracticeIntensitySaveFailed => R(nameof(PracticeIntensitySaveFailed));
     public static string PracticeMoreChips(int count) => F(nameof(PracticeMoreChips), count);
     public static string PracticeAnswersTitle => R(nameof(PracticeAnswersTitle));
     public static string NextStepTitle => R(nameof(NextStepTitle));

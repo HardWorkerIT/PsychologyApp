@@ -1571,7 +1571,7 @@
     <value>Appel d'urgence</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>PIN oublié ? Vérifier votre identité</value>
+    <value>Code PIN oublié ?</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>Créez un nouveau code pour l’application.</value>
@@ -4697,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Supprimer et quitter</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>Impossible d’ouvrir l’application Téléphone. Composez le {0} manuellement ou copiez le numéro.</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>Chat IA</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>Impossible de sauvegarder le niveau de tension.</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>Impossible d&apos;accéder au code PIN protégé. Réessaie ou récupère ton code PIN.</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>Le code PIN reste indisponible.</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>Ouvrir les paramètres de sécurité</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>La récupération par verrouillage de l&apos;écran est indisponible sur cet appareil.</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>Vérification du code PIN…</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>Tu peux à nouveau saisir ton code PIN.</value>
+  </data>
 </root>

@@ -23,6 +23,7 @@ public sealed class AppLockViewModel : BaseViewModel
     private string? _pendingPin;
     private string? _statusText;
     private bool _isBusy;
+    private bool _checkingPin;
     private bool _isResetting;
     private bool _showDialFailure;
     private long _cooldownStarted;
@@ -48,6 +49,8 @@ public sealed class AppLockViewModel : BaseViewModel
         AddPinDigitCommand = new Command<string?>(AppendPinDigit);
         DeletePinDigitCommand = new Command(DeletePinDigit);
         RecoverPinCommand = new AsyncCommand(RecoverPinAsync);
+        RetryPinStorageCommand = new AsyncCommand(RetryPinStorageAsync);
+        OpenSecuritySettingsCommand = new AsyncCommand(OpenSecuritySettingsAsync);
         CallEmergencyCommand = new AsyncCommand(CallEmergencyAsync);
         CopyNumberCommand = new AsyncCommand(() => ShowDialFailure
             ? clipboard.CopyWithFeedbackAsync(Lines.Emergency, AppStrings.QuoteCopied)
@@ -70,17 +73,23 @@ public sealed class AppLockViewModel : BaseViewModel
         EntryState.Create => _isResetting ? AppStrings.AppLockPinResetLead : AppStrings.AppLockSetupLead,
         EntryState.Confirm => AppStrings.AppLockConfirmLead,
         EntryState.Unlock => AppStrings.AppLockLead,
-        EntryState.RecoveryRequired => AppStrings.AppLockPinStorageError,
-        _ => string.Empty
+        EntryState.RecoveryRequired => AppStrings.AppLockStorageRetryLead,
+        _ => AppStrings.SkeletonLoadingLabel
     };
 
     public string PinPromptText => AppStrings.AppLockPinPrompt;
     public string PinProgressText => AppStrings.AppLockPinProgress(_pinInput.Length, AppPinPolicy.Length);
     public string RecoveryText => AppStrings.AppLockForgotPin;
+    public string RetryStorageText => AppStrings.RetryQuestion;
+    public string OpenSecuritySettingsText => AppStrings.AppLockOpenSecuritySettings;
+    public string RecoveryUnavailableText => _authenticator.Availability == DeviceUnlockAvailability.NoScreenLock
+        ? AppStrings.AppLockNoScreenLock : AppStrings.AppLockRecoveryUnsupported;
     public string PinEntryDescription => AppStrings.AppLockPinEntry;
     public string DeletePinDigitText => AppStrings.AppLockDeletePinDigit;
-    public string? StatusText => IsPinCoolingDown ? AppStrings.AppLockPinLockedOut(_cooldownSeconds) : _statusText;
-    public bool HasStatus => IsPinCoolingDown || !string.IsNullOrWhiteSpace(_statusText);
+    public string? StatusText => _checkingPin ? AppStrings.AppLockCheckingPin
+        : IsPinCoolingDown ? AppStrings.AppLockPinLockedOut(_cooldownSeconds) : _statusText;
+    public bool HasStatus => !string.IsNullOrWhiteSpace(StatusText);
+    public bool IsCheckingPin => _checkingPin;
     public bool IsPinCoolingDown => _cooldownSeconds > 0;
     public bool IsInitialized => _state != EntryState.Uninitialized;
     public bool IsPinEntryVisible => _state is EntryState.Create or EntryState.Confirm or EntryState.Unlock;
@@ -88,8 +97,15 @@ public sealed class AppLockViewModel : BaseViewModel
     public bool CanDeletePin => CanEnterPin && _pinInput.Length > 0;
     public ObservableCollection<bool> PinCells { get; } = new(Enumerable.Repeat(false, AppPinPolicy.Length));
     public bool HasSystemRecovery =>
-        _authenticator.Availability != DeviceUnlockAvailability.Unsupported
+        _authenticator.Availability == DeviceUnlockAvailability.Available
         && _state is EntryState.Unlock or EntryState.RecoveryRequired;
+    public bool ShowRecoveryUnavailable => _state is EntryState.Unlock or EntryState.RecoveryRequired
+        && _authenticator.Availability != DeviceUnlockAvailability.Available;
+    public bool CanOpenSecuritySettings => ShowRecoveryUnavailable
+        && _authenticator.Availability == DeviceUnlockAvailability.NoScreenLock
+        && _authenticator.CanOpenSecuritySettings;
+    public bool ShowRetryStorage => _state == EntryState.RecoveryRequired;
+    public bool CanUseRecoveryActions => !_isBusy;
     public bool CanSubmitPin => CanEnterPin && AppPinPolicy.IsValid(_pinInput);
 
     public string PinInput
@@ -125,6 +141,8 @@ public sealed class AppLockViewModel : BaseViewModel
     public ICommand AddPinDigitCommand { get; }
     public ICommand DeletePinDigitCommand { get; }
     public ICommand RecoverPinCommand { get; }
+    public ICommand RetryPinStorageCommand { get; }
+    public ICommand OpenSecuritySettingsCommand { get; }
     public ICommand CallEmergencyCommand { get; }
     public ICommand CopyNumberCommand { get; }
 
@@ -137,6 +155,9 @@ public sealed class AppLockViewModel : BaseViewModel
             nameof(PinPromptText),
             nameof(PinProgressText),
             nameof(RecoveryText),
+            nameof(RetryStorageText),
+            nameof(OpenSecuritySettingsText),
+            nameof(RecoveryUnavailableText),
             nameof(PinEntryDescription),
             nameof(DeletePinDigitText),
             nameof(CallEmergencyText),
@@ -181,17 +202,22 @@ public sealed class AppLockViewModel : BaseViewModel
             _state = EntryState.RecoveryRequired;
         }
 
-        OnPropertyChanged(nameof(IsInitialized));
-        Notify(
-            nameof(TitleText),
-            nameof(LeadText),
-            nameof(IsPinEntryVisible),
-            nameof(CanEnterPin),
-            nameof(CanDeletePin),
-            nameof(HasSystemRecovery),
-            nameof(StatusText),
-            nameof(HasStatus));
+        RefreshEntryState();
     }
+
+    internal void RefreshRecoveryAvailability() =>
+        Notify(nameof(HasSystemRecovery), nameof(ShowRecoveryUnavailable), nameof(CanOpenSecuritySettings), nameof(RecoveryUnavailableText));
+
+    private void RefreshEntryState()
+    {
+        Notify(nameof(IsInitialized), nameof(TitleText), nameof(LeadText), nameof(IsPinEntryVisible));
+        RefreshRecoveryAvailability();
+        RefreshInteractionState();
+    }
+
+    private void RefreshInteractionState() =>
+        Notify(nameof(CanEnterPin), nameof(CanDeletePin), nameof(CanSubmitPin), nameof(CanUseRecoveryActions),
+            nameof(IsCheckingPin), nameof(StatusText), nameof(HasStatus));
 
     private void AppendPinDigit(string? digit)
     {
@@ -242,14 +268,10 @@ public sealed class AppLockViewModel : BaseViewModel
         }
 
         string pin = _pinInput;
-        PinInput = string.Empty;
         _isBusy = true;
-        OnPropertyChanged(nameof(CanEnterPin));
-        OnPropertyChanged(nameof(CanDeletePin));
-        OnPropertyChanged(nameof(CanSubmitPin));
+        _checkingPin = _state != EntryState.Create;
         _statusText = null;
-        OnPropertyChanged(nameof(StatusText));
-        OnPropertyChanged(nameof(HasStatus));
+        RefreshInteractionState();
 
         try
         {
@@ -268,7 +290,7 @@ public sealed class AppLockViewModel : BaseViewModel
                     _pendingPin = null;
                     _state = EntryState.Create;
                     _statusText = AppStrings.AppLockPinMismatch;
-                    Notify(nameof(TitleText), nameof(LeadText), nameof(StatusText), nameof(HasStatus));
+                    Notify(nameof(TitleText), nameof(LeadText));
                     return;
                 }
 
@@ -296,37 +318,79 @@ public sealed class AppLockViewModel : BaseViewModel
                 else
                 {
                     _statusText = AppStrings.AppLockPinIncorrect;
-                    Notify(nameof(StatusText), nameof(HasStatus));
                 }
             }
         }
         catch (Exception ex)
         {
             BestEffort.Report(ex);
+            _pendingPin = null;
             _state = EntryState.RecoveryRequired;
-            Notify(nameof(TitleText), nameof(LeadText), nameof(IsPinEntryVisible), nameof(CanEnterPin), nameof(CanDeletePin), nameof(HasSystemRecovery), nameof(StatusText), nameof(HasStatus));
+            RefreshEntryState();
         }
         finally
         {
-            _isBusy = false;
-            OnPropertyChanged(nameof(CanEnterPin));
-            OnPropertyChanged(nameof(CanDeletePin));
-            OnPropertyChanged(nameof(CanSubmitPin));
             PinInput = string.Empty;
+            _isBusy = false;
+            _checkingPin = false;
+            RefreshInteractionState();
+        }
+    }
+
+    private async Task RetryPinStorageAsync()
+    {
+        if (_isBusy || !ShowRetryStorage)
+        {
+            return;
+        }
+
+        _isBusy = _checkingPin = true;
+        _statusText = null;
+        RefreshInteractionState();
+        try
+        {
+            // A missing record after a read failure is ambiguous. A retry may restore PIN entry, never authorize a new PIN.
+            if (await _pinCredentialStore.HasPinAsync())
+            {
+                _state = EntryState.Unlock;
+                RefreshEntryState();
+            }
+            else
+            {
+                _statusText = AppStrings.AppLockStorageStillUnavailable;
+            }
+        }
+        catch (Exception ex)
+        {
+            BestEffort.Report(ex);
+            _statusText = AppStrings.AppLockStorageStillUnavailable;
+        }
+        finally
+        {
+            _isBusy = _checkingPin = false;
+            RefreshInteractionState();
+        }
+    }
+
+    private async Task OpenSecuritySettingsAsync()
+    {
+        if (!_isBusy && CanOpenSecuritySettings && !await _authenticator.TryOpenSecuritySettingsAsync())
+        {
+            _statusText = AppStrings.AppLockPhoneUnlockUnavailable;
+            Notify(nameof(StatusText), nameof(HasStatus));
         }
     }
 
     private async Task RecoverPinAsync()
     {
+        RefreshRecoveryAvailability();
         if (_isBusy || !HasSystemRecovery)
         {
             return;
         }
 
         _isBusy = true;
-        OnPropertyChanged(nameof(CanEnterPin));
-        OnPropertyChanged(nameof(CanDeletePin));
-        OnPropertyChanged(nameof(CanSubmitPin));
+        RefreshInteractionState();
         try
         {
             DeviceUnlockResult result = await _authenticator.AuthenticateAsync(
@@ -340,15 +404,8 @@ public sealed class AppLockViewModel : BaseViewModel
                 _statusText = null;
                 _cooldownDuration = TimeSpan.Zero;
                 RefreshPinCooldown();
-                Notify(
-                    nameof(TitleText),
-                    nameof(LeadText),
-                    nameof(IsPinEntryVisible),
-                    nameof(CanEnterPin),
-                    nameof(CanDeletePin),
-                    nameof(HasSystemRecovery),
-                    nameof(StatusText),
-                    nameof(HasStatus));
+                PinInput = string.Empty;
+                RefreshEntryState();
             }
             else if (result == DeviceUnlockResult.CannotAsk)
             {
@@ -359,9 +416,7 @@ public sealed class AppLockViewModel : BaseViewModel
         finally
         {
             _isBusy = false;
-            OnPropertyChanged(nameof(CanEnterPin));
-            OnPropertyChanged(nameof(CanDeletePin));
-            OnPropertyChanged(nameof(CanSubmitPin));
+            RefreshInteractionState();
         }
     }
 }

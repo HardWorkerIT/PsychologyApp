@@ -175,6 +175,7 @@ public sealed class TechniqueDialogueViewModel : ChatViewModelBase
                 _sessionStartedAt,
                 _completion,
                 preIntensity: PreIntensity(),
+                postIntensity: _scenarioSession?.GetRating("rating_after"),
                 deleteDraft: fields.Count > 0,
                 onSaved: RememberCompletedAnswersAsync,
                 sessionPayloadJson: payload);

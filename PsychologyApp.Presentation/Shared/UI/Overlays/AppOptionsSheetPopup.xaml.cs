@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls.Shapes;
 using PsychologyApp.Presentation.Shared.Common;
 using PsychologyApp.Presentation.Shared.Common.Infrastructure;
 using PsychologyApp.Presentation.Shared.Services.Dialogs;
+using PsychologyApp.Presentation.Shared.Services.Security;
 
 namespace PsychologyApp.Presentation.Shared.UI.Overlays;
 
@@ -25,6 +26,7 @@ public partial class AppOptionsSheetPopup : Popup
     private Func<int, string> _selectionSummaryFactory = _ => string.Empty;
     private string? _pendingValue;
     private Entry? _dialogInputEntry;
+    private bool _requiresPin;
     private bool _isDecisionSheet;
     private bool? _dialogResult;
 
@@ -79,17 +81,28 @@ public partial class AppOptionsSheetPopup : Popup
 
         if (input is not null)
         {
+            _requiresPin = input.IsPin;
             var entry = new Entry
             {
                 IsPassword = input.IsPassword,
                 Placeholder = input.Placeholder,
                 Text = input.InitialText,
-                MaxLength = input.MaxLength,
+                MaxLength = _requiresPin ? AppPinPolicy.Length : input.MaxLength,
                 ReturnType = ReturnType.Done,
                 Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["InputTextStyle"]
             };
             entry.Completed += OnInputCompleted;
             _dialogInputEntry = entry;
+            if (_requiresPin)
+            {
+                var keyboardResize = new KeyboardResize();
+                Loaded += (_, _) => keyboardResize.Enable();
+                Unloaded += (_, _) => keyboardResize.Restore();
+                SheetHost.SafeAreaEdges = Microsoft.Maui.SafeAreaEdges.All;
+                entry.Keyboard = Keyboard.Numeric;
+                entry.TextChanged += OnPinChanged;
+                UpdatePinAcceptState();
+            }
             OptionsStack.Add(new Border
             {
                 Style = (Style)Microsoft.Maui.Controls.Application.Current!.Resources["InputBorderStyle"],
@@ -287,14 +300,20 @@ public partial class AppOptionsSheetPopup : Popup
         if (GetUsableWindowSize() is (double width, double height))
         {
             SheetHost.WidthRequest = width;
-            SheetHost.HeightRequest = height;
+            if (!_requiresPin)
+            {
+                SheetHost.HeightRequest = height;
+            }
             OptionsScroll.MaximumHeightRequest = GetOptionsMaximumHeight(height);
             return;
         }
 
         DisplayInfo display = DeviceDisplay.MainDisplayInfo;
         SheetHost.WidthRequest = display.Width / display.Density;
-        SheetHost.HeightRequest = display.Height / display.Density;
+        if (!_requiresPin)
+        {
+            SheetHost.HeightRequest = display.Height / display.Density;
+        }
         OptionsScroll.MaximumHeightRequest = GetOptionsMaximumHeight(display.Height / display.Density);
     }
 
@@ -687,8 +706,7 @@ public partial class AppOptionsSheetPopup : Popup
 
         if (_isDecisionSheet)
         {
-            _dialogResult = true;
-            ClosePopup();
+            TryAcceptInput();
             return;
         }
 
@@ -708,8 +726,35 @@ public partial class AppOptionsSheetPopup : Popup
 
     private void OnInputCompleted(object? sender, EventArgs e)
     {
+        TryAcceptInput();
+    }
+
+    private void TryAcceptInput()
+    {
+        if (_isClosing || (_requiresPin && !AppPinPolicy.IsValid(_dialogInputEntry?.Text)))
+        {
+            return;
+        }
+
         _dialogResult = true;
         ClosePopup();
+    }
+
+    private void OnPinChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (sender is Entry entry && e.NewTextValue is { } text && text.Any(ch => !char.IsAsciiDigit(ch)))
+        {
+            entry.Text = new string(text.Where(char.IsAsciiDigit).ToArray());
+        }
+
+        UpdatePinAcceptState();
+    }
+
+    private void UpdatePinAcceptState()
+    {
+        bool valid = AppPinPolicy.IsValid(_dialogInputEntry?.Text);
+        AcceptHost.IsEnabled = valid;
+        AcceptHost.Opacity = valid ? 1 : 0.5;
     }
 
     private void OnCancelTapped(object? sender, TappedEventArgs e)

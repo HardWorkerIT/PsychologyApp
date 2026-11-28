@@ -13,6 +13,29 @@ namespace PsychologyApp.Presentation.Tests.ViewModels;
 public sealed class JournalViewModelTests
 {
     [Fact]
+    public async Task OpeningATimelineEntryEditsThatEntryEvenWhenTheDayHasOtherCheckIns()
+    {
+        var context = new JournalEditorContext();
+        var (viewModel, progress, _) = await CreateWithSavedMoodAsync(editorContext: context);
+        var day = DateOnly.FromDateTime(DateTime.Today).AddDays(-1);
+        progress.Setup(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([
+                new() { MoodEntryId = 11, MoodLevel = 2, RecordedAt = day.ToDateTime(new TimeOnly(9, 0)).ToUniversalTime(), Note = "Morning" },
+                new() { MoodEntryId = 12, MoodLevel = 4, RecordedAt = day.ToDateTime(new TimeOnly(19, 0)).ToUniversalTime(), Note = "Selected entry" },
+                new() { MoodEntryId = 13, MoodLevel = 3, RecordedAt = day.ToDateTime(new TimeOnly(21, 0)).ToUniversalTime(), Note = "Later entry" }
+            ]);
+        context.PendingTarget = (day, 12);
+
+        await viewModel.ReloadAsync();
+
+        Assert.True(viewModel.IsEveningSelected);
+        Assert.Equal("Selected entry", viewModel.JournalNote);
+        viewModel.JournalNote = "Edit the selected entry";
+        await viewModel.FlushPendingNoteSaveAsync();
+        progress.Verify(p => p.UpdateMoodNoteAsync(12, "Edit the selected entry", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task AJourneyToUrgentHelpDoesNotWaitForANoteWrite()
     {
         var (viewModel, progress, navigation) = await CreateWithSavedMoodAsync();
@@ -101,7 +124,7 @@ public sealed class JournalViewModelTests
     }
 
     private static async Task<(JournalViewModel ViewModel, Mock<IUserProgressService> Progress, Mock<INavigationService> Navigation)>
-        CreateWithSavedMoodAsync(IDialogService? dialogs = null)
+        CreateWithSavedMoodAsync(IDialogService? dialogs = null, JournalEditorContext? editorContext = null)
     {
         var progress = new Mock<IUserProgressService>();
         progress.Setup(p => p.GetMoodsAsync(It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
@@ -110,7 +133,7 @@ public sealed class JournalViewModelTests
         var navigation = new Mock<INavigationService>();
         navigation.Setup(n => n.GoToCrisisHubAsync()).Returns(Task.CompletedTask);
         JournalViewModel viewModel = new(new JournalMoodLoader(progress.Object, new KeywordCrisisDetector()),
-            new JournalEditorContext(), dialogs ?? Mock.Of<IDialogService>(), navigation.Object);
+            editorContext ?? new JournalEditorContext(), dialogs ?? Mock.Of<IDialogService>(), navigation.Object);
         await viewModel.ReloadAsync();
         return (viewModel, progress, navigation);
     }

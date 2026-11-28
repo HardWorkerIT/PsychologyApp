@@ -24,7 +24,7 @@ saves the person's message and the whole reply in one transaction and updates th
 
 `CompanionDialogue` decides in this order:
 
-1. Crisis wording is checked first (`KeywordCrisisDetector`). A hit opens the crisis hub and nothing else runs.
+1. Crisis wording is checked first (`KeywordCrisisDetector`). The chat opens urgent help without waiting for storage or the typing animation. A saved crisis reply carries its own help button, and the service saves it without consulting optional sources.
 2. A typed 0-10 number answers the tension question, exactly like the chip.
 2b. Input that is not a message is recognised before anything else is guessed: bare digits ("1111"), key mashing ("asdfgh", "йцукен",
    "qwerty"), one letter repeated, a repeated unit ("sdfsdf"), a long word with no vowel, "???" (means "what?", the last question is

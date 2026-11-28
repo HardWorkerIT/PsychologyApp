@@ -29,4 +29,5 @@ public interface IDialogService
     /// <summary>Asks for a secret (masked) in the app's existing options sheet; null when cancelled or when another dialog is on screen.</summary>
     Task<string?> PromptPasswordAsync(string? title, string message, string placeholder, string accept, string cancel);
     Task<string?> PromptPasswordSheetAsync(string? title, string message, string placeholder, string accept, string cancel);
+    Task<string?> PromptPinSheetAsync(string? title, string message, string placeholder, string accept, string cancel);
 }

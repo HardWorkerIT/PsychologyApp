@@ -82,6 +82,11 @@
                                         </DataTrigger>
                                     </Label.Triggers>
                                 </Label>
+                                <ui:ButtonView
+                                    IsVisible="{Binding HasCrisisHelp}"
+                                    Variant="Secondary"
+                                    BodyText="{Binding CrisisHelpText}"
+                                    TapCommand="{Binding CrisisHelpCommand}" />
                                 <Label
                                     Text="{Binding TimeText}"
                                     Style="{StaticResource CaptionStyle}"

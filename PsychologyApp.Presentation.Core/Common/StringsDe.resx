@@ -1571,7 +1571,7 @@
     <value>Notruf</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>PIN vergessen? Identität bestätigen</value>
+    <value>PIN vergessen?</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>Erstelle eine neue App-PIN.</value>
@@ -4697,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Verwerfen und verlassen</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>Die Telefon-App konnte nicht geöffnet werden. Wähle {0} manuell oder kopiere die Nummer.</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>KI-Chat</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>Die Bewertung der Anspannung konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>Auf die geschützte PIN konnte nicht zugegriffen werden. Versuche es erneut oder stelle deine PIN wieder her.</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>Die PIN ist weiterhin nicht verfügbar.</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>Sicherheitseinstellungen öffnen</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>Die Wiederherstellung per Displaysperre ist auf diesem Gerät nicht verfügbar.</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>PIN wird geprüft …</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>Du kannst deine PIN wieder eingeben.</value>
+  </data>
 </root>

@@ -1571,7 +1571,7 @@
     <value>紧急呼叫</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>忘记 PIN？验证身份</value>
+    <value>忘记 PIN 码？</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>请创建新的应用 PIN 码。</value>
@@ -4697,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>丢弃并退出</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>无法打开拨号界面。请手动拨打 {0}，或复制号码。</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>AI 聊天</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>无法保存紧张程度评分。</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>无法访问受保护的 PIN 码。请重试或恢复 PIN 码。</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>PIN 码仍不可用。</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>打开安全设置</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>此设备不支持通过屏幕锁定恢复 PIN 码。</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>正在验证 PIN 码…</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>可以再次输入 PIN 码。</value>
+  </data>
 </root>

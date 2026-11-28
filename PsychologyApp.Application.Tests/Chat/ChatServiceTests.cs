@@ -344,11 +344,10 @@ public class ChatServiceTests
     public async Task A_failed_chat_open_does_not_leave_an_empty_session_that_suppresses_the_next_greeting()
     {
         ChatService service = CreateService();
-        _progress.SetupSequence(p => p.GetLatestTestResultsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new InvalidOperationException("local data unavailable"))
-            .ReturnsAsync((IReadOnlyDictionary<string, TestResultDTO>)new Dictionary<string, TestResultDTO>());
+        _repository.TurnWriteFailure = new InvalidOperationException("local data unavailable");
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartNewChatAsync());
+        _repository.TurnWriteFailure = null;
         ChatTurnResult retry = await service.StartNewChatAsync();
 
         Assert.Single(retry.NewMessages);
@@ -523,6 +522,80 @@ public class ChatServiceTests
 
         Assert.Equal(DialogueActionKind.OpenCrisisHub, result.Action!.Kind);
         Assert.Equal(2, result.NewMessages.Count);
+        Assert.Equal(ChatQuickReplyKinds.CrisisHelp, Assert.Single(result.NewMessages[1].QuickReplies).Kind);
+    }
+
+    [Fact]
+    public async Task A_crisis_turn_does_not_read_optional_test_history()
+    {
+        ChatService service = CreateService();
+        long id = (await service.StartNewChatAsync()).Session.Id;
+        _progress.Invocations.Clear();
+        var blocked = new TaskCompletionSource<IReadOnlyDictionary<string, TestResultDTO>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _progress.Setup(p => p.GetLatestTestResultsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()))
+            .Returns(blocked.Task);
+
+        ChatTurnResult result;
+        try
+        {
+            result = await service.SendTextAsync(id, "Я не хочу больше жить").WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        finally
+        {
+            blocked.TrySetResult(new Dictionary<string, TestResultDTO>());
+        }
+
+        Assert.Equal(DialogueActionKind.OpenCrisisHub, result.Action!.Kind);
+        _progress.Verify(p => p.GetLatestTestResultsAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task A_failed_quote_catalog_does_not_prevent_a_reply()
+    {
+        CreateService();
+        var quotes = new Mock<IQuotContentProvider>();
+        quotes.Setup(p => p.LoadAllAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new IOException("Catalog unavailable"));
+        var service = new ChatService(_repository, new LexiconSituationAnalyzer(), new KeywordCrisisDetector(),
+            _progress.Object, new Language(false), _clock, quotes.Object);
+        long id = (await service.StartNewChatAsync()).Session.Id;
+
+        ChatTurnResult turn = await service.SendTextAsync(id, "Мне тревожно из-за работы");
+
+        Assert.Contains(turn.NewMessages, message => message.Role == ChatRole.Companion);
+        Assert.Equal("Тревога · работа", turn.Session.Title);
+    }
+
+    [Fact]
+    public async Task Answering_an_older_plan_does_not_remove_a_newer_plan_with_the_same_words()
+    {
+        ChatService service = CreateService();
+        const string plan = "Выйти прогуляться";
+        await _repository.SetMemoryAsync(ChatMemoryKeys.Plan, plan);
+        await _repository.SetMemoryAsync(ChatMemoryKeys.PlanAt, _clock.Utc.AddHours(-8).ToString("O"));
+        ChatTurnResult opening = await service.StartNewChatAsync();
+        Assert.Contains(plan, opening.NewMessages[0].Text);
+        string newerAt = _clock.Utc.AddMinutes(5).ToString("O");
+        await _repository.SetMemoryAsync(ChatMemoryKeys.PlanAt, newerAt);
+
+        await service.SendQuickReplyAsync(opening.Session.Id, new(ChatQuickReplyKinds.Act, "Получилось", "plan:done"));
+
+        IReadOnlyDictionary<string, string> memory = await _repository.GetMemoryAsync();
+        Assert.Equal(plan, memory[ChatMemoryKeys.Plan]);
+        Assert.Equal(newerAt, memory[ChatMemoryKeys.PlanAt]);
+    }
+
+    [Fact]
+    public async Task Renaming_before_the_first_emotion_survives_the_first_substantive_reply()
+    {
+        ChatService service = CreateService();
+        long id = (await service.StartNewChatAsync()).Session.Id;
+        await service.SendTextAsync(id, "Привет");
+        await service.RenameAsync(id, "Мой разговор");
+
+        ChatTurnResult turn = await service.SendTextAsync(id, "Мне тревожно из-за работы");
+
+        Assert.Equal("Мой разговор", turn.Session.Title);
+        Assert.Equal(nameof(CompanionEmotion.Anxiety), turn.Session.Emotion);
     }
 
     [Fact]
@@ -843,15 +916,15 @@ public class ChatServiceTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task Crisis_help_survives_a_storage_error_before_or_after_recognition(bool failsBeforeRecognition)
+    public async Task Crisis_help_survives_a_storage_read_or_write_error(bool failsOnRead)
     {
         ChatService service = CreateService();
         long id = (await service.StartNewChatAsync()).Session.Id;
         int savedMessages = (await _repository.GetMessagesAsync(id)).Count;
         IOException failure = new("Storage unavailable");
-        if (failsBeforeRecognition)
+        if (failsOnRead)
         {
-            _repository.MemoryReadBarrier = () => Task.FromException(failure);
+            _repository.SessionReadBarrier = _ => Task.FromException(failure);
         }
         else
         {

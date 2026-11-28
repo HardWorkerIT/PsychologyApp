@@ -30,6 +30,21 @@ public partial class SettingsPage : ContentPage
 #endif
     }
 
+    protected override bool OnBackButtonPressed()
+    {
+        if (BindingContext is not SettingsViewModel viewModel)
+        {
+            return base.OnBackButtonPressed();
+        }
+
+        if (viewModel.Finish.CanExecute(null))
+        {
+            viewModel.Finish.Execute(null);
+        }
+
+        return true;
+    }
+
 #if ANDROID
     protected override void OnAppearing()
     {

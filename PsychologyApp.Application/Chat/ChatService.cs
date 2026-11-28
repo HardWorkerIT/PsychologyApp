@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 using PsychologyApp.Application.Abstractions.Integration;
 using PsychologyApp.Application.Abstractions.Persistence;
 using PsychologyApp.Application.Conversation;
@@ -102,7 +103,8 @@ public sealed class ChatService(
     IChatLanguageProvider language,
     TimeProvider time,
     IQuotContentProvider quotes,
-    IEmotionGuesser? emotionGuesser = null) : IChatService, IChatEraseLifecycle
+    IEmotionGuesser? emotionGuesser = null,
+    ILogger<ChatService>? logger = null) : IChatService, IChatEraseLifecycle
 {
     private const int MaxTitleLength = 60;
     private const int MaxNameLength = 30;
@@ -208,7 +210,7 @@ public sealed class ChatService(
             // A chat on a topic starts with that topic: the step decided last time waits for an ordinary chat.
             CompanionReply reply = topic is not null
                 ? dialogue.OpenTopic(opening, topic)
-                : dialogue.Open(opening with { OpenPlan = PlanToAskAbout(memory, now) }, previous);
+                : dialogue.Open(WithOpeningPlan(opening, memory, now), previous);
             session.StateJson = reply.State.Serialize();
             IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, CompanionMessages(session, reply, now), [], cancellationToken).ConfigureAwait(false);
 
@@ -292,7 +294,7 @@ public sealed class ChatService(
         DateTime now = Now();
         CompanionDialogue dialogue = await DialogueAsync(cancellationToken).ConfigureAwait(false);
         CompanionReply reply = dialogue.FollowUpAfterPractice(state);
-        ApplyReply(session, reply, now, firstText: null);
+        ApplyReply(session, state, reply, now, firstText: null);
         IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, CompanionMessages(session, reply, now), [], cancellationToken).ConfigureAwait(false);
         return new ChatTurnResult(session, added, null);
     }
@@ -313,6 +315,7 @@ public sealed class ChatService(
             }
 
             session.Title = trimmed.Length > MaxTitleLength ? trimmed[..MaxTitleLength] : trimmed;
+            session.StateJson = (CompanionState.Deserialize(session.StateJson) with { HasManualTitle = true }).Serialize();
             await repository.UpdateSessionAsync(session, cancellationToken).ConfigureAwait(false);
         }
         finally
@@ -420,17 +423,17 @@ public sealed class ChatService(
     /// <summary>
     /// The step decided on in an earlier chat, once it has had time to be tried (from six hours on) and while it is still fresh (two weeks).
     /// </summary>
-    private static string? PlanToAskAbout(IReadOnlyDictionary<string, string> memory, DateTime now)
+    private static CompanionState WithOpeningPlan(CompanionState state, IReadOnlyDictionary<string, string> memory, DateTime now)
     {
         if (!memory.TryGetValue(ChatMemoryKeys.Plan, out string? plan) || string.IsNullOrWhiteSpace(plan)
             || !memory.TryGetValue(ChatMemoryKeys.PlanAt, out string? at)
             || !DateTime.TryParse(at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime decided))
         {
-            return null;
+            return state;
         }
 
         TimeSpan age = now - decided.ToUniversalTime();
-        return age >= PlanAskAfter && age <= PlanForgetAfter ? plan : null;
+        return age >= PlanAskAfter && age <= PlanForgetAfter ? state with { OpenPlan = plan, OpenPlanAt = at } : state;
     }
 
     private static readonly TimeSpan HeavyWindow = TimeSpan.FromDays(14);
@@ -441,7 +444,7 @@ public sealed class ChatService(
 
     /// <summary>Carries what a turn revealed into the memory that outlives the chat: a new name, a started practice, a practice that helped,
     /// a step decided on (and that it was asked about), the topic of the chat.</summary>
-    private List<ChatMemoryChange> MemoryChanges(CompanionState before, CompanionReply reply, IReadOnlyDictionary<string, string> memory, DateTime now)
+    private List<ChatMemoryChange> MemoryChanges(CompanionState before, CompanionReply reply, IReadOnlyDictionary<string, string> memory, DateTime now, DateTime openedUtc)
     {
         List<ChatMemoryChange> changes = [];
         string? recordedTopicKey = reply.State.TopicCounted is { } countedTopic && countedTopic != before.TopicCounted
@@ -476,7 +479,7 @@ public sealed class ChatService(
             changes.Add(new ChatMemoryChange(ChatMemoryKeys.Plan, plan));
             changes.Add(new ChatMemoryChange(ChatMemoryKeys.PlanAt, Now().ToString("O", CultureInfo.InvariantCulture)));
         }
-        else if (reply.State.PlanResolved && !before.PlanResolved)
+        else if (reply.State.PlanResolved && !before.PlanResolved && IsOpenedPlan(before, memory, openedUtc))
         {
             changes.Add(new ChatMemoryChange(ChatMemoryKeys.Plan));
             changes.Add(new ChatMemoryChange(ChatMemoryKeys.PlanAt));
@@ -508,11 +511,26 @@ public sealed class ChatService(
         return changes;
     }
 
+    private static bool IsOpenedPlan(CompanionState state, IReadOnlyDictionary<string, string> memory, DateTime openedUtc)
+    {
+        if (state.OpenPlan is not { } openedPlan || memory.GetValueOrDefault(ChatMemoryKeys.Plan) != openedPlan)
+        {
+            return false;
+        }
+
+        string? currentAt = memory.GetValueOrDefault(ChatMemoryKeys.PlanAt);
+        // Older chats stored the plan text alone. Their plan had to predate the opening question by at least six hours.
+        return state.OpenPlanAt is { } openPlanAt ? currentAt == openPlanAt
+            : DateTime.TryParse(currentAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime decided)
+                && openedUtc - decided.ToUniversalTime() >= PlanAskAfter;
+    }
+
     private Task<ChatTurnResult> TakeTurnAsync(long sessionId, string userText, CompanionInput input, CancellationToken cancellationToken) =>
         TakeTurnCoreAsync(sessionId, userText, input, cancellationToken);
 
     private async Task<ChatTurnResult> TakeTurnCoreAsync(long sessionId, string userText, CompanionInput input, CancellationToken cancellationToken)
     {
+        bool isCrisis = CompanionDialogue.IsCrisisInput(crisisDetector, language.IsEnglish, input);
         await _memoryGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
@@ -525,10 +543,22 @@ public sealed class ChatService(
                 return new ChatTurnResult(session, [], null);
             }
 
+            if (isCrisis)
+            {
+                DateTime now = Now();
+                var dialogue = new CompanionDialogue(analyzer, crisisDetector, language.IsEnglish);
+                CompanionState state = CompanionState.Deserialize(session.StateJson);
+                CompanionReply reply = dialogue.CrisisReply(state);
+                ApplyReply(session, state, reply, now, firstText: null);
+                IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session,
+                    [UserMessage(sessionId, userText, now), .. CompanionMessages(session, reply, now)], [], cancellationToken)
+                    .ConfigureAwait(false);
+                return new ChatTurnResult(session, added, reply.Action);
+            }
+
             return await TakeTurnWithMemoryAsync(sessionId, userText, input, session, cancellationToken).ConfigureAwait(false);
         }
-        catch (Exception error) when (error is not OperationCanceledException
-            && new CompanionDialogue(analyzer, crisisDetector, language.IsEnglish).IsCrisisInput(input))
+        catch (Exception error) when (isCrisis && error is not OperationCanceledException)
         {
             throw new ChatCrisisTurnNotSavedException(CompanionContent.Crisis(language.IsEnglish), error);
         }
@@ -555,7 +585,7 @@ public sealed class ChatService(
             earlierTopicChats: RecurringTopics.EarlierChats(memory, now),
             techniqueTryCounts: PracticeTryCounts(memory)).ConfigureAwait(false);
         CompanionReply reply = dialogue.Respond(state, input);
-        ApplyReply(session, reply, now, firstText: input is CompanionInput.FreeText ? userText : null);
+        ApplyReply(session, state, reply, now, firstText: input is CompanionInput.FreeText ? userText : null);
 
         // The journal entry and its chat acknowledgement must commit together. Retrying a failed turn then writes one entry.
         MoodEntryDTO? mood = reply.Action is { Kind: DialogueActionKind.LogMood, MoodLevel: { } moodLevel }
@@ -564,10 +594,10 @@ public sealed class ChatService(
 
         List<ChatMessageDTO> pending =
         [
-            new() { SessionId = sessionId, Role = ChatRole.User, Text = userText, CreatedAt = now },
+            UserMessage(sessionId, userText, now),
             .. CompanionMessages(session, reply, now)
         ];
-        IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, pending, MemoryChanges(state, reply, memory, now), cancellationToken, mood).ConfigureAwait(false);
+        IReadOnlyList<ChatMessageDTO> added = await StoreAsync(session, pending, MemoryChanges(state, reply, memory, now, session.CreatedAt), cancellationToken, mood).ConfigureAwait(false);
 
         // Logging to the journal is a side effect the companion carries out itself; the UI never sees it as a navigation instruction.
         if (reply.Action?.Kind == DialogueActionKind.LogMood)
@@ -578,7 +608,7 @@ public sealed class ChatService(
     }
 
     /// <summary>Copies what the turn learned onto the session: state, recognised feeling, tension, title, activity time.</summary>
-    private void ApplyReply(ChatSessionDTO session, CompanionReply reply, DateTime now, string? firstText)
+    private void ApplyReply(ChatSessionDTO session, CompanionState before, CompanionReply reply, DateTime now, string? firstText)
     {
         bool emotionWasUnknown = string.IsNullOrWhiteSpace(session.Emotion) || session.Emotion == nameof(CompanionEmotion.Unknown);
         bool themeWasUnknown = string.IsNullOrWhiteSpace(session.Theme);
@@ -597,9 +627,16 @@ public sealed class ChatService(
             session.Theme = theme.ToString();
         }
 
+        if (reply.State.HasManualTitle)
+        {
+            return;
+        }
+
         bool becameKnown = emotionWasUnknown && reply.Emotion != CompanionEmotion.Unknown;
         bool firstFreeText = firstText is not null && reply.State.RecentTexts.Count == 1;
-        if (firstFreeText || becameKnown)
+        if ((firstFreeText || becameKnown) && (HasDefaultTitle(session.Title)
+            || (emotionWasUnknown && before.RecentTexts.Any(text =>
+                session.Title == CompanionDialogueContent.Title(CompanionEmotion.Unknown, null, text, language.IsEnglish)))))
         {
             string source = firstText ?? reply.State.RecentTexts.FirstOrDefault() ?? session.Title;
             session.Title = CompanionDialogueContent.Title(reply.Emotion, reply.Theme, source, language.IsEnglish);
@@ -622,8 +659,13 @@ public sealed class ChatService(
             Role = ChatRole.Companion,
             Text = text,
             CreatedAt = now,
-            QuickReplies = i == reply.Messages.Count - 1 ? reply.QuickReplies : []
+            QuickReplies = i != reply.Messages.Count - 1 ? []
+                : reply.Action?.Kind == DialogueActionKind.OpenCrisisHub ? [new(ChatQuickReplyKinds.CrisisHelp, string.Empty)]
+                : reply.QuickReplies
         });
+
+    private static ChatMessageDTO UserMessage(long sessionId, string text, DateTime now) =>
+        new() { SessionId = sessionId, Role = ChatRole.User, Text = text, CreatedAt = now };
 
     /// <summary>Saves the turn (memory, messages and the session) in one transaction and returns the messages with their ids.</summary>
     private async Task<IReadOnlyList<ChatMessageDTO>> StoreAsync(
@@ -661,16 +703,20 @@ public sealed class ChatService(
         // Heavy days that keep coming back are measured: earlier chats of two weeks that ended at 7 or more, and the questionnaires already taken.
         DateTime now = Now();
         DateTime since = now - HeavyWindow;
-        int heavyChats = await repository.CountHighTensionSessionsAsync(since, now, currentSessionId, HeavyTension, cancellationToken)
-            .ConfigureAwait(false);
+        Task<int> heavyTask = ReadOptionalAsync("high-tension history",
+            () => repository.CountHighTensionSessionsAsync(since, now, currentSessionId, HeavyTension, cancellationToken), 0, cancellationToken);
 
-        Task<IReadOnlyDictionary<string, TestResultDTO>> takenTask = progress.GetLatestTestResultsAsync(["phq9", "gad7", "pcl5"], cancellationToken);
-        Task<IReadOnlyList<QuotSeed>> quotesTask = quotes.LoadAllAsync(cancellationToken);
-        Task<TestResultDTO?> stressTestTask = progress.GetLatestTestResultAsync(CompanionResourceContent.StressTestId, cancellationToken);
+        Task<IReadOnlyDictionary<string, TestResultDTO>> takenTask = ReadOptionalAsync("questionnaires",
+            () => progress.GetLatestTestResultsAsync(["phq9", "gad7", "pcl5"], cancellationToken),
+            new Dictionary<string, TestResultDTO>(), cancellationToken);
+        Task<IReadOnlyList<QuotSeed>> quotesTask = ReadOptionalAsync("quotes",
+            () => quotes.LoadAllAsync(cancellationToken), [], cancellationToken);
+        Task<TestResultDTO?> stressTestTask = ReadOptionalAsync("stress test",
+            () => progress.GetLatestTestResultAsync(CompanionResourceContent.StressTestId, cancellationToken), null, cancellationToken);
         Task<IReadOnlyList<MoodEntryDTO>> moodsTask = includeTodayMood
-            ? progress.GetRecentMoodsAsync(3, cancellationToken)
+            ? ReadOptionalAsync("recent mood", () => progress.GetRecentMoodsAsync(3, cancellationToken), [], cancellationToken)
             : Task.FromResult<IReadOnlyList<MoodEntryDTO>>([]);
-        await Task.WhenAll(takenTask, quotesTask, stressTestTask, moodsTask).ConfigureAwait(false);
+        await Task.WhenAll(takenTask, quotesTask, stressTestTask, moodsTask, heavyTask).ConfigureAwait(false);
         IReadOnlyDictionary<string, TestResultDTO> taken = await takenTask.ConfigureAwait(false);
         IReadOnlyList<QuotSeed> availableQuotes = await quotesTask.ConfigureAwait(false);
         TestResultDTO? latestStressTest = await stressTestTask.ConfigureAwait(false);
@@ -693,10 +739,23 @@ public sealed class ChatService(
             todayLowMood: todayLowMood,
             recentStressTest: stressTest,
             emotionGuesser: emotionGuesser,
-            recentHeavyChats: heavyChats,
+            recentHeavyChats: await heavyTask.ConfigureAwait(false),
             recentlyTakenTests: recentlyTaken,
             earlierTopicChats: earlierTopicChats,
             techniqueTryCounts: techniqueTryCounts);
+    }
+
+    private async Task<T> ReadOptionalAsync<T>(string source, Func<Task<T>> read, T fallback, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await read().ConfigureAwait(false);
+        }
+        catch (Exception error) when (!cancellationToken.IsCancellationRequested)
+        {
+            logger?.LogWarning("Chat context source {Source} unavailable ({ErrorType}).", source, error.GetType().Name);
+            return fallback;
+        }
     }
 
     private bool IsLocalToday(DateTime recordedAtUtc, DateTime nowUtc)

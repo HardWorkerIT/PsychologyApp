@@ -1,5 +1,7 @@
 using Moq;
 using PsychologyApp.Application.Articles;
+using PsychologyApp.Application.Models;
+using PsychologyApp.Application.UserProgress;
 using PsychologyApp.Presentation.Pages.ReadArticles.ArticleReader;
 using PsychologyApp.Presentation.Pages.ReadArticles.Articles;
 using PsychologyApp.Presentation.Pages.ReadArticles.Courses;
@@ -14,6 +16,33 @@ namespace PsychologyApp.Presentation.Tests;
 [Collection("Localization")]
 public sealed class LibraryCatalogRefreshTests
 {
+    [Fact]
+    public async Task ASlowOrFailedMeasurementHistoryDoesNotBlockTheCourse()
+    {
+        Course course = ArticleContent.Courses(AppStrings.Language)[0];
+        var reading = new Mock<IReadingService>();
+        reading.Setup(service => service.GetAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new ReadingState());
+        var progress = new Mock<IUserProgressService>();
+        var history = new TaskCompletionSource<IReadOnlyList<TestResultDTO>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        progress.Setup(service => service.GetTestResultHistoryAsync(course.TestId, It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .Returns(history.Task);
+        var viewModel = new CourseViewModel(new TestNavigationService(Mock.Of<INavigation>()), reading.Object,
+            progress.Object, Mock.Of<IDialogService>(), ReadyDatabase(), course.Id);
+
+        Task refresh = viewModel.RefreshAsync();
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => !viewModel.IsLoading);
+        Assert.True(viewModel.CanAct);
+        Assert.False(refresh.IsCompleted);
+        Assert.NotEmpty(viewModel.Days);
+
+        history.SetException(new IOException("Test history unavailable"));
+        await refresh;
+
+        Assert.True(viewModel.CanAct);
+        Assert.False(viewModel.IsLoadFailed);
+        Assert.False(viewModel.HasMeasure);
+    }
+
     [Fact]
     public async Task ReturningToCoursesWithoutVisibleProgressChangesKeepsTheListInPlace()
     {

@@ -1571,7 +1571,7 @@
     <value>Chamada de emergência</value>
   </data>
   <data name="AppLockForgotPin" xml:space="preserve">
-    <value>Esqueceu o PIN? Confirmar identidade</value>
+    <value>Esqueceste o PIN?</value>
   </data>
   <data name="AppLockPinResetLead" xml:space="preserve">
     <value>Crie um novo PIN para o aplicativo.</value>
@@ -4697,4 +4697,25 @@
   <data name="ChatDiscardDraftAccept" xml:space="preserve"><value>Descartar e sair</value></data>
   <data name="CrisisDialUnavailable" xml:space="preserve"><value>Não foi possível abrir o marcador. Marque {0} manualmente ou copie o número.</value></data>
   <data name="ShellBottomChat" xml:space="preserve"><value>Chat IA</value></data>
+  <data name="PracticeIntensitySaveFailed" xml:space="preserve">
+    <value>Não foi possível guardar o nível de tensão.</value>
+  </data>
+  <data name="AppLockStorageRetryLead" xml:space="preserve">
+    <value>Não foi possível aceder ao PIN protegido. Tenta novamente ou recupera o PIN.</value>
+  </data>
+  <data name="AppLockStorageStillUnavailable" xml:space="preserve">
+    <value>O PIN continua indisponível.</value>
+  </data>
+  <data name="AppLockOpenSecuritySettings" xml:space="preserve">
+    <value>Abrir as definições de segurança</value>
+  </data>
+  <data name="AppLockRecoveryUnsupported" xml:space="preserve">
+    <value>A recuperação através do bloqueio de ecrã está indisponível neste dispositivo.</value>
+  </data>
+  <data name="AppLockCheckingPin" xml:space="preserve">
+    <value>A verificar o PIN…</value>
+  </data>
+  <data name="AppLockPinEntryReady" xml:space="preserve">
+    <value>Já podes voltar a introduzir o PIN.</value>
+  </data>
 </root>

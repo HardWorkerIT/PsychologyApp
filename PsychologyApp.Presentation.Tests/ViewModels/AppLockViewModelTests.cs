@@ -78,6 +78,57 @@ public sealed class AppLockViewModelTests
     }
 
     [Fact]
+    public async Task A_slow_verification_keeps_the_masked_entry_and_shows_that_the_pin_is_being_checked()
+    {
+        AppLockViewModel vm = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);
+        var verification = new TaskCompletionSource<AppPinVerificationResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        _pinStore.Setup(s => s.VerifyPinAsync("123456")).Returns(verification.Task);
+        await vm.InitializeAsync();
+        vm.PinInput = "123456";
+        vm.SubmitPinCommand.Execute(null);
+
+        Assert.False(vm.CanEnterPin);
+        Assert.Equal(AppStrings.AppLockCheckingPin, vm.StatusText);
+        Assert.All(vm.PinCells, cell => Assert.True(cell));
+        Assert.False(vm.Unlocked.IsCompleted);
+
+        verification.SetResult(new(false, TimeSpan.Zero));
+        await VmTestHelpers.WaitUntilAsync(() => vm.SubmitPinCommand.CanExecute(null));
+        Assert.True(vm.CanEnterPin);
+        Assert.Equal(AppStrings.AppLockPinIncorrect, vm.StatusText);
+        Assert.All(vm.PinCells, cell => Assert.False(cell));
+    }
+
+    [Fact]
+    public async Task Storage_retry_without_phone_credentials_requires_an_existing_pin_and_keeps_the_app_locked()
+    {
+        AppLockViewModel vm = Create(DeviceUnlockAvailability.NoScreenLock, DeviceUnlockResult.CannotAsk);
+        _authenticator.SetupGet(a => a.CanOpenSecuritySettings).Returns(true);
+        _authenticator.Setup(a => a.TryOpenSecuritySettingsAsync()).ReturnsAsync(true);
+        _pinStore.SetupSequence(s => s.HasPinAsync())
+            .ThrowsAsync(new IOException())
+            .ReturnsAsync(false)
+            .ReturnsAsync(true);
+        await vm.InitializeAsync();
+
+        Assert.True(vm.ShowRetryStorage);
+        Assert.True(vm.CanOpenSecuritySettings);
+        Assert.False(vm.HasSystemRecovery);
+        await VmTestHelpers.RunAsync(vm.OpenSecuritySettingsCommand);
+        _authenticator.Verify(a => a.TryOpenSecuritySettingsAsync(), Times.Once);
+
+        await VmTestHelpers.RunAsync(vm.RetryPinStorageCommand);
+        Assert.False(vm.IsPinEntryVisible);
+        Assert.Equal(AppStrings.AppLockStorageStillUnavailable, vm.StatusText);
+
+        await VmTestHelpers.RunAsync(vm.RetryPinStorageCommand);
+        Assert.True(vm.IsPinEntryVisible);
+        Assert.False(vm.ShowRetryStorage);
+        Assert.False(vm.Unlocked.IsCompleted);
+        _pinStore.Verify(s => s.SetPinAsync(It.IsAny<string>()), Times.Never);
+    }
+
+    [Fact]
     public async Task An_incorrect_app_pin_keeps_personal_content_closed()
     {
         AppLockViewModel viewModel = Create(DeviceUnlockAvailability.Available, DeviceUnlockResult.Passed);

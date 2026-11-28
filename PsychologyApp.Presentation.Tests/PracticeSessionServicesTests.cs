@@ -204,6 +204,42 @@ public sealed class TechniqueSessionCompletionServiceTests
 
 public sealed class PracticeCompletionViewModelSafetyTests
 {
+    [Fact]
+    public async Task TensionRatingKeepsTheLatestChoiceAndCanRetryAFailedWrite()
+    {
+        var outcome = new TaskCompletionSource<SessionResultDTO?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var firstWrite = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var latestWrite = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var progress = new Mock<IUserProgressService>();
+        progress.Setup(p => p.GetSessionResultAsync(42, It.IsAny<CancellationToken>())).Returns(outcome.Task);
+        progress.Setup(p => p.GetRecentMoodsAsync(3, It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        progress.Setup(p => p.UpdateSessionResultPostIntensityAsync(42, 8, It.IsAny<CancellationToken>())).Returns(firstWrite.Task);
+        progress.SetupSequence(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()))
+            .Returns(latestWrite.Task)
+            .Returns(Task.CompletedTask);
+        var resolver = new NextPracticeResolver(progress.Object, Mock.Of<IUserPreferencesStore>(),
+            Mock.Of<ITechniqueRecommendationService>(), new TechniqueCatalogGateway(Mock.Of<ITechniqueCatalogService>()),
+            Mock.Of<IClinicalCareService>());
+        var viewModel = new PracticeCompletionViewModel(Mock.Of<INavigationService>(), progress.Object, resolver,
+            Mock.Of<ICrisisDetector>(), Mock.Of<IDonationSupportService>(), 1, sessionResultId: 42);
+
+        viewModel.PostIntensityText = "8";
+        viewModel.PostIntensityText = "3";
+        progress.Verify(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()), Times.Never);
+        outcome.SetResult(new SessionResultDTO { PreIntensity = 9, PostIntensity = 8 });
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => viewModel.HasSudsDelta);
+        Assert.Equal("3", viewModel.PostIntensityText);
+
+        firstWrite.SetResult();
+        latestWrite.SetException(new IOException("Storage unavailable"));
+        await ViewModels.VmTestHelpers.WaitUntilAsync(() => viewModel.HasPostIntensitySaveError);
+        await ViewModels.VmTestHelpers.RunAsync(viewModel.RetryPostIntensityCommand);
+
+        Assert.False(viewModel.HasPostIntensitySaveError);
+        Assert.Equal("3", viewModel.PostIntensityText);
+        progress.Verify(p => p.UpdateSessionResultPostIntensityAsync(42, 3, It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

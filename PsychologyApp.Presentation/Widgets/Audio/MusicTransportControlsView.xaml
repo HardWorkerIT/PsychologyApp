@@ -55,18 +55,9 @@
                     IconName="Pause"
                     IconSize="28"
                     IconColor="White"
-                    IsVisible="False"
+                    IsVisible="{Binding IsPlaying, Source={x:Reference Root}}"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center">
-                    <ui:MaterialIconView.Triggers>
-                        <DataTrigger
-                            Binding="{Binding IsPlaying, Source={x:Reference Root}}"
-                            TargetType="ui:MaterialIconView"
-                            Value="True">
-                            <Setter Property="IsVisible" Value="True" />
-                        </DataTrigger>
-                    </ui:MaterialIconView.Triggers>
-                </ui:MaterialIconView>
+                    VerticalOptions="Center" />
             </Grid>
         </Border>
 

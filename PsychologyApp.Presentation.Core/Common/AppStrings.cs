@@ -842,6 +842,12 @@ public static partial class AppStrings
     public static string AppLockForgotPin => R(nameof(AppLockForgotPin));
     public static string AppLockPinResetLead => R(nameof(AppLockPinResetLead));
     public static string AppLockPinStorageError => R(nameof(AppLockPinStorageError));
+    public static string AppLockStorageRetryLead => R(nameof(AppLockStorageRetryLead));
+    public static string AppLockStorageStillUnavailable => R(nameof(AppLockStorageStillUnavailable));
+    public static string AppLockOpenSecuritySettings => R(nameof(AppLockOpenSecuritySettings));
+    public static string AppLockRecoveryUnsupported => R(nameof(AppLockRecoveryUnsupported));
+    public static string AppLockCheckingPin => R(nameof(AppLockCheckingPin));
+    public static string AppLockPinEntryReady => R(nameof(AppLockPinEntryReady));
     public static string AppLockPhoneUnlockUnavailable => R(nameof(AppLockPhoneUnlockUnavailable));
     public static string AppLockChangePin => R(nameof(AppLockChangePin));
     public static string AppLockPinChanged => R(nameof(AppLockPinChanged));

@@ -96,14 +96,8 @@
                             IconSize="20"
                             IconColor="{AppThemeBinding Light={DynamicResource TextSecondaryLight}, Dark={DynamicResource TextSecondaryDark}}"
                             AutomationProperties.IsInAccessibleTree="False"
-                            IsVisible="False"
-                            VerticalOptions="Center">
-                            <ui:MaterialIconView.Triggers>
-                                <DataTrigger Binding="{Binding IsDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
-                                    <Setter Property="IsVisible" Value="True" />
-                                </DataTrigger>
-                            </ui:MaterialIconView.Triggers>
-                        </ui:MaterialIconView>
+                            IsVisible="{Binding IsDetailExpanded, Source={x:Reference Root}}"
+                            VerticalOptions="Center" />
                     </Grid>
                 </Grid>
                 <testUi:QuestionnaireResultDetailView
@@ -149,14 +143,8 @@
                             IconSize="20"
                             IconColor="{DynamicResource Primary}"
                             AutomationProperties.IsInAccessibleTree="False"
-                            IsVisible="False"
-                            VerticalOptions="Center">
-                            <ui:MaterialIconView.Triggers>
-                                <DataTrigger Binding="{Binding IsLuscherDetailExpanded, Source={x:Reference Root}}" TargetType="ui:MaterialIconView" Value="True">
-                                    <Setter Property="IsVisible" Value="True" />
-                                </DataTrigger>
-                            </ui:MaterialIconView.Triggers>
-                        </ui:MaterialIconView>
+                            IsVisible="{Binding IsLuscherDetailExpanded, Source={x:Reference Root}}"
+                            VerticalOptions="Center" />
                     </Grid>
                 </Grid>
                 <testUi:LuscherHistoryDetailView

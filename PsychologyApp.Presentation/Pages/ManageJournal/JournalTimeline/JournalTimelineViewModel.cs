@@ -212,7 +212,7 @@ public sealed class JournalTimelineViewModel : BaseViewModel
             return;
         }
 
-        await _journalScreenCoordinator.OpenEditorDayAsync(entry.Day, _navigationService);
+        await _journalScreenCoordinator.ReturnToEditorAsync(entry.Day, _navigationService, entry.MoodEntryId);
     }
 
     private async Task ShareEntryAsync(object? parameter)
